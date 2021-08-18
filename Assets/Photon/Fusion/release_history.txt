@@ -1,0 +1,459 @@
+# 0.6.0
+
+## Beta Nightly
+
+### Build 259 (Aug 10, 2021)
+
+**What's New**
+
+- Improved 'Lite' theme handling for inline-help and headers.  
+Simplified inline-help skin to just use basic GUIStyles  
+Added graphic source for gui styles/icons
+
+**Changes**
+
+- `HitOptions.DetailedHit` is obsolete: lag-compensated queries now always compute detailed info
+
+**Bug Fixes**
+
+- Fixed: An issue in the computation of the broad-phase volume of lag-compensated hitbox roots with position offset that could cause hitboxes to not be checked
+- Fixed: An issue in the computation of lag-compensated `HitboxRoot` bounds that could reduce the efficiency of the broad-phase data structure
+- Fixed: An issue in the lag-compensated ray-cast queries against sphere objects when the ray length was set to `Mathf.Infinity`, `float.MaxValue` or very large values, causing the hit point to be set at infinity
+- Fixed: Rpcs not being invoked for client authority objects
+- Fixed: Rpc with source=RpcSources.StateAuthority not being invokable in Shared mode
+- Fixed: Inspector handling with inline-help and component headers on Retina/hi-res type displays  
+Changed header skins to use basic styles and single textures for simpiler reskinning.  
+Saved make files for headers to project  
+Added more header color/icon options  
+Added Fusion styles to make eventual skinning/look changes later easier
+
+### Build 258 (Aug 08, 2021)
+
+**Bug Fixes**
+
+- Fixed: NetworkBehaviour "Missing NetworkObject" button now correctly adds NetworkObject to transform.root when clicked
+
+### Build 257 (Aug 07, 2021)
+
+**Bug Fixes**
+
+- Fixed: ILWeaver throwing an exception if an assembly is referenced more than once
+- Fixed: RunWeaver() force saves any changes to the NetworkProjectConfigAsset before weaving
+
+### Build 256 (Aug 06, 2021)
+
+**What's New**
+
+- `Fusion/Run Weaver` menu item. Can be run in case of `Type Foo has not been weaved` runtime error messages
+- Improvements in layout/help on the HitboxRoot component.  
+Moved button UI code out of editor and into HitRoot class (trying to avoid editor scripts unless absolutely needed)
+
+**Bug Fixes**
+
+- Fixed: Auto-BroadRange button on HitboxRoot handles Box collider types correctly now
+- Fixed: Auto-BroadRange button on HitboxRoot ignores scaling selectively, in agreement with Hitboxes handling of scaling and offset values
+
+### Build 255 (Aug 05, 2021)
+
+**What's New**
+
+- Added TickTimer.RemainingTime to get the remaining time in seconds
+- Inline-help support for inspector buttons using BehaviourButtonActionAttribute
+- XMLDocumentation added support for tooltip/summary handling for all member types (to allow inline buttons etc to make use of inline help/tooltips)
+- `HitboxRoot.SetMinBoundingRadius` method that resets the root `BroadRadius` to be the minimum bounding radius for the current hitboxes.  
+The method can be triggered from a new button on the component editor and is automatically called if the root is initialized with a zeroed broad radius
+
+**Changes**
+
+- FusionInstaller installs com.unity.nuget.mono-cecil instead of the outdated nuget.mono-cecil
+- If the config is not serialized in text mode, ILWeaver emits a warning
+
+**Bug Fixes**
+
+- Fixed: Recompile button in AccuracyDefaults not recompiling everything in Unity 2021.1
+- Fixed: In case of Mono-Cecil being missed, Fusion.CodeGen emits a warnings instead of not compiling
+
+### Build 254 (Aug 04, 2021)
+
+**What's New**
+
+- Added Interpolator<T>ReaderDelegate to allow access to reading the interpolated data out
+- Added Interpolator<T>.InterpolationDelegate to allow you to override the interpolation delegate
+
+**Changes**
+
+- Lag Compensated `Hitbox` and `HitboxRoot` active states are now decoupled from the GameObject/Behavior states and can be accessed with new get/set methods and properties
+
+**Bug Fixes**
+
+- Fixed: An issue in the lag-compensated structure that could cause stack overflow when removing entries
+- Fixed: Several fixes for share mode scene objects
+
+# 0.5.0
+
+## Beta Nightly
+
+### Build 253 (Aug 03, 2021)
+
+**What's New**
+
+- DestroyOrphaned - a way to destroy "non-existent" NOs
+- Support for advanced Odin serialization(such as interfaces) added. Use BehaviourSerializedOdin, SimulationBehaviourSerializedOdin, and NetworkBehaviourSerializedOdin as base classes for the equivalent of Odin's SerializedMonoBehaviour
+
+**Changes**
+
+- `NetworkSceneManager` - abstract `NetworkSceneManagerBase` can now be extended and added to the runner prefab to implement custom scene loading logic
+
+**Bug Fixes**
+
+- Fixed: Derived NetworkedBehaviours will show parent's private [Networked] values in their Networked Properties foldout. (Previously only protected/public values were shown)
+- Fixed: NetworkSceneManager reloading initial scene
+- Fixed: Scene baking for `SimulationBehaviours` not in `NetworkObject` hierarchy
+- Fixed: `NetworkDebugStart` DontDestroyOnLoad - the containing game object unparents itself with a warning
+- Fixed: An issue when a client joins while a scene switch is happening (multiple peers)
+- Fixed: If NetworkDebugStart is parented, move it to root in runtime; otherwise DontDestroyOnLoad won't work
+- Fixed: Map baking - orphaned SimulationBehaviours (i.e. ones without NetworkObjects up the hierarchy) are acceptable
+- Fixed: Removing game objects in multiple peer mode cleans up SharedInstanceUnitySceneRoot correctly
+
+### Build 251 (Aug 02, 2021)
+
+**What's New**
+
+- InterpolationDataSource.NoInterpolation as an option to disable Fusion handling interpolation for a NetworkBehaviour
+- Added quick setup of basic  working 2D scene with menu 'GameObject>Fusion>Setup Basic Fusion Scene 2D'
+- Component header graphics reduced garbage and added more caching. Long component names now gracefully truncate words in order to fit the width of the inspector
+
+**Changes**
+
+- HitboxManager is now automatically handled by Runner (config moved to NetworkProjectSettings). Instance accessible through Runner.LagCompensation
+- Improved client disconnect behaviour in case of a forcible shutdown (ALT-F4, etc.)
+- Fusion header graphics now display when using BehaviourOdin, NetworkBehaviourOdin and SimulationBehaviourOdin base classes
+- NRB and NRB2D now derive from NetworkRigidbodyBase class
+- Exception message when `NetworkBehaviourWeavedAttribute` is not found to a more meaningful one
+- SimulationBehaviour.Runner  and SimulationBehaviour.Object is now marked as NonSerialized
+- ILWeaver has been moved to a separate assembly (Unity.Fusion.CodeGen) and is now using Unity's ILPostProcessor pipeline. As a result the weaver is now an order of magnitude faster and more reliable. Also, weaving errors are now treated as compile errors (can't be accidentally cleared with the Clear button). If NetworkProjectConfig is not stored in its default location, implement ILWeaverSettings.OverrideNetworkProjectConfigPath in Fusion.CodeGen.User.cs
+
+**Bug Fixes**
+
+- Fixed: NetworkTransformAnchor treats a null parent and a parent which is the MultiPeer root scene object both as null. Fixes teleport hitch when reparenting an object which has the MultiPeer root as its parent the first time
+- Fixed: NetworkCharacterController now uses same Defaults() handling as NetworkTransform, which resolves a teleport from origin occurring on Spawn.  
+Renamed SharedInstance to MultiPeer in a few places there were missed
+- Fixed: Spawning position issues related to Defaults() handling in NT/NRB/NCC classes.  
+Changed Before/AfterAllTicks from explicit to implicit interface implementations
+- Fixed: Assembly resolve when building using IL2CPP and .NET 4.x on Unity 2021.1+
+- Fixed: Issue with ILWeaver trying to reference mscorelib when netstandard is being used
+- Fixed: ILWeaver referencing .NET core libraries in Unity 2021.1
+- Fixed: Added null checks inside DestroyRemotePrefab to catch cases where unity already destroyed an object but it's still exists in the network id lookup table
+- Fixed: Memory leak relating to un-sent and un-received packets when shutting down
+- Fixed: Memory leak in unity editor when using latency simulation
+- Fixed: Additional memory leaks
+- Fixed: NetworkRigidbody2D functionality restored
+- Fixed: Several issues with packet fragmentation and IPv6
+- Fixed: Issue with new Spawn<T> overload not finding NetworkObject reference properly
+- Fixed: FUSION_WEAVER_DEBUG with UnityEditor weaver compile error
+- Fixed: Unity has hard time parsing call stacks from exceptions logged in ILPP, split them into lines and log individually then
+- Fixed: NetworkObjects are no longer automatically set to DontDestroyOnLoad
+- Fixed: Several memory leaks
+
+### Build 246 (Jul 27, 2021)
+
+**What's New**
+
+- Added NetworkRunner.Spawn<T>(T prefab) where T : NetworkBehaviour as a complement to NetworkRunner.Spawn(NetworkObject prefab)
+- Added NetworkBehaviour.Interpolator<T>.TryGetValues
+
+### Build 245 (Jul 23, 2021)
+
+**What's New**
+
+- Double-clicking component header graphic now opens script for editing (same behaviour as the unity default script field)
+- Added support for interpolating user defined networked properties of type float/vector2/vector3/vector4/quaternion
+
+**Bug Fixes**
+
+- Fixed: Importing new Fusion releases should now properly detect existing config files
+- Fixed: An issue in the lag compensated queries performed on the server/host when the state authority is not a client and sub-tick accuracy is set in the query options
+
+### Build 244 (Jul 22, 2021)
+
+**Bug Fixes**
+
+- Fixed: Config files should now be able to create correctly, even with completely missing/deleted/moved resource folders
+
+### Build 243 (Jul 22, 2021)
+
+**Changes**
+
+- SimulationBehaviour.Object and NetworkBehaviour.Object is now assigned for predicted spawned objects
+
+**Bug Fixes**
+
+- Fixed: NetworkObject.IsProxy  now checks if object exists also
+
+### Build 242 (Jul 22, 2021)
+
+**What's New**
+
+- Added NetworkObject.IsPredictedSpawn, Obsoleted NetworkObject.IsPredicted
+
+**Changes**
+
+- StartGameArgs now allows you to provide an INetworkObjectPool at runtime to set the pool object to use dynamically
+- NetworkObjectPool is now a scriptable object instead of a mono behaviour to allow it to be hooked up in editor inspector
+- Second Despawned parameter "bool hasState" will now be true when running in EC mode, if hasState is true it means you can access the networked state of the object being destroyed
+- Despawned now takes NetworkRunner as first parameter so runner is always accessible during Despawn
+- NetworkObject StateAuthority/InputAuthoirty/IsSceneObject will no longer throw null ref exceptions for un-attached objects
+
+**Bug Fixes**
+
+- Fixed: Removed bandwidth overhead for unused words in input delta compressor
+- Fixed: NetworkRunner.Despawn will now properly check for null object
+- Fixed: NetworkProjectConfig and PhotonConfig assets should not generate correctly when creating a new project
+
+### Build 241 (Jul 21, 2021)
+
+**What's New**
+
+- Added PlayerRef.PlayerId
+
+**Changes**
+
+- NetworkObject.IsPredicted is no longer true after object has been confirmed by server
+- Predicted spawned objects now have access to the runner
+- Despawn now takes an optional allowPredicted parameter (defaults to false) which allows you to "despawn" predicted spawned objects on clients also
+
+### Build 238 (Jul 20, 2021)
+
+**What's New**
+
+- NetworkProjectConfig and PhotonAppSettings assets are now created if they do not exist
+- Added Inspector component graphic headers (replacement for default script field)
+- Added recompile button to AccuracyDefaults with warning when defaults are changed (a recompile is needed before running/building in order to reweave the new accuracy values)
+
+**Changes**
+
+- Realtime Client Conn Timeout to 30secs  
+This aims to prevent unwanted disconnects for long-running sessions
+- Removing `NetworkProjectConfig.asset` and `PhotonAppSettings.asset` from the SDK packages
+
+### Build 236 (Jul 12, 2021)
+
+**Removed**
+
+- Removed NetworkTransformParent. Has been replaced with NetworkTransformAnchor for syncing parenting
+
+**Bug Fixes**
+
+- Fixed: Longs and ulongs [Networked] properties causing ILWeaver error
+
+### Build 235 (Jul 10, 2021)
+
+**Bug Fixes**
+
+- Fixed: NetworkBehaviour's inspector buttons for adding a missing NetworkObject will now allow undo, and should dirty correctly in all use cases
+
+### Build 234 (Jul 09, 2021)
+
+**What's New**
+
+- Runner.GameInfo  
+This property exposes some Photon Cloud metadata like Room Name and current connected Region
+- RpcAttribute.TickAligned - if set to false the Rpc will be handled without waiting for a target's tick to catch up, if there are not any tick aligned Rpcs waiting (order is preserved)
+
+**Bug Fixes**
+
+- Fixed: Longs and ulongs as Rpc parameters causing ILWeaver error
+- Fixed: Fusion windows should now remember their state when Unity is restarted
+
+### Build 233 (Jul 08, 2021)
+
+**Bug Fixes**
+
+- Fixed: ILWeaver error when deriving from NetworkTransformAnchor
+
+### Build 232 (Jul 07, 2021)
+
+**Bug Fixes**
+
+- Fixed: Transient despawned objects are now ignored on lag compensated queries
+
+### Build 231 (Jul 06, 2021)
+
+**Bug Fixes**
+
+- Fixed: FusionStats are now created last in NetworkDebugStart, and check to see if any active EventSystems exist. Fixes issues with 'multiple event systems' warnings spamming the logs
+
+### Build 229 (Jul 02, 2021)
+
+**Changes**
+
+- NetworkBehaviour.Defaults now take two parameters: afterSpawned and isLocalSpawn
+- Renamed AppIdRealtime to AppIdFusion in Photon App Settings scriptable object
+- Photon Realtime SDK to v4.1.6.3
+
+**Bug Fixes**
+
+- Fixed: Issues with transform.position not being consistent in Spawned callback between server/client in server mode, and also not being consistent in client auth mode
+
+### Build 228 (Jul 01, 2021)
+
+**Bug Fixes**
+
+- Fixed: Issue with [Accuracy(0)] on Vector2/Vector3/Quaternion
+- Fixed: Bug with objects spawned by re-used player indices not showing up for other clients in shared mode
+- Fixed: Weaver issue with static fields on structs implementing INetworkStruct
+
+### Build 227 (Jun 30, 2021)
+
+**Breaking Changes**
+
+- Added ShutdownReason to OnShutdown Event  
+You must modify any INetworkRunnerCallbacks to include the extra param on the OnShutdown callback
+
+**What's New**
+
+- Added shortcuts for 'Rebuild Object Table' and 'Import Scenes From Build Settings' to the Fusion menu in Unity
+- Added AlwaysShowStats boolean setting on NetworkDebugStart
+- Added area of interest support for shared mode
+- Added transform parenting support to NetworkTransform/NetworkRigidbody/NetworkCharacterController
+- Added Teleport to NetworkRigidbody and NetworkCharacterController
+
+**Changes**
+
+- Renamed NetworkAreaOfInterestBehaviour.PositionOffset to NetworkAreaOfInterestBehaviour.PositionWordOffset
+
+### Build 226 (Jun 29, 2021)
+
+**What's New**
+
+- Added NetworkRunner.RequestStateAuthority and NetworkRunner.ReleaseStateAuthority
+
+**Bug Fixes**
+
+- Fixed: Object destruction when clients leave in shared mode
+
+### Build 223 (Jun 25, 2021)
+
+**Bug Fixes**
+
+- Fixed: "Could not load NetworkProjectConfigAsset" errors after importing package on some Unity versions
+
+### Build 222 (Jun 24, 2021)
+
+**What's New**
+
+- Added NetworkObject.RemoveInputAuthority and NetworkObject.RemoveStateAuthority
+
+**Bug Fixes**
+
+- Fixed: Weaver will now longer throw an exception when Accuracy is specified with a double
+
+### Build 221 (Jun 23, 2021)
+
+**Changes**
+
+- Callback interfaces like ISceneLoaded, IPlayerJoined, IBeforeAllTicks, etc. will no longer be invoked on behaviours which are not enabled
+
+**Bug Fixes**
+
+- Fixed: An issues in the Lag-Compensated system when adding the first HitboxRoot object to a Manager that started with no initial objects
+- Fixed: Issue with NetworkRigidbody throwing errors when physics mode is set to None
+
+### Build 220 (Jun 22, 2021)
+
+**What's New**
+
+- RaycastAll to lag compensated queries
+
+**Changes**
+
+- NetworkRigidbody now automatically disabled the built in unity rigidbody interpolation, if NetworkRigidbody is used fusion takes care of all interpolation for that rigidbody
+- Changed order of SyncDragMass and InterpolationTarget in inspector for NetworkRigidbody
+- Networked Properties in inspector now use a default closed foldout, monitoring these values can cause performance issues in the editor with complex NetworkBehaviours
+
+**Bug Fixes**
+
+- Fixed: SinglePlayer Mode
+- Fixed: IL2CPP memory alignment issue on android
+
+### Build 218 (Jun 19, 2021)
+
+**Changes**
+
+- Runtime and Baked info exposed in the NetworkObject inspector
+
+### Build 217 (Jun 18, 2021)
+
+**What's New**
+
+- Lag compensated query for past pos/rot of any specific hitbox (two overloads: based on tick, or on player reference view)
+
+**Changes**
+
+- Improved documentation and ease of interpolation configuration options
+
+**Bug Fixes**
+
+- Fixed: All issues with nested INetworkInput and INetworkStruct types
+- Fixed: Minor issue in interpolation time jitter delta calculation where a small amount of delta time would sometimes be discarded
+
+### Build 216 (Jun 17, 2021)
+
+**What's New**
+
+- Implemented new ingame stats
+
+**Changes**
+
+- NetworkDebugStart Auto mode will never show menu. Use Manual or UserInterface settings to start clients
+
+**Bug Fixes**
+
+- Fixed: MaxPlayers connected to a Dedicated Server
+- Fixed: NetworkDebugStart menu for StartClients and StartClient working again
+- Fixed: Bug where client side prediction time would get stuck in very high prediction offset in rare cases
+- Fixed: Bug where client side prediction time would get stuck in very high prediction offset in rare cases
+- Fixed: Assert bug in SmoothRandom constructor
+
+### Build 215 (Jun 16, 2021)
+
+**Bug Fixes**
+
+- Fixed: Issue with NetworkBehaviourUtils marked as private causing issues when weaving certain RPCs
+
+### Build 214 (Jun 15, 2021)
+
+**What's New**
+
+- Added NetworkRunner.GetAllBehaviours<T> API to get all active network/simulation behaviours of a certain type
+- IRunnerVisibilityRecognizedType can be added to Monobehaviours to flag them for inclusion in the RunnerVisibility system
+
+**Changes**
+
+- Obsoleted GetActiveSimulationBehaviours for GetAllBehaviours
+
+**Bug Fixes**
+
+- Fixed: SinglePlayer mode start
+
+### Build 213 (Jun 14, 2021)
+
+**Bug Fixes**
+
+- Fixed: Networked Properties UI added handling for [Neworked] pointer types
+
+### Build 211 (Jun 11, 2021)
+
+**Bug Fixes**
+
+- Fixed: Nanosockets for macOS
+- Fixed: Singleplayer game sdtart
+
+### Build 208 (Jun 09, 2021)
+
+- Initial beta release
+
+**Changes**
+
+- Cleared alpha changelog
+

@@ -1,0 +1,255 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Assembly-CSharp</name>
+    </assembly>
+    <members>
+        <member name="T:PlayerSpawnerPrototype">
+            <summary>
+            Prototyping component for spawning Player avatars.
+            </summary>
+        </member>
+        <member name="F:SpawnerPrototype`1.StateAuthority">
+            <summary>
+            Available if AllowClientObjects is enabled in the NetworkProjectConfig, this allows players to be spawned with client StateAuthority.
+            </summary>
+        </member>
+        <member name="T:NetworkDebugStartGUI">
+            <summary>
+            Companion component for <see cref="T:NetworkDebugStart"/>. Automatically added as needed for rendering in-game networking IMGUI.
+            </summary>
+        </member>
+        <member name="F:NetworkDebugStartGUI.EnableHotkeys">
+            <summary>
+            When enabled, the in-game user interface buttons can be activated with the keys H (Host), S (Server) and C (Client).
+            </summary>
+        </member>
+        <member name="T:ISpawnPointPrototype">
+            <summary>
+            Flag interface to identify GameObjects that should be used as markers for spawn points. 
+            Used by <see cref="!:ISpawnPointManagerPrototype"/> to locate spawn points in a scene.
+            </summary>
+        </member>
+        <member name="T:InputBehaviourPrototype">
+            <summary>
+            A simple example of Fusion input collection. This component should be on the same GameObject as the <see cref="T:Fusion.NetworkRunner"/>.
+            </summary>
+        </member>
+        <member name="T:NetworkInputPrototype">
+            <summary>
+            Example definition of an INetworkStruct.
+            </summary>
+        </member>
+        <member name="T:NetworkDebugStart">
+            <summary>
+            A Fusion prototyping class for starting up basic networking. Add this component to your startup scene, and supply a <see cref="F:NetworkDebugStart.RunnerPrefab"/>.
+            Can be set to automatically startup the network, display an in-game menu, or allow simplified start calls like <see cref="M:NetworkDebugStart.StartHost"/>.
+            </summary>
+        </member>
+        <member name="T:NetworkDebugStart.ServerModes">
+            <summary>
+            Enumeration of Server Modes. Server starts a server peer without a local player. Host starts a server peer with a local player.
+            Shared indicates that no peer should be started, and the Photon cloud will act as the server.
+            </summary>
+        </member>
+        <member name="T:NetworkDebugStart.StartModes">
+            <summary>
+            Selection for how <see cref="T:NetworkDebugStart"/> will behave at startup.
+            </summary>
+        </member>
+        <member name="F:NetworkDebugStart.RunnerPrefab">
+            <summary>
+            Supply a Prefab or a scene object which has the <see cref="T:Fusion.NetworkRunner"/> component on it, 
+            as well as any runner dependent components which implement <see cref="T:Fusion.INetworkRunnerCallbacks"/>, 
+            such as <see cref="T:Fusion.NetworkEvents"/> or your own custom INetworkInput implementations.
+            </summary>
+        </member>
+        <member name="F:NetworkDebugStart.StartMode">
+            <summary>
+            Select how network startup will be triggered. Automatically, by in-game menu selection, or exclusively by script.
+            </summary>
+        </member>
+        <member name="F:NetworkDebugStart.Server">
+            <summary>
+            When <see cref="F:NetworkDebugStart.StartMode"/> is set to <see cref="F:NetworkDebugStart.StartModes.Automatic"/>, this option selects if the <see cref="T:Fusion.NetworkRunner"/> 
+            will be started as a dedicated server, or as a host (which is a server with a local player).
+            </summary>
+        </member>
+        <member name="F:NetworkDebugStart.AutoClients">
+            <summary>
+            The number of client <see cref="T:Fusion.NetworkRunner"/> instances that will be created if running in Mulit-Peer Mode. 
+            When using the Select start mode, this number will be the default value for the additional clients option box.
+            </summary>
+        </member>
+        <member name="F:NetworkDebugStart.ServerPort">
+            <summary>
+            The port that server/host <see cref="T:Fusion.NetworkRunner"/> will use.
+            </summary>
+        </member>
+        <member name="F:NetworkDebugStart.DefaultRoomName">
+            <summary>
+            The default room name to use when connecting to photon cloud.
+            </summary>
+        </member>
+        <member name="M:NetworkDebugStart.StartServer">
+            <summary>
+            Start a server instance.
+            </summary>
+        </member>
+        <member name="M:NetworkDebugStart.StartHost">
+            <summary>
+            Start a host instance. This is a server instance, with a local player.
+            </summary>
+        </member>
+        <member name="M:NetworkDebugStart.StartClient">
+            <summary>
+            Start a client instance.
+            </summary>
+        </member>
+        <member name="M:NetworkDebugStart.StartServerPlusClients">
+            <summary>
+            Start a Fusion server instance, and the number of client instances indicated by <see cref="F:NetworkDebugStart.AutoClients"/>. 
+            InstanceMode must be set to Multi-Peer mode, as this requires multiple <see cref="T:Fusion.NetworkRunner"/> instances.
+            </summary>
+        </member>
+        <member name="M:NetworkDebugStart.StartHostPlusClients">
+            <summary>
+            Start a Fusion host instance, and the number of client instances indicated by <see cref="F:NetworkDebugStart.AutoClients"/>. 
+            InstanceMode must be set to Multi-Peer mode, as this requires multiple <see cref="T:Fusion.NetworkRunner"/> instances.
+            </summary>
+        </member>
+        <member name="M:NetworkDebugStart.StartServerPlusClients(System.Int32)">
+            <summary>
+            Start a Fusion server instance, and the indicated number of client instances. 
+            InstanceMode must be set to Multi-Peer mode, as this requires multiple <see cref="T:Fusion.NetworkRunner"/> instances.
+            </summary>
+        </member>
+        <member name="M:NetworkDebugStart.StartHostPlusClients(System.Int32)">
+            <summary>
+            Start a Fusion host instance (server with local player), and the indicated number of additional client instances. 
+            InstanceMode must be set to Multi-Peer mode, as this requires multiple <see cref="T:Fusion.NetworkRunner"/> instances.
+            </summary>
+        </member>
+        <member name="M:NetworkDebugStart.StartMultipleClients(System.Int32)">
+            <summary>
+            Start a Fusion host instance (server with local player), and the indicated number of additional client instances. 
+            InstanceMode must be set to Multi-Peer mode, as this requires multiple <see cref="T:Fusion.NetworkRunner"/> instances.
+            </summary>
+        </member>
+        <member name="M:NetworkDebugStart.StartMultipleSharedClients(System.Int32)">
+            <summary>
+            Start as Room on the Photon cloud, and connects as one or more clients.
+            </summary>
+            <param name="clientCount"></param>
+        </member>
+        <member name="M:FusionScalableIMGUI.GetScaledSkin">
+            <summary>
+            Get the custom scalable skin, already resized to the current screen.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:FusionScalableIMGUI.GetScaledSkin(System.Single@,System.Single@,System.Int32@,System.Int32@)">
+            <summary>
+            Get the custom scalable skin, already resized to the current screen. Provides the height, width, padding and margin used.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:FusionScalableIMGUI.ScaleGuiSkinToScreenHeight(UnityEngine.GUISkin)">
+            <summary>
+            Modifies a skin to make it scale with screen height.
+            </summary>
+            <param name="skin"></param>
+            <returns>Returns (height, width, padding, margin) values applied to the GuiSkin</returns>
+        </member>
+        <member name="T:SpawnPointManagerPrototype`1">
+            <summary>
+            Derive from this class for different <see cref="T:ISpawnPointPrototype"/> types. 
+            Derived manager will only find that spawn point type, allowing for separate handling of player spawn points from other spawn-able items such as AI.
+            </summary>
+            <typeparam name="T"></typeparam>
+        </member>
+        <member name="F:SpawnPointManagerPrototype`1.Sequence">
+            <summary>
+            How spawn points will be selected from the <see cref="F:SpawnPointManagerPrototype`1._spawnPoints"/> collection.
+            </summary>
+        </member>
+        <member name="F:SpawnPointManagerPrototype`1.BlockingLayers">
+            <summary>
+            LayerMask for which physics layers should be used for blocked spawn point checks.
+            </summary>
+        </member>
+        <member name="F:SpawnPointManagerPrototype`1.BlockedCheckRadius">
+            <summary>
+            The search radius used for detecting if a spawn point is blocked by an object.
+            </summary>
+        </member>
+        <member name="F:SpawnPointManagerPrototype`1._spawnPoints">
+            <summary>
+            Serialized collection of all <see cref="T:ISpawnPointPrototype"/> of the type T found in the same scene as this component.
+            </summary>
+        </member>
+        <member name="M:SpawnPointManagerPrototype`1.CollectSpawnPoints(Fusion.NetworkRunner)">
+            <summary>
+            Find all <see cref="T:ISpawnPointPrototype"/> instances in the same scene as this spawner. 
+            This should only be done at development time if using the Photon relay for any spawn logic.
+            </summary>
+        </member>
+        <member name="M:SpawnPointManagerPrototype`1.GetNextSpawnPoint(Fusion.NetworkRunner,Fusion.PlayerRef,System.Boolean)">
+            <summary>
+            Select the next spawn point using the defined <see cref="F:SpawnPointManagerPrototype`1.Sequence"/>. Override this method to expand on this, such as detecting if a spawn point is blocked.
+            </summary>
+        </member>
+        <member name="M:SpawnPointManagerPrototype`1.AllSpawnPointsBlockedFallback">
+            <summary>
+            Handling for if all spawn points are blocked.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:SpawnPointManagerPrototype`1.GetNextUnblocked(System.Int32)">
+            <summary>
+            Cycles through all remaining spawn points searching for unblocked. Will return null if all points return <see cref="!:IsBlocked(Transform)"/> == true.
+            </summary>
+            <param name="failedIndex">The index of the first tried SpawnPoints[] element, which was blocked.</param>
+            <returns>(<see cref="F:SpawnPointManagerPrototype`1._spawnPoints"/> index, <see cref="T:ISpawnPointPrototype"/>)</returns>
+        </member>
+        <member name="M:SpawnPointManagerPrototype`1.IsBlocked(UnityEngine.Component)">
+            <summary>
+            Override this method with any logic for checking if a spawn point is blocked.
+            </summary>
+            <param name="spawnPoint"></param>
+            <returns></returns>
+        </member>
+        <member name="T:ISpawnPointManagerPrototype`1">
+            <summary>
+            Interface for <see cref="T:SpawnPointManagerPrototype`1"/> behaviours.
+            </summary>
+        </member>
+        <member name="T:PlayerSpawnPointPrototype">
+            <summary>
+            Flag component to identify GameObjects that should be used as markers for spawn points.
+            </summary>
+        </member>
+        <member name="F:ControllerPrototype.Speed">
+            <summary>
+            If object is not using <see cref="T:Fusion.NetworkCharacterController"/>, this controls how much change is applied to the transform/rigidbody.
+            </summary>
+        </member>
+        <member name="T:PlayerAOIPrototype">
+            <summary>
+            Prototyping component for Fusion. Updates the Player's AOI every tick to be a radius around this object.
+            </summary>
+        </member>
+        <member name="F:PlayerAOIPrototype.Radius">
+            <summary>
+            Radius around this GameObject that defines the Area Of Interest for the InputAuthority of the object.
+            The InputAuthority player of this <see cref="T:Fusion.NetworkObject"/>, 
+            will receive updates for any other <see cref="T:Fusion.NetworkObject"/> within this radius. 
+            </summary>
+        </member>
+        <member name="T:FusionStats">
+            <summary>
+            Fusion Telemetry component.
+            </summary>
+        </member>
+    </members>
+</doc>
