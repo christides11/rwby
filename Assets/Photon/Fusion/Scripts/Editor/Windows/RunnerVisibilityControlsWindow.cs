@@ -84,13 +84,10 @@ namespace Fusion.Editor {
       // When not playing, we use the config asset rather than runner configs to get the current mode settings.
       if (!Application.isPlaying) {
 
-        var npc = NetworkProjectConfigUtilities.GetOrCreateNetworkProjectConfigAsset();
-        // NetworkProjectConfigAsset file is missing and likely is in the process of being created.
-        if (npc == null)
-          return;
+        var npc = NetworkProjectConfig.Global;
 
-        if (npc.Config.PeerMode != NetworkProjectConfig.PeerModes.Multiple) {
-          EditorGUILayout.HelpBox("Runner Visibility Controls only apply to Multi-Peer mode.", MessageType.Info);
+        if (npc.PeerMode != NetworkProjectConfig.PeerModes.Multiple) {
+          BehaviourEditorUtils.DrawWarnBox("Runner Visibility Controls only apply to Multi-Peer mode.", MessageType.Info);
         }
         return;
       }
@@ -103,7 +100,7 @@ namespace Fusion.Editor {
       _scrollPosition = EditorGUILayout.BeginScrollView(_scrollPosition);
 
       if (!Application.isPlaying) {
-        EditorGUILayout.HelpBox("No Runners Active.", MessageType.Info);
+        BehaviourEditorUtils.DrawWarnBox("No Runners Active.", MessageType.Info);
       } else {
         var enumerator = NetworkRunner.GetInstancesEnumerator();
         while (enumerator.MoveNext()) {
@@ -118,7 +115,7 @@ namespace Fusion.Editor {
 
           // Check for MultiPeer using the runner.config, in case developer changed that prior to starting runner. (may disagree with asset config)
           if (config.PeerMode != NetworkProjectConfig.PeerModes.Multiple) {
-            EditorGUILayout.HelpBox("Runner Visibility Controls only apply to Multi-Peer mode.", MessageType.Info);
+            BehaviourEditorUtils.DrawWarnBox("Runner Visibility Controls only apply to Multi-Peer mode.", MessageType.Info);
             break;
           }
 

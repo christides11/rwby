@@ -57,7 +57,7 @@ public class NetworkDebugStartGUI : Fusion.Behaviour {
     ValidateClientCount();
   }
   protected virtual void Start() {
-    _isMultiplePeerMode = NetworkProjectConfigAsset.Instance.Config.PeerMode == NetworkProjectConfig.PeerModes.Multiple;
+    _isMultiplePeerMode = NetworkProjectConfig.Global.PeerMode == NetworkProjectConfig.PeerModes.Multiple;
   }
 
   protected NetworkDebugStart EnsureNetworkDebugStartExists() {

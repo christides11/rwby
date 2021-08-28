@@ -49,9 +49,9 @@ namespace rwby
 			//NetworkProjectConfigAsset.Instance.NetworkObjectPool = ScriptableObject.CreateInstance<FusionObjectPoolRoot>(); //gameObject.AddComponent<FusionObjectPoolRoot>();
 
 			if (mode == GameMode.Shared)
-				NetworkProjectConfigAsset.Instance.Config.Simulation.ReplicationMode = SimulationConfig.StateReplicationModes.ClientAuthEventualConsistency;
+				NetworkProjectConfig.Global.Simulation.ReplicationMode = SimulationConfig.StateReplicationModes.EventualConsistency;
 			else
-				NetworkProjectConfigAsset.Instance.Config.Simulation.ReplicationMode = SimulationConfig.StateReplicationModes.ServerAuthDeltaSnapshots;
+				NetworkProjectConfig.Global.Simulation.ReplicationMode = SimulationConfig.StateReplicationModes.DeltaSnapshots;
 
 			_runner = gameObject.GetComponent<NetworkRunner>();
 			if (!_runner)
@@ -78,7 +78,7 @@ namespace rwby
 		private bool TryGetSceneRef(out SceneRef sceneRef)
 		{
 			var scenePath = SceneManager.GetActiveScene().path;
-			var config = NetworkProjectConfigAsset.Instance.Config;
+			var config = NetworkProjectConfig.Global;
 
 			if (config.TryGetSceneRef(scenePath, out sceneRef) == false)
 			{
@@ -124,7 +124,7 @@ namespace rwby
 			ClientOnDisconnectedFromServer?.Invoke(runner);
 		}
 
-		public void OnConnectRequest(NetworkRunner runner, NetworkRunnerCallbackArgs.ConnectRequest request)
+		public void OnConnectRequest(NetworkRunner runner, NetworkRunnerCallbackArgs.ConnectRequest request, byte[] token)
 		{
 			Debug.Log("Connected request");
 		}

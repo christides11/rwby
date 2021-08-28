@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.AddressableAssets;
 using System.Threading.Tasks;
 using Cysharp.Threading.Tasks;
+using UnityEngine.SceneManagement;
 
 namespace rwby
 {
@@ -21,11 +22,12 @@ namespace rwby
         [SerializeField] [TextArea] private string description;
         [SerializeField] private bool selectable;
 
-        [SerializeField] private AssetReference sceneReference;
+        //[SerializeField] private AssetReference sceneReference;
 
         public override async UniTask LoadMap(UnityEngine.SceneManagement.LoadSceneMode loadMode)
         {
-            await Addressables.LoadSceneAsync(sceneReference, loadMode);
+            await SceneManager.LoadSceneAsync(sceneName, loadMode);
+            //await Addressables.LoadSceneAsync(sceneReference, loadMode);
         }
 
         public override async UniTask UnloadMap()

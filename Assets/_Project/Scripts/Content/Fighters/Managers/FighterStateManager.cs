@@ -6,7 +6,9 @@ using UnityEngine;
 
 namespace rwby
 {
-    public class FighterStateManager : NetworkBehaviour, IFighterStateManager //HnSF.Fighters.FighterStateManager
+    [OrderBefore(typeof(FighterCombatManager))]
+    [OrderAfter(typeof(Fusion.HitboxManager))]
+    public class FighterStateManager : NetworkBehaviour, IFighterStateManager
     {
         public delegate void StateAction(IFighterBase self, ushort from, uint fromStateFrame);
         public delegate void StateFrameAction(IFighterBase self, uint preChangeFrame);
@@ -18,8 +20,8 @@ namespace rwby
         [Networked] public uint CurrentStateFrame { get; set; }
 
         protected Dictionary<ushort, FighterStateBase> states = new Dictionary<ushort, FighterStateBase>();
-        [SerializeField] protected string currentStateName;
         [SerializeField] protected FighterManager manager;
+        [SerializeField] protected FighterCombatManager combatManager;
 
         public void Tick()
         {
@@ -29,14 +31,28 @@ namespace rwby
 
         public void LateTick()
         {
-            states[CurrentState].OnLateUpdate();
+
         }
 
+        public override void FixedUpdateNetwork()
+        {
+            if (CurrentState == 0) return;
+            states[CurrentState].OnLateUpdate();
+        }
 
         public void AddState(FighterStateBase state, ushort stateNumber)
         {
             (state as FighterState).manager = manager;
             states.Add(stateNumber, state);
+        }
+
+        public void RemoveState(ushort stateNumber)
+        {
+            if(CurrentState == stateNumber)
+            {
+                return;
+            }
+            states.Remove(stateNumber);
         }
 
         public bool ChangeState(ushort state, uint stateFrame = 0, bool callOnInterrupt = true)
@@ -48,9 +64,9 @@ namespace rwby
 
                 if (callOnInterrupt)
                 {
-                    if (CurrentState != 0)
+                    if (oldState != 0)
                     {
-                        states[CurrentState].OnInterrupted();
+                        states[oldState].OnInterrupted();
                     }
                 }
                 CurrentStateFrame = stateFrame;
@@ -61,7 +77,6 @@ namespace rwby
                     states[CurrentState].Initialize();
                     CurrentStateFrame = 1;
                 }
-                currentStateName = states[CurrentState].GetName();
                 OnStatePostChange?.Invoke(manager, oldState, oldStateFrame);
                 return true;
             }
@@ -75,6 +90,15 @@ namespace rwby
                 return states[state];
             }
             return null;
+        }
+
+        public string GetCurrentStateName()
+        {
+            if(CurrentState == 0)
+            {
+                return "N/A";
+            }
+            return states[CurrentState].GetName();
         }
 
         public void IncrementFrame()

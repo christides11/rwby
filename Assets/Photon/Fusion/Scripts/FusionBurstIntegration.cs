@@ -119,7 +119,7 @@ public static unsafe class FusionBurstIntegration {
   [BurstCompile]
   public static void BurstAreaOfInterestInsertAndResovleDelegate(Simulation.AreaOfInterest* aoi, Accuracy* accuracy, Allocator* allocator, NetworkObjectRefMapPtr* map) {
     Simulation.AreaOfInterest.InsertObjects(aoi, *accuracy, allocator, map);
-    Simulation.AreaOfInterest.Resolve(aoi);
+    Simulation.AreaOfInterest.Resolve(aoi, allocator);
   }
 
   [BurstCompile]

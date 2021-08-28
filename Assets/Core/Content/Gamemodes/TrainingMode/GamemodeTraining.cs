@@ -8,6 +8,8 @@ namespace rwby
 {
     public class GamemodeTraining : GameModeBase
     {
+        public ModObjectReference botReference;
+
         public override async UniTask<bool> SetupGamemode(ModObjectReference[] componentReferences, List<ModObjectReference> content)
         {
             bool baseResult = await base.SetupGamemode(componentReferences, content);
@@ -47,9 +49,16 @@ namespace rwby
                 IFighterDefinition fighterDefinition = (IFighterDefinition)ContentManager.instance.GetContentDefinition(ContentType.Fighter, characterReference);
 
                 FighterInputManager fim = NetworkManager.singleton.FusionLauncher.NetworkRunner.Spawn(fighterDefinition.GetFighter().GetComponent<FighterInputManager>(), new Vector3(xOff, 5, 0), Quaternion.identity, c.Key);
+                fim.gameObject.name = $"Player {cm.PlayerName}";
                 cm.RPC_SetPlayer(fim);
                 xOff += 5;
             }
+
+            // Spawn BOT
+            IFighterDefinition botDefinition = (IFighterDefinition)ContentManager.instance.GetContentDefinition(ContentType.Fighter, botReference);
+            FighterInputManager botFim = NetworkManager.singleton.FusionLauncher.NetworkRunner.Spawn(botDefinition.GetFighter().GetComponent<FighterInputManager>(), new Vector3(0, 0, 5), Quaternion.identity, null);
+            botFim.gameObject.name = $"Bot";
+
             Debug.Log("Started gamemode.");
         }
     }

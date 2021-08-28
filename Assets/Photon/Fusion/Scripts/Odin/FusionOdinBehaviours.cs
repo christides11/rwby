@@ -2,7 +2,9 @@
 using UnityEngine;
 #if ODIN_INSPECTOR
 using Sirenix.OdinInspector;
+#if !FUSION_ODIN_EDITOR_ONLY
 using Sirenix.Serialization;
+#endif
 #endif
 
 namespace Fusion {
@@ -43,8 +45,11 @@ namespace Fusion {
 #endif
   public abstract unsafe class BehaviourSerializedOdin : Fusion.Behaviour
 
-#if ODIN_INSPECTOR
-    , ISerializationCallbackReceiver, ISupportsPrefabSerialization {
+#if ODIN_INSPECTOR && !FUSION_ODIN_EDITOR_ONLY
+
+    , ISerializationCallbackReceiver, 
+    
+    ISupportsPrefabSerialization {
 
     [SerializeField, HideInInspector]
     private SerializationData serializationData;
@@ -69,7 +74,7 @@ namespace Fusion {
 #endif
   public abstract unsafe class SimulationBehaviourSerializedOdin : SimulationBehaviour
 
-#if ODIN_INSPECTOR
+#if ODIN_INSPECTOR && !FUSION_ODIN_EDITOR_ONLY
     , ISerializationCallbackReceiver, ISupportsPrefabSerialization {
 
     [SerializeField, HideInInspector]
@@ -95,7 +100,7 @@ namespace Fusion {
 #endif
   public abstract unsafe class NetworkBehaviourSerializedOdin : NetworkBehaviour
 
-#if ODIN_INSPECTOR
+#if ODIN_INSPECTOR && !FUSION_ODIN_EDITOR_ONLY
     , ISerializationCallbackReceiver, ISupportsPrefabSerialization {
 
     [SerializeField, HideInInspector]

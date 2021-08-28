@@ -76,7 +76,7 @@ public class NetworkDebugStart : Fusion.Behaviour {
   [DrawIf(nameof(_showAutoClients), true, DrawIfHideType.ReadOnly)]
   public int AutoClients = 1;
 
-  bool _usingMultiPeerMode => NetworkProjectConfigAsset.Instance.Config.PeerMode == NetworkProjectConfig.PeerModes.Multiple;
+  bool _usingMultiPeerMode => NetworkProjectConfig.Global.PeerMode == NetworkProjectConfig.PeerModes.Multiple;
   bool _showAutoClients => StartMode != StartModes.Manual && _usingMultiPeerMode;
 
   /// <summary>
@@ -110,7 +110,7 @@ public class NetworkDebugStart : Fusion.Behaviour {
 
   protected virtual void Start() {
 
-    var config = NetworkProjectConfigAsset.Instance.Config;
+    var config = NetworkProjectConfig.Global;
     var isMultiPeer = config.PeerMode == NetworkProjectConfig.PeerModes.Multiple;
 
     var existingrunner = FindObjectOfType<NetworkRunner>();
@@ -157,7 +157,7 @@ public class NetworkDebugStart : Fusion.Behaviour {
 
   protected bool TryGetSceneRef(out SceneRef sceneRef) {
     var scenePath = SceneManager.GetActiveScene().path;
-    var config = NetworkProjectConfigAsset.Instance.Config;
+    var config = NetworkProjectConfig.Global;
 
     if (config.TryGetSceneRef(scenePath, out sceneRef) == false) {
       // Failed to find scene by full path, try with just name
@@ -227,7 +227,7 @@ public class NetworkDebugStart : Fusion.Behaviour {
   /// InstanceMode must be set to Multi-Peer mode, as this requires multiple <see cref="NetworkRunner"/> instances.
   /// </summary>
   public virtual void StartServerPlusClients(int clientCount) {
-    if (NetworkProjectConfigAsset.Instance.Config.PeerMode == NetworkProjectConfig.PeerModes.Multiple) {
+    if (NetworkProjectConfig.Global.PeerMode == NetworkProjectConfig.PeerModes.Multiple) {
       if (TryGetSceneRef(out var sceneRef)) {
         StartCoroutine(StartWithClients(GameMode.Server, sceneRef, clientCount));
       }
@@ -241,7 +241,7 @@ public class NetworkDebugStart : Fusion.Behaviour {
   /// InstanceMode must be set to Multi-Peer mode, as this requires multiple <see cref="NetworkRunner"/> instances.
   /// </summary>
   public void StartHostPlusClients(int clientCount) {
-    if (NetworkProjectConfigAsset.Instance.Config.PeerMode == NetworkProjectConfig.PeerModes.Multiple) {
+    if (NetworkProjectConfig.Global.PeerMode == NetworkProjectConfig.PeerModes.Multiple) {
       if (TryGetSceneRef(out var sceneRef)) {
         StartCoroutine(StartWithClients(GameMode.Host, sceneRef, clientCount));
       }
@@ -255,7 +255,7 @@ public class NetworkDebugStart : Fusion.Behaviour {
   /// InstanceMode must be set to Multi-Peer mode, as this requires multiple <see cref="NetworkRunner"/> instances.
   /// </summary>
   public void StartMultipleClients(int clientCount) {
-    if (NetworkProjectConfigAsset.Instance.Config.PeerMode == NetworkProjectConfig.PeerModes.Multiple) {
+    if (NetworkProjectConfig.Global.PeerMode == NetworkProjectConfig.PeerModes.Multiple) {
       if (TryGetSceneRef(out var sceneRef)) {
         StartCoroutine(StartWithClients(null, sceneRef, clientCount));
       }
@@ -269,7 +269,7 @@ public class NetworkDebugStart : Fusion.Behaviour {
   /// </summary>
   /// <param name="clientCount"></param>
   public void StartMultipleSharedClients(int clientCount) {
-    if (NetworkProjectConfigAsset.Instance.Config.PeerMode == NetworkProjectConfig.PeerModes.Multiple) {
+    if (NetworkProjectConfig.Global.PeerMode == NetworkProjectConfig.PeerModes.Multiple) {
       if (TryGetSceneRef(out var sceneRef)) {
         StartCoroutine(StartWithClients(GameMode.Shared, sceneRef, clientCount));
       }
@@ -370,7 +370,7 @@ public class NetworkDebugStart : Fusion.Behaviour {
     DontDestroyOnLoad(RunnerPrefab);
     RunnerPrefab.name = "Temporary Runner Prefab";
 
-    var config = NetworkProjectConfigAsset.Instance.Config;
+    var config = NetworkProjectConfig.Global;
     if (clientCount > 1 || (clientCount > 0 && serverMode.HasValue && serverMode.Value != GameMode.Shared)) {
       if (config.PeerMode != NetworkProjectConfig.PeerModes.Multiple) {
         Debug.LogError($"Instance mode must be set to {nameof(NetworkProjectConfig.PeerModes.Multiple)} to perform a debug start with server + client(s)");
@@ -429,7 +429,7 @@ public class NetworkDebugStart : Fusion.Behaviour {
     var currentScene = SceneManager.GetActiveScene();
     if (currentScene.GetSceneIndexInBuildSettings() == -1 || currentScene.GetSceneIndexInFusionSettings() == -1) {
       GUILayout.Space(4);
-      var clicked = Fusion.Editor.BehaviourEditorUtils.DrawWarnButton(new GUIContent("Add Scene To Settings", "Will add current scene to both Unity Build Settings and Fusion scene lists."), true);
+      var clicked = Fusion.Editor.BehaviourEditorUtils.DrawWarnButton(new GUIContent("Add Scene To Settings", "Will add current scene to both Unity Build Settings and Fusion scene lists."), MessageType.Warning);
       if (clicked) {
         if (currentScene.name == "") {
           UnityEditor.SceneManagement.EditorSceneManager.SaveCurrentModifiedScenesIfUserWantsTo();

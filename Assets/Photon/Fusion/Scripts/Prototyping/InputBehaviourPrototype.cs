@@ -59,6 +59,10 @@ public class InputBehaviourPrototype : Fusion.Behaviour, INetworkRunnerCallbacks
       frameworkInput.Buttons |= NetworkInputPrototype.BUTTON_RELOAD;
     }
 
+    if (Input.GetMouseButton(0)) {
+      frameworkInput.Buttons |= NetworkInputPrototype.BUTTON_FIRE;
+    }
+
     input.Set(frameworkInput);
   }
 
@@ -71,7 +75,7 @@ public class InputBehaviourPrototype : Fusion.Behaviour, INetworkRunnerCallbacks
     // shutdown any client that has failed to connect
     runner.Shutdown();
   }
-  public void OnConnectRequest(NetworkRunner runner, NetworkRunnerCallbackArgs.ConnectRequest request) { }
+  public void OnConnectRequest(NetworkRunner runner, NetworkRunnerCallbackArgs.ConnectRequest request, byte[] token) { }
   
   public void OnDisconnectedFromServer(NetworkRunner runner) {
     // shutdown any client that has disconnected from server

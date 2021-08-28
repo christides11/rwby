@@ -193,7 +193,7 @@ namespace rwby
         private bool TryGetSceneRef(out SceneRef sceneRef)
         {
             var scenePath = SceneManager.GetActiveScene().path;
-            var config = NetworkProjectConfigAsset.Instance.Config;
+            var config = NetworkProjectConfig.Global;
 
             if (config.TryGetSceneRef(scenePath, out sceneRef) == false)
             {

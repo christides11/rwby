@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 
-public class SpawnerPrototype<T> : SimulationBehaviour, IPlayerJoined, IPlayerLeft, ISceneLoaded where T : Component, ISpawnPointPrototype {
+public class SpawnerPrototype<T> : SimulationBehaviour, IPlayerJoined, IPlayerLeft, ISpawned, ISceneLoaded where T : Component, ISpawnPointPrototype {
 
 #if UNITY_EDITOR
   public override EditorHeaderBackColor EditorHeaderBackColor => EditorHeaderBackColor.Steel;
@@ -25,8 +25,8 @@ public class SpawnerPrototype<T> : SimulationBehaviour, IPlayerJoined, IPlayerLe
   public AuthorityOptions StateAuthority;
   protected bool _AllowClientObjects {
     get {
-      var config = (Runner && Runner.IsRunning) ? Runner.Config : NetworkProjectConfigAsset.Instance.Config;
-      return config.Simulation.ReplicationMode == SimulationConfig.StateReplicationModes.ClientAuthEventualConsistency;
+      var config = (Runner && Runner.IsRunning) ? Runner.Config : NetworkProjectConfig.Global;
+      return config.Simulation.Topology == SimulationConfig.Topologies.Shared;  
     }
   }
 
@@ -36,7 +36,7 @@ public class SpawnerPrototype<T> : SimulationBehaviour, IPlayerJoined, IPlayerLe
     spawnManager = GetComponent<ISpawnPointManagerPrototype<T>>();
   }
 
-  public override void Spawned() {
+  public void Spawned() {
 
     if (SpawnMethod != SpawnMethods.AutoOnNetworkStart)
       return;

@@ -17,7 +17,7 @@ public class ToggleRunnerProvideInput : Fusion.Behaviour {
 
   public void Awake() {
 
-    if (NetworkProjectConfigAsset.Instance.Config.PeerMode != NetworkProjectConfig.PeerModes.Multiple) {
+    if (NetworkProjectConfig.Global.PeerMode != NetworkProjectConfig.PeerModes.Multiple) {
       Debug.LogWarning($"{nameof(ToggleRunnerProvideInput)} only works in Multi-Peer mode. Destroying.");
       Destroy(this);
       return;

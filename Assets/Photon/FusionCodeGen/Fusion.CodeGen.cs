@@ -2061,7 +2061,7 @@ namespace Fusion.CodeGen {
         var setDefaults = type.Methods.FirstOrDefault(x => x.Name == DEFAULTS_METHOD_NAME);
 
         // base method
-        var baseMethod = FindMethodInParent(asm, type, DEFAULTS_METHOD_NAME, nameof(NetworkBehaviour), 0);
+        var baseMethod = FindMethodInParent(asm, type, DEFAULTS_METHOD_NAME, nameof(NetworkBehaviour), 2);
 
         foreach (var property in type.Properties) {
           if (IsWeavableProperty(property, out var propertyInfo) == false) {
@@ -2096,8 +2096,6 @@ namespace Fusion.CodeGen {
               setDefaults.IsVirtual = true;
               setDefaults.IsHideBySig = true;
               setDefaults.IsReuseSlot = true;
-              setDefaults.Parameters.Add(new ParameterDefinition("afterSpawned", ParameterAttributes.None, asm.Import(typeof(bool))));
-              setDefaults.Parameters.Add(new ParameterDefinition("isLocalSpawn", ParameterAttributes.None, asm.Import(typeof(bool))));
 
               // call base method
               if (baseMethod != null) {
@@ -2105,21 +2103,6 @@ namespace Fusion.CodeGen {
                 bodyIL.Append(Instruction.Create(OpCodes.Ldarg_0));
                 bodyIL.Append(Instruction.Create(OpCodes.Call, baseMethod));
               }
-
-              var il  = setDefaults.Body.GetILProcessor();
-              
-              var nop = Nop();
-              il.Append(Ldarg_1());
-              il.Append(Brfalse(nop));
-              il.Append(Ret());
-              il.Append(nop);
-              
-              nop = Nop();
-              il  = setDefaults.Body.GetILProcessor();
-              il.Append(Ldarg_2());
-              il.Append(Brfalse(nop));
-              il.Append(Ret());
-              il.Append(nop);
 
               type.Methods.Add(setDefaults);
             }
@@ -2780,13 +2763,22 @@ namespace Fusion.CodeGen {
       ILPostProcessResult result;
       var log = new ILWeaverLog();
 
+
       if (!ILWeaverSettings.ValidateConfig(out var status, out var readException)) {
         string message;
 
         switch (status) {
-          case ILWeaverSettings.ConfigStatus.NotFound:
-            message = $"Fusion ILWeaver config error: {nameof(NetworkProjectConfig)} not found at {ILWeaverSettings.NetworkProjectConfigPath}, weaving stopped. " +
-              $"Implement {nameof(ILWeaverSettings)}.OverrideNetworkProjectConfigPath in Fusion.CodeGen.User.cs to change the config's location.";
+          case ILWeaverSettings.ConfigStatus.NotFound: {
+
+              var candidates = Directory.GetFiles("Assets", "*.fusion", SearchOption.AllDirectories);
+
+              message = $"Fusion ILWeaver config error: {nameof(NetworkProjectConfig)} not found at {ILWeaverSettings.NetworkProjectConfigPath}, weaving stopped. " +
+                $"Implement {nameof(ILWeaverSettings)}.OverrideNetworkProjectConfigPath in Fusion.CodeGen.User.cs to change the config's location.";
+
+              if (candidates.Any()) {
+                message += $" Possible candidates are: {(string.Join(", ", candidates))}.";
+              }
+            }
             break;
 
           case ILWeaverSettings.ConfigStatus.NotAYAMLFile:
@@ -3916,6 +3908,10 @@ namespace Fusion.CodeGen {
   using System.Collections.Generic;
   using System.IO;
   using System.Linq;
+  using System.Runtime.Serialization.Json;
+  using System.Text;
+  using System.Xml.Linq;
+  using System.Xml.XPath;
 
   static partial class ILWeaverSettings {
 
@@ -3927,7 +3923,7 @@ namespace Fusion.CodeGen {
       ReadException
     }
 
-    const string DefaultNetworkProjectConfigPath = "Assets/Photon/Fusion/Resources/NetworkProjectConfig.asset";
+    const string DefaultNetworkProjectConfigPath = "Assets/Photon/Fusion/Resources/NetworkProjectConfig.fusion";
 
     static partial void OverrideNetworkProjectConfigPath(ref string path);
 
@@ -3939,34 +3935,34 @@ namespace Fusion.CodeGen {
       }
     }
 
-    static Lazy<string[]> _configLines = new Lazy<string[]>(() => {
-      return File.ReadAllLines(NetworkProjectConfigPath);
+    static Lazy<XDocument> _config = new Lazy<XDocument>(() => {
+      using (var stream = File.OpenRead(NetworkProjectConfigPath)) {
+        var jsonReader = JsonReaderWriterFactory.CreateJsonReader(stream, new System.Xml.XmlDictionaryReaderQuotas());
+        return XDocument.Load(jsonReader);
+      }
     });
 
-
     static Lazy<AccuracyDefaults> _accuracyDefaults = new Lazy<AccuracyDefaults>(() => {
-      var lines = _configLines.Value;
-      var accuracyDefaultsLines = GetYamlPropertyLines(nameof(NetworkProjectConfigAsset.Config.AccuracyDefaults), lines);
+
+      var element = GetElementOrThrow(_config.Value.Root, nameof(NetworkProjectConfig.AccuracyDefaults));
 
       AccuracyDefaults defaults = new AccuracyDefaults();
-      var t = ParseAccuracies(accuracyDefaultsLines, nameof(AccuracyDefaults.coreKeys), nameof(AccuracyDefaults.coreVals));
-      defaults.coreKeys = t.Item1;
-      defaults.coreVals = t.Item2;
 
-      t = ParseAccuracies(accuracyDefaultsLines, nameof(AccuracyDefaults.tags), nameof(AccuracyDefaults.values));
-      defaults.tags = t.Item1.ToList();
-      defaults.values = t.Item2.ToList();
+      {
+        var t = ParseAccuracies(element, nameof(AccuracyDefaults.coreKeys), nameof(AccuracyDefaults.coreVals));
+        defaults.coreKeys = t.Item1;
+        defaults.coreVals = t.Item2;
+      }
+
+      {
+        var t = ParseAccuracies(element, nameof(AccuracyDefaults.tags), nameof(AccuracyDefaults.values));
+        defaults.tags = t.Item1.ToList();
+        defaults.values = t.Item2.ToList();
+      }
 
       defaults.RebuildLookup();
       return defaults;
     });
-
-    static Lazy<HashSet<string>> _assembliesToWeave = new Lazy<HashSet<string>>(() => {
-      var lines = _configLines.Value;
-      var assembliesLines = GetYamlPropertyLines(nameof(NetworkProjectConfigAsset.AssembliesToWeave), lines);
-      return new HashSet<string>(assembliesLines.Select(x => x.TrimStart('-', ' ')), StringComparer.OrdinalIgnoreCase);
-    });
-
 
 
     static partial void GetAccuracyPartial(string tag, ref float? accuracy) {
@@ -3975,7 +3971,7 @@ namespace Fusion.CodeGen {
           accuracy = result._value;
         }
       } catch (Exception ex) {
-        throw new Exception("WTF is wrong with " + tag, ex);
+        throw new Exception("Error getting accuracy " + tag, ex);
       }
     }
 
@@ -3991,12 +3987,8 @@ namespace Fusion.CodeGen {
           return false;
         }
 
-        var lines = _configLines.Value;
-        // https://docs.unity3d.com/Manual/YAMLSceneExample.html
-        if (lines.Length < 2 || lines[0].Trim() != "%YAML 1.1" || lines[1].Trim() != "%TAG !u! tag:unity3d.com,2011:") {
-          errorType = ConfigStatus.NotAYAMLFile;
-          return false;
-        }
+        _ = _config.Value;
+        _ = _assembliesToWeave.Value;
 
         errorType = ConfigStatus.Ok;
         return true;
@@ -4007,69 +3999,65 @@ namespace Fusion.CodeGen {
       }
     }
 
-    private static int GetLineIndent(string line) {
-      int i;
-      for (i = 0; i < line.Length; ++i) {
-        if (line[i] != ' ') {
-          break;
-        }
+    static XElement GetElementOrThrow(XElement element, string name) {
+      var child = element.Element(name);
+      if (child == null) {
+        throw new InvalidOperationException($"Node {name} not found in config. (path: {element.GetXPath()})");
       }
-      return i;
+      return child;
     }
 
-    private static string[] GetYamlPropertyLines(string fieldName, string[] lines) {
+    static IEnumerable<XElement> GetElementsOrThrow(XElement element, string name) {
+      return GetElementOrThrow(element, name).Elements();
+    }
+
+    static float GetElementAsFloat(XElement element, string name) {
+      var child = GetElementOrThrow(element, name);
+      try {
+        return (float)child;
+      } catch (Exception ex) {
+        throw new InvalidOperationException($"Unable to cast {child.GetXPath()} to float", ex);
+      }
+    }
+
+    static (string[], Accuracy[]) ParseAccuracies(XElement element, string keyName, string valueName) {
+      var keys = GetElementsOrThrow(element, keyName).Select(x => x.Value).ToArray();
+      var values = GetElementsOrThrow(element, valueName).Select(x => GetElementAsFloat(x, nameof(Accuracy._value)))
+                      .Zip(keys, (val, key) => new Accuracy(key, val))
+                      .ToArray();
+      return (keys, values);
+    }
+
+    static Lazy<HashSet<string>> _assembliesToWeave = new Lazy<HashSet<string>>(() => {
+      return new HashSet<string>(GetElementsOrThrow(_config.Value.Root, nameof(NetworkProjectConfig.AssembliesToWeave)).Select(x => x.Value));
+    });
+
+    public static string GetXPath(this XElement element) {
+      var ancestors = element.AncestorsAndSelf()
+        .Select(x => {
+          int index = x.GetIndexPosition();
+          string name = x.Name.LocalName;
+          return (index == -1) ? $"/{name}" : $"/{name}[{index}]";
+        });
+
+      return string.Concat(ancestors.Reverse());
+    }
+
+    public static int GetIndexPosition(this XElement element) {
+      if (element.Parent == null) {
+        return -1;
+      }
 
       int i = 0;
-      int indent = 0;
-
-      var prefix = $"{fieldName}:";
-
-      // find the start and the indent
-      for (; i < lines.Length; ++i) {
-        indent = GetLineIndent(lines[i]);
-        if (lines[i].Length - indent >= prefix.Length && string.Compare(prefix, 0, lines[i], indent, prefix.Length) == 0) {
-          ++i;
-          break;
+      foreach (var sibling in element.Parent.Elements(element.Name)) {
+        if (sibling == element) {
+          return i;
         }
+        i++;
       }
 
-      int startIndex = i;
-
-      // now collect all the lines with this indent
-      for (; i < lines.Length; ++i) {
-        var line = lines[i];
-        var lineIndent = GetLineIndent(line);
-        if (lineIndent < indent || (indent == lineIndent && line[lineIndent] != '-')) {
-          break;
-        }
-      }
-
-      if (startIndex < i) {
-        return lines.Skip(startIndex)
-          .Take(i - startIndex)
-          .Select(x => x.Substring(indent))
-          .ToArray();
-      } else {
-        return Array.Empty<string>();
-      }
+      return -1;
     }
-
-    private static (string[], Accuracy[]) ParseAccuracies(string[] lines, string keysName, string defsName) {
-      var coreKeys = GetYamlPropertyLines($"{keysName}:", lines)
-        .Select(x => x.TrimStart('-', ' '))
-        .ToArray();
-
-      var valuePrefix = $"{nameof(Accuracy._value)}: ";
-      var coreDefs = GetYamlPropertyLines($"{defsName}:", lines)
-        .Select(x => x.TrimStart('-', ' '))
-        .Where(x => x.StartsWith(valuePrefix))
-        .Select(x => float.Parse(x.Substring(valuePrefix.Length)))
-        .Zip(coreKeys, (val, name) => new Accuracy(name, val))
-        .ToArray();
-
-      return (coreKeys, coreDefs);
-    }
-
   }
 }
 #endif

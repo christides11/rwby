@@ -10,13 +10,12 @@ namespace rwby
 {
     public class FighterCharacterController : NetworkBehaviour
     {
-        [Networked] public Vector3 moveVector { get; set; }
-
         public NetworkCharacterController ncc;
-
         protected Transform _transform;
 
-        public bool Grounded;
+        public Movement LastMovement;
+
+        public LayerMask groundMask;
 
         public void Awake()
         {
@@ -29,17 +28,17 @@ namespace rwby
             ncc.Jumped = true;
         }
 
-        public void Move(Vector3 movementForce, float gravityForce, ICallbacks callback = null, LayerMask? layerMask = null)
+        public void Move(Vector3 movementForce, float gravityForce, ICallbacks callback = null)
         {
-            if(movementForce.y > 0)
+            if(gravityForce > 0)
             {
                 ForceUnground();
             }
 
             var dt = Runner.DeltaTime;
-            var movementPack = ncc.ComputeRawMovement(movementForce, callback, layerMask);
+            var movementPack = ncc.ComputeRawMovement(movementForce.normalized, callback, groundMask);
 
-            ComputeRawSteer(ref movementPack, dt, gravityForce);
+            ComputeRawSteer(ref movementPack, dt, movementForce, gravityForce);
 
             var movement = ncc.Velocity * dt;
             if (movementPack.Penetration > float.Epsilon)
@@ -57,34 +56,36 @@ namespace rwby
             _transform.position += movement;
 
 #if DEBUG
-            //LastMovement = movementPack;
+            LastMovement = movementPack;
 #endif
         }
 
-        void ComputeRawSteer(ref Movement movementPack, float dt, float gravityForce)
+        void ComputeRawSteer(ref Movement movementPack, float dt, Vector3 movementForce, float gravityForce)
         {
-            Grounded = movementPack.Grounded;
-
+            ncc.Grounded = movementPack.Grounded;
             var current = ncc.Velocity;
+
+            if(movementPack.Contacts == 1 && Vector3.Angle(Vector3.up, movementPack.GroundNormal) > ncc.Config.MaxSlope)
+            {
+                ncc.Grounded = false;
+            }
+
             switch (movementPack.Type)
             {
                 case MovementType.FreeFall:
-                    ncc.Grounded = false;
-                    current = movementPack.Tangent * dt;
+                    current = movementForce;
                     current.y = gravityForce;
                     break;
                 case MovementType.Horizontal:
-                    ncc.Grounded = true;
-                    current = movementPack.Tangent * dt;
+                    current = movementForce;
                     current.y = gravityForce;
                     break;
                 case MovementType.SlopeFall:
-                    ncc.Grounded = true;
-                    current = movementPack.SlopeTangent * dt;
+                    current = movementPack.SlopeTangent;
                     current.y = gravityForce;
                     break;
                 case MovementType.None:
-                    ncc.Grounded = true;
+                    current = movementForce;//movementPack.Tangent;
                     current.y = gravityForce;
                     break;
             }

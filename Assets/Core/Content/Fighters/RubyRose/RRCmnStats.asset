@@ -1,0 +1,144 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 35e502ecbe84ff54e8b00da2946dc891, type: 3}
+  m_Name: RRCmnStats
+  m_EditorClassIdentifier: 
+  groundFriction: 60
+  jumpSquatFriction: 0
+  walkMaxSpeed: 9
+  walkBaseAcceleration: 18
+  walkAcceleration: 18
+  walkRotationSpeed: 15.708
+  walkAccelerationFromDot:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: -1
+      value: 2
+      inSlope: -1
+      outSlope: -1
+      tangentMode: 34
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 34
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  runMaxSpeed: 17
+  runBaseAcceleration: 48.57143
+  runAcceleration: 48.57143
+  runRotationSpeed: 31.41593
+  runAccelerationFromDot:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: -1
+      value: 0.4
+      inSlope: 0.057632934
+      outSlope: 0.057632934
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0.22916667
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 0.3
+      outSlope: 0.3
+      tangentMode: 34
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  jumpSquatFrames: 4
+  jumpMinimumFrames: 3
+  jumpMaxTime: 38
+  jumpMaxHeight: 3.5
+  jumpConversedHorizontalMomentum: 0
+  jumpHorizontalVelocity: 0
+  fallGravityMultiplier: 2
+  airJumps: 1
+  airJumpMinimumFrames: 5
+  airJumpMaxTime: 40
+  airJumpMaxHeight: 2
+  airJumpHorizontalMomentum: 4
+  airDashes: 2
+  airDashFrames: 16
+  airDashStartup: 3
+  airDashMaxMagnitude: 20
+  airDashForce: 23
+  airDashGravityDelay: 13
+  airDashFrictionDelay: 100
+  airDashFriction: 0
+  aerialMaxFallSpeed: 14
+  aerialMaxSpeed: 17
+  aerialBaseAcceleration: 6.666667
+  aerialAcceleration: 6
+  aerialDeceleration: 0
+  aerialAccelerationFromDot:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: -1
+      value: 0.5
+      inSlope: 0.5
+      outSlope: 0.5
+      tangentMode: 34
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 34
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  hitstunHoldPositionFor: 10
+  hitstunGravity: 46
+  hitstunMaxFallSpeed: 100
+  hitstunGroundFriction: 60
+  inertiaFriction: 0

@@ -8,5 +8,9 @@ namespace rwby
         public string bootLoaderSceneName = "Singletons";
         public string mainMenuSceneName = "MainMenu";
         public AddressablesModDefinition baseMod;
+        public PlayerCamera playerCameraPrefab;
+        public GameObject followVirtualCameraPrefab;
+        public Hurtbox hurtboxPrefab;
+        public bool showHitboxes;
     }
 }

@@ -4,6 +4,13 @@
         <name>Fusion.Realtime</name>
     </assembly>
     <members>
+        <member name="T:Fusion.Photon.Realtime.FusionRelayClient">
+            <summary>
+            Fusion Realtime Client
+            
+            This will deal with all communication done with the Photon Cloud
+            </summary>
+        </member>
         <member name="F:Fusion.Photon.Realtime.FusionRelayClient.KeepAliveInBackground">
             <summary>Defines for how long the Fallback Thread should keep the connection, before it may time out as usual.</summary>
             <remarks>We want to the Client to keep it's connection when an app is in the background (and doesn't call Update / Service Clients should not keep their connection indefinitely in the background, so after some milliseconds, the Fallback Thread should stop keeping it up.</remarks>
@@ -18,6 +25,21 @@
             <param name="bufferLength">Buffer Length</param>
             <param name="reliable">Flag to set reliability on the Event</param>
             <returns>True if the event was sent, false otherwise</returns>
+        </member>
+        <member name="M:Fusion.Photon.Realtime.FusionRelayClient.ExtractData(System.Object,System.Byte*,System.Int32@)">
+            <summary>
+            Utility method used to extract the content of a <see cref="T:ExitGames.Client.Photon.ByteArraySlice"/> from a object holder.
+            This is necessary so there are no references of Photon Lib DLLs other than on the Fusion.Realtime project
+            </summary>
+            <param name="dataObj">Data Object Holder, this must be a reference of a <see cref="T:ExitGames.Client.Photon.ByteArraySlice"/></param>
+            <param name="buffer">Buffer to write the content of the array slice</param>
+            <param name="bufferLength">Output size of the written buffer</param>
+            <returns>True if the extraction was done correctly, false otherwise</returns>
+        </member>
+        <member name="M:Fusion.Photon.Realtime.FusionRelayClient.Update">
+            <summary>
+            Used to keep the client communication
+            </summary>
         </member>
         <member name="M:Fusion.Photon.Realtime.Async.LoadBalancingClientAsyncExtensions.ConnectToMasterAsync(Fusion.Photon.Realtime.LoadBalancingClient,Fusion.Photon.Realtime.AppSettings,System.Boolean)">
             <summary>
@@ -184,7 +206,19 @@
         <member name="F:Fusion.Photon.Realtime.AppSettings.AppIdVoice">
             <summary>AppId for Photon Voice.</summary>
         </member>
-        <!-- Badly formed XML comment ignored for member "F:Fusion.Photon.Realtime.AppSettings.BestRegionSummaryFromStorage" -->
+        <member name="F:Fusion.Photon.Realtime.AppSettings.BestRegionSummaryFromStorage">
+             <summary>Set to a previous BestRegionSummary value before connecting.</summary>
+             <remarks>
+             This is a value used when the client connects to the "Best Region".<br/>
+             If this is null or empty, all regions gets pinged. Providing a previous summary on connect,
+             speeds up best region selection and makes the previously selected region "sticky".<br/>
+            
+             Unity clients should store the BestRegionSummary in the PlayerPrefs.
+             You can store the new result by implementing <see cref="M:Fusion.Photon.Realtime.IConnectionCallbacks.OnConnectedToMaster"/>.
+             If <see cref="F:Fusion.Photon.Realtime.LoadBalancingClient.SummaryToCache"/> is not null, store this string.
+             To avoid storing the value multiple times, you could set SummaryToCache to null.
+             </remarks>
+        </member>
         <member name="F:Fusion.Photon.Realtime.AppSettings.EnableProtocolFallback">
             <summary>Enables a fallback to another protocol in case a connect to the Name Server fails.</summary>
             <remarks>See: LoadBalancingClient.EnableProtocolFallback.</remarks>

@@ -573,11 +573,62 @@
             <param name="netType">Specifies UDP network type.</param>
             <param name="publicEndPoint">Public IP end point.</param>
         </member>
+        <member name="P:Fusion.Protocol.BitStream.Size">
+            <summary>
+            Total size in BITS of the buffer
+            </summary>
+        </member>
+        <member name="P:Fusion.Protocol.BitStream.Position">
+            <summary>
+            Current read/write position in BITS inside the Buffer
+            </summary>
+        </member>
+        <member name="P:Fusion.Protocol.BitStream.BytesRequired">
+            <summary>
+            Size of written buffer in BYTES
+            Ammount of bytes required considering the total of written bytes
+            </summary>
+        </member>
+        <member name="P:Fusion.Protocol.BitStream.Capacity">
+            <summary>
+            Total Size in BYTES of the Buffer
+            </summary>
+        </member>
+        <member name="P:Fusion.Protocol.BitStream.Done">
+            <summary>
+            Signal if the buffer was completely written
+            </summary>
+        </member>
+        <member name="P:Fusion.Protocol.BitStream.Overflowing">
+            <summary>
+            Signal if the buffer is overflowing
+            </summary>
+        </member>
+        <member name="P:Fusion.Protocol.BitStream.Writing">
+            <summary>
+            Signal if the Buffer is in Write Mode
+            </summary>
+        </member>
+        <member name="P:Fusion.Protocol.BitStream.Reading">
+            <summary>
+            Signal if the Buffer is in Read Mode
+            </summary>
+        </member>
+        <member name="P:Fusion.Protocol.BitStream.Data">
+            <summary>
+            Internal Byte Array
+            </summary>
+        </member>
         <member name="T:Fusion.Protocol.Message">
             <summary>
             Base Protocol Message.
             
             This concentrates the basics for serialization and cloning
+            </summary>
+        </member>
+        <member name="F:Fusion.Protocol.Message.CUSTOM_DATA_LENGHT">
+            <summary>
+            Max Lenght of the Custom Data
             </summary>
         </member>
         <member name="F:Fusion.Protocol.Message.ProtocolVersion">
@@ -595,6 +646,11 @@
             Represents an Invalid Version
             </summary>
         </member>
+        <member name="P:Fusion.Protocol.Message.CustomData">
+            <summary>
+            Custom data send along side any Protocol Message
+            </summary>
+        </member>
         <member name="M:Fusion.Protocol.Message.Clone">
             <summary>
             Creates a copy of this Message
@@ -607,13 +663,13 @@
             </summary>
             <param name="protocolMessage">Protocol Message Version</param>
         </member>
-        <member name="M:Fusion.Protocol.Message.Serialize(Fusion.Sockets.NetBitBufferSerializer*)">
+        <member name="M:Fusion.Protocol.Message.Serialize(Fusion.Protocol.BitStream)">
             <summary>
-            Serialize this Message into or from a <see cref="T:Fusion.Sockets.NetBitBuffer"/>.
+            Serialize this Message into or from a <see cref="T:Fusion.Protocol.BitStream"/>.
             </summary>
-            <param name="serializer">Buffer to read from or write into the data of the Message</param>
+            <param name="stream">Buffer to read from or write into the data of the Message</param>
         </member>
-        <member name="M:Fusion.Protocol.Message.SerializeProtected(Fusion.Sockets.NetBitBufferSerializer*)">
+        <member name="M:Fusion.Protocol.Message.SerializeProtected(Fusion.Protocol.BitStream)">
             <summary>
             Used by the specialized versions of Message to serialize its data
             </summary>
@@ -828,6 +884,11 @@
             <see cref="!:https://doc-api.photonengine.com/en/dotnet/current/class_exit_games_1_1_client_1_1_photon_1_1_event_data.html#a85c3ee46f89cc41d459ababb1d55d150"/>
             </summary>
         </member>
+        <member name="T:Fusion.Protocol.ProtocolSerializer">
+            <summary>
+            Protocol Messages Serializer
+            </summary>
+        </member>
         <member name="F:Fusion.Protocol.ProtocolMessageVersion.Invalid">
             <summary>
             Invalid Version
@@ -841,6 +902,11 @@
         <member name="F:Fusion.Protocol.ProtocolMessageVersion.V1_1_0">
             <summary>
             Added Support to Fusion Serialization Version
+            </summary>
+        </member>
+        <member name="F:Fusion.Protocol.ProtocolMessageVersion.V1_2_0">
+            <summary>
+            Added Custom Data to all Protocol Messages
             </summary>
         </member>
         <member name="F:Fusion.Protocol.ProtocolMessageVersion.LATEST">

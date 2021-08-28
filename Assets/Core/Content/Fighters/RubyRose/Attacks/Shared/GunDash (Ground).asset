@@ -1,0 +1,272 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7bf9a8a0f22d37c43902ca4d8d9a9197, type: 3}
+  m_Name: GunDash (Ground)
+  m_EditorClassIdentifier: 
+  attackName: Gun Dash (Ground)
+  description: 
+  useState: 0
+  stateOverride: 0
+  length: 35
+  hurtboxDefinition: {fileID: 0}
+  commandAttackCancelWindows: []
+  chargeWindows: []
+  hitboxGroups:
+  - id: 0
+  events:
+  - id: 1
+  - id: 2
+  - id: 3
+  - id: 4
+  - id: 5
+  cancels: []
+  firstActableFrame: 100
+  references:
+    version: 1
+    00000000:
+      type: {class: HitboxGroup, ns: rwby, asm: rwby.csharp}
+      data:
+        ID: 0
+        activeFramesStart: 6
+        activeFramesEnd: 6
+        boxes:
+        - id: 6
+        attachToEntity: 1
+        attachTo: 
+        chargeLevelNeeded: -1
+        chargeLevelMax: 1
+        hitboxHitInfo:
+          id: 7
+        attachPoint: 
+    00000001:
+      type: {class: AttackEventDefinition, ns: HnSF.Combat, asm: HnSF}
+      data:
+        nickname: Rotation
+        active: 1
+        onHitCheck: 0
+        onHitHitboxGroup: 0
+        onHitIDGroup: 0
+        startFrame: 6
+        endFrame: 6
+        attackEvent:
+          id: 8
+        conditions: []
+        variables:
+          intVars: 
+          floatVars: []
+          objectVars: []
+          curveVars: []
+        inputCheckTiming: 0
+        inputCheckStartFrame: 1
+        inputCheckEndFrame: 1
+        input:
+          executeWindow: 3
+          executeInputs: []
+          sequenceWindow: 8
+          sequenceInputs: []
+        chargeLevelMin: 0
+        chargeLevelMax: 0
+        inputCheckProcessed: 0
+    00000002:
+      type: {class: AttackEventDefinition, ns: HnSF.Combat, asm: HnSF}
+      data:
+        nickname: M.Forward
+        active: 1
+        onHitCheck: 0
+        onHitHitboxGroup: 0
+        onHitIDGroup: 0
+        startFrame: 6
+        endFrame: 6
+        attackEvent:
+          id: 9
+        conditions: []
+        variables:
+          intVars: 
+          floatVars: []
+          objectVars: []
+          curveVars: []
+        inputCheckTiming: 0
+        inputCheckStartFrame: 1
+        inputCheckEndFrame: 1
+        input:
+          executeWindow: 3
+          executeInputs: []
+          sequenceWindow: 8
+          sequenceInputs: []
+        chargeLevelMin: 0
+        chargeLevelMax: 0
+        inputCheckProcessed: 0
+    00000003:
+      type: {class: AttackEventDefinition, ns: HnSF.Combat, asm: HnSF}
+      data:
+        nickname: M.Up
+        active: 1
+        onHitCheck: 0
+        onHitHitboxGroup: 0
+        onHitIDGroup: 0
+        startFrame: 6
+        endFrame: 6
+        attackEvent:
+          id: 10
+        conditions: []
+        variables:
+          intVars: 
+          floatVars: []
+          objectVars: []
+          curveVars: []
+        inputCheckTiming: 0
+        inputCheckStartFrame: 5
+        inputCheckEndFrame: 5
+        input:
+          executeWindow: 1
+          executeInputs: []
+          sequenceWindow: 1
+          sequenceInputs:
+          - inputType: 0
+            buttonID: 12
+            stickDirection: {x: 0, y: 0}
+            directionDeviation: 0
+        chargeLevelMin: 0
+        chargeLevelMax: 0
+        inputCheckProcessed: 0
+    00000004:
+      type: {class: AttackEventDefinition, ns: HnSF.Combat, asm: HnSF}
+      data:
+        nickname: G.Friction
+        active: 1
+        onHitCheck: 0
+        onHitHitboxGroup: 0
+        onHitIDGroup: 0
+        startFrame: 10
+        endFrame: 30
+        attackEvent:
+          id: 11
+        conditions: []
+        variables:
+          intVars: 
+          floatVars: []
+          objectVars: []
+          curveVars: []
+        inputCheckTiming: 0
+        inputCheckStartFrame: 1
+        inputCheckEndFrame: 1
+        input:
+          executeWindow: 3
+          executeInputs: []
+          sequenceWindow: 8
+          sequenceInputs: []
+        chargeLevelMin: 0
+        chargeLevelMax: 0
+        inputCheckProcessed: 0
+    00000005:
+      type: {class: AttackEventDefinition, ns: HnSF.Combat, asm: HnSF}
+      data:
+        nickname: Gravity
+        active: 1
+        onHitCheck: 0
+        onHitHitboxGroup: 0
+        onHitIDGroup: 0
+        startFrame: 30
+        endFrame: 35
+        attackEvent:
+          id: 12
+        conditions: []
+        variables:
+          intVars: 
+          floatVars: []
+          objectVars: []
+          curveVars: []
+        inputCheckTiming: 0
+        inputCheckStartFrame: 1
+        inputCheckEndFrame: 1
+        input:
+          executeWindow: 3
+          executeInputs: []
+          sequenceWindow: 8
+          sequenceInputs: []
+        chargeLevelMin: 0
+        chargeLevelMax: 0
+        inputCheckProcessed: 0
+    00000006:
+      type: {class: BoxDefinition, ns: HnSF.Combat, asm: HnSF}
+      data:
+        shape: 1
+        offset: {x: 0, y: 0.5, z: 0}
+        size: {x: 0, y: 0, z: 0}
+        rotation: {x: 0, y: 0, z: 0}
+        radius: 1.5
+        height: 0
+    00000007:
+      type: {class: HitInfo, ns: rwby, asm: rwby.csharp}
+      data:
+        hitType: 0
+        hitKills: 1
+        continuousHit: 0
+        spaceBetweenHits: 0
+        opponentResetXForce: 1
+        opponentResetYForce: 1
+        autoLink: 0
+        forceType: 0
+        forceRelation: 0
+        attackerHitstop: 4
+        hitstop: 4
+        hitstun: 60
+        airOnly: 0
+        groundOnly: 0
+        causesTumble: 0
+        knockdown: 0
+        groundBounces: 0
+        groundBounceForce: 0
+        wallBounces: 0
+        wallBounceForce: 0
+        damageOnHit: 0
+        opponentForce: {x: 0, y: 10, z: 10}
+        forceIncludeYForce: 0
+        opponentForceMultiplier: 1
+        opponentMaxMagnitude: 1
+        opponentMinMagnitude: 1
+        throwConfirm: {fileID: 0}
+        holdVelocityTime: 5
+        opponentForceAir: {x: 0, y: 0, z: 0}
+        opponentFriction: 50
+        opponentGravity: 18
+        hitSound: {fileID: 0}
+        hangTime: 5
+        blockType: 0
+        blockstun: 0
+        blockForce: {x: 0, y: 0, z: 0}
+        blockForceAir: {x: 0, y: 0, z: 0}
+    00000008:
+      type: {class: RotationSet, ns: rwby.Combat.AttackEvents, asm: rwby.csharp}
+    00000009:
+      type: {class: ForceSet, ns: rwby.Combat.AttackEvents, asm: rwby.csharp}
+      data:
+        applyXZForce: 1
+        applyYForce: 0
+        xzForce: {x: 0, y: 9}
+        yForce: 0
+    0000000A:
+      type: {class: ForceSet, ns: rwby.Combat.AttackEvents, asm: rwby.csharp}
+      data:
+        applyXZForce: 0
+        applyYForce: 1
+        xzForce: {x: 0, y: 0}
+        yForce: 14
+    0000000B:
+      type: {class: ApplyFriction, ns: rwby.Combat.AttackEvents, asm: rwby.csharp}
+      data:
+        useXZFriction: 0
+        useYFriction: 1
+        xzFriction: 0
+        yFriction: 40
+    0000000C:
+      type: {class: ApplyGravity, ns: rwby.Combat.AttackEvents, asm: rwby.csharp}

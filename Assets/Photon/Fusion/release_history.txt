@@ -1,6 +1,207 @@
+# 0.7.0
+
+## Beta Nightly
+
+### Build 276 (Aug 26, 2021)
+
+**What's New**
+
+- Added ILocalPrefabCreated and IRemotePrefabCreated interfaces that can be used on NetworkBehaviour to get a callback _before_ Spawned is invoked to setup internal state on the behaviour
+
+**Changes**
+
+- Simplified PlayerJoined/PlayerLeft callback to always happen during a tick instead of randomly before/after ticks
+
+**Bug Fixes**
+
+- Fixed: Issue with remote prefabs not being created
+- Fixed: Issue with Defaults overriding received state for NRB/NT during first rollback
+
+### Build 274 (Aug 25, 2021)
+
+- Fusion SDK version 0.7.0 released
+
 # 0.6.0
 
 ## Beta Nightly
+
+### Build 273 (Aug 25, 2021)
+
+**What's New**
+
+- Added changed state cache sharing for EC
+
+**Changes**
+
+- Improved Allocator.Copy performance massively
+
+**Bug Fixes**
+
+- Fixed: Memory leak on client when relasing SimulationInput instances
+- Fixed: `NetworkBehaviour` sub classes not calling base types' `Defaults(bool,bool)`
+- Fixed: SimulationInput.Buffer.CopySortedTo alloc
+- Fixed: Removed extra unnecessary state copy done in delta snapshots transformed mode by server
+
+### Build 272 (Aug 25, 2021)
+
+**Breaking Changes**
+
+- SimulationBehaviour.GetInput moved down to NetworkBehaviour, if you need to get input inside of a SimulationBehaviour use Object.Runner.TryGetInputForPlayer
+- Spawned() and Despawned() virtual methods moved down to NetworkBehaviour, not available on SimulationBehaviour anymore. If you need Spawned/Despawned callbacks on a SimulationBehaviour use the ISpawned and IDespawned callback interface
+- SimulationBehaviour.StateAuthorityChanged was removed, use the new IStateAuthorityChanged callback interface instead
+
+**What's New**
+
+- Added support for connection token supplied via StartGameArgs.ConnectionToken. Not used in shared mode
+- Added StartGameArgs.CustomCallbackInterfaces to allow users to hook into our O(1) constant time callback lookup
+- Added NetworkRunner.GetInterfaceListNext and NetworkRunner.GetInterfaceListPrev to get prev/next of an interface simulation behaviour linked list
+- Added IsFirstTick and IsForward
+
+**Bug Fixes**
+
+- Fixed: GetInterfaceListHead now uses the type parameter properly
+- Fixed: Cant use pointers outside of unsafe compiler error in NetworkObjectGuidDrawer
+- Fixed: Prefabs for remote objects are now properly spawned inside of a tick
+- Fixed: IsLastTick now has correct value during resimulations
+- Fixed: Scan for matching predicted spawned object now uses PredictionKey and PrefabType instead of only PredictionKey
+- Fixed: OnBeforeSpawned callback is now invoked for predicted spawns when they are successful
+- Fixed: IBeforeClientPredictionReset and IAfterClientPredictionReset are now called properly
+- Fixed: StateAuthorityChanged is now called properly in all cases
+- Fixed: Burst integration parameter call amount and order
+- Fixed: NetworkRigidBody now properly replicates IsKinematic == true to proxies
+- Fixed: NetworkRigidbody now respects and uses Space Local setting
+
+### Build 271 (Aug 24, 2021)
+
+**What's New**
+
+- QueryTriggerInteraction parameter for lag compensated raycasts (when including PhysX)
+
+**Bug Fixes**
+
+- Fixed: Lag compensated API can also be used in shared mode (queries are local to client)
+- Fixed: Bug with invalid message sequence number assert check
+- Fixed: Same bit/byte copy issue on plugin code
+- Fixed: Issue with CloudCommunicator copying memory using bit length instead of byte length of buffer
+- Fixed: A rare memory leak related to connection token
+- Fixed: Incorrect Free order on native socket shutdown that could lead to rare crash
+- Fixed: Minor memory leak on net bit buffer stacks
+
+### Build 268 (Aug 23, 2021)
+
+**What's New**
+
+- Serialized Accuracy retains hash reference to user defined tags even if those tags are deleted in NetworkProjectConfig, and will use AccuracyDefaults.Default for their value until the tag is restored, or a different tag is selected for the Accuracy's global setting
+
+**Changes**
+
+- Accuracy struct defaults to AccuracyDefaults.Default rather than AccuracyDefaults.Uncompressed
+
+### Build 266 (Aug 20, 2021)
+
+**What's New**
+
+- `Fusion.CodeGen.Trigger` asset that forces weaver to run if `AssembliesToWeaver` or `Accuracy` of the project config changes
+
+**Changes**
+
+- Default prefab asset container changed to "Assets/Photon/Fusion/User/NetworkPrefabAssetContainer.asset"
+- Removed 'Recompile' button from AccuracyDefaults drawer. Will be replaced by auto re-weave when needed after changes to config
+
+### Build 265 (Aug 19, 2021)
+
+**Breaking Changes**
+
+- OnConnectionRequest callback now takes an additional byte[] token parameter
+
+**What's New**
+
+- Added support for a 128 byte connection token
+- Legacy `NetworkProjectConfig` assets automatic conversion
+
+**Changes**
+
+- NetworkRunner.Connect now accepts a byte[] token parameter
+- SocketThreadingMode no longer configurable
+
+### Build 264 (Aug 19, 2021)
+
+**Breaking Changes**
+
+- `NetworkProjectConfig` format and file extension have changed. If upgrading, select your `NetworkProjectConfig` asset and click `Convert To The New Config Format` button
+
+**What's New**
+
+- ILWeaver suggest possible `NetworkProjectConfig` locations is the config is not found in the default location
+
+**Changes**
+
+- ILWeaver no longer requires global asset text serialization
+
+**Removed**
+
+- `NetworkProjectConfigAsset.Instance.Config` removed. Use `NetworkProjectConfig.Global` instead
+
+### Build 263 (Aug 19, 2021)
+
+**Breaking Changes**
+
+- Server/Host mode with Client Auth has been removed completely. Client authoritative games are only possible in shared mode from now on. Server/Host mode is always server authoritative
+- Physics Prediction has been removed in Shared Mode
+
+**What's New**
+
+- Added Runner.Topology to easily query if you are running in Client/Server or Shared mode
+
+**Changes**
+
+- PhysicsMode in NetworkProjectConfiguration is now called Server Physics Mode as it does not longer apply to Shared mode
+- ReplicationMode in NetworkProjectConfiguration now only has 'Delta Snapshots' and 'Eventual Consistency', ServerAuth prefixed and ClientAUth prefixed options are removed
+- Removed NetworkRunner.GetActiveSimulationBehaviours, use NetworkRunner.GetAllBehaviours instead
+- `HitboxManager` no longer runs on FUN if the runner is being shutdown
+
+**Bug Fixes**
+
+- Fixed: Predicted spawns are now factored into RunnerVisibilityNode handling
+- Fixed: Possible NullReferenceException on `Hitbox.OnDrawGizmos` when the Runner is being shutdown and disposed
+
+### Build 262 (Aug 18, 2021)
+
+**Bug Fixes**
+
+- Fixed: Issue with predictively spawned objects being pre-emptively flagged as failure despite the correct data from server having arrived
+- Fixed: Made sure Despawn cant be called on an object which belongs to another runner
+
+### Build 261 (Aug 18, 2021)
+
+**Bug Fixes**
+
+- Fixed: 'Add NetworkObject' button on NetworkBehaviour's inspector now works with mutli-selection
+
+### Build 260 (Aug 16, 2021)
+
+**What's New**
+
+- FUSION_ODIN_EDITOR_ONLY define added, which disables advanced Odin serialization (Sirenix.Serialization). This define needs to be added to your Unity project in order to use Odin's Editor Only mode
+- Added NetworkObject.LastReceiveTick
+- Added Simulation Culling feature
+- Added layer masks to area of interest system
+
+**Changes**
+
+- `NetworkProjectConfig` uses scene paths consistently now. However, to ensure backwards and Unity compatibility `NetworkProjectConfig.TryGetSceneRef` accepts both full scene paths and scene names
+- Renamed 'Player' config setting to 'Default Players' to better convey what it does
+- Removed 'send client input to server' configuration option for client auth mode
+- Renamed UseAreaOfInterest to UseInterestManagement in config
+
+**Bug Fixes**
+
+- Fixed: PredictionKey does not end up in game state when running in client auth mode anymore
+- Fixed: Empty Room Name when starting Server  
+Now, if no Room Name is specified, a Server peer will always create a Room with a random name
+- Fixed: `NetworkDebugStart` not adding the current scene to `NetworkProjectConfig` correctly
+- Fixed: Corrected error message about missing compiler define to show correct constant FUSION_BURST
+- Fixed: Issues with RPC forwarding in Shared Mode
 
 ### Build 259 (Aug 10, 2021)
 

@@ -39,8 +39,8 @@ namespace Fusion.Assistants {
       nr.gameObject.EnsureComponentExists<NetworkEvents>();
 
       // Set our physics to 2D
-      NetworkProjectConfigAsset.Instance.Config.PhysicsEngine = NetworkProjectConfig.PhysicsEngines.Physics3D;
-      AssetDatabase.SaveAssets();
+      NetworkProjectConfig.Global.PhysicsEngine = NetworkProjectConfig.PhysicsEngines.Physics3D;
+      NetworkProjectConfigUtilities.SaveGlobalConfig();
 
       // Get scene and mark scene as dirty.
       DirtyAndSaveScene(nds.gameObject.scene);
@@ -76,7 +76,8 @@ namespace Fusion.Assistants {
       nr.gameObject.EnsureComponentExists<NetworkEvents>();
 
       // Set our physics to 2D
-      NetworkProjectConfigAsset.Instance.Config.PhysicsEngine = NetworkProjectConfig.PhysicsEngines.Physics2D;
+      NetworkProjectConfig.Global.PhysicsEngine = NetworkProjectConfig.PhysicsEngines.Physics2D;
+      NetworkProjectConfigUtilities.SaveGlobalConfig();
 
       // Get scene and mark scene as dirty.
       DirtyAndSaveScene(nds.gameObject.scene);

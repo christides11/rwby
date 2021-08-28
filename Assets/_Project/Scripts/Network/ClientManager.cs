@@ -8,7 +8,7 @@ using UnityEngine;
 namespace rwby
 {
 	[OrderBefore(typeof(FighterInputManager), typeof(FighterManager))]
-    public class ClientManager : NetworkBehaviour, INetworkRunnerCallbacks
+    public class ClientManager : NetworkBehaviour, INetworkRunnerCallbacks, IBeforeUpdate, IAfterUpdate
     {
 		public delegate void EmptyAction();
 		public static event EmptyAction OnStartHosting;
@@ -28,12 +28,71 @@ namespace rwby
 
 		Rewired.Player p = null;
 
-        public void Awake()
+		public PlayerCamera camera;
+
+        protected virtual void Awake()
         {
 			networkManager = NetworkManager.singleton;
 			MatchManager.onMatchSettingsLoadFailed += MatchSettingsLoadFail;
 			MatchManager.onMatchSettingsLoadSuccess += MatchSettingsLoadSuccess;
 			DontDestroyOnLoad(gameObject);
+        }
+
+        public override void Render()
+        {
+            if (camera)
+            {
+				camera.CamUpdate();
+            }
+        }
+
+        bool buttonJump;
+		bool buttonLightAttack;
+		bool buttonHeavyAttack;
+		bool buttonBlock;
+		bool buttonDash;
+		bool buttonShoot;
+		bool buttonLockOn;
+		bool buttonAbility1;
+		bool buttonAbility2;
+		bool buttonAbility3;
+		bool buttonAbility4;
+		public void BeforeUpdate()
+		{
+			if (p != null)
+			{
+				if (p.GetButton(Action.Jump)) { buttonJump = true; }
+				if (p.GetButton(Action.Light_Attack)) { buttonLightAttack = true; }
+				if (p.GetButton(Action.Heavy_Attack)) { buttonHeavyAttack = true; }
+				if (p.GetButton(Action.Block)) { buttonBlock = true; }
+				if (p.GetButton(Action.Dash)) { buttonDash = true; }
+				if (p.GetButton(Action.Shoot)) { buttonShoot = true; }
+				if (p.GetButton(Action.Lock_On)) { buttonLockOn = true; }
+				if (p.GetButton(Action.Ability_1)) { buttonAbility1 = true; }
+				if (p.GetButton(Action.Ability_2)) { buttonAbility2 = true; }
+				if (p.GetButton(Action.Ability_3)) { buttonAbility3 = true; }
+				if (p.GetButton(Action.Ability_4)) { buttonAbility4 = true; }
+			}
+		}
+
+		public void AfterUpdate()
+		{
+			ClearInputs();
+		}
+
+		protected virtual void ClearInputs()
+        {
+			buttonJump = false;
+			buttonLightAttack = false;
+			buttonHeavyAttack = false;
+			buttonBlock = false;
+			buttonDash = false;
+			buttonShoot = false;
+			buttonLockOn = false;
+			buttonAbility1 = false;
+			buttonAbility2 = false;
+			buttonAbility3 = false;
+			buttonAbility4 = false;
         }
 
         private void GamemodeSetupSuccess()
@@ -142,15 +201,27 @@ namespace rwby
 				return;
 			}
 			frameworkInput.movement = p.GetAxis2D(Action.Movement_X, Action.Movement_Y);
-			frameworkInput.forward = Vector3.forward;
-			frameworkInput.right = Vector3.right;
-			if (p.GetButton(Action.Jump)) { frameworkInput.Buttons |= NetworkInputData.BUTTON_JUMP; }
-			if (p.GetButton(Action.Light_Attack)) { frameworkInput.Buttons |= NetworkInputData.BUTTON_LIGHT_ATTACK; }
-			if (p.GetButton(Action.Heavy_Attack)) { frameworkInput.Buttons |= NetworkInputData.BUTTON_HEAVY_ATTACK; }
-			if (p.GetButton(Action.Block)) { frameworkInput.Buttons |= NetworkInputData.BUTTON_BLOCK; }
-			if (p.GetButton(Action.Dash)) { frameworkInput.Buttons |= NetworkInputData.BUTTON_DASH; }
-			if (p.GetButton(Action.Shoot)) { frameworkInput.Buttons |= NetworkInputData.BUTTON_SHOOT; }
-			if (p.GetButton(Action.Lock_On)) { frameworkInput.Buttons |= NetworkInputData.BUTTON_LOCK_ON; }
+			if (camera)
+			{
+				frameworkInput.forward = camera.transform.forward;
+				frameworkInput.right = camera.transform.right;
+			}
+			else
+			{
+				frameworkInput.forward = Vector3.forward;
+				frameworkInput.right = Vector3.right;
+			}
+			if (buttonJump) { frameworkInput.Buttons |= NetworkInputData.BUTTON_JUMP; }
+			if (buttonLightAttack) { frameworkInput.Buttons |= NetworkInputData.BUTTON_LIGHT_ATTACK; }
+			if (buttonHeavyAttack) { frameworkInput.Buttons |= NetworkInputData.BUTTON_HEAVY_ATTACK; }
+			if (buttonBlock) { frameworkInput.Buttons |= NetworkInputData.BUTTON_BLOCK; }
+			if (buttonDash) { frameworkInput.Buttons |= NetworkInputData.BUTTON_DASH; }
+			if (buttonShoot) { frameworkInput.Buttons |= NetworkInputData.BUTTON_SHOOT; }
+			if (buttonLockOn) { frameworkInput.Buttons |= NetworkInputData.BUTTON_LOCK_ON; }
+			if (buttonAbility1) { frameworkInput.Buttons |= NetworkInputData.BUTTON_ABILITY_ONE; }
+			if (buttonAbility2) { frameworkInput.Buttons |= NetworkInputData.BUTTON_ABILITY_TWO; }
+			if (buttonAbility3) { frameworkInput.Buttons |= NetworkInputData.BUTTON_ABILITY_THREE; }
+			if (buttonAbility4) { frameworkInput.Buttons |= NetworkInputData.BUTTON_ABILITY_FOUR; }
 			// Hand over the data to Fusion
 			input.Set(frameworkInput);
 		}
@@ -178,9 +249,10 @@ namespace rwby
 		public void OnShutdown(NetworkRunner runner, ShutdownReason shutdownReason) { }
 		public void OnConnectedToServer(NetworkRunner runner) { }
 		public void OnDisconnectedFromServer(NetworkRunner runner) { }
-		public void OnConnectRequest(NetworkRunner runner, NetworkRunnerCallbackArgs.ConnectRequest request) { }
+		public void OnConnectRequest(NetworkRunner runner, NetworkRunnerCallbackArgs.ConnectRequest request, byte[] token) { }
 		public void OnConnectFailed(NetworkRunner runner, NetAddress remoteAddress, NetConnectFailedReason reason) { }
 		public void OnUserSimulationMessage(NetworkRunner runner, SimulationMessagePtr message) { }
 		public void OnObjectWordsChanged(NetworkRunner runner, NetworkObject networkedObject, HashSet<int> changedWords, NetworkObjectMemoryPtr oldMemory) { }
-	}
+
+    }
 }
