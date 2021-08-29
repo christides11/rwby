@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 7959724796852287778}
   - component: {fileID: -6404266287376982040}
   - component: {fileID: 5654392912087799858}
+  - component: {fileID: 6130200685216010254}
   m_Layer: 0
   m_Name: MatchManager
   m_TagString: Untagged
@@ -53,7 +54,8 @@ MonoBehaviour:
   NestedObjects: []
   NetworkedBehaviours:
   - {fileID: 5654392912087799858}
-  SimulationBehaviours: []
+  SimulationBehaviours:
+  - {fileID: 6130200685216010254}
 --- !u!114 &5654392912087799858
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -70,3 +72,15 @@ MonoBehaviour:
   initializingMatch: 0
   _SelectedGamemode: 
   _GamemodeContent: 
+--- !u!114 &6130200685216010254
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5952573547676171332}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0fc3da84c7b1bab4aa09ae6dfdca9834, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

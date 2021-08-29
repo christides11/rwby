@@ -1,6 +1,7 @@
 using Fusion;
 using HnSF.Combat;
 using HnSF.Fighters;
+using KinematicCharacterController;
 using rwby.fighters.states;
 using System;
 using System.Collections;
@@ -40,6 +41,8 @@ namespace rwby
         [SerializeField] protected FighterStatManager statManager;
         [SerializeField] protected IFighterDefinition fighterDefinition;
         public Transform visualTransform;
+
+        public Vector3 positionTesting;
 
         public void OnFighterLoaded()
         {
@@ -270,8 +273,8 @@ namespace rwby
 
         public virtual void RotateVisual(Vector3 direction, float speed)
         {
-            Vector3 newDirection = Vector3.RotateTowards(transform.forward, direction, speed * Runner.DeltaTime, 0.0f);
-            transform.rotation = Quaternion.LookRotation(newDirection);
+            //Vector3 newDirection = Vector3.RotateTowards(transform.forward, direction, speed * Runner.DeltaTime, 0.0f);
+            //transform.rotation = Quaternion.LookRotation(newDirection);
         }
 
         public void SetTargetable(bool value)
@@ -281,7 +284,7 @@ namespace rwby
 
         public void SetVisualRotation(Vector3 direction)
         {
-            transform.rotation = Quaternion.LookRotation(direction);
+            //transform.rotation = Quaternion.LookRotation(direction);
         }
 
         public GameObject GetGameObject()

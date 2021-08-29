@@ -15,11 +15,11 @@ namespace rwby
         [Networked] public float forceGravity { get; set; }
 
         [SerializeField] protected FighterManager manager;
-        [SerializeField] protected FighterCharacterController cc;
+        [SerializeField] protected FighterCC kCC;
 
         public void Tick()
         {
-            cc.Move(forceMovement, forceGravity);
+            kCC.SetMovement(forceMovement, forceGravity);
         }
 
         public Vector3 GetOverallForce()
@@ -29,12 +29,12 @@ namespace rwby
 
         public void CheckIfGrounded()
         {
-            IsGroundedNetworked = cc.ncc.Grounded;
+            IsGroundedNetworked = kCC.Motor.GroundingStatus.IsStableOnGround;
         }
 
         public void Freeze()
         {
-            cc.Move(Vector3.zero, 0);
+            kCC.SetMovement(Vector3.zero, 0);
         }
 
         public void ResetForces()
