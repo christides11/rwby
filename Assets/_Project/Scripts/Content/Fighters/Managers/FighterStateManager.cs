@@ -29,11 +29,6 @@ namespace rwby
             states[CurrentState].OnUpdate();
         }
 
-        public void LateTick()
-        {
-
-        }
-
         public override void FixedUpdateNetwork()
         {
             if (CurrentState == 0) return;

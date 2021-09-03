@@ -75,11 +75,7 @@ namespace rwby
         public override void FixedUpdateNetwork()
         {
             base.FixedUpdateNetwork();
-            Tick();
-        }
 
-        public void Tick()
-        {
             // Shake during hitstop (only when you got hit by an attack).
             /*if (CombatManager.HitStop > 0
                 && CombatManager.HitStun > 0)
@@ -104,11 +100,6 @@ namespace rwby
                 CombatManager.HitStop--;
                 PhysicsManager.Freeze();
             }
-        }
-
-        public void LateTick()
-        {
-
         }
 
         public Vector3 GetCenter()
@@ -272,11 +263,6 @@ namespace rwby
             right.Normalize();
 
             return forward * vertical + right * horizontal;
-        }
-
-        public Vector3 GetVisualBasedDirection(Vector3 direction)
-        {
-            throw new System.NotImplementedException();
         }
 
         public virtual void RotateVisual(Vector3 direction, float speed)
