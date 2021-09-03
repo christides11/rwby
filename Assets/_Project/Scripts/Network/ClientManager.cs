@@ -51,12 +51,13 @@ namespace rwby
 		bool buttonHeavyAttack;
 		bool buttonBlock;
 		bool buttonDash;
-		bool buttonShoot;
+		bool buttonGrab;
 		bool buttonLockOn;
 		bool buttonAbility1;
 		bool buttonAbility2;
 		bool buttonAbility3;
 		bool buttonAbility4;
+		bool buttonExtra1;
 		public void BeforeUpdate()
 		{
 			if (p != null)
@@ -66,12 +67,13 @@ namespace rwby
 				if (p.GetButton(Action.Heavy_Attack)) { buttonHeavyAttack = true; }
 				if (p.GetButton(Action.Block)) { buttonBlock = true; }
 				if (p.GetButton(Action.Dash)) { buttonDash = true; }
-				if (p.GetButton(Action.Shoot)) { buttonShoot = true; }
+				if (p.GetButton(Action.Grab)) { buttonGrab = true; }
 				if (p.GetButton(Action.Lock_On)) { buttonLockOn = true; }
 				if (p.GetButton(Action.Ability_1)) { buttonAbility1 = true; }
 				if (p.GetButton(Action.Ability_2)) { buttonAbility2 = true; }
 				if (p.GetButton(Action.Ability_3)) { buttonAbility3 = true; }
 				if (p.GetButton(Action.Ability_4)) { buttonAbility4 = true; }
+				if (p.GetButton(Action.Extra1)) { buttonExtra1 = true; }
 			}
 		}
 
@@ -87,12 +89,13 @@ namespace rwby
 			buttonHeavyAttack = false;
 			buttonBlock = false;
 			buttonDash = false;
-			buttonShoot = false;
+			buttonGrab = false;
 			buttonLockOn = false;
 			buttonAbility1 = false;
 			buttonAbility2 = false;
 			buttonAbility3 = false;
 			buttonAbility4 = false;
+			buttonExtra1 = false;
         }
 
         private void GamemodeSetupSuccess()
@@ -216,12 +219,13 @@ namespace rwby
 			if (buttonHeavyAttack) { frameworkInput.Buttons |= NetworkInputData.BUTTON_HEAVY_ATTACK; }
 			if (buttonBlock) { frameworkInput.Buttons |= NetworkInputData.BUTTON_BLOCK; }
 			if (buttonDash) { frameworkInput.Buttons |= NetworkInputData.BUTTON_DASH; }
-			if (buttonShoot) { frameworkInput.Buttons |= NetworkInputData.BUTTON_SHOOT; }
+			if (buttonGrab) { frameworkInput.Buttons |= NetworkInputData.BUTTON_GRAB; }
 			if (buttonLockOn) { frameworkInput.Buttons |= NetworkInputData.BUTTON_LOCK_ON; }
 			if (buttonAbility1) { frameworkInput.Buttons |= NetworkInputData.BUTTON_ABILITY_ONE; }
 			if (buttonAbility2) { frameworkInput.Buttons |= NetworkInputData.BUTTON_ABILITY_TWO; }
 			if (buttonAbility3) { frameworkInput.Buttons |= NetworkInputData.BUTTON_ABILITY_THREE; }
 			if (buttonAbility4) { frameworkInput.Buttons |= NetworkInputData.BUTTON_ABILITY_FOUR; }
+			if (buttonExtra1) { frameworkInput.Buttons |= NetworkInputData.BUTTON_Extra_1; }
 			// Hand over the data to Fusion
 			input.Set(frameworkInput);
 		}

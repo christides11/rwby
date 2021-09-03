@@ -10,13 +10,13 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7bf9a8a0f22d37c43902ca4d8d9a9197, type: 3}
-  m_Name: Scythe.Atk.Grd.H
+  m_Name: Rifle.Atk.Grd.F_H
   m_EditorClassIdentifier: 
-  attackName: Ground H
+  attackName: Forward H
   description: 
   useState: 0
   stateOverride: 0
-  length: 30
+  length: 35
   hurtboxDefinition: {fileID: 0}
   commandAttackCancelWindows: []
   chargeWindows: []
@@ -82,7 +82,7 @@ MonoBehaviour:
         onHitHitboxGroup: 0
         onHitIDGroup: 0
         startFrame: 1
-        endFrame: 30
+        endFrame: 35
         attackEvent:
           id: 6
         conditions: []
@@ -109,7 +109,7 @@ MonoBehaviour:
         offset: {x: 0, y: 1, z: 1}
         size: {x: 2, y: 2, z: 2}
         rotation: {x: 0, y: 0, z: 0}
-        radius: 1.7
+        radius: 1
         height: 0
     00000004:
       type: {class: HitInfo, ns: rwby, asm: rwby.csharp}
@@ -125,7 +125,7 @@ MonoBehaviour:
         forceRelation: 0
         attackerHitstop: 4
         hitstop: 4
-        hitstun: 25
+        hitstun: 40
         airOnly: 0
         groundOnly: 0
         causesTumble: 0
@@ -135,15 +135,15 @@ MonoBehaviour:
         wallBounces: 0
         wallBounceForce: 0
         damageOnHit: 10
-        opponentForce: {x: 0, y: 0, z: 10}
+        opponentForce: {x: 0, y: 7, z: 0}
         forceIncludeYForce: 0
         opponentForceMultiplier: 1
         opponentMaxMagnitude: 1
         opponentMinMagnitude: 1
         throwConfirm: {fileID: 0}
         holdVelocityTime: 0
-        opponentForceAir: {x: 0, y: 0, z: 0}
-        opponentFriction: 0
+        opponentForceAir: {x: 0, y: 7, z: 0}
+        opponentFriction: 10
         opponentGravity: 0
         hitSound: {fileID: 0}
         hangTime: 0
@@ -154,7 +154,7 @@ MonoBehaviour:
     00000005:
       type: {class: ClampMovement, ns: rwby.Combat.AttackEvents, asm: rwby.csharp}
       data:
-        maxLength: 10
+        maxLength: 5
     00000006:
       type: {class: ApplyFriction, ns: rwby.Combat.AttackEvents, asm: rwby.csharp}
       data:

@@ -10,15 +10,16 @@ namespace rwby
     {
         public KinematicCharacterMotor Motor;
 
+        private Vector3 rot;
         private Vector3 gravity;
         private Vector3 moveVector;
         private Vector3 _internalVelocityAdd;
 
         [Header("Stable Movement")]
-        public float stableMovementSharpness = 15f;
+        [Range(0.0f, 1.0f)] public float stableMovementSharpness = 0.5f;
 
         [Header("Air Movement")]
-        public float airMovementSharpness = 15f;
+        [Range(0.0f, 1.0f)] public float airMovementSharpness = 0.5f;
 
         [Header("Misc")]
         public List<Collider> IgnoredColliders = new List<Collider>();
@@ -45,6 +46,11 @@ namespace rwby
             }
         }
 
+        public void SetRotation(Vector3 rotation)
+        {
+            rot = rotation;
+        }
+
         public void BeforeCharacterUpdate(float deltaTime)
         {
 
@@ -69,7 +75,7 @@ namespace rwby
 
         public void UpdateRotation(ref Quaternion currentRotation, float deltaTime)
         {
-
+            currentRotation = Quaternion.LookRotation(rot, Motor.CharacterUp);
         }
 
         public void UpdateVelocity(ref Vector3 currentVelocity, float deltaTime)
@@ -103,8 +109,7 @@ namespace rwby
                 Vector3 targetMovementVelocity = reorientedInput;
 
                 // Smooth movement Velocity
-                currentVelocity = targetMovementVelocity;
-                //currentVelocity = Vector3.Lerp(currentVelocity, targetMovementVelocity, 1f - Mathf.Exp(-stableMovementSharpness * deltaTime));
+                currentVelocity = Vector3.Lerp(currentVelocity, targetMovementVelocity, stableMovementSharpness);
             }
             else
             {
@@ -122,8 +127,7 @@ namespace rwby
                 }
 
                 // Smooth movement Velocity
-                currentVelocity = targetMovementVelocity + gravity;
-                //currentVelocity = Vector3.Lerp(currentVelocity, targetMovementVelocity + gravity, airMovementSharpness * deltaTime);
+                currentVelocity = Vector3.Lerp(currentVelocity, targetMovementVelocity + gravity, airMovementSharpness);
             }
 
             // Take into account additive velocity

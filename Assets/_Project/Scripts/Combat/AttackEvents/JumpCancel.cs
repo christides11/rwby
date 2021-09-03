@@ -11,7 +11,7 @@ namespace rwby.Combat.AttackEvents
             return "Jump Cancel";
         }
 
-        public override AttackEventReturnType Evaluate(int frame, int endFrame, IFighterBase controller, AttackEventVariables variables)
+        public override AttackEventReturnType Evaluate(int frame, int endFrame, IFighterBase controller)
         {
             if ((controller as FighterManager).TryJump())
             {

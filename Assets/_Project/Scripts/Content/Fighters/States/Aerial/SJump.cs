@@ -21,10 +21,8 @@ namespace rwby.fighters.states
             manager.PhysicsManager.HandleMovement(manager.StatManager.AerialBaseAcceleration, manager.StatManager.AerialAcceleration, manager.StatManager.AerialDeceleration,
                 manager.StatManager.AerialMaxSpeed, manager.StatManager.AerialAccelFromDot);
 
-            if (CheckInterrupt() == false)
-            {
-                manager.StateManager.IncrementFrame();
-            }
+            if (CheckInterrupt()) return;
+            manager.StateManager.IncrementFrame();
         }
 
         public override bool CheckInterrupt()  

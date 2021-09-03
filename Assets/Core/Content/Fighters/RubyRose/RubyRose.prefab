@@ -154,7 +154,9 @@ MonoBehaviour:
   hurtboxManager: {fileID: 5886531129838790707}
   statManager: {fileID: 7571525903815252237}
   fighterDefinition: {fileID: 11400000, guid: f0f374ed69303bf499b21d67a399ece3, type: 2}
+  capsuleCollider: {fileID: 2898563863352299436}
   visualTransform: {fileID: 7954403120791412188}
+  _TargetingForward: {x: 0, y: 0}
   _currentAerialJump: 0
   _currentAerialDash: 0
   _apexTime: 0
@@ -391,8 +393,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _interpolationDataSource: 0
   Motor: {fileID: 5710829672531719765}
-  stableMovementSharpness: 15
-  airMovementSharpness: 15
+  stableMovementSharpness: 0.9
+  airMovementSharpness: 0.9
   IgnoredColliders: []
 --- !u!136 &2898563863352299436
 CapsuleCollider:
@@ -452,7 +454,7 @@ MonoBehaviour:
   KillVelocityWhenExceedMaxMovementIterations: 1
   KillRemainingMovementWhenExceedMaxMovementIterations: 1
   GroundCollider: {fileID: 0}
-  interpolationTarget: {fileID: 0}
+  interpolationTarget: {fileID: 7954403120791412188}
   empt: 0
   __mustUngroundTimeCounter: 0
   _AttachedRigidbodyVelocity: {x: 0, y: 0, z: 0}

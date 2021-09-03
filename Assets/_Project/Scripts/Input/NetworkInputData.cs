@@ -18,9 +18,9 @@ namespace rwby
 		public const uint BUTTON_HEAVY_ATTACK = 1 << 3;
 		public const uint BUTTON_DASH = 1 << 4;
 		public const uint BUTTON_LOCK_ON = 1 << 5;
-		public const uint BUTTON_SHOOT = 1 << 6;
+		public const uint BUTTON_GRAB = 1 << 6;
 		
-		public const uint BUTTON_DPAD_UP = 1 << 7;
+		public const uint BUTTON_Extra_1 = 1 << 7;
 		public const uint BUTTON_DPAD_DOWN = 1 << 8;
 		public const uint BUTTON_DPAD_LEFT = 1 << 9;
 		public const uint BUTTON_DPAD_RIGHT = 1 << 10;

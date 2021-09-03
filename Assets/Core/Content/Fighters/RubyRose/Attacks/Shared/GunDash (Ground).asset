@@ -26,8 +26,6 @@ MonoBehaviour:
   - id: 1
   - id: 2
   - id: 3
-  - id: 4
-  - id: 5
   cancels: []
   firstActableFrame: 100
   references:
@@ -39,13 +37,13 @@ MonoBehaviour:
         activeFramesStart: 6
         activeFramesEnd: 6
         boxes:
-        - id: 6
+        - id: 4
         attachToEntity: 1
         attachTo: 
         chargeLevelNeeded: -1
         chargeLevelMax: 1
         hitboxHitInfo:
-          id: 7
+          id: 5
         attachPoint: 
     00000001:
       type: {class: AttackEventDefinition, ns: HnSF.Combat, asm: HnSF}
@@ -55,10 +53,10 @@ MonoBehaviour:
         onHitCheck: 0
         onHitHitboxGroup: 0
         onHitIDGroup: 0
-        startFrame: 6
-        endFrame: 6
+        startFrame: 1
+        endFrame: 1
         attackEvent:
-          id: 8
+          id: 6
         conditions: []
         variables:
           intVars: 
@@ -87,7 +85,7 @@ MonoBehaviour:
         startFrame: 6
         endFrame: 6
         attackEvent:
-          id: 9
+          id: 7
         conditions: []
         variables:
           intVars: 
@@ -108,77 +106,15 @@ MonoBehaviour:
     00000003:
       type: {class: AttackEventDefinition, ns: HnSF.Combat, asm: HnSF}
       data:
-        nickname: M.Up
-        active: 1
-        onHitCheck: 0
-        onHitHitboxGroup: 0
-        onHitIDGroup: 0
-        startFrame: 6
-        endFrame: 6
-        attackEvent:
-          id: 10
-        conditions: []
-        variables:
-          intVars: 
-          floatVars: []
-          objectVars: []
-          curveVars: []
-        inputCheckTiming: 0
-        inputCheckStartFrame: 5
-        inputCheckEndFrame: 5
-        input:
-          executeWindow: 1
-          executeInputs: []
-          sequenceWindow: 1
-          sequenceInputs:
-          - inputType: 0
-            buttonID: 12
-            stickDirection: {x: 0, y: 0}
-            directionDeviation: 0
-        chargeLevelMin: 0
-        chargeLevelMax: 0
-        inputCheckProcessed: 0
-    00000004:
-      type: {class: AttackEventDefinition, ns: HnSF.Combat, asm: HnSF}
-      data:
-        nickname: G.Friction
+        nickname: Friction
         active: 1
         onHitCheck: 0
         onHitHitboxGroup: 0
         onHitIDGroup: 0
         startFrame: 10
-        endFrame: 30
-        attackEvent:
-          id: 11
-        conditions: []
-        variables:
-          intVars: 
-          floatVars: []
-          objectVars: []
-          curveVars: []
-        inputCheckTiming: 0
-        inputCheckStartFrame: 1
-        inputCheckEndFrame: 1
-        input:
-          executeWindow: 3
-          executeInputs: []
-          sequenceWindow: 8
-          sequenceInputs: []
-        chargeLevelMin: 0
-        chargeLevelMax: 0
-        inputCheckProcessed: 0
-    00000005:
-      type: {class: AttackEventDefinition, ns: HnSF.Combat, asm: HnSF}
-      data:
-        nickname: Gravity
-        active: 1
-        onHitCheck: 0
-        onHitHitboxGroup: 0
-        onHitIDGroup: 0
-        startFrame: 30
         endFrame: 35
         attackEvent:
-          id: 12
+          id: 8
         conditions: []
         variables:
           intVars: 
@@ -196,7 +132,7 @@ MonoBehaviour:
         chargeLevelMin: 0
         chargeLevelMax: 0
         inputCheckProcessed: 0
-    00000006:
+    00000004:
       type: {class: BoxDefinition, ns: HnSF.Combat, asm: HnSF}
       data:
         shape: 1
@@ -205,7 +141,7 @@ MonoBehaviour:
         rotation: {x: 0, y: 0, z: 0}
         radius: 1.5
         height: 0
-    00000007:
+    00000005:
       type: {class: HitInfo, ns: rwby, asm: rwby.csharp}
       data:
         hitType: 0
@@ -229,7 +165,7 @@ MonoBehaviour:
         wallBounces: 0
         wallBounceForce: 0
         damageOnHit: 0
-        opponentForce: {x: 0, y: 10, z: 10}
+        opponentForce: {x: 0, y: 0, z: -10}
         forceIncludeYForce: 0
         opponentForceMultiplier: 1
         opponentMaxMagnitude: 1
@@ -245,28 +181,19 @@ MonoBehaviour:
         blockstun: 0
         blockForce: {x: 0, y: 0, z: 0}
         blockForceAir: {x: 0, y: 0, z: 0}
-    00000008:
+    00000006:
       type: {class: RotationSet, ns: rwby.Combat.AttackEvents, asm: rwby.csharp}
-    00000009:
+    00000007:
       type: {class: ForceSet, ns: rwby.Combat.AttackEvents, asm: rwby.csharp}
       data:
         applyXZForce: 1
         applyYForce: 0
-        xzForce: {x: 0, y: 9}
+        xzForce: {x: 0, y: 18}
         yForce: 0
-    0000000A:
-      type: {class: ForceSet, ns: rwby.Combat.AttackEvents, asm: rwby.csharp}
-      data:
-        applyXZForce: 0
-        applyYForce: 1
-        xzForce: {x: 0, y: 0}
-        yForce: 14
-    0000000B:
+    00000008:
       type: {class: ApplyFriction, ns: rwby.Combat.AttackEvents, asm: rwby.csharp}
       data:
-        useXZFriction: 0
-        useYFriction: 1
-        xzFriction: 0
-        yFriction: 40
-    0000000C:
-      type: {class: ApplyGravity, ns: rwby.Combat.AttackEvents, asm: rwby.csharp}
+        useXZFriction: 1
+        useYFriction: 0
+        xzFriction: 50
+        yFriction: 0

@@ -76,18 +76,6 @@ namespace rwby
                 }
                 return;
             }
-
-
-            if (CheckInterrupt())
-            {
-                return;
-            }
-
-            /*
-            if (HandleChargeLevels(manager, currentAttack) == false)
-            {
-                manager.StateManager.IncrementFrame();
-            }*/
         }
 
         public override void OnLateUpdate()
@@ -110,6 +98,10 @@ namespace rwby
                 entityManager.StateManager.IncrementFrame();
             }*/
 
+            if (CheckInterrupt())
+            {
+                return;
+            }
             
             if (HandleChargeLevels(manager, currentAttack) == false)
             {
@@ -205,8 +197,7 @@ namespace rwby
                 }*/
                 return currentEvent.attackEvent.Evaluate((int)(manager.StateManager.CurrentStateFrame - currentEvent.startFrame),
                     currentEvent.endFrame - currentEvent.startFrame,
-                    manager,
-                    currentEvent.variables);
+                    manager);
             }
             return HnSF.Combat.AttackEventReturnType.NONE;
         }

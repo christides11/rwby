@@ -17,9 +17,25 @@ namespace rwby
         [SerializeField] protected FighterManager manager;
         [SerializeField] protected FighterCC kCC;
 
+        protected Vector3 rotationDir;
+
         public void Tick()
         {
             kCC.SetMovement(forceMovement, forceGravity);
+            if(rotationDir == Vector3.zero)
+            {
+                kCC.SetRotation(transform.forward);
+            }
+            else
+            {
+                kCC.SetRotation(rotationDir);
+            }
+            rotationDir = Vector3.zero;
+        }
+
+        public void SetRotation(Vector3 rot)
+        {
+            rotationDir = rot;
         }
 
         public Vector3 GetOverallForce()

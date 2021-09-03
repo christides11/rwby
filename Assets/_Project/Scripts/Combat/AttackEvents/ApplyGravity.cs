@@ -11,7 +11,7 @@ namespace rwby.Combat.AttackEvents
             return "Gravity";
         }
 
-        public override AttackEventReturnType Evaluate(int frame, int endFrame, IFighterBase controller, AttackEventVariables variables)
+        public override AttackEventReturnType Evaluate(int frame, int endFrame, IFighterBase controller)
         {
             FighterManager manager = controller as FighterManager;
             manager.apexTime = manager.StatManager.MaxAirJumpTime / 2.0f;

@@ -13,7 +13,7 @@ namespace rwby.Combat.AttackEvents
             return "Clamp Gravity";
         }
 
-        public override AttackEventReturnType Evaluate(int frame, int endFrame, IFighterBase controller, AttackEventVariables variables)
+        public override AttackEventReturnType Evaluate(int frame, int endFrame, IFighterBase controller)
         {
             FighterManager manager = controller as FighterManager;
             if (maxLength == 0)

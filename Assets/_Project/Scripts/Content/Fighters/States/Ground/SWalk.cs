@@ -19,9 +19,6 @@ namespace rwby.fighters.states
 
         public override void OnUpdate()
         {
-            Debug.Log($"Off: {Vector3.Distance(manager.transform.position, manager.positionTesting)}");
-            manager.positionTesting = manager.transform.position;
-
             manager.HurtboxManager.CreateHurtboxes(0, 0);
             Vector3 movement = manager.GetMovementVector();
             movement.y = 0;

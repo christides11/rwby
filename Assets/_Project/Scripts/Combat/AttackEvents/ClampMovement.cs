@@ -13,7 +13,7 @@ namespace rwby.Combat.AttackEvents
             return "Clamp Movement";
         }
 
-        public override AttackEventReturnType Evaluate(int frame, int endFrame, IFighterBase controller, AttackEventVariables variables)
+        public override AttackEventReturnType Evaluate(int frame, int endFrame, IFighterBase controller)
         {
             FighterManager manager = controller as FighterManager;
             manager.PhysicsManager.forceMovement = Vector3.ClampMagnitude(manager.PhysicsManager.forceMovement, maxLength);

@@ -23,6 +23,9 @@ namespace rwby
         [Networked] public NetworkBool TargetableNetworked { get; set; }
         public bool Targetable { get { return TargetableNetworked; } }
 
+        [Networked] public NetworkBool HardTargeting { get; set; }
+        [Networked] public Vector2 TargetingForward { get; set; }
+
         // Stats
         [Networked] public NetworkBool StoredRun { get; set; }
         [Networked] public float currentAerialJump { get; set; }
@@ -40,9 +43,8 @@ namespace rwby
         [SerializeField] protected FighterHurtboxManager hurtboxManager;
         [SerializeField] protected FighterStatManager statManager;
         [SerializeField] protected IFighterDefinition fighterDefinition;
+        [SerializeField] protected CapsuleCollider capsuleCollider;
         public Transform visualTransform;
-
-        public Vector3 positionTesting;
 
         public void OnFighterLoaded()
         {
@@ -58,10 +60,11 @@ namespace rwby
         public override void Spawned()
         {
             base.Spawned();
+            TargetableNetworked = true;
             if (Object.HasInputAuthority)
             {
                 ClientManager.local.camera = GameObject.Instantiate(GameManager.singleton.settings.playerCameraPrefab, transform.position, transform.rotation);
-                ClientManager.local.camera.SetLookAtTarget(visualTransform);
+                ClientManager.local.camera.SetLookAtTarget(this);
             }
             combatManager.Cleanup();
             combatManager.SetMoveset(0);
@@ -92,7 +95,6 @@ namespace rwby
                 {
                     CombatManager.BlockStun--;
                 }
-                //HandleLockon();
                 PhysicsManager.CheckIfGrounded();
                 StateManager.Tick();
                 PhysicsManager.Tick();
@@ -108,6 +110,12 @@ namespace rwby
         {
 
         }
+
+        public Vector3 GetCenter()
+        {
+            return transform.position + Vector3.up;
+        }
+
         protected virtual void SetupStates()
         {
             stateManager.AddState(new SIdle(), (ushort)FighterCmnStates.IDLE);
@@ -273,8 +281,8 @@ namespace rwby
 
         public virtual void RotateVisual(Vector3 direction, float speed)
         {
-            //Vector3 newDirection = Vector3.RotateTowards(transform.forward, direction, speed * Runner.DeltaTime, 0.0f);
-            //transform.rotation = Quaternion.LookRotation(newDirection);
+            Vector3 newDirection = Vector3.RotateTowards(transform.forward, direction, speed * Runner.DeltaTime, 0.0f);
+            physicsManager.SetRotation(newDirection);
         }
 
         public void SetTargetable(bool value)
@@ -284,12 +292,17 @@ namespace rwby
 
         public void SetVisualRotation(Vector3 direction)
         {
-            //transform.rotation = Quaternion.LookRotation(direction);
+            physicsManager.SetRotation(direction);
         }
 
         public GameObject GetGameObject()
         {
             return gameObject;
+        }
+
+        public Bounds GetBounds()
+        {
+            return capsuleCollider.bounds;
         }
     }
 }

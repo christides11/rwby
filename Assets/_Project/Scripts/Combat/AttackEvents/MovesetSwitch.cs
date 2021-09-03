@@ -4,23 +4,20 @@ using UnityEngine;
 
 namespace rwby.Combat.AttackEvents
 {
-    public class RotationSet : HnSF.Combat.AttackEvent
+    public class MovesetSwitch : HnSF.Combat.AttackEvent
     {
+        public int moveset;
+
         public override string GetName()
         {
-            return "Set Rotation";
+            return "Moveset Switch";
         }
 
         public override AttackEventReturnType Evaluate(int frame, int endFrame, IFighterBase controller)
         {
             FighterManager e = (FighterManager)controller;
 
-            Vector3 moveDir = e.GetMovementVector();
-            if(moveDir != Vector3.zero)
-            {
-                e.SetVisualRotation(moveDir);
-            }
-
+            e.CombatManager.SetMoveset(moveset);
             return AttackEventReturnType.NONE;
         }
     }

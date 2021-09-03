@@ -143,6 +143,17 @@ MonoBehaviour:
   stickAxialDeadZone: 0.15
   stickXAxisSpeed: 1
   stickYAxisSpeed: 1
+  followTarget: {fileID: 0}
+  LockOnTarget: {fileID: 0}
+  lockonLayerMask:
+    serializedVersion: 2
+    m_Bits: 64
+  lockonVisibilityLayerMask:
+    serializedVersion: 2
+    m_Bits: 8
+  lockonMaxDistance: 20
+  lockonFudging: 0.1
+  currentCameraState: 0
 --- !u!114 &2367648952191529709
 MonoBehaviour:
   m_ObjectHideFlags: 0

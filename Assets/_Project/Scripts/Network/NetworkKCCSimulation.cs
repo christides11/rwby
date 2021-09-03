@@ -15,15 +15,8 @@ namespace rwby
 
         public override void FixedUpdateNetwork()
         {
-            if (KinematicCharacterSystem.Settings.Interpolate)
-            {
-                KinematicCharacterSystem.PreSimulationInterpolationUpdate(Runner.DeltaTime);
-            }
+            KinematicCharacterSystem.PreSimulationInterpolationUpdate(Runner.DeltaTime);
             KinematicCharacterSystem.Simulate(Runner.DeltaTime, KinematicCharacterSystem.CharacterMotors, KinematicCharacterSystem.PhysicsMovers);
-            if (KinematicCharacterSystem.Settings.Interpolate)
-            {
-                KinematicCharacterSystem.PostSimulationInterpolationUpdate(Runner.DeltaTime);
-            }
         }
     }
 }

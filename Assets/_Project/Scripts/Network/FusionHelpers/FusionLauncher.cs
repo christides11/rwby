@@ -36,6 +36,7 @@ namespace rwby
 		private Dictionary<PlayerRef, NetworkObject> _players = new Dictionary<PlayerRef, NetworkObject>();
 		private ConnectionStatus _status;
 		private NetworkObject _playerPrefab;
+		private FusionObjectPoolRoot _pool;
 
 		public enum ConnectionStatus { Disconnected, Connecting, Failed, Connected }
 
@@ -47,26 +48,28 @@ namespace rwby
 			SetConnectionStatus(ConnectionStatus.Connecting);
 
 			//NetworkProjectConfigAsset.Instance.NetworkObjectPool = ScriptableObject.CreateInstance<FusionObjectPoolRoot>(); //gameObject.AddComponent<FusionObjectPoolRoot>();
-
+			/*
 			if (mode == GameMode.Shared)
 				NetworkProjectConfig.Global.Simulation.ReplicationMode = SimulationConfig.StateReplicationModes.EventualConsistency;
 			else
-				NetworkProjectConfig.Global.Simulation.ReplicationMode = SimulationConfig.StateReplicationModes.DeltaSnapshots;
+				NetworkProjectConfig.Global.Simulation.ReplicationMode = SimulationConfig.StateReplicationModes.DeltaSnapshots;*/
 
 			_runner = gameObject.GetComponent<NetworkRunner>();
 			if (!_runner)
 				_runner = gameObject.AddComponent<NetworkRunner>();
 			_runner.name = name;
 			_runner.ProvideInput = mode != GameMode.Server;
-
 			_runner.AddCallbacks(this);
-			await _runner.StartGame(new StartGameArgs() { GameMode = mode, SessionName = roomName });
+
+			if (_pool == null)
+				_pool = gameObject.AddComponent<FusionObjectPoolRoot>();
+
+			await _runner.StartGame(new StartGameArgs() { GameMode = mode, SessionName = roomName, ObjectPool = _pool });
 
 			var current = SceneManager.GetActiveScene();
-			if (TryGetSceneRef(out SceneRef scene))
+			if (mode != GameMode.Client && TryGetSceneRef(out SceneRef scene))
 			{
-				if (mode != GameMode.Client)
-					_runner.SetActiveScene(scene);
+				_runner.SetActiveScene(scene);
 			}
 
 			if(mode == GameMode.Host)

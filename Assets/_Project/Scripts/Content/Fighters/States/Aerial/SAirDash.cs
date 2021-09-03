@@ -43,10 +43,8 @@ namespace rwby.fighters.states
                 manager.PhysicsManager.forceGravity = Mathf.Clamp(manager.PhysicsManager.forceGravity, -manager.StatManager.MaxFallSpeed, float.MaxValue);
             }
 
-            if (CheckInterrupt() == false)
-            {
-                manager.StateManager.IncrementFrame();
-            }
+            if (CheckInterrupt()) return;
+            manager.StateManager.IncrementFrame();
         }
 
         public override bool CheckInterrupt()

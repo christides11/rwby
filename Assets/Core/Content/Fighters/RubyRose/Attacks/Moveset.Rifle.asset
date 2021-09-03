@@ -1,5 +1,57 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!114 &-1281523101444985141
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a020e6c3cba96ed45adef2c66abe6b7f, type: 3}
+  m_Name: Moveset Switch
+  m_EditorClassIdentifier: 
+  graph: {fileID: 11400000}
+  position: {x: -184, y: -136}
+  ports:
+    keys:
+    - lastNode
+    - nextNode
+    values:
+    - _fieldName: lastNode
+      _node: {fileID: -1281523101444985141}
+      _typeQualifiedName: HnSF.Combat.MovesetAttackNode, HnSF, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+      connections: []
+      _direction: 0
+      _connectionType: 0
+      _typeConstraint: 0
+      _dynamic: 0
+    - _fieldName: nextNode
+      _node: {fileID: -1281523101444985141}
+      _typeQualifiedName: System.Collections.Generic.List`1[[HnSF.Combat.MovesetAttackNode+nextNodeDefinition,
+        HnSF, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null]], mscorlib,
+        Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089
+      connections: []
+      _direction: 1
+      _connectionType: 0
+      _typeConstraint: 0
+      _dynamic: 0
+  Identifier: 0
+  lastNode: {fileID: 0}
+  inputSequence:
+    executeWindow: 3
+    executeInputs:
+    - inputType: 0
+      buttonID: 7
+      stickDirection: {x: 0, y: 0}
+      directionDeviation: 0
+    sequenceWindow: 8
+    sequenceInputs: []
+  attackDefinition: {fileID: 11400000, guid: 59d33ce316786b6498ebf2ab5cedca0e, type: 2}
+  nextNode: []
+  lockonRequired: 0
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -12,10 +64,72 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7d2ab7f4c66cd7743a17e78e184b8c8e, type: 3}
   m_Name: Moveset.Rifle
   m_EditorClassIdentifier: 
-  nodes: []
-  nodeIDCounter: 0
+  nodes:
+  - {fileID: -1281523101444985141}
+  - {fileID: 3904786362034143861}
+  nodeIDCounter: 2
   cancelLists: []
   groundIdleCancelListID: -1
-  groundAttackStartNodes: []
+  groundAttackStartNodes:
+  - {fileID: 3904786362034143861}
+  - {fileID: -1281523101444985141}
   airIdleCancelListID: -1
-  airAttackStartNodes: []
+  airAttackStartNodes:
+  - {fileID: 3904786362034143861}
+  - {fileID: -1281523101444985141}
+--- !u!114 &3904786362034143861
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a020e6c3cba96ed45adef2c66abe6b7f, type: 3}
+  m_Name: Grd.Atk.F+H
+  m_EditorClassIdentifier: 
+  graph: {fileID: 11400000}
+  position: {x: -184, y: -632}
+  ports:
+    keys:
+    - lastNode
+    - nextNode
+    values:
+    - _fieldName: lastNode
+      _node: {fileID: 3904786362034143861}
+      _typeQualifiedName: HnSF.Combat.MovesetAttackNode, HnSF, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+      connections: []
+      _direction: 0
+      _connectionType: 0
+      _typeConstraint: 0
+      _dynamic: 0
+    - _fieldName: nextNode
+      _node: {fileID: 3904786362034143861}
+      _typeQualifiedName: System.Collections.Generic.List`1[[HnSF.Combat.MovesetAttackNode+nextNodeDefinition,
+        HnSF, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null]], mscorlib,
+        Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089
+      connections: []
+      _direction: 1
+      _connectionType: 0
+      _typeConstraint: 0
+      _dynamic: 0
+  Identifier: 1
+  lastNode: {fileID: 0}
+  inputSequence:
+    executeWindow: 3
+    executeInputs:
+    - inputType: 0
+      buttonID: 3
+      stickDirection: {x: 0, y: 0}
+      directionDeviation: 0
+    - inputType: 1
+      buttonID: 0
+      stickDirection: {x: 0, y: 1}
+      directionDeviation: 0.85
+    sequenceWindow: 8
+    sequenceInputs: []
+  attackDefinition: {fileID: 11400000, guid: 407fe0fb4d3c93440b823b67c1c3a754, type: 2}
+  nextNode: []
+  lockonRequired: 0

@@ -20,7 +20,7 @@ namespace rwby.Combat.AttackEvents
             return "Set Forces";
         }
 
-        public override AttackEventReturnType Evaluate(int frame, int endFrame, IFighterBase controller, AttackEventVariables variables)
+        public override AttackEventReturnType Evaluate(int frame, int endFrame, IFighterBase controller)
         {
             FighterManager e = (FighterManager)controller;
 

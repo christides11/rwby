@@ -17,7 +17,7 @@ namespace rwby.Combat.AttackEvents
             return "Movement";
         }
 
-        public override AttackEventReturnType Evaluate(int frame, int endFrame, IFighterBase controller, AttackEventVariables variables)
+        public override AttackEventReturnType Evaluate(int frame, int endFrame, IFighterBase controller)
         {
             FighterManager manager = (FighterManager)controller;
             manager.PhysicsManager.HandleMovement(baseAcceleration, acceleration, deceleration, maxSpeed, accelFromDot);

@@ -21,13 +21,14 @@ namespace rwby
         protected InputButtonData[] HeavyAttack = new InputButtonData[inputCapacity];
         protected InputButtonData[] Jump = new InputButtonData[inputCapacity];
         protected InputButtonData[] Block = new InputButtonData[inputCapacity];
-        protected InputButtonData[] Shoot = new InputButtonData[inputCapacity];
+        protected InputButtonData[] Grab = new InputButtonData[inputCapacity];
         protected InputButtonData[] Dash = new InputButtonData[inputCapacity];
         protected InputButtonData[] LockOn = new InputButtonData[inputCapacity];
         protected InputButtonData[] Ability1 = new InputButtonData[inputCapacity];
         protected InputButtonData[] Ability2 = new InputButtonData[inputCapacity];
         protected InputButtonData[] Ability3 = new InputButtonData[inputCapacity];
         protected InputButtonData[] Ability4 = new InputButtonData[inputCapacity];
+        protected InputButtonData[] Extra1 = new InputButtonData[inputCapacity];
 
         public override void Spawned()
         {
@@ -43,13 +44,14 @@ namespace rwby
             HeavyAttack[frame % inputCapacity] = new InputButtonData(inputData.IsDown(NetworkInputData.BUTTON_HEAVY_ATTACK), HeavyAttack[(frame-1) % inputCapacity]);
             Jump[frame % inputCapacity] = new InputButtonData(inputData.IsDown(NetworkInputData.BUTTON_JUMP), Jump[(frame-1) % inputCapacity]);
             Block[frame % inputCapacity] = new InputButtonData(inputData.IsDown(NetworkInputData.BUTTON_BLOCK), Block[(frame-1) % inputCapacity]);
-            Shoot[frame % inputCapacity] = new InputButtonData(inputData.IsDown(NetworkInputData.BUTTON_SHOOT), Shoot[(frame-1) % inputCapacity]);
+            Grab[frame % inputCapacity] = new InputButtonData(inputData.IsDown(NetworkInputData.BUTTON_GRAB), Grab[(frame-1) % inputCapacity]);
             Dash[frame % inputCapacity] = new InputButtonData(inputData.IsDown(NetworkInputData.BUTTON_DASH), Dash[(frame-1) % inputCapacity]);
             LockOn[frame % inputCapacity] = new InputButtonData(inputData.IsDown(NetworkInputData.BUTTON_LOCK_ON), LockOn[(frame-1) % inputCapacity]);
             Ability1[frame % inputCapacity] = new InputButtonData(inputData.IsDown(NetworkInputData.BUTTON_ABILITY_ONE), Ability1[(frame - 1) % inputCapacity]);
             Ability2[frame % inputCapacity] = new InputButtonData(inputData.IsDown(NetworkInputData.BUTTON_ABILITY_TWO), Ability2[(frame - 1) % inputCapacity]);
             Ability3[frame % inputCapacity] = new InputButtonData(inputData.IsDown(NetworkInputData.BUTTON_ABILITY_THREE), Ability3[(frame - 1) % inputCapacity]);
             Ability4[frame % inputCapacity] = new InputButtonData(inputData.IsDown(NetworkInputData.BUTTON_ABILITY_FOUR), Ability4[(frame - 1) % inputCapacity]);
+            Extra1[frame % inputCapacity] = new InputButtonData(inputData.IsDown(NetworkInputData.BUTTON_Extra_1), Extra1[(frame - 1) % inputCapacity]);
         }
 
         public virtual Vector2 GetMovement(int startOffset = 0)
@@ -92,6 +94,16 @@ namespace rwby
             return GetButton(ref Block, out buttonOffset, startOffset, bufferFrames);
         }
 
+        public virtual InputButtonData GetGrab(out int buttonOffset, int startOffset = 0, int bufferFrames = 0)
+        {
+            return GetButton(ref Grab, out buttonOffset, startOffset, bufferFrames);
+        }
+
+        public virtual InputButtonData GetLockOn(out int buttonOffset, int startOffset = 0, int bufferFrames = 0)
+        {
+            return GetButton(ref LockOn, out buttonOffset, startOffset, bufferFrames);
+        }
+
         public virtual InputButtonData GetAbility1(out int buttonOffset, int startOffset = 0, int bufferFrames = 0)
         {
             return GetButton(ref Ability1, out buttonOffset, startOffset, bufferFrames);
@@ -112,6 +124,11 @@ namespace rwby
             return GetButton(ref Ability4, out buttonOffset, startOffset, bufferFrames);
         }
 
+        public virtual InputButtonData GetExtra1(out int buttonOffset, int startOffset = 0, int bufferFrames = 0)
+        {
+            return GetButton(ref Extra1, out buttonOffset, startOffset, bufferFrames);
+        }
+
         public virtual InputButtonData GetButton(PlayerInputType button, out int buttonOffset, int startOffset = 0, int bufferFrames = 0)
         {
             buttonOffset = startOffset;
@@ -129,6 +146,10 @@ namespace rwby
                     return GetAbility1(out buttonOffset, startOffset, bufferFrames);
                 case PlayerInputType.ABILITY_2:
                     return GetAbility2(out buttonOffset, startOffset, bufferFrames);
+                case PlayerInputType.LOCK_ON:
+                    return GetLockOn(out buttonOffset, startOffset, bufferFrames);
+                case PlayerInputType.EXTRA_1:
+                    return GetExtra1(out buttonOffset, startOffset, bufferFrames);
                 default:
                     return new InputButtonData();
             }

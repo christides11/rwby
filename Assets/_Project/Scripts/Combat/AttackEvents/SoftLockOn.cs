@@ -13,7 +13,7 @@ namespace rwby.Combat.AttackEvents
 
         public float rotSpeed = 10;
 
-        public override AttackEventReturnType Evaluate(int frame, int endFrame, IFighterBase controller, AttackEventVariables variables)
+        public override AttackEventReturnType Evaluate(int frame, int endFrame, IFighterBase controller)
         {
             FighterManager manager = controller as FighterManager;
             /*
