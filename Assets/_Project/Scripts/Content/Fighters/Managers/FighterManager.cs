@@ -24,7 +24,7 @@ namespace rwby
         public bool Targetable { get { return TargetableNetworked; } }
 
         [Networked] public NetworkBool HardTargeting { get; set; }
-        [Networked] public Vector2 TargetingForward { get; set; }
+        [Networked] public NetworkObject CurrentTarget { get; set; }
 
         // Stats
         [Networked] public NetworkBool StoredRun { get; set; }
@@ -45,6 +45,12 @@ namespace rwby
         [SerializeField] protected IFighterDefinition fighterDefinition;
         [SerializeField] protected CapsuleCollider capsuleCollider;
         public Transform visualTransform;
+
+        [Header("Lock On")]
+        public LayerMask lockonLayerMask;
+        public LayerMask lockonVisibilityLayerMask;
+        public float lockonMaxDistance = 20;
+        public float lockonFudging = 0.1f;
 
         public void OnFighterLoaded()
         {
@@ -85,6 +91,8 @@ namespace rwby
                 //visual.transform.localPosition = pos;
             }*/
 
+            HandleLockon();
+
             if (CombatManager.HitStop == 0)
             {
                 if (CombatManager.BlockStun > 0)
@@ -99,6 +107,102 @@ namespace rwby
             {
                 CombatManager.HitStop--;
                 PhysicsManager.Freeze();
+            }
+        }
+
+        private void HandleLockon()
+        {
+            if(HardTargeting == false)
+            {
+                TryLockon();
+            }
+            else
+            {
+                TryLockoff();
+            }
+        }
+
+        private void TryLockon()
+        {
+            if (inputManager.GetLockOn(out int bOffset).isDown == false) return;
+            PickLockonTarget();
+            HardTargeting = true;
+        }
+
+        private void TryLockoff()
+        {
+            if (inputManager.GetLockOn(out int bOffset).isDown == true) return;
+            CurrentTarget = null;
+            HardTargeting = false;
+        }
+
+        private void PickLockonTarget()
+        {
+            Collider[] list = Physics.OverlapSphere(GetCenter(), lockonMaxDistance, lockonLayerMask);
+            // The direction of the lockon defaults to the forward of the camera.
+            Vector3 referenceDirection = GetMovementVector(0, 1);
+            // If the movement stick is pointing in a direction, then our lockon should
+            // be based on that angle instead.
+            Vector2 movementDir = InputManager.GetMovement(0);
+            if (movementDir.magnitude >= InputConstants.movementDeadzone)
+            {
+                referenceDirection = GetMovementVector(movementDir.x, movementDir.y);
+            }
+
+            // Loop through all targets and find the one that matches the angle the best.
+            GameObject closestTarget = null;
+            float closestAngle = -2.0f;
+            float closestDistance = Mathf.Infinity;
+            foreach (Collider c in list)
+            {
+                // Ignore self.
+                if (c.gameObject == gameObject)
+                {
+                    continue;
+                }
+                // Only objects with ILockonable can be locked on to.
+                if (c.TryGetComponent(out ITargetable targetLockonComponent) == false)
+                {
+                    continue;
+                }
+                // The target can not be locked on to right now.
+                if (!targetLockonComponent.Targetable)
+                {
+                    continue;
+                }
+
+                Vector3 targetDistance = targetLockonComponent.GetBounds().center - GetBounds().center;
+                // If we can't see the target, it can not be locked on to.
+                if (Physics.Raycast(GetBounds().center, targetDistance.normalized, out RaycastHit h, targetDistance.magnitude, lockonVisibilityLayerMask))
+                {
+                    continue;
+                }
+
+                targetDistance.y = 0;
+                float currAngle = Vector3.Dot(referenceDirection, targetDistance.normalized);
+                bool withinFudging = Mathf.Abs(currAngle - closestAngle) <= lockonFudging;
+                // Targets have similar positions, choose the closer one.
+                if (withinFudging)
+                {
+                    if (targetDistance.sqrMagnitude < closestDistance)
+                    {
+                        closestTarget = c.gameObject;
+                        closestAngle = currAngle;
+                        closestDistance = targetDistance.sqrMagnitude;
+                    }
+                }
+                // Target is closer to the angle than the last one, this is the new target.
+                else if (currAngle > closestAngle)
+                {
+                    closestTarget = c.gameObject;
+                    closestAngle = currAngle;
+                    closestDistance = targetDistance.sqrMagnitude;
+                }
+            }
+
+            if(closestTarget != null)
+            {
+                CurrentTarget = closestTarget.GetComponent<NetworkObject>();
             }
         }
 

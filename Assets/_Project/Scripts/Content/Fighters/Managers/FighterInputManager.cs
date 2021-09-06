@@ -146,6 +146,8 @@ namespace rwby
                     return GetAbility1(out buttonOffset, startOffset, bufferFrames);
                 case PlayerInputType.ABILITY_2:
                     return GetAbility2(out buttonOffset, startOffset, bufferFrames);
+                case PlayerInputType.ABILITY_3:
+                    return GetAbility3(out buttonOffset, startOffset, bufferFrames);
                 case PlayerInputType.LOCK_ON:
                     return GetLockOn(out buttonOffset, startOffset, bufferFrames);
                 case PlayerInputType.EXTRA_1:

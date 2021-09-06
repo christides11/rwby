@@ -81,79 +81,8 @@ namespace rwby
 
         private void TryLockOn()
         {
-            if (p.GetButton(Action.Lock_On) == false) return;
-
-            PickLockonTarget();
-        }
-
-        private void PickLockonTarget()
-        {
-            Collider[] list = Physics.OverlapSphere(followTarget.GetCenter(), lockonMaxDistance, lockonLayerMask);
-            // The direction of the lockon defaults to the forward of the camera.
-            Vector3 referenceDirection = followTarget.GetMovementVector(0, 1);
-            // If the movement stick is pointing in a direction, then our lockon should
-            // be based on that angle instead.
-            Vector2 movementDir = followTarget.InputManager.GetMovement(0);
-            if (movementDir.magnitude >= InputConstants.movementDeadzone)
-            {
-                referenceDirection = followTarget.GetMovementVector(movementDir.x, movementDir.y);
-            }
-
-            // Loop through all targets and find the one that matches the angle the best.
-            GameObject closestTarget = null;
-            float closestAngle = -2.0f;
-            float closestDistance = Mathf.Infinity;
-            foreach (Collider c in list)
-            {
-                // Ignore self.
-                if (c.gameObject == followTarget.gameObject)
-                {
-                    continue;
-                }
-                // Only objects with ILockonable can be locked on to.
-                if (c.TryGetComponent(out ITargetable targetLockonComponent) == false)
-                {
-                    continue;
-                }
-                // The target can not be locked on to right now.
-                if (!targetLockonComponent.Targetable)
-                {
-                    continue;
-                }
-
-                Vector3 targetDistance = targetLockonComponent.GetBounds().center - followTarget.GetBounds().center;
-                // If we can't see the target, it can not be locked on to.
-                if (Physics.Raycast(followTarget.GetBounds().center, targetDistance.normalized, out RaycastHit h, targetDistance.magnitude, lockonVisibilityLayerMask))
-                {
-                    continue;
-                }
-
-                targetDistance.y = 0;
-                float currAngle = Vector3.Dot(referenceDirection, targetDistance.normalized);
-                bool withinFudging = Mathf.Abs(currAngle - closestAngle) <= lockonFudging;
-                // Targets have similar positions, choose the closer one.
-                if (withinFudging)
-                {
-                    if (targetDistance.sqrMagnitude < closestDistance)
-                    {
-                        closestTarget = c.gameObject;
-                        closestAngle = currAngle;
-                        closestDistance = targetDistance.sqrMagnitude;
-                    }
-                }
-                // Target is closer to the angle than the last one, this is the new target.
-                else if (currAngle > closestAngle)
-                {
-                    closestTarget = c.gameObject;
-                    closestAngle = currAngle;
-                    closestDistance = targetDistance.sqrMagnitude;
-                }
-            }
-
-            if (closestTarget != null)
-            {
-                LockOnToTarget(closestTarget);
-            }
+            if (followTarget.HardTargeting == false || followTarget.CurrentTarget == null) return;
+            LockOnToTarget(followTarget.CurrentTarget.gameObject);
         }
 
         private void LockOnToTarget(GameObject target)
@@ -161,24 +90,19 @@ namespace rwby
             LockOnTarget = target;
             thirdPersonaCamera.InitiateLockOn(target);
             currentCameraState = CameraState.LOCK_ON;
-            followTarget.HardTargeting = true;
         }
 
         private void HandleLockOn()
         {
-            Vector3 dir = (LockOnTarget.transform.position - followTarget.transform.position);
-            dir.y = 0;
-            followTarget.TargetingForward = new Vector2(dir.x, dir.z);
             thirdPersonaCamera.ManualUpdate();
             TryLockoff();
         }
 
         private void TryLockoff()
         {
-            if (p.GetButton(Action.Lock_On) == true) return;
+            if (followTarget.HardTargeting == true && followTarget.CurrentTarget != null) return;
             thirdPersonaCamera.ExitLockOn();
             currentCameraState = CameraState.THIRDPERSON;
-            followTarget.HardTargeting = false;
         }
 
         public virtual void Update()

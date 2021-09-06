@@ -42,11 +42,7 @@ MonoBehaviour:
   lastNode: {fileID: 0}
   inputSequence:
     executeWindow: 3
-    executeInputs:
-    - inputType: 0
-      buttonID: 12
-      stickDirection: {x: 0, y: 0}
-      directionDeviation: 0
+    executeInputs: []
     sequenceWindow: 8
     sequenceInputs: []
   attackDefinition: {fileID: 11400000, guid: 780a30c94c820be46a8923049a2f9a9c, type: 2}
@@ -94,11 +90,7 @@ MonoBehaviour:
   lastNode: {fileID: 0}
   inputSequence:
     executeWindow: 3
-    executeInputs:
-    - inputType: 0
-      buttonID: 12
-      stickDirection: {x: 0, y: 0}
-      directionDeviation: 0
+    executeInputs: []
     sequenceWindow: 8
     sequenceInputs: []
   attackDefinition: {fileID: 11400000, guid: 7d219d8bc5b226f4ab92f9bb06e3b806, type: 2}
@@ -198,11 +190,7 @@ MonoBehaviour:
   lastNode: {fileID: 0}
   inputSequence:
     executeWindow: 3
-    executeInputs:
-    - inputType: 0
-      buttonID: 13
-      stickDirection: {x: 0, y: 0}
-      directionDeviation: 0
+    executeInputs: []
     sequenceWindow: 8
     sequenceInputs: []
   attackDefinition: {fileID: 11400000, guid: f7c3117c8f2651744aa4f3f66af14950, type: 2}
@@ -283,16 +271,22 @@ MonoBehaviour:
   cancelLists: []
   groundIdleCancelListID: -1
   groundAttackStartNodes:
-  - {fileID: -7034547069272612835}
-  - {fileID: -2552742204646169340}
   - {fileID: 5433208356493312847}
   - {fileID: -478884067571542759}
   - {fileID: -3217907378620375815}
   airIdleCancelListID: -1
   airAttackStartNodes:
-  - {fileID: -2552742204646169340}
-  - {fileID: -3718041422948319744}
   - {fileID: -3217907378620375815}
+  groundAbilityNodes:
+  - {fileID: -7034547069272612835}
+  - {fileID: -2552742204646169340}
+  - {fileID: 0}
+  - {fileID: 0}
+  airAbilityNodes:
+  - {fileID: -3718041422948319744}
+  - {fileID: -2552742204646169340}
+  - {fileID: 0}
+  - {fileID: 0}
 --- !u!114 &5433208356493312847
 MonoBehaviour:
   m_ObjectHideFlags: 0

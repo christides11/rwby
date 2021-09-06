@@ -11,5 +11,8 @@ namespace rwby
         //public FighterStatsSO fighterStats;
         //public HurtboxCollection hurtboxCollection;
         //public AnimationReferenceHolder animationCollection;
+        [Header("Abilities")]
+        public List<MovesetAttackNode> groundAbilityNodes;
+        public List<MovesetAttackNode> airAbilityNodes;
     }
 }

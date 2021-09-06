@@ -113,10 +113,15 @@ namespace rwby
 
         protected virtual int CheckStartingNodes()
         {
-            MovesetDefinition moveset = CurrentMoveset;
+            rwby.Moveset moveset = (Moveset)CurrentMoveset;
             switch (physicsManager.IsGrounded)
             {
                 case true:
+                    int groundAbility = CheckAbilityNodes(ref moveset.groundAbilityNodes);
+                    if(groundAbility != -1)
+                    {
+                        return groundAbility;
+                    }
                     if (moveset.groundIdleCancelListID != -1)
                     {
                         int cancel = TryCancelList(moveset.groundIdleCancelListID);
@@ -132,6 +137,11 @@ namespace rwby
                     }
                     break;
                 case false:
+                    int airAbility = CheckAbilityNodes(ref moveset.airAbilityNodes);
+                    if (airAbility != -1)
+                    {
+                        return airAbility;
+                    }
                     if (moveset.airIdleCancelListID != -1)
                     {
                         int cancel = TryCancelList(moveset.airIdleCancelListID);
@@ -190,6 +200,7 @@ namespace rwby
             return -1;
         }
 
+
         protected virtual HnSF.Combat.MovesetAttackNode CheckAttackNode(HnSF.Combat.MovesetAttackNode node)
         {
             if (node.attackDefinition == null)
@@ -203,6 +214,44 @@ namespace rwby
             }
 
             if (CheckForInputSequence(node.inputSequence))
+            {
+                return node;
+            }
+            return null;
+        }
+
+        [SerializeField] protected List<PlayerInputType> abilityButtons = new List<PlayerInputType>();
+        protected virtual int CheckAbilityNodes<T>(ref List<T> nodes) where T : HnSF.Combat.MovesetAttackNode
+        {
+            for (int i = 0; i < nodes.Count; i++)
+            {
+                HnSF.Combat.MovesetAttackNode man = CheckAbilityNode(abilityButtons[i], nodes[i]);
+                if (man != null)
+                {
+                    return nodes[i].Identifier;
+                }
+            }
+            return -1;
+        }
+
+        protected virtual HnSF.Combat.MovesetAttackNode CheckAbilityNode(PlayerInputType inputT, HnSF.Combat.MovesetAttackNode node)
+        {
+            if (node.attackDefinition == null)
+            {
+                return null;
+            }
+
+            if (CheckAttackNodeConditions(node) == false)
+            {
+                return null;
+            }
+
+            if(manager.InputManager.GetButton(inputT, out int bOff).firstPress == false)
+            {
+                return null;
+            }
+
+            if (CheckForInputSequence(node.inputSequence, 0, true))
             {
                 return node;
             }
@@ -450,7 +499,11 @@ namespace rwby
                 return hitReaction;
             }
 
-            
+            if(BlockState != BlockStateType.NONE)
+            {
+
+            }
+            /*
             if (BlockState != BlockStateType.NONE)
             {
                 if (hitInfo.blockType == HitBlockType.MID)
@@ -471,7 +524,7 @@ namespace rwby
                     BlockStun = hitInfo.blockstun;
                     return hitReaction;
                 }
-            }
+            }*/
 
             // Got hit, apply stun, damage, and forces.
             hitReaction.reaction = HitReactionType.HIT;
