@@ -33,6 +33,11 @@ namespace rwby
             rotationDir = Vector3.zero;
         }
 
+        public void SetPosition(Vector3 position)
+        {
+            kCC.Motor.SetPosition(position, true);
+        }
+
         public void SetRotation(Vector3 rot)
         {
             rotationDir = rot;

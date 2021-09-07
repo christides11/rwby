@@ -10,6 +10,11 @@ namespace rwby.core.content
     {
         [Networked] public Vector3 TeleportPosition { get; set; }
 
+        public float teleportHeight = 5;
+        public float teleportDist = 3;
+        public float teleportGravity = 20;
+        public Vector3 teleportLockoffOffset;
+
         protected override void SetupStates()
         {
             stateManager.AddState(new RRTeleport(), (ushort)RubyRoseStates.TELEPORT);

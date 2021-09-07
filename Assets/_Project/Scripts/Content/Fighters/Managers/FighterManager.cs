@@ -25,6 +25,7 @@ namespace rwby
 
         [Networked] public NetworkBool HardTargeting { get; set; }
         [Networked] public NetworkObject CurrentTarget { get; set; }
+        [Networked] public NetworkBool Visible { get; set; }
 
         // Stats
         [Networked] public NetworkBool StoredRun { get; set; }
@@ -67,6 +68,7 @@ namespace rwby
         {
             base.Spawned();
             TargetableNetworked = true;
+            Visible = true;
             if (Object.HasInputAuthority)
             {
                 ClientManager.local.camera = GameObject.Instantiate(GameManager.singleton.settings.playerCameraPrefab, transform.position, transform.rotation);
@@ -81,6 +83,8 @@ namespace rwby
         public override void FixedUpdateNetwork()
         {
             base.FixedUpdateNetwork();
+
+            visualTransform.gameObject.SetActive(Visible);
 
             // Shake during hitstop (only when you got hit by an attack).
             /*if (CombatManager.HitStop > 0
@@ -131,7 +135,7 @@ namespace rwby
 
         private void TryLockoff()
         {
-            if (inputManager.GetLockOn(out int bOffset).isDown == true) return;
+            if (inputManager.GetLockOn(out int bOffset).isDown == true && (CurrentTarget != null && CurrentTarget.GetComponent<ITargetable>().Targetable == false)) return;
             CurrentTarget = null;
             HardTargeting = false;
         }

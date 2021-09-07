@@ -18,14 +18,13 @@ namespace rwby
             manager.CombatManager.Charging = true;
             manager.HurtboxManager.ResetHurtboxes();
             AttackDefinition currentAttack = (AttackDefinition)manager.CombatManager.CurrentAttackNode.attackDefinition;
-            if (currentAttack.useState)
-            {
-                manager.StateManager.ChangeState(currentAttack.stateOverride);
-                return;
-            }
-            for(int i = 0; i < manager.attackEventInput.Length; i++)
+            for (int i = 0; i < manager.attackEventInput.Length; i++)
             {
                 manager.attackEventInput.Set(i, false);
+            }
+            if (currentAttack.useState)
+            {
+                manager.StateManager.GetState(currentAttack.stateOverride).Initialize();
             }
         }
 
@@ -33,6 +32,11 @@ namespace rwby
         {
             AttackDefinition currentAttack = (AttackDefinition)manager.CombatManager.CurrentAttackNode.attackDefinition;
             manager.HurtboxManager.CreateHurtboxes(0, 0);
+
+            if (currentAttack.useState)
+            {
+                manager.StateManager.GetState(currentAttack.stateOverride).OnUpdate();
+            }
 
             if (TryCancelWindow(currentAttack))
             {
@@ -80,12 +84,13 @@ namespace rwby
 
         public override void OnLateUpdate()
         {
-            if(manager.CombatManager.HitStop != 0)
+            AttackDefinition currentAttack = (AttackDefinition)manager.CombatManager.CurrentAttackNode.attackDefinition;
+
+            if (manager.CombatManager.HitStop != 0)
             {
                 return;
             }
 
-            AttackDefinition currentAttack = (AttackDefinition)manager.CombatManager.CurrentAttackNode.attackDefinition;
             for (int i = 0; i < currentAttack.hitboxGroups.Count; i++)
             {
                 HandleHitboxGroup(i, currentAttack.hitboxGroups[i]);
@@ -103,9 +108,14 @@ namespace rwby
                 return;
             }
             
-            if (HandleChargeLevels(manager, currentAttack) == false)
+            if (HandleChargeLevels(manager, currentAttack) == false && currentAttack.useState == false)
             {
                 manager.StateManager.IncrementFrame();
+            }
+
+            if (currentAttack.useState)
+            {
+                manager.StateManager.GetState(currentAttack.stateOverride).OnLateUpdate();
             }
         }
 
@@ -303,6 +313,11 @@ namespace rwby
 
         public override bool CheckInterrupt()
         {
+            AttackDefinition currentAttack = (AttackDefinition)manager.CombatManager.CurrentAttackNode.attackDefinition;
+            if (currentAttack.useState && manager.StateManager.GetState(currentAttack.stateOverride).CheckInterrupt())
+            {
+                return true;
+            }
             if (manager.TryAttack())
             {
                 return true;
@@ -330,7 +345,11 @@ namespace rwby
 
         public override void OnInterrupted()
         {
-            base.OnInterrupted();
+            AttackDefinition currentAttack = (AttackDefinition)manager.CombatManager.CurrentAttackNode.attackDefinition;
+            if (currentAttack.useState)
+            {
+                manager.StateManager.GetState(currentAttack.stateOverride).OnInterrupted();
+            }
         }
 
         private bool FirstInterruptableFrameCheck()

@@ -168,7 +168,11 @@ MonoBehaviour:
   _currentAerialDash: 0
   _apexTime: 0
   _gravity: 0
-  _TeleportPosition: {x: 0, y: 0, z: 0}
+  teleportHeight: 2
+  teleportDist: 2
+  teleportGravity: -10
+  teleportLockoffOffset: {x: 0, y: 0, z: 0}
+  _TeleportPosition: {x: 0, y: 2, z: 5}
 --- !u!114 &7730901374118442406
 MonoBehaviour:
   m_ObjectHideFlags: 0
