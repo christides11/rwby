@@ -164,6 +164,16 @@ MonoBehaviour:
     m_Bits: 8
   lockonMaxDistance: 20
   lockonFudging: 0.1
+  wallLayerMask:
+    serializedVersion: 2
+    m_Bits: 8
+  wallCheckDistance: 0.7
+  currentWall: {fileID: 0}
+  ceilingCheckDistance: 1.2
+  wallRunVertical: -0.9
+  sideWallDistance: 1
+  wallSide: 0
+  wallRunHozMultiplier: 1
   _currentAerialJump: 0
   _currentAerialDash: 0
   _apexTime: 0
@@ -366,6 +376,8 @@ MonoBehaviour:
   airDashMaxMagnitude: 0
   airDashForce: 0
   airDashGravityDelay: 0
+  wallRunHorizontalTime: 0
+  wallRunHorizontalSpeed: 0
 --- !u!114 &8828466035712802024
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -58,6 +58,10 @@ namespace rwby
         public float airDashForce;
         public int airDashGravityDelay;
 
+        // Wall run
+        public int wallRunHorizontalTime;
+        public float wallRunHorizontalSpeed;
+
         public void SetupStats()
         {
             GroundFriction = new StatFloat(cmnStats.groundFriction);
@@ -101,6 +105,9 @@ namespace rwby
             airDashMaxMagnitude = cmnStats.airDashMaxMagnitude;
             airDashForce = cmnStats.airDashForce;
             airDashGravityDelay = cmnStats.airDashGravityDelay;
+
+            wallRunHorizontalTime = cmnStats.wallRunHorizontalTime;
+            wallRunHorizontalSpeed = cmnStats.wallRunHorizontalSpeed;
         }
     }
 }

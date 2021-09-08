@@ -49,7 +49,7 @@ namespace rwby.fighters.states
 
         public override bool CheckInterrupt()
         {
-            if (manager.TryAttack() || manager.TryAirJump())
+            if (manager.TryAttack() || manager.TryAirJump() || manager.TryWallRun())
             {
                 return true;
             }

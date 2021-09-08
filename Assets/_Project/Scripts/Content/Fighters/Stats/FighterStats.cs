@@ -61,6 +61,10 @@ namespace rwby
         public float hitstunMaxFallSpeed;
         public float hitstunGroundFriction;
 
+        [Header("Wall Run")]
+        public int wallRunHorizontalTime;
+        public float wallRunHorizontalSpeed;
+
         [Header("Other")]
         public float inertiaFriction;
     }
