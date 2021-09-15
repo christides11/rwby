@@ -64,6 +64,11 @@ namespace rwby.fighters.states
                 {
                     return true;
                 }
+                if(manager.InputManager.GetBlock(out int bOff).isDown == false)
+                {
+                    manager.StateManager.ChangeState((ushort)FighterCmnStates.IDLE);
+                    return true;
+                }
             }
             return false;
         }

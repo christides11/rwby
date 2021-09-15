@@ -16,26 +16,22 @@ namespace rwby.Combat.AttackEvents
         public override AttackEventReturnType Evaluate(int frame, int endFrame, IFighterBase controller)
         {
             FighterManager manager = controller as FighterManager;
-            /*
-            (controller as FighterManager).PickSoftlockTarget();
-            Vector2 move = controller.InputManager.GetAxis2D((int)PlayerInputType.MOVEMENT);
-            Vector3 dir = Vector3.zero;
+            Vector3 mDir = manager.GetMovementVector();
 
-            if (move.magnitude >= InputConstants.movementThreshold)
+            // Pointing in direction using movement.
+            if(mDir.sqrMagnitude > 0)
             {
-                dir = (controller as FighterManager).GetMovementVector(move.x, move.y);
-                dir.Normalize();
-                controller.RotateVisual(dir, rotSpeed);
+                manager.RotateVisual(mDir, rotSpeed);
                 return AttackEventReturnType.NONE;
             }
 
-            if ((controller as FighterManager).LockonTarget != null)
+            if(manager.CurrentTarget != null)
             {
-                dir = ((controller as FighterManager).LockonTarget.transform.position - controller.transform.position);
-                dir.y = 0;
-                dir.Normalize();
-                controller.RotateVisual(dir, rotSpeed);
-            }*/
+                mDir = manager.CurrentTarget.transform.position - manager.transform.position;
+                mDir.y = 0;
+                mDir.Normalize();
+                manager.RotateVisual(mDir, rotSpeed);
+            }
 
             return AttackEventReturnType.NONE;
         }

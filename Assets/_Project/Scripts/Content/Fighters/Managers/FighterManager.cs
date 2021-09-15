@@ -76,7 +76,7 @@ namespace rwby
             }
             combatManager.Cleanup();
             combatManager.SetMoveset(0);
-            statManager.SetupStats();
+            statManager.SetupStats((combatManager.movesets[0] as Moveset).fighterStats);
             SetupStates();
         }
 
@@ -135,7 +135,13 @@ namespace rwby
 
         private void TryLockoff()
         {
-            if (inputManager.GetLockOn(out int bOffset).isDown == true && (CurrentTarget != null && CurrentTarget.GetComponent<ITargetable>().Targetable == false)) return;
+            float dist = 0;
+            if(CurrentTarget != null)
+            {
+                dist = Vector3.Distance(transform.position, CurrentTarget.transform.position);
+            }
+            if ((dist <= lockonMaxDistance+0.5f)
+                && (inputManager.GetLockOn(out int bOffset).isDown == true && (CurrentTarget != null && CurrentTarget.GetComponent<ITargetable>().Targetable == true)) ) return;
             CurrentTarget = null;
             HardTargeting = false;
         }
@@ -170,7 +176,7 @@ namespace rwby
                     continue;
                 }
                 // The target can not be locked on to right now.
-                if (!targetLockonComponent.Targetable)
+                if (targetLockonComponent.Targetable == false)
                 {
                     continue;
                 }
@@ -236,7 +242,7 @@ namespace rwby
             StateManager.AddState(new SBlockAir(), (ushort)FighterCmnStates.BLOCK_AIR);
 
             StateManager.AddState(new SWallRunH(), (ushort)FighterCmnStates.WALL_RUN_H);
-            StateManager.AddState(new SWallRunV(), (ushort)FighterCmnStates.WALL_RUN_V);
+            StateManager.AddState(new SWallJump(), (ushort)FighterCmnStates.WALL_JUMP);
 
             StateManager.ChangeState((ushort)FighterCmnStates.FALL);
         }
@@ -321,7 +327,14 @@ namespace rwby
             {
                 return false;
             }
-            StateManager.ChangeState((ushort)FighterCmnStates.BLOCK_HIGH);
+            if (PhysicsManager.IsGroundedNetworked)
+            {
+                StateManager.ChangeState((ushort)FighterCmnStates.BLOCK_HIGH);
+            }
+            else
+            {
+                StateManager.ChangeState((ushort)FighterCmnStates.BLOCK_AIR);
+            }
             return true;
         }
 
@@ -342,7 +355,7 @@ namespace rwby
         public GameObject currentWall;
         public float ceilingCheckDistance = 1.2f;
         public RaycastHit wallRayHit;
-        public float wallRunVertical = -0.9f;
+        public float wallRunDot = -0.9f;
 
         public float sideWallDistance;
         public int wallSide;
@@ -358,16 +371,8 @@ namespace rwby
             if (rh.collider == null) return false;
 
             float dotProduct = Vector3.Dot(rh.normal, GetMovementVector().normalized);
-            if (dotProduct < wallRunVertical)
+            if (dotProduct < wallRunDot)
             {
-                Debug.Log("V");
-                lastWallHit = rh;
-                StateManager.ChangeState((int)FighterCmnStates.WALL_RUN_V);
-                return true;
-            }
-            else if (dotProduct < -0.1f)
-            {
-                Debug.Log("H");
                 lastWallHit = rh;
                 StateManager.ChangeState((int)FighterCmnStates.WALL_RUN_H);
                 return true;
@@ -397,20 +402,35 @@ namespace rwby
             Vector3 movementLeftForward = (translatedLeft + translatedMovement).normalized;
             Vector3 movementRightForward = ((-translatedLeft) + translatedMovement).normalized;
 
-            Physics.Raycast(transform.position + new Vector3(0, 1, 0),
-                translatedMovement.normalized, out forwardRay, wallCheckDistance, wallLayerMask);
+            //Physics.Raycast(transform.position + new Vector3(0, 1, 0),
+            //    translatedMovement.normalized, out forwardRay, wallCheckDistance, wallLayerMask);
+
+            //Debug.DrawRay(transform.position + new Vector3(0, 1, 0),
+            //    translatedMovement.normalized * wallCheckDistance, Color.red);
 
             Physics.Raycast(transform.position + new Vector3(0, 1, 0),
                 movementLeftForward, out leftForwardRay, wallCheckDistance, wallLayerMask);
 
+            //Debug.DrawRay(transform.position + new Vector3(0, 1, 0),
+            //    movementLeftForward * wallCheckDistance, Color.red);
+
             Physics.Raycast(transform.position + new Vector3(0, 1, 0),
                 translatedLeft.normalized, out leftRay, wallCheckDistance, wallLayerMask);
+
+            //Debug.DrawRay(transform.position + new Vector3(0, 1, 0),
+            //    translatedLeft.normalized * wallCheckDistance, Color.red);
 
             Physics.Raycast(transform.position + new Vector3(0, 1, 0),
                 movementRightForward, out rightForwardRay, wallCheckDistance, wallLayerMask);
 
+            //Debug.DrawRay(transform.position + new Vector3(0, 1, 0),
+            //    movementRightForward * wallCheckDistance, Color.red);
+
             Physics.Raycast(transform.position + new Vector3(0, 1, 0),
                 -translatedLeft.normalized, out rightRay, wallCheckDistance, wallLayerMask);
+
+            //Debug.DrawRay(transform.position + new Vector3(0, 1, 0),
+            //    -translatedLeft.normalized * wallCheckDistance, Color.red);
 
             FixRaycastHit(ref forwardRay);
             FixRaycastHit(ref leftRay);
@@ -418,16 +438,17 @@ namespace rwby
             FixRaycastHit(ref rightForwardRay);
             FixRaycastHit(ref rightRay);
 
+            /*
             if (forwardRay.collider != null
                 && forwardRay.distance <= leftForwardRay.distance
                 && forwardRay.distance <= rightForwardRay.distance
                 && forwardRay.distance <= leftRay.distance
                 && forwardRay.distance <= rightRay.distance)
             {
-                wallDir = 0;
+                wallDir = 1;
                 return forwardRay;
             }
-            else if (
+            else*/ if (
                leftForwardRay.collider != null
                && leftForwardRay.distance <= forwardRay.distance
                && leftForwardRay.distance <= leftRay.distance
@@ -490,12 +511,17 @@ namespace rwby
         /// <returns>A direction vector based on the camera's forward.</returns>
         public virtual Vector3 GetMovementVector(int frame = 0)
         {
-            Vector2 movement = InputManager.GetMovement(frame);
-            if(movement.magnitude < InputConstants.movementDeadzone)
+            Vector2 movement = ExtDebug.DeadZoner(InputManager.GetMovement(frame), InputConstants.movementDeadzone);
+            if(movement == Vector2.zero)
             {
                 return Vector3.zero;
             }
             return GetMovementVector(movement.x, movement.y);
+        }
+
+        public float Remap(float value, float from1, float to1, float from2, float to2)
+        {
+            return (value - from1) / (to1 - from1) * (to2 - from2) + from2;
         }
 
         public virtual Vector3 GetMovementVector(float horizontal, float vertical)

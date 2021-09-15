@@ -22,7 +22,9 @@ namespace rwby
 		[Networked] public NetworkBool LobbyReadyStatus { get; set; }
 		[Networked] public NetworkBool MatchReadyStatus { get; set; }
 
-		[SerializeField] protected FighterInputManager inputManager;
+		[Networked] public NetworkObject ClientFighter { get; set; }
+
+		public FighterInputManager inMan;
 
 		protected NetworkManager networkManager;
 
@@ -119,6 +121,8 @@ namespace rwby
 				local = this;
 				Runner.AddCallbacks(this);
 				RPC_Configure(GameManager.singleton.localUsername);
+				BaseHUD bhud = GameObject.Instantiate(GameManager.singleton.settings.baseUI, transform, false);
+				bhud.SetClient(this);
 			}
 		}
 
@@ -181,12 +185,13 @@ namespace rwby
 		{
 			p = ReInput.players.GetPlayer(controllerID);
 		}
-
+		
+		/*
 		[Rpc(RpcSources.StateAuthority, RpcTargets.All)]
-		public void RPC_SetPlayer(FighterInputManager player)
+		public void RPC_SetPlayer(NetworkObject player)
         {
-			inputManager = player;
-        }
+			inputManager = player.GetComponent<FighterInputManager>();
+        }*/
 
 		/// <summary>
 		/// Get Unity input and store them in a struct for Fusion
@@ -234,17 +239,28 @@ namespace rwby
 		{
 		}
 
+		[Networked] public NetworkInputData latestConfirmedInput { get; set; }
+
 		public override void FixedUpdateNetwork()
 		{
 			// Get our input struct and act accordingly. This method will only return data if we
 			// have Input or State Authority - meaning on the controlling player or the server.
 			if (GetInput(out NetworkInputData input))
 			{
-				if (inputManager == null)
-                {
-					return;
-                }
-				inputManager.FeedInput(networkManager.FusionLauncher.NetworkRunner.Simulation.Tick, input);
+				latestConfirmedInput = input;
+
+				if (inMan == null)
+				{
+					if (ClientFighter != null)
+					{
+						inMan = ClientFighter.GetComponent<FighterInputManager>();
+					}
+					else
+					{
+						return;
+					}
+				}
+				inMan.FeedInput(networkManager.FusionLauncher.NetworkRunner.Simulation.Tick, input);
 			}
 		}
 

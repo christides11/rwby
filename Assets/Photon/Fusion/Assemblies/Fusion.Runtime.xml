@@ -280,9 +280,26 @@
             Name of the field that holds the default value for this networked property.
             </summary>
         </member>
+        <member name="P:Fusion.NetworkedAttribute.Group">
+            <summary>
+            Property group for this property
+            </summary>
+        </member>
         <member name="M:Fusion.NetworkedAttribute.#ctor">
             <summary>
             Default constructor for NetworkedAttribute
+            </summary>
+        </member>
+        <member name="M:Fusion.NetworkedAttribute.#ctor(System.String)">
+            <summary>
+            Group constructor
+            </summary>
+            <param name="group">The property group this property belongs to</param>
+        </member>
+        <member name="P:Fusion.NetworkSerializeMethodAttribute.MaxSize">
+            <summary>
+            If set, this changes expected Wrap method signature to int Name(NetworkRunner, T, byte*) and Unwrap to int Name(NetworkRunner, byte*, ref T).
+            In both cases, the result is the number of bytes written/read and can not be greater than what's declared here.
             </summary>
         </member>
         <member name="T:Fusion.NetworkStructWeavedAttribute">
@@ -557,27 +574,15 @@
             </summary>
             <returns>Async Task of the connect to Photon Cloud process. Can be used to wait for the process to be finished</returns>
         </member>
-        <member name="M:Fusion.CloudServices.CreateOrJoinRoomAsync(System.String,System.Boolean)">
+        <member name="M:Fusion.CloudServices.CreateOrJoinRoomAsync(Fusion.Photon.Realtime.EnterRoomParams,Fusion.Photon.Realtime.OpJoinRandomRoomParams,System.Boolean,System.Boolean)">
             <summary>
             Create or Join a Photon Room using the Room Name as identifier.
             </summary>
-            <param name="RoomName">Optional Room Name, if not set, a Random Name will be used</param>
-            <param name="forceRoomCreation">Force the creation of a Room when the Room Name is empty</param>
+            <param name="enterRoomParams">Create/Enter Room Params</param>
+            <param name="joinParams">Random Room Join Params</param>
+            <param name="forceRoomCreation">Force the Room Creation first, then try to Join</param>
+            <param name="tryJoinRandom">Signal if the peer should try to join a Random Room first</param>
             <returns>Async Task of the room creation process. Can be used to wait for the process to be finished</returns>
-        </member>
-        <member name="M:Fusion.CloudServices.CreateAndJoinRoomAsync(System.String)">
-            <summary>
-            Create a Room and Join automatically.
-            </summary>
-            <param name="RoomName">Optional Room Name, if not set, a Random Name will be used</param>
-            <returns>Async Task of the room creation process. Can be used to wait for the process to be finished</returns>
-        </member>
-        <member name="M:Fusion.CloudServices.JoinRoomAsync(System.String)">
-            <summary>
-            Join a Room with RoomName as identifier. If no RoomName is passed, try to Join a Random Room.
-            </summary>
-            <param name="RoomName">Optional Room Name, if not set, a random room will be joined</param>
-            <returns>Async Task of the room joining process. Can be used to wait for the process to be finished</returns>
         </member>
         <member name="M:Fusion.CloudServices.DisconnectFromCloud">
             <summary>
@@ -629,10 +634,11 @@
             </summary>
             <returns>True if in same Subnet</returns>
         </member>
-        <member name="M:Fusion.CloudServices.BuildEnterRoomParams(System.String)">
+        <member name="M:Fusion.CloudServices.BuildEnterRoomParams(Fusion.Photon.Realtime.TypedLobby,System.String)">
             <summary>
             Build a new EnterRoomParams ref using the default configs and optional Room Name
             </summary>
+            <param name="typedLobby">Which lobby the Room should exits</param>
             <param name="RoomName">Optional Room Name, if not set, a Random Name will be used</param>
             <returns>EnterRoomParams reference.</returns>
         </member>
@@ -833,6 +839,21 @@
             Timeout between sending a <see cref="T:Fusion.Protocol.Join"/> Request and receive a Join Confirmation
             </summary>
         </member>
+        <member name="F:Fusion.CloudServicesMetadata.FUSION_PLUGIN_NAME">
+            <summary>
+            Fusion Plugin Name for request
+            </summary>
+        </member>
+        <member name="F:Fusion.CloudServicesMetadata.LobbyClientServer">
+            <summary>
+            Client Server Lobby
+            </summary>
+        </member>
+        <member name="F:Fusion.CloudServicesMetadata.LobbyShared">
+            <summary>
+            Shared Lobby
+            </summary>
+        </member>
         <member name="P:Fusion.CloudServicesMetadata.RunnerInitializeArgs">
             <summary>
             Reference to the initialization arguments set by the user.
@@ -868,6 +889,11 @@
             <summary>
             List of Peer the Server must send pings.
             This is part of the NAT Punch implementation.
+            </summary>
+        </member>
+        <member name="F:Fusion.CloudServicesMetadata.LastDisconnectMsg">
+            <summary>
+            Last Disconnect Msg Received from the Plugin
             </summary>
         </member>
         <member name="T:Fusion.ScheduledRequestsExt">
@@ -1611,12 +1637,12 @@
             <param name="toParentIsValid">If a parent value has been serialized. Invalid means unknown parent.</param>
             <returns>(From Parent, To Parent)</returns>
         </member>
-        <member name="M:Fusion.NetworkTransformAnchor.GetFromParentForInterpolation(Fusion.NetworkTransformAnchor,Fusion.NetworkRunner,Fusion.InterpolationData@,System.Boolean@)">
+        <member name="M:Fusion.NetworkTransformAnchor.GetToParentForInterpolation(Fusion.NetworkTransformAnchor,Fusion.NetworkRunner,Fusion.InterpolationData@,System.Boolean@)">
             <summary>
-            Returns the networked value for parent <see cref="T:Fusion.NetworkTransformAnchor"/>, for the From state only. (Teleports only require the From).
+            Returns the networked value for parent <see cref="T:Fusion.NetworkTransformAnchor"/>, for the To state only. (Teleports only require the To).
             If valid parent is found, it is forced to run Render() - as parents should always interpolate before children.
             </summary>
-            <param name="fromParentIsValid">If a parent value has been serialized. Invalid means unknown parent.</param>
+            <param name="toParentIsValid">If a parent value has been serialized. Invalid means unknown parent.</param>
             <returns></returns>
         </member>
         <member name="T:Fusion.OrderAttribute">
@@ -1781,11 +1807,17 @@
             <param name="go"></param>
             <param name="runner"></param>
         </member>
-        <member name="M:Fusion.RunnerVisibilityNode.RefreshRunnerVisibility(Fusion.NetworkRunner)">
+        <member name="M:Fusion.RunnerVisibilityNode.RefreshAllRunnerVisibilities">
+            <summary>
+            Force a complete visibility refresh on all runners. Typically used if a runner is destroyed/shutdown.
+            </summary>
+        </member>
+        <member name="M:Fusion.RunnerVisibilityNode.RefreshRunnerVisibility(Fusion.NetworkRunner,System.Boolean)">
             <summary>
             Reapplies a runner's IsVisibile setting to all of its registered visibility nodes.
             </summary>
             <param name="runner"></param>
+            <param name="refreshCommonObjects"></param>
         </member>
         <member name="T:Fusion.RunnerVisibilityNodes">
             <summary>
@@ -2805,6 +2837,11 @@
             
             </summary>
         </member>
+        <member name="F:Fusion.NetworkObject.DefaultPropertyGroups">
+            <summary>
+            
+            </summary>
+        </member>
         <member name="P:Fusion.NetworkObject.LastReceiveTick">
             <summary>
             Last tick this object received an update (only in Eventual Consistency mode)
@@ -3433,6 +3470,15 @@
             Starts <see cref="T:Fusion.NetworkRunner"/> using the supplied arguments.
             </summary>
         </member>
+        <member name="M:Fusion.NetworkRunner.SetPropertyGroup(Fusion.NetworkObject,Fusion.PlayerRef,System.String,System.Boolean)">
+            <summary>
+            Enable or disable a property group for a networked object for a specific player   
+            </summary>
+            <param name="obj"></param>
+            <param name="player"></param>
+            <param name="group"></param>
+            <param name="enabled"></param>
+        </member>
         <member name="M:Fusion.NetworkRunner.GetPlayerRtt(Fusion.PlayerRef)">
             <summary>
             Returns the player round trip time (ping) in seconds
@@ -3764,14 +3810,14 @@
             <param name="args">Custom arguments used to setup the Fusion Simulation</param>
             <returns>Task that can be awaited to chain actions</returns>
         </member>
-        <member name="M:Fusion.NetworkRunner.GameModeSinglePlayer(Fusion.StartGameArgs)">
+        <member name="M:Fusion.NetworkRunner.StartGameModeSinglePlayer(Fusion.StartGameArgs)">
             <summary>
             Start Fusion in Single Player Mode
             </summary>
             <param name="args">Initialization Arguments</param>
             <returns>A running Task of the initialization process</returns>
         </member>
-        <member name="M:Fusion.NetworkRunner.GameModeCloud(Fusion.StartGameArgs)">
+        <member name="M:Fusion.NetworkRunner.StartGameModeCloud(Fusion.StartGameArgs)">
             <summary>
             Start Fusion in one of the Cloud Game Modes
             </summary>
@@ -3941,6 +3987,21 @@
         <member name="F:Fusion.ShutdownReason.Error">
             <summary>
             Shutdown was caused by some internal error
+            </summary>
+        </member>
+        <member name="F:Fusion.ShutdownReason.IncompatibleConfiguration">
+            <summary>
+            Raised when the peer tries to Join a Room with a mismatching type between ClientServer Mode and Shared Mode.
+            </summary>
+        </member>
+        <member name="F:Fusion.ShutdownReason.ServerInRoom">
+            <summary>
+            Raised when the local peer started as a Server and tried to join a Room that already has a Server peer.
+            </summary>
+        </member>
+        <member name="F:Fusion.ShutdownReason.DisconnectedByPluginLogic">
+            <summary>
+            Raised when the Peer is disconnected or kicked by a Plugin Logic.
             </summary>
         </member>
         <member name="T:Fusion.INetworkRunnerCallbacks">

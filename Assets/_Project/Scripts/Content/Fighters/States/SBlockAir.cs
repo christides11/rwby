@@ -14,14 +14,22 @@ namespace rwby.fighters.states
         public override void Initialize()
         {
             base.Initialize();
-            manager.ResetVariablesOnGround();
             manager.CombatManager.BlockState = BlockStateType.AIR;
+
+            if (manager.apexTime == 0)
+            {
+                manager.apexTime = manager.StatManager.MaxJumpTime / 2.0f;
+                manager.gravity = (-2.0f * manager.StatManager.MaxJumpHeight) / Mathf.Pow(manager.apexTime, 2.0f);
+            }
         }
 
         public override void OnUpdate()
         {
             manager.HurtboxManager.CreateHurtboxes(0, 0);
             manager.PhysicsManager.ApplyMovementFriction();
+
+            manager.PhysicsManager.forceGravity += manager.gravity * manager.StatManager.fallGravityMultiplier * manager.Runner.DeltaTime;
+            manager.PhysicsManager.forceGravity = Mathf.Clamp(manager.PhysicsManager.forceGravity, -manager.StatManager.MaxFallSpeed, float.MaxValue);
 
             if (CheckInterrupt() == false)
             {
@@ -37,14 +45,19 @@ namespace rwby.fighters.states
 
         public override bool CheckInterrupt()
         {
-            manager.PhysicsManager.CheckIfGrounded();
-            if (manager.PhysicsManager.IsGroundedNetworked == false)
+            if (manager.CombatManager.BlockStun == 0)
             {
-                manager.StateManager.ChangeState((ushort)FighterCmnStates.FALL);
-                return true;
+                if (manager.InputManager.GetBlock(out int bOff).isDown == false)
+                {
+                    manager.StateManager.ChangeState((ushort)FighterCmnStates.FALL);
+                    return true;
+                }
             }
-            if (manager.TryJump())
+
+            manager.PhysicsManager.CheckIfGrounded();
+            if (manager.PhysicsManager.IsGroundedNetworked == true)
             {
+                manager.StateManager.ChangeState((ushort)FighterCmnStates.BLOCK_HIGH);
                 return true;
             }
             return false;

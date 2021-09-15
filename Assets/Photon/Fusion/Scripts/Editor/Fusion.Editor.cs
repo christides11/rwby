@@ -1538,7 +1538,8 @@ namespace Fusion.Editor {
         return EditorGUI.GetPropertyHeight(property);
       }
 
-      return 0;
+      // -1 is required rather than zero, otherwise a space is added for hidden fields.
+      return -1;
     }
 
     public override void OnGUI(Rect position, SerializedProperty property, GUIContent label) {
@@ -3412,10 +3413,7 @@ namespace Fusion.Editor {
   [InitializeOnLoad]
   public partial class FusionHubWindow : EditorWindow {
 
-    const int NAV_WIDTH = 256;
-    const float NAV_BTTN_HEIGHT = 120;
-
-    // ------------- PRIVATE MEMBERS ------------------------------------------------------------------------------
+    const int NAV_WIDTH = 256 + 2;
 
     private static bool? ready; // true after InitContent(), reset onDestroy, onEnable, etc.
 
@@ -3449,12 +3447,13 @@ namespace Fusion.Editor {
 
     private void OnEnable() {
       ready = false;
-      windowSize = new Vector2(800, 500);
+      windowSize = new Vector2(800, 540);
 
       this.minSize = windowSize;
 
       // Pre-load Release History
       this.PrepareReleaseHistoryText();
+      wantsMouseMove = true;
     }
 
     private void OnDestroy() {
@@ -3462,13 +3461,16 @@ namespace Fusion.Editor {
     }
 
     private void OnGUI() {
+
+      GUI.skin = FusionHubSkin;
+
       try {
         InitContent();
 
         windowPosition = this.position.position;
 
         // full window wrapper
-        EditorGUILayout.BeginHorizontal();
+        EditorGUILayout.BeginHorizontal(GUI.skin.window);
         {
           // Left Nav menu
           EditorGUILayout.BeginVertical(GUILayout.MaxWidth(NAV_WIDTH), GUILayout.MinWidth(NAV_WIDTH));
@@ -3486,12 +3488,20 @@ namespace Fusion.Editor {
 
         DrawFooter();
 
-
       } catch (Exception) {
         // ignored
       }
+
+      // Force repaints while mouse is over the window, to keep Hover graphics working (Unity quirk)
+      var timeSinceStartup = Time.realtimeSinceStartupAsDouble;
+      if (Event.current.type == EventType.MouseMove && timeSinceStartup > _nextForceRepaint) {
+        // Cap the repaint rate a bit since we are forcing repaint on mouse move
+        _nextForceRepaint = timeSinceStartup + .05f;
+        Repaint();
+      }
     }
 
+    private double _nextForceRepaint;
     private Vector2 _scrollRect;
 
     private void DrawContent() {
@@ -3499,11 +3509,9 @@ namespace Fusion.Editor {
         var section = Sections[currentSection];
         GUILayout.Label(section.Description, headerTextStyle);
 
-        EditorGUILayout.BeginVertical(defaultBox);
+        EditorGUILayout.BeginVertical(FusionHubSkin.box);
         _scrollRect = EditorGUILayout.BeginScrollView(_scrollRect);
-        //EditorGUILayout.BeginVertical(new GUIStyle(EditorStyles.label) { padding = new RectOffset(0,0,10,10)});
         section.DrawMethod.Invoke();
-        //EditorGUILayout.EndVertical();
         EditorGUILayout.EndScrollView();
         EditorGUILayout.EndVertical();
       }
@@ -3512,9 +3520,7 @@ namespace Fusion.Editor {
     static void DrawWelcomeSection() {
 
       // Top Welcome content box
-      //EditorGUILayout.BeginVertical(contentBoxStyle);
-      GUILayout.Label(WELCOME_TEXT, textLabelStyle);
-      //EditorGUILayout.EndVertical();
+      GUILayout.Label(WELCOME_TEXT);
       GUILayout.Space(16);
 
       if (_showAppIdInWelcome)
@@ -3523,6 +3529,11 @@ namespace Fusion.Editor {
 
     static void DrawSetupSection() {
       DrawSetupAppIdBox();
+      DrawButtonAction(Icon.FusionIcon, "Fusion Network Project Settings", "Network settings specific to Fusion.", 
+        callback: () => NetworkProjectConfigUtilities.PingGlobalConfigAsset(true));
+      DrawButtonAction(Icon.PhotonCloud, "Photon App Settings", "Network settings specific to the Photon transport.",
+        callback: () => { EditorGUIUtility.PingObject(Photon.Realtime.PhotonAppSettings.Instance); Selection.activeObject = Photon.Realtime.PhotonAppSettings.Instance; });
+
     }
 
     static void DrawDocumentationSection() {
@@ -3533,16 +3544,11 @@ namespace Fusion.Editor {
     static void DrawSamplesSection() {
 
       GUILayout.Label("Samples", headerLabelStyle);
+      DrawButtonAction(Resources.Load<Texture2D>("FusionHubSampleIcons/tanknarok-logo"), "Fusion Tanknarok Demo", callback: OpenURL(UrlTanks));
+      GUILayout.Space(15);
+
       DrawButtonAction(Icon.Samples, "Hello Fusion Demo", callback: OpenURL(UrlHelloFusion));
       DrawButtonAction(Icon.Samples, "Hello Fusion VR Demo", callback: OpenURL(UrlHelloFusionVr));
-      DrawButtonAction(Icon.Samples, "Fusion Tanks Demo", callback: OpenURL(UrlTanks));
-
-      //GUILayout.Space(4);
-
-      //GUILayout.Label("Tutorials", headerLabelStyle);
-      //DrawButtonAction(Icon.Documentation, "Hello Fusion Demo", callback: OpenURL(UrlHelloFusion));
-      //DrawButtonAction(Icon.Documentation, "Hello Fusion VR Demo", callback: OpenURL(UrlHelloFusionVr));
-
     }
 
     static void DrawRealtimeReleaseSection() {
@@ -3555,7 +3561,6 @@ namespace Fusion.Editor {
         DrawReleaseHistoryItem("Fixed:", releaseHistoryTextFixed);
         DrawReleaseHistoryItem("Removed:", releaseHistoryTextRemoved);
         DrawReleaseHistoryItem("Internal:", releaseHistoryTextInternal);
-
       }
       GUILayout.EndVertical();
     }
@@ -3595,20 +3600,20 @@ namespace Fusion.Editor {
       var realtimeSettings = Photon.Realtime.PhotonAppSettings.Instance;
       var realtimeAppId = realtimeSettings.AppSettings.AppIdFusion;
       // Setting up AppId content box.
-      EditorGUILayout.BeginVertical(contentBoxStyle);
+      EditorGUILayout.BeginVertical(FusionHubSkin.GetStyle("SteelBox") /*contentBoxStyle*/) ;
       {
-        GUILayout.Label(REALTIME_APPID_SETUP_INSTRUCTIONS, wrappingRichTextLabelStyle);
+        GUILayout.Label(REALTIME_APPID_SETUP_INSTRUCTIONS);
 
         DrawButtonAction(Icon.PhotonCloud, "Open the Photon Dashboard", callback: OpenURL(UrlDashboard));
         EditorGUILayout.Space(4);
 
-        EditorGUILayout.BeginHorizontal();
+        EditorGUILayout.BeginHorizontal(FusionHubSkin.GetStyle("SteelBox"));
         {
           EditorGUI.BeginChangeCheck();
           GUILayout.Label("Fusion App Id:", GUILayout.Width(120));
           var icon = IsAppIdValid() ? Resources.Load<Texture2D>("icons/correct-icon") : EditorGUIUtility.FindTexture("console.erroricon.sml");
-          GUILayout.Label(icon, GUILayout.Width(20), GUILayout.Height(20));
-          var editedAppId = EditorGUILayout.DelayedTextField("", realtimeAppId);
+          GUILayout.Label(icon, GUILayout.Width(24), GUILayout.Height(24));
+          var editedAppId = EditorGUILayout.DelayedTextField("", realtimeAppId, FusionHubSkin.textField, GUILayout.Height(24));
           if (EditorGUI.EndChangeCheck()) {
             realtimeSettings.AppSettings.AppIdFusion = editedAppId;
             EditorUtility.SetDirty(realtimeSettings);
@@ -3632,25 +3637,14 @@ namespace Fusion.Editor {
     }
 
     static void DrawHeader() {
-      GUILayout.Space(6);
-      GUILayout.Label(Icons[(int)Icon.ProductLogo]/*, GUILayout.Width(256), GUILayout.Height(40)*/);
+      GUILayout.Label(Icons[(int)Icon.ProductLogo], _navbarHeaderGraphicStyle);
     }
 
     static void DrawFooter() {
-      GUILayout.BeginHorizontal();
+      GUILayout.BeginHorizontal(FusionHubSkin.window);
       {
-        GUILayout.Label("Exit Games 2021", GUILayout.Width(256), GUILayout.Height(16));
+        GUILayout.Label("\u00A9 2021, Exit Games GmbH. All rights reserved.");
       }
-      GUILayout.EndHorizontal();
-    }
-
-    static void DrawMenuHeader(string text) {
-      GUILayout.BeginHorizontal();
-      GUILayout.FlexibleSpace();
-
-      GUILayout.Label(text, headerNavBarlabelStyle);
-
-      GUILayout.FlexibleSpace();
       GUILayout.EndHorizontal();
     }
 
@@ -3660,20 +3654,25 @@ namespace Fusion.Editor {
         image = Icons[(int)section.Icon],
       };
 
-      var renderStyle = currentSection ? buttonActiveStyle : buttonStyle;
-
+      var renderStyle = currentSection ? buttonActiveStyle : GUI.skin.button;
       return GUILayout.Button(content, renderStyle);
     }
 
     static void DrawButtonAction(Icon icon, string header, string description = null, bool? active = null, Action callback = null, int? width = null) {
-      var content = new GUIContent() {
-        text = description == null ? " " + header : string.Format("  <b>{0}</b>\n  {1}", header, description), // TODO: Remove format
-        image = Icons[(int)icon],
-      };
+      DrawButtonAction(Icons[(int)icon], header, description, active, callback, width);
+    }
 
-      var renderStyle = active.HasValue && active.Value == true ? buttonActiveStyle : buttonStyle;
+    static void DrawButtonAction(Texture2D icon, string header, string description = null, bool? active = null, Action callback = null, int? width = null) {
 
-      if (GUILayout.Button(content, renderStyle, width.HasValue ? GUILayout.Width(width.Value) : GUILayout.ExpandWidth(true)) && callback != null) {
+      var padding = GUI.skin.button.padding.top + GUI.skin.button.padding.bottom;
+      var height = icon.height + padding;
+
+      var renderStyle = active.HasValue && active.Value == true ? buttonActiveStyle : GUI.skin.button;
+      // Draw text separately (not part of button guiconent) to have control over the space between the icon and the text.
+      var rect = EditorGUILayout.GetControlRect(false, height, width.HasValue ? GUILayout.Width(width.Value) : GUILayout.ExpandWidth(true));
+      bool clicked = GUI.Button(rect, icon, renderStyle);
+      GUI.Label(new Rect(rect) { xMin = rect.xMin + icon.width + 20 }, description == null ? "<b>" + header +"</b>" : string.Format("<b>{0}</b>\n{1}", header, description));
+      if (clicked && callback != null) {
         callback.Invoke();
       }
     }
@@ -3736,10 +3735,12 @@ namespace Fusion.Editor {
       Samples,
       [Description("FusionHubIcons/community")]
       Community,
-      [Description("FusionHubIcons/fusion-hub-logo:FusionHubIcons/fusion-hub-logo")]
+      [Description("FusionHubIcons/fusion-logo")]
       ProductLogo,
-      [Description("FusionHubIcons/photon-cloud-32-dark:FusionHubIcons/photon-cloud-32-light")]
+      [Description("FusionHubIcons/photon-cloud-32-dark")]
       PhotonCloud,
+      [Description("FusionHubIcons/fusion-icon")]
+      FusionIcon,
     }
 
 
@@ -3753,14 +3754,14 @@ namespace Fusion.Editor {
         new Section("Support", "Support and Community Links", DrawSupportSection, Icon.Community),
     };
 
-    internal const string UrlFusionDocsOnline = "https://doc.photonengine.com/en-us/fusion/";
-    internal const string UrlFusionIntro = "https://doc.photonengine.com/en-us/fusion/current/getting-started/fusion-intro";
-    internal const string UrlCloudDashboard = "https://id.photonengine.com/en-US/account/signin?email=";
+    internal const string UrlFusionDocsOnline = "https://doc.photonengine.com/fusion/";
+    internal const string UrlFusionIntro = "https://doc.photonengine.com/fusion/current/getting-started/fusion-intro";
+    internal const string UrlCloudDashboard = "https://id.photonengine.com/account/signin?email=";
     internal const string UrlDiscordGeneral = "https://discord.gg/qP6XVe3XWK";
     internal const string UrlDashboard = "https://dashboard.photonengine.com/";
-    internal const string UrlHelloFusion = "https://doc.photonengine.com/en-us/fusion/current/hello-fusion/hello-fusion";
-    internal const string UrlHelloFusionVr = "https://doc.photonengine.com/en-us/fusion/current/hello-fusion/hello-fusion-vr";
-    internal const string UrlTanks = "https://doc.photonengine.com/en-us/fusion/current/samples/fusion-tanks";
+    internal const string UrlHelloFusion = "https://doc.photonengine.com/fusion/current/hello-fusion/hello-fusion";
+    internal const string UrlHelloFusionVr = "https://doc.photonengine.com/fusion/current/hello-fusion/hello-fusion-vr";
+    internal const string UrlTanks = "https://doc.photonengine.com/fusion/current/samples/fusion-tanknarok";
     internal const string UrlFusionDocApi = "https://doc-api.photonengine.com/en/fusion/current/annotated.html";
 
     internal const string WINDOW_TITLE = "Photon Fusion Hub";
@@ -3775,7 +3776,9 @@ namespace Fusion.Editor {
       "More samples, tutorials, and documentation are being added regularly - so check back often.";
 
     internal const string REALTIME_APPID_SETUP_INSTRUCTIONS =
-@"A Fusion AppId specific to Fusion is required for networking. To acquire an App Id:
+@"<b>An App Id specific to Fusion is required for networking.</b>
+
+To acquire an App Id:
 - Open the Photon Dashboard (Log-in as required)
 - Select an existing Fusion App Id, or create a new one.
 - Copy the App Id and paste into the field below (or into the PhotonAppSettings.asset).
@@ -3783,19 +3786,6 @@ namespace Fusion.Editor {
 
     internal const string GETTING_STARTED_INSTRUCTIONS =
       @"Links to demos, tutorials, API references and other information can be found on the PhotonEngine.com website.";
-
-    //internal const string BUTTON_BACK_TEXT = "Back";
-    //internal const string BUTTON_DONE_TEXT = "Done";
-    //internal const string BUTTON_NEXT_TEXT = "Next";
-
-    //internal const string LEAVE_REVIEW_TEXT = "Leave a review";
-
-    //internal const string AlreadyRegisteredInfo = "The email is registered so we can't fetch your App Id (without password).\n\nPlease login online to get your AppId and paste it above.";
-    //internal const string RegistrationError = "Some error occurred. Please try again later.";
-    //internal const string SkipRegistrationInfo = "Skipping? No problem:\nEdit your server settings in the PhotonAppSettings file.";
-    //internal const string SetupCompleteInfo = "<b>Done!</b>\nAll connection settings can be edited in the <b>PhotonAppSettings</b> now.\nHave a look.";
-    //internal const string AppliedToSettingsInfo = "Your AppId is now applied to this project.";
-    //internal const string RegisteredNewAccountInfo = "We created a (free) account and fetched you an AppId.\nWelcome. Your project is setup.";
 
     private static string releaseHistoryHeader;
     private static List<string> releaseHistoryTextAdded;
@@ -3806,36 +3796,22 @@ namespace Fusion.Editor {
 
     private static string fusionReleaseHistory;
 
+    private static GUISkin _fusionHubSkinBacking;
+    static GUISkin FusionHubSkin {
+      get {
+        if (_fusionHubSkinBacking == null) {
+          _fusionHubSkinBacking = Resources.Load<GUISkin>("FusionHubSkin/FusionHubSkin");
+        }
+        return _fusionHubSkinBacking;
+      }
+    }
 
-    // Styles
-    // -- Buttons
-    private static GUIStyle defaultBox;
-    private static GUIStyle rightContentBox;
-    private static GUIStyle minimalButtonStyle;
-    private static GUIStyle simpleButtonStyle;
-    // -- Labels & Text
-    private static GUIStyle inputLabelStyle;
-    private static GUIStyle headerNavBarlabelStyle;
+    private static GUIStyle _navbarHeaderGraphicStyle;
     private static GUIStyle textLabelStyle;
     private static GUIStyle headerLabelStyle;
-    private static GUIStyle wrappingRichTextLabelStyle;
     private static GUIStyle releaseNotesStyle;
-    private static GUIStyle centerInputTextStyle;
     private static GUIStyle headerTextStyle;
-    private static GUIStyle contentBoxStyle;
-    // -- GUI Style
-    private static GUIStyle buttonStyle;
     private static GUIStyle buttonActiveStyle;
-
-
-
-    private enum WizardStage {
-      Intro = 1,
-      ReleaseHistory = 2,
-      FusionHistory = 3,
-      Photon = 4,
-      Support = 5
-    }
 
     /// <summary>
     /// Converts the enumeration of icons into the array of textures.
@@ -3865,70 +3841,28 @@ namespace Fusion.Editor {
         return;
       }
 
-
       ConvertIconEnumToArray();
 
-      bool isProSkin = EditorGUIUtility.isProSkin;
+      Color commonTextColor = Color.white;
 
-      Color headerTextColor = isProSkin
-                      ? new Color(0xf2 / 255f, 0xad / 255f, 0f)
-                      : new Color(30 / 255f, 99 / 255f, 183 / 255f);
-      Color commonTextColor = isProSkin ? Color.white : Color.black;
+      var _guiSkin = FusionHubSkin;
 
-      defaultBox = new GUIStyle(isProSkin ? FusionGUIStyles.GroupBoxType.Gray.GetStyle() : FusionGUIStyles.GroupBoxType.Info.GetStyle()) {
-        //padding = new RectOffset(8, 8, 18, 8),
-        //margin = new RectOffset(4, 4, 10, 4),
-        normal = { textColor = commonTextColor },
-        active = { textColor = commonTextColor },
-        hover = { textColor = commonTextColor },
-      };
+      _navbarHeaderGraphicStyle = new GUIStyle(_guiSkin.button) { alignment = TextAnchor.MiddleCenter };
 
-      //const int CONTENT_PADDING = 10;
-      //defaultBox = new GUIStyle(defaultBox) {
-      //  //padding = new RectOffset(CONTENT_PADDING, CONTENT_PADDING, CONTENT_PADDING, CONTENT_PADDING),
-      //  margin = new RectOffset(0, 4, 8, 8),
-      //};
-
-      headerTextStyle = new GUIStyle(EditorStyles.label) {
+      headerTextStyle = new GUIStyle(_guiSkin.label) {
         fontSize = 18,
-        padding = new RectOffset(8, 8, 8, 0),
-        //margin = new RectOffset(3, 4, 8, 0),
-        fontStyle = FontStyle.Bold
-        //richText = true,
-      };
-
-      contentBoxStyle = new GUIStyle(defaultBox) {
-        fontSize = 14,
-        richText = true,
-      };
-
-      buttonStyle = new GUIStyle(GUI.skin.button) {
-        richText = true,
-        alignment = TextAnchor.MiddleLeft,
-        padding = new RectOffset(8, 8, 8, 8),
-        margin = new RectOffset(6, 6, 4, 4),
-        fontSize = 14,
-      };
-
-      buttonActiveStyle = new GUIStyle(buttonStyle) {
+        padding = new RectOffset(12, 8, 8, 8),
         fontStyle = FontStyle.Bold,
+        normal = { textColor = commonTextColor }
       };
 
-      inputLabelStyle = new GUIStyle(EditorStyles.boldLabel) {
-        fontSize = 14,
-        margin   = new RectOffset(),
-        padding  = new RectOffset(10, 0, 0, 0),
-        normal   = { textColor = commonTextColor }
+      buttonActiveStyle = new GUIStyle(_guiSkin.button) {
+        fontStyle = FontStyle.Bold,
+        normal = { background = _guiSkin.button.active.background, textColor = Color.white }
       };
 
-      headerNavBarlabelStyle = new GUIStyle(EditorStyles.boldLabel) {
-        padding  = new RectOffset(10, 0, 0, 0),
-        margin   = new RectOffset(),
-        fontSize = 18,
-        normal   = { textColor = headerTextColor }
-      };
 
-      textLabelStyle = new GUIStyle(EditorStyles.label) {
+      textLabelStyle = new GUIStyle(_guiSkin.label) {
         wordWrap = true,
         normal   =  { textColor = commonTextColor },
         richText = true,
@@ -3938,34 +3872,12 @@ namespace Fusion.Editor {
         fontSize = 16,
       };
 
-      wrappingRichTextLabelStyle = new GUIStyle(GUI.skin.label) {
-        wordWrap = true,
-        normal = { textColor = commonTextColor },
-        richText = true,
-      };
-
       releaseNotesStyle = new GUIStyle(textLabelStyle) {
         richText = true,
       };
 
-      centerInputTextStyle = new GUIStyle(GUI.skin.textField) {
-        alignment = TextAnchor.MiddleCenter,
-        fontSize = 12,
-        fixedHeight = 26
-      };
-
-      minimalButtonStyle = new GUIStyle(EditorStyles.miniButton) {
-        fixedWidth = 130
-      };
-
-      simpleButtonStyle = new GUIStyle(GUI.skin.button) {
-        fontSize = 12,
-        padding = new RectOffset(10, 10, 10, 10)
-      };
-
       ready = true;
     }
-
 
     private static Action OpenURL(string url, params object[] args) {
       return () => {
@@ -3991,13 +3903,12 @@ namespace Fusion.Editor {
     static string titleVersionReformat, sectionReformat, header1Reformat, header2Reformat, header3Reformat, classReformat;
 
     void InitializeFormatters() {
-      bool isProSkin = EditorGUIUtility.isProSkin;
-      titleVersionReformat = isProSkin ? "<size=22><color=white>$1</color></size>" : "<size=22><color=black>$1</color></size>";
-      sectionReformat = isProSkin ? "<i><color=lightblue>$1</color></i>" : "<i><color=darkblue>$1</color></i>";
-      header1Reformat = isProSkin ? "<size=22><color=white>$1</color></size>" : "<size=22><color=black>$1</color></size>";
-      header2Reformat = isProSkin ? "<size=18><color=white>$1</color></size>" : "<size=18><color=black>$1</color></size>";
-      header3Reformat = isProSkin ? "<b><color=#ffffaaff>$1</color></b>" : "<b><color=#444422ff>$1</color></b>";
-      classReformat = isProSkin ? "<color=#FFDDBB>$1</color>" : "<color=#a53500ff>$1</color>";
+      titleVersionReformat = "<size=22><color=white>$1</color></size>" ;
+      sectionReformat = "<i><color=lightblue>$1</color></i>";
+      header1Reformat = "<size=22><color=white>$1</color></size>";
+      header2Reformat = "<size=18><color=white>$1</color></size>";
+      header3Reformat = "<b><color=#ffffaaff>$1</color></b>";
+      classReformat   = "<color=#FFDDBB>$1</color>";
     }
 
     /// <summary>
@@ -4011,9 +3922,7 @@ namespace Fusion.Editor {
       // Fusion
       {
         var filePath = BuildPath(Application.dataPath, "Photon", "Fusion", "release_history.txt");
-
         var text = (TextAsset)AssetDatabase.LoadAssetAtPath(filePath, typeof(TextAsset));
-
         var baseText = text.text;
 
         // #
@@ -4031,7 +3940,6 @@ namespace Fusion.Editor {
         fusionReleaseHistory = baseText;
       }
 
-
       // Realtime
       {
         try {
@@ -4042,12 +3950,12 @@ namespace Fusion.Editor {
 
           var baseText = text.text;
 
-          var regexVersion = new Regex(@"Version (\d+\.?)*", RegexOptions.IgnoreCase | RegexOptions.CultureInvariant | RegexOptions.Multiline);
-          var regexAdded = new Regex(@"\b(Added:)(.*)\b", RegexOptions.IgnoreCase | RegexOptions.CultureInvariant | RegexOptions.Multiline);
-          var regexChanged = new Regex(@"\b(Changed:)(.*)\b", RegexOptions.IgnoreCase | RegexOptions.CultureInvariant | RegexOptions.Multiline);
-          var regexUpdated = new Regex(@"\b(Updated:)(.*)\b", RegexOptions.IgnoreCase | RegexOptions.CultureInvariant | RegexOptions.Multiline);
-          var regexFixed = new Regex(@"\b(Fixed:)(.*)\b", RegexOptions.IgnoreCase | RegexOptions.CultureInvariant | RegexOptions.Multiline);
-          var regexRemoved = new Regex(@"\b(Removed:)(.*)\b", RegexOptions.IgnoreCase | RegexOptions.CultureInvariant | RegexOptions.Multiline);
+          var regexVersion  = new Regex(@"Version (\d+\.?)*",   RegexOptions.IgnoreCase | RegexOptions.CultureInvariant | RegexOptions.Multiline);
+          var regexAdded    = new Regex(@"\b(Added:)(.*)\b",    RegexOptions.IgnoreCase | RegexOptions.CultureInvariant | RegexOptions.Multiline);
+          var regexChanged  = new Regex(@"\b(Changed:)(.*)\b",  RegexOptions.IgnoreCase | RegexOptions.CultureInvariant | RegexOptions.Multiline);
+          var regexUpdated  = new Regex(@"\b(Updated:)(.*)\b",  RegexOptions.IgnoreCase | RegexOptions.CultureInvariant | RegexOptions.Multiline);
+          var regexFixed    = new Regex(@"\b(Fixed:)(.*)\b",    RegexOptions.IgnoreCase | RegexOptions.CultureInvariant | RegexOptions.Multiline);
+          var regexRemoved  = new Regex(@"\b(Removed:)(.*)\b",  RegexOptions.IgnoreCase | RegexOptions.CultureInvariant | RegexOptions.Multiline);
           var regexInternal = new Regex(@"\b(Internal:)(.*)\b", RegexOptions.IgnoreCase | RegexOptions.CultureInvariant | RegexOptions.Multiline);
 
           var matches = regexVersion.Matches(baseText);
@@ -5015,6 +4923,7 @@ namespace Fusion.Editor {
 
   [CustomEditor(typeof(NetworkObject), true)]
   [InitializeOnLoad]
+  [CanEditMultipleObjects]
   public unsafe class NetworkObjectEditor : BehaviourEditor {
     private bool _runtimeInfoFoldout;
 
@@ -5145,19 +5054,19 @@ namespace Fusion.Editor {
       //FusionEditorGUI.ScriptPropertyField(serializedObject);
       serializedObject.DrawScriptHelp(serializedObject.targetObject.GetInstanceID(), ref _expandedHelpName, target);
 
-      var obj = (NetworkObject)target;
-      var gameObject = obj.gameObject;
-
       // these properties' isExpanded are going to be used for foldouts; that's the easiet
       // way to get quasi-persistent foldouts
       var guidProperty = serializedObject.FindPropertyOrThrow(nameof(NetworkObject.NetworkGuid));
       var flagsProperty = serializedObject.FindPropertyOrThrow(nameof(NetworkObject.Flags));
+      var obj = (NetworkObject)base.target;
 
       guidProperty.isExpanded = EditorGUILayout.Foldout(guidProperty.isExpanded, "Baked Data");
       if (guidProperty.isExpanded) {
         using (new EditorGUI.IndentLevelScope())
         using (new EditorGUI.DisabledScope(true)) {
-          EditorGUILayout.LabelField("Flags", obj.Flags.ToString());
+          using (new FusionEditorGUI.ShowMixedValueScope(flagsProperty.hasMultipleDifferentValues)) {
+            FusionEditorGUI.LayoutSelectableLabel(EditorGUIUtility.TrTextContent(nameof(obj.Flags)), obj.Flags.ToString());
+          }
           EditorGUILayout.PropertyField(serializedObject.FindPropertyOrThrow(nameof(NetworkObject.NetworkGuid)));
           EditorGUILayout.PropertyField(serializedObject.FindPropertyOrThrow(nameof(NetworkObject.NestedObjects)));
           EditorGUILayout.PropertyField(serializedObject.FindPropertyOrThrow(nameof(NetworkObject.SimulationBehaviours)));
@@ -5165,38 +5074,41 @@ namespace Fusion.Editor {
         }
       }
 
-      if (AssetDatabase.IsMainAsset(gameObject)) {
-        Debug.Assert(!AssetDatabaseUtils.IsSceneObject(gameObject));
+      if (targets.Length == 1) {
+        if (AssetDatabase.IsMainAsset(obj.gameObject)) {
+          Debug.Assert(!AssetDatabaseUtils.IsSceneObject(obj.gameObject));
 
-        if (!obj.Flags.IsVersionCurrent() || !obj.Flags.IsPrefab() || !obj.NetworkGuid.IsValid) {
-          BehaviourEditorUtils.DrawWarnBox("Prefab needs to be reimported.", MessageType.Error);
-          if (GUILayout.Button("Reimport")) {
-            AssetDatabase.ImportAsset(AssetDatabase.GetAssetPath(gameObject));
+          if (!obj.Flags.IsVersionCurrent() || !obj.Flags.IsPrefab() || !obj.NetworkGuid.IsValid) {
+            BehaviourEditorUtils.DrawWarnBox("Prefab needs to be reimported.", MessageType.Error);
+            if (GUILayout.Button("Reimport")) {
+              AssetDatabase.ImportAsset(AssetDatabase.GetAssetPath(obj.gameObject));
+            }
+          } else {
+            EditorGUILayout.Space();
+            EditorGUILayout.LabelField("Prefab Settings", EditorStyles.boldLabel);
+            EditorGUI.BeginChangeCheck();
+
+            bool spawnable = EditorGUILayout.Toggle("Is Spawnable", !obj.Flags.IsIgnored());
+            EditorGUILayout.LabelField("Load Info", spawnable ? NetworkObjectEditor.GetLoadInfoString(obj) : "---");
+
+            if (EditorGUI.EndChangeCheck()) {
+              var value = obj.Flags.SetIgnored(!spawnable);
+              serializedObject.FindProperty(nameof(NetworkObject.Flags)).intValue = (int)value;
+              serializedObject.ApplyModifiedProperties();
+            }
           }
-        } else {
-
-          EditorGUILayout.Space();
-          EditorGUILayout.LabelField("Prefab Settings", EditorStyles.boldLabel);
-          EditorGUI.BeginChangeCheck();
-
-          bool spawnable = EditorGUILayout.Toggle("Is Spawnable", !obj.Flags.IsIgnored());
-          EditorGUILayout.LabelField("Load Info", spawnable ? NetworkObjectEditor.GetLoadInfoString(obj) : "---");
-          
-          if (EditorGUI.EndChangeCheck()) {
-            var value = obj.Flags.SetIgnored(!spawnable);
-            serializedObject.FindProperty(nameof(NetworkObject.Flags)).intValue = (int)value;
-            serializedObject.ApplyModifiedProperties();
-          }
-        }
-      } else if (AssetDatabaseUtils.IsSceneObject(gameObject)) {
-        if (!obj.Flags.IsVersionCurrent() || !obj.Flags.IsSceneObject() || !obj.NetworkGuid.IsValid) {
-          if (!EditorApplication.isPlaying) {
-            BehaviourEditorUtils.DrawWarnBox("This object hasn't been baked yet. Save the scene or enter playmode.");
+        } else if (AssetDatabaseUtils.IsSceneObject(obj.gameObject)) {
+          if (!obj.Flags.IsVersionCurrent() || !obj.Flags.IsSceneObject() || !obj.NetworkGuid.IsValid) {
+            if (!EditorApplication.isPlaying) {
+              BehaviourEditorUtils.DrawWarnBox("This object hasn't been baked yet. Save the scene or enter playmode.");
+            }
           }
         }
       }
 
-      if (EditorApplication.isPlaying) {
+      EditorGUILayout.PropertyField(serializedObject.FindPropertyOrThrow("DefaultPropertyGroups"));
+
+      if (EditorApplication.isPlaying && targets.Length == 1) {
         EditorGUILayout.Space();
         flagsProperty.isExpanded = EditorGUILayout.Foldout(flagsProperty.isExpanded, "Runtime Info");
         if (flagsProperty.isExpanded) {
@@ -5230,7 +5142,7 @@ namespace Fusion.Editor {
       EditorGUILayout.PropertyField(destroyWhenStateAuthLeaves, new GUIContent("Destroy When State Auth Leaves"));
       
       EditorGUILayout.Space();
-      EditorGUI.BeginDisabledGroup(NetworkProjectConfig.Global.Simulation.InterestManagement == false || EditorApplication.isPlaying);
+      EditorGUI.BeginDisabledGroup(EditorApplication.isPlaying);
       EditorGUILayout.LabelField("Area Of Interest Settings", EditorStyles.boldLabel);
 
       var isGlobal = serializedObject.FindProperty("AoiMode");
@@ -5753,21 +5665,28 @@ namespace Fusion.Editor {
 
   public class OrderWindow : EditorWindow {
 
+    static bool errorSuppression;
 
     [UnityEditor.Callbacks.DidReloadScripts]
     static void Init() {
+      
+      // Don't keep running sorter after a null result. There is a error that is already reported to the log.
+      if (errorSuppression)
+        return;
 
       var sorter = new OrderSorter();
       sortedNodes = sorter.Run();
+
+      if (sortedNodes == null) {
+        errorSuppression = true;
+      }
     }
 
     static OrderNode[] sortedNodes;
     static StringBuilder sb = new StringBuilder();
 
     GUIStyle gridLabelStyle;
-    GUIStyle hdrLabelStyle;
     GUIStyle rowStyle;
-    GUIStyle miniDefLabel;
     GUIStyle classLabelStyle;
     GUIStyle classLabelSelectedStyle;
 
@@ -5791,11 +5710,7 @@ namespace Fusion.Editor {
         fontSize = 9
       };
 
-
-      hdrLabelStyle = new GUIStyle("Label") { alignment = TextAnchor.UpperCenter, padding = new RectOffset(0, 0, 0, 0), margin = new RectOffset(0, 0, 0, 0) };
       rowStyle = new GUIStyle("Label") { padding = new RectOffset(4, 4, 0, 0), margin = new RectOffset(3, 3, 0, 0) };
-      miniDefLabel = new GUIStyle("LinkLabel") { fontSize = gridLabelStyle.fontSize };
-
 
       classLabelStyle = new GUIStyle((GUIStyle)"toolbarButtonLeft") {
         fontSize = 11,
@@ -5814,6 +5729,7 @@ namespace Fusion.Editor {
         richText = true
       };
     }
+
 
     void OnGUI() {
 
@@ -5835,12 +5751,18 @@ namespace Fusion.Editor {
 
       scrollPos = EditorGUILayout.BeginScrollView(scrollPos);
       
-      foreach (var node in sortedNodes) {
+      if (sortedNodes == null) {
+        BehaviourEditorUtils.DrawWarnBox("Conflicts in script OrderBefore and OrderAfter attributes. Check the Unity Debug Log for details on script conflicts.", msgtype: MessageType.Error);
+        //EditorGUILayout.LabelField("Error in SortOrder.");
+        //EditorGUILayout.LabelField("Check Log for details.");
+      } else {
+        foreach (var node in sortedNodes) {
 
-        var val = node.SimFlags;
+          var val = node.SimFlags;
 
-        if (node.Type == typeof(SimulationBehaviour) || (val.Item1 & modes) != 0 || (val.Item2 & stages) != 0) {
-          DrawRow(node);
+          if (node.Type == typeof(SimulationBehaviour) || (val.Item1 & modes) != 0 || (val.Item2 & stages) != 0) {
+            DrawRow(node);
+          }
         }
       }
 
@@ -6384,7 +6306,12 @@ namespace Fusion.Editor {
   using System.Text;
   using System.Threading.Tasks;
   using UnityEditor;
+#if UNITY_2021_2_OR_NEWER
+  using UnityEditor.SceneManagement;
+#else
   using UnityEditor.Experimental.SceneManagement;
+#endif
+
   using UnityEngine;
 
   public static class AssetDatabaseUtils {

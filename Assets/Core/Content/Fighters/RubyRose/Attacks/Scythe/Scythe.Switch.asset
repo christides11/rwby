@@ -12,13 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7bf9a8a0f22d37c43902ca4d8d9a9197, type: 3}
   m_Name: Scythe.Switch
   m_EditorClassIdentifier: 
-  attackName: Switch Switch
+  attackName: Scythe Switch
   description: 
   useState: 0
   stateOverride: 0
   length: 10
   hurtboxDefinition: {fileID: 0}
-  commandAttackCancelWindows: []
   chargeWindows: []
   hitboxGroups: []
   events:
@@ -41,11 +40,6 @@ MonoBehaviour:
         attackEvent:
           id: 2
         conditions: []
-        variables:
-          intVars: 
-          floatVars: []
-          objectVars: []
-          curveVars: []
         inputCheckTiming: 0
         inputCheckStartFrame: 1
         inputCheckEndFrame: 1
@@ -56,7 +50,6 @@ MonoBehaviour:
           sequenceInputs: []
         chargeLevelMin: 0
         chargeLevelMax: 0
-        inputCheckProcessed: 0
     00000001:
       type: {class: AttackEventDefinition, ns: HnSF.Combat, asm: HnSF}
       data:
@@ -70,11 +63,6 @@ MonoBehaviour:
         attackEvent:
           id: 3
         conditions: []
-        variables:
-          intVars: 
-          floatVars: []
-          objectVars: []
-          curveVars: []
         inputCheckTiming: 0
         inputCheckStartFrame: 1
         inputCheckEndFrame: 1
@@ -85,7 +73,6 @@ MonoBehaviour:
           sequenceInputs: []
         chargeLevelMin: 0
         chargeLevelMax: 0
-        inputCheckProcessed: 0
     00000002:
       type: {class: ApplyFriction, ns: rwby.Combat.AttackEvents, asm: rwby.csharp}
       data:

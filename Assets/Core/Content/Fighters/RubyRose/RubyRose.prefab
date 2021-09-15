@@ -100,6 +100,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   AoiMode: 0
+  DefaultPropertyGroups: []
   DestroyWhenStateAuthorityLeaves: 0
   AoiPosition: {fileID: 0}
   Flags: 2305
@@ -133,6 +134,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _interpolationDataSource: 0
+  manager: {fileID: 832128857849921822}
   _BufferLimit: 0
 --- !u!114 &832128857849921822
 MonoBehaviour:
@@ -167,10 +169,10 @@ MonoBehaviour:
   wallLayerMask:
     serializedVersion: 2
     m_Bits: 8
-  wallCheckDistance: 0.7
+  wallCheckDistance: 1
   currentWall: {fileID: 0}
   ceilingCheckDistance: 1.2
-  wallRunVertical: -0.9
+  wallRunDot: -0.1
   sideWallDistance: 1
   wallSide: 0
   wallRunHozMultiplier: 1
@@ -318,7 +320,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _interpolationDataSource: 0
-  cmnStats: {fileID: 11400000, guid: 9db018607e1c48c498ee3d8a7c4cefc3, type: 2}
+  GroundFriction: 0
+  JumpSquatFriction: 0
+  WalkMinSpeed: 0
+  WalkMaxSpeed: 0
+  WalkBaseAccel: 0
+  WalkAcceleration: 0
   walkRotationSpeed: 0
   WalkAccelFromDot:
     serializedVersion: 2
@@ -353,6 +360,10 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+  RunMinSpeed: 0
+  RunMaxSpeed: 0
+  RunBaseAccel: 0
+  RunAcceleration: 0
   runRotationSpeed: 0
   RunAccelFromDot:
     serializedVersion: 2
@@ -360,9 +371,28 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+  MinJumpFrames: 0
+  MaxJumpTime: 0
+  MaxJumpHeight: 0
+  JumpSquatFrames: 0
+  JumpConversedMomentum: 0
+  JumpHorizontalVelocity: 0
   fallGravityMultiplier: 0
   airJumps: 0
   minAirJumpTime: 0
+  MaxAirJumpTime: 0
+  MaxAirJumpHeight: 0
+  AirJumpHorizontalMomentum: 0
+  AirJumpConversedMomentum: 0
+  MaxWallJumpTime: 0
+  MaxWallJumpHeight: 0
+  WallJumpConversedMomentum: 0
+  WallJumpHorizontalMomentum: 0
+  MaxFallSpeed: 0
+  AerialMaxSpeed: 0
+  AerialBaseAcceleration: 0
+  AerialAcceleration: 0
+  AerialDeceleration: 0
   AerialAccelFromDot:
     serializedVersion: 2
     m_Curve: []
@@ -370,14 +400,24 @@ MonoBehaviour:
     m_PostInfinity: 2
     m_RotationOrder: 4
   hitstunGravity: 0
+  aerialRotationSpeed: 0
   airDashes: 0
   airDashFrames: 0
   airDashStartup: 3
   airDashMaxMagnitude: 0
   airDashForce: 0
   airDashGravityDelay: 0
+  airDashFrictionDelay: 0
+  airDashFriction: 0
   wallRunHorizontalTime: 0
   wallRunHorizontalSpeed: 0
+  wallRunGravity: 0
+  wallRunGravityCurve:
+    serializedVersion: 2
+    m_Curve: []
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!114 &8828466035712802024
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -431,10 +471,10 @@ CapsuleCollider:
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 1
-  m_Radius: 0.5
-  m_Height: 2
+  m_Radius: 0.3
+  m_Height: 1.65
   m_Direction: 1
-  m_Center: {x: 0, y: 1, z: 0}
+  m_Center: {x: 0, y: 0.825, z: 0}
 --- !u!114 &5710829672531719765
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -449,9 +489,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _interpolationDataSource: 0
   Capsule: {fileID: 2898563863352299436}
-  CapsuleRadius: 0.5
-  CapsuleHeight: 2
-  CapsuleYOffset: 1
+  CapsuleRadius: 0.3
+  CapsuleHeight: 1.65
+  CapsuleYOffset: 0.825
   CapsulePhysicsMaterial: {fileID: 0}
   GroundDetectionExtraDistance: 0
   MaxStableSlopeAngle: 60
@@ -462,9 +502,9 @@ MonoBehaviour:
   StepHandling: 1
   MaxStepHeight: 0.5
   AllowSteppingWithoutStableGrounding: 0
-  MinRequiredStepDepth: 0.1
+  MinRequiredStepDepth: 0
   LedgeAndDenivelationHandling: 1
-  MaxStableDistanceFromLedge: 0.5
+  MaxStableDistanceFromLedge: 0
   MaxVelocityForLedgeSnap: 0
   MaxStableDenivelationAngle: 180
   InteractiveRigidbodyHandling: 0

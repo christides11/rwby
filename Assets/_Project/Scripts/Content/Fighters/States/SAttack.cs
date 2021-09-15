@@ -10,7 +10,8 @@ namespace rwby
     {
         public override string GetName()
         {
-            return "Attack";
+            AttackDefinition currentAttack = (AttackDefinition)manager.CombatManager.CurrentAttackNode.attackDefinition;
+            return currentAttack.attackName;
         }
 
         public override void Initialize()

@@ -6,7 +6,8 @@ namespace rwby.Combat.AttackEvents
 {
     public class ClampGravity : AttackEvent
     {
-        public float maxLength;
+        public float max;
+        public float min;
 
         public override string GetName()
         {
@@ -16,14 +17,7 @@ namespace rwby.Combat.AttackEvents
         public override AttackEventReturnType Evaluate(int frame, int endFrame, IFighterBase controller)
         {
             FighterManager manager = controller as FighterManager;
-            if (maxLength == 0)
-            {
-                manager.PhysicsManager.forceGravity = 0;
-            }
-            else
-            {
-                manager.PhysicsManager.forceGravity = Mathf.Clamp(manager.PhysicsManager.forceGravity, -maxLength, maxLength);
-            }
+            manager.PhysicsManager.forceGravity = Mathf.Clamp(manager.PhysicsManager.forceGravity, min, max);
             return AttackEventReturnType.NONE;
         }
     }

@@ -1,5 +1,57 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!114 &-8424633173119037835
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a020e6c3cba96ed45adef2c66abe6b7f, type: 3}
+  m_Name: Atk-Air-L
+  m_EditorClassIdentifier: 
+  graph: {fileID: 11400000}
+  position: {x: -248, y: -888}
+  ports:
+    keys:
+    - lastNode
+    - nextNode
+    values:
+    - _fieldName: lastNode
+      _node: {fileID: -8424633173119037835}
+      _typeQualifiedName: HnSF.Combat.MovesetAttackNode, HnSF, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+      connections: []
+      _direction: 0
+      _connectionType: 0
+      _typeConstraint: 0
+      _dynamic: 0
+    - _fieldName: nextNode
+      _node: {fileID: -8424633173119037835}
+      _typeQualifiedName: System.Collections.Generic.List`1[[HnSF.Combat.MovesetAttackNode+nextNodeDefinition,
+        HnSF, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null]], mscorlib,
+        Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089
+      connections: []
+      _direction: 1
+      _connectionType: 0
+      _typeConstraint: 0
+      _dynamic: 0
+  Identifier: 7
+  lastNode: {fileID: 0}
+  inputSequence:
+    executeWindow: 3
+    executeInputs:
+    - inputType: 0
+      buttonID: 2
+      stickDirection: {x: 0, y: 0}
+      directionDeviation: 0
+    sequenceWindow: 8
+    sequenceInputs: []
+  attackDefinition: {fileID: 11400000, guid: 10f7bc9e1db8fd149824f65af227b91c, type: 2}
+  nextNode: []
+  lockonRequired: 0
 --- !u!114 &-7034547069272612835
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -268,16 +320,19 @@ MonoBehaviour:
   - {fileID: -2552742204646169340}
   - {fileID: -3217907378620375815}
   - {fileID: 6397012873814956192}
-  nodeIDCounter: 7
+  - {fileID: -8424633173119037835}
+  nodeIDCounter: 8
   cancelLists: []
   groundIdleCancelListID: -1
   groundAttackStartNodes:
+  - {fileID: -3217907378620375815}
   - {fileID: 5433208356493312847}
   - {fileID: -478884067571542759}
-  - {fileID: -3217907378620375815}
   airIdleCancelListID: -1
   airAttackStartNodes:
   - {fileID: -3217907378620375815}
+  - {fileID: -8424633173119037835}
+  fighterStats: {fileID: 11400000, guid: 9db018607e1c48c498ee3d8a7c4cefc3, type: 2}
   groundAbilityNodes:
   - {fileID: -7034547069272612835}
   - {fileID: -2552742204646169340}

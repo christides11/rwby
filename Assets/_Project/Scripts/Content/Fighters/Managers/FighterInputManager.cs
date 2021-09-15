@@ -30,6 +30,8 @@ namespace rwby
         protected InputButtonData[] Ability4 = new InputButtonData[inputCapacity];
         protected InputButtonData[] Extra1 = new InputButtonData[inputCapacity];
 
+        public FighterManager manager;
+
         public override void Spawned()
         {
             base.Spawned();

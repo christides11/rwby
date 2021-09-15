@@ -12,5 +12,6 @@ namespace rwby
         public GameObject followVirtualCameraPrefab;
         public Hurtbox hurtboxPrefab;
         public bool showHitboxes;
+        public BaseHUD baseUI;
     }
 }

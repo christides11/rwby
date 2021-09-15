@@ -122,18 +122,29 @@
             <summary>
             Get a ByteArraySlice from pool. This overload handles user supplied byte[] and byte count and can be used as a non-boxing alternative to ArraySegment&lt;byte&gt;.
             </summary>
+            <remarks>
+            This effectively pools the ByteArraySlice instances but not their data.
+            ByteArraySlice.Release() will return the slice itself to the pool but delete the reference to the buffer supplied here.
+            </remarks>
         </member>
         <member name="M:ExitGames.Client.Photon.ByteArraySlicePool.Acquire(System.Int32)">
             <summary>
             Get byte[] wrapper from pool. This overload accepts a bytecount and will return a wrapper with a byte[] that size or greater.
             </summary>
         </member>
-        <member name="M:ExitGames.Client.Photon.ByteArraySlicePool.Release(ExitGames.Client.Photon.ByteArraySlice)">
+        <member name="M:ExitGames.Client.Photon.ByteArraySlicePool.PopOrCreate(System.Collections.Generic.Stack{ExitGames.Client.Photon.ByteArraySlice},System.Int32)">
+            <summary>Pops a slice from the stack or creates a new slice for that stack.</summary>
+            <param name="stack">The stack to use. Lock that stack before calling PopOrCreate for thread safety.</param>
+            <param name="stackIndex"></param>
+            <returns>A slice.</returns>
+        </member>
+        <member name="M:ExitGames.Client.Photon.ByteArraySlicePool.Release(ExitGames.Client.Photon.ByteArraySlice,System.Int32)">
             <summary>
             Releasing a ByteArraySlice, will put it back into the pool, if it was acquired from one.
             </summary>
             <param name="slice">The ByteArraySlice to return to the pool.</param>
-            <returns>True if this slice was returned to some pool. False if not.</returns>
+            <param name="stackIndex">The stackIndex for this slice.</param>
+            <returns>True if this slice was returned to some pool. False if not (null or stackIndex &lt; 0.</returns>
         </member>
         <member name="M:ExitGames.Client.Photon.ByteArraySlicePool.ClearPools(System.Int32,System.Int32)">
             <summary>
@@ -204,7 +215,7 @@
         <member name="T:ExitGames.Client.Photon.Encryption.IPhotonEncryptor">
             <summary>Interface for DatagramEncryptor implementations.</summary>
         </member>
-        <member name="M:ExitGames.Client.Photon.Encryption.IPhotonEncryptor.Init(System.Byte[],System.Byte[],System.Byte[],System.Boolean)">
+        <member name="M:ExitGames.Client.Photon.Encryption.IPhotonEncryptor.Init(System.Byte[],System.Byte[],System.Byte[],System.Boolean,System.Int32)">
             <summary>Initialize the encryptor.</summary>
         </member>
         <member name="F:ExitGames.Client.Photon.Encryption.EncryptorNet.encryptorIn">
@@ -222,7 +233,7 @@
             Implementation of encryption for "Datagram Encryption".
             </summary>
         </member>
-        <member name="M:ExitGames.Client.Photon.Encryption.EncryptorNative.Init(System.Byte[],System.Byte[],System.Byte[],System.Boolean)">
+        <member name="M:ExitGames.Client.Photon.Encryption.EncryptorNative.Init(System.Byte[],System.Byte[],System.Byte[],System.Boolean,System.Int32)">
             <summary>
             Initialize
             </summary>
@@ -819,6 +830,12 @@
             Wrapper is will not be returned to its pool until it is Unwrapped, or the pool is cleared.
             </summary>
         </member>
+        <member name="M:ExitGames.Client.Photon.ParameterDictionary.System#Collections#Generic#IEnumerable{System#Collections#Generic#KeyValuePair{System#Byte,System#Object}}#GetEnumerator">
+            <inheritdoc />
+        </member>
+        <member name="M:ExitGames.Client.Photon.ParameterDictionary.GetEnumerator">
+            <inheritdoc />
+        </member>
         <member name="M:ExitGames.Client.Photon.ParameterDictionary.TryGetObject(System.Byte)">
             <summary>
             Will get the object using the key. If the key is invalid, will return null.
@@ -827,11 +844,9 @@
             <returns></returns>
         </member>
         <member name="M:ExitGames.Client.Photon.ParameterDictionary.ToStringFull(System.Boolean)">
-            <summary>
-            Returns 
-            </summary>
-            <param name="includeTypes"></param>
-            <returns></returns>
+            <summary>Dictionary content as string.</summary>
+            <param name="includeTypes">If true, type-info is also included.</param>
+            <returns>Full content of dictionary as string.</returns>
         </member>
         <member name="F:ExitGames.Client.Photon.PhotonCodes.ClientKey">
             <summary>Param code. Used in internal op: InitEncryption.</summary>
@@ -1866,8 +1881,10 @@
             <summary>
             Initializes Datagram Encryption. Optionally, the EncryptorType is being used, if set.
             </summary>
-            <param name="encryptionSecret">secret used to cipher udp packets</param>
-            <param name="hmacSecret">secret used for authentication of udp packets</param>
+            <param name="encryptionSecret">Secret used to cipher udp packets.</param>
+            <param name="hmacSecret">Secret used for authentication of udp packets.</param>
+            <param name="randomizedSequenceNumbers">Sets if enet Sequence Numbers will be randomized or not. Preferably should be true.</param>
+            <param name="chainingModeGCM">Sets if the chaining mode should be CBC (false, default) or GCM (true). GCM mode is only available with a native encryption plugin.</param>
         </member>
         <member name="M:ExitGames.Client.Photon.PhotonPeer.InitPayloadEncryption(System.Byte[])">
             <summary>

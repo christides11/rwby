@@ -78,55 +78,117 @@ namespace Fusion.CodeGen {
       return path.Contains("-Editor") || path.Contains(".Editor");
     }
 
-    bool TryGetNetworkWrapperType(TypeReference type, out TypeReference result) {
-      return TryGetNetworkWrapperType(type, out result, out _, out _);
+    struct WrapInfo {
+      public MethodDefinition WrapMethod;
+      public MethodDefinition UnwrapMethod;
+      public TypeReference WrapperType;
+      public TypeReference Type;
+      public int MaxRawByteCount;
+      public bool UnwrapByRef;
+      public bool IsRaw => MaxRawByteCount > 0;
     }
 
-    bool TryGetNetworkWrapperType(TypeReference type, out TypeReference result, out MethodDefinition wrap, out MethodDefinition unwrap) {
+    bool TryGetNetworkWrapperType(TypeReference type, out WrapInfo result) {
       if (type == null) {
-        result = null;
-        wrap = null;
-        unwrap = null;
+        result = default;
         return false;
       }
 
       var definition = type.TryResolve();
       if (definition == null) {
-        result = null;
-        wrap = null;
-        unwrap = null;
+        result = default;
         return false;
       }
 
-      MethodDefinition wrapMethod = null;
-      MethodDefinition unwrapMethod = null;
-      foreach (var method in definition.Methods) {
-        if (!method.IsStatic) {
-          continue;
-        }
+      int rawByteCount = 0;
 
-        if (method.Name == NETWORK_WRAP_NAME) {
-          if (method.Parameters.Count == 3 && method.Parameters[0].ParameterType.IsSame<NetworkRunner>() && method.Parameters[1].ParameterType.IsSame(type) && method.Parameters[2].IsOut && method.ReturnType.IsBool()) {
-            wrapMethod = method;
+      if (definition.GetSingleOrDefaultMethodWithAttribute<NetworkSerializeMethodAttribute>(out var wrapAttribute, out var wrapMethod)) {
+        wrapAttribute.TryGetAttributeProperty<int>(nameof(NetworkSerializeMethodAttribute.MaxSize), out rawByteCount);
+
+        if (rawByteCount > 0) {
+          try {
+            wrapMethod.ThrowIfNotStatic()
+                      .ThrowIfNotPublic()
+                      .ThrowIfParameterCount(3)
+                      .ThrowIfParameter(0, typeof(NetworkRunner))
+                      .ThrowIfParameter(1, type)
+                      .ThrowIfParameter(2, typeof(byte*))
+                      .ThrowIfReturnType(typeof(int));
+          } catch (Exception ex) {
+            throw new ILWeaverException($"Method marked with {nameof(NetworkSerializeMethodAttribute)} has an invalid signature RAW", ex);
           }
-        }
-        if (method.Name == NETWORK_UNWRAP_NAME) {
-          if (method.Parameters.Count == 3 && method.Parameters[0].ParameterType.IsSame<NetworkRunner>() && method.Parameters[2].ParameterType.IsSame(type) && method.Parameters[2].IsOut && method.ReturnType.IsBool()) {
-            unwrapMethod = method;
+        } else {
+          try {
+            wrapMethod.ThrowIfNotStatic()
+                      .ThrowIfNotPublic()
+                      .ThrowIfParameterCount(2)
+                      .ThrowIfParameter(0, typeof(NetworkRunner))
+                      .ThrowIfParameter(1, type);
+          } catch (Exception ex) {
+            throw new ILWeaverException($"Method marked with {nameof(NetworkSerializeMethodAttribute)} has an invalid signature", ex);
           }
         }
       }
+
+      bool cacheUnwrap = false;
+
+      if (definition.GetSingleOrDefaultMethodWithAttribute<NetworkDeserializeMethodAttribute>(out var unwrapAttribute, out var unwrapMethod)) {
+        if (wrapMethod == null) {
+          throw new ILWeaverException($"Method marked with {nameof(NetworkDeserializeMethodAttribute)}, but there is no method marked with {nameof(NetworkSerializeMethodAttribute)}: {unwrapMethod}");
+        }
+
+        if (rawByteCount > 0) {
+          try {
+            unwrapMethod.ThrowIfNotStatic()
+                        .ThrowIfNotPublic()
+                        .ThrowIfReturnType(typeof(int))
+                        .ThrowIfParameterCount(3)
+                        .ThrowIfParameter(0, typeof(NetworkRunner))
+                        .ThrowIfParameter(1, typeof(byte*))
+                        .ThrowIfParameter(2, type, isByReference: true);
+            cacheUnwrap = true;
+          } catch (Exception ex) {
+            throw new ILWeaverException($"Method marked with {nameof(NetworkDeserializeMethodAttribute)} has an invalid signature RAW", ex);
+          }
+        } else {
+          try {
+            unwrapMethod.ThrowIfNotStatic()
+                        .ThrowIfNotPublic()
+                        .ThrowIfParameter(0, typeof(NetworkRunner))
+                        .ThrowIfParameter(1, wrapMethod.ReturnType);
+            
+            if (unwrapMethod.Parameters.Count == 3) {
+              unwrapMethod.ThrowIfReturnType(typeof(void))
+                          .ThrowIfParameter(2, type, isByReference: true);
+              cacheUnwrap = true;
+            } else if (unwrapMethod.Parameters.Count == 2) {
+              unwrapMethod.ThrowIfReturnType(type);
+            } else {
+              throw new ILWeaverException($"Expected 2 or 3 parameters");
+            }
+          } catch (Exception ex) {
+            throw new ILWeaverException($"Method marked with {nameof(NetworkDeserializeMethodAttribute)} has an invalid signature", ex);
+          }
+          
+        }
+      } else if (wrapMethod != null) {
+        throw new ILWeaverException($"Method marked with {nameof(NetworkSerializeMethodAttribute)}, but there is no method marked with {nameof(NetworkDeserializeMethodAttribute)}: {wrapMethod}");
+      }
+
 
       if (wrapMethod != null && unwrapMethod != null) {
-        if (wrapMethod.Parameters[2].ParameterType.IsSame(unwrapMethod.Parameters[1].ParameterType)) {
-          result = unwrapMethod.Parameters[1].ParameterType;
-          wrap = wrapMethod;
-          unwrap = unwrapMethod;
-          return true;
-        }
+        result = new WrapInfo() {
+          MaxRawByteCount = rawByteCount,
+          UnwrapMethod    = unwrapMethod,
+          WrapMethod      = wrapMethod,
+          WrapperType     = rawByteCount > 0 ? null : wrapMethod.ReturnType,
+          Type            = type,
+          UnwrapByRef     = cacheUnwrap,
+        };
+        return true;
       }
 
-      return TryGetNetworkWrapperType(definition.BaseType, out result, out wrap, out unwrap);
+      return TryGetNetworkWrapperType(definition.BaseType, out result);
     }
 
     TypeDefinition FindNetworkedBehaviourTypeDef(TypeDefinition type) {
@@ -168,15 +230,11 @@ namespace Fusion.CodeGen {
 
     const string DEFAULTS_METHOD_NAME = nameof(NetworkBehaviour.Defaults);
 
-    const string NETWORK_WRAP_NAME = nameof(NetworkBehaviour.TryNetworkWrap);
-    const string NETWORK_UNWRAP_NAME = nameof(NetworkBehaviour.TryNetworkUnwrap);
-
     const string FIND_OBJECT_METHOD_NAME = nameof(NetworkRunner.FindObject);
 
     Dictionary<string, TypeMetaData> _typeData = new Dictionary<string, TypeMetaData>();
     Dictionary<string, BehaviourMetaData> _networkedBehaviourTypeData = new Dictionary<string, BehaviourMetaData>();
     Dictionary<string, int> _rpcCount = new Dictionary<string, int>();
-
 
 
     internal readonly ILWeaverLog Log;
@@ -279,6 +337,14 @@ namespace Fusion.CodeGen {
       }
     }
 
+    int GetWordCount(ILWeaverAssembly asm, WrapInfo wrapInfo) {
+      return wrapInfo.WrapperType != null ? GetTypeWordCount(asm, wrapInfo.WrapperType) : Native.WordCount(wrapInfo.MaxRawByteCount, Allocator.REPLICATE_WORD_SIZE);
+    }
+
+    int GetByteCount(ILWeaverAssembly asm, WrapInfo wrapInfo) {
+      return GetWordCount(asm, wrapInfo) * Allocator.REPLICATE_WORD_SIZE;
+    }
+
     int GetTypeWordCount(ILWeaverAssembly asm, TypeReference type) {
       if (type.IsPointer) {
         type = type.GetElementType();
@@ -310,9 +376,9 @@ namespace Fusion.CodeGen {
             WordCount = Native.WordCount(size, Allocator.REPLICATE_WORD_SIZE),
             Definition = typeDefinition
           });
-        } else if (TryGetNetworkWrapperType(type, out var wrapperType)) {
+        } else if (TryGetNetworkWrapperType(type, out var wrapInfo)) {
           _typeData.Add(type.FullName, data = new TypeMetaData {
-            WordCount = GetTypeWordCount(asm, wrapperType),
+            WordCount = GetWordCount(asm, wrapInfo),
             Definition = typeDefinition
           });
         } else {
@@ -325,6 +391,10 @@ namespace Fusion.CodeGen {
       }
 
       return data.WordCount;
+    }
+
+    int GetByteCount(ILWeaverAssembly asm, TypeReference type) {
+      return GetTypeWordCount(asm, type) * Allocator.REPLICATE_WORD_SIZE;
     }
 
     int GetPropertyWordCount(ILWeaverAssembly asm, PropertyDefinition property) {
@@ -551,23 +621,34 @@ namespace Fusion.CodeGen {
           setIL.Append(Stind(type));
           setIL.Append(Instruction.Create(OpCodes.Ret));
         }
-      } else if (TryGetNetworkWrapperType(type, out var wrapperType, out var wrapMethod, out var unwrapMethod)) {
+      } else if (TryGetNetworkWrapperType(type, out var wrapInfo)) {
 
-        Action<ILProcessor> getRunner = il => {
-          il.Append(Instruction.Create(OpCodes.Ldarg_0));
-          il.Append(Instruction.Create(OpCodes.Ldfld, asm.NetworkedBehaviour.GetField(RUNNER_FIELD_NAME)));
-        };
+        FieldDefinition field = null;
+        //if (wrapInfo.UnwrapByRef) {
+        //  cache = new FieldDefinition(GetCacheName(property.Name), FieldAttributes.Private, wrapInfo.Type);
+        //}
 
         // getter
-        WeaveNetworkUnwrap(asm, getIL, property.GetMethod, getRunner, il2 => addressLoader(il2, 0), unwrapMethod, resultType: property.PropertyType, notifyFailed: false);
-        getIL.Append(Ret());
+        using (var ctx = new MethodContext(asm, property.GetMethod, addressGetter: (x) => addressLoader(x, 0))) {
+          if (field != null) {
+            property.DeclaringType.Fields.Add(field);
+            WeaveNetworkUnwrap(asm, getIL, ctx, wrapInfo, property.PropertyType, previousValue: field);
+          } else {
+            WeaveNetworkUnwrap(asm, getIL, ctx, wrapInfo, property.PropertyType);
+          }
+          getIL.Append(Ret());
+        }
 
         // setter
-        var tmp = WeaveNetworkWrap(asm, setIL, property.SetMethod, getRunner, il2 => il2.Append(Ldarg_1()), type, wrapMethod, notifyFailed: true);
-        addressLoader(setIL, 0);
-        setIL.Append(Ldloc(tmp));
-        setIL.Append(Stind_or_Stobj(tmp.VariableType));
-        setIL.Append(Ret());
+        using (var ctx = new MethodContext(asm, property.SetMethod, addressGetter: (x) => addressLoader(x, 0))) {
+          WeaveNetworkWrap(asm, setIL, ctx, il => il.Append(Ldarg_1()), wrapInfo);
+          //if (cache != null) {
+          //  setIL.Append(Ldarg_0());
+          //  setIL.Append(Ldarg_1());
+          //  setIL.Append(Stfld(cache));
+          //}
+          setIL.Append(Ret());
+        }
       }
         // other value types
         else if (type.IsValueType) {
@@ -868,8 +949,12 @@ namespace Fusion.CodeGen {
         return true;
       }
 
-      if (TryGetNetworkWrapperType(property, out var wrapperType)) {
-        return IsRpcCompatibleType(wrapperType);
+      if (TryGetNetworkWrapperType(property, out var wrapInfo)) {
+        if (wrapInfo.MaxRawByteCount > 0) {
+          return true;
+        } else {
+          return IsRpcCompatibleType(wrapInfo.WrapperType);
+        }
       }
 
       return false;
@@ -1097,18 +1182,6 @@ namespace Fusion.CodeGen {
       Dictionary<string, int> invokerNameCounter = new Dictionary<string, int>();
 
       foreach (var (rpc, attr) in rpcs) {
-        Action<ILProcessor> getRunner;
-
-        if (rpc.IsStatic) {
-          getRunner = il => il.Append(Ldarg_0());
-        } else {
-          getRunner = il => {
-            il.Append(Ldarg_0());
-            il.Append(Ldfld(asm.SimulationBehaviour.GetField(RUNNER_FIELD_NAME)));
-          };
-        }
-
-
         int sources;
         int targets;
 
@@ -1133,15 +1206,16 @@ namespace Fusion.CodeGen {
         // rpc key
         int instanceRpcKey = -1;
 
-        {
+        using (var ctx = new RpcMethodContext(asm, rpc, rpc.IsStatic)) {
+
           // local variables
-          var data = new VariableDefinition(asm.Import(typeof(byte)).MakePointerType());
-          var offset = new VariableDefinition(asm.Import(typeof(int)));
+          ctx.DataVariable = new VariableDefinition(asm.Import(typeof(byte)).MakePointerType());
+          ctx.OffsetVariable = new VariableDefinition(asm.Import(typeof(int)));
           var message = new VariableDefinition(asm.SimulationMessage.Reference.MakePointerType());
           VariableDefinition localAuthorityMask = null;
 
-          rpc.Body.Variables.Add(data);
-          rpc.Body.Variables.Add(offset);
+          rpc.Body.Variables.Add(ctx.DataVariable);
+          rpc.Body.Variables.Add(ctx.OffsetVariable);
           rpc.Body.Variables.Add(message);
           rpc.Body.InitLocals = true;
 
@@ -1189,7 +1263,7 @@ namespace Fusion.CodeGen {
           // check if runner's ok
           if (NetworkRunner.BuildType == NetworkRunner.BuildTypes.Debug) {
             if (rpc.IsStatic) {
-              getRunner(il);
+              il.AppendMacro(ctx.LoadRunner());
               var checkDone = Nop();
               il.Append(Brtrue_S(checkDone));
               il.Append(Ldstr(rpc.Parameters[0].Name));
@@ -1205,7 +1279,8 @@ namespace Fusion.CodeGen {
 
           // if we shouldn't invoke during resim
           if (invokeResim == false) {
-            getRunner(il);
+            il.AppendMacro(ctx.LoadRunner());
+
             il.Append(Call(asm.NetworkRunner.GetProperty("Stage")));
             il.Append(Ldc_I4((int)SimulationStages.Resimulate));
             il.Append(Instruction.Create(OpCodes.Beq, ret));
@@ -1222,7 +1297,7 @@ namespace Fusion.CodeGen {
 
           // check if target is reachable or not
           if (rpcTargetParameter != null) {
-            getRunner(il);
+            il.AppendMacro(ctx.LoadRunner());
 
             il.Append(Ldarg(rpcTargetParameter));
             il.Append(Call(asm.NetworkRunner.GetMethod(nameof(NetworkRunner.GetRpcTargetStatus))));
@@ -1301,13 +1376,13 @@ namespace Fusion.CodeGen {
 
           // if not targeted (already handled earlier) check if it can be sent at all
           if (rpcTargetParameter == null) {
-            getRunner(il);
+            il.AppendMacro(ctx.LoadRunner());
             il.Append(Call(asm.NetworkRunner.GetMethod(nameof(NetworkRunner.HasAnyActiveConnections))));
             il.Append(Brfalse(afterSend));
           }
 
           // create simulation message
-          getRunner(il);
+          il.AppendMacro(ctx.LoadRunner());
           il.Append(Call(asm.NetworkRunner.GetProperty(nameof(NetworkRunner.Simulation))));
           il.Append(Ldc_I4(RpcHeader.SIZE));
 
@@ -1329,11 +1404,11 @@ namespace Fusion.CodeGen {
             if (para.ParameterType.IsString()) {
               il.Append(Ldarg(para));
               il.Append(Call(asm.Native.GetMethod(nameof(Native.GetLengthPrefixedUTF8ByteCount))));
-              AlignToWordSize(il);
+              il.AppendMacro(AlignToWordSize());
             } else if (para.ParameterType.IsArray) {
               WeaveArrayByteSize(asm, il, para);
             } else {
-              var size = GetTypeWordCount(asm, para.ParameterType) * Allocator.REPLICATE_WORD_SIZE;
+              var size = GetByteCount(asm, para.ParameterType);
               il.Append(Ldc_I4(size));
             }
             il.Append(Add());
@@ -1345,7 +1420,7 @@ namespace Fusion.CodeGen {
           // get data for messages
           il.Append(Ldloc(message));
           il.Append(Call(asm.SimulationMessage.GetMethod(nameof(SimulationMessage.GetData), 1)));
-          il.Append(Stloc(data));
+          il.Append(Stloc(ctx.DataVariable));
 
           // create RpcHeader
           // il.Append(Ldloc(data));
@@ -1367,13 +1442,13 @@ namespace Fusion.CodeGen {
             il.Append(Call(asm.RpcHeader.GetMethod(nameof(RpcHeader.Create), 3)));
           }
 
-          il.Append(Ldloc(data));
+          il.Append(Ldloc(ctx.DataVariable));
           il.Append(Call(asm.RpcHeader.GetMethod(nameof(RpcHeader.Write))));
-          AlignToWordSize(il);
+          il.AppendMacro(AlignToWordSize());
           //il.Append(Stobj(asm.RpcHeader.Reference));
 
           //il.Append(Ldc_I4(RpcHeader.SIZE));
-          il.Append(Stloc(offset));
+          il.Append(Stloc(ctx.OffsetVariable));
 
           // write parameters
           for (int i = 0; i < rpc.Parameters.Count; ++i) {
@@ -1389,54 +1464,37 @@ namespace Fusion.CodeGen {
               continue;
             }
             if (para.ParameterType.IsString()) {
-
-              il.Append(Ldloc(offset));
-
-              il.Append(Ldloc(data));
-              il.Append(Ldloc(offset));
-              il.Append(Add());
-              il.Append(Ldarg(para));
-              il.Append(Call(asm.Native.GetMethod(nameof(Native.WriteLengthPrefixedUTF8))));
-              AlignToWordSize(il);
-
-              il.Append(Add());
-              il.Append(Stloc(offset));
-
+              using (ctx.AddOffsetScope(il)) { 
+                il.AppendMacro(ctx.LoadAddress());
+                il.Append(Ldarg(para));
+                il.Append(Call(asm.Native.GetMethod(nameof(Native.WriteLengthPrefixedUTF8))));
+                il.AppendMacro(AlignToWordSize());
+              };
             } else if (para.ParameterType.IsArray) {
-              WeaveRpcArrayInput(asm, rpc, data, offset, il, getRunner, para);
+              WeaveRpcArrayInput(asm, ctx, il, para);
             } else {
-              var size = GetTypeWordCount(asm, para.ParameterType) * Allocator.REPLICATE_WORD_SIZE;
-
-              VariableDefinition tempVariable = null;
-              if (!para.ParameterType.IsPrimitive && TryGetNetworkWrapperType(para.ParameterType, out var wrapperType, out var wrapMethod, out _)) {
-                tempVariable = WeaveNetworkWrap(asm, il, rpc, getRunner, il2 => il2.Append(Ldarg(para)), para.ParameterType, wrapMethod, notifyFailed: true);
+              if (!para.ParameterType.IsPrimitive && TryGetNetworkWrapperType(para.ParameterType, out var wrapInfo)) {
+                WeaveNetworkWrap(asm, il, ctx, il => il.Append(Ldarg(para)), wrapInfo);
+              } else {
+                il.AppendMacro(ctx.LoadAddress());
+                il.Append(Ldarg(para));
+                il.Append(Stind_or_Stobj(para.ParameterType));
+                il.AppendMacro(ctx.AddOffset(GetByteCount(asm, para.ParameterType)));
               }
-
-              il.Append(Ldloc(data));
-              il.Append(Ldloc(offset));
-              il.Append(Add());
-
-              il.Append(tempVariable != null ? Ldloc(tempVariable) : Ldarg(para));
-              il.Append(Stind_or_Stobj(tempVariable != null ? tempVariable.VariableType : para.ParameterType));
-
-              il.Append(Ldloc(offset));
-              il.Append(Ldc_I4(size));
-              il.Append(Add());
-              il.Append(Stloc(offset));
             }
           }
 
           // update message offset
           il.Append(Ldloc(message));
           il.Append(Ldflda(asm.SimulationMessage.GetField(nameof(SimulationMessage.Offset))));
-          il.Append(Ldloc(offset));
+          il.Append(Ldloc(ctx.OffsetVariable));
           il.Append(Ldc_I4(8));
           il.Append(Mul());
           il.Append(Stind_I4());
 
           // send message
 
-          getRunner(il);
+          il.AppendMacro(ctx.LoadRunner());
 
           if (rpcTargetParameter != null) {
             il.Append(Ldloc(message));
@@ -1485,7 +1543,7 @@ namespace Fusion.CodeGen {
             foreach (var param in rpc.Parameters) {
               if (param.ParameterType.IsSame<RpcInfo>()) {
                 // need to fill it now
-                getRunner(il);
+                il.AppendMacro(ctx.LoadRunner());
                 il.Append(Ldc_I4((int)channel));
                 il.Append(Call(asm.RpcInfo.GetMethod(nameof(RpcInfo.FromLocal))));
                 il.Append(Starg_S(param));
@@ -1499,9 +1557,10 @@ namespace Fusion.CodeGen {
           il.Append(ret);
         }
 
-        {
+        var invoker = new MethodDefinition(InvokerMethodName(rpc.Name, invokerNameCounter), MethodAttributes.Family | MethodAttributes.Static, asm.Import(typeof(void)));
+        using (var ctx = new RpcMethodContext(asm, invoker, rpc.IsStatic)) {
+
           // create invoker delegate
-          var invoker = new MethodDefinition(InvokerMethodName(rpc.Name, invokerNameCounter), MethodAttributes.Family | MethodAttributes.Static, asm.Import(typeof(void)));
           if (rpc.IsStatic) {
             var runner = new ParameterDefinition("runner", ParameterAttributes.None, asm.NetworkRunner.Reference);
             invoker.Parameters.Add(runner);
@@ -1525,16 +1584,16 @@ namespace Fusion.CodeGen {
           type.Methods.Add(invoker);
 
           // local variables
-          var data = new VariableDefinition(asm.Import(typeof(byte)).MakePointerType());
-          var offset = new VariableDefinition(asm.Import(typeof(int)));
+          ctx.DataVariable = new VariableDefinition(asm.Import(typeof(byte)).MakePointerType());
+          ctx.OffsetVariable = new VariableDefinition(asm.Import(typeof(int)));
           var parameters = new VariableDefinition[rpc.Parameters.Count];
 
           for (int i = 0; i < parameters.Length; ++i) {
             invoker.Body.Variables.Add(parameters[i] = new VariableDefinition(rpc.Parameters[i].ParameterType));
           }
 
-          invoker.Body.Variables.Add(data);
-          invoker.Body.Variables.Add(offset);
+          invoker.Body.Variables.Add(ctx.DataVariable);
+          invoker.Body.Variables.Add(ctx.OffsetVariable);
           invoker.Body.InitLocals = true;
 
           var il = invoker.Body.GetILProcessor();
@@ -1542,12 +1601,12 @@ namespace Fusion.CodeGen {
           // grab data from message and store in local
           il.Append(Ldarg_1());
           il.Append(Call(asm.SimulationMessage.GetMethod(nameof(SimulationMessage.GetData), 1)));
-          il.Append(Stloc(data));
+          il.Append(Stloc(ctx.DataVariable));
 
-          il.Append(Ldloc(data));
+          il.Append(Ldloc(ctx.DataVariable));
           il.Append(Call(asm.RpcHeader.GetMethod(nameof(RpcHeader.ReadSize))));
-          AlignToWordSize(il);
-          il.Append(Stloc(offset));
+          il.AppendMacro(AlignToWordSize());
+          il.Append(Stloc(ctx.OffsetVariable));
 
           for (int i = 0; i < parameters.Length; ++i) {
             var para = parameters[i];
@@ -1564,17 +1623,12 @@ namespace Fusion.CodeGen {
               il.Append(Stloc(para));
             } else if (para.VariableType.IsString()) {
 
-              il.Append(Ldloc(offset));
-              {
-                il.Append(Ldloc(data));
-                il.Append(Ldloc(offset));
-                il.Append(Add());
+              using (ctx.AddOffsetScope(il)) { 
+                il.AppendMacro(ctx.LoadAddress());
                 il.Append(Ldloca(para));
                 il.Append(Call(asm.Native.GetMethod(nameof(Native.ReadLengthPrefixedUTF8))));
-                AlignToWordSize(il);
-              }
-              il.Append(Add());
-              il.Append(Stloc(offset));
+                il.AppendMacro(AlignToWordSize());
+              };
 
             } else if (para.VariableType.IsSame<RpcInfo>()) {
               il.Append(Ldarg_1());
@@ -1582,30 +1636,17 @@ namespace Fusion.CodeGen {
               il.Append(Stloc(para));
 
             } else if (para.VariableType.IsArray) {
-              WeaveRpcArrayInvoke(asm, invoker, data, offset, il, getRunner, para);
+              WeaveRpcArrayInvoke(asm, ctx, il, para);
 
             } else {
-              var size = GetTypeWordCount(asm, para.VariableType) * Allocator.REPLICATE_WORD_SIZE;
-
-              if (!para.VariableType.IsPrimitive && TryGetNetworkWrapperType(para.VariableType, out var wrapperType, out _, out var unwrapMethod)) {
-                WeaveNetworkUnwrap(asm, il, invoker, getRunner, il2 => {
-                  il2.Append(Ldloc(data));
-                  il2.Append(Ldloc(offset));
-                  il2.Append(Add());
-                }, unwrapMethod, resultVariable: para, notifyFailed: true);
+              if (!para.VariableType.IsPrimitive && TryGetNetworkWrapperType(para.VariableType, out var wrapInfo)) {
+                WeaveNetworkUnwrap(asm, il, ctx, wrapInfo, para.VariableType, storeResult: il => il.Append(Stloc(para)));
               } else {
-                il.Append(Ldloc(data));
-                il.Append(Ldloc(offset));
-                il.Append(Add());
+                il.AppendMacro(ctx.LoadAddress());
                 il.Append(Ldind_or_Ldobj(para.VariableType));
                 il.Append(Stloc(para));
+                il.AppendMacro(ctx.AddOffset(GetByteCount(asm, para.VariableType)));
               }
-
-
-              il.Append(Ldloc(offset));
-              il.Append(Ldc_I4(size));
-              il.Append(Add());
-              il.Append(Stloc(offset));
             }
           }
 
@@ -1669,12 +1710,7 @@ namespace Fusion.CodeGen {
       return false;
     }
 
-    void AlignToWordSize(ILProcessor il) {
-      il.Append(Ldc_I4(Allocator.REPLICATE_WORD_SIZE - 1));
-      il.Append(Add());
-      il.Append(Ldc_I4(~(Allocator.REPLICATE_WORD_SIZE - 1)));
-      il.Append(And());
-    }
+
 
     void WeaveArrayByteSize(ILWeaverAssembly asm, ILProcessor il, ParameterDefinition para) {
 
@@ -1683,10 +1719,10 @@ namespace Fusion.CodeGen {
       var elementType = para.ParameterType.GetElementType();
       if (elementType.IsPrimitive) {
         size = GetPrimitiveSize(elementType);
-      } else if (TryGetNetworkWrapperType(elementType, out var wrapperType)) {
-        size = GetTypeWordCount(asm, wrapperType) * Allocator.REPLICATE_WORD_SIZE;
+      } else if (TryGetNetworkWrapperType(elementType, out var wrapInfo)) {
+        size = GetByteCount(asm, wrapInfo);
       } else {
-        size = GetTypeWordCount(asm, elementType) * Allocator.REPLICATE_WORD_SIZE;
+        size = GetByteCount(asm, elementType);
       }
 
       // array length
@@ -1699,7 +1735,7 @@ namespace Fusion.CodeGen {
 
       if (elementType.IsPrimitive && (size % Allocator.REPLICATE_WORD_SIZE) != 0) {
         // need to align to word count boundaries
-        AlignToWordSize(il);
+        il.AppendMacro(AlignToWordSize());
       }
 
       // store the length
@@ -1707,35 +1743,27 @@ namespace Fusion.CodeGen {
       il.Append(Add());
     }
 
-    void WeaveRpcArrayInvoke(ILWeaverAssembly asm, MethodDefinition method, VariableDefinition data, VariableDefinition offset, ILProcessor il, Action<ILProcessor> getRunner, VariableDefinition para) {
+    void WeaveRpcArrayInvoke(ILWeaverAssembly asm, RpcMethodContext ctx, ILProcessor il, VariableDefinition para) {
       var elementType = para.VariableType.GetElementType();
 
       var intType = asm.Import(typeof(Int32));
 
+
       // alloc result array
-      il.Append(Ldloc(data));
-      il.Append(Ldloc(offset));
-      il.Append(Add());
+      il.AppendMacro(ctx.LoadAddress());
       il.Append(Ldind(intType));
       il.Append(Instruction.Create(OpCodes.Newarr, elementType));
       il.Append(Stloc(para));
 
-      il.Append(Ldloc(offset));
-      il.Append(Ldc_I4(sizeof(Int32)));
-      il.Append(Add());
-      il.Append(Stloc(offset));
+      il.AppendMacro(ctx.AddOffset(sizeof(Int32)));
 
       if (elementType.IsPrimitive) {
-        il.Append(Ldloc(offset));
-        {
+        using (ctx.AddOffsetScope(il)) { 
           // dst
           il.Append(Ldloc(para));
 
           // src
-          il.Append(Ldloc(data));
-          il.Append(Ldloc(offset));
-          il.Append(Add());
-
+          il.AppendMacro(ctx.LoadAddress());
 
           var memCpy = new GenericInstanceMethod(asm.Native.GetMethod(nameof(Native.CopyToArray), 2));
           memCpy.GenericArguments.Add(elementType);
@@ -1743,18 +1771,12 @@ namespace Fusion.CodeGen {
 
           if (elementType.IsPrimitive && (GetPrimitiveSize(elementType) % Allocator.REPLICATE_WORD_SIZE) != 0) {
             // need to align to word count boundaries
-            AlignToWordSize(il);
+            il.AppendMacro(AlignToWordSize());
           }
-        }
-        il.Append(Add());
-        il.Append(Stloc(offset));
+        };
       } else {
 
-
-
-        var arrayIndex = new VariableDefinition(asm.Import(typeof(int)));
-        method.Body.Variables.Add(arrayIndex);
-
+        var arrayIndex = ctx.GetOrCreateVariable("ArrayIndex", asm.Import(typeof(int)));
         var exitCondition = Ldloc(arrayIndex);
 
         il.Append(Ldc_I4(0));
@@ -1764,43 +1786,28 @@ namespace Fusion.CodeGen {
         // prepare store
         var loopBody = il.AppendReturn(Nop());
 
-        int sourceElementSize;
-        if (TryGetNetworkWrapperType(elementType, out var wrapperType, out _, out var unwrapMethod)) {
+        if (TryGetNetworkWrapperType(elementType, out var wrapInfo)) {
 
-          var tmp = new VariableDefinition(elementType);
-          method.Body.Variables.Add(tmp);
-
-          WeaveNetworkUnwrap(asm, il, method, getRunner, il2 => {
-            il2.Append(Ldloc(data));
-            il2.Append(Ldloc(offset));
-            il2.Append(Add());
-          }, unwrapMethod, resultVariable: tmp, notifyFailed: true);
-
-          il.Append(Ldloc(para));
-          il.Append(Ldloc(arrayIndex));
-          il.Append(Ldloc(tmp));
-
-          sourceElementSize = GetTypeWordCount(asm, wrapperType) * Allocator.REPLICATE_WORD_SIZE;
+          WeaveNetworkUnwrap(asm, il, ctx, wrapInfo, elementType,
+            prepareStore: il => {
+              il.Append(Ldloc(para));
+              il.Append(Ldloc(arrayIndex));
+            },
+            storeResult: il => {
+              il.Append(Stelem(elementType));
+            });
 
         } else {
 
           il.Append(Ldloc(para));
           il.Append(Ldloc(arrayIndex));
 
-          il.Append(Ldloc(data));
-          il.Append(Ldloc(offset));
-          il.Append(Add());
-
+          il.AppendMacro(ctx.LoadAddress());
           il.Append(Ldind_or_Ldobj(elementType));
-          sourceElementSize = GetTypeWordCount(asm, elementType) * Allocator.REPLICATE_WORD_SIZE;
-        }
-        il.Append(Stelem(elementType));
+          il.Append(Stelem(elementType));
 
-        // increase offset
-        il.Append(Ldloc(offset));
-        il.Append(Ldc_I4(sourceElementSize));
-        il.Append(Add());
-        il.Append(Stloc(offset));
+          il.AppendMacro(ctx.AddOffset(GetByteCount(asm, elementType)));
+        }
 
         // increase index
         il.Append(Ldloc(arrayIndex));
@@ -1817,13 +1824,11 @@ namespace Fusion.CodeGen {
       }
     }
 
-    void WeaveRpcArrayInput(ILWeaverAssembly asm, MethodDefinition method, VariableDefinition data, VariableDefinition offset, ILProcessor il, Action<ILProcessor> getRunner, ParameterDefinition para) {
+    void WeaveRpcArrayInput(ILWeaverAssembly asm, RpcMethodContext ctx, ILProcessor il, ParameterDefinition para) {
       var elementType = para.ParameterType.GetElementType();
 
       // store the array size
-      il.Append(Ldloc(data));
-      il.Append(Ldloc(offset));
-      il.Append(Add());
+      il.AppendMacro(ctx.LoadAddress());
 
       // array length
       il.Append(Ldarg(para));
@@ -1832,18 +1837,12 @@ namespace Fusion.CodeGen {
 
       il.Append(Stind_I4());
 
-      il.Append(Ldloc(offset));
-      il.Append(Ldc_I4(sizeof(Int32)));
-      il.Append(Add());
-      il.Append(Stloc(offset));
+      il.AppendMacro(ctx.AddOffset(sizeof(Int32)));
 
       if (elementType.IsPrimitive) {
-        il.Append(Ldloc(offset));
-        {
+        using (ctx.AddOffsetScope(il)) { 
           // dst
-          il.Append(Ldloc(data));
-          il.Append(Ldloc(offset));
-          il.Append(Add());
+          il.AppendMacro(ctx.LoadAddress());
 
           // src
           il.Append(Ldarg(para));
@@ -1852,15 +1851,12 @@ namespace Fusion.CodeGen {
           il.Append(Call(memCpy));
 
           if (elementType.IsPrimitive && (GetPrimitiveSize(elementType) % Allocator.REPLICATE_WORD_SIZE) != 0) {
-            AlignToWordSize(il);
+            il.AppendMacro(AlignToWordSize());
           }
-        }
-        il.Append(Add());
-        il.Append(Stloc(offset));
+        };
       } else {
 
-        var arrayIndex = new VariableDefinition(asm.Import(typeof(int)));
-        method.Body.Variables.Add(arrayIndex);
+        var arrayIndex = ctx.GetOrCreateVariable("arrayIndex", asm.Import(typeof(int)));
 
         var exitCondition = Ldloc(arrayIndex);
 
@@ -1870,36 +1866,25 @@ namespace Fusion.CodeGen {
 
         var loopBody = il.AppendReturn(Nop());
 
-        VariableDefinition wrappedValue = null;
-        if (TryGetNetworkWrapperType(elementType, out var wrapperType, out var wrapMethod, out _)) {
-          wrappedValue = WeaveNetworkWrap(asm, il, method, getRunner, il2 => {
-            il2.Append(Ldarg(para));
-            il2.Append(Ldloc(arrayIndex));
-            il2.Append(Ldelem(elementType));
-          }, elementType, wrapMethod, notifyFailed: false);
-        }
 
-        // dst
-        il.Append(Ldloc(data));
-        il.Append(Ldloc(offset));
-        il.Append(Add());
+        if (TryGetNetworkWrapperType(elementType, out var wrapInfo)) {
 
-        if (wrappedValue != null) {
-          il.Append(Ldloc(wrappedValue));
-          il.Append(Stind_or_Stobj(wrappedValue.VariableType));
+          WeaveNetworkWrap(asm, il, ctx, il => {
+            il.Append(Ldarg(para));
+            il.Append(Ldloc(arrayIndex));
+            il.Append(Ldelem(elementType));
+          }, wrapInfo);
+
         } else {
           // get array elem
+          il.AppendMacro(ctx.LoadAddress());
+
           il.Append(Ldarg(para));
           il.Append(Ldloc(arrayIndex));
           il.Append(Ldelem(elementType));
           il.Append(Stind_or_Stobj(elementType));
+          il.AppendMacro(ctx.AddOffset(GetByteCount(asm, elementType)));
         }
-
-        // increase offset
-        il.Append(Ldloc(offset));
-        il.Append(Ldc_I4(GetTypeWordCount(asm, wrappedValue?.VariableType ?? elementType) * Allocator.REPLICATE_WORD_SIZE));
-        il.Append(Add());
-        il.Append(Stloc(offset));
 
         // increase index
         il.Append(Ldloc(arrayIndex));
@@ -1917,95 +1902,125 @@ namespace Fusion.CodeGen {
       }
     }
 
-    VariableDefinition WeaveNetworkWrap(ILWeaverAssembly asm, ILProcessor il, MethodDefinition hostMethod, Action<ILProcessor> emitGetRunner, Action<ILProcessor> emitGetValue, TypeReference typeToWrap, MethodDefinition wrapMethod, bool notifyFailed = false) {
+    void WeaveNetworkWrap(ILWeaverAssembly asm, ILProcessor il, MethodContext ctx, Action<ILProcessor> emitGetValue, WrapInfo wrapInfo) {
 
-      var wrapperType = wrapMethod.Parameters[2].ParameterType;
-      Log.Assert(wrapperType.IsByReference);
-      wrapperType = wrapperType.GetElementType();
+      if (!wrapInfo.IsRaw) {
+        il.AppendMacro(ctx.LoadAddress());
+      }
 
-      var outVariable = new VariableDefinition(hostMethod.Module.ImportReference(wrapperType));
-      hostMethod.Body.Variables.Add(outVariable);
-
-      var done = Nop();
-
-      emitGetRunner(il);
+      il.AppendMacro(ctx.LoadRunner());
       emitGetValue(il);
 
-      il.Append(Ldloca(outVariable));
-      il.Append(Call(hostMethod.Module.ImportReference(wrapMethod)));
-
-      if (notifyFailed) {
-        il.Append(Brtrue_S(done));
-        var notifyFailedMethod = new GenericInstanceMethod(asm.NetworkBehaviourUtils.GetMethod(nameof(NetworkBehaviourUtils.NotifyNetworkWrapFailed)));
-        notifyFailedMethod.GenericArguments.Add(typeToWrap);
-        emitGetValue(il);
-        il.Append(Call(notifyFailedMethod));
-      } else {
-        il.Append(Pop());
+      if (wrapInfo.IsRaw) {
+        il.AppendMacro(ctx.LoadAddress());
       }
-      il.Append(done);
-      return outVariable;
+
+      il.Append(Call(ctx.Method.Module.ImportReference(wrapInfo.WrapMethod)));
+
+      if (wrapInfo.IsRaw) {
+        // read bytes are on top of the stack
+        il.Append(Ldc_I4(wrapInfo.MaxRawByteCount));
+        var validateMethod = new GenericInstanceMethod(asm.NetworkBehaviourUtils.GetMethod(nameof(NetworkBehaviourUtils.VerifyRawNetworkWrap)));
+        validateMethod.GenericArguments.Add(wrapInfo.Type);
+        il.Append(Call(validateMethod));
+
+        if (ctx.HasOffset) {
+          il.AppendMacro(AlignToWordSize());
+          il.AppendMacro(ctx.AddOffset());
+        } else {
+          il.Append(Pop());
+        }
+
+      } else {
+        var type = ctx.Method.Module.ImportReference(wrapInfo.WrapperType.GetElementType());
+        il.Append(Stind_or_Stobj(type));
+        
+        if (ctx.HasOffset) {
+          il.AppendMacro(ctx.AddOffset(GetByteCount(asm, type)));
+        }
+      }
     }
 
-    void WeaveNetworkUnwrap(ILWeaverAssembly asm, ILProcessor il, MethodDefinition hostMethod, Action<ILProcessor> emitGetRunner, Action<ILProcessor> emitGetAddress, MethodDefinition unwrapMethod, TypeReference resultType = null, VariableDefinition resultVariable = null, bool notifyFailed = false) {
+    void WeaveNetworkUnwrap(ILWeaverAssembly asm, ILProcessor il, MethodContext ctx, WrapInfo wrapInfo, TypeReference resultType, FieldDefinition previousValue = null, Action<ILProcessor> prepareStore = null, Action<ILProcessor> storeResult = null) {
+      if (resultType == null) {
+        throw new ArgumentNullException(nameof(resultType));
+      }
 
-      var wrapperType = unwrapMethod.Parameters[1].ParameterType;
+      var wrapperType = wrapInfo.UnwrapMethod.Parameters[1].ParameterType;
       Log.Assert(!wrapperType.IsByReference);
 
-      var typeToLoad = hostMethod.Module.ImportReference(wrapperType);
+      var typeToLoad = ctx.Method.Module.ImportReference(wrapperType);
 
-      if (resultType == null && resultVariable == null) {
-        throw new ArgumentException();
-      }
+      if (wrapInfo.IsRaw || wrapInfo.UnwrapByRef) {
+        il.AppendMacro(ctx.LoadRunner());
+        il.AppendMacro(ctx.LoadAddress());
+        if (!wrapInfo.IsRaw) {
+          il.Append(Ldind_or_Ldobj(typeToLoad));
+        }
 
-      if (resultType == null) {
-        resultType = resultVariable.VariableType;
-      } else if (resultVariable != null) {
-        Assert.Check(resultVariable.VariableType.IsSame(resultType));
-      }
+        VariableDefinition byRefTempVariable = null;
+        if (previousValue == null) {
+          byRefTempVariable = ctx.GetOrCreateVariable("RawUnwrap_tmp", wrapInfo.Type);
+          il.Append(Ldloca_S(byRefTempVariable));
+        } else {
+          il.Append(Ldarg_0());
+          il.Append(Ldflda(previousValue));
+        }
 
-      var done = Nop();
+        il.Append(Call(ctx.Method.Module.ImportReference(wrapInfo.UnwrapMethod)));
 
-      emitGetRunner(il);
+        if (wrapInfo.IsRaw) {
+          // check if number of bytes checks out
+          GenericInstanceMethod validateMethod;
+          validateMethod = new GenericInstanceMethod(asm.NetworkBehaviourUtils.GetMethod(nameof(NetworkBehaviourUtils.VerifyRawNetworkUnwrap), genericArgsCount: 1));
+          validateMethod.GenericArguments.Add(resultType);
+          il.Append(Ldc_I4(wrapInfo.MaxRawByteCount));
+          il.Append(Call(validateMethod));
 
-      emitGetAddress(il);
-      il.Append(Ldind_or_Ldobj(typeToLoad));
+          if (ctx.HasOffset) {
+            il.AppendMacro(AlignToWordSize());
+            il.AppendMacro(ctx.AddOffset());
+          }
 
-      VariableDefinition tempOutVariable = null;
-      if (resultVariable == null || !unwrapMethod.Parameters[2].ParameterType.IsSame(resultType)) {
-        tempOutVariable = new VariableDefinition(hostMethod.Module.ImportReference(unwrapMethod.Parameters[2].ParameterType.GetElementType()));
-        hostMethod.Body.Variables.Add(tempOutVariable);
-      }
+        } else {
+          il.AppendMacro(ctx.AddOffset(GetByteCount(asm, resultType)));
+        }
 
-      il.Append(Ldloca(tempOutVariable ?? resultVariable));
-      il.Append(Call(hostMethod.Module.ImportReference(unwrapMethod)));
+        prepareStore?.Invoke(il);
 
-      if (notifyFailed) {
-        il.Append(Brtrue_S(done));
+        if (previousValue == null) {
+          il.Append(Ldloc(byRefTempVariable));
+        } else {
+          il.Append(Ldarg_0());
+          il.Append(Ldfld(previousValue));
+        }
 
-        var notifyFailedMethod = new GenericInstanceMethod(asm.NetworkBehaviourUtils.GetMethod(nameof(NetworkBehaviourUtils.NotifyNetworkUnwrapFailed)));
-        notifyFailedMethod.GenericArguments.Add(typeToLoad);
-        emitGetAddress(il);
-        il.Append(Ldind_or_Ldobj(typeToLoad));
-        il.Append(Call(notifyFailedMethod));
+        if (!wrapInfo.UnwrapMethod.ReturnType.IsSame(resultType)) {
+          il.Append(Cast(resultType));
+        }
+
+        storeResult?.Invoke(il);
 
       } else {
-        il.Append(Pop());
-      }
 
-      il.Append(done);
+        // if not by ref, we don't handle the previous value field
+        Log.Assert(previousValue == null);
 
-      if (tempOutVariable != null) {
-        il.Append(Ldloc(tempOutVariable));
-        if (!unwrapMethod.Parameters[2].ParameterType.IsSame(resultType)) {
+        prepareStore?.Invoke(il);
+
+        il.AppendMacro(ctx.LoadRunner());
+        il.AppendMacro(ctx.LoadAddress());
+        il.Append(Ldind_or_Ldobj(typeToLoad));
+
+        il.Append(Call(ctx.Method.Module.ImportReference(wrapInfo.UnwrapMethod)));
+
+        if (!wrapInfo.UnwrapMethod.ReturnType.IsSame(resultType)) {
           il.Append(Cast(resultType));
-
-          if (resultVariable != null) {
-            il.Append(Stloc(resultVariable));
-          }
-        } else {
-          Log.Assert(resultVariable == null);
         }
+
+        storeResult?.Invoke(il);
+
+        il.AppendMacro(ctx.AddOffset(GetByteCount(asm, resultType)));
       }
     }
 
@@ -2309,11 +2324,16 @@ namespace Fusion.CodeGen {
       return methRef;
     }
 
-    public MethodReference GetMethod(string name, int? argsCount = null) {
+    public MethodReference GetMethod(string name, int? argsCount = null, int? genericArgsCount = null) {
       bool found = _methods.TryGetValue((name, argsCount), out var methRef);
       if (found == false) {
         for (int i = 0; i < BaseDefinitions.Count; ++i) {
-          var typeDef = BaseDefinitions[i].Methods.FirstOrDefault(x => x.Name == name && (argsCount.HasValue == false || x.Parameters.Count == argsCount.Value));
+          
+          var typeDef = BaseDefinitions[i].Methods.FirstOrDefault(
+            x => x.Name == name &&
+            (argsCount.HasValue == false || x.Parameters.Count == argsCount.Value) &&
+            (genericArgsCount == null || x.GenericParameters.Count == genericArgsCount.Value));
+
           if (typeDef != null) {
             methRef = Assembly.CecilAssembly.MainModule.ImportReference(typeDef);
             _methods.Add((name, argsCount), methRef);
@@ -2886,14 +2906,15 @@ namespace Fusion.CodeGen {
       public override AssemblyNameReference ImportReference(AssemblyName name) {
         if (name.Name == "System.Private.CoreLib") {
           // seems weaver is run with .net core,  but we need to stick to .net framework
-          var count = module.AssemblyReferences.Count(x => x.Name == "mscorlib" || x.Name == "netstandard");
-          if (count == 1) {
-            return module.AssemblyReferences.Single(x => x.Name == "mscorlib" || x.Name == "netstandard");
-          } 
-          
+          var candidates = module.AssemblyReferences
+            .Where(x => x.Name == "mscorlib" || x.Name == "netstandard")
+            .OrderBy(x => x.Name)
+            .ThenByDescending(x => x.Version)
+            .ToList();
+
           // in Unity 2020.1 and .NET 4.x mode when building with IL2CPP apparently both mscrolib and netstandard can be loaded
-          if (count > 1) {
-            return module.AssemblyReferences.First(x => x.Name == "mscorlib");
+          if (candidates.Count > 0) {
+            return candidates[0];
           }
           
           throw new ILWeaverException("Could not locate mscrolib or netstandard assemblies");
@@ -3237,6 +3258,12 @@ namespace Fusion.CodeGen {
       if (type == null) {
         throw new ArgumentNullException(nameof(type));
       }
+      if (type.IsByReference) {
+        type = type.GetElementType();
+      }
+      if (type.IsVoid() && t == typeof(void)) {
+        return true;
+      }
       if (type.IsValueType != t.IsValueType) {
         return false;
       }
@@ -3244,6 +3271,16 @@ namespace Fusion.CodeGen {
         return false;
       }
       return true;
+    }
+
+    public static bool IsSame(this TypeReference type, TypeOrTypeRef t) {
+      if (t.Type != null) {
+        return IsSame(type, t.Type);
+      } else if (t.TypeReference != null) {
+        return IsSame(type, t.TypeReference);
+      } else {
+        throw new InvalidOperationException();
+      }
     }
 
     public static bool IsSame(this TypeReference type, TypeReference t) {
@@ -3322,6 +3359,11 @@ namespace Fusion.CodeGen {
       return (T)attr.ConstructorArguments[index].Value;
     }
 
+    public static T GetAttributeProperty<T>(this CustomAttribute attr, string name, T defaultValue = default) {
+      attr.TryGetAttributeProperty(name, out var result, defaultValue);
+      return result;
+    }
+
     public static bool TryGetAttributeProperty<T>(this CustomAttribute attr, string name, out T value, T defaultValue = default) {
       if (attr.HasProperties) {
         var prop = attr.Properties.FirstOrDefault(x => x.Name == name);
@@ -3353,6 +3395,121 @@ namespace Fusion.CodeGen {
       il.Append(instruction);
       return instruction;
     }
+
+    public static void AppendMacro<T>(this ILProcessor il, in T macro) where T : struct, ILProcessorMacro {
+      macro.Emit(il);
+    }
+
+    public class TypeOrTypeRef {
+
+      public Type Type { get; }
+      public TypeReference TypeReference { get; }
+
+
+      public TypeOrTypeRef(Type type, bool isOut = false) {
+        Type = type;
+      }
+
+      public TypeOrTypeRef(TypeReference type, bool isOut = false) {
+        TypeReference = type;
+      }
+
+      public static implicit operator TypeOrTypeRef(Type type) {
+        return new TypeOrTypeRef(type);
+      }
+
+      public static implicit operator TypeOrTypeRef(TypeReference type) {
+        return new TypeOrTypeRef(type);
+      }
+
+      public override string ToString() {
+        if (Type != null) {
+          return Type.FullName;
+        } else if (TypeReference != null) {
+          return TypeReference.ToString();
+        } else {
+          return "AnyType";
+        }
+      }
+    }
+
+
+    public static bool GetSingleOrDefaultMethodWithAttribute<T>(this TypeDefinition type, out CustomAttribute attribute, out MethodDefinition method) where T : Attribute {
+
+      MethodDefinition resultMethod = null;
+      CustomAttribute resultAttribute = null;
+
+      foreach (var m in type.Methods) {
+        if (m.TryGetAttribute<T>(out var attr)) {
+          if (resultMethod != null) {
+            throw new ILWeaverException($"Only one method with attribute {typeof(T)} allowed per class: {type}");
+          } else {
+            resultMethod = m;
+            resultAttribute = attr;
+          }
+        }
+      }
+
+      method = resultMethod;
+      attribute = resultAttribute;
+      return method != null;
+    }
+
+
+    public static MethodDefinition ThrowIfStatic(this MethodDefinition method) {
+      if (method.IsStatic) {
+        throw new ILWeaverException($"Method is static: {method.FullName}");
+      }
+      return method;
+    }
+
+    public static MethodDefinition ThrowIfNotStatic(this MethodDefinition method) {
+      if (!method.IsStatic) {
+        throw new ILWeaverException($"Method is not static: {method}");
+      }
+      return method;
+    }
+
+    public static MethodDefinition ThrowIfNotPublic(this MethodDefinition method) {
+      if (!method.IsPublic) {
+        throw new ILWeaverException($"Method is not public: {method}");
+      }
+      return method;
+    }
+
+    public static MethodDefinition ThrowIfReturnType(this MethodDefinition method, TypeOrTypeRef type) {
+      if (!method.ReturnType.IsSame(type)) {
+
+        throw new ILWeaverException($"Method has an invalid return type (expected {type}): {method}");
+      }
+      return method;
+    }
+
+    public static MethodDefinition ThrowIfParameterCount(this MethodDefinition method, int count) {
+      if (method.Parameters.Count != count) {
+        throw new ILWeaverException($"Method has invalid parameter count (expected {count}): {method}");
+      }
+      return method;
+    }
+
+    public static MethodDefinition ThrowIfParameter(this MethodDefinition method, int index, TypeOrTypeRef type = null, bool isByReference = false) {
+      var p = method.Parameters[index];
+      if (type != null && !p.ParameterType.IsSame(type)) {
+        throw new ILWeaverException($"Parameter {p} ({index}) has an invalid type (expected {type}): {method}");
+      }
+      if (p.ParameterType.IsByReference != isByReference) {
+        if (p.IsOut) {
+          throw new ILWeaverException($"Parameter {p} ({index}) is a ref parameter: {method}");
+        } else {
+          throw new ILWeaverException($"Parameter {p} ({index}) is not a ref parameter: {method}");
+        }
+      }
+      return method;
+    }
+  }
+
+  public interface ILProcessorMacro {
+    void Emit(ILProcessor il);
   }
 }
 #endif
@@ -3615,6 +3772,189 @@ namespace Fusion.CodeGen {
 #endregion
 
 
+#region Assets/Photon/FusionCodeGen/ILWeaverMethodContext.cs
+
+#if FUSION_WEAVER && FUSION_HAS_MONO_CECIL
+
+namespace Fusion.CodeGen {
+
+  using System;
+  using System.Collections.Generic;
+  using Mono.Cecil;
+  using Mono.Cecil.Cil;
+  using static Fusion.CodeGen.ILWeaverOpCodes;
+
+  unsafe partial class ILWeaver {
+
+    ILMacroStruct AlignToWordSize() => new[] {
+      Ldc_I4(Allocator.REPLICATE_WORD_SIZE - 1),
+      Add(),
+      Ldc_I4(~(Allocator.REPLICATE_WORD_SIZE - 1)),
+      And()
+    };
+
+    struct ILMacroStruct : ILProcessorMacro {
+      Action<ILProcessor> generator;
+      Instruction[] instructions;
+      public static implicit operator ILMacroStruct(Instruction[] instructions) {
+        return new ILMacroStruct() {
+          instructions = instructions
+        };
+      }
+
+      public static implicit operator ILMacroStruct(Action<ILProcessor> generator) {
+        return new ILMacroStruct() {
+          generator = generator
+        };
+      }
+
+      public void Emit(ILProcessor il) {
+        if (generator != null) {
+          generator(il);
+        } else {
+          foreach (var instruction in instructions) {
+            il.Append(instruction);
+          }
+        }
+      }
+    }
+
+    class MethodContext : IDisposable {
+      public readonly ILWeaverAssembly Assembly;
+      public readonly MethodDefinition Method;
+
+      private Dictionary<string, VariableDefinition> _fields = new Dictionary<string, VariableDefinition>();
+      private Action<ILProcessor> addressGetter;
+      private bool runnerIsLdarg0 = false;
+
+      public MethodContext(ILWeaverAssembly assembly, MethodDefinition method, bool staticRunnerAccessor = false, Action<ILProcessor> addressGetter = null) {
+        this.Assembly = assembly;
+        this.Method = method;
+        this.runnerIsLdarg0 = staticRunnerAccessor;
+        this.addressGetter = addressGetter;
+      }
+
+      public void Dispose() {
+      }
+
+      public VariableDefinition GetOrCreateVariable(string id, TypeReference type) {
+        if (_fields.TryGetValue(id, out var val)) {
+          if (!val.VariableType.IsSame(type)) {
+            throw new ArgumentException($"Variable of with the same name {id} already exists, but has a different type: {type} vs {val.VariableType}", nameof(id));
+          }
+          return val;
+        }
+        var result = new VariableDefinition(type);
+        _fields.Add(id, result);
+        Method.Body.Variables.Add(result);
+        return result;
+      }
+
+      public virtual ILMacroStruct LoadAddress() => addressGetter;
+
+      public AddOffsetMacro AddOffset(int val) => AddOffset(Ldc_I4(val));
+
+      public AddOffsetMacro AddOffset(VariableDefinition val) => AddOffset(Ldloc(val));
+
+      public AddOffsetMacro AddOffset(Instruction val) => new AddOffsetMacro(this, instruction: val);
+
+      public AddOffsetMacro AddOffset(Action<ILProcessor> generator) => new AddOffsetMacro(this, generator: generator);
+
+      public AddOffsetMacro AddOffset() => new AddOffsetMacro(this, null, null);
+
+      public ScopeRpcOffset AddOffsetScope(ILProcessor il) => new ScopeRpcOffset(il, this);
+
+      public ILMacroStruct LoadRunner() {
+        return runnerIsLdarg0 ?
+          new[] { Ldarg_0() } :
+          new[] { Ldarg_0(), Ldfld(Assembly.SimulationBehaviour.GetField(nameof(SimulationBehaviour.Runner))) };
+      }
+
+      public virtual bool HasOffset => false;
+
+      protected virtual void EmitAddOffsetBefore(ILProcessor il) {
+      }
+
+      protected virtual void EmitAddOffsetAfter(ILProcessor il) {
+      }
+
+      public readonly struct AddOffsetMacro : ILProcessorMacro {
+        public readonly MethodContext Context;
+        public readonly Instruction Instruction;
+        public readonly Action<ILProcessor> Generator;
+
+        public AddOffsetMacro(MethodContext context, Instruction instruction = null, Action<ILProcessor> generator = null) {
+          Context = context;
+          Instruction = instruction;
+          Generator = generator;
+        }
+
+        public void Emit(ILProcessor il) {
+          if (Context.HasOffset) {
+            Context.EmitAddOffsetBefore(il);
+            if (Instruction != null) {
+              il.Append(Instruction);
+            } else if (Generator != null) {
+              Generator(il);
+            }
+            Context.EmitAddOffsetAfter(il);
+          }
+        }
+      }
+
+      public readonly struct ScopeRpcOffset : IDisposable {
+        public readonly MethodContext context;
+        public readonly ILProcessor il;
+
+        public ScopeRpcOffset(ILProcessor il, MethodContext context) {
+          this.context = context;
+          this.il = il;
+          if (context.HasOffset) {
+            context.EmitAddOffsetBefore(il);
+          }
+        }
+
+        public void Dispose() {
+          if (context.HasOffset) {
+            context.EmitAddOffsetAfter(il);
+          }
+        }
+      }
+    }
+
+    class RpcMethodContext : MethodContext {
+      public VariableDefinition DataVariable;
+      public VariableDefinition OffsetVariable;
+
+      public RpcMethodContext(ILWeaverAssembly asm, MethodDefinition definition, bool staticRunnerAccessor)
+        : base(asm, definition, staticRunnerAccessor) {
+      }
+
+      public override bool HasOffset => true;
+
+      protected override void EmitAddOffsetBefore(ILProcessor il) {
+        il.Append(Ldloc(OffsetVariable));
+      }
+
+      protected override void EmitAddOffsetAfter(ILProcessor il) {
+        il.Append(Add());
+        il.Append(Stloc(OffsetVariable));
+      }
+
+      public override ILMacroStruct LoadAddress() => new[] {
+        Ldloc(DataVariable),
+        Ldloc(OffsetVariable),
+        Add(),
+      };
+    }
+  }
+}
+
+#endif
+
+#endregion
+
+
 #region Assets/Photon/FusionCodeGen/ILWeaverOpCodes.cs
 
 #if FUSION_WEAVER && FUSION_HAS_MONO_CECIL
@@ -3644,6 +3984,7 @@ namespace Fusion.CodeGen {
     public static Instruction Br_S(Instruction target)      => Instruction.Create(OpCodes.Br_S, target);
     public static Instruction Br(Instruction target)        => Instruction.Create(OpCodes.Br, target);
     public static Instruction Blt_S(Instruction target)     => Instruction.Create(OpCodes.Blt_S, target);
+    public static Instruction Ble_S(Instruction target)     => Instruction.Create(OpCodes.Ble_S, target);
     public static Instruction Beq(Instruction target)       => Instruction.Create(OpCodes.Beq, target);
     public static Instruction Bne_Un_S(Instruction target)  => Instruction.Create(OpCodes.Bne_Un_S, target);
     public static Instruction Beq_S(Instruction target)     => Instruction.Create(OpCodes.Beq_S, target);
@@ -3671,6 +4012,9 @@ namespace Fusion.CodeGen {
     public static Instruction Stsfld(FieldReference field) => Instruction.Create(OpCodes.Stsfld, field);
 
     // locals
+
+    public static Instruction Ldloc_or_const(VariableDefinition var, int val) => var != null ? Ldloc(var) : Ldc_I4(val);
+
     public static Instruction Ldloc(VariableDefinition var)    => Instruction.Create(OpCodes.Ldloc, var);
     public static Instruction Ldloca(VariableDefinition var)   => Instruction.Create(OpCodes.Ldloca, var);
     public static Instruction Ldloca_S(VariableDefinition var) => Instruction.Create(OpCodes.Ldloca_S, var);

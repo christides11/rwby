@@ -90,6 +90,7 @@ Transform:
   - {fileID: 7663082700249121291}
   - {fileID: 7663082699387055487}
   - {fileID: 7663082700113663897}
+  - {fileID: 5134940442478104719}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -299,12 +300,12 @@ MonoBehaviour:
       _startPlaying: 1
       _defaultJoystickMaps:
       - _enabled: 1
-        _categoryId: 0
+        _categoryId: 1
         _layoutId: 0
       _defaultMouseMaps: []
       _defaultKeyboardMaps:
       - _enabled: 1
-        _categoryId: 0
+        _categoryId: 1
         _layoutId: 0
       _defaultCustomControllerMaps: []
       _startingCustomControllers: []
@@ -322,7 +323,7 @@ MonoBehaviour:
     - _id: 1
       _name: Movement X
       _type: 0
-      _descriptiveName: Action0
+      _descriptiveName: Movement X
       _positiveDescriptiveName: Movement Right
       _negativeDescriptiveName: Movement Left
       _behaviorId: 0
@@ -340,7 +341,7 @@ MonoBehaviour:
     - _id: 3
       _name: Camera X
       _type: 0
-      _descriptiveName: Action0
+      _descriptiveName: Camera X
       _positiveDescriptiveName: Camera Right
       _negativeDescriptiveName: Camera Left
       _behaviorId: 0
@@ -349,7 +350,7 @@ MonoBehaviour:
     - _id: 4
       _name: Camera Y
       _type: 0
-      _descriptiveName: Action0
+      _descriptiveName: Camera Y
       _positiveDescriptiveName: Camera Up
       _negativeDescriptiveName: Camera Down
       _behaviorId: 0
@@ -358,7 +359,7 @@ MonoBehaviour:
     - _id: 5
       _name: Jump
       _type: 1
-      _descriptiveName: Action0
+      _descriptiveName: Jump
       _positiveDescriptiveName: 
       _negativeDescriptiveName: 
       _behaviorId: 0
@@ -367,7 +368,7 @@ MonoBehaviour:
     - _id: 6
       _name: Light Attack
       _type: 1
-      _descriptiveName: Action0
+      _descriptiveName: Light Attack
       _positiveDescriptiveName: 
       _negativeDescriptiveName: 
       _behaviorId: 0
@@ -376,7 +377,7 @@ MonoBehaviour:
     - _id: 7
       _name: Heavy Attack
       _type: 1
-      _descriptiveName: Action0
+      _descriptiveName: Heavy Attack
       _positiveDescriptiveName: 
       _negativeDescriptiveName: 
       _behaviorId: 0
@@ -385,7 +386,7 @@ MonoBehaviour:
     - _id: 8
       _name: Block
       _type: 1
-      _descriptiveName: Action0
+      _descriptiveName: Block
       _positiveDescriptiveName: 
       _negativeDescriptiveName: 
       _behaviorId: 0
@@ -394,7 +395,7 @@ MonoBehaviour:
     - _id: 9
       _name: Dash
       _type: 1
-      _descriptiveName: Action0
+      _descriptiveName: Dash
       _positiveDescriptiveName: 
       _negativeDescriptiveName: 
       _behaviorId: 0
@@ -412,7 +413,7 @@ MonoBehaviour:
     - _id: 11
       _name: Lock-On
       _type: 1
-      _descriptiveName: Action0
+      _descriptiveName: Lock-On
       _positiveDescriptiveName: 
       _negativeDescriptiveName: 
       _behaviorId: 0
@@ -421,7 +422,7 @@ MonoBehaviour:
     - _id: 13
       _name: Ability Menu
       _type: 1
-      _descriptiveName: Action0
+      _descriptiveName: Ability Menu
       _positiveDescriptiveName: 
       _negativeDescriptiveName: 
       _behaviorId: 0
@@ -430,7 +431,7 @@ MonoBehaviour:
     - _id: 14
       _name: Ability 1
       _type: 1
-      _descriptiveName: Action0
+      _descriptiveName: Ability 1
       _positiveDescriptiveName: 
       _negativeDescriptiveName: 
       _behaviorId: 0
@@ -439,7 +440,7 @@ MonoBehaviour:
     - _id: 15
       _name: Ability 2
       _type: 1
-      _descriptiveName: Action0
+      _descriptiveName: Ability 2
       _positiveDescriptiveName: 
       _negativeDescriptiveName: 
       _behaviorId: 0
@@ -448,7 +449,7 @@ MonoBehaviour:
     - _id: 16
       _name: Ability 3
       _type: 1
-      _descriptiveName: Action0
+      _descriptiveName: Ability 3
       _positiveDescriptiveName: 
       _negativeDescriptiveName: 
       _behaviorId: 0
@@ -457,7 +458,7 @@ MonoBehaviour:
     - _id: 17
       _name: Ability 4
       _type: 1
-      _descriptiveName: Action1
+      _descriptiveName: Ability 4
       _positiveDescriptiveName: 
       _negativeDescriptiveName: 
       _behaviorId: 0
@@ -466,7 +467,7 @@ MonoBehaviour:
     - _id: 18
       _name: Extra1
       _type: 1
-      _descriptiveName: Action0
+      _descriptiveName: Extra 1
       _positiveDescriptiveName: 
       _negativeDescriptiveName: 
       _behaviorId: 0
@@ -475,7 +476,7 @@ MonoBehaviour:
     - _id: 19
       _name: Extra2
       _type: 1
-      _descriptiveName: Action0
+      _descriptiveName: Extra 2
       _positiveDescriptiveName: 
       _negativeDescriptiveName: 
       _behaviorId: 0
@@ -484,7 +485,7 @@ MonoBehaviour:
     - _id: 20
       _name: Extra3
       _type: 1
-      _descriptiveName: Action1
+      _descriptiveName: Extra 3
       _positiveDescriptiveName: 
       _negativeDescriptiveName: 
       _behaviorId: 0
@@ -493,7 +494,7 @@ MonoBehaviour:
     - _id: 21
       _name: Extra4
       _type: 1
-      _descriptiveName: Action2
+      _descriptiveName: Extra 4
       _positiveDescriptiveName: 
       _negativeDescriptiveName: 
       _behaviorId: 0
@@ -756,8 +757,8 @@ MonoBehaviour:
         _modifierKey2: 0
         _modifierKey3: 0
     keyboardMaps:
-    - id: 0
-      categoryId: 0
+    - id: 2
+      categoryId: 1
       layoutId: 0
       name: 
       hardwareGuidString: 
@@ -994,16 +995,16 @@ MonoBehaviour:
     inputBehaviorIdCounter: 1
     mapCategoryIdCounter: 2
     joystickLayoutIdCounter: 1
-    keyboardLayoutIdCounter: 1
-    mouseLayoutIdCounter: 1
+    keyboardLayoutIdCounter: 2
+    mouseLayoutIdCounter: 2
     customControllerLayoutIdCounter: 1
     joystickMapIdCounter: 1
-    keyboardMapIdCounter: 1
-    mouseMapIdCounter: 0
+    keyboardMapIdCounter: 3
+    mouseMapIdCounter: 1
     customControllerMapIdCounter: 0
     customControllerIdCounter: 0
-    controllerMapLayoutManagerSetIdCounter: 0
-    controllerMapEnablerSetIdCounter: 0
+    controllerMapLayoutManagerSetIdCounter: 1
+    controllerMapEnablerSetIdCounter: 1
   _controllerDataFiles: {fileID: 11400000, guid: d21d2b20df8369642b76aafbb2576ba7, type: 2}
 --- !u!1 &7663082699953192564
 GameObject:
@@ -1050,6 +1051,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   modLoader: {fileID: 4380024885267416392}
   contentManager: {fileID: 1944286682528977741}
+  cMapper: {fileID: 5134940442468124677}
   settings: {fileID: 11400000, guid: fa9f7c1fd91f42e4087fa739f9dd3614, type: 2}
   localUsername: 
   currentMapSceneName: 
@@ -1196,3 +1198,128 @@ MonoBehaviour:
   fusionLauncher: {fileID: 7663082700249121294}
   clientPrefab: {fileID: 149176565956672013, guid: db178e092b035ba428a0260f8afaa2c6, type: 3}
   matchManagerPrefab: {fileID: -6404266287376982040, guid: 6484992e4351374448cae018c947ba52, type: 3}
+--- !u!1001 &5134940442478458545
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 7663082699315219240}
+    m_Modifications:
+    - target: {fileID: 152114, guid: 03b9a6db219d12e4f8ec2934e0c7e721, type: 3}
+      propertyPath: m_Name
+      value: ControlMapper
+      objectReference: {fileID: 0}
+    - target: {fileID: 452158, guid: 03b9a6db219d12e4f8ec2934e0c7e721, type: 3}
+      propertyPath: m_RootOrder
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 452158, guid: 03b9a6db219d12e4f8ec2934e0c7e721, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 452158, guid: 03b9a6db219d12e4f8ec2934e0c7e721, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 452158, guid: 03b9a6db219d12e4f8ec2934e0c7e721, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 452158, guid: 03b9a6db219d12e4f8ec2934e0c7e721, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 452158, guid: 03b9a6db219d12e4f8ec2934e0c7e721, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 452158, guid: 03b9a6db219d12e4f8ec2934e0c7e721, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 452158, guid: 03b9a6db219d12e4f8ec2934e0c7e721, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 452158, guid: 03b9a6db219d12e4f8ec2934e0c7e721, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 452158, guid: 03b9a6db219d12e4f8ec2934e0c7e721, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 452158, guid: 03b9a6db219d12e4f8ec2934e0c7e721, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 11452084, guid: 03b9a6db219d12e4f8ec2934e0c7e721, type: 3}
+      propertyPath: _rewiredInputManager
+      value: 
+      objectReference: {fileID: 7663082699387055486}
+    - target: {fileID: 11452084, guid: 03b9a6db219d12e4f8ec2934e0c7e721, type: 3}
+      propertyPath: _mappingSets.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 11452084, guid: 03b9a6db219d12e4f8ec2934e0c7e721, type: 3}
+      propertyPath: _showActionCategoryLabels
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 11452084, guid: 03b9a6db219d12e4f8ec2934e0c7e721, type: 3}
+      propertyPath: _showInputBehaviorSettings
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 11452084, guid: 03b9a6db219d12e4f8ec2934e0c7e721, type: 3}
+      propertyPath: _allowElementAssignmentConflicts
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 11452084, guid: 03b9a6db219d12e4f8ec2934e0c7e721, type: 3}
+      propertyPath: _mappingSets.Array.data[0]._mapCategoryId
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 11452084, guid: 03b9a6db219d12e4f8ec2934e0c7e721, type: 3}
+      propertyPath: _mappingSets.Array.data[1]._mapCategoryId
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 11452084, guid: 03b9a6db219d12e4f8ec2934e0c7e721, type: 3}
+      propertyPath: _mappingSets.Array.data[1]._actionListMode
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 11452084, guid: 03b9a6db219d12e4f8ec2934e0c7e721, type: 3}
+      propertyPath: _mappingSets.Array.data[0]._actionCategoryIds.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 11452084, guid: 03b9a6db219d12e4f8ec2934e0c7e721, type: 3}
+      propertyPath: _mappingSets.Array.data[1]._actionCategoryIds.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 11452084, guid: 03b9a6db219d12e4f8ec2934e0c7e721, type: 3}
+      propertyPath: _mappingSets.Array.data[0]._actionCategoryIds.Array.data[1]
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 11452084, guid: 03b9a6db219d12e4f8ec2934e0c7e721, type: 3}
+      propertyPath: _mappingSets.Array.data[1]._actionCategoryIds.Array.data[0]
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 11452084, guid: 03b9a6db219d12e4f8ec2934e0c7e721, type: 3}
+      propertyPath: _mappingSets.Array.data[1]._actionCategoryIds.Array.data[1]
+      value: 1
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 03b9a6db219d12e4f8ec2934e0c7e721, type: 3}
+--- !u!4 &5134940442478104719 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 452158, guid: 03b9a6db219d12e4f8ec2934e0c7e721, type: 3}
+  m_PrefabInstance: {fileID: 5134940442478458545}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &5134940442468124677 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 11452084, guid: 03b9a6db219d12e4f8ec2934e0c7e721, type: 3}
+  m_PrefabInstance: {fileID: 5134940442478458545}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: edac79059a45d244a8050315593a7e9e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

@@ -6,7 +6,10 @@ namespace rwby.fighters.states
 {
     public class SJumpSquat : FighterState
     {
-
+        public override string GetName()
+        {
+            return "Jump Squat";
+        }
         public override void Initialize()
         {
             base.Initialize();

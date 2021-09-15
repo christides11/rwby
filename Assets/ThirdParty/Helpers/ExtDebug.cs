@@ -1,9 +1,41 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public static class ExtDebug
 {
+    public static Vector2 DeadZoner(Vector2 raw, float dead)
+    {
+        float d2 = raw.x * raw.x + raw.y * raw.y;
+
+        if(d2 < dead*dead || d2 < 0)
+        {
+            // We're inside the deadzone, return zero
+            return Vector2.zero;
+        }
+        else
+        {
+            float d = Mathf.Sqrt(d2);
+
+            // Normalise raw input
+            float nx = raw.x / d;
+            float ny = raw.y / d;
+
+            // Rescaled so (dead->1) becomes (0->1)
+            d = (d - dead) / (1 - dead);
+
+            // and clamped down so we get 0 <= d <= 1
+            d = Mathf.Min(d, 1);
+
+            // Apply a curve for a smoother feel (as suggested by (Gibgezr)[https://github.com/Gibgezr]
+            // Uncomment the following line and see if your game feels better
+            //d = d * d;
+
+            return new Vector2(nx*d, ny*d);
+        }
+    }
+
     public static bool FastApproximately(float a, float b, float threshold)
     {
         return ((a < b) ? (b - a) : (a - b)) <= threshold;

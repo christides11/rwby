@@ -18,7 +18,6 @@ MonoBehaviour:
   stateOverride: 0
   length: 40
   hurtboxDefinition: {fileID: 0}
-  commandAttackCancelWindows: []
   chargeWindows: []
   hitboxGroups: []
   events:
@@ -45,11 +44,6 @@ MonoBehaviour:
         attackEvent:
           id: 6
         conditions: []
-        variables:
-          intVars: 
-          floatVars: []
-          objectVars: []
-          curveVars: []
         inputCheckTiming: 0
         inputCheckStartFrame: 1
         inputCheckEndFrame: 1
@@ -60,7 +54,6 @@ MonoBehaviour:
           sequenceInputs: []
         chargeLevelMin: 0
         chargeLevelMax: 0
-        inputCheckProcessed: 0
     00000001:
       type: {class: AttackEventDefinition, ns: HnSF.Combat, asm: HnSF}
       data:
@@ -74,11 +67,6 @@ MonoBehaviour:
         attackEvent:
           id: 7
         conditions: []
-        variables:
-          intVars: 
-          floatVars: []
-          objectVars: []
-          curveVars: []
         inputCheckTiming: 0
         inputCheckStartFrame: 1
         inputCheckEndFrame: 1
@@ -89,7 +77,6 @@ MonoBehaviour:
           sequenceInputs: []
         chargeLevelMin: 0
         chargeLevelMax: 0
-        inputCheckProcessed: 0
     00000002:
       type: {class: AttackEventDefinition, ns: HnSF.Combat, asm: HnSF}
       data:
@@ -103,11 +90,6 @@ MonoBehaviour:
         attackEvent:
           id: 8
         conditions: []
-        variables:
-          intVars: 
-          floatVars: []
-          objectVars: []
-          curveVars: []
         inputCheckTiming: 0
         inputCheckStartFrame: 1
         inputCheckEndFrame: 1
@@ -118,7 +100,6 @@ MonoBehaviour:
           sequenceInputs: []
         chargeLevelMin: 0
         chargeLevelMax: 0
-        inputCheckProcessed: 0
     00000003:
       type: {class: AttackEventDefinition, ns: HnSF.Combat, asm: HnSF}
       data:
@@ -132,11 +113,6 @@ MonoBehaviour:
         attackEvent:
           id: 9
         conditions: []
-        variables:
-          intVars: 
-          floatVars: []
-          objectVars: []
-          curveVars: []
         inputCheckTiming: 0
         inputCheckStartFrame: 1
         inputCheckEndFrame: 1
@@ -147,7 +123,6 @@ MonoBehaviour:
           sequenceInputs: []
         chargeLevelMin: 0
         chargeLevelMax: 0
-        inputCheckProcessed: 0
     00000004:
       type: {class: AttackEventDefinition, ns: HnSF.Combat, asm: HnSF}
       data:
@@ -161,11 +136,6 @@ MonoBehaviour:
         attackEvent:
           id: 10
         conditions: []
-        variables:
-          intVars: 
-          floatVars: []
-          objectVars: []
-          curveVars: []
         inputCheckTiming: 0
         inputCheckStartFrame: 1
         inputCheckEndFrame: 1
@@ -176,7 +146,6 @@ MonoBehaviour:
           sequenceInputs: []
         chargeLevelMin: 0
         chargeLevelMax: 0
-        inputCheckProcessed: 0
     00000005:
       type: {class: AttackEventDefinition, ns: HnSF.Combat, asm: HnSF}
       data:
@@ -190,11 +159,6 @@ MonoBehaviour:
         attackEvent:
           id: 11
         conditions: []
-        variables:
-          intVars: 
-          floatVars: []
-          objectVars: []
-          curveVars: []
         inputCheckTiming: 0
         inputCheckStartFrame: 1
         inputCheckEndFrame: 1
@@ -205,7 +169,6 @@ MonoBehaviour:
           sequenceInputs: []
         chargeLevelMin: 0
         chargeLevelMax: 0
-        inputCheckProcessed: 0
     00000006:
       type: {class: ClampMovement, ns: rwby.Combat.AttackEvents, asm: rwby.csharp}
       data:
@@ -223,6 +186,7 @@ MonoBehaviour:
         baseAcceleration: 5
         acceleration: 5
         deceleration: 0
+        minSpeed: 0
         maxSpeed: 10
         accelFromDot:
           serializedVersion: 2
@@ -265,4 +229,5 @@ MonoBehaviour:
     0000000B:
       type: {class: ClampGravity, ns: rwby.Combat.AttackEvents, asm: rwby.csharp}
       data:
-        maxLength: 10
+        max: 10
+        min: -10

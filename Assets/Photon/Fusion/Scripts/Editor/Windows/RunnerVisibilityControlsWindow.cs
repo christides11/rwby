@@ -121,7 +121,9 @@ namespace Fusion.Editor {
 
           EditorGUILayout.BeginHorizontal();
           {
-            string runnerName = isWide ? runner.MultiPeerUnitySceneRoot.scene.name : (runner.IsServer ? "S" : "C");
+            string runnerName = isWide ?
+              (runner.MultiPeerUnitySceneRoot ? runner.MultiPeerUnitySceneRoot.scene.name : "") :
+              (runner.IsServer ? "S" : "C");
 
             if (VisibilitySettingLabel == null)
               VisibilitySettingLabel = new GUIContent(runnerName, "Toggles IsVisible for this Runner. [Shift + Click] will solo the selected runner.");

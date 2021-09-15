@@ -9,6 +9,7 @@ namespace rwby.Combat.AttackEvents
         public float baseAcceleration = 0;
         public float acceleration = 0;
         public float deceleration = 0;
+        public float minSpeed = 0;
         public float maxSpeed = 0;
         public AnimationCurve accelFromDot;
 
@@ -20,7 +21,7 @@ namespace rwby.Combat.AttackEvents
         public override AttackEventReturnType Evaluate(int frame, int endFrame, IFighterBase controller)
         {
             FighterManager manager = (FighterManager)controller;
-            manager.PhysicsManager.HandleMovement(baseAcceleration, acceleration, deceleration, maxSpeed, accelFromDot);
+            manager.PhysicsManager.HandleMovement(baseAcceleration, acceleration, deceleration, minSpeed, maxSpeed, accelFromDot);
 
             return AttackEventReturnType.NONE;
         }

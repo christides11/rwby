@@ -63,6 +63,11 @@ namespace rwby
 
         }
 
+        public virtual FighterStats GetCurrentStats()
+        {
+            return (movesets[CurrentMovesetIdentifier] as Moveset).fighterStats;
+        }
+
         public virtual void SetHitStop(int value)
         {
             HitStop = value;

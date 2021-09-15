@@ -41,6 +41,7 @@ namespace rwby
         public void SetRotation(Vector3 rot)
         {
             rotationDir = rot;
+            kCC.Motor.SetRotation(Quaternion.LookRotation(rotationDir), true);
         }
 
         public Vector3 GetOverallForce()
@@ -113,14 +114,10 @@ namespace rwby
             return value;
         }
 
-        public virtual void HandleMovement(float baseAccel, float movementAccel, float deceleration, float maxSpeed, AnimationCurve accelFromDot)
+        public virtual void HandleMovement(float baseAccel, float movementAccel, float deceleration, float minSpeed, float maxSpeed, AnimationCurve accelFromDot)
         {
             // Get wanted movement vector.
             Vector3 movement = manager.GetMovementVector();
-            if (movement.magnitude < InputConstants.movementDeadzone)
-            {
-                movement = Vector3.zero;
-            }
 
             // Real Accel
             float realAcceleration = baseAccel + (movement.magnitude * movementAccel);
@@ -132,7 +129,7 @@ namespace rwby
 
             // Calculated our wanted movement force.
             float accel = movement == Vector3.zero ? deceleration : realAcceleration * accelFromDot.Evaluate(Vector3.Dot(movement, forceMovement.normalized));
-            Vector3 goalVelocity = movement * maxSpeed;
+            Vector3 goalVelocity = movement.normalized * (minSpeed + (movement.magnitude * (maxSpeed - minSpeed)));
 
             // Move towards that goal based on our acceleration.
             forceMovement = Vector3.MoveTowards(forceMovement, goalVelocity, accel * Runner.DeltaTime);

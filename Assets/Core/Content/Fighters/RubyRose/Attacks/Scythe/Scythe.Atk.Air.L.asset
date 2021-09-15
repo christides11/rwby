@@ -1,0 +1,286 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7bf9a8a0f22d37c43902ca4d8d9a9197, type: 3}
+  m_Name: Scythe.Atk.Air.L
+  m_EditorClassIdentifier: 
+  attackName: Air L
+  description: 
+  useState: 0
+  stateOverride: 0
+  length: 25
+  hurtboxDefinition: {fileID: 0}
+  chargeWindows: []
+  hitboxGroups:
+  - id: 0
+  events:
+  - id: 1
+  - id: 2
+  - id: 3
+  - id: 4
+  - id: 5
+  cancels: []
+  firstActableFrame: 100
+  references:
+    version: 1
+    00000000:
+      type: {class: HitboxGroup, ns: rwby, asm: rwby.csharp}
+      data:
+        ID: 0
+        activeFramesStart: 6
+        activeFramesEnd: 9
+        boxes:
+        - id: 6
+        attachToEntity: 1
+        attachTo: 
+        chargeLevelNeeded: -1
+        chargeLevelMax: 1
+        hitboxHitInfo:
+          id: 7
+        attachPoint: 
+    00000001:
+      type: {class: AttackEventDefinition, ns: HnSF.Combat, asm: HnSF}
+      data:
+        nickname: Lockon.Rot
+        active: 1
+        onHitCheck: 0
+        onHitHitboxGroup: 0
+        onHitIDGroup: 0
+        startFrame: 1
+        endFrame: 5
+        attackEvent:
+          id: 8
+        conditions: []
+        inputCheckTiming: 0
+        inputCheckStartFrame: 1
+        inputCheckEndFrame: 1
+        input:
+          executeWindow: 3
+          executeInputs: []
+          sequenceWindow: 8
+          sequenceInputs: []
+        chargeLevelMin: 0
+        chargeLevelMax: 0
+    00000002:
+      type: {class: AttackEventDefinition, ns: HnSF.Combat, asm: HnSF}
+      data:
+        nickname: Clamp.Move
+        active: 1
+        onHitCheck: 0
+        onHitHitboxGroup: 0
+        onHitIDGroup: 0
+        startFrame: 1
+        endFrame: 2
+        attackEvent:
+          id: 9
+        conditions: []
+        inputCheckTiming: 0
+        inputCheckStartFrame: 1
+        inputCheckEndFrame: 1
+        input:
+          executeWindow: 3
+          executeInputs: []
+          sequenceWindow: 8
+          sequenceInputs: []
+        chargeLevelMin: 0
+        chargeLevelMax: 0
+    00000003:
+      type: {class: AttackEventDefinition, ns: HnSF.Combat, asm: HnSF}
+      data:
+        nickname: Clamp.Gravity
+        active: 1
+        onHitCheck: 0
+        onHitHitboxGroup: 0
+        onHitIDGroup: 0
+        startFrame: 1
+        endFrame: 2
+        attackEvent:
+          id: 10
+        conditions: []
+        inputCheckTiming: 0
+        inputCheckStartFrame: 1
+        inputCheckEndFrame: 1
+        input:
+          executeWindow: 3
+          executeInputs: []
+          sequenceWindow: 8
+          sequenceInputs: []
+        chargeLevelMin: 0
+        chargeLevelMax: 0
+    00000004:
+      type: {class: AttackEventDefinition, ns: HnSF.Combat, asm: HnSF}
+      data:
+        nickname: Friction.Move
+        active: 1
+        onHitCheck: 0
+        onHitHitboxGroup: 0
+        onHitIDGroup: 0
+        startFrame: 1
+        endFrame: 25
+        attackEvent:
+          id: 11
+        conditions: []
+        inputCheckTiming: 0
+        inputCheckStartFrame: 1
+        inputCheckEndFrame: 1
+        input:
+          executeWindow: 3
+          executeInputs: []
+          sequenceWindow: 8
+          sequenceInputs: []
+        chargeLevelMin: 0
+        chargeLevelMax: 0
+    00000005:
+      type: {class: AttackEventDefinition, ns: HnSF.Combat, asm: HnSF}
+      data:
+        nickname: Gravity
+        active: 1
+        onHitCheck: 0
+        onHitHitboxGroup: 0
+        onHitIDGroup: 0
+        startFrame: 1
+        endFrame: 25
+        attackEvent:
+          id: 12
+        conditions: []
+        inputCheckTiming: 0
+        inputCheckStartFrame: 1
+        inputCheckEndFrame: 1
+        input:
+          executeWindow: 3
+          executeInputs: []
+          sequenceWindow: 8
+          sequenceInputs: []
+        chargeLevelMin: 0
+        chargeLevelMax: 0
+    00000006:
+      type: {class: BoxDefinition, ns: HnSF.Combat, asm: HnSF}
+      data:
+        shape: 1
+        offset: {x: 0, y: 1, z: 1}
+        size: {x: 2, y: 2, z: 2}
+        rotation: {x: 0, y: 0, z: 0}
+        radius: 1
+        height: 0
+    00000007:
+      type: {class: HitInfo, ns: rwby, asm: rwby.csharp}
+      data:
+        hitType: 0
+        hitKills: 1
+        continuousHit: 0
+        spaceBetweenHits: 0
+        opponentResetXForce: 1
+        opponentResetYForce: 1
+        autoLink: 0
+        forceType: 0
+        forceRelation: 0
+        attackerHitstop: 20
+        hitstop: 20
+        hitstun: 25
+        airOnly: 0
+        groundOnly: 0
+        causesTumble: 0
+        knockdown: 0
+        groundBounces: 0
+        groundBounceForce: 0
+        wallBounces: 0
+        wallBounceForce: 0
+        damageOnHit: 10
+        opponentForce: {x: 0, y: 0, z: 2}
+        forceIncludeYForce: 0
+        opponentForceMultiplier: 1
+        opponentMaxMagnitude: 1
+        opponentMinMagnitude: 1
+        throwConfirm: {fileID: 0}
+        holdVelocityTime: 0
+        opponentForceAir: {x: 0, y: 0, z: 0}
+        opponentFriction: 10
+        opponentGravity: 0
+        hitSound: {fileID: 0}
+        hangTime: 0
+        blockType: 0
+        blockstun: 0
+        blockForce: {x: 0, y: 0, z: 0}
+        blockForceAir: {x: 0, y: 0, z: 0}
+    00000008:
+      type: {class: SoftLockOn, ns: rwby.Combat.AttackEvents, asm: rwby.csharp}
+      data:
+        rotSpeed: 40
+    00000009:
+      type: {class: ClampMovement, ns: rwby.Combat.AttackEvents, asm: rwby.csharp}
+      data:
+        maxLength: 10
+    0000000A:
+      type: {class: ClampGravity, ns: rwby.Combat.AttackEvents, asm: rwby.csharp}
+      data:
+        max: 1
+        min: -1
+    0000000B:
+      type: {class: ApplyFriction, ns: rwby.Combat.AttackEvents, asm: rwby.csharp}
+      data:
+        useXZFriction: 1
+        useYFriction: 0
+        xzFriction: 30
+        yFriction: 0
+    0000000C:
+      type: {class: ApplyGravity, ns: rwby.Combat.AttackEvents, asm: rwby.csharp}
+      data:
+        gravityCurve:
+          serializedVersion: 2
+          m_Curve:
+          - serializedVersion: 3
+            time: 0
+            value: 0
+            inSlope: 0
+            outSlope: 0
+            tangentMode: 0
+            weightedMode: 0
+            inWeight: 0
+            outWeight: 0.07215447
+          - serializedVersion: 3
+            time: 0.1
+            value: 0
+            inSlope: 0
+            outSlope: 0
+            tangentMode: 0
+            weightedMode: 0
+            inWeight: 0.33333334
+            outWeight: 0.33333334
+          - serializedVersion: 3
+            time: 0.42383772
+            value: 0.6107498
+            inSlope: 1.5396999
+            outSlope: 1.5396999
+            tangentMode: 34
+            weightedMode: 0
+            inWeight: 0.33333334
+            outWeight: 0.33333334
+          - serializedVersion: 3
+            time: 0.75
+            value: 1
+            inSlope: 0
+            outSlope: 0
+            tangentMode: 0
+            weightedMode: 0
+            inWeight: 0.33333334
+            outWeight: 0.33333334
+          - serializedVersion: 3
+            time: 1
+            value: 1
+            inSlope: 0
+            outSlope: 0
+            tangentMode: 0
+            weightedMode: 0
+            inWeight: 0.07825202
+            outWeight: 0
+          m_PreInfinity: 2
+          m_PostInfinity: 2
+          m_RotationOrder: 4

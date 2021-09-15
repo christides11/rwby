@@ -180,25 +180,8 @@
             This is Serializable for Unity, so it can be included in ScriptableObject instances.
             </remarks>
         </member>
-        <member name="F:Fusion.Photon.Realtime.AppSettings.FixedRegion">
-            <summary>Can be set to any of the Photon Cloud's region names to directly connect to that region.</summary>
-            <remarks>if this IsNullOrEmpty() AND UseNameServer == true, use BestRegion. else, use a server</remarks>
-        </member>
-        <member name="F:Fusion.Photon.Realtime.AppSettings.UseNameServer">
-            <summary>If false, the app will attempt to connect to a Master Server (which is obsolete but sometimes still necessary).</summary>
-            <remarks>if true, Server points to a NameServer (or is null, using the default), else it points to a MasterServer.</remarks>
-        </member>
-        <member name="F:Fusion.Photon.Realtime.AppSettings.Port">
-            <summary>If not null, this sets the port of the first Photon server to connect to (that will "forward" the client as needed).</summary>
-        </member>
-        <member name="F:Fusion.Photon.Realtime.AppSettings.ProxyServer">
-            <summary>The address (hostname or IP and port) of the proxy server.</summary>
-        </member>
-        <member name="F:Fusion.Photon.Realtime.AppSettings.AuthMode">
-            <summary>Defines how authentication is done. On each system, once or once via a WSS connection (safe).</summary>
-        </member>
-        <member name="F:Fusion.Photon.Realtime.AppSettings.NetworkLogging">
-            <summary>Log level for the network lib.</summary>
+        <member name="F:Fusion.Photon.Realtime.AppSettings.AppIdFusion">
+            <summary>AppId for Photon Fusion.</summary>
         </member>
         <member name="F:Fusion.Photon.Realtime.AppSettings.AppIdChat">
             <summary>AppId for Photon Chat.</summary>
@@ -206,25 +189,32 @@
         <member name="F:Fusion.Photon.Realtime.AppSettings.AppIdVoice">
             <summary>AppId for Photon Voice.</summary>
         </member>
-        <member name="F:Fusion.Photon.Realtime.AppSettings.BestRegionSummaryFromStorage">
-             <summary>Set to a previous BestRegionSummary value before connecting.</summary>
-             <remarks>
-             This is a value used when the client connects to the "Best Region".<br/>
-             If this is null or empty, all regions gets pinged. Providing a previous summary on connect,
-             speeds up best region selection and makes the previously selected region "sticky".<br/>
-            
-             Unity clients should store the BestRegionSummary in the PlayerPrefs.
-             You can store the new result by implementing <see cref="M:Fusion.Photon.Realtime.IConnectionCallbacks.OnConnectedToMaster"/>.
-             If <see cref="F:Fusion.Photon.Realtime.LoadBalancingClient.SummaryToCache"/> is not null, store this string.
-             To avoid storing the value multiple times, you could set SummaryToCache to null.
-             </remarks>
+        <member name="F:Fusion.Photon.Realtime.AppSettings.AppVersion">
+            <summary>The AppVersion can be used to identify builds and will split the AppId distinct "Virtual AppIds" (important for matchmaking).</summary>
+        </member>
+        <member name="F:Fusion.Photon.Realtime.AppSettings.FixedRegion">
+            <summary>Can be set to any of the Photon Cloud's region names to directly connect to that region.</summary>
+            <remarks>if this IsNullOrEmpty() AND UseNameServer == true, use BestRegion. else, use a server</remarks>
+        </member>
+        <!-- Badly formed XML comment ignored for member "F:Fusion.Photon.Realtime.AppSettings.BestRegionSummaryFromStorage" -->
+        <member name="F:Fusion.Photon.Realtime.AppSettings.Port">
+            <summary>If not null, this sets the port of the first Photon server to connect to (that will "forward" the client as needed).</summary>
+        </member>
+        <member name="F:Fusion.Photon.Realtime.AppSettings.ProxyServer">
+            <summary>The address (hostname or IP and port) of the proxy server.</summary>
         </member>
         <member name="F:Fusion.Photon.Realtime.AppSettings.EnableProtocolFallback">
             <summary>Enables a fallback to another protocol in case a connect to the Name Server fails.</summary>
             <remarks>See: LoadBalancingClient.EnableProtocolFallback.</remarks>
         </member>
+        <member name="F:Fusion.Photon.Realtime.AppSettings.AuthMode">
+            <summary>Defines how authentication is done. On each system, once or once via a WSS connection (safe).</summary>
+        </member>
         <member name="F:Fusion.Photon.Realtime.AppSettings.EnableLobbyStatistics">
             <summary>If true, the client will request the list of currently available lobbies.</summary>
+        </member>
+        <member name="F:Fusion.Photon.Realtime.AppSettings.NetworkLogging">
+            <summary>Log level for the network lib.</summary>
         </member>
         <member name="P:Fusion.Photon.Realtime.AppSettings.IsMasterServerAddress">
             <summary>If true, the Server field contains a Master Server address (if any address at all).</summary>
@@ -252,12 +242,24 @@
             Photon client to log information and statistics from.
             </summary>
         </member>
+        <member name="F:Fusion.Photon.Realtime.ConnectionHandler.DisconnectAfterKeepAlive">
+            <summary>Option to let the fallback thread call Disconnect after the KeepAliveInBackground time. Default: false.</summary>
+            <remarks>
+            If set to true, the thread will disconnect the client regularly, should the client not call SendOutgoingCommands / Service.
+            This may happen due to an app being in background (and not getting a lot of CPU time) or when loading assets.
+            
+            If false, a regular timeout time will have to pass (on top) to time out the client.
+            </remarks>
+        </member>
         <member name="F:Fusion.Photon.Realtime.ConnectionHandler.KeepAliveInBackground">
             <summary>Defines for how long the Fallback Thread should keep the connection, before it may time out as usual.</summary>
             <remarks>We want to the Client to keep it's connection when an app is in the background (and doesn't call Update / Service Clients should not keep their connection indefinitely in the background, so after some milliseconds, the Fallback Thread should stop keeping it up.</remarks>
         </member>
         <member name="P:Fusion.Photon.Realtime.ConnectionHandler.CountSendAcksOnly">
             <summary>Counts how often the Fallback Thread called SendAcksOnly, which is purely of interest to monitor if the game logic called SendOutgoingCommands as intended.</summary>
+        </member>
+        <member name="P:Fusion.Photon.Realtime.ConnectionHandler.FallbackThreadRunning">
+            <summary>True if a fallback thread is running. Will call the client's SendAcksOnly() method to keep the connection up.</summary>
         </member>
         <member name="F:Fusion.Photon.Realtime.ConnectionHandler.ApplyDontDestroyOnLoad">
             <summary>Keeps the ConnectionHandler, even if a new scene gets loaded.</summary>
@@ -305,11 +307,11 @@
             <remarks>
             Does not remove keys from target (so non-string keys CAN be in target if they were before).
             </remarks>
-            <param name="target">The target IDicitionary passed in plus all string-typed keys from the addHash.</param>
+            <param name="target">The target IDictionary passed in plus all string-typed keys from the addHash.</param>
             <param name="addHash">A IDictionary that should be merged partly into target to update it.</param>
         </member>
         <member name="M:Fusion.Photon.Realtime.Extensions.ToStringFull(System.Collections.IDictionary)">
-            <summary>Helper method for debugging of IDictionary content, inlcuding type-information. Using this is not performant.</summary>
+            <summary>Helper method for debugging of IDictionary content, including type-information. Using this is not performant.</summary>
             <remarks>Should only be used for debugging as necessary.</remarks>
             <param name="origin">Some Dictionary or Hashtable.</param>
             <returns>String of the content of the IDictionary.</returns>
@@ -332,6 +334,17 @@
             <param name="original">The original IDictonary to get string-typed keys from.</param>
             <returns>New Hashtable containing only string-typed keys of the original.</returns>
         </member>
+        <member name="M:Fusion.Photon.Realtime.Extensions.StripToStringKeys(ExitGames.Client.Photon.Hashtable)">
+            <summary>
+            This method copies all string-typed keys of the original into a new Hashtable.
+            </summary>
+            <remarks>
+            Does not recurse (!) into hashes that might be values in the root-hash.
+            This does not modify the original.
+            </remarks>
+            <param name="original">The original IDictonary to get string-typed keys from.</param>
+            <returns>New Hashtable containing only string-typed keys of the original.</returns>
+        </member>
         <member name="F:Fusion.Photon.Realtime.Extensions.keysWithNullValue">
             <summary>Used by StripKeysWithNullValues.</summary>
             <remarks>
@@ -340,6 +353,14 @@
             </remarks>
         </member>
         <member name="M:Fusion.Photon.Realtime.Extensions.StripKeysWithNullValues(System.Collections.IDictionary)">
+            <summary>Removes all keys with null values.</summary>
+            <remarks>
+            Photon properties are removed by setting their value to null. Changes the original IDictionary!
+            Uses lock(keysWithNullValue), which should be no problem in expected use cases.
+            </remarks>
+            <param name="original">The IDictionary to strip of keys with null value.</param>
+        </member>
+        <member name="M:Fusion.Photon.Realtime.Extensions.StripKeysWithNullValues(ExitGames.Client.Photon.Hashtable)">
             <summary>Removes all keys with null values.</summary>
             <remarks>
             Photon properties are removed by setting their value to null. Changes the original IDictionary!
@@ -527,6 +548,9 @@
         </member>
         <member name="F:Fusion.Photon.Realtime.ClientAppType.Voice">
             <summary>Voice apps stream audio.</summary>
+        </member>
+        <member name="F:Fusion.Photon.Realtime.ClientAppType.Fusion">
+            <summary>Fusion clients are for matchmaking and relay in Photon Fusion.</summary>
         </member>
         <member name="T:Fusion.Photon.Realtime.EncryptionMode">
             <summary>
@@ -1004,11 +1028,15 @@
             <returns>False, if the conditions are not met. Then, this client does not attempt the ReconnectAndRejoin.</returns>
         </member>
         <member name="M:Fusion.Photon.Realtime.LoadBalancingClient.Disconnect(Fusion.Photon.Realtime.DisconnectCause)">
-            <summary>Disconnects the peer from a server or stays disconnected. If the client / peer was connected, a callback will be triggered.</summary>
-            <remarks>
-            This method will not change the current State, if this client State is PeerCreated, Disconnecting or Disconnected.
-            In those cases, there is also no callback for the disconnect. The DisconnectedCause will only change if the client was connected.
-            </remarks>
+             <summary>Disconnects the peer from a server or stays disconnected. If the client / peer was connected, a callback will be triggered.</summary>
+             <remarks>
+             Disconnect will attempt to notify the server of the client closing the connection.
+            
+             Clients that are in a room, will leave the room. If the room's playerTTL &gt; 0, the player will just become inactive (and may rejoin).
+            
+             This method will not change the current State, if this client State is PeerCreated, Disconnecting or Disconnected.
+             In those cases, there is also no callback for the disconnect. The DisconnectedCause will only change if the client was connected.
+             </remarks>
         </member>
         <member name="M:Fusion.Photon.Realtime.LoadBalancingClient.DisconnectToReconnect">
             <summary>

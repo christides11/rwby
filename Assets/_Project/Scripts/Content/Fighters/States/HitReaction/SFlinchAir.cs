@@ -31,7 +31,7 @@ namespace rwby
             {
                 
                 manager.PhysicsManager.HandleGravity(
-                    manager.StatManager.MaxFallSpeed,
+                    manager.StatManager.hitstunGravity,
                     (manager.CombatManager as FighterCombatManager).hitstunGravity,
                     1);
 

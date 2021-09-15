@@ -20,6 +20,7 @@ namespace rwby
         BLOCK_LOW = 16,
         BLOCK_AIR = 17,
         WALL_RUN_V = 18,
-        WALL_RUN_H = 19
+        WALL_RUN_H = 19,
+        WALL_JUMP = 20
     }
 }

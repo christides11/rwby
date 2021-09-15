@@ -25,7 +25,7 @@ namespace rwby.fighters.states
             manager.RotateVisual(movement.normalized, manager.StatManager.runRotationSpeed);
 
             manager.PhysicsManager.HandleMovement(manager.StatManager.RunBaseAccel, manager.StatManager.RunAcceleration,
-                manager.StatManager.GroundFriction, manager.StatManager.RunMaxSpeed, manager.StatManager.RunAccelFromDot);
+                manager.StatManager.GroundFriction, manager.StatManager.RunMinSpeed, manager.StatManager.RunMaxSpeed, manager.StatManager.RunAccelFromDot);
 
             if (CheckInterrupt() == false)
             {

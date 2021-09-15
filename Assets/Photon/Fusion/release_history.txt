@@ -2,6 +2,107 @@
 
 ## Beta Nightly
 
+### Build 290 (Sep 13, 2021)
+
+**What's New**
+
+- [NetworkSerializeMethod] and [NetworkDeserializeMethod] attributes. Together they can make any type Fusion-serializable (usable in `[Networked]` properties and in Rpcs). Expected signatures, for type T, are `[NetworkSerializeMethod(MaxSize = <MaxByteSize>)] public static int <MethodName>(NetworkRunner runner, T obj, byte* data)` (returns number of bytes written) and `[NetworkDeserializeMethod] public static int <MethodName>(NetworkRunner, byte* data, ref T result)` (returns number of bytes read). There's also an alternative signature supported, which "wraps" T with an existing `INetworkStruct` type (S): `[NetworkSerializeMethod] public static S <MethodName>(NetworkRunner runner, T obj)` and `[NetworkDeserializeMethod] public static T <MethodName>(NetworkRunner runner, S wrapper)` or `[NetworkDeserializeMethod] public static void <MethodName>(NetworkRunner runner, S wrapper, ref T result)`
+
+**Bug Fixes**
+
+- Fixed: NDS in SharedMode with Empty Session Name
+
+### Build 289 (Sep 09, 2021)
+
+**Bug Fixes**
+
+- Fixed: Physics2D.simulateMode automatically set to Script mode at runtime, when NetworkProjectConfig PhysicsEngine is set to 2D
+- Fixed: Unexpected characters in `Fusion.Editor.cs`
+
+### Build 288 (Sep 08, 2021)
+
+**Bug Fixes**
+
+- Fixed: Inspector - `NetworkObject` multiple selection
+- Fixed: ILWeaver throwing an exception if multiple `netstandard` assemblies are referenced
+- Fixed: AssetDatabaseUtils compile for Unity 2021.2b
+
+### Build 287 (Sep 07, 2021)
+
+**What's New**
+
+- Tanknarok Demo link added to Fusion Hub Window  
+Refactored styles in Fusion hub to a single GuiSkin and unified light and dark themes for easier future maintenance
+- Links to Fusion and Photon settings added to Fusion Hub Window
+
+**Bug Fixes**
+
+- Fixed: Removed localization from Fusion Hub links (all were pointing to en-us versions)
+
+### Build 286 (Sep 03, 2021)
+
+**Changes**
+
+- Added GuiSkin option to NetworkDebugStartGUI which uses a GuiSkin asset for its defaults. While not meant to be used for production interfaces, this does allow for some customization
+
+**Bug Fixes**
+
+- Fixed: NetworkDebugStart handling for Automatic with setting of Client should now work correctly in all cases (Multi-peer and Single-Peer)
+
+### Build 285 (Sep 01, 2021)
+
+**Changes**
+
+- NT/NRB/NCC Teleport changed to hold on interpolation To rather than From state, to be consistent with 'NoInterpolation' handling
+
+**Bug Fixes**
+
+- Fixed: Hit normal being inverted in some configurations when performing lag-compensated raycasts against boxes
+- Fixed: NetworkDebugStartGUI null errors when editing text ilelds fixed
+
+### Build 283 (Aug 31, 2021)
+
+**What's New**
+
+- Shutdown button added to NetworkDebugStart and option to Hide GUI After Start
+- Option in NetworkDebugStart for showing a shutdown button
+- Shutdown handling and cleanup/reset to NetworkDebugStart and NetworkRunner
+- NetworkRunner Shutdown button added to component inspector at runtime
+- NetworkDebugStartGUI adeded current stage information label
+
+**Bug Fixes**
+
+- Fixed: Execute Order Inspector window will correctly warn of OrderBefore/OrderAfter conflicts again
+- Fixed: DrawifAttribute was adding one vertical space to GUI for hidden elements
+- Fixed: Missing covert to local space in NRB in some edge cases
+- Fixed: NetworkDebugStartGUI handling of vertical aspect ratio screens, and extreme screen aspect ratios
+
+### Build 282 (Aug 30, 2021)
+
+**Bug Fixes**
+
+- Fixed: Issue with despawn in shared mode
+- Fixed: Bug in shared mode with interest management
+
+### Build 280 (Aug 28, 2021)
+
+**Bug Fixes**
+
+- Fixed: TempAlloc now handles allocations larger than managed allocator page size
+
+### Build 279 (Aug 27, 2021)
+
+**What's New**
+
+- Added 'Property Groups' functionality
+
+**Bug Fixes**
+
+- Fixed: Issues with initial state of scene objects in shared mode
+- Fixed: State auth handling when receiving data in shared mode you have state auth over already
+- Fixed: Bug with NRB.SharedMode.Defaults init
+- Fixed: Issue with corrupted shared mode object state
+
 ### Build 276 (Aug 26, 2021)
 
 **What's New**

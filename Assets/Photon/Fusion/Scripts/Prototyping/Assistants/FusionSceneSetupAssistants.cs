@@ -35,6 +35,7 @@ namespace Fusion.Assistants {
       var nds = n.Item1;
       var nr = n.Item2;
 
+      nr.gameObject.EnsureComponentExists<InputBehaviourPrototype>();
       AddPlayerSpawner(nr.gameObject);
       nr.gameObject.EnsureComponentExists<NetworkEvents>();
 
@@ -70,11 +71,12 @@ namespace Fusion.Assistants {
 
       var nds = n.Item1;
       var nr = n.Item2;
-
+      
+      nr.gameObject.EnsureComponentExists<InputBehaviourPrototype>();
       var spawner = AddPlayerSpawner(nr.gameObject);
       spawner.PlayerPrefab = FusionPrototypingPrefabs.BasicPlayerRB2D.GetComponent<NetworkObject>();
       nr.gameObject.EnsureComponentExists<NetworkEvents>();
-
+     
       // Set our physics to 2D
       NetworkProjectConfig.Global.PhysicsEngine = NetworkProjectConfig.PhysicsEngines.Physics2D;
       NetworkProjectConfigUtilities.SaveGlobalConfig();
@@ -83,9 +85,15 @@ namespace Fusion.Assistants {
       DirtyAndSaveScene(nds.gameObject.scene);
     }
 
-
-
     [MenuItem("GameObject/Fusion/Setup/Add Networking To Scene", false, FusionAssistants.PRIORITY)]
+    public static void AddNetworkingToScene() {
+      (NetworkDebugStart nds, NetworkRunner nr) n = AddNetworkStartup();
+      n.nr.gameObject.EnsureComponentExists<NetworkEvents>();
+
+      // Get scene and mark scene as dirty.
+      DirtyAndSaveScene(n.nds.gameObject.scene);
+    }
+
     public static (NetworkDebugStart, NetworkRunner) AddNetworkStartup() {
       // Add Visibility node to AudioListeners to disallow multiple active in shared instance mode (preventing log spam)
       HandleAudioListeners();
@@ -98,10 +106,7 @@ namespace Fusion.Assistants {
       if (nr == null) {
 
         // Add NetworkRunner to scene if NetworkDebugStart doesn't have one set as a prefab already.
-        nr = FusionAssistants.EnsureExistsInScene<NetworkRunner>(
-          "Prototype Runner/Spawner/Inputs", null,
-          typeof(InputBehaviourPrototype)
-          );
+        nr = FusionAssistants.EnsureExistsInScene<NetworkRunner>("Prototype Runner/Spawner/Inputs");
 
         nds.RunnerPrefab = nr;
         // The runner go is also our fallback spawn point... so raise it into the air a bit
@@ -111,8 +116,8 @@ namespace Fusion.Assistants {
       return (nds, nr);
     }
 
-    [MenuItem("GameObject/Fusion/Setup/Add Player Spawner", false, FusionAssistants.PRIORITY)]
-    public static void AddPlayerSpawner() {  AddPlayerSpawner(null); }
+    //[MenuItem("GameObject/Fusion/Setup/Add Player Spawner", false, FusionAssistants.PRIORITY)]
+    public static void AddPlayerSpawner() { AddPlayerSpawner(null); }
     public static PlayerSpawnerPrototype AddPlayerSpawner(GameObject addTo) {
       if (addTo == null) {
         if (Selection.activeGameObject != null && Selection.activeGameObject.scene == SceneManager.GetActiveScene()) {
@@ -128,7 +133,7 @@ namespace Fusion.Assistants {
       return spawner;
     }
 
-    [MenuItem("GameObject/Fusion/Setup/Add Player Spawn Point", false, FusionAssistants.PRIORITY)]
+    //[MenuItem("GameObject/Fusion/Setup/Add Player Spawn Point", false, FusionAssistants.PRIORITY)]
     public static void AddPlayerSpawnPoint() {
       var parent = Selection.activeGameObject ? Selection.activeGameObject.transform : null;
       var point = FusionAssistants.CreatePrimitive(null, "Player SpawnPoint", null, null, null, parent, null, typeof(PlayerSpawnPointPrototype));

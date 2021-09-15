@@ -1,4 +1,5 @@
 using Cysharp.Threading.Tasks;
+using Rewired.UI.ControlMapper;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -11,6 +12,7 @@ namespace rwby
 
         [SerializeField] private ModLoader modLoader;
         [SerializeField] private ContentManager contentManager;
+        [SerializeField] private ControlMapper cMapper;
 
         public Settings settings;
         public string localUsername;
@@ -23,6 +25,21 @@ namespace rwby
             modLoader.Initialize();
             contentManager.Initialize();
             modLoader.loadedMods.Add("core", new LoadedModDefinition(null, settings.baseMod));
+        }
+
+        private void Update()
+        {
+            if (Input.GetKeyDown(KeyCode.F1))
+            {
+                if (cMapper.isOpen)
+                {
+                    cMapper.Close(false);
+                }
+                else
+                {
+                    cMapper.Open();
+                }
+            }
         }
 
         public virtual async UniTask<bool> LoadMap(ModObjectReference map)

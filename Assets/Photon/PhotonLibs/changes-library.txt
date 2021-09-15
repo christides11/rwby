@@ -3,6 +3,18 @@ Photon C# Client Library - Changelog
 Exit Games GmbH - www.photonengine.com - forum.photonengine.com
 
 
+Version 4.1.6.5 (24. August 2021 - rev6181)
+    Fixed: Protocol16 to throw a NotSupportedException when a length value can not be serialized as short (as defined). This affects arrays (except byte[]), strings, hashtables, dictionaries and other variable length values.
+    Updated: C# classes to the latest state of the native PhotonEncryptorPlugin API.
+
+Version 4.1.6.4 (26. July 2021 - rev6143)
+    Changed: ByteArraySlice and ByteArraySlicePool to achieve thread safety.
+    Changed: PhotonClientWebSocket.AsyncConnectAndReceive to reuse memory. It may still grow somewhat as memory allocated for very large messages is not released but rather held to receive as big messages. This class is not used for WebGL exports.
+    Removed: Surplus logging in PhotonClientWebSocket implementation.
+    Added: Null-check in PhotonClientWebSocket.Send() if the socket may be disconnecting already. Added fitting error log.
+    Changed: TCP implementation to avoid memory allocations. It now uses a Queue<StreamBuffer> which is pooled and re-used. DispatchIncomingCommands() releases the StreamBuffers back into the pool.
+    Fixed: TrafficStats counting of ping-result command size. This was still counting the buffer size instead of received-data size (usually less).
+
 Version 4.1.6.3 (24. June 2021 - rev6099)
     Fixed: An issue with deserialization of custom types.
 

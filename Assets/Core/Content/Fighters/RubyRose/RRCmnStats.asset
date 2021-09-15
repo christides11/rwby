@@ -14,10 +14,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   groundFriction: 60
   jumpSquatFriction: 0
-  walkMaxSpeed: 9
+  walkMinSpeed: 6
+  walkMaxSpeed: 8.25
   walkBaseAcceleration: 18
-  walkAcceleration: 18
-  walkRotationSpeed: 15.708
+  walkAcceleration: 27
+  walkRotationSpeed: 20
   walkAccelerationFromDot:
     serializedVersion: 2
     m_Curve:
@@ -51,27 +52,37 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  runMaxSpeed: 17
-  runBaseAcceleration: 48.57143
-  runAcceleration: 48.57143
-  runRotationSpeed: 31.41593
+  runMinSpeed: 12
+  runMaxSpeed: 14
+  runBaseAcceleration: 10
+  runAcceleration: 20
+  runRotationSpeed: 10
   runAccelerationFromDot:
     serializedVersion: 2
     m_Curve:
     - serializedVersion: 3
       time: -1
-      value: 0.4
-      inSlope: 0.057632934
-      outSlope: 0.057632934
+      value: 0.75
+      inSlope: 0
+      outSlope: 0
       tangentMode: 0
       weightedMode: 0
       inWeight: 0
-      outWeight: 0.22916667
+      outWeight: 0.05081302
+    - serializedVersion: 3
+      time: 0
+      value: 0.75
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
     - serializedVersion: 3
       time: 1
       value: 1
-      inSlope: 0.3
-      outSlope: 0.3
+      inSlope: 0.25
+      outSlope: 0.25
       tangentMode: 34
       weightedMode: 0
       inWeight: 0.33333334
@@ -80,29 +91,34 @@ MonoBehaviour:
     m_PostInfinity: 2
     m_RotationOrder: 4
   jumpSquatFrames: 4
-  jumpMinimumFrames: 3
+  jumpMinimumFrames: 0
   jumpMaxTime: 38
   jumpMaxHeight: 3.5
-  jumpConversedHorizontalMomentum: 0
-  jumpHorizontalVelocity: 0
-  fallGravityMultiplier: 2
+  jumpConversedHorizontalMomentum: 0.5
+  jumpHorizontalVelocity: 4.5
+  fallGravityMultiplier: 1.6
   airJumps: 1
   airJumpMinimumFrames: 5
   airJumpMaxTime: 40
   airJumpMaxHeight: 2
+  airJumpConversedHorizontalMomentum: 0.2
   airJumpHorizontalMomentum: 4
   airDashes: 2
   airDashFrames: 16
   airDashStartup: 3
   airDashMaxMagnitude: 20
-  airDashForce: 23
-  airDashGravityDelay: 13
-  airDashFrictionDelay: 100
-  airDashFriction: 0
+  airDashForce: 20
+  airDashGravityDelay: 14
+  airDashFrictionDelay: 11
+  airDashFriction: 100
+  MaxWallJumpTime: 25
+  MaxWallJumpHeight: 1
+  WallJumpConversedMomentum: 0.5
+  WallJumpHorizontalMomentum: 10
   aerialMaxFallSpeed: 14
   aerialMaxSpeed: 17
-  aerialBaseAcceleration: 6.666667
-  aerialAcceleration: 6
+  aerialBaseAcceleration: 5
+  aerialAcceleration: 7
   aerialDeceleration: 0
   aerialAccelerationFromDot:
     serializedVersion: 2
@@ -137,10 +153,54 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+  aerialRotationSpeed: 10
   hitstunHoldPositionFor: 10
   hitstunGravity: 46
   hitstunMaxFallSpeed: 100
   hitstunGroundFriction: 60
-  wallRunHorizontalTime: 50
+  wallRunHorizontalTime: 90
   wallRunHorizontalSpeed: 17
+  wallRunGravity: 14
+  wallRunGravityCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 34
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 0.4
+      value: 0
+      inSlope: 0
+      outSlope: 0.23970574
+      tangentMode: 1
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.06997677
+    - serializedVersion: 3
+      time: 0.95
+      value: 1
+      inSlope: 2.3178966
+      outSlope: 0
+      tangentMode: 1
+      weightedMode: 0
+      inWeight: 0.031358857
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
   inertiaFriction: 0

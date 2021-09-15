@@ -18,13 +18,14 @@ MonoBehaviour:
   stateOverride: 0
   length: 25
   hurtboxDefinition: {fileID: 0}
-  commandAttackCancelWindows: []
   chargeWindows: []
   hitboxGroups:
   - id: 0
   events:
   - id: 1
   - id: 2
+  - id: 3
+  - id: 4
   cancels: []
   firstActableFrame: 100
   references:
@@ -36,15 +37,38 @@ MonoBehaviour:
         activeFramesStart: 6
         activeFramesEnd: 9
         boxes:
-        - id: 3
+        - id: 5
         attachToEntity: 1
         attachTo: 
         chargeLevelNeeded: -1
         chargeLevelMax: 1
         hitboxHitInfo:
-          id: 4
+          id: 6
         attachPoint: 
     00000001:
+      type: {class: AttackEventDefinition, ns: HnSF.Combat, asm: HnSF}
+      data:
+        nickname: Lockon.Rot
+        active: 1
+        onHitCheck: 0
+        onHitHitboxGroup: 0
+        onHitIDGroup: 0
+        startFrame: 1
+        endFrame: 5
+        attackEvent:
+          id: 7
+        conditions: []
+        inputCheckTiming: 0
+        inputCheckStartFrame: 1
+        inputCheckEndFrame: 1
+        input:
+          executeWindow: 3
+          executeInputs: []
+          sequenceWindow: 8
+          sequenceInputs: []
+        chargeLevelMin: 0
+        chargeLevelMax: 0
+    00000002:
       type: {class: AttackEventDefinition, ns: HnSF.Combat, asm: HnSF}
       data:
         nickname: Clamp.Move
@@ -55,13 +79,8 @@ MonoBehaviour:
         startFrame: 1
         endFrame: 1
         attackEvent:
-          id: 5
+          id: 8
         conditions: []
-        variables:
-          intVars: 
-          floatVars: []
-          objectVars: []
-          curveVars: []
         inputCheckTiming: 0
         inputCheckStartFrame: 1
         inputCheckEndFrame: 1
@@ -72,8 +91,7 @@ MonoBehaviour:
           sequenceInputs: []
         chargeLevelMin: 0
         chargeLevelMax: 0
-        inputCheckProcessed: 0
-    00000002:
+    00000003:
       type: {class: AttackEventDefinition, ns: HnSF.Combat, asm: HnSF}
       data:
         nickname: Friction.Move
@@ -84,13 +102,8 @@ MonoBehaviour:
         startFrame: 1
         endFrame: 25
         attackEvent:
-          id: 6
+          id: 9
         conditions: []
-        variables:
-          intVars: 
-          floatVars: []
-          objectVars: []
-          curveVars: []
         inputCheckTiming: 0
         inputCheckStartFrame: 1
         inputCheckEndFrame: 1
@@ -101,8 +114,30 @@ MonoBehaviour:
           sequenceInputs: []
         chargeLevelMin: 0
         chargeLevelMax: 0
-        inputCheckProcessed: 0
-    00000003:
+    00000004:
+      type: {class: AttackEventDefinition, ns: HnSF.Combat, asm: HnSF}
+      data:
+        nickname: PSFX
+        active: 1
+        onHitCheck: 0
+        onHitHitboxGroup: 0
+        onHitIDGroup: 0
+        startFrame: 5
+        endFrame: 5
+        attackEvent:
+          id: 10
+        conditions: []
+        inputCheckTiming: 0
+        inputCheckStartFrame: 1
+        inputCheckEndFrame: 1
+        input:
+          executeWindow: 3
+          executeInputs: []
+          sequenceWindow: 8
+          sequenceInputs: []
+        chargeLevelMin: 0
+        chargeLevelMax: 0
+    00000005:
       type: {class: BoxDefinition, ns: HnSF.Combat, asm: HnSF}
       data:
         shape: 1
@@ -111,7 +146,7 @@ MonoBehaviour:
         rotation: {x: 0, y: 0, z: 0}
         radius: 1
         height: 0
-    00000004:
+    00000006:
       type: {class: HitInfo, ns: rwby, asm: rwby.csharp}
       data:
         hitType: 0
@@ -151,14 +186,23 @@ MonoBehaviour:
         blockstun: 0
         blockForce: {x: 0, y: 0, z: 0}
         blockForceAir: {x: 0, y: 0, z: 0}
-    00000005:
+    00000007:
+      type: {class: SoftLockOn, ns: rwby.Combat.AttackEvents, asm: rwby.csharp}
+      data:
+        rotSpeed: 30
+    00000008:
       type: {class: ClampMovement, ns: rwby.Combat.AttackEvents, asm: rwby.csharp}
       data:
         maxLength: 10
-    00000006:
+    00000009:
       type: {class: ApplyFriction, ns: rwby.Combat.AttackEvents, asm: rwby.csharp}
       data:
         useXZFriction: 1
         useYFriction: 0
         xzFriction: 30
         yFriction: 0
+    0000000A:
+      type: {class: PlaySFX, ns: rwby.Combat.AttackEvents, asm: rwby.csharp}
+      data:
+        aClipPrefab: {fileID: 0}
+        audioClip: {fileID: 0}

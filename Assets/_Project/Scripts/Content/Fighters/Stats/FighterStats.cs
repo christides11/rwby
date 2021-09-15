@@ -1,3 +1,4 @@
+using Fusion;
 using UnityEngine;
 
 namespace rwby
@@ -9,12 +10,14 @@ namespace rwby
         public float groundFriction;
         public float jumpSquatFriction;
 
+        public float walkMinSpeed;
         public float walkMaxSpeed;
         public float walkBaseAcceleration;
         public float walkAcceleration;
         public float walkRotationSpeed;
         public AnimationCurve walkAccelerationFromDot;
 
+        public float runMinSpeed;
         public float runMaxSpeed;
         public float runBaseAcceleration;
         public float runAcceleration;
@@ -35,6 +38,7 @@ namespace rwby
         public int airJumpMinimumFrames = 5;
         public int airJumpMaxTime = 45;
         public float airJumpMaxHeight = 4;
+        public float airJumpConversedHorizontalMomentum;
         public float airJumpHorizontalMomentum;
 
         [Header("Air Dash")]
@@ -47,6 +51,12 @@ namespace rwby
         public int airDashFrictionDelay;
         public float airDashFriction;
 
+        [Header("Wall Jump")]
+        public float MaxWallJumpTime;
+        public float MaxWallJumpHeight;
+        public float WallJumpConversedMomentum;
+        public float WallJumpHorizontalMomentum;
+
         [Header("Aerial Movement")]
         public float aerialMaxFallSpeed;
         public float aerialMaxSpeed;
@@ -54,6 +64,7 @@ namespace rwby
         public float aerialAcceleration;
         public float aerialDeceleration;
         public AnimationCurve aerialAccelerationFromDot;
+        public float aerialRotationSpeed;
 
         [Header("Hitstun")]
         public int hitstunHoldPositionFor = 10;
@@ -64,6 +75,8 @@ namespace rwby
         [Header("Wall Run")]
         public int wallRunHorizontalTime;
         public float wallRunHorizontalSpeed;
+        public float wallRunGravity;
+        public AnimationCurve wallRunGravityCurve;
 
         [Header("Other")]
         public float inertiaFriction;
