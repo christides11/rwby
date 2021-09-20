@@ -5,6 +5,7 @@ namespace rwby
         Fighter,
         Gamemode,
         GamemodeComponent,
-        Map
+        Map,
+        Soundbank
     }
 }

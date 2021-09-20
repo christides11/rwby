@@ -18,13 +18,13 @@ MonoBehaviour:
   stateOverride: 0
   length: 30
   hurtboxDefinition: {fileID: 0}
-  commandAttackCancelWindows: []
   chargeWindows: []
   hitboxGroups:
   - id: 0
   events:
   - id: 1
   - id: 2
+  - id: 3
   cancels: []
   firstActableFrame: 100
   references:
@@ -36,13 +36,13 @@ MonoBehaviour:
         activeFramesStart: 8
         activeFramesEnd: 11
         boxes:
-        - id: 3
+        - id: 4
         attachToEntity: 1
         attachTo: 
         chargeLevelNeeded: -1
         chargeLevelMax: 1
         hitboxHitInfo:
-          id: 4
+          id: 5
         attachPoint: 
     00000001:
       type: {class: AttackEventDefinition, ns: HnSF.Combat, asm: HnSF}
@@ -55,13 +55,8 @@ MonoBehaviour:
         startFrame: 1
         endFrame: 1
         attackEvent:
-          id: 5
+          id: 6
         conditions: []
-        variables:
-          intVars: 
-          floatVars: []
-          objectVars: []
-          curveVars: []
         inputCheckTiming: 0
         inputCheckStartFrame: 1
         inputCheckEndFrame: 1
@@ -72,7 +67,6 @@ MonoBehaviour:
           sequenceInputs: []
         chargeLevelMin: 0
         chargeLevelMax: 0
-        inputCheckProcessed: 0
     00000002:
       type: {class: AttackEventDefinition, ns: HnSF.Combat, asm: HnSF}
       data:
@@ -84,13 +78,8 @@ MonoBehaviour:
         startFrame: 1
         endFrame: 30
         attackEvent:
-          id: 6
+          id: 7
         conditions: []
-        variables:
-          intVars: 
-          floatVars: []
-          objectVars: []
-          curveVars: []
         inputCheckTiming: 0
         inputCheckStartFrame: 1
         inputCheckEndFrame: 1
@@ -101,8 +90,30 @@ MonoBehaviour:
           sequenceInputs: []
         chargeLevelMin: 0
         chargeLevelMax: 0
-        inputCheckProcessed: 0
     00000003:
+      type: {class: AttackEventDefinition, ns: HnSF.Combat, asm: HnSF}
+      data:
+        nickname: sfx
+        active: 1
+        onHitCheck: 0
+        onHitHitboxGroup: 0
+        onHitIDGroup: 0
+        startFrame: 8
+        endFrame: 8
+        attackEvent:
+          id: 8
+        conditions: []
+        inputCheckTiming: 0
+        inputCheckStartFrame: 1
+        inputCheckEndFrame: 1
+        input:
+          executeWindow: 3
+          executeInputs: []
+          sequenceWindow: 8
+          sequenceInputs: []
+        chargeLevelMin: 0
+        chargeLevelMax: 0
+    00000004:
       type: {class: BoxDefinition, ns: HnSF.Combat, asm: HnSF}
       data:
         shape: 1
@@ -111,7 +122,7 @@ MonoBehaviour:
         rotation: {x: 0, y: 0, z: 0}
         radius: 1.7
         height: 0
-    00000004:
+    00000005:
       type: {class: HitInfo, ns: rwby, asm: rwby.csharp}
       data:
         hitType: 0
@@ -151,14 +162,20 @@ MonoBehaviour:
         blockstun: 0
         blockForce: {x: 0, y: 0, z: 0}
         blockForceAir: {x: 0, y: 0, z: 0}
-    00000005:
+    00000006:
       type: {class: ClampMovement, ns: rwby.Combat.AttackEvents, asm: rwby.csharp}
       data:
         maxLength: 10
-    00000006:
+    00000007:
       type: {class: ApplyFriction, ns: rwby.Combat.AttackEvents, asm: rwby.csharp}
       data:
         useXZFriction: 1
         useYFriction: 0
         xzFriction: 30
         yFriction: 0
+    00000008:
+      type: {class: PlaySFX, ns: rwby.Combat.AttackEvents, asm: rwby.csharp}
+      data:
+        aClipPrefab: {fileID: 7106954603056005566, guid: ddaaed784009a95478cc139acb2d4850, type: 3}
+        sndbkName: global
+        sfxName: swingc

@@ -56,6 +56,7 @@ namespace rwby
         {
             if (!modLoader.loadedMods.ContainsKey(objectReference.modIdentifier))
             {
+                Debug.LogError($"Error loading content {objectReference}: mod {objectReference.modIdentifier} not found.");
                 return false;
             }
             return await modLoader.loadedMods[objectReference.modIdentifier].definition.LoadContentDefinition(contentType, objectReference.objectIdentifier);

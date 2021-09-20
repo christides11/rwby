@@ -70,6 +70,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _interpolationDataSource: 0
   audioSource: {fileID: 3942584108487966666}
+  _networkedSoundbankIndex: 0
+  _networkedSoundIndex: 0
+  _networkedSoundTick: 0
+  _networkedPlayMode: 0
 --- !u!82 &3942584108487966666
 AudioSource:
   m_ObjectHideFlags: 0
@@ -81,8 +85,8 @@ AudioSource:
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 0}
-  m_PlayOnAwake: 1
-  m_Volume: 1
+  m_PlayOnAwake: 0
+  m_Volume: 0.3
   m_Pitch: 1
   Loop: 0
   Mute: 0

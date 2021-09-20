@@ -1,4 +1,5 @@
-using Fusion;
+using Cysharp.Threading.Tasks;
+using Fusion;    
 using HnSF.Combat;
 using HnSF.Fighters;
 using KinematicCharacterController;
@@ -19,6 +20,7 @@ namespace rwby
         public FighterStatManager StatManager { get { return statManager; } }
         public FighterPhysicsManager PhysicsManager { get { return physicsManager; } }
         public FighterHurtboxManager HurtboxManager { get { return hurtboxManager; } }
+        public SoundbankContainer SoundbankContainer { get { return soundbankContainer; } }
 
         [Networked] public NetworkBool TargetableNetworked { get; set; }
         public bool Targetable { get { return TargetableNetworked; } }
@@ -45,6 +47,7 @@ namespace rwby
         [SerializeField] protected FighterStatManager statManager;
         [SerializeField] protected IFighterDefinition fighterDefinition;
         [SerializeField] protected CapsuleCollider capsuleCollider;
+        [SerializeField] protected SoundbankContainer soundbankContainer;
         public Transform visualTransform;
 
         [Header("Lock On")]
@@ -53,12 +56,12 @@ namespace rwby
         public float lockonMaxDistance = 20;
         public float lockonFudging = 0.1f;
 
-        public void OnFighterLoaded()
+        public virtual async UniTask<bool> OnFighterLoaded()
         {
-
+            return true;
         }
 
-        public void Awake()
+        public virtual void Awake()
         {
             networkManager = NetworkManager.singleton;
             combatManager.movesets = fighterDefinition.GetMovesets();

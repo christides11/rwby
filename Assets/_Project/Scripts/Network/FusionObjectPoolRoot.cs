@@ -50,7 +50,7 @@ namespace rwby
 
 		public void ReleaseInstance(NetworkRunner runner, NetworkObject no, bool isSceneObject)
 		{
-			Debug.Log($"Releasing {no} instance, isSceneObject={isSceneObject}");
+			//Debug.Log($"Releasing {no} instance, isSceneObject={isSceneObject}");
 			if (no != null)
 			{
 				FusionObjectPool pool;

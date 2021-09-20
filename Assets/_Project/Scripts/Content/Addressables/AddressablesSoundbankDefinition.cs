@@ -1,18 +1,33 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class AddressablesSoundbankDefinition : MonoBehaviour
+namespace rwby
 {
-    // Start is called before the first frame update
-    void Start()
+    [CreateAssetMenu(fileName = "AddressablesMapDefinition", menuName = "rwby/Content/Addressables/SoundbankDefinition")]
+    public class AddressablesSoundbankDefinition : ISoundbankDefinition
     {
-        
-    }
+        public override string Name { get { return soundbankName; } }
+        public override List<SoundbankSoundEntry> Sounds { get { return sounds; } }
+        public override Dictionary<string, int> SoundMap { get { return soundMap; } }
+        [SerializeField] private string soundbankName;
+        [SerializeField] private List<SoundbankSoundEntry> sounds = new List<SoundbankSoundEntry>();
 
-    // Update is called once per frame
-    void Update()
-    {
-        
+        public Dictionary<string, int> soundMap = new Dictionary<string, int>();
+
+        private void OnValidate()
+        {
+            for(int i = 0; i < sounds.Count; i++)
+            {
+                sounds[i].index = i;
+            }
+        }
+
+        private void OnEnable()
+        {
+            for(int i = 0; i < sounds.Count; i++)
+            {
+                soundMap.Add(sounds[i].id, i);
+            }
+        }
     }
 }

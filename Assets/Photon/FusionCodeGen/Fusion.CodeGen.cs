@@ -1980,6 +1980,8 @@ namespace Fusion.CodeGen {
           if (ctx.HasOffset) {
             il.AppendMacro(AlignToWordSize());
             il.AppendMacro(ctx.AddOffset());
+          } else {
+            il.Append(Pop());
           }
 
         } else {

@@ -1,6 +1,7 @@
 using Fusion;
 using Fusion.Sockets;
 using Rewired;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -8,8 +9,8 @@ using UnityEngine;
 namespace rwby
 {
 	[OrderBefore(typeof(FighterInputManager), typeof(FighterManager))]
-    public class ClientManager : NetworkBehaviour, INetworkRunnerCallbacks, IBeforeUpdate, IAfterUpdate
-    {
+	public class ClientManager : NetworkBehaviour, INetworkRunnerCallbacks, IBeforeUpdate, IAfterUpdate
+	{
 		public delegate void EmptyAction();
 		public static event EmptyAction OnStartHosting;
 
@@ -32,23 +33,23 @@ namespace rwby
 
 		public PlayerCamera camera;
 
-        protected virtual void Awake()
-        {
+		protected virtual void Awake()
+		{
 			networkManager = NetworkManager.singleton;
 			MatchManager.onMatchSettingsLoadFailed += MatchSettingsLoadFail;
 			MatchManager.onMatchSettingsLoadSuccess += MatchSettingsLoadSuccess;
 			DontDestroyOnLoad(gameObject);
-        }
+		}
 
-        public override void Render()
-        {
-            if (camera)
-            {
+		public override void Render()
+		{
+			if (camera)
+			{
 				camera.CamUpdate();
-            }
-        }
+			}
+		}
 
-        bool buttonJump;
+		bool buttonJump;
 		bool buttonLightAttack;
 		bool buttonHeavyAttack;
 		bool buttonBlock;
@@ -85,7 +86,7 @@ namespace rwby
 		}
 
 		protected virtual void ClearInputs()
-        {
+		{
 			buttonJump = false;
 			buttonLightAttack = false;
 			buttonHeavyAttack = false;
@@ -98,20 +99,20 @@ namespace rwby
 			buttonAbility3 = false;
 			buttonAbility4 = false;
 			buttonExtra1 = false;
-        }
+		}
 
-        private void GamemodeSetupSuccess()
-        {
+		private void GamemodeSetupSuccess()
+		{
 			RPC_SetMatchReadyStatus(true);
-        }
+		}
 
-        private void GamemodeSetupFailure()
-        {
+		private void GamemodeSetupFailure()
+		{
 			RPC_SetMatchReadyStatus(false);
-        }
+		}
 
-        public override void Spawned()
-        {
+		public override void Spawned()
+		{
 			clientManagers.Add(this);
 			if (Object.HasInputAuthority)
 			{
@@ -126,26 +127,26 @@ namespace rwby
 			}
 		}
 
-        public override void Despawned(NetworkRunner runner, bool hasState)
-        {
-            base.Despawned(runner, hasState);
+		public override void Despawned(NetworkRunner runner, bool hasState)
+		{
+			base.Despawned(runner, hasState);
 			clientManagers.Remove(this);
-        }
+		}
 
-        private void MatchSettingsLoadSuccess()
-        {
-            if (Object.HasStateAuthority)
-            {
+		private void MatchSettingsLoadSuccess()
+		{
+			if (Object.HasStateAuthority)
+			{
 				LobbyReadyStatus = false;
-            }
+			}
 			if (Object.HasInputAuthority)
 			{
 				RPC_ReportReadyStatus(true);
 			}
-        }
+		}
 
-        private void MatchSettingsLoadFail(MatchSettingsLoadFailedReason reason)
-        {
+		private void MatchSettingsLoadFail(MatchSettingsLoadFailedReason reason)
+		{
 			if (Object.HasStateAuthority)
 			{
 				LobbyReadyStatus = false;
@@ -155,7 +156,7 @@ namespace rwby
 				Debug.Log($"Match settings failed to load: {reason}");
 				RPC_ReportReadyStatus(false);
 			}
-        }
+		}
 
 		[Rpc(RpcSources.InputAuthority, RpcTargets.StateAuthority)]
 		private void RPC_SetMatchReadyStatus(NetworkBool status)
@@ -185,7 +186,7 @@ namespace rwby
 		{
 			p = ReInput.players.GetPlayer(controllerID);
 		}
-		
+
 		/*
 		[Rpc(RpcSources.StateAuthority, RpcTargets.All)]
 		public void RPC_SetPlayer(NetworkObject player)
@@ -241,27 +242,36 @@ namespace rwby
 
 		[Networked] public NetworkInputData latestConfirmedInput { get; set; }
 
+		[Networked, Capacity(10)] public NetworkArray<NetworkInputData> inputBuffer { get; set; }
+		[Networked] public int inputBufferPosition { get; set; }
+
+		public int setInputBuffer = 3;
+		[NonSerialized] private int inputBufferCapacity = 10;
+
 		public override void FixedUpdateNetwork()
 		{
+
 			// Get our input struct and act accordingly. This method will only return data if we
 			// have Input or State Authority - meaning on the controlling player or the server.
 			if (GetInput(out NetworkInputData input))
 			{
-				latestConfirmedInput = input;
-
-				if (inMan == null)
-				{
-					if (ClientFighter != null)
-					{
-						inMan = ClientFighter.GetComponent<FighterInputManager>();
-					}
-					else
-					{
-						return;
-					}
-				}
-				inMan.FeedInput(networkManager.FusionLauncher.NetworkRunner.Simulation.Tick, input);
+				inputBuffer.Set((inputBufferPosition+setInputBuffer)%(inputBufferCapacity), input);
 			}
+
+			if (inMan == null)
+			{
+				if (ClientFighter != null)
+				{
+					inMan = ClientFighter.GetComponent<FighterInputManager>();
+				}
+				else
+				{
+					return;
+				}
+			}
+
+			inMan.FeedInput(networkManager.FusionLauncher.NetworkRunner.Simulation.Tick, inputBuffer[(inputBufferPosition)%inputBufferCapacity]);
+			inputBufferPosition++;
 		}
 
         public void OnPlayerJoined(NetworkRunner runner, PlayerRef player) { }

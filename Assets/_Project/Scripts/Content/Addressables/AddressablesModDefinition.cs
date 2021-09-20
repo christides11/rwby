@@ -28,6 +28,7 @@ namespace rwby
         [SerializeField] private List<IdentifierAssetReferenceRelation<IGameModeDefinition>> gamemodeRefs = new List<IdentifierAssetReferenceRelation<IGameModeDefinition>>();
         [SerializeField] private List<IdentifierAssetReferenceRelation<IGameModeComponentDefinition>> gamemodeComponentRefs = new List<IdentifierAssetReferenceRelation<IGameModeComponentDefinition>>();
         [SerializeField] private List<IdentifierAssetReferenceRelation<IMapDefinition>> mapRefs = new List<IdentifierAssetReferenceRelation<IMapDefinition>>();
+        [SerializeField] private List<IdentifierAssetReferenceRelation<ISoundbankDefinition>> soundbankRefs = new List<IdentifierAssetReferenceRelation<ISoundbankDefinition>>();
 
         [NonSerialized] private Dictionary<string, AssetReferenceT<IFighterDefinition>> fighterReferences = new Dictionary<string, AssetReferenceT<IFighterDefinition>>();
         [NonSerialized] private Dictionary<string, OperationResult<IFighterDefinition>> fighterDefinitions
@@ -45,12 +46,17 @@ namespace rwby
         [NonSerialized] private Dictionary<string, OperationResult<IMapDefinition>> mapDefinitions
             = new Dictionary<string, OperationResult<IMapDefinition>>();
 
+        [NonSerialized] private Dictionary<string, AssetReferenceT<ISoundbankDefinition>> soundbankReferences = new Dictionary<string, AssetReferenceT<ISoundbankDefinition>>();
+        [NonSerialized] private Dictionary<string, OperationResult<ISoundbankDefinition>> soundbankDefinitions
+            = new Dictionary<string, OperationResult<ISoundbankDefinition>>();
+
         public void OnEnable()
         {
             fighterReferences.Clear();
             gamemodeReferences.Clear();
             gamemodeComponentReferences.Clear();
             mapReferences.Clear();
+            soundbankReferences.Clear();
             foreach (IdentifierAssetReferenceRelation<IFighterDefinition> a in fighterRefs)
             {
                 fighterReferences.Add(a.identifier, a.asset);
@@ -67,6 +73,10 @@ namespace rwby
             {
                 mapReferences.Add(a.identifier, a.asset);
             }
+            foreach (IdentifierAssetReferenceRelation<ISoundbankDefinition> a in soundbankRefs)
+            {
+                soundbankReferences.Add(a.identifier, a.asset);
+            }
         }
 
         #region Content
@@ -82,6 +92,8 @@ namespace rwby
                     return gamemodeComponentReferences.ContainsKey(contentIdentfier) ? true : false;
                 case ContentType.Map:
                     return mapReferences.ContainsKey(contentIdentfier) ? true : false;
+                case ContentType.Soundbank:
+                    return soundbankReferences.ContainsKey(contentIdentfier) ? true : false;
                 default:
                     return false;
             }
@@ -104,6 +116,8 @@ namespace rwby
                     return await LoadContentDefinitions(gamemodeComponentReferences, gamemodeComponentDefinitions);
                 case ContentType.Map:
                     return await LoadContentDefinitions(mapReferences, mapDefinitions);
+                case ContentType.Soundbank:
+                    return await LoadContentDefinitions(soundbankReferences, soundbankDefinitions);
             }
             return false;
         } 
@@ -126,6 +140,8 @@ namespace rwby
                     return await LoadContentDefinition(gamemodeComponentReferences, gamemodeComponentDefinitions, contentIdentifier);
                 case ContentType.Map:
                     return await LoadContentDefinition(mapReferences, mapDefinitions, contentIdentifier);
+                case ContentType.Soundbank:
+                    return await LoadContentDefinition(soundbankReferences, soundbankDefinitions, contentIdentifier);
                 default:
                     return false;
             }
@@ -143,6 +159,8 @@ namespace rwby
                     return GetContentDefinitions(gamemodeComponentReferences, gamemodeComponentDefinitions);
                 case ContentType.Map:
                     return GetContentDefinitions(mapReferences, mapDefinitions);
+                case ContentType.Soundbank:
+                    return GetContentDefinitions(soundbankReferences, soundbankDefinitions);
                 default:
                     return null;
             }
@@ -166,6 +184,8 @@ namespace rwby
                     return GetContentDefinition(gamemodeComponentDefinitions, contentIdentifier);
                 case ContentType.Map:
                     return GetContentDefinition(mapDefinitions, contentIdentifier);
+                case ContentType.Soundbank:
+                    return GetContentDefinition(soundbankDefinitions, contentIdentifier);
                 default:
                     return null;
             }
@@ -191,6 +211,9 @@ namespace rwby
                 case ContentType.Map:
                     UnloadContentDefinitions(mapReferences, mapDefinitions);
                     break;
+                case ContentType.Soundbank:
+                    UnloadContentDefinitions(soundbankReferences, soundbankDefinitions);
+                    break;
             }
         }
 
@@ -214,6 +237,9 @@ namespace rwby
                     break;
                 case ContentType.Map:
                     UnloadContentDefinition(mapReferences, mapDefinitions, contentIdentifier);
+                    break;
+                case ContentType.Soundbank:
+                    UnloadContentDefinition(soundbankReferences, soundbankDefinitions, contentIdentifier);
                     break;
             }
         }
@@ -249,6 +275,7 @@ namespace rwby
             // Content doesn't exist.
             if (references.ContainsKey(contentIdentifier) == false)
             {
+                Debug.LogError($"Error loading {contentIdentifier}: Content does not exist.");
                 return false;
             }
             // Content already loaded.
@@ -258,6 +285,7 @@ namespace rwby
                 {
                     return true;
                 }
+                Debug.LogError($"Error loading {contentIdentifier}: content is currently in progress of loading.");
                 return false;
             }
             definitions.Add(contentIdentifier, new OperationResult<T>());
@@ -268,6 +296,7 @@ namespace rwby
                 definitions[contentIdentifier] = result;
                 return true;
             }
+            Debug.LogError($"Error loading {contentIdentifier}: could not load.");
             definitions.Remove(contentIdentifier);
             return false;
         }

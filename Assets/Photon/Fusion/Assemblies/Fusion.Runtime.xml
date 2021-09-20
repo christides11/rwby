@@ -2446,9 +2446,11 @@
             Hit object source (PhysX or Fusion Hitboxes).
             </summary>
         </member>
-        <member name="F:Fusion.LagCompensatedHit.Object">
+        <member name="F:Fusion.LagCompensatedHit.GameObject">
             <summary>
             The Unity Game Object that was hit. Its data is not lag compensated.
+            This is either the <see cref="F:Fusion.LagCompensatedHit.Hitbox"/>'s or the <see cref="F:Fusion.LagCompensatedHit.Collider"/>'s gameObject,
+            depending on the object hit being a lag-compensated Hitbox or a regular Unity collider, respectively.
             </summary>
         </member>
         <member name="F:Fusion.LagCompensatedHit.Normal">

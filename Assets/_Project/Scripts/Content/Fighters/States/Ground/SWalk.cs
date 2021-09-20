@@ -17,6 +17,8 @@ namespace rwby.fighters.states
             manager.ResetVariablesOnGround();
         }
 
+        string c = "global";
+        string s = "foot1";
         public override void OnUpdate()
         {
             manager.HurtboxManager.CreateHurtboxes(0, 0);
@@ -26,6 +28,11 @@ namespace rwby.fighters.states
 
             manager.PhysicsManager.HandleMovement(manager.StatManager.WalkBaseAccel, manager.StatManager.WalkAcceleration,
                 manager.StatManager.GroundFriction, manager.StatManager.WalkMinSpeed, manager.StatManager.WalkMaxSpeed, manager.StatManager.WalkAccelFromDot);
+
+            if(manager.StateManager.CurrentStateFrame % 20 == 0)
+            {
+                manager.SoundbankContainer.PlaySound(c, s);
+            }
 
             if (CheckInterrupt() == false)
             {
