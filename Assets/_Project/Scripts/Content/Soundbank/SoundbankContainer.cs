@@ -28,18 +28,9 @@ namespace rwby
             int soundbankIndex = soundbankMap[sndbnkName];
             int soundIndex = soundbanks[soundbankIndex].SoundMap[soundName];
 
-            if (Object.HasStateAuthority || Object.HasInputAuthority)
-            {
-                var key = new NetworkObjectPredictionKey { Byte0 = (byte)Runner.Simulation.Tick, Byte1 = (byte)Object.InputAuthority.PlayerId, Byte2 = (byte)soundbankIndex, Byte3 = (byte)soundIndex };
-                NetworkedAudioClip no = Runner.Spawn(audioSourcePrefab, transform.position, Quaternion.identity, null, null, key);
-                no.PlaySound(this, soundbankIndex, soundIndex);
-            }else if (Object.IsProxy)
-            {
-                if (Runner.IsResimulation == false)
-                {
-                    Debug.Log("Proxy play sound.");
-                }
-            }
+            var key = new NetworkObjectPredictionKey { Byte0 = (byte)Runner.Simulation.Tick, Byte1 = (byte)Object.InputAuthority.PlayerId, Byte2 = (byte)soundbankIndex, Byte3 = (byte)soundIndex };
+            NetworkedAudioClip no = Runner.Spawn(audioSourcePrefab, transform.position, Quaternion.identity, null, null, key);
+            no.PlaySound(this, soundbankIndex, soundIndex);
         }
     }
 }

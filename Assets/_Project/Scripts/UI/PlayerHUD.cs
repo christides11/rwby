@@ -15,14 +15,21 @@ namespace rwby
         [SerializeField] protected TextMeshProUGUI gravityText;
         [SerializeField] protected TextMeshProUGUI rttText;
 
+        protected MovingAverage rttMovingAverage = new MovingAverage(60);
+
         public override void Update()
         {
             if (client.inMan == null) return;
-
             stateText.text = client.inMan.manager.StateManager.GetCurrentStateName();
             speedText.text = client.inMan.manager.PhysicsManager.forceMovement.magnitude.ToString("F1");
             gravityText.text = client.inMan.manager.PhysicsManager.forceGravity.ToString("F1");
-            rttText.text = (client.Runner.GetPlayerRtt(client.Runner.LocalPlayer) * 1000).ToString("F0");
+        }
+
+        private void FixedUpdate()
+        {
+            if (client == null) return;
+            rttMovingAverage.ComputeAverage((int)(client.Runner.GetPlayerRtt(client.Runner.LocalPlayer) * 1000));
+            rttText.text = $"{rttMovingAverage.Average.ToString("F0")} +/- {rttMovingAverage.StandardDeviation().ToString("F0")}";
         }
     }
 }

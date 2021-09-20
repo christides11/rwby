@@ -90,7 +90,6 @@ namespace rwby
             {
                 audioSource.clip = soundbankContainer.soundbanks[soundbankIndex].Sounds[soundIndex].clip;
                 audioSource.Play();
-                //audioSource.PlayOneShot(soundbankContainer.soundbanks[soundbankIndex].Sounds[soundIndex].clip);
             }
         }
 
@@ -115,19 +114,6 @@ namespace rwby
                 return;
             }
             soundTick++;
-
-            if(audioSource.time == 0)
-            {
-                //Debug.Log("NOT PLAYING!!!!");
-                //audioSource.Play();
-                //audioSource.PlayOneShot();
-            }
-            /*
-            if (Mathf.Abs(audioSource.time - (soundTick * Runner.DeltaTime)) > Runner.DeltaTime)
-            {
-                audioSource.PlayOneShot(soundbankContainer.soundbanks[soundbankIndex].Sounds[soundIndex].clip);
-                audioSource.time = soundTick * Runner.DeltaTime;
-            }*/
 
             if(soundTick >= 300)
             {
@@ -158,7 +144,6 @@ namespace rwby
 
         public void PredictedSpawnFailed()
         {
-            Debug.Log("Failed prediction.");
             Runner.Despawn(Object, true);
         }
     }
