@@ -86,7 +86,6 @@ namespace rwby
         public float hitstopShakeDistance = 0.5f;
         public int hitstopDir = 1;
         public int hitstopShakeFrames = 1;
-        public bool hitstopShake = true;
 
         public override void FixedUpdateNetwork()
         {
@@ -94,15 +93,7 @@ namespace rwby
 
             visualTransform.gameObject.SetActive(Visible);
 
-            // Shake during hitstop.
-            if (hitstopShake
-                && CombatManager.HitStop > 0
-                && CombatManager.HitStun > 0
-                && CombatManager.HitStop % hitstopShakeFrames == 0)
-            {
-                physicsManager.SetPosition(transform.position + (transform.forward * hitstopShakeDistance * hitstopDir), false);
-                hitstopDir *= -1;
-            }
+            HitstopShake();
 
             HandleLockon();
 
@@ -118,8 +109,39 @@ namespace rwby
             }
             else
             {
-                CombatManager.HitStop--;
+                CombatManager.hitstopCounter++;
                 PhysicsManager.Freeze();
+                if(CombatManager.hitstopCounter == CombatManager.HitStop)
+                {
+                    CombatManager.HitStop = 0;
+                    currentShakeDirection = 0;
+                }
+            }
+        }
+
+        public Vector3[] shakeDirs;
+        [Networked] public sbyte currentShakeDirection { get; set; }
+
+        protected void HitstopShake()
+        {
+            // Shake during hitstop.
+            if (CombatManager.HitStop != 0
+                && CombatManager.HitStun > 0
+                && CombatManager.HitStop % hitstopShakeFrames == 0)
+            {
+                Vector3 dir = shakeDirs[currentShakeDirection].z * transform.forward
+                    + shakeDirs[currentShakeDirection].x * transform.right;
+                physicsManager.SetPosition(transform.position + (dir * hitstopShakeDistance * hitstopDir), true);
+                hitstopDir *= -1;
+                
+                if(hitstopDir == 1)
+                {
+                    currentShakeDirection++;
+                    if(currentShakeDirection >= shakeDirs.Length)
+                    {
+                        currentShakeDirection = 0;
+                    }
+                }
             }
         }
 

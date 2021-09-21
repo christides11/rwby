@@ -58,6 +58,8 @@ namespace rwby
         [Networked] public float hitstunFriction { get; set; }
         [Networked] public float hitstunGravity { get; set; }
 
+        [Networked] public int hitstopCounter { get; set; }
+
         public virtual void CLateUpdate()
         {
 
@@ -70,6 +72,7 @@ namespace rwby
 
         public virtual void SetHitStop(int value)
         {
+            hitstopCounter = 0;
             HitStop = value;
         }
 
@@ -80,6 +83,7 @@ namespace rwby
 
         public virtual void AddHitStop(int value)
         {
+            hitstopCounter = 0;
             HitStop += value;
         }
 

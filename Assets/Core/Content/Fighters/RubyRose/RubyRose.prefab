@@ -169,10 +169,15 @@ MonoBehaviour:
     m_Bits: 8
   lockonMaxDistance: 20
   lockonFudging: 0.1
-  hitstopShakeDistance: 0.02
+  hitstopShakeDistance: 0.06
   hitstopDir: 1
   hitstopShakeFrames: 1
   hitstopShake: 1
+  shakeDirs:
+  - {x: 0, y: 0, z: 1}
+  - {x: -1, y: 0, z: 0}
+  - {x: 0, y: 0, z: -1}
+  - {x: 1, y: 0, z: 0}
   wallLayerMask:
     serializedVersion: 2
     m_Bits: 8
@@ -187,6 +192,7 @@ MonoBehaviour:
   _currentAerialDash: 0
   _apexTime: 0
   _gravity: 0
+  _currentShakeDirection: 0
   teleportHeight: 2
   teleportDist: 2
   teleportGravity: -10
@@ -230,6 +236,7 @@ MonoBehaviour:
   _hitstunHoldVelocityTime: 0
   _hitstunFriction: 0
   _hitstunGravity: 0
+  _hitstopCounter: 0
 --- !u!114 &8508573390081789594
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1253,6 +1260,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: RRModel
       objectReference: {fileID: 0}
+    - target: {fileID: 3242034372189480202, guid: 8b237060e82c7e04e848e82fb55df346, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: ea639b62bce73294bbca72703a4a24ce, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 8b237060e82c7e04e848e82fb55df346, type: 3}
 --- !u!4 &8283802794803722692 stripped
