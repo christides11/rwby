@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 4836978162100010341}
   - component: {fileID: 4658355523066924356}
   - component: {fileID: 950948419232728986}
+  - component: {fileID: 6423316455996810596}
   m_Layer: 0
   m_Name: VirtualCamera_Follow
   m_TagString: Untagged
@@ -112,6 +113,45 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   input: {x: 0, y: 0}
+--- !u!114 &6423316455996810596
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1366373497692758267}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cb5a814255fef6e4eb24d3bc23f8eca3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  virtualCamera: {fileID: 4836978162100010341}
+  perlin: {fileID: 0}
+  shakeIntensity: 0
+  shakeCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0.055894308
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: -1.8089293
+      outSlope: -1.8089293
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.033536613
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!1 &7399488607672990224
 GameObject:
   m_ObjectHideFlags: 0
@@ -124,6 +164,7 @@ GameObject:
   - component: {fileID: 8720698590452217187}
   - component: {fileID: 2520366439107754039}
   - component: {fileID: 734704842440229473}
+  - component: {fileID: 6758085784923742164}
   m_Layer: 0
   m_Name: cm
   m_TagString: Untagged
@@ -262,3 +303,20 @@ MonoBehaviour:
     m_LegacyHeadingDefinition: -1
     m_LegacyVelocityFilterStrength: -1
   m_ApplyBeforeBody: 0
+--- !u!114 &6758085784923742164
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7399488607672990224}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 68bb026fafb42b14791938953eaace77, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_NoiseProfile: {fileID: 11400000, guid: a1c9179827624e34fbbd6146425d856b, type: 2}
+  m_PivotOffset: {x: 0, y: 0, z: 0}
+  m_AmplitudeGain: 0
+  m_FrequencyGain: 1
+  mNoiseOffsets: {x: 253.59982, y: 179.39438, z: 41.731934}

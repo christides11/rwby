@@ -19,6 +19,9 @@ namespace rwby
         public Vector3 blockForce;
         public Vector3 blockForceAir;
 
+        [Header("Camera Shake")]
+        public float shakeValue;
+
         public HitInfo() : base()
         {
 

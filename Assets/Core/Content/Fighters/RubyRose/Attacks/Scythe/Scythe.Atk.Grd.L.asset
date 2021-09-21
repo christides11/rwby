@@ -35,7 +35,7 @@ MonoBehaviour:
       data:
         ID: 0
         activeFramesStart: 6
-        activeFramesEnd: 9
+        activeFramesEnd: 6
         boxes:
         - id: 5
         attachToEntity: 1
@@ -158,9 +158,9 @@ MonoBehaviour:
         autoLink: 0
         forceType: 0
         forceRelation: 0
-        attackerHitstop: 20
-        hitstop: 20
-        hitstun: 25
+        attackerHitstop: 6
+        hitstop: 6
+        hitstun: 20
         airOnly: 0
         groundOnly: 0
         causesTumble: 0
@@ -186,6 +186,7 @@ MonoBehaviour:
         blockstun: 0
         blockForce: {x: 0, y: 0, z: 0}
         blockForceAir: {x: 0, y: 0, z: 0}
+        shakeValue: 0.15
     00000007:
       type: {class: SoftLockOn, ns: rwby.Combat.AttackEvents, asm: rwby.csharp}
       data:
@@ -204,6 +205,5 @@ MonoBehaviour:
     0000000A:
       type: {class: PlaySFX, ns: rwby.Combat.AttackEvents, asm: rwby.csharp}
       data:
-        aClipPrefab: {fileID: 7106954603056005566, guid: ddaaed784009a95478cc139acb2d4850, type: 3}
         sndbkName: global
         sfxName: swingb

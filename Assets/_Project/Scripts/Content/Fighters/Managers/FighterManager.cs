@@ -83,20 +83,26 @@ namespace rwby
             SetupStates();
         }
 
+        public float hitstopShakeDistance = 0.5f;
+        public int hitstopDir = 1;
+        public int hitstopShakeFrames = 1;
+        public bool hitstopShake = true;
+
         public override void FixedUpdateNetwork()
         {
             base.FixedUpdateNetwork();
 
             visualTransform.gameObject.SetActive(Visible);
 
-            // Shake during hitstop (only when you got hit by an attack).
-            /*if (CombatManager.HitStop > 0
-                && CombatManager.HitStun > 0)
+            // Shake during hitstop.
+            if (hitstopShake
+                && CombatManager.HitStop > 0
+                && CombatManager.HitStun > 0
+                && CombatManager.HitStop % hitstopShakeFrames == 0)
             {
-                //Vector3 pos = visual.transform.localPosition;
-                //pos.x = (Mathf.Sign(pos.x) > 0 ? -1 : 0) * .02f;
-                //visual.transform.localPosition = pos;
-            }*/
+                physicsManager.SetPosition(transform.position + (transform.forward * hitstopShakeDistance * hitstopDir), false);
+                hitstopDir *= -1;
+            }
 
             HandleLockon();
 

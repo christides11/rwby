@@ -19,6 +19,8 @@ namespace rwby
 
         public Camera Cam { get { return cam; } }
 
+        public static PlayerCamera instance;
+
         [Header("References")]
         [SerializeField] private Camera cam;
         [SerializeField] private ThirdPersonCamera thirdPersonaCamera;
@@ -53,6 +55,7 @@ namespace rwby
 
         void Awake()
         {
+            instance = this;
             currentCameraState = CameraState.THIRDPERSON;
             p = ReInput.players.GetPlayer(0);
             thirdPersonaCamera.SetCameraState(ThirdPersonCamera.CamStates.Off);
@@ -204,6 +207,11 @@ namespace rwby
         public void SetPosition(Vector3 position)
         {
             transform.position = position;
+        }
+
+        public void ShakeCamera(float intensity, float time)
+        {
+            freeLook.GetComponent<CinemachineShake>().ShakeCamera(intensity, time);
         }
     }
 }

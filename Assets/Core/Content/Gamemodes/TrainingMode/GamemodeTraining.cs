@@ -55,9 +55,9 @@ namespace rwby
             }
 
             // Spawn BOT
-            //IFighterDefinition botDefinition = (IFighterDefinition)ContentManager.instance.GetContentDefinition(ContentType.Fighter, botReference);
-            //FighterInputManager botFim = NetworkManager.singleton.FusionLauncher.NetworkRunner.Spawn(botDefinition.GetFighter().GetComponent<FighterInputManager>(), new Vector3(0, 0, 5), Quaternion.identity, null);
-            //botFim.gameObject.name = $"Bot";
+            IFighterDefinition botDefinition = (IFighterDefinition)ContentManager.instance.GetContentDefinition(ContentType.Fighter, botReference);
+            FighterInputManager botFim = NetworkManager.singleton.FusionLauncher.NetworkRunner.Spawn(botDefinition.GetFighter().GetComponent<FighterInputManager>(), new Vector3(0, 0, 5), Quaternion.identity, null);
+            botFim.gameObject.name = $"Bot";
 
             //Debug.Log("Started gamemode.");
         }

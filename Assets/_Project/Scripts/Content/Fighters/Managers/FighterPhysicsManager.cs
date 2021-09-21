@@ -33,9 +33,9 @@ namespace rwby
             rotationDir = Vector3.zero;
         }
 
-        public void SetPosition(Vector3 position)
+        public void SetPosition(Vector3 position, bool bypassInterpolation = true)
         {
-            kCC.Motor.SetPosition(position, true);
+            kCC.Motor.SetPosition(position, bypassInterpolation);
         }
 
         public void SetRotation(Vector3 rot)

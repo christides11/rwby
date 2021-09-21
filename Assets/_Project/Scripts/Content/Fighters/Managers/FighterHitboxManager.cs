@@ -1,6 +1,5 @@
 using Fusion;
 using HnSF.Combat;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -98,6 +97,10 @@ namespace rwby
             {
                 case HitReactionType.HIT:
                     combatManager.SetHitStop((hitboxGroup.hitboxHitInfo as HitInfo).attackerHitstop);
+                    if (Runner.IsResimulation == false && Object.HasInputAuthority == true)
+                    {
+                        PlayerCamera.instance.ShakeCamera((hitboxGroup.hitboxHitInfo as HitInfo).shakeValue, (hitboxGroup.hitboxHitInfo as HitInfo).hitstop * Runner.DeltaTime);
+                    }
                     break;
             }
         }

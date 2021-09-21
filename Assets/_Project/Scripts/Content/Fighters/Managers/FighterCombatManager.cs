@@ -531,6 +531,7 @@ namespace rwby
                 }
             }*/
 
+            manager.PhysicsManager.SetRotation((hurtInfo.forward * -1).normalized);
             // Got hit, apply stun, damage, and forces.
             hitReaction.reaction = HitReactionType.HIT;
             SetHitStop(hitInfo.hitstop);
