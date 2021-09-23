@@ -9,12 +9,14 @@ namespace rwby
     {
         public HurtboxGroup hurtboxGroupHit;
         public Vector3 attackerVelocity;
+        public Vector3 hitPosition;
 
-        public HurtInfo(HitInfo hitInfo, HurtboxGroup hurtboxGroupHit, Vector3 center, Vector3 forward, Vector3 right, Vector3 attackerVelocity)
+        public HurtInfo(HitInfo hitInfo, HurtboxGroup hurtboxGroupHit, Vector3 center, Vector3 forward, Vector3 right, Vector3 attackerVelocity, Vector3 hitPosition)
             : base(hitInfo, center, forward, right)
         {
             this.attackerVelocity = attackerVelocity;
             this.hurtboxGroupHit = hurtboxGroupHit;
+            this.hitPosition = hitPosition;
         }
     }
 }

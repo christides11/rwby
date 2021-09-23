@@ -2,6 +2,51 @@
 
 ## Beta Nightly
 
+### Build 297 (Sep 22, 2021)
+
+**Breaking Changes**
+
+- Due to changes in prefab pipeline, prefabs need to be reimported. This can be done with `Fusion/Rebuild Object Table`
+
+**What's New**
+
+- `[NetworkPrefab]` attribute. When added to a `NetworkObject` field, the object picker will only show prefabs with `FusionPrefab` label.  
+Remove: `NetworkProjectConfig.PrefabSources`: prefab source information is now stored in config's hidden nested assets and is generated based on prefabs marked with `FusionPrefab` label. This means that serialized config is now a lot smaller as it does not contain prefab information directly
+
+**Changes**
+
+- Prefabs with `NetworkObject` script are now labeled with `FusionPrefab` label during import
+- `NetworkPrefabRef` property drawer: object picker shows prefabs with `FusionPrefab` label
+- Config's initial `PrefabAssetsContainerPath` value to an empty string. This means that `NetworkPrefabAsset` (a reference-based alternative to `NetworkPrefabRef`/`NetworkObject` references) generation is now disabled by default. Existing configs are not affected
+- `NetworkPrefabTable.TryAdd` now accepts a guid and an `INetworkPrefabSource` instance. If prefabs need to be added at runtime, `NetworkPrefabSourceStatic` and `NetworkPrefabSourceUnityBase` subclasses can be used as `INetworkPrefabSource` implementations
+- NetworkPrefabAssets are disabled by default (they need `PrefabAssetsContainerPath` field set in `NetworkProjectConfig` inspector)
+
+**Bug Fixes**
+
+- Fixed: Config warning for initial weaving
+
+### Build 296 (Sep 22, 2021)
+
+**Bug Fixes**
+
+- Fixed: ILWeaver error when `NetworkBehaviour` subclass from another assembly was used in a `[Networked]` property
+
+### Build 294 (Sep 21, 2021)
+
+**What's New**
+
+- Fusion Matchmaking API
+- SessionInfo class with all major Session related information
+- NetworkRunner.StartGame(GameMode, SessionInfo) to join an specific Session
+- NetworkRunner.JoinSessionLobby(SessionLobby, LobbyName) to join a Lobby
+- INetworkRunnerCallbacks.OnSessionListUpdated to receive Session Lobby list updates
+- Several new Shutdown Reasons for better handling of error cases
+
+**Changes**
+
+- NetworkRunner.GameInfo renamed to NetworkRunner.SessionInfo
+- NetworkRunner.StartGame with Custom Params and Custom Lobby
+
 ### Build 292 (Sep 17, 2021)
 
 **Bug Fixes**

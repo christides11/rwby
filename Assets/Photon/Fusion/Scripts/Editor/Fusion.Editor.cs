@@ -18,42 +18,20 @@ namespace Fusion.Editor {
 #endregion
 
 
-#region Assets/Photon/Fusion/Scripts/Editor/AssetPipeline/INetworkPrefabLoadInfoFactory.cs
-
-﻿// removed
-
-#endregion
-
-
 #region Assets/Photon/Fusion/Scripts/Editor/AssetPipeline/INetworkPrefabSourceFactory.cs
 
 ﻿namespace Fusion.Editor {
   using System;
 
   public interface INetworkPrefabSourceFactory {
+    int Order { get; }
     Type SourceType { get; }
 
-    int Order { get; }
-
-    NetworkPrefabSource.EntryBase TryCreateEntry(NetworkObject prefab);
-    bool TryResolve(NetworkPrefabSource.EntryBase entry, out NetworkObject prefab);
+    NetworkPrefabSourceUnityBase TryCreate(string assetPath);
+    UnityEngine.GameObject EditorResolveSource(NetworkPrefabSourceUnityBase prefabAsset);
   }
 }
 
-
-#endregion
-
-
-#region Assets/Photon/Fusion/Scripts/Editor/AssetPipeline/NetworkDefaultPrefabLoadInfoFactory.cs
-
-﻿// removed
-
-#endregion
-
-
-#region Assets/Photon/Fusion/Scripts/Editor/AssetPipeline/NetworkPrefabLoadInfoFactory.cs
-
-﻿// removed
 
 #endregion
 
@@ -64,7 +42,7 @@ namespace Fusion.Editor {
   using System;
   using System.Linq;
 
-  public static class NetworkPrefabSourceFactory {
+  internal static class NetworkPrefabSourceFactory {
 
     private static readonly Lazy<INetworkPrefabSourceFactory[]> _factories = new Lazy<INetworkPrefabSourceFactory[]>(() => {
       return UnityEditor.TypeCache.GetTypesDerivedFrom<INetworkPrefabSourceFactory>()
@@ -73,25 +51,39 @@ namespace Fusion.Editor {
         .ToArray();
     });
 
-    public static (NetworkPrefabSource.EntryBase, Type) Create(NetworkObject prefab) {
+    public static NetworkPrefabSourceUnityBase Create(string assetPath) {
       foreach (var factory in _factories.Value) {
-        var info = factory.TryCreateEntry(prefab);
-        if (info != null) {
-          return (info, factory.SourceType);
+        var source = factory.TryCreate(assetPath);
+        if (source != null) {
+          if (source.GetType() != factory.SourceType) {
+            throw new InvalidOperationException($"Factory {factory} is expected to return {factory.SourceType}, returned {source.GetType()} instead");
+          }
+          if (source is INetworkPrefabSource == false) {
+            throw new InvalidOperationException($"Type {source.GetType()} does not implement {nameof(INetworkPrefabSource)}");
+          }
+          return source;
         }
       }
 
-      throw new InvalidOperationException($"No factory could create info for prefab {prefab}");
+      throw new InvalidOperationException($"No factory could create info for prefab {assetPath}");
     }
 
-    public static NetworkObject Resolve(NetworkPrefabSource.EntryBase entry) {
+    public static NetworkObject ResolveOrThrow(NetworkPrefabSourceUnityBase source) {
       foreach (var factory in _factories.Value) {
-        if (factory.TryResolve(entry, out var prefab)) {
-          return prefab;
+        if (factory.SourceType == source.GetType()) {
+          var prefab = factory.EditorResolveSource(source);
+          if (prefab == null) {
+            throw new InvalidOperationException($"Factory {factory} returned null for {source}");
+          }
+          var networkObject = prefab.GetComponent<NetworkObject>();
+          if (networkObject == null) {
+            throw new InvalidOperationException($"Prefab {prefab} does not contain {nameof(NetworkObject)} component");
+          }
+          return networkObject;
         }
       }
 
-      throw new InvalidOperationException($"No factory could resolve {entry}");
+      throw new InvalidOperationException($"No factory could resolve {source}");
     }
   }
 }
@@ -100,47 +92,34 @@ namespace Fusion.Editor {
 #endregion
 
 
-#region Assets/Photon/Fusion/Scripts/Editor/AssetPipeline/NetworkPrefabSourceFactoryResources.cs
+#region Assets/Photon/Fusion/Scripts/Editor/AssetPipeline/NetworkPrefabSourceFactoryResource.cs
 
 ﻿namespace Fusion.Editor {
   using System;
   using UnityEditor;
   using UnityEngine;
 
-  public class NetworkPrefabSourceFactoryResources : INetworkPrefabSourceFactory {
+  public class NetworkPrefabAssetFactoryResource: INetworkPrefabSourceFactory {
 
     public const int DefaultOrder = 1000;
 
-    Type INetworkPrefabSourceFactory.SourceType => typeof(NetworkPrefabSourceResources);
+    Type INetworkPrefabSourceFactory.SourceType => typeof(NetworkPrefabSourceUnityResource);
 
     int INetworkPrefabSourceFactory.Order => DefaultOrder;
 
-    bool INetworkPrefabSourceFactory.TryResolve(NetworkPrefabSource.EntryBase entry, out NetworkObject prefab) {
-      if (entry is NetworkPrefabSourceResources.Entry resource) {
-        var go = Resources.Load<GameObject>(resource.ResourcePath);
-        if (go) {
-          prefab = go.GetComponent<NetworkObject>();
-        } else {
-          prefab = null;
-        }
-        return true;
+    NetworkPrefabSourceUnityBase INetworkPrefabSourceFactory.TryCreate(string assetPath) {
+      if (PathUtils.MakeRelativeToFolder(assetPath, "Resources", out var resourcesPath)) {
+        var result = ScriptableObject.CreateInstance<NetworkPrefabSourceUnityResource>();
+        result.ResourcePath = PathUtils.GetPathWithoutExtension(resourcesPath);
+        return result;
       } else {
-        prefab = null;
-        return false;
+        return null;
       }
     }
 
-    NetworkPrefabSource.EntryBase INetworkPrefabSourceFactory.TryCreateEntry(NetworkObject prefab) {
-      var assetPath = AssetDatabase.GetAssetPath(prefab.gameObject);
-      Debug.Assert(AssetDatabase.IsMainAsset(prefab.gameObject));
-
-      if (PathUtils.MakeRelativeToFolder(assetPath, "Resources", out var resourcesPath)) {
-        return new NetworkPrefabSourceResources.Entry() {
-          ResourcePath = PathUtils.GetPathWithoutExtension(resourcesPath)
-        };
-      }
-
-      return null;
+    GameObject INetworkPrefabSourceFactory.EditorResolveSource(NetworkPrefabSourceUnityBase prefabAsset) {
+      var resource = (NetworkPrefabSourceUnityResource)prefabAsset;
+      return Resources.Load<GameObject>(resource.ResourcePath);
     }
   }
 }
@@ -153,356 +132,35 @@ namespace Fusion.Editor {
 
 ﻿namespace Fusion.Editor {
   using System;
+  using UnityEditor;
+  using UnityEngine;
 
-  public class NetworkPrefabSourceStaticFactory : INetworkPrefabSourceFactory {
+  public class NetworkPrefabAssetFactoryStatic : INetworkPrefabSourceFactory {
 
-    public const int DefaultOrder = 1000;
+    public const int DefaultOrder = 2000;
 
-    Type INetworkPrefabSourceFactory.SourceType => typeof(NetworkPrefabSourceStatic);
+    Type INetworkPrefabSourceFactory.SourceType => typeof(NetworkPrefabSourceUnityStatic);
 
     int INetworkPrefabSourceFactory.Order => DefaultOrder;
 
-    bool INetworkPrefabSourceFactory.TryResolve(NetworkPrefabSource.EntryBase entry, out NetworkObject prefab) {
-      if (entry is NetworkPrefabSourceStatic.Entry staticEntry) {
-        prefab = staticEntry.Prefab;
-        return true;
+    NetworkPrefabSourceUnityBase INetworkPrefabSourceFactory.TryCreate(string assetPath) {
+      var gameObject = AssetDatabase.LoadAssetAtPath<GameObject>(assetPath);
+      if (gameObject == null) {
+        throw new InvalidOperationException($"Unable to load {assetPath}");
       }
-      prefab = null;
-      return false;
+
+      var networkObject = gameObject.GetComponent<NetworkObject>();
+      if (networkObject == null) {
+        throw new InvalidOperationException($"Unable to get {nameof(NetworkObject)} from {assetPath}");
+      }
+
+      var result = ScriptableObject.CreateInstance<NetworkPrefabSourceUnityStatic>();
+      result.PrefabReference = gameObject;
+      return result;
     }
 
-    NetworkPrefabSource.EntryBase INetworkPrefabSourceFactory.TryCreateEntry(NetworkObject prefab) {
-      return new NetworkPrefabSourceStatic.Entry() {
-        Prefab = prefab
-      };
-    }
-  }
-}
-
-
-#endregion
-
-
-#region Assets/Photon/Fusion/Scripts/Editor/AssetPipeline/NetworkPrefabSourceUtils.cs
-
-namespace Fusion.Editor {
-  using System;
-  using System.Collections.Generic;
-  using System.Linq;
-  using UnityEditor;
-  using UnityEngine;
-
-  public static partial class NetworkPrefabSourceUtils {
-
-    private static IEnumerable<NetworkPrefabSource> Sources {
-      get {
-        var config = NetworkProjectConfig.Global;
-        foreach (var source in config.PrefabSources) {
-          yield return source;
-        }
-      }
-    }
-
-    static partial void AddOrUpdatePrefabPartial(NetworkObject prefab, ref bool dirty);
-    static partial void RemovePrefabPartial(NetworkObjectGuid prefab, ref bool dirty);
-    static partial void RebuildPartial();
-
-    public static bool AddOrUpdatePrefab(NetworkObject prefab) {
-      bool dirty = false;
-
-      var (sourceEntry, sourceType) = NetworkPrefabSourceFactory.Create(prefab);
-      sourceEntry.PrefabGuid = prefab.NetworkGuid;
-
-      NetworkPrefabSource targetSource = null;
-
-      // remove from any other source this prefab might be in
-      foreach (var source in Sources) {
-        if (source.GetType() != sourceType) {
-          dirty |= source.Remove(sourceEntry.PrefabGuid);
-        } else {
-          Debug.Assert(targetSource == null);
-          targetSource = source;
-        }
-      }
-
-      if (targetSource == null) {
-        dirty = true;
-        targetSource = (NetworkPrefabSource)Activator.CreateInstance(sourceType);
-        ArrayUtility.Add(ref NetworkProjectConfig.Global.PrefabSources, targetSource);
-      }
-
-      dirty |= targetSource.Set(sourceEntry);
-
-      AddOrUpdatePrefabPartial(prefab, ref dirty);
-
-      return dirty;
-    }
-
-    public static void Rebuild() {
-      // find all the prefabs
-      var candidates = AssetDatabase.FindAssets("t:GameObject")
-        .Select(guid => {
-          var go = (GameObject)AssetDatabase.LoadMainAssetAtPath(AssetDatabase.GUIDToAssetPath(guid));
-          NetworkObject prefab = go != null ? go.GetComponent<NetworkObject>() : null;
-          return new { guid, prefab };
-        })
-        .Where(x => x.prefab)
-        .ToList();
-
-      Array.Resize(ref NetworkProjectConfig.Global.PrefabSources, 0);
-
-      // add or update entries
-      foreach (var candidate in candidates) {
-        NetworkObjectEditor.BakeHierarchy(candidate.prefab.gameObject, NetworkObjectGuid.Parse(candidate.guid),
-          x => EditorUtility.SetDirty((UnityEngine.Object)x));
-
-        Debug.Assert(candidate.prefab.NetworkGuid.ToUnityGuidString() == candidate.guid);
-
-        var prefab = candidate.prefab;
-        if (!prefab.Flags.IsPrefab() || !prefab.NetworkGuid.IsValid) {
-          Debug.LogWarning($"Prefab {AssetDatabase.GetAssetPath(prefab.gameObject)} needs reimporting");
-        }
-
-        if (prefab.Flags.IsIgnored()) {
-          RemovePrefab(candidate.prefab.NetworkGuid);
-        } else {
-          AddOrUpdatePrefab(candidate.prefab);
-        }
-      }
-
-      RebuildPartial();
-
-      Refresh();
-    }
-
-    public static bool RemovePrefab(NetworkObjectGuid guid) {
-      bool dirty = false;
-
-      foreach (var source in Sources) {
-        dirty |= source.Remove(guid);
-      }
-
-
-      RemovePrefabPartial(guid, ref dirty);
-
-      return dirty;
-    }
-
-    public static bool TryResolvePrefab(NetworkObjectGuid guid, out NetworkObject prefab) {
-      if (TryFindPrefabSourceEntry(guid, out var entry)) {
-        prefab = NetworkPrefabSourceFactory.Resolve(entry);
-        if (prefab == null) {
-          return false;
-        }
-
-        Assert.Always(guid.Equals(prefab.NetworkGuid), $"Prefab guid mismatch; expected {guid}, got {prefab.NetworkGuid}");
-        return true;
-      }
-
-      prefab = default;
-      return false;
-    }
-
-    internal static void Refresh() {
-      foreach (var source in NetworkProjectConfig.Global.PrefabSources) {
-        source.Store();
-      }
-      NetworkProjectConfigUtilities.SaveGlobalConfig();
-    }
-
-
-    internal static bool TryFindPrefabSourceEntry(NetworkObjectGuid guid, out NetworkPrefabSource.EntryBase result) {
-      foreach (var source in Sources) {
-        var entry = source.Find(guid);
-        if (entry == null) {
-          continue;
-        }
-
-        result = entry;
-        return true;
-      }
-
-      result = null;
-      return false;
-    }
-
-    
-  }
-}
-
-#endregion
-
-
-#region Assets/Photon/Fusion/Scripts/Editor/AssetPipeline/NetworkPrefabSourceUtils.PrefabAssets.cs
-
-namespace Fusion.Editor {
-  using System;
-  using System.Collections.Generic;
-  using System.IO;
-  using System.Linq;
-  using UnityEditor;
-  using UnityEngine;
-
-  public static partial class NetworkPrefabSourceUtils {
-#if !FUSION_UNITY_DISABLE_PREFAB_ASSETS
-
-    public const string MissingPrefabPrefix = "~MISSING~";
-
-    private static Dictionary<NetworkObjectGuid, List<NetworkPrefabAsset>> _prefabAssetsLookup;
-    private static UnityEngine.Object _container;
-
-    private static Dictionary<NetworkObjectGuid, List<NetworkPrefabAsset>> PrefabAssetsLookup {
-      get {
-        if (_prefabAssetsLookup == null) {
-          NetworkPrefabAsset[] assets = LoadAllPrefabAssets();
-
-          _prefabAssetsLookup = new Dictionary<NetworkObjectGuid, List<NetworkPrefabAsset>>();
-          foreach (var asset in assets) {
-            if (_prefabAssetsLookup.TryGetValue(asset.AssetGuid, out var list)) {
-              list.Add(asset);
-            } else {
-              _prefabAssetsLookup.Add(asset.AssetGuid, new List<NetworkPrefabAsset>() { asset });
-            }
-          }
-
-          EditorApplication.delayCall += InvalidateLookup;
-        }
-
-        return _prefabAssetsLookup;
-      }
-    }
-
-    private static void InvalidateLookup() {
-      _prefabAssetsLookup = null;
-    }
-
-    private static NetworkPrefabAsset[] LoadAllPrefabAssets() {
-      if (!NetworkProjectConfigUtilities.GlobalConfigImporter) {
-        return Array.Empty<NetworkPrefabAsset>();
-      }
-
-      return AssetDatabase.LoadAllAssetsAtPath(NetworkProjectConfigUtilities.GlobalConfigImporter.PrefabAssetsContainerPath).OfType<NetworkPrefabAsset>().ToArray();
-    }
-
-    private static void StorePrefabAsset(NetworkPrefabAsset prefabAsset) {
-
-      if (!NetworkProjectConfigUtilities.GlobalConfigImporter) {
-        return;
-      }
-
-      var path = NetworkProjectConfigUtilities.GlobalConfigImporter.PrefabAssetsContainerPath;
-      if (string.IsNullOrEmpty(path)) {
-        return;
-      }
-
-      if (_container && path != AssetDatabase.GetAssetPath(_container)) {
-        _container = null;
-      }
-
-      if (_container == null) {
-        _container = AssetDatabase.LoadMainAssetAtPath(path);
-      }
-
-      if (_container == null) {
-        _container = ScriptableObject.CreateInstance<NetworkPrefabAssetCollection>();
-        var directory = Path.GetDirectoryName(path);
-        if (!Directory.Exists(directory)) {
-          Directory.CreateDirectory(directory);
-        }
-        AssetDatabase.CreateAsset(_container, path);
-      }
-      
-      AssetDatabase.AddObjectToAsset(prefabAsset, _container);
-    }
-
-    static partial void AddOrUpdatePrefabPartial(NetworkObject prefab, ref bool dirty) {
-      // update prefab assets
-      if (PrefabAssetsLookup.TryGetValue(prefab.NetworkGuid, out var prefabAssets)) {
-        if (prefabAssets.Count > 1) {
-          Debug.LogWarning($"Multiple entries for guid: {prefab.NetworkGuid}:\n{string.Join("\n", prefabAssets)}", prefabAssets[0]);
-        }
-
-        for (int i = 0; i < prefabAssets.Count; ++i) {
-          var asset = prefabAssets[i];
-          var replaced = SetScriptableObjectType<NetworkPrefabAsset>(asset);
-          if (asset != replaced || replaced.name != prefab.name) {
-            prefabAssets[i] = replaced;
-            prefabAssets[i].name = prefab.name;
-            dirty = true;
-          }
-        }
-      } else {
-        var prefabAsset = ScriptableObject.CreateInstance<NetworkPrefabAsset>();
-        prefabAsset.AssetGuid = prefab.NetworkGuid;
-        prefabAsset.name = prefab.name;
-        PrefabAssetsLookup.Add(prefab.NetworkGuid, new List<NetworkPrefabAsset>() { prefabAsset });
-        StorePrefabAsset(prefabAsset);
-        dirty = true;
-      }
-    }
-
-    static partial void RemovePrefabPartial(NetworkObjectGuid guid, ref bool dirty) {
-      if (PrefabAssetsLookup.TryGetValue(guid, out var prefabAssets)) {
-        for (int i = 0; i < prefabAssets.Count; ++i) {
-          var asset = prefabAssets[i];
-          var replacement = SetScriptableObjectType<NetworkPrefabAssetMissing>(asset);
-          if (asset != replacement || !replacement.name.StartsWith(MissingPrefabPrefix)) {
-            replacement.name = MissingPrefabPrefix + replacement.name;
-            prefabAssets[i] = asset;
-            dirty = true;
-          }
-        }
-      }
-    }
-
-    static partial void RebuildPartial() {
-
-      HashSet<NetworkObjectGuid> guids = new HashSet<NetworkObjectGuid>();
-      foreach (var source in Sources) {
-        foreach (var entry in source.Entries) {
-          guids.Add(entry.PrefabGuid);
-        }
-      }
-
-      // remove old asset prefabs
-      foreach (var asset in LoadAllPrefabAssets()) {
-        if (!guids.Contains(asset.AssetGuid)) {
-          UnityEngine.Object.DestroyImmediate(asset, true);
-        }
-      }
-    }
-
-    static T SetScriptableObjectType<T>(ScriptableObject obj) where T : ScriptableObject {
-      if (obj.GetType() == typeof(T)) {
-        return (T)obj;
-      }
-
-      var tmp = ScriptableObject.CreateInstance(typeof(T));
-      try {
-        using (var dst = new SerializedObject(obj)) {
-          using (var src = new SerializedObject(tmp)) {
-            var scriptDst = dst.FindPropertyOrThrow(FusionEditorGUI.ScriptPropertyName);
-            var scriptSrc = src.FindPropertyOrThrow(FusionEditorGUI.ScriptPropertyName);
-            Debug.Assert(scriptDst.objectReferenceValue != scriptSrc.objectReferenceValue);
-            dst.CopyFromSerializedProperty(scriptSrc);
-            dst.ApplyModifiedPropertiesWithoutUndo();
-            return (T)dst.targetObject;
-          }
-        }
-      } finally {
-        UnityEngine.Object.DestroyImmediate(tmp);
-      }
-    }
-#endif
-
-
-    internal static bool TryFindPrefabAsset(NetworkObjectGuid guid, out NetworkPrefabAsset result) {
-#if !FUSION_UNITY_DISABLE_PREFAB_ASSETS
-      result = PrefabAssetsLookup[guid].FirstOrDefault();
-#else
-      result = null;
-#endif
-      return result != null;
+    GameObject INetworkPrefabSourceFactory.EditorResolveSource(NetworkPrefabSourceUnityBase prefabAsset) {
+      return ((NetworkPrefabSourceUnityStatic)prefabAsset).PrefabReference;
     }
   }
 }
@@ -1893,8 +1551,8 @@ namespace Fusion.Editor {
               DragAndDrop.visualMode = DragAndDropVisualMode.Generic;
 
               if (Event.current.type == EventType.DragPerform) {
-                if (NetworkPrefabSourceUtils.TryFindPrefabAsset(draggedObject.NetworkGuid, out var info)) {
-                  property.objectReferenceValue = info;
+                if (NetworkProjectConfigUtilities.TryGetPrefabAsset(draggedObject.NetworkGuid, out NetworkPrefabAsset prefabAsset)) { 
+                  property.objectReferenceValue = prefabAsset;
                   property.serializedObject.ApplyModifiedProperties();
                 }
               }
@@ -1912,7 +1570,7 @@ namespace Fusion.Editor {
           if (GUI.Button(position, "Ping")) {
             // ping the main asset
             var info = (NetworkPrefabAsset)property.objectReferenceValue;
-            if (NetworkPrefabSourceUtils.TryResolvePrefab(info.AssetGuid, out var prefab)) {
+            if (NetworkProjectConfigUtilities.TryResolvePrefab(info.AssetGuid, out var prefab)) { 
               EditorGUIUtility.PingObject(prefab.gameObject);
             }
           }
@@ -1945,70 +1603,36 @@ namespace Fusion.Editor {
 
       serializedObject.OnInpsectorGUICustom(target, ref _expandedHelpName);
 
-      bool allValid = true;
-      bool anyValid = false;
-      bool allMissing = true;
-      bool anyMissing = false;
+      if (targets.Length > 1) {
+        EditorGUILayout.LabelField("Prefabs");
+      }
 
-      foreach (NetworkPrefabAsset target in targets) {
-        if (NetworkPrefabSourceUtils.TryResolvePrefab(target.AssetGuid, out var prefab)) {
-          allMissing = false;
-          anyValid = prefab != null;
+      foreach (var prefab in targets
+        .Cast<NetworkPrefabAsset>()
+        .OrderBy(x => x.name)
+        .Select(x => {
+          NetworkProjectConfigUtilities.TryResolvePrefab(x.AssetGuid, out var prefab);
+          return prefab;
+        })) {
+
+        if (targets.Length > 1) {
+          EditorGUILayout.ObjectField(prefab, typeof(NetworkObject), false);
         } else {
-          allValid = false;
-          anyMissing |= target is NetworkPrefabAssetMissing;
-          allMissing &= target is NetworkPrefabAssetMissing;
+          EditorGUILayout.ObjectField("Prefab", prefab, typeof(NetworkObject), false);
         }
       }
 
-      using (new EditorGUI.DisabledScope(anyValid == false)) {
+      if (targets.OfType<NetworkPrefabAssetMissing>().Any()) {
         EditorGUILayout.Space();
-        if (GUILayout.Button("Select Prefab(s)")) {
-          Selection.objects = targets.Cast<NetworkPrefabAsset>()
-            .Select(x => {
-              NetworkPrefabSourceUtils.TryResolvePrefab(x.AssetGuid, out var prefab);
-              return prefab;
-            })
-            .Where(x => x)
-            .Select(x => (UnityEngine.Object)x.gameObject)
-            .ToArray();
-        }
-      }
+        EditorGUILayout.HelpBox($"Prefab assets have their type changed to {"MISSING"} in case a prefab is removed or is set as not spawnable. " +
+          $"If a prefab is restored/made spawnable again, all the references will once again point to the same prefab. Having such placeholders also makes it trivial " +
+          $"to find any assets referencing missing prefabs.", MessageType.Info);
 
-      if (!allValid) {
-
-        if (anyMissing) {
-          EditorGUILayout.Space();
-          EditorGUILayout.HelpBox($"Prefab assets have their type changed to {"MISSING"} in case a prefab is removed or is set as not spawnable. " +
-            $"If a prefab is restored/made spawnable again, all the references will once again point to the same prefab. Having such placeholders also makes it trivial " +
-            $"to find any assets referencing missing prefabs.", MessageType.Info);
-
-          if (GUILayout.Button("Destroy Selected Missing Prefab Placeholders")) {
-            foreach (var asset in targets.OfType<NetworkPrefabAssetMissing>().ToList()) {
-              DestroyImmediate(asset, true);
-            }
-            NetworkPrefabSourceUtils.Refresh();
-            GUIUtility.ExitGUI();
+        if (GUILayout.Button("Destroy Selected Missing Prefab Placeholders")) {
+          foreach (var asset in targets.OfType<NetworkPrefabAssetMissing>().ToList()) {
+            DestroyImmediate(asset, true);
           }
-        }
-
-        if (!allMissing) {
-          EditorGUILayout.Space();
-          EditorGUILayout.HelpBox($"Selection contains prefab assets that are invalid. Consider rebuilding prefab table. You can always destroy prefab assets with context menu.", MessageType.Warning);
-
-          if (GUILayout.Button("Rebuild Prefab Table")) {
-            NetworkPrefabSourceUtils.Rebuild();
-            GUIUtility.ExitGUI();
-          }
-
-          if (GUILayout.Button("Destroy Selected Invalid Prefab Assets")) {
-            var invalidPrefabs = targets.Cast<NetworkPrefabAsset>().Where(x => !(x is NetworkPrefabAssetMissing) && !NetworkPrefabSourceUtils.TryResolvePrefab(x.AssetGuid, out _)).ToList();
-            foreach (var asset in invalidPrefabs) {
-              DestroyImmediate(asset, true);
-            }
-            NetworkPrefabSourceUtils.Refresh();
-            GUIUtility.ExitGUI();
-          }
+          GUIUtility.ExitGUI();
         }
       }
 
@@ -2046,12 +1670,12 @@ namespace Fusion.Editor {
     }
 
     public override GUIContent GetPreviewTitle() {
-      if (NetworkPrefabSourceUtils.TryFindPrefabSourceEntry(target.AssetGuid, out var entry)) {
-        return new GUIContent(entry.ToString());
+      if (NetworkProjectConfigUtilities.TryGetPrefabSource(target.AssetGuid, out INetworkPrefabSource entry)) {
+        return new GUIContent(entry.EditorSummary);
       } else {
         return new GUIContent("null");
       }
-      
+
     }
 
     public override void OnPreviewGUI(Rect r, GUIStyle background) {
@@ -2093,6 +1717,95 @@ namespace Fusion.Editor {
   }
 }
 
+#endregion
+
+
+#region Assets/Photon/Fusion/Scripts/Editor/CustomTypes/NetworkPrefabAttributeDrawer.cs
+
+namespace Fusion.Editor {
+  using System;
+  using System.Collections.Generic;
+  using System.Reflection;
+  using UnityEditor;
+  using UnityEngine;
+
+  [CustomPropertyDrawer(typeof(NetworkPrefabAttribute))]
+  public class NetworkPrefabAttributeDrawer : PropertyDrawerWithErrorHandling {
+
+    protected override void OnGUIInternal(Rect position, SerializedProperty property, GUIContent label) {
+
+      var leafType = fieldInfo.FieldType.GetUnityLeafType();
+      if (leafType != typeof(GameObject) && leafType != typeof(NetworkObject) && !leafType.IsSubclassOf(typeof(NetworkObject))) {
+        SetError($"{nameof(NetworkPrefabAttribute)} only works for {typeof(GameObject)} and {typeof(NetworkObject)} fields");
+        return;
+      }
+
+      using (new FusionEditorGUI.PropertyScopeWithPrefixLabel(position, label, property, out position)) {
+
+        GameObject prefab;
+        if (leafType == typeof(GameObject)) {
+          prefab = (GameObject)property.objectReferenceValue;
+        } else {
+          var component = (NetworkObject)property.objectReferenceValue;
+          prefab = component != null ? component.gameObject : null;
+        }
+
+        EditorGUI.BeginChangeCheck();
+
+        prefab = (GameObject)EditorGUI.ObjectField(position, prefab, typeof(GameObject), false);
+
+        // ensure the results are filtered
+        if (UnityInternal.ObjectSelector.isVisible) {
+          var selector = UnityInternal.ObjectSelector.get;
+          if (UnityInternal.EditorGUIUtility.LastControlID == selector.objectSelectorID) {
+            var filter = selector.searchFilter;
+            if (!filter.Contains(NetworkProjectConfigImporter.FusionPrefabTagSearchTerm)) {
+              if (string.IsNullOrEmpty(filter)) {
+                filter = NetworkProjectConfigImporter.FusionPrefabTagSearchTerm;
+              } else {
+                filter = NetworkProjectConfigImporter.FusionPrefabTagSearchTerm + " " + filter;
+              }
+              selector.searchFilter = filter;
+            }
+          }
+        }
+
+        if (EditorGUI.EndChangeCheck()) {
+          UnityEngine.Object result;
+          if (!prefab) {
+            result = null;
+          } else { 
+            if (leafType == typeof(GameObject)) {
+              result = prefab;
+            } else { 
+              result = prefab.GetComponent(leafType);
+              if (!result) {
+                SetError($"Prefab {prefab} does not have a {leafType} component");
+                return;
+              }
+            }
+          }
+
+          property.objectReferenceValue = prefab;
+          property.serializedObject.ApplyModifiedProperties();
+        }
+
+        if (prefab) {
+          var no = prefab.GetComponent<NetworkObject>();
+          if (no == null) {
+            SetError($"Prefab {prefab} does not have a {nameof(NetworkObject)} component");
+          } else if (!no.NetworkGuid.IsValid) {
+            SetError($"Prefab {prefab} needs to be reimported.");
+          } else if (!NetworkProjectConfigUtilities.TryResolvePrefab(no.NetworkGuid, out var resolved)) {
+            SetError($"Prefab {prefab} with guid {no.NetworkGuid} not found in the config. Try reimporting.");
+          } else if (resolved != no) {
+            SetError($"Prefab {prefab} with guid {no.NetworkGuid} resolved to a different prefab: {resolved}.");
+          }
+        }
+      }
+    }
+  }
+}
 
 #endregion
 
@@ -2106,20 +1819,17 @@ namespace Fusion.Editor {
   using UnityEditor;
   using UnityEngine;
 
-#pragma warning disable CS0612 // Type or member is obsolete
   [CustomPropertyDrawer(typeof(NetworkPrefabRef))]
-#pragma warning restore CS0612 // Type or member is obsolete
   public class NetworkPrefabRefDrawer : PropertyDrawerWithErrorHandling {
 
     protected override void OnGUIInternal(Rect position, SerializedProperty property, GUIContent label) {
 
       var prefabRef = NetworkObjectGuidDrawer.GetValue(property);
 
-
       using (new FusionEditorGUI.PropertyScopeWithPrefixLabel(position, label, property, out position)) {
         NetworkObject prefab = null;
 
-        if (prefabRef.IsValid && !NetworkPrefabSourceUtils.TryResolvePrefab(prefabRef, out prefab)) {
+        if (prefabRef.IsValid && !NetworkProjectConfigUtilities.TryResolvePrefab(prefabRef, out prefab)) {
           var prefabActualPath = AssetDatabase.GUIDToAssetPath(prefabRef.ToString("N"));
           if (!string.IsNullOrEmpty(prefabActualPath)) {
             var go = AssetDatabase.LoadMainAssetAtPath(prefabActualPath) as GameObject;
@@ -2134,9 +1844,36 @@ namespace Fusion.Editor {
         }
 
         EditorGUI.BeginChangeCheck();
-        prefab = (NetworkObject)EditorGUI.ObjectField(position, prefab, typeof(NetworkObject), false);
+
+        var prefabGo = (GameObject)EditorGUI.ObjectField(position, prefab != null ? prefab.gameObject : null, typeof(GameObject), false);
+
+        // ensure the results are filtered
+        if (UnityInternal.ObjectSelector.isVisible) {
+          var selector = UnityInternal.ObjectSelector.get;
+          if (UnityInternal.EditorGUIUtility.LastControlID == selector.objectSelectorID) {
+            var filter = selector.searchFilter;
+            if (!filter.Contains(NetworkProjectConfigImporter.FusionPrefabTagSearchTerm)) {
+              if (string.IsNullOrEmpty(filter)) {
+                filter = NetworkProjectConfigImporter.FusionPrefabTagSearchTerm;
+              } else {
+                filter = NetworkProjectConfigImporter.FusionPrefabTagSearchTerm + " " + filter;
+              }
+              selector.searchFilter = filter;
+            }
+          }
+        }
 
         if (EditorGUI.EndChangeCheck()) {
+          if (prefabGo) {
+            prefab = prefabGo.GetComponent<NetworkObject>();
+            if (!prefab) {
+              SetError($"Prefab {prefabGo} does not have a {nameof(NetworkObject)} component");
+              return;
+            }
+          } else {
+            prefab = null;
+          }
+
           if (prefab) {
             prefabRef = prefab.NetworkGuid;
           } else {
@@ -2148,6 +1885,7 @@ namespace Fusion.Editor {
 
         SetInfo($"{prefabRef}");
 
+
         if (prefab) {
           var expectedPrefabRef = prefab.NetworkGuid;
           if (!prefabRef.Equals(expectedPrefabRef)) {
@@ -2155,7 +1893,7 @@ namespace Fusion.Editor {
               $"This can happen if prefabs are incorrectly resolved, e.g. when there are multiple resources of the same name.");
           } else if (!expectedPrefabRef.IsValid) {
             SetError($"Prefab {prefab} needs to be reimported.");
-          } else if (!NetworkPrefabSourceUtils.TryResolvePrefab(expectedPrefabRef, out _)) {
+          } else if (!NetworkProjectConfigUtilities.TryResolvePrefab(expectedPrefabRef, out _)) {
             SetError($"Prefab {prefab} with guid {prefab.NetworkGuid} not found in the config. Try reimporting.");
           } else {
             // ClearError();
@@ -2833,8 +2571,15 @@ namespace Fusion.Editor {
       using (new EditorGUI.DisabledScope(string.IsNullOrEmpty(assetPath))) {
         position.x += position.width;
         position.width = 40;
-        if (GUI.Button(position, "Ping")) {
-          // ping the main asset
+        bool buttonPressed;
+
+        bool wasEnabled = GUI.enabled;
+        GUI.enabled = true;
+        buttonPressed = GUI.Button(position, "Ping");
+        GUI.enabled = wasEnabled;
+
+        if (buttonPressed) {
+          // ping the main assets
           EditorGUIUtility.PingObject(AssetDatabase.LoadMainAssetAtPath(assetPath));
         }
       }
@@ -4083,7 +3828,7 @@ namespace Fusion.Editor {
   using UnityEditor.AssetImporters;
   using UnityEngine;
 
-  [ScriptedImporter(1, ExtensionWithoutDot)]
+  [ScriptedImporter(1, ExtensionWithoutDot, NetworkProjectConfigImporter.ImportQueueOffset + 1)]
   public class FusionWeaverTriggerImporter : ScriptedImporter {
     public const string DependencyName = "FusionILWeaverTriggerImporter/ConfigHash";
     public const string Extension = "." + ExtensionWithoutDot;
@@ -4095,13 +3840,13 @@ namespace Fusion.Editor {
     }
 
     private static void RefreshDependencyHash() {
-      var candidates = NetworkProjectConfigUtilities.GetConfigPaths();
-      if (candidates.Length == 0) {
+      var configPath = NetworkProjectConfigUtilities.GetGlobalConfigPath(false);
+      if (string.IsNullOrEmpty(configPath)) {
         return;
       }
 
       try {
-        var cfg = NetworkProjectConfigImporter.LoadConfigFromFile(candidates[0]);
+        var cfg = NetworkProjectConfigImporter.LoadConfigFromFile(configPath);
 
         var hash = new Hash128();
         foreach (var key in cfg.AccuracyDefaults.coreKeys) {
@@ -4154,7 +3899,8 @@ namespace Fusion.Editor {
     [MenuItem("Fusion/Run Weaver")]
     public static void RunWeaver() {
 
-      NetworkProjectConfigUtilities.SaveGlobalConfig();
+      // ensure config exists
+      _ = NetworkProjectConfigUtilities.GetGlobalConfigPath();
 
       CompilationPipeline.RequestScriptCompilation(
 #if UNITY_2021_1_OR_NEWER
@@ -4927,15 +4673,17 @@ namespace Fusion.Editor {
   public unsafe class NetworkObjectEditor : BehaviourEditor {
     private bool _runtimeInfoFoldout;
 
-    public static void BakeHierarchy(GameObject root, NetworkObjectGuid? prefabGuid, Action<object> setDirty = null, Func<NetworkObject, NetworkObjectGuid> guidProvider = null) {
+    public static bool BakeHierarchy(GameObject root, NetworkObjectGuid? prefabGuid, Action<object> setDirty = null, Func<NetworkObject, NetworkObjectGuid> guidProvider = null) {
       var networkObjectsBuffer = new List<NetworkObject>();
       var simulationBehaviourBuffer = new List<SimulationBehaviour>();
       var networkBehaviourBuffer = new List<NetworkBehaviour>();
 
+      bool dirty = false;
+
       using (var pathCache = new TransformPathCache()) {
         root.GetComponentsInChildren(networkObjectsBuffer);
         if (networkObjectsBuffer.Count == 0) {
-          return;
+          return dirty;
         }
 
         var networkObjects = networkObjectsBuffer.Select(x => new {
@@ -4967,7 +4715,7 @@ namespace Fusion.Editor {
             if (entry.Path.IsEqualOrAncestorOf(scriptEntry.Path)) {
               var script = scriptEntry.Script;
               if (script is NetworkBehaviour networkBehaviour) {
-                Set(networkBehaviour, ref networkBehaviour.Object, entry.Object, setDirty);
+                dirty |= Set(networkBehaviour, ref networkBehaviour.Object, entry.Object, setDirty);
                 networkBehaviourBuffer.Add(networkBehaviour);
               } else {
                 simulationBehaviourBuffer.Add(script);
@@ -4982,10 +4730,10 @@ namespace Fusion.Editor {
           }
 
           networkBehaviourBuffer.Reverse();
-          Set(entry.Object, ref entry.Object.NetworkedBehaviours, networkBehaviourBuffer, setDirty);
+          dirty |= Set(entry.Object, ref entry.Object.NetworkedBehaviours, networkBehaviourBuffer, setDirty);
 
           simulationBehaviourBuffer.Reverse();
-          Set(entry.Object, ref entry.Object.SimulationBehaviours, simulationBehaviourBuffer, setDirty);
+          dirty |= Set(entry.Object, ref entry.Object.SimulationBehaviours, simulationBehaviourBuffer, setDirty);
 
           // handle flags
 
@@ -4997,13 +4745,13 @@ namespace Fusion.Editor {
 
           if (prefabGuid == null) {
             if (flags.IsPrefab()) {
-              Set(entry.Object, ref entry.Object.NetworkGuid, default, setDirty);
+              dirty |= Set(entry.Object, ref entry.Object.NetworkGuid, default, setDirty);
             }
             flags = flags.SetType(NetworkObjectFlags.TypeSceneObject);
             if (guidProvider == null) {
               throw new ArgumentNullException(nameof(guidProvider));
             }
-            Set(entry.Object, ref entry.Object.NetworkGuid, guidProvider(entry.Object), setDirty);
+            dirty |= Set(entry.Object, ref entry.Object.NetworkGuid, guidProvider(entry.Object), setDirty);
           } else {
             flags = flags.SetType(entry.Path.Depth == 1 ? NetworkObjectFlags.TypePrefab : NetworkObjectFlags.TypePrefabChild);
             if (entry.Path.Depth > 1) {
@@ -5014,11 +4762,11 @@ namespace Fusion.Editor {
                 throw new ArgumentException($"Invalid value: {prefabGuid}", nameof(prefabGuid));
               }
 
-              Set(entry.Object, ref entry.Object.NetworkGuid, prefabGuid.Value, setDirty);
+              dirty |= Set(entry.Object, ref entry.Object.NetworkGuid, prefabGuid.Value, setDirty);
             }
           }
 
-          Set(entry.Object, ref entry.Object.Flags, flags, setDirty);
+          dirty |= Set(entry.Object, ref entry.Object.Flags, flags, setDirty);
         }
 
         Debug.Assert(networkScripts.Any(x => x.Script is NetworkBehaviour) == false);
@@ -5037,18 +4785,21 @@ namespace Fusion.Editor {
           int descendantsBegin = j + 1;
           Debug.Assert(networkObjectsBuffer.Count == i - descendantsBegin);
 
-          Set(entry.Object, ref entry.Object.NestedObjects, networkObjectsBuffer, setDirty);
+          dirty |= Set(entry.Object, ref entry.Object.NestedObjects, networkObjectsBuffer, setDirty);
         }
       }
+
+      return dirty;
     }
 
     static string GetLoadInfoString(NetworkObject prefab) {
-      if (NetworkPrefabSourceUtils.TryFindPrefabSourceEntry(prefab.NetworkGuid, out var entry)) {
-        return entry.ToString();
+      if (NetworkProjectConfigUtilities.TryGetPrefabSource(prefab.NetworkGuid, out INetworkPrefabSource prefabAsset)) { 
+        return prefabAsset.EditorSummary;
       }
-
       return "Null";
     }
+
+
 
     public override void OnInspectorGUI() {
       //FusionEditorGUI.ScriptPropertyField(serializedObject);
@@ -5089,7 +4840,7 @@ namespace Fusion.Editor {
             EditorGUI.BeginChangeCheck();
 
             bool spawnable = EditorGUILayout.Toggle("Is Spawnable", !obj.Flags.IsIgnored());
-            EditorGUILayout.LabelField("Load Info", spawnable ? NetworkObjectEditor.GetLoadInfoString(obj) : "---");
+            EditorGUILayout.LabelField("Prefab Source", spawnable ? NetworkObjectEditor.GetLoadInfoString(obj) : "---");
 
             if (EditorGUI.EndChangeCheck()) {
               var value = obj.Flags.SetIgnored(!spawnable);
@@ -5190,6 +4941,7 @@ namespace Fusion.Editor {
   }
 }
 
+
 #endregion
 
 
@@ -5216,98 +4968,81 @@ namespace Fusion.Editor {
       EditorApplication.playModeStateChanged += OnPlaymodeChange;
     }
 
-    private static int _reentryCount = 0;
-    private const int MaxReentryCount = 3;
-
     int IOrderedCallback.callbackOrder => 0;
 
-    private static void OnPostprocessAllAssets(string[] importedAssets, string[] deletedAssets, string[] movedAssets, string[] movedFromAssetPaths)
-    {
-      ProcessAssets(importedAssets, deletedAssets, movedAssets);
-    }
+    private static HashSet<string> _dirtyFusionPrefabs = new HashSet<string>();
 
-    private static void ProcessAssets(string[] importedAssets, string[] deletedAssets, string[] movedAssets) {
-      try {
-        if (++_reentryCount > MaxReentryCount) {
-          Debug.LogError("Exceeded max reentry count, possibly a bug");
-          return;
+
+    static void OnPostprocessAllAssets(string[] importedAssets, string[] deletedAssets, string[] movedAssets, string[] movedFromAssetPaths) {
+      FusionEditorLog.TraceImport($"Postprocessing imported assets [{importedAssets.Length}]:\n{string.Join("\n", importedAssets)}");
+
+      bool configPossiblyDirty = false;
+
+      foreach (var path in importedAssets) {
+        if (!path.EndsWith(".prefab")) {
+          continue;
         }
 
-        bool dirty = false;
-
-        foreach (var path in importedAssets) {
-          dirty |= ProcessAsset(path);
+        if (_dirtyFusionPrefabs.Remove(path)) {
+          FusionEditorLog.TraceImport(path, "Was marked as dirty in OnPostprocessPrefab, going to reimport config");
+          configPossiblyDirty = true;
         }
 
-        if (importedAssets.Length > 0 && movedAssets.Length > 0) {
-          // sometimes unity has duplicates in the lists and this
-          // messes up with 
-          foreach (var path in movedAssets.Except(importedAssets)) {
-            dirty |= ProcessAsset(path);
+        // TODO: reduce the need to do it somehow?
+        var go = AssetDatabase.LoadAssetAtPath<GameObject>(path);
+        if (go) {
+          var no = go.GetComponent<NetworkObject>();
+          bool shouldHaveLabel = no && no.Flags.IsIgnored() == false;
+          if (AssetDatabaseUtils.SetLabel(go, NetworkProjectConfigImporter.FusionPrefabTag, shouldHaveLabel)) {
+            configPossiblyDirty = true;
+            AssetDatabase.ImportAsset(path);
+            FusionEditorLog.TraceImport(path, "Labels dirty, going to reimport the config, too");
+          } else if (no) {
+            FusionEditorLog.TraceImport(path, "Labels up to date");
           }
-        } else {
-          foreach (var path in movedAssets) {
-            dirty |= ProcessAsset(path);
-          }
         }
+      }
 
-        foreach (var path in deletedAssets) {
-          dirty |= ProcessAssetDeletion(path);
+
+      if (configPossiblyDirty) {
+        // configs needs to be reimported as well
+        var configPath = NetworkProjectConfigUtilities.GetGlobalConfigPath(createIfMissing: false);
+        if (!string.IsNullOrEmpty(configPath)) {
+          AssetDatabase.ImportAsset(configPath);
         }
-
-        if (dirty) {
-          NetworkPrefabSourceUtils.Refresh();
-        }
-
-      } finally {
-        --_reentryCount;
       }
     }
 
-    [System.Diagnostics.Conditional("FUSION_EDITOR_TRACE")]
-    private static void Trace(string msg) {
-      Debug.Log($"[Fusion/NetworkObjectPostprocessor] {msg}");
-    }
-
-    private static bool ProcessAsset(string path) {
-      if (!path.EndsWith(".prefab")) {
-        return false;
-      }
-
-      var prefab = AssetDatabase.LoadMainAssetAtPath(path) as GameObject;
-      if (!prefab) {
-        return false;
-      }
+    void OnPostprocessPrefab(GameObject prefab) {
+      // can't set labels here, Unity seems to only invoke this if it does not have a cached imported prefab already
+      // for instance, toggling a checkbox will only have the prefab imported twice, regardless of how many
+      // times the checkbox is toggled
 
       var networkObject = prefab.GetComponent<NetworkObject>();
+
       if (!networkObject) {
-        return false;
+        FusionEditorLog.TraceImport(assetPath, $"Not a {nameof(NetworkObject)}, not baking");
+        return;
       }
 
-      try {
-        return OnPrefabImported(networkObject, path);
-      } catch (Exception ex) {
-        Debug.LogError($"Error processing prefab: {path}: {ex}", prefab);
-        return false;
-      }
-    }
-
-    private static bool ProcessAssetDeletion(string path) {
-      if (!path.EndsWith(".prefab", StringComparison.OrdinalIgnoreCase)) {
-        return false;
-      }
-      var guid = AssetDatabase.AssetPathToGUID(path);
-      if (string.IsNullOrEmpty(path)) {
-        return false;
+      var assetGuid = AssetDatabase.AssetPathToGUID(assetPath);
+      if (!NetworkObjectGuid.TryParse(assetGuid, out var guid)) {
+        context.LogImportError($"Unable to parse the guid of {assetPath}: {assetGuid}, not going to bake");
+        return;
       }
 
-      try {
-        Trace($"Removing {path}");
-        return NetworkPrefabSourceUtils.RemovePrefab(NetworkObjectGuid.Parse(guid));
-      } finally {
-        Trace($"Removed {path}");
-      }
+      // now do the baking
+      FusionEditorLog.TraceImport(assetPath, $"Prefab is a {nameof(NetworkObject)}, going to bake");
 
+      var originalGuid = networkObject.NetworkGuid;
+      var sw = System.Diagnostics.Stopwatch.StartNew();
+      var dirty = NetworkObjectEditor.BakeHierarchy(prefab.gameObject, guid);
+      FusionEditorLog.TraceImport(assetPath, $"Baking took {sw.Elapsed}, changes: {dirty}");
+
+      if (originalGuid != guid) {
+        FusionEditorLog.TraceImport(assetPath, $"Prefab has likely been cloned (outdated guid), going to reimport config");
+        _dirtyFusionPrefabs.Add(assetPath);
+      }
     }
 
     private static Action<object> SetDirty = x => EditorUtility.SetDirty((UnityEngine.Object)x);
@@ -5348,37 +5083,6 @@ namespace Fusion.Editor {
       return guid;
     };
 
-    private static bool OnPrefabImported(NetworkObject prefab, string prefabPath) {
-      Trace($"Importing {prefabPath}");
-      try {
-        var assetGuid = AssetDatabase.AssetPathToGUID(prefabPath);
-        if (!NetworkObjectGuid.TryParse(assetGuid, out var guid)) {
-          Debug.LogError($"Unable to parse the guid of {prefabPath}: {assetGuid}");
-        }
-
-        // now do the baking
-        NetworkObjectEditor.BakeHierarchy(prefab.gameObject, guid, SetDirty);
-
-        // handle the table
-        if (prefab.Flags.IsIgnored()) {
-          return NetworkPrefabSourceUtils.RemovePrefab(prefab.NetworkGuid);
-        } else {
-          if (NetworkPrefabSourceUtils.TryResolvePrefab(prefab.NetworkGuid, out var otherPrefab) && otherPrefab && otherPrefab != prefab) {
-            Debug.LogError($"A diffent prefab with guid {prefab.NetworkGuid} already exists, rebuild the object table.");
-            return false;
-          } else {
-            return NetworkPrefabSourceUtils.AddOrUpdatePrefab(prefab);
-          }
-        }
-      } finally {
-        Trace($"Imported {prefabPath}");
-      }
-    }
-
-    private void OnPostprocessPrefab(GameObject prefab) {
-      // TODO: perhaps filter prefabs here?
-    }
-
     public static void BakeSceneObjects(Scene scene) {
       var sw = System.Diagnostics.Stopwatch.StartNew();
 
@@ -5387,7 +5091,7 @@ namespace Fusion.Editor {
           NetworkObjectEditor.BakeHierarchy(root, null, SetDirty, guidProvider: GuidProvider);
         }
       } finally {
-        Trace($"Baking {scene} took: {sw.Elapsed}");
+        FusionEditorLog.TraceImport(scene.path, $"Baking {scene} took: {sw.Elapsed}");
       }
     }
 
@@ -6337,6 +6041,53 @@ namespace Fusion.Editor {
     public static bool IsSceneObject(GameObject go) {
       return ReferenceEquals(PrefabStageUtility.GetPrefabStage(go), null) && (PrefabUtility.IsPartOfPrefabAsset(go) == false || PrefabUtility.GetPrefabAssetType(go) == PrefabAssetType.NotAPrefab);
     }
+
+    public static bool HasLabel(UnityEngine.Object obj, string label) {
+      var labels = AssetDatabase.GetLabels(obj);
+      var index = Array.IndexOf(labels, label);
+      return index >= 0;
+    }
+
+    public static bool SetLabel(UnityEngine.Object obj, string label, bool present) {
+      var labels = AssetDatabase.GetLabels(obj);
+      var index = Array.IndexOf(labels, label);
+      if (present) {
+        if (index >= 0) {
+          return false;
+        }
+        ArrayUtility.Add(ref labels, label);
+      } else {
+        if (index < 0) {
+          return false;
+        }
+        ArrayUtility.RemoveAt(ref labels, index);
+      }
+
+      AssetDatabase.SetLabels(obj, labels);
+      return true;
+    }
+
+    public static T SetScriptableObjectType<T>(ScriptableObject obj) where T : ScriptableObject {
+      if (obj.GetType() == typeof(T)) {
+        return (T)obj;
+      }
+
+      var tmp = ScriptableObject.CreateInstance(typeof(T));
+      try {
+        using (var dst = new SerializedObject(obj)) {
+          using (var src = new SerializedObject(tmp)) {
+            var scriptDst = dst.FindPropertyOrThrow(FusionEditorGUI.ScriptPropertyName);
+            var scriptSrc = src.FindPropertyOrThrow(FusionEditorGUI.ScriptPropertyName);
+            Debug.Assert(scriptDst.objectReferenceValue != scriptSrc.objectReferenceValue);
+            dst.CopyFromSerializedProperty(scriptSrc);
+            dst.ApplyModifiedPropertiesWithoutUndo();
+            return (T)dst.targetObject;
+          }
+        }
+      } finally {
+        UnityEngine.Object.DestroyImmediate(tmp);
+      }
+    }
   }
 }
 
@@ -6420,6 +6171,19 @@ namespace Fusion.Editor {
   using UnityEngine;
 
   public static partial class FusionEditorGUI {
+
+    public sealed class EnabledScope : GUI.Scope {
+      private readonly bool value;
+
+      public EnabledScope(bool enabled) {
+        value = GUI.enabled;
+        GUI.enabled = enabled;
+      }
+
+      protected override void CloseScope() {
+        GUI.enabled = value;
+      }
+    }
 
     public sealed class BackgroundColorScope : GUI.Scope {
       private readonly Color value;
@@ -6686,6 +6450,68 @@ namespace Fusion.Editor {
 #endregion
 
 
+#region Assets/Photon/Fusion/Scripts/Editor/Utilities/FusionEditorLog.cs
+
+namespace Fusion.Editor {
+  using System;
+  using UnityEngine;
+  using ConditionalAttribute = System.Diagnostics.ConditionalAttribute;
+
+  public static class FusionEditorLog {
+
+    const string LogPrefix =    "[<color=#add8e6>Fusion/Editor</color>]";
+    const string ImportPrefix = "[<color=#add8e6>Fusion/Import</color>]";
+    const string ConfigPrefix = "[<color=#add8e6>Fusion/Config</color>]";
+
+    [Conditional("FUSION_EDITOR_TRACE")]
+    public static void Trace(string msg) {
+      Log(msg);
+    }
+
+    public static void Log(string msg) {
+      Debug.Log($"{LogPrefix} {msg}");
+    }
+
+
+    [Conditional("FUSION_EDITOR_TRACE")]
+    public static void TraceConfig(string msg) {
+      LogConfig(msg);
+    }
+
+    public static void WarnConfig(string msg) {
+      Debug.LogWarning($"{ConfigPrefix} {msg}");
+    }
+
+    public static void LogConfig(string msg) {
+      Debug.Log($"{ConfigPrefix} {msg}");
+    }
+
+    [Conditional("FUSION_EDITOR_TRACE")]
+    public static void TraceImport(string assetPath, string msg) {
+      Debug.Log($"{ImportPrefix} {assetPath}: {msg}");
+    }
+
+    [Conditional("FUSION_EDITOR_TRACE")]
+    public static void TraceImport(string msg) {
+      Debug.Log($"{ImportPrefix} {msg}");
+    }
+
+    public static void ErrorImport(string msg) {
+      Debug.LogError($"{ImportPrefix} {msg}");
+    }
+
+    internal static void WarnImport(string msg) {
+      Debug.LogWarning($"{ImportPrefix} {msg}");
+    }
+
+
+  }
+}
+
+
+#endregion
+
+
 #region Assets/Photon/Fusion/Scripts/Editor/Utilities/LogSlider.cs
 
 ﻿namespace Fusion.Editor {
@@ -6824,7 +6650,6 @@ namespace Fusion.Editor {
       RetryEnsurePhotonAppSettingsExists();
     }
 
-
     internal static void RetryEnsureProjectConfigConverted() {
       // Keep deferring this check until Unity is ready to deal with asset find/create.
       if (EditorApplication.isCompiling || EditorApplication.isUpdating) {
@@ -6934,6 +6759,7 @@ namespace Fusion.Editor {
     }
 
 
+
     [MenuItem("Fusion/Network Project Config", priority = 200)]
     static void PingNetworkProjectConfigAsset() {
       NetworkProjectConfigUtilities.PingGlobalConfigAsset(true);
@@ -6942,7 +6768,18 @@ namespace Fusion.Editor {
 
     [MenuItem("Fusion/Rebuild Object Table", priority = 100)]
     public static void RebuildObjectTable() {
-      NetworkPrefabSourceUtils.Rebuild();
+      foreach (var prefab in AssetDatabase.FindAssets($"t:prefab")
+        .Select(AssetDatabase.GUIDToAssetPath)
+        .Select(x => (GameObject)AssetDatabase.LoadMainAssetAtPath(x))) {
+        if (prefab.TryGetComponent<NetworkObject>(out var networkObject) && !networkObject.Flags.IsIgnored()) {
+          AssetDatabaseUtils.SetLabel(prefab, NetworkProjectConfigImporter.FusionPrefabTag, true);
+        } else {
+          AssetDatabaseUtils.SetLabel(prefab, NetworkProjectConfigImporter.FusionPrefabTag, false);
+        }
+
+      }
+
+      AssetDatabase.Refresh();
       SaveGlobalConfig();
     }
 
@@ -7039,10 +6876,11 @@ namespace Fusion.Editor {
 
       var json = EditorJsonUtility.ToJson(config, true);
 
-      string path = EnsureConfigPath();
+      string path = GetGlobalConfigPath();
       string existingJson = File.ReadAllText(path);
       
       if (!string.Equals(json, existingJson)) {
+        AssetDatabase.MakeEditable(path);
         File.WriteAllText(path, json);
       }
 
@@ -7051,7 +6889,7 @@ namespace Fusion.Editor {
     }
 
     public static void PingGlobalConfigAsset(bool select = false) {
-      var config = AssetDatabase.LoadAssetAtPath<NetworkProjectConfigAsset>(EnsureConfigPath());
+      var config = AssetDatabase.LoadAssetAtPath<NetworkProjectConfigAsset>(GetGlobalConfigPath());
       if (config != null) {
         EditorGUIUtility.PingObject(config);
         if (select) {
@@ -7062,53 +6900,114 @@ namespace Fusion.Editor {
 
     public static NetworkProjectConfigImporter GlobalConfigImporter {
       get {
-        return (NetworkProjectConfigImporter)AssetImporter.GetAtPath(EnsureConfigPath());
+        return (NetworkProjectConfigImporter)AssetImporter.GetAtPath(GetGlobalConfigPath());
       }
     }
 
-    private static string EnsureConfigPath() {
-
-      var candidates = GetConfigPaths();
-
-      if (candidates.Length == 0) {
-        var path = EnsureConfigFolderExists() + "/" + NetworkProjectConfigImporter.ExpectedAssetName;
-        Debug.Log($"Creating new {nameof(NetworkProjectConfig)} at {path}");
-
-        var json = EditorJsonUtility.ToJson(CreateDefaultConfig());
-        File.WriteAllText(path, json);
-        AssetDatabase.Refresh();
-        return path;
-      }
-
-      if (candidates.Length > 1) {
-        Debug.LogWarning($"There are multiple configs, choosing the first one: {(string.Join("\n", candidates))}");
-      }
-
-      return candidates[0];
+    public static bool TryGetPrefabAsset(NetworkObjectGuid guid, out NetworkPrefabAsset prefabAsset) {
+      prefabAsset = AssetDatabase.LoadAllAssetsAtPath(GetGlobalConfigPath())
+        .OfType<NetworkPrefabAsset>()
+        .FirstOrDefault(x => x.AssetGuid == guid);
+      return prefabAsset;
     }
 
-    internal static string[] GetConfigPaths() {
-      var candidates =
-        AssetDatabase.FindAssets($"t:{nameof(NetworkProjectConfigAsset)}")
-        .Select(x => AssetDatabase.GUIDToAssetPath(x))
-        .Where(x => Path.GetExtension(x) == NetworkProjectConfigImporter.Extension)
+    public static bool TryGetPrefabSource<T>(NetworkObjectGuid guid, out T source) where T : class, INetworkPrefabSource {
+      if (NetworkProjectConfig.Global.PrefabTable.TryGetPrefabEntry(guid, out var iprefab) && iprefab is T asset) {
+        source = asset;
+        return true;
+      }
+      source = null;
+      return false;
+    }
+
+    public static bool TryResolvePrefab(NetworkObjectGuid guid, out NetworkObject prefab) {
+      if (TryGetPrefabSource(guid, out NetworkPrefabSourceUnityBase source)) {
+        try {
+          prefab = NetworkPrefabSourceFactory.ResolveOrThrow(source);
+          return true;
+        } catch (Exception ex) {
+          FusionEditorLog.Trace(ex.ToString());
+        }
+      }
+
+      prefab = null;
+      return false;
+    }
+
+    internal static string GetGlobalConfigPath(bool createIfMissing = true) {
+      var candidates = AssetDatabase.FindAssets($"glob:\"*{NetworkProjectConfigImporter.Extension}\"")
+        .Select(AssetDatabase.GUIDToAssetPath)
         .ToArray();
 
       if (candidates.Length == 0) {
         // try with a regular file api, as maybe the file has not been imported yet
         candidates = Directory.GetFiles("Assets/", $"*{NetworkProjectConfigImporter.Extension}", SearchOption.AllDirectories);
-        for (int i = 0; i < candidates.Length; ++i) {
-          candidates[i] = PathUtils.MakeSane(candidates[i]);
+
+        if (candidates.Length > 0) {
+          FusionEditorLog.WarnConfig($"AssetDatabase did not find any config, but a raw glob found these:\n{string.Join("\n", candidates)}");
+          for (int i = 0; i < candidates.Length; ++i) {
+            candidates[i] = PathUtils.MakeSane(candidates[i]);
+          }
         }
       }
 
-      return candidates;
+      if (candidates.Length == 0) {
+        if (createIfMissing) {
+
+          var defaultPath = EnsureConfigFolderExists() + "/" + NetworkProjectConfig.DefaultResourceName + NetworkProjectConfigImporter.Extension;
+
+          if (AssetDatabase.IsAssetImportWorkerProcess()) {
+            FusionEditorLog.WarnConfig($"Creating a new config at {defaultPath}, but an import is already taking place. " +
+              $"AssetDatabase will \"see\" the config after the current import is over.");
+          } else {
+            FusionEditorLog.LogConfig($"Creating new config at {defaultPath}");
+          }
+
+          var json = EditorJsonUtility.ToJson(CreateDefaultConfig());
+          File.WriteAllText(defaultPath, json);          
+          AssetDatabase.ImportAsset(defaultPath);
+
+          return defaultPath;
+        } else {
+          return string.Empty;
+        }
+      }
+      if (candidates.Length > 1) {
+        FusionEditorLog.WarnConfig($"There are multiple configs, choosing the first one: {(string.Join("\n", candidates))}");
+      }
+      return candidates[0];
     }
 
     // invoked by reflection, don't remove
-    private static NetworkProjectConfig LoadGlobalConfig() {
-      var path = EnsureConfigPath();
-      return NetworkProjectConfigImporter.LoadConfigFromFile(path);
+    private static NetworkProjectConfigAsset EditTimeLoadGlobalConfigWrapper() {
+      var path = GetGlobalConfigPath();
+
+      FusionEditorLog.TraceConfig($"Loading Global config from {path}");
+
+      var config = NetworkProjectConfigImporter.LoadConfigFromFile(path);
+      var wrapper = AssetDatabase.LoadAssetAtPath<NetworkProjectConfigAsset>(path);
+
+      if (!wrapper) {
+        // well, try reimporting?
+        FusionEditorLog.TraceConfig($"Failed to load config at first attempt, reimporting and trying again.");
+        AssetDatabase.ImportAsset(path);
+        wrapper = AssetDatabase.LoadAssetAtPath<NetworkProjectConfigAsset>(path);
+      }
+
+      if (!wrapper) {
+        if (AssetDatabase.IsAssetImportWorkerProcess()) {
+          FusionEditorLog.WarnConfig($"Config created/dirty during import, this is not supported");
+        } else {
+          FusionEditorLog.WarnConfig($"Failed to load config with regular AssetDatabase, " +
+            $"prefab assets disabled until next reimport.");
+        }
+
+        wrapper = ScriptableObject.CreateInstance<NetworkProjectConfigAsset>();
+      }
+
+      // overwrite imported config with raw one, in case there's an import lagging behind
+      wrapper.Config = config;
+      return wrapper;
     }
 
     private static NetworkProjectConfig CreateDefaultConfig() {
@@ -7219,6 +7118,511 @@ namespace Fusion.Editor {
   }
 }
 
+
+#endregion
+
+
+#region Assets/Photon/Fusion/Scripts/Editor/Utilities/ReflectionUtils.cs
+
+﻿namespace Fusion.Editor {
+
+  using System;
+  using System.Collections.Generic;
+  using System.Linq;
+  using System.Linq.Expressions;
+  using System.Reflection;
+
+  public static class ReflectionUtils {
+    public const BindingFlags DefaultBindingFlags = BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.Instance;
+
+    public static Type GetUnityLeafType(this Type type) {
+      if (type.HasElementType) {
+        type = type.GetElementType();
+      } else if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(List<>)) {
+        type = type.GetGenericArguments()[0];
+      }
+      return type;
+    }
+
+#if UNITY_EDITOR
+
+    public static T CreateEditorMethodDelegate<T>(string editorAssemblyTypeName, string methodName, BindingFlags flags = DefaultBindingFlags) where T : Delegate {
+      return CreateMethodDelegate<T>(typeof(UnityEditor.Editor).Assembly, editorAssemblyTypeName, methodName, flags);
+    }
+
+    public static Delegate CreateEditorMethodDelegate(string editorAssemblyTypeName, string methodName, BindingFlags flags, Type delegateType) {
+      return CreateMethodDelegate(typeof(UnityEditor.Editor).Assembly, editorAssemblyTypeName, methodName, flags, delegateType);
+    }
+
+#endif
+
+    public static T CreateMethodDelegate<T>(this Type type, string methodName, BindingFlags flags = DefaultBindingFlags) where T : Delegate {
+      try {
+        return CreateMethodDelegateInternal<T>(type, methodName, flags);
+      } catch (System.Exception ex) {
+        throw new InvalidOperationException(CreateMethodExceptionMessage<T>(type.Assembly, type.FullName, methodName, flags), ex);
+      }
+    }
+
+    public static Delegate CreateMethodDelegate(this Type type, string methodName, BindingFlags flags, Type delegateType) {
+      try {
+        return CreateMethodDelegateInternal(type, methodName, flags, delegateType);
+      } catch (System.Exception ex) {
+        throw new InvalidOperationException(CreateMethodExceptionMessage(type.Assembly, type.FullName, methodName, flags, delegateType), ex);
+      }
+    }
+
+    public static T CreateMethodDelegate<T>(Assembly assembly, string typeName, string methodName, BindingFlags flags = DefaultBindingFlags) where T : Delegate {
+      try {
+        var type = assembly.GetType(typeName, true);
+        return CreateMethodDelegateInternal<T>(type, methodName, flags);
+      } catch (System.Exception ex) {
+        throw new InvalidOperationException(CreateMethodExceptionMessage<T>(assembly, typeName, methodName, flags), ex);
+      }
+    }
+
+    public static Delegate CreateMethodDelegate(Assembly assembly, string typeName, string methodName, BindingFlags flags, Type delegateType) {
+      try {
+        var type = assembly.GetType(typeName, true);
+        return CreateMethodDelegateInternal(type, methodName, flags, delegateType);
+      } catch (System.Exception ex) {
+        throw new InvalidOperationException(CreateMethodExceptionMessage(assembly, typeName, methodName, flags, delegateType), ex);
+      }
+    }
+
+    public static T CreateMethodDelegate<T>(this Type type, string methodName, BindingFlags flags, Type delegateType, params DelegateSwizzle[] fallbackSwizzles) where T : Delegate {
+      try {
+        MethodInfo method = GetMethodOrThrow(type, methodName, flags, delegateType, fallbackSwizzles, out var swizzle);
+
+        var delegateParameters = typeof(T).GetMethod("Invoke").GetParameters();
+        var parameters = new List<ParameterExpression>();
+
+        for (int i = 0; i < delegateParameters.Length; ++i) {
+          parameters.Add(Expression.Parameter(delegateParameters[i].ParameterType, $"param_{i}"));
+        }
+
+        var convertedParameters = new List<Expression>();
+        {
+          var methodParameters = method.GetParameters();
+          if (swizzle == null) {
+            for (int i = 0, j = method.IsStatic ? 0 : 1; i < methodParameters.Length; ++i, ++j) {
+              convertedParameters.Add(Expression.Convert(parameters[j], methodParameters[i].ParameterType));
+            }
+          } else {
+            var swizzledParameters = swizzle.Swizzle(parameters.ToArray());
+            for (int i = 0, j = method.IsStatic ? 0 : 1; i < methodParameters.Length; ++i, ++j) {
+              convertedParameters.Add(Expression.Convert(swizzledParameters[j], methodParameters[i].ParameterType));
+            }
+          }
+        }
+
+        MethodCallExpression callExpression;
+        if (method.IsStatic) {
+          callExpression = Expression.Call(method, convertedParameters);
+        } else {
+          var instance = Expression.Convert(parameters[0], method.DeclaringType);
+          callExpression = Expression.Call(instance, method, convertedParameters);
+        }
+
+        var l = Expression.Lambda(typeof(T), callExpression, parameters);
+        var del = l.Compile();
+        return (T)del;
+      } catch (Exception ex) {
+        throw new InvalidOperationException(CreateMethodExceptionMessage<T>(type.Assembly, type.FullName, methodName, flags), ex);
+      }
+    }
+
+    public static T CreateConstructorDelegate<T>(this Type type, BindingFlags flags, Type delegateType, params DelegateSwizzle[] fallbackSwizzles) where T : Delegate {
+      try {
+        var constructor = GetConstructorOrThrow(type, flags, delegateType, fallbackSwizzles, out var swizzle);
+
+        var delegateParameters = typeof(T).GetMethod("Invoke").GetParameters();
+        var parameters = new List<ParameterExpression>();
+
+        for (int i = 0; i < delegateParameters.Length; ++i) {
+          parameters.Add(Expression.Parameter(delegateParameters[i].ParameterType, $"param_{i}"));
+        }
+
+        var convertedParameters = new List<Expression>();
+        {
+          var constructorParameters = constructor.GetParameters();
+          if (swizzle == null) {
+            for (int i = 0, j = 0; i < constructorParameters.Length; ++i, ++j) {
+              convertedParameters.Add(Expression.Convert(parameters[j], constructorParameters[i].ParameterType));
+            }
+          } else {
+            var swizzledParameters = swizzle.Swizzle(parameters.ToArray());
+            for (int i = 0, j = 0; i < constructorParameters.Length; ++i, ++j) {
+              convertedParameters.Add(Expression.Convert(swizzledParameters[j], constructorParameters[i].ParameterType));
+            }
+          }
+        }
+
+        NewExpression newExpression = Expression.New(constructor, convertedParameters);
+        var l = Expression.Lambda(typeof(T), newExpression, parameters);
+        var del = l.Compile();
+        return (T)del;
+      } catch (Exception ex) {
+        throw new InvalidOperationException(CreateConstructorExceptionMessage(type.Assembly, type.FullName, flags), ex);
+      }
+    }
+
+    public static FieldInfo GetFieldOrThrow(this Type type, string fieldName, BindingFlags flags = DefaultBindingFlags) {
+      var field = type.GetField(fieldName, flags);
+      if (field == null) {
+        throw new ArgumentOutOfRangeException(nameof(fieldName), CreateFieldExceptionMessage(type.Assembly, type.FullName, fieldName, flags));
+      }
+      return field;
+    }
+
+    public static FieldInfo GetFieldOrThrow<T>(this Type type, string fieldName, BindingFlags flags = DefaultBindingFlags) {
+      return GetFieldOrThrow(type, fieldName, typeof(T), flags);
+    }
+
+    public static FieldInfo GetFieldOrThrow(this Type type, string fieldName, Type fieldType, BindingFlags flags = DefaultBindingFlags) {
+      var field = type.GetField(fieldName, flags);
+      if (field == null) {
+        throw new ArgumentOutOfRangeException(nameof(fieldName), CreateFieldExceptionMessage(type.Assembly, type.FullName, fieldName, flags));
+      }
+      if (field.FieldType != fieldType) {
+        throw new InvalidProgramException($"Field {type.FullName}.{fieldName} is of type {field.FieldType}, not expected {fieldType}");
+      }
+      return field;
+    }
+
+    public static PropertyInfo GetPropertyOrThrow<T>(this Type type, string propertyName, BindingFlags flags = DefaultBindingFlags) {
+      return GetPropertyOrThrow(type, propertyName, typeof(T), flags);
+    }
+
+    public static PropertyInfo GetPropertyOrThrow(this Type type, string propertyName, Type propertyType, BindingFlags flags = DefaultBindingFlags) {
+      var property = type.GetProperty(propertyName, flags);
+      if (property == null) {
+        throw new ArgumentOutOfRangeException(nameof(propertyName), CreateFieldExceptionMessage(type.Assembly, type.FullName, propertyName, flags));
+      }
+      if (property.PropertyType != propertyType) {
+        throw new InvalidProgramException($"Property {type.FullName}.{propertyName} is of type {property.PropertyType}, not expected {propertyType}");
+      }
+      return property;
+    }
+
+    public static ConstructorInfo GetConstructorInfoOrThrow(this Type type, Type[] types, BindingFlags flags = DefaultBindingFlags) {
+      var constructor = type.GetConstructor(flags, null, types, null);
+      if (constructor == null) {
+        throw new ArgumentOutOfRangeException(nameof(types), CreateConstructorExceptionMessage(type.Assembly, type.FullName, types, flags));
+      }
+      return constructor;
+    }
+
+    public static Type GetNestedTypeOrThrow(this Type type, string name, BindingFlags flags) {
+      var result = type.GetNestedType(name, flags);
+      if (result == null) {
+        throw new ArgumentOutOfRangeException(nameof(name), CreateFieldExceptionMessage(type.Assembly, type.FullName, name, flags));
+      }
+      return result;
+    }
+
+    public static InstanceAccessor<FieldType> CreateFieldAccessor<FieldType>(this Type type, string fieldName, Type expectedFieldType = null, BindingFlags flags = DefaultBindingFlags) {
+      var field = type.GetFieldOrThrow(fieldName, expectedFieldType ?? typeof(FieldType), BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
+      return CreateAccessorInternal<FieldType>(field);
+    }
+
+    public static StaticAccessor<object> CreateStaticFieldAccessor(this Type type, string fieldName, Type expectedFieldType = null) {
+      return CreateStaticFieldAccessor<object>(type, fieldName, expectedFieldType);
+    }
+
+    public static StaticAccessor<FieldType> CreateStaticFieldAccessor<FieldType>(this Type type, string fieldName, Type expectedFieldType = null) {
+      var field = type.GetFieldOrThrow(fieldName, expectedFieldType ?? typeof(FieldType), BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic);
+      return CreateStaticAccessorInternal<FieldType>(field);
+    }
+
+    public static InstanceAccessor<PropertyType> CreatePropertyAccessor<PropertyType>(this Type type, string fieldName, Type expectedPropertyType = null, BindingFlags flags = DefaultBindingFlags) {
+      var field = type.GetPropertyOrThrow(fieldName, expectedPropertyType ?? typeof(PropertyType), BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
+      return CreateAccessorInternal<PropertyType>(field);
+    }
+
+    public static StaticAccessor<object> CreateStaticPropertyAccessor(this Type type, string fieldName, Type expectedFieldType = null) {
+      return CreateStaticPropertyAccessor<object>(type, fieldName, expectedFieldType);
+    }
+
+    public static StaticAccessor<FieldType> CreateStaticPropertyAccessor<FieldType>(this Type type, string fieldName, Type expectedFieldType = null) {
+      var field = type.GetPropertyOrThrow(fieldName, expectedFieldType ?? typeof(FieldType), BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic);
+      return CreateStaticAccessorInternal<FieldType>(field);
+    }
+
+    private static string CreateMethodExceptionMessage<T>(Assembly assembly, string typeName, string methodName, BindingFlags flags) {
+      return CreateMethodExceptionMessage(assembly, typeName, methodName, flags, typeof(T));
+    }
+
+    private static string CreateMethodExceptionMessage(Assembly assembly, string typeName, string methodName, BindingFlags flags, Type delegateType) {
+      return $"{assembly.FullName}.{typeName}.{methodName} with flags: {flags} and type: {delegateType}";
+    }
+
+    private static string CreateFieldExceptionMessage(Assembly assembly, string typeName, string fieldName, BindingFlags flags) {
+      return $"{assembly.FullName}.{typeName}.{fieldName} with flags: {flags}";
+    }
+
+    private static string CreateConstructorExceptionMessage(Assembly assembly, string typeName, BindingFlags flags) {
+      return $"{assembly.FullName}.{typeName}() with flags: {flags}";
+    }
+
+    private static string CreateConstructorExceptionMessage(Assembly assembly, string typeName, Type[] types, BindingFlags flags) {
+      return $"{assembly.FullName}.{typeName}({(string.Join(", ", types.Select(x => x.FullName)))}) with flags: {flags}";
+    }
+
+    private static T CreateMethodDelegateInternal<T>(this Type type, string name, BindingFlags flags) where T : Delegate {
+      return (T)CreateMethodDelegateInternal(type, name, flags, typeof(T));
+    }
+
+    private static Delegate CreateMethodDelegateInternal(this Type type, string name, BindingFlags flags, Type delegateType) {
+      MethodInfo method = GetMethodOrThrow(type, name, flags, delegateType);
+      return System.Delegate.CreateDelegate(delegateType, null, method);
+    }
+
+    private static MethodInfo GetMethodOrThrow(Type type, string name, BindingFlags flags, Type delegateType) {
+      return GetMethodOrThrow(type, name, flags, delegateType, Array.Empty<DelegateSwizzle>(), out _);
+    }
+
+    private static MethodInfo FindMethod(Type type, string name, BindingFlags flags, Type returnType, params Type[] parameters) {
+      var method = type.GetMethod(name, flags, null, parameters, null);
+
+      if (method == null) {
+        return null;
+      }
+
+      if (method.ReturnType != returnType) {
+        return null;
+      }
+
+      return method;
+    }
+
+    private static ConstructorInfo GetConstructorOrThrow(Type type, BindingFlags flags, Type delegateType, DelegateSwizzle[] swizzles, out DelegateSwizzle firstMatchingSwizzle) {
+      var delegateMethod = delegateType.GetMethod("Invoke");
+
+      var allDelegateParameters = delegateMethod.GetParameters().Select(x => x.ParameterType).ToArray();
+
+      var constructor = type.GetConstructor(flags, null, allDelegateParameters, null);
+      if (constructor != null) {
+        firstMatchingSwizzle = null;
+        return constructor;
+      }
+
+      if (swizzles != null) {
+        foreach (var swizzle in swizzles) {
+          Type[] swizzled = swizzle.Swizzle(allDelegateParameters);
+          constructor = type.GetConstructor(flags, null, swizzled, null);
+          if (constructor != null) {
+            firstMatchingSwizzle = swizzle;
+            return constructor;
+          }
+        }
+      }
+
+      var constructors = type.GetConstructors(flags);
+      throw new ArgumentOutOfRangeException(nameof(delegateType), $"No matching constructor found for {type}, " +
+        $"signature \"{delegateType}\", " +
+        $"flags \"{flags}\" and " +
+        $"params: {string.Join(", ", allDelegateParameters.Select(x => x.FullName))}" +
+        $", candidates are\n: {(string.Join("\n", constructors.Select(x => x.ToString())))}");
+    }
+
+    private static MethodInfo GetMethodOrThrow(Type type, string name, BindingFlags flags, Type delegateType, DelegateSwizzle[] swizzles, out DelegateSwizzle firstMatchingSwizzle) {
+      var delegateMethod = delegateType.GetMethod("Invoke");
+
+      var allDelegateParameters = delegateMethod.GetParameters().Select(x => x.ParameterType).ToArray();
+
+      var method = FindMethod(type, name, flags, delegateMethod.ReturnType, flags.HasFlag(BindingFlags.Static) ? allDelegateParameters : allDelegateParameters.Skip(1).ToArray());
+      if (method != null) {
+        firstMatchingSwizzle = null;
+        return method;
+      }
+
+      if (swizzles != null) {
+        foreach (var swizzle in swizzles) {
+          Type[] swizzled = swizzle.Swizzle(allDelegateParameters);
+          if (!flags.HasFlag(BindingFlags.Static) && swizzled[0] != type) {
+            throw new InvalidOperationException();
+          }
+          method = FindMethod(type, name, flags, delegateMethod.ReturnType, flags.HasFlag(BindingFlags.Static) ? swizzled : swizzled.Skip(1).ToArray());
+          if (method != null) {
+            firstMatchingSwizzle = swizzle;
+            return method;
+          }
+        }
+      }
+
+      var methods = type.GetMethods(flags);
+      throw new ArgumentOutOfRangeException(nameof(name), $"No method found matching name \"{name}\", " +
+        $"signature \"{delegateType}\", " +
+        $"flags \"{flags}\" and " +
+        $"params: {string.Join(", ", allDelegateParameters.Select(x => x.FullName))}" +
+        $", candidates are\n: {(string.Join("\n", methods.Select(x => x.ToString())))}");
+    }
+
+    public static bool IsArrayOrList(this Type listType) {
+      if (listType.IsArray) {
+        return true;
+      } else if (listType.IsGenericType && listType.GetGenericTypeDefinition() == typeof(List<>)) {
+        return true;
+      }
+      return false;
+    }
+
+    public static Type GetArrayOrListElementType(this Type listType) {
+      if (listType.IsArray) {
+        return listType.GetElementType();
+      } else if (listType.IsGenericType && listType.GetGenericTypeDefinition() == typeof(List<>)) {
+        return listType.GetGenericArguments()[0];
+      }
+      return null;
+    }
+
+    public static Type MakeFuncType(params Type[] types) {
+      return GetFuncType(types.Length).MakeGenericType(types);
+    }
+
+    private static Type GetFuncType(int argumentCount) {
+      switch (argumentCount) {
+        case 1: return typeof(Func<>);
+        case 2: return typeof(Func<,>);
+        case 3: return typeof(Func<,,>);
+        case 4: return typeof(Func<,,,>);
+        case 5: return typeof(Func<,,,,>);
+        case 6: return typeof(Func<,,,,,>);
+        default: throw new ArgumentOutOfRangeException(nameof(argumentCount));
+      }
+    }
+
+    public static Type MakeActionType(params Type[] types) {
+      if (types.Length == 0) return typeof(Action);
+      return GetActionType(types.Length).MakeGenericType(types);
+    }
+
+    private static Type GetActionType(int argumentCount) {
+      switch (argumentCount) {
+        case 1: return typeof(Action<>);
+        case 2: return typeof(Action<,>);
+        case 3: return typeof(Action<,,>);
+        case 4: return typeof(Action<,,,>);
+        case 5: return typeof(Action<,,,,>);
+        case 6: return typeof(Action<,,,,,>);
+        default: throw new ArgumentOutOfRangeException(nameof(argumentCount));
+      }
+    }
+
+    private static StaticAccessor<T> CreateStaticAccessorInternal<T>(MemberInfo fieldOrProperty) {
+      try {
+        var valueParameter = Expression.Parameter(typeof(T), "value");
+        bool canWrite = true;
+
+        UnaryExpression valueExpression;
+        MemberExpression memberExpression;
+        if (fieldOrProperty is PropertyInfo property) {
+          valueExpression = Expression.Convert(valueParameter, property.PropertyType);
+          memberExpression = Expression.Property(null, property);
+          canWrite = property.CanWrite;
+        } else {
+          var field = (FieldInfo)fieldOrProperty;
+          valueExpression = Expression.Convert(valueParameter, field.FieldType);
+          memberExpression = Expression.Field(null, field);
+          canWrite = field.IsInitOnly == false;
+        }
+
+        Func<T> getter;
+        var getExpression = Expression.Convert(memberExpression, typeof(T));
+        var getLambda = Expression.Lambda<Func<T>>(getExpression);
+        getter = getLambda.Compile();
+
+        Action<T> setter = null;
+        if (canWrite) {
+          var setExpression = Expression.Assign(memberExpression, valueExpression);
+          var setLambda = Expression.Lambda<Action<T>>(setExpression, valueParameter);
+          setter = setLambda.Compile();
+        }
+
+        return new StaticAccessor<T>() {
+          GetValue = getter,
+          SetValue = setter
+        };
+      } catch (Exception ex) {
+        throw new InvalidOperationException($"Failed to create accessor for {fieldOrProperty.DeclaringType}.{fieldOrProperty.Name}", ex);
+      }
+    }
+
+    private static InstanceAccessor<T> CreateAccessorInternal<T>(MemberInfo fieldOrProperty) {
+      try {
+        var instanceParameter = Expression.Parameter(typeof(object), "instance");
+        var instanceExpression = Expression.Convert(instanceParameter, fieldOrProperty.DeclaringType);
+
+        var valueParameter = Expression.Parameter(typeof(T), "value");
+        bool canWrite = true;
+
+        UnaryExpression valueExpression;
+        MemberExpression memberExpression;
+        if (fieldOrProperty is PropertyInfo property) {
+          valueExpression = Expression.Convert(valueParameter, property.PropertyType);
+          memberExpression = Expression.Property(instanceExpression, property);
+          canWrite = property.CanWrite;
+        } else {
+          var field = (FieldInfo)fieldOrProperty;
+          valueExpression = Expression.Convert(valueParameter, field.FieldType);
+          memberExpression = Expression.Field(instanceExpression, field);
+          canWrite = field.IsInitOnly == false;
+        }
+
+        Func<object, T> getter;
+
+        var getExpression = Expression.Convert(memberExpression, typeof(T));
+        var getLambda = Expression.Lambda<Func<object, T>>(getExpression, instanceParameter);
+        getter = getLambda.Compile();
+
+        Action<object, T> setter = null;
+        if (canWrite) {
+          var setExpression = Expression.Assign(memberExpression, valueExpression);
+          var setLambda = Expression.Lambda<Action<object, T>>(setExpression, instanceParameter, valueParameter);
+          setter = setLambda.Compile();
+        }
+
+        return new InstanceAccessor<T>() {
+          GetValue = getter,
+          SetValue = setter
+        };
+      } catch (Exception ex) {
+        throw new InvalidOperationException($"Failed to create accessor for {fieldOrProperty.DeclaringType}.{fieldOrProperty.Name}", ex);
+      }
+    }
+
+    public struct InstanceAccessor<TValue> {
+      public Func<object, TValue> GetValue;
+      public Action<object, TValue> SetValue;
+    }
+
+    public struct StaticAccessor<TValue> {
+      public Func<TValue> GetValue;
+      public Action<TValue> SetValue;
+    }
+
+    public class DelegateSwizzle {
+      private int[] _args;
+
+      public int Count => _args.Length;
+
+      public DelegateSwizzle(params int[] args) {
+        _args = args;
+      }
+
+      public T[] Swizzle<T>(T[] inputTypes) {
+        T[] result = new T[_args.Length];
+
+        for (int i = 0; i < _args.Length; ++i) {
+          result[i] = inputTypes[_args[i]];
+        }
+
+        return result;
+      }
+    }
+  }
+}
 
 #endregion
 
@@ -7717,6 +8121,8 @@ namespace Fusion.Editor {
   using UnityEditor;
   using UnityEngine;
 
+  using static Fusion.Editor.ReflectionUtils;
+
   public static class UnityInternal {
     [InitializeOnLoad]
     public static class EditorGUI {
@@ -7729,8 +8135,8 @@ namespace Fusion.Editor {
 
     [InitializeOnLoad]
     public static class EditorGUIUtility {
-      private static readonly FieldInfo s_LastControlID = typeof(UnityEditor.EditorGUIUtility).GetFieldOrThrow(nameof(s_LastControlID));
-      public static int LastControlID => (int)s_LastControlID.GetValue(null);
+      private static readonly StaticAccessor<int> s_LastControlID =  typeof(UnityEditor.EditorGUIUtility).CreateStaticFieldAccessor<int>(nameof(s_LastControlID));
+      public static int LastControlID => s_LastControlID.GetValue();
     }
 
     [InitializeOnLoad]
@@ -7740,6 +8146,34 @@ namespace Fusion.Editor {
       public static readonly GetDrawerTypeForTypeDelegate GetDrawerTypeForType = InternalType.CreateMethodDelegate<GetDrawerTypeForTypeDelegate>(nameof(GetDrawerTypeForType));
     }
 
+    [InitializeOnLoad]
+    public static class EditorApplication {
+      public static readonly Action Internal_CallAssetLabelsHaveChanged = typeof(UnityEditor.EditorApplication).CreateMethodDelegate<Action>(nameof(Internal_CallAssetLabelsHaveChanged));
+    }
+
+    public struct ObjectSelector {
+      [InitializeOnLoad]
+      static class Statics {
+        public static readonly Type InternalType = typeof(UnityEditor.Editor).Assembly.GetType("UnityEditor.ObjectSelector", true);
+        public static readonly StaticAccessor<bool> _tooltip = InternalType.CreateStaticPropertyAccessor<bool>(nameof(isVisible));
+        public static readonly StaticAccessor<EditorWindow> _get = InternalType.CreateStaticPropertyAccessor<EditorWindow>(nameof(get), InternalType);
+        public static readonly InstanceAccessor<string> _searchFilter = InternalType.CreatePropertyAccessor<string>(nameof(searchFilter));
+      }
+
+      private EditorWindow _instance;
+
+      public static bool isVisible => Statics._tooltip.GetValue();
+      
+      public static ObjectSelector get => new ObjectSelector() { _instance = Statics._get.GetValue() };
+
+      public string searchFilter {
+        get => Statics._searchFilter.GetValue(_instance);
+        set => Statics._searchFilter.SetValue(_instance, value);
+      }
+
+      private static readonly InstanceAccessor<int> _objectSelectorID = Statics.InternalType.CreateFieldAccessor<int>(nameof(objectSelectorID));
+      public int objectSelectorID => _objectSelectorID.GetValue(_instance);
+    }
   }
 }
 

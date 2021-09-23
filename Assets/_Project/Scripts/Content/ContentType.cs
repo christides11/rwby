@@ -6,6 +6,7 @@ namespace rwby
         Gamemode,
         GamemodeComponent,
         Map,
-        Soundbank
+        Soundbank,
+        Effectbank
     }
 }

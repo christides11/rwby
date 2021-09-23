@@ -19,8 +19,15 @@ namespace rwby
         public Vector3 blockForce;
         public Vector3 blockForceAir;
 
-        [Header("Camera Shake")]
+        public string hitSoundbankName;
+        public string hitSoundName;
+
+        // Shake
         public float shakeValue;
+
+        // Effect
+        public string effectbankName;
+        public string effectName;
 
         public HitInfo() : base()
         {

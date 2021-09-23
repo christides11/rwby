@@ -2,6 +2,7 @@
 
   using System;
   using System.IO;
+  using System.Linq;
   using UnityEditor;
   using UnityEditor.AssetImporters;
   using UnityEngine;
@@ -95,6 +96,10 @@
         var extra = (NetworkProjectConfigAsset)extraData;
         extra.Config = NetworkProjectConfigImporter.LoadConfigFromFile(importer.assetPath);
         extra.PrefabAssetsContainerPath = importer.PrefabAssetsContainerPath;
+        extra.Prefabs = AssetDatabase.LoadAllAssetsAtPath(importer.assetPath)
+          .OfType<NetworkPrefabSourceUnityBase>()
+          .ToArray();
+
         _initializeException = null;
       } catch (Exception ex) {
         _initializeException = ex;

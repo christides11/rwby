@@ -29,6 +29,7 @@ namespace rwby
         [SerializeField] private List<IdentifierAssetReferenceRelation<IGameModeComponentDefinition>> gamemodeComponentRefs = new List<IdentifierAssetReferenceRelation<IGameModeComponentDefinition>>();
         [SerializeField] private List<IdentifierAssetReferenceRelation<IMapDefinition>> mapRefs = new List<IdentifierAssetReferenceRelation<IMapDefinition>>();
         [SerializeField] private List<IdentifierAssetReferenceRelation<ISoundbankDefinition>> soundbankRefs = new List<IdentifierAssetReferenceRelation<ISoundbankDefinition>>();
+        [SerializeField] private List<IdentifierAssetReferenceRelation<IEffectbankDefinition>> effectbankRefs = new List<IdentifierAssetReferenceRelation<IEffectbankDefinition>>();
 
         [NonSerialized] private Dictionary<string, AssetReferenceT<IFighterDefinition>> fighterReferences = new Dictionary<string, AssetReferenceT<IFighterDefinition>>();
         [NonSerialized] private Dictionary<string, OperationResult<IFighterDefinition>> fighterDefinitions
@@ -50,6 +51,11 @@ namespace rwby
         [NonSerialized] private Dictionary<string, OperationResult<ISoundbankDefinition>> soundbankDefinitions
             = new Dictionary<string, OperationResult<ISoundbankDefinition>>();
 
+        [NonSerialized] private Dictionary<string, AssetReferenceT<IEffectbankDefinition>> effectbankReferences = new Dictionary<string, AssetReferenceT<IEffectbankDefinition>>();
+        [NonSerialized]
+        private Dictionary<string, OperationResult<IEffectbankDefinition>> effectbankDefinitions
+            = new Dictionary<string, OperationResult<IEffectbankDefinition>>();
+
         public void OnEnable()
         {
             fighterReferences.Clear();
@@ -57,6 +63,7 @@ namespace rwby
             gamemodeComponentReferences.Clear();
             mapReferences.Clear();
             soundbankReferences.Clear();
+            effectbankReferences.Clear();
             foreach (IdentifierAssetReferenceRelation<IFighterDefinition> a in fighterRefs)
             {
                 fighterReferences.Add(a.identifier, a.asset);
@@ -77,6 +84,10 @@ namespace rwby
             {
                 soundbankReferences.Add(a.identifier, a.asset);
             }
+            foreach (IdentifierAssetReferenceRelation<IEffectbankDefinition> a in effectbankRefs)
+            {
+                effectbankReferences.Add(a.identifier, a.asset);
+            }
         }
 
         #region Content
@@ -94,6 +105,8 @@ namespace rwby
                     return mapReferences.ContainsKey(contentIdentfier) ? true : false;
                 case ContentType.Soundbank:
                     return soundbankReferences.ContainsKey(contentIdentfier) ? true : false;
+                case ContentType.Effectbank:
+                    return effectbankReferences.ContainsKey(contentIdentfier) ? true : false;
                 default:
                     return false;
             }
@@ -118,6 +131,8 @@ namespace rwby
                     return await LoadContentDefinitions(mapReferences, mapDefinitions);
                 case ContentType.Soundbank:
                     return await LoadContentDefinitions(soundbankReferences, soundbankDefinitions);
+                case ContentType.Effectbank:
+                    return await LoadContentDefinitions(effectbankReferences, effectbankDefinitions);
             }
             return false;
         } 
@@ -142,6 +157,8 @@ namespace rwby
                     return await LoadContentDefinition(mapReferences, mapDefinitions, contentIdentifier);
                 case ContentType.Soundbank:
                     return await LoadContentDefinition(soundbankReferences, soundbankDefinitions, contentIdentifier);
+                case ContentType.Effectbank:
+                    return await LoadContentDefinition(effectbankReferences, effectbankDefinitions, contentIdentifier);
                 default:
                     return false;
             }
@@ -161,6 +178,8 @@ namespace rwby
                     return GetContentDefinitions(mapReferences, mapDefinitions);
                 case ContentType.Soundbank:
                     return GetContentDefinitions(soundbankReferences, soundbankDefinitions);
+                case ContentType.Effectbank:
+                    return GetContentDefinitions(effectbankReferences, effectbankDefinitions);
                 default:
                     return null;
             }
@@ -186,6 +205,8 @@ namespace rwby
                     return GetContentDefinition(mapDefinitions, contentIdentifier);
                 case ContentType.Soundbank:
                     return GetContentDefinition(soundbankDefinitions, contentIdentifier);
+                case ContentType.Effectbank:
+                    return GetContentDefinition(effectbankDefinitions, contentIdentifier);
                 default:
                     return null;
             }
@@ -214,6 +235,9 @@ namespace rwby
                 case ContentType.Soundbank:
                     UnloadContentDefinitions(soundbankReferences, soundbankDefinitions);
                     break;
+                case ContentType.Effectbank:
+                    UnloadContentDefinitions(effectbankReferences, effectbankDefinitions);
+                    break;
             }
         }
 
@@ -240,6 +264,9 @@ namespace rwby
                     break;
                 case ContentType.Soundbank:
                     UnloadContentDefinition(soundbankReferences, soundbankDefinitions, contentIdentifier);
+                    break;
+                case ContentType.Effectbank:
+                    UnloadContentDefinition(effectbankReferences, effectbankDefinitions, contentIdentifier);
                     break;
             }
         }

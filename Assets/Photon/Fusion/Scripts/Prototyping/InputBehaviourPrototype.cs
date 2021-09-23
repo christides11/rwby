@@ -86,6 +86,7 @@ public class InputBehaviourPrototype : Fusion.Behaviour, INetworkRunnerCallbacks
   public void OnUserSimulationMessage(NetworkRunner runner, SimulationMessagePtr message) { }
   public void OnObjectWordsChanged(NetworkRunner runner, NetworkObject obj, HashSet<int> changedWords, NetworkObjectMemoryPtr oldMemory) { }
   public void OnShutdown(NetworkRunner runner, ShutdownReason shutdownReason) { }
+  public void OnSessionListUpdated(NetworkRunner runner, List<SessionInfo> sessionList) {  }
 }
 
 /// <summary>

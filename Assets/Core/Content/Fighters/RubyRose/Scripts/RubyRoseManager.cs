@@ -23,6 +23,12 @@ namespace rwby.core.content
             {
                 return false;
             }
+
+            bool globalEffectbankLoadResult = await ContentManager.instance.LoadContentDefinition(ContentType.Effectbank, new ModObjectReference("core", "global"));
+            if (globalEffectbankLoadResult == false)
+            {
+                return false;
+            }
             return true;
         }
 
@@ -34,8 +40,14 @@ namespace rwby.core.content
             {
                 Debug.LogError("Error loading global soundbank.");
             }
-
             soundbankContainer.AddSoundbank(globalSnbk.Name, globalSnbk);
+
+            IEffectbankDefinition globalEffectbank = (IEffectbankDefinition)ContentManager.instance.GetContentDefinition(ContentType.Effectbank, new ModObjectReference("core", "global"));
+            if (globalEffectbank == null)
+            {
+                Debug.LogError("Error loading global effectbank.");
+            }
+            effectbankContainer.AddEffectbank(globalEffectbank.Name, globalEffectbank);
         }
 
         protected override void SetupStates()

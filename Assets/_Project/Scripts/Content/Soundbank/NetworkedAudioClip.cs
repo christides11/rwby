@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using Fusion;
 
@@ -122,27 +120,27 @@ namespace rwby
         }
 
         // PREDICTION //
-        public void PredictedSpawnSpawned()
+        public virtual void PredictedSpawnSpawned()
         {
             soundTick = 0;
         }
 
-        public void PredictedSpawnUpdate()
+        public virtual void PredictedSpawnUpdate()
         {
 
         }
 
-        public void PredictedSpawnRender()
+        public virtual void PredictedSpawnRender()
         {
 
         }
 
-        public void PredictedSpawnSuccess()
+        public virtual void PredictedSpawnSuccess()
         {
 
         }
 
-        public void PredictedSpawnFailed()
+        public virtual void PredictedSpawnFailed()
         {
             Runner.Despawn(Object, true);
         }

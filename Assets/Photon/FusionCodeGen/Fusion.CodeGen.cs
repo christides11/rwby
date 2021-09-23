@@ -1915,13 +1915,13 @@ namespace Fusion.CodeGen {
         il.AppendMacro(ctx.LoadAddress());
       }
 
-      il.Append(Call(ctx.Method.Module.ImportReference(wrapInfo.WrapMethod)));
+      il.Append(Call(ctx.ImportReference(wrapInfo.WrapMethod)));
 
       if (wrapInfo.IsRaw) {
         // read bytes are on top of the stack
         il.Append(Ldc_I4(wrapInfo.MaxRawByteCount));
         var validateMethod = new GenericInstanceMethod(asm.NetworkBehaviourUtils.GetMethod(nameof(NetworkBehaviourUtils.VerifyRawNetworkWrap)));
-        validateMethod.GenericArguments.Add(wrapInfo.Type);
+        validateMethod.GenericArguments.Add(ctx.ImportReference(wrapInfo.Type));
         il.Append(Call(validateMethod));
 
         if (ctx.HasOffset) {
@@ -1932,7 +1932,7 @@ namespace Fusion.CodeGen {
         }
 
       } else {
-        var type = ctx.Method.Module.ImportReference(wrapInfo.WrapperType.GetElementType());
+        var type = ctx.ImportReference(wrapInfo.WrapperType.GetElementType());
         il.Append(Stind_or_Stobj(type));
         
         if (ctx.HasOffset) {
@@ -1949,7 +1949,7 @@ namespace Fusion.CodeGen {
       var wrapperType = wrapInfo.UnwrapMethod.Parameters[1].ParameterType;
       Log.Assert(!wrapperType.IsByReference);
 
-      var typeToLoad = ctx.Method.Module.ImportReference(wrapperType);
+      var typeToLoad = ctx.ImportReference(wrapperType);
 
       if (wrapInfo.IsRaw || wrapInfo.UnwrapByRef) {
         il.AppendMacro(ctx.LoadRunner());
@@ -1960,14 +1960,14 @@ namespace Fusion.CodeGen {
 
         VariableDefinition byRefTempVariable = null;
         if (previousValue == null) {
-          byRefTempVariable = ctx.GetOrCreateVariable("RawUnwrap_tmp", wrapInfo.Type);
+          byRefTempVariable = ctx.GetOrCreateVariable("RawUnwrap_tmp", ctx.ImportReference(wrapInfo.Type));
           il.Append(Ldloca_S(byRefTempVariable));
         } else {
           il.Append(Ldarg_0());
           il.Append(Ldflda(previousValue));
         }
 
-        il.Append(Call(ctx.Method.Module.ImportReference(wrapInfo.UnwrapMethod)));
+        il.Append(Call(ctx.ImportReference(wrapInfo.UnwrapMethod)));
 
         if (wrapInfo.IsRaw) {
           // check if number of bytes checks out
@@ -2014,7 +2014,7 @@ namespace Fusion.CodeGen {
         il.AppendMacro(ctx.LoadAddress());
         il.Append(Ldind_or_Ldobj(typeToLoad));
 
-        il.Append(Call(ctx.Method.Module.ImportReference(wrapInfo.UnwrapMethod)));
+        il.Append(Call(ctx.ImportReference(wrapInfo.UnwrapMethod)));
 
         if (!wrapInfo.UnwrapMethod.ReturnType.IsSame(resultType)) {
           il.Append(Cast(resultType));
@@ -2857,6 +2857,7 @@ namespace Fusion.CodeGen {
             }
           }
         } catch (Exception ex) {
+          log.Error($"Exception thrown when weaving {compiledAssembly.Name}");
           log.Exception(ex);
         } finally {
           log.FixNewLinesInMessages();
@@ -3850,6 +3851,13 @@ namespace Fusion.CodeGen {
         _fields.Add(id, result);
         Method.Body.Variables.Add(result);
         return result;
+      }
+
+      public TypeReference ImportReference(TypeReference type) {
+        return Method.Module.ImportReference(type);
+      }
+      public MethodReference ImportReference(MethodReference type) {
+        return Method.Module.ImportReference(type);
       }
 
       public virtual ILMacroStruct LoadAddress() => addressGetter;

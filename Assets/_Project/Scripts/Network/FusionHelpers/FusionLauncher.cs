@@ -178,5 +178,7 @@ namespace rwby
         {
 			Debug.Log($"Shutdown ({shutdownReason.ToString()})");
 		}
+
+		public void OnSessionListUpdated(NetworkRunner runner, List<SessionInfo> sessionList) { }
     }
 }

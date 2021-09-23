@@ -521,7 +521,48 @@
             <param name="messageType">The icon of the message box. Use <code>(int)UnityEditor.MessageType</code></param>
             <param name="compare">How the condition member value and compareToValye will be evaluated.</param>
         </member>
+        <member name="T:Fusion.CloudCommunicator">
+            <summary>
+            Wrapper around the Fusion LBC Implementation <see cref="T:Fusion.Photon.Realtime.FusionRelayClient"/>
+            
+            It will control and manage the communication between Fusion and the Photon Cloud
+            </summary>
+        </member>
+        <member name="P:Fusion.CloudCommunicator.Client">
+            <summary>
+            Fusion LBC Client Reference
+            </summary>
+        </member>
+        <member name="P:Fusion.CloudCommunicator.CommunicatorID">
+            <summary>
+            ID of this Communicator. This reflects the Actor Number of the Peer inside the Room
+            </summary>
+        </member>
+        <member name="M:Fusion.CloudCommunicator.Service">
+            <summary>
+            Keeps the Fusion Client up and running
+            </summary>
+        </member>
+        <member name="M:Fusion.CloudCommunicator.HandleProtocolPackage(System.Int32,System.Object)">
+            <summary>
+            Handles Protocol Msgs sent by the Fusion Plugin
+            
+            It converts the byte buffer into usable Protocol Msgs
+            </summary>
+            <param name="actorNr">Sender Actor of the Protocol Msg, generally the Plugin</param>
+            <param name="data">Object that stores the buffer to be converted</param>
+        </member>
+        <member name="M:Fusion.CloudCommunicator.HandleDataPackage(System.Int32,System.Object)">
+            <summary>
+            Handles Data Events
+            </summary>
+            <param name="actorNr">Sender Actor/Remote Connection</param>
+            <param name="data">Data buffer to be processed</param>
+        </member>
         <member name="T:Fusion.CloudServices">
+            <summary>
+            Responsible to deal with LoadBalancingClient Events
+            </summary>
             <summary>
             Responsible for dealing and managing the API used to communicate with the Photon Cloud.
             This also includes:
@@ -574,7 +615,35 @@
             </summary>
             <returns>Async Task of the connect to Photon Cloud process. Can be used to wait for the process to be finished</returns>
         </member>
-        <member name="M:Fusion.CloudServices.CreateOrJoinRoomAsync(Fusion.Photon.Realtime.EnterRoomParams,Fusion.Photon.Realtime.OpJoinRandomRoomParams,System.Boolean,System.Boolean)">
+        <member name="M:Fusion.CloudServices.JoinSessionLobby(Fusion.SessionLobby,System.String)">
+            <summary>
+            Join the Peer to a specific Lobby, either a prebuild or a custom one
+            </summary>
+            <param name="sessionLobby">Lobby Type to Join</param>
+            <param name="lobbyID">Lobby ID</param>
+            <returns>True if the operation could be completed. <see cref="M:Fusion.Photon.Realtime.LoadBalancingClient.OpJoinLobby(Fusion.Photon.Realtime.TypedLobby)"/></returns>
+        </member>
+        <member name="M:Fusion.CloudServices.EnterRoom(Fusion.StartGameArgs)">
+             <summary>
+             Make the local Peer Create/Join a Room based on Start Game Arguments
+             
+                           --------------------->Yes--->CreateOrJoin
+             SharedMode--->| Valid Room Name |
+                           --------------------->No---->[RandomRoomName]-->JoinRandomOrCreate
+            
+                           --------------------->Yes--->CreateOrJoin
+             ClientMode--->| Valid Room Name |
+                           --------------------->No---->[RandomRoomName]-->JoinRandom
+             
+             ServerMode--  --------------------->Yes----------------------------|
+                        |->| Valid Room Name |                                  v
+             HostMode----  --------------------->No---->[RandomRoomName]-->CreateOrJoin
+             
+             </summary>
+             <param name="args">Start Game Args ref</param>
+             <returns>Task of the Join Room process</returns>
+        </member>
+        <member name="M:Fusion.CloudServices.CreateOrJoinRoomAsync(Fusion.Photon.Realtime.EnterRoomParams,Fusion.Photon.Realtime.OpJoinRandomRoomParams,System.Boolean,System.Boolean,System.Boolean)">
             <summary>
             Create or Join a Photon Room using the Room Name as identifier.
             </summary>
@@ -582,6 +651,7 @@
             <param name="joinParams">Random Room Join Params</param>
             <param name="forceRoomCreation">Force the Room Creation first, then try to Join</param>
             <param name="tryJoinRandom">Signal if the peer should try to join a Random Room first</param>
+            <param name="enableRoomCreateFallback">Signal if the peer should create a Room if no Room is found on Random Join</param>
             <returns>Async Task of the room creation process. Can be used to wait for the process to be finished</returns>
         </member>
         <member name="M:Fusion.CloudServices.DisconnectFromCloud">
@@ -634,18 +704,28 @@
             </summary>
             <returns>True if in same Subnet</returns>
         </member>
-        <member name="M:Fusion.CloudServices.BuildEnterRoomParams(Fusion.Photon.Realtime.TypedLobby,System.String)">
+        <member name="M:Fusion.CloudServices.UpdateSessionInfo">
             <summary>
-            Build a new EnterRoomParams ref using the default configs and optional Room Name
+            Update the <see cref="T:Fusion.SessionInfo"/> data based on the current LBC Information after the peer enters a Room
             </summary>
-            <param name="typedLobby">Which lobby the Room should exits</param>
-            <param name="RoomName">Optional Room Name, if not set, a Random Name will be used</param>
-            <returns>EnterRoomParams reference.</returns>
         </member>
-        <member name="M:Fusion.CloudServices.UpdateGameInfo">
+        <member name="M:Fusion.CloudServices.OnRoomPropertiesChanged">
             <summary>
-            Update the GameInfo data based on the current LBC Information after the peer enters a Room
+            Callback invoked when any Room Property has changed
             </summary>
+        </member>
+        <member name="M:Fusion.CloudServices.OnRoomListChanged(System.Collections.Generic.List{Fusion.Photon.Realtime.RoomInfo})">
+            <summary>
+            Callback invoked when the Room list is updated with data from the Cloud
+            </summary>
+            <param name="roomList">New List of <see cref="T:Fusion.Photon.Realtime.RoomInfo"/></param>
+        </member>
+        <member name="M:Fusion.CloudServices.ConvertToSessionInfo(Fusion.Photon.Realtime.RoomInfo)">
+            <summary>
+            Converts a <see cref="T:Fusion.Photon.Realtime.RoomInfo"/> to a <see cref="T:Fusion.SessionInfo"/>
+            </summary>
+            <param name="roomInfo"><see cref="T:Fusion.Photon.Realtime.RoomInfo"/> ref</param>
+            <returns><see cref="T:Fusion.SessionInfo"/> ref</returns>
         </member>
         <member name="M:Fusion.CloudServices.InitRelayLogs">
             <summary>
@@ -839,11 +919,6 @@
             Timeout between sending a <see cref="T:Fusion.Protocol.Join"/> Request and receive a Join Confirmation
             </summary>
         </member>
-        <member name="F:Fusion.CloudServicesMetadata.FUSION_PLUGIN_NAME">
-            <summary>
-            Fusion Plugin Name for request
-            </summary>
-        </member>
         <member name="F:Fusion.CloudServicesMetadata.LobbyClientServer">
             <summary>
             Client Server Lobby
@@ -889,11 +964,6 @@
             <summary>
             List of Peer the Server must send pings.
             This is part of the NAT Punch implementation.
-            </summary>
-        </member>
-        <member name="F:Fusion.CloudServicesMetadata.LastDisconnectMsg">
-            <summary>
-            Last Disconnect Msg Received from the Plugin
             </summary>
         </member>
         <member name="T:Fusion.ScheduledRequestsExt">
@@ -2973,7 +3043,7 @@
         <member name="T:Fusion.NetworkPrefabAsset">
             <summary>
             Represents a base class for "prefab assets" - assets that point to a prefab and provide a way to load them.
-            </summary>
+            </summary> 
         </member>
         <member name="F:Fusion.NetworkPrefabAsset.AssetGuid">
             <summary>
@@ -3001,16 +3071,11 @@
             Data pointer to the first word of this objects data block
             </summary>
         </member>
-        <member name="T:Fusion.NetworkPrefabSource">
-            <summary>
-            Represents a base class for "prefab assets" - assets that point to a prefab and provide a way to load them.
-            </summary>
-        </member>
-        <member name="M:Fusion.NetworkPrefabTable.TryAdd(Fusion.NetworkPrefabSource.EntryBase,Fusion.NetworkPrefabId@)">
+        <member name="M:Fusion.NetworkPrefabTable.TryAdd(Fusion.NetworkObjectGuid,Fusion.INetworkPrefabSource,Fusion.NetworkPrefabId@)">
             <summary>
             Adds prefab to the table and assigns it an id.
             </summary>
-            <param name="prefab"></param>
+            <param name="source"></param>
             <param name="id">The id assigned to the prefab (if returns true) or id of the prefab with the same guid that has already been added.</param>
             <returns>True if the prefab prefab had unique guid and was added.</returns>
         </member>
@@ -3217,6 +3282,24 @@
         <member name="P:Fusion.NetworkProjectConfigAsset.FusionVersionInfo">
             <summary>
             Get the version information for the Fusion.Runntime.dll.
+            </summary>
+        </member>
+        <member name="F:Fusion.NetworkProjectConfigAsset.PrefabAssetsContainerPath">
+            <summary>
+            Path to <see cref="T:Fusion.NetworkPrefabAssetCollection"/> asset (created on demand if non-existent), which will serve as a host
+            for lightweight <see cref="T:Fusion.NetworkPrefabAsset"/> assets. They can be used to reference prefabs
+            alternatively to <see cref="T:Fusion.NetworkPrefabRef"/> and regular <see cref="T:Fusion.NetworkObject"/> references,
+            offering the best of two worlds: decoupling and Find References support.
+            <br/><br/>
+            Suggested path: Assets/Photon/Fusion/User/NetworkPrefabAssetCollection.asset
+            </summary>
+        </member>
+        <member name="F:Fusion.NetworkProjectConfigAsset.Prefabs">
+            <summary>
+            An auto-generated list containing source information (e.g. Resource path, address, static reference) for all the prefabs that can be spawned, i.e. the ones with <see cref="T:Fusion.NetworkObject"/>
+            component and without <see cref="F:Fusion.NetworkObjectFlags.Ignore"/> flag.
+            <br/><br/>
+            Additional prefabs can registered at runtime with <see cref="M:Fusion.NetworkPrefabTable.TryAdd(Fusion.NetworkObjectGuid,Fusion.INetworkPrefabSource,Fusion.NetworkPrefabId@)"/>.
             </summary>
         </member>
         <member name="T:Fusion.NetworkRunner">
@@ -3771,7 +3854,7 @@
             Current Game Mode active on the Fusion Simulation
             </summary>
         </member>
-        <member name="P:Fusion.NetworkRunner.GameInfo">
+        <member name="P:Fusion.NetworkRunner.SessionInfo">
             <summary>
             Stores information about the current running session
             </summary>
@@ -3795,7 +3878,15 @@
             <summary>
             Connect the local peer to Photon Cloud using an async process.
             </summary>
-            <returns>Async Task of the connect to Photon Cloud process. Can be used to wait for the process to be finished</returns>
+            <returns>Async Task of the connect to Photon Cloud process. Can be used to wait for the process to be finished.</returns>
+        </member>
+        <member name="M:Fusion.NetworkRunner.JoinSessionLobby(Fusion.SessionLobby,System.String)">
+            <summary>
+            Join the Peer to a specific Lobby, either a prebuild or a custom one
+            </summary>
+            <param name="sessionLobby">Lobby Type to Join</param>
+            <param name="lobbyID">Lobby ID</param>
+            <returns>Async Task to Join a Session Lobby. Can be used to wait for the process to be finished.</returns>
         </member>
         <member name="M:Fusion.NetworkRunner.DisconnectFromCloud">
             <summary>
@@ -3804,6 +3895,16 @@
             If the Cloud Services were not initialized, it just returns immediately
             </summary>
             <returns></returns>
+        </member>
+        <member name="M:Fusion.NetworkRunner.StartGame(Fusion.GameMode,Fusion.SessionInfo)">
+            <summary>
+            Start Game to join a specific <see cref="P:Fusion.NetworkRunner.SessionInfo"/>.
+            Only <see cref="F:Fusion.GameMode.Client"/> and <see cref="F:Fusion.GameMode.Shared"/> are accepted in this case 
+            as the local peer is joining a already running session and must not be creating one.
+            </summary>
+            <param name="gameMode">Starting GameMode</param>
+            <param name="session">Session to Join</param>
+            <returns>Task that can be awaited to chain actions</returns>
         </member>
         <member name="M:Fusion.NetworkRunner.StartGame(Fusion.StartGameArgs)">
             <summary>
@@ -3831,6 +3932,12 @@
             Wait for Fusion to be fully started
             </summary>
             <returns></returns>
+        </member>
+        <member name="M:Fusion.NetworkRunner.UpdateSessionList(System.Collections.Generic.List{Fusion.SessionInfo})">
+            <summary>
+            Signal an update on the list of <see cref="P:Fusion.NetworkRunner.SessionInfo"/>
+            </summary>
+            <param name="sessionList"></param>
         </member>
         <member name="T:Fusion.StartGameArgs">
             <summary>
@@ -3893,6 +4000,16 @@
             Connection token sent by client to server. Not used in shared mode.
             </summary>
         </member>
+        <member name="F:Fusion.StartGameArgs.SessionProperties">
+            <summary>
+            Session Properties
+            </summary>
+        </member>
+        <member name="F:Fusion.StartGameArgs.CustomLobbyName">
+            <summary>
+            Session Custom Lobby to be published in
+            </summary>
+        </member>
         <member name="T:Fusion.GameMode">
             <summary>
             Fusion Game Mode.
@@ -3946,34 +4063,107 @@
             Connection was accomplished directly with the remote peer
             </summary>
         </member>
-        <member name="T:Fusion.GameInfo">
+        <member name="T:Fusion.SessionLobby">
+            <summary>
+            Session Lobby Type
+            </summary>
+        </member>
+        <member name="F:Fusion.SessionLobby.Invalid">
+            <summary>
+            Invalid Session Lobby Type
+            </summary>
+        </member>
+        <member name="F:Fusion.SessionLobby.ClientServer">
+            <summary>
+            Server Client Lobby
+            </summary>
+        </member>
+        <member name="F:Fusion.SessionLobby.Shared">
+            <summary>
+            Shared Lobby
+            </summary>
+        </member>
+        <member name="F:Fusion.SessionLobby.Custom">
+            <summary>
+            Custom Lobby - works in conjuction with a Lobby Name/ID
+            </summary>
+        </member>
+        <member name="T:Fusion.SessionInfo">
             <summary>
             Holds information about the Game Session
             </summary>
         </member>
-        <member name="P:Fusion.GameInfo.IsValid">
+        <member name="P:Fusion.SessionInfo.IsValid">
             <summary>
-            Flag to signal if the Game Info is ready for use
+            Flag to signal if the <see cref="T:Fusion.SessionInfo"/> is ready for use
             </summary>
         </member>
-        <member name="P:Fusion.GameInfo.RoomName">
+        <member name="P:Fusion.SessionInfo.Name">
             <summary>
             Stores the current Room Name
             </summary>
         </member>
-        <member name="P:Fusion.GameInfo.Region">
+        <member name="P:Fusion.SessionInfo.Region">
             <summary>
             Stores the current connected Region
             </summary>
         </member>
-        <member name="P:Fusion.GameInfo.IsVisible">
+        <member name="P:Fusion.SessionInfo.IsVisible">
             <summary>
             Signal if the current connected Room is visible
             </summary>
         </member>
-        <member name="P:Fusion.GameInfo.IsOpen">
+        <member name="P:Fusion.SessionInfo.IsOpen">
             <summary>
             Signal if the current connected Room is open
+            </summary>
+        </member>
+        <member name="P:Fusion.SessionInfo.Properties">
+            <summary>
+            Room Custom Properties
+            </summary>
+        </member>
+        <member name="M:Fusion.SessionInfo.op_Implicit(Fusion.SessionInfo)~System.Boolean">
+            <summary>
+            Check if the <see cref="T:Fusion.SessionInfo"/> reference is not Null and is Valid.
+            </summary>
+            <param name="sessionInfo"></param>
+        </member>
+        <member name="M:Fusion.SessionInfo.UpdateCustomProperties(System.Collections.Generic.Dictionary{System.String,System.Int32})">
+            <summary>
+            Update or change the Custom Properties of the current joined Room
+            </summary>
+            <param name="customProperties">New custom properties</param>
+        </member>
+        <member name="M:Fusion.SessionInfo.ToString">
+            <summary>
+            String representation of a <see cref="T:Fusion.SessionInfo"/>
+            </summary>
+            <returns>Formatted <see cref="T:Fusion.SessionInfo"/></returns>
+        </member>
+        <member name="T:Fusion.NetworkRunnerCallbackArgs">
+            <summary>
+            Stores data types used on the <see cref="T:Fusion.INetworkRunnerCallbacks"/> interface
+            </summary>
+        </member>
+        <member name="T:Fusion.NetworkRunnerCallbackArgs.ConnectRequest">
+            <summary>
+            Data holder of a Connection Request from a remote client
+            </summary>
+        </member>
+        <member name="P:Fusion.NetworkRunnerCallbackArgs.ConnectRequest.RemoteAddress">
+            <summary>
+            Address of the remote client
+            </summary>
+        </member>
+        <member name="M:Fusion.NetworkRunnerCallbackArgs.ConnectRequest.Accept">
+            <summary>
+            Accepts the Request
+            </summary>
+        </member>
+        <member name="M:Fusion.NetworkRunnerCallbackArgs.ConnectRequest.Refuse">
+            <summary>
+            Refuses the Request
             </summary>
         </member>
         <member name="T:Fusion.ShutdownReason">
@@ -4004,6 +4194,36 @@
         <member name="F:Fusion.ShutdownReason.DisconnectedByPluginLogic">
             <summary>
             Raised when the Peer is disconnected or kicked by a Plugin Logic.
+            </summary>
+        </member>
+        <member name="F:Fusion.ShutdownReason.GameClosed">
+            <summary>
+            Raised when the Game the Peer is trying to Join is Closed
+            </summary>
+        </member>
+        <member name="F:Fusion.ShutdownReason.GameNotFound">
+            <summary>
+            Raised when the Game the Peer is trying to Join does not exist
+            </summary>
+        </member>
+        <member name="F:Fusion.ShutdownReason.MaxCcuReached">
+            <summary>
+            Raised when all CCU available for the Photon Application are in use
+            </summary>
+        </member>
+        <member name="F:Fusion.ShutdownReason.InvalidRegion">
+            <summary>
+            Raised when the peer is trying to connect to an unavailable or non-existent Region
+            </summary>
+        </member>
+        <member name="F:Fusion.ShutdownReason.GameIdAlreadyExists">
+            <summary>
+            Raised when a Session with the same name was already created
+            </summary>
+        </member>
+        <member name="F:Fusion.ShutdownReason.GameIsFull">
+            <summary>
+            Raised when a peer is trying to join a Room with already the max capacity of players
             </summary>
         </member>
         <member name="T:Fusion.INetworkRunnerCallbacks">
@@ -4055,6 +4275,14 @@
             Callback when <see cref="T:Fusion.NetworkRunner"/> disconnects from a server or host.
             </summary>
         </member>
+        <member name="M:Fusion.INetworkRunnerCallbacks.OnConnectRequest(Fusion.NetworkRunner,Fusion.NetworkRunnerCallbackArgs.ConnectRequest,System.Byte[])">
+            <summary>
+            Callback when <see cref="T:Fusion.NetworkRunner"/> receives a Connection Request from a Remote Client
+            </summary>
+            <param name="runner">Local NetworkRunner</param>
+            <param name="request">Request information</param>
+            <param name="token">Request Token</param>
+        </member>
         <member name="M:Fusion.INetworkRunnerCallbacks.OnConnectFailed(Fusion.NetworkRunner,Fusion.Sockets.NetAddress,Fusion.Sockets.NetConnectFailedReason)">
             <summary>
             Callback when <see cref="T:Fusion.NetworkRunner"/> fails to connect to a server or host.
@@ -4075,6 +4303,13 @@
             <param name="networkedObject">The object whos memory changed</param>
             <param name="changedWords">Which words changed in the memory</param>
             <param name="oldMemory">If not null it's a pointer to the old memory block which contains the old values for this object</param>
+        </member>
+        <member name="M:Fusion.INetworkRunnerCallbacks.OnSessionListUpdated(Fusion.NetworkRunner,System.Collections.Generic.List{Fusion.SessionInfo})">
+            <summary>
+            This callback is invoked when a new List of Sessions is received from Photon Cloud
+            </summary>
+            <param name="runner">The runner this object exists on</param>
+            <param name="sessionList">Updated list of Session</param>
         </member>
         <member name="T:Fusion.AccuracyDefaults">
             <summary>

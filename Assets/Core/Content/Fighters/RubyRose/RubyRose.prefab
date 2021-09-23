@@ -55,6 +55,7 @@ GameObject:
   - component: {fileID: 2898563863352299436}
   - component: {fileID: 5710829672531719765}
   - component: {fileID: 4006742894894194177}
+  - component: {fileID: 4275241288035171677}
   m_Layer: 6
   m_Name: RubyRose
   m_TagString: Untagged
@@ -160,6 +161,7 @@ MonoBehaviour:
   fighterDefinition: {fileID: 11400000, guid: f0f374ed69303bf499b21d67a399ece3, type: 2}
   capsuleCollider: {fileID: 2898563863352299436}
   soundbankContainer: {fileID: 4006742894894194177}
+  effectbankContainer: {fileID: 4275241288035171677}
   visualTransform: {fileID: 7954403120791412188}
   lockonLayerMask:
     serializedVersion: 2
@@ -172,7 +174,6 @@ MonoBehaviour:
   hitstopShakeDistance: 0.06
   hitstopDir: 1
   hitstopShakeFrames: 1
-  hitstopShake: 1
   shakeDirs:
   - {x: 0, y: 0, z: 1}
   - {x: -1, y: 0, z: 0}
@@ -559,6 +560,20 @@ MonoBehaviour:
   _interpolationDataSource: 0
   soundbanks: []
   audioSourcePrefab: {fileID: 7106954603056005566, guid: ddaaed784009a95478cc139acb2d4850, type: 3}
+--- !u!114 &4275241288035171677
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3009557721057671630}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 28d280872d7e7f34b9ad8bd02ccf1288, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _interpolationDataSource: 0
+  effectbanks: []
 --- !u!1 &7413372779673764670
 GameObject:
   m_ObjectHideFlags: 0

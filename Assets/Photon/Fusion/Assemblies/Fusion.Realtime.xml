@@ -6,6 +6,10 @@
     <members>
         <member name="T:Fusion.Photon.Realtime.FusionRelayClient">
             <summary>
+            Responsible for running a thread that will keep the LoadBalancingClient connected to the Cloud
+            when the application is in the background
+            </summary>
+            <summary>
             Fusion Realtime Client
             
             This will deal with all communication done with the Photon Cloud
@@ -14,6 +18,66 @@
         <member name="F:Fusion.Photon.Realtime.FusionRelayClient.KeepAliveInBackground">
             <summary>Defines for how long the Fallback Thread should keep the connection, before it may time out as usual.</summary>
             <remarks>We want to the Client to keep it's connection when an app is in the background (and doesn't call Update / Service Clients should not keep their connection indefinitely in the background, so after some milliseconds, the Fallback Thread should stop keeping it up.</remarks>
+        </member>
+        <member name="F:Fusion.Photon.Realtime.FusionRelayClient._delayBetweenPings">
+            <summary>
+            Delay between each ACK/Ping to Photon Cloud
+            </summary>
+        </member>
+        <member name="F:Fusion.Photon.Realtime.FusionRelayClient._ackSent">
+            <summary>
+            Signal if ACK was Sent
+            </summary>
+        </member>
+        <member name="F:Fusion.Photon.Realtime.FusionRelayClient._fallbackThreadId">
+            <summary>
+            Thread ID
+            </summary>
+        </member>
+        <member name="P:Fusion.Photon.Realtime.FusionRelayClient.FallbackThreadRunning">
+            <summary>
+            Check if Thread is running by checking the Thread ID
+            </summary>
+        </member>
+        <member name="M:Fusion.Photon.Realtime.FusionRelayClient.StartFallbackSendAck">
+            <summary>
+            Starts a new rhread to send ACK to Cloud
+            </summary>
+        </member>
+        <member name="M:Fusion.Photon.Realtime.FusionRelayClient.StopFallbackSendAck">
+            <summary>
+            Stop the currently running background thread
+            </summary>
+        </member>
+        <member name="M:Fusion.Photon.Realtime.FusionRelayClient.BackgroundAcksTask">
+            <summary>
+            ACK Thread Action.
+            
+            This will check the last time the LBC sent anything to the Cloud, if it's more than <see cref="F:Fusion.Photon.Realtime.FusionRelayClient._delayBetweenPings"/>,
+            an ACK Msg will be sent, so the Cloud keeps the connection active.
+            </summary>
+            <returns>True if the Thread should keep running, false otherwise.</returns>
+        </member>
+        <member name="F:Fusion.Photon.Realtime.FusionRelayClient.FUSION_PLUGIN_NAME">
+            <summary>
+            Fusion Plugin Name for request
+            </summary>
+        </member>
+        <member name="P:Fusion.Photon.Realtime.FusionRelayClient.IsReadyAndInRoom">
+            <summary>
+            Flag to signal if the Client is Ready to perform cloud action and it is in a Room
+            </summary>
+        </member>
+        <member name="E:Fusion.Photon.Realtime.FusionRelayClient.OnRoomPropertiesChanged">
+            <summary>
+            Signal if some room property has changed
+            </summary>
+        </member>
+        <member name="M:Fusion.Photon.Realtime.FusionRelayClient.OnEventHandler(ExitGames.Client.Photon.EventData)">
+            <summary>
+            Handles all received events from the Photon Cloud
+            </summary>
+            <param name="evt">Event Data</param>
         </member>
         <member name="M:Fusion.Photon.Realtime.FusionRelayClient.SendEvent(System.Int32,System.Byte,System.Byte*,System.Int32,System.Boolean)">
             <summary>
@@ -36,10 +100,46 @@
             <param name="bufferLength">Output size of the written buffer</param>
             <returns>True if the extraction was done correctly, false otherwise</returns>
         </member>
+        <member name="M:Fusion.Photon.Realtime.FusionRelayClient.UpdateRoomProperties(System.Collections.Generic.Dictionary{System.String,System.Int32})">
+            <summary>
+            Change the Custom Properties of the current Room
+            </summary>
+            <param name="properties">New set of Custom Properties</param>
+            <returns>True if the change was made, false otherwise</returns>
+        </member>
+        <member name="M:Fusion.Photon.Realtime.FusionRelayClient.UpdateRoomVisibility(System.Boolean)">
+            <summary>
+            Change the IsVisible Property of the current Room
+            </summary>
+            <param name="value">New value of IsVisible</param>
+            <returns>True if the change was made, false otherwise</returns>
+        </member>
+        <member name="M:Fusion.Photon.Realtime.FusionRelayClient.UpdateRoomOpenness(System.Boolean)">
+            <summary>
+            Change the IsOpen Property of the current Room
+            </summary>
+            <param name="value">New value of IsOpen</param>
+            <returns>True if the change was made, false otherwise</returns>
+        </member>
+        <member name="M:Fusion.Photon.Realtime.FusionRelayClient.GetRoomProperties">
+            <summary>
+            Get Current Custom Properties of Room
+            </summary>
+            <returns>Custom Properties Dictionary</returns>
+        </member>
         <member name="M:Fusion.Photon.Realtime.FusionRelayClient.Update">
             <summary>
             Used to keep the client communication
             </summary>
+        </member>
+        <member name="M:Fusion.Photon.Realtime.FusionRelayClient.BuildEnterRoomParams(Fusion.Photon.Realtime.TypedLobby,System.String,System.Int32,System.Collections.Generic.Dictionary{System.String,System.Int32})">
+            <summary>
+            Build a new EnterRoomParams ref using the default configs and optional Room Name
+            </summary>
+            <param name="typedLobby">Which lobby the Room should exits</param>
+            <param name="RoomName">Room Name, if not set, a Random Name will be used</param>
+            <param name="customProperties">Optional Room Custom Properties</param>
+            <returns>EnterRoomParams reference.</returns>
         </member>
         <member name="M:Fusion.Photon.Realtime.Async.LoadBalancingClientAsyncExtensions.ConnectToMasterAsync(Fusion.Photon.Realtime.LoadBalancingClient,Fusion.Photon.Realtime.AppSettings,System.Boolean)">
             <summary>
@@ -79,7 +179,7 @@
             <exception cref="T:Fusion.Photon.Realtime.Async.OperationException">Is thrown when the operation completed unsuccessfully</exception>
             <exception cref="T:Fusion.Photon.Realtime.Async.OperationTimeoutException">Is thrown when the operation timed out</exception>
         </member>
-        <member name="M:Fusion.Photon.Realtime.Async.LoadBalancingClientAsyncExtensions.CreateAndJoinRoomAsync(Fusion.Photon.Realtime.LoadBalancingClient,Fusion.Photon.Realtime.EnterRoomParams,System.Boolean,System.Boolean)">
+        <member name="M:Fusion.Photon.Realtime.Async.LoadBalancingClientAsyncExtensions.CreateRoomAsync(Fusion.Photon.Realtime.LoadBalancingClient,Fusion.Photon.Realtime.EnterRoomParams,System.Boolean,System.Boolean)">
             <summary>
             Create and join a room.
             </summary>
@@ -192,11 +292,18 @@
         <member name="F:Fusion.Photon.Realtime.AppSettings.AppVersion">
             <summary>The AppVersion can be used to identify builds and will split the AppId distinct "Virtual AppIds" (important for matchmaking).</summary>
         </member>
+        <member name="F:Fusion.Photon.Realtime.AppSettings.UseNameServer">
+            <summary>If false, the app will attempt to connect to a Master Server (which is obsolete but sometimes still necessary).</summary>
+            <remarks>if true, Server points to a NameServer (or is null, using the default), else it points to a MasterServer.</remarks>
+        </member>
         <member name="F:Fusion.Photon.Realtime.AppSettings.FixedRegion">
             <summary>Can be set to any of the Photon Cloud's region names to directly connect to that region.</summary>
             <remarks>if this IsNullOrEmpty() AND UseNameServer == true, use BestRegion. else, use a server</remarks>
         </member>
         <!-- Badly formed XML comment ignored for member "F:Fusion.Photon.Realtime.AppSettings.BestRegionSummaryFromStorage" -->
+        <member name="F:Fusion.Photon.Realtime.AppSettings.Server">
+            <summary>The address (hostname or IP) of the server to connect to.</summary>
+        </member>
         <member name="F:Fusion.Photon.Realtime.AppSettings.Port">
             <summary>If not null, this sets the port of the first Photon server to connect to (that will "forward" the client as needed).</summary>
         </member>

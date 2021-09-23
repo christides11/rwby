@@ -13,7 +13,7 @@ namespace rwby
         [SerializeField] protected FighterCombatManager combatManager;
 
         public LayerMask hitLayermask;
-        List<LagCompensatedHit> lch = new List<LagCompensatedHit>();
+        public List<LagCompensatedHit> lch = new List<LagCompensatedHit>();
 
         private void Awake()
         {
@@ -86,17 +86,27 @@ namespace rwby
             }
             //collidedIHurtables[hitboxGroup.ID].hitIHurtables.Add(hurtboxes[hurtboxIndex].Owner);
             //collidedIHurtables[hitboxGroup.ID].hitboxGroups.Add(hitboxGroupIndex);
-            HurtHurtbox(hitboxGroup, hitboxIndex, hurtboxes[hurtboxIndex], attacker);
+            HurtHurtbox(hitboxGroup, hitboxIndex, hurtboxes[hurtboxIndex], attacker, lch[hurtboxIndex].Point);
             return true;
         }
 
-        protected virtual void HurtHurtbox(HitboxGroup hitboxGroup, int hitboxIndex, Hurtbox hurtbox, GameObject attacker)
+        protected virtual void HurtHurtbox(HitboxGroup hitboxGroup, int hitboxIndex, Hurtbox hurtbox, GameObject attacker, Vector3 hitPoint)
         {
-            HitReaction reaction = (HitReaction)hurtbox.hurtable.Hurt(BuildHurtInfo(hitboxGroup, hitboxIndex, hurtbox, attacker));
+            HitReaction reaction = (HitReaction)hurtbox.hurtable.Hurt(BuildHurtInfo(hitboxGroup, hitboxIndex, hurtbox, attacker, hitPoint));
             switch (reaction.reaction)
             {
                 case HitReactionType.HIT:
                     combatManager.SetHitStop((hitboxGroup.hitboxHitInfo as HitInfo).attackerHitstop);
+                    HitInfo hi = (hitboxGroup.hitboxHitInfo as HitInfo);
+                    if (string.IsNullOrEmpty(hi.effectbankName) == false) {
+                        BaseEffect be = manager.EffectbankContainer.CreateEffect(hurtbox.transform.position + Vector3.up + (-transform.forward.normalized * 0.25f), 
+                            attacker.transform.rotation, hi.effectbankName, hi.effectName);
+                        be.PlayEffect();
+                    }
+                    if(string.IsNullOrEmpty(hi.hitSoundbankName) == false)
+                    {
+                        manager.SoundbankContainer.PlaySound(hi.hitSoundbankName, hi.hitSoundName);
+                    }
                     if (Runner.IsResimulation == false && Object.HasInputAuthority == true)
                     {
                         PlayerCamera.instance.ShakeCamera((hitboxGroup.hitboxHitInfo as HitInfo).shakeValue, (hitboxGroup.hitboxHitInfo as HitInfo).hitstop * Runner.DeltaTime);
@@ -105,7 +115,7 @@ namespace rwby
             }
         }
 
-        protected virtual HurtInfoBase BuildHurtInfo(HitboxGroup hitboxGroup, int hitboxIndex, Hurtbox hurtbox, GameObject attacker)
+        protected virtual HurtInfoBase BuildHurtInfo(HitboxGroup hitboxGroup, int hitboxIndex, Hurtbox hurtbox, GameObject attacker, Vector3 hitPoint)
         {
             HurtInfo hurtInfo;
 
@@ -114,7 +124,7 @@ namespace rwby
                 case HitboxForceRelation.ATTACKER:
                     hurtInfo = new HurtInfo((HitInfo)hitboxGroup.hitboxHitInfo, hurtbox.hurtboxGroup as HurtboxGroup,
                         transform.position, manager.transform.forward, manager.transform.right,
-                        manager.PhysicsManager.GetOverallForce());
+                        manager.PhysicsManager.GetOverallForce(), hitPoint);
                     break;
                 /*case HitboxForceRelation.HITBOX:
                     Vector3 position = hitboxGroup.attachToEntity ? manager.transform.position + (hitboxGroup.boxes[hitboxIndex] as HnSF.Combat.BoxDefinition).offset
@@ -126,12 +136,12 @@ namespace rwby
                 case HitboxForceRelation.WORLD:
                     hurtInfo = new HurtInfo((HitInfo)hitboxGroup.hitboxHitInfo, hurtbox.hurtboxGroup as HurtboxGroup,
                         transform.position, Vector3.forward, Vector3.right,
-                        (manager.PhysicsManager as FighterPhysicsManager).GetOverallForce());
+                        (manager.PhysicsManager as FighterPhysicsManager).GetOverallForce(), hitPoint);
                     break;
                 default:
                     hurtInfo = new HurtInfo((HitInfo)hitboxGroup.hitboxHitInfo, hurtbox.hurtboxGroup as HurtboxGroup,
                         transform.position, manager.transform.forward, manager.transform.right,
-                        manager.PhysicsManager.GetOverallForce());
+                        manager.PhysicsManager.GetOverallForce(), hitPoint);
                     break;
             }
             return hurtInfo;
@@ -172,7 +182,7 @@ namespace rwby
                     break;
                 case BoxShape.Circle:
                     cldAmt = Runner.LagCompensation.OverlapSphere(position, (hitboxGroup.boxes[boxIndex] as HnSF.Combat.BoxDefinition).radius, Runner.Simulation.Tick, lch, hitLayermask,
-                        HitOptions.SubtickAccuracy);
+                         HitOptions.DetailedHit);
                     if (gameManager.settings.showHitboxes)
                     {
                         ExtDebug.DrawWireSphere(position, (hitboxGroup.boxes[boxIndex] as HnSF.Combat.BoxDefinition).radius, Color.red, Runner.Simulation.DeltaTime, 3);
@@ -187,7 +197,7 @@ namespace rwby
 
             for (int i = 0; i < cldAmt; i++)
             {
-                Hurtbox h = lch[i].Object.GetComponent<Hurtbox>();
+                Hurtbox h = lch[i].GameObject.GetComponent<Hurtbox>();
                 if (h.HitboxActive == true && h.Root.gameObject != gameObject)
                 {
                     hurtboxes[i] = h;

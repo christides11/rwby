@@ -21,6 +21,7 @@ namespace rwby
         public FighterPhysicsManager PhysicsManager { get { return physicsManager; } }
         public FighterHurtboxManager HurtboxManager { get { return hurtboxManager; } }
         public SoundbankContainer SoundbankContainer { get { return soundbankContainer; } }
+        public EffectbankContainer EffectbankContainer { get { return effectbankContainer; } }
 
         [Networked] public NetworkBool TargetableNetworked { get; set; }
         public bool Targetable { get { return TargetableNetworked; } }
@@ -48,6 +49,7 @@ namespace rwby
         [SerializeField] protected IFighterDefinition fighterDefinition;
         [SerializeField] protected CapsuleCollider capsuleCollider;
         [SerializeField] protected SoundbankContainer soundbankContainer;
+        [SerializeField] protected EffectbankContainer effectbankContainer;
         public Transform visualTransform;
 
         [Header("Lock On")]

@@ -391,6 +391,12 @@ public class NetworkDebugStart : Fusion.Behaviour {
       }
     }
 
+    // If NDS is starting more than 1 shared client, they need to use the same Session Name, otherwise, they will end up on different Rooms
+    // as Fusion creates a Random Session Name when no name is passed on the args
+    if (serverMode == GameMode.Shared && clientCount > 1 && config.PeerMode == NetworkProjectConfig.PeerModes.Multiple) {
+      DefaultRoomName = string.IsNullOrEmpty(DefaultRoomName) == false ? DefaultRoomName : Guid.NewGuid().ToString();
+    }
+
     if (gameObject.transform.parent) {
       Debug.LogWarning($"{nameof(NetworkDebugStart)} can't be a child game object, un-parenting.");
       gameObject.transform.parent = null;
