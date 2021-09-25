@@ -112,6 +112,12 @@ namespace rwby
                         PlayerCamera.instance.ShakeCamera((hitboxGroup.hitboxHitInfo as HitInfo).shakeValue, (hitboxGroup.hitboxHitInfo as HitInfo).hitstop * Runner.DeltaTime);
                     }
                     break;
+                case HitReactionType.BLOCKED:
+                    combatManager.SetHitStop((hitboxGroup.hitboxHitInfo as HitInfo).blockHitstopAttacker);
+                    BaseEffect bb = manager.EffectbankContainer.CreateEffect(hurtbox.transform.position + Vector3.up + (-transform.forward.normalized * 0.5f),
+                            attacker.transform.rotation * Quaternion.Euler(0, 90, 0), "global", "shieldhit1");
+                    bb.PlayEffect(true, false);
+                    break;
             }
         }
 

@@ -16,7 +16,7 @@ namespace rwby.fighters.states
             base.Initialize();
             manager.ResetVariablesOnGround();
             manager.CombatManager.BlockState = BlockStateType.HIGH;
-            manager.guardEffect.PlayEffect(true);
+            manager.guardEffect.PlayEffect(true, false);
         }
 
         public override void OnUpdate()

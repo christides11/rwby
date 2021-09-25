@@ -37,6 +37,22 @@ namespace rwby
             return yPosition;
         }
 
+        protected override float DrawStunGroup(Rect position, SerializedProperty property, float yPosition)
+        {
+            yPosition = base.DrawStunGroup(position, property, yPosition);
+            EditorGUI.PropertyField(new Rect(position.x, yPosition, position.width, lineHeight), property.FindPropertyRelative("blockHitstopAttacker"), new GUIContent("Block Hitstop (Attacker)", "Block Hitstop (Attacker)"));
+            yPosition += lineSpacing;
+            EditorGUI.PropertyField(new Rect(position.x, yPosition, position.width, lineHeight), property.FindPropertyRelative("blockHitstopDefender"), new GUIContent("Block Hitstop (Defender)", "Block Hitstop (Defender)"));
+            yPosition += lineSpacing;
+            EditorGUI.PropertyField(new Rect(position.x, yPosition, position.width, lineHeight), property.FindPropertyRelative("blockstun"), new GUIContent("Blockstun", "Blockstun"));
+            yPosition += lineSpacing;
+            EditorGUI.PropertyField(new Rect(position.x, yPosition, position.width, lineHeight), property.FindPropertyRelative("blockForce"), new GUIContent("Block Pushback", "Block Pushback"));
+            yPosition += lineSpacing;
+            EditorGUI.PropertyField(new Rect(position.x, yPosition, position.width, lineHeight), property.FindPropertyRelative("blockForceAir"), new GUIContent("Block Pushback (Air)", "Block Pushback (Air)"));
+            yPosition += lineSpacing;
+            return yPosition;
+        }
+
         protected virtual float DrawEffectGroup(Rect position, SerializedProperty property, float yPosition)
         {
             EditorGUI.PropertyField(new Rect(position.x, yPosition, position.width, lineHeight), property.FindPropertyRelative("effectbankName"));

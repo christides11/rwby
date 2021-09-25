@@ -5,7 +5,7 @@ namespace rwby
 {
     public class BaseEffect : NetworkBehaviour, IPredictedSpawnBehaviour
     {
-        public virtual void PlayEffect(bool restart = true)
+        public virtual void PlayEffect(bool restart = true, bool autoDelete = true)
         {
 
         }

@@ -38,8 +38,11 @@ namespace rwby
             }
         }
 
-        public override void PlayEffect(bool restart = true)
+        bool autoDelete = false;
+
+        public override void PlayEffect(bool restart = true, bool autoDelete = true)
         {
+            this.autoDelete = autoDelete;
             if (restart)
             {
                 startTick = Runner.Simulation.Tick;
@@ -70,6 +73,13 @@ namespace rwby
         public override void FixedUpdateNetwork()
         {
             if (playMode != AudioPlayMode.Play) return;
+            
+            if(autoDelete && (Runner.Simulation.Tick - startTick) * Runner.DeltaTime > particleSystems[0].main.duration)
+            {
+                StopEffect(ParticleSystemStopBehavior.StopEmittingAndClear);
+                DestroyEffect();
+                return;
+            }
 
             if (Runner.IsServer)
             {

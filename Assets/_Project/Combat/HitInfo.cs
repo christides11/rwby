@@ -19,6 +19,9 @@ namespace rwby
         public Vector3 blockForce;
         public Vector3 blockForceAir;
 
+        public ushort blockHitstopAttacker;
+        public ushort blockHitstopDefender;
+
         public string hitSoundbankName;
         public string hitSoundName;
 
@@ -28,6 +31,7 @@ namespace rwby
         // Effect
         public string effectbankName;
         public string effectName;
+
 
         public HitInfo() : base()
         {

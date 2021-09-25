@@ -6,6 +6,7 @@ using HnSF.Combat;
 using HnSF.Fighters;
 using HnSF.Input;
 using System;
+using rwby.Combat.AttackEvents;
 
 namespace rwby
 {
@@ -510,30 +511,19 @@ namespace rwby
 
             if(BlockState != BlockStateType.NONE)
             {
+                if(Vector3.Angle(transform.forward, hurtInfo.forward) > 90)
+                {
+                    hitReaction.reaction = HitReactionType.BLOCKED;
+                    SetHitStop(hitInfo.blockHitstopDefender);
+                    BlockStun = hitInfo.blockstun;
 
+                    Vector3 baseBlockForce = manager.PhysicsManager.IsGrounded ? hitInfo.blockForce : hitInfo.blockForceAir;
+                    Vector3 blockForces = (baseBlockForce.x * hurtInfo.right) + (baseBlockForce.z * hurtInfo.forward);
+                    physicsManager.forceGravity = baseBlockForce.y;
+                    physicsManager.forceMovement = blockForces;
+                    return hitReaction;
+                }
             }
-            /*
-            if (BlockState != BlockStateType.NONE)
-            {
-                if (hitInfo.blockType == HitBlockType.MID)
-                {
-                    hitReaction.reaction = HitReactionType.BLOCKED;
-                    BlockStun = hitInfo.blockstun;
-                    return hitReaction;
-                }
-                else if (BlockState == BlockStateType.HIGH && hitInfo.blockType == HitBlockType.HIGH)
-                {
-                    hitReaction.reaction = HitReactionType.BLOCKED;
-                    BlockStun = hitInfo.blockstun;
-                    return hitReaction;
-                }
-                else if (BlockState == BlockStateType.LOW && hitInfo.blockType == HitBlockType.LOW)
-                {
-                    hitReaction.reaction = HitReactionType.BLOCKED;
-                    BlockStun = hitInfo.blockstun;
-                    return hitReaction;
-                }
-            }*/
 
             manager.PhysicsManager.SetRotation((hurtInfo.forward * -1).normalized);
             // Got hit, apply stun, damage, and forces.

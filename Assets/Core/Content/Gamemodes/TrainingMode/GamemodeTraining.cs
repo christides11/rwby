@@ -1,5 +1,6 @@
 using Cysharp.Threading.Tasks;
 using Fusion;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -9,6 +10,7 @@ namespace rwby
     public class GamemodeTraining : GameModeBase
     {
         public ModObjectReference botReference;
+        public FighterInputManager botInputManager;
 
         public override async UniTask<bool> SetupGamemode(ModObjectReference[] componentReferences, List<ModObjectReference> content)
         {
@@ -56,10 +58,29 @@ namespace rwby
 
             // Spawn BOT
             IFighterDefinition botDefinition = (IFighterDefinition)ContentManager.instance.GetContentDefinition(ContentType.Fighter, botReference);
-            FighterInputManager botFim = NetworkManager.singleton.FusionLauncher.NetworkRunner.Spawn(botDefinition.GetFighter().GetComponent<FighterInputManager>(), new Vector3(0, 0, 5), Quaternion.identity, null);
-            botFim.gameObject.name = $"Bot";
+            botInputManager = NetworkManager.singleton.FusionLauncher.NetworkRunner.Spawn(botDefinition.GetFighter().GetComponent<FighterInputManager>(), new Vector3(0, 0, 5), Quaternion.identity, null);
+            botInputManager.gameObject.name = $"Bot";
+        }
 
-            //Debug.Log("Started gamemode.");
+        public override void FixedUpdateNetwork()
+        {
+            if (botInputManager)
+            {
+                botInputManager.FeedInput(Runner.Simulation.Tick, CreateBotInput());
+            }
+        }
+
+        public bool buttonBlock;
+        public bool buttonJump;
+
+        private NetworkInputData CreateBotInput()
+        {
+            NetworkInputData botInput = new NetworkInputData();
+
+            if (buttonBlock) { botInput.Buttons |= NetworkInputData.BUTTON_BLOCK; }
+            if (buttonJump) { botInput.Buttons |= NetworkInputData.BUTTON_JUMP; }
+
+            return botInput;
         }
     }
 }

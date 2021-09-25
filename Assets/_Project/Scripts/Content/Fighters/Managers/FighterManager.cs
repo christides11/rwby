@@ -131,7 +131,7 @@ namespace rwby
         {
             // Shake during hitstop.
             if (CombatManager.HitStop != 0
-                && CombatManager.HitStun > 0
+                && (CombatManager.HitStun > 0 || CombatManager.BlockStun > 0)
                 && CombatManager.HitStop % hitstopShakeFrames == 0)
             {
                 Vector3 dir = shakeDirs[currentShakeDirection].z * transform.forward
