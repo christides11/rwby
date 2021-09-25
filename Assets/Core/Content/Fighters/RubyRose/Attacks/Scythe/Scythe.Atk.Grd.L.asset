@@ -122,8 +122,8 @@ MonoBehaviour:
         onHitCheck: 0
         onHitHitboxGroup: 0
         onHitIDGroup: 0
-        startFrame: 5
-        endFrame: 5
+        startFrame: 4
+        endFrame: 4
         attackEvent:
           id: 10
         conditions: []
@@ -158,8 +158,8 @@ MonoBehaviour:
         autoLink: 0
         forceType: 0
         forceRelation: 0
-        attackerHitstop: 6
-        hitstop: 6
+        attackerHitstop: 4
+        hitstop: 4
         hitstun: 20
         airOnly: 0
         groundOnly: 0
@@ -186,7 +186,9 @@ MonoBehaviour:
         blockstun: 0
         blockForce: {x: 0, y: 0, z: 0}
         blockForceAir: {x: 0, y: 0, z: 0}
-        shakeValue: 0.1
+        hitSoundbankName: global
+        hitSoundName: hitc
+        shakeValue: 0
         effectbankName: global
         effectName: hit1
     00000007:

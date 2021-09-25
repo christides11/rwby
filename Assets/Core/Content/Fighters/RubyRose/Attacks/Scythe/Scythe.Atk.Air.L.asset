@@ -36,7 +36,7 @@ MonoBehaviour:
       data:
         ID: 0
         activeFramesStart: 6
-        activeFramesEnd: 9
+        activeFramesEnd: 6
         boxes:
         - id: 6
         attachToEntity: 1
@@ -182,8 +182,8 @@ MonoBehaviour:
         autoLink: 0
         forceType: 0
         forceRelation: 0
-        attackerHitstop: 20
-        hitstop: 20
+        attackerHitstop: 4
+        hitstop: 4
         hitstun: 25
         airOnly: 0
         groundOnly: 0
@@ -210,6 +210,11 @@ MonoBehaviour:
         blockstun: 0
         blockForce: {x: 0, y: 0, z: 0}
         blockForceAir: {x: 0, y: 0, z: 0}
+        hitSoundbankName: global
+        hitSoundName: hita
+        shakeValue: 0
+        effectbankName: global
+        effectName: hit1
     00000008:
       type: {class: SoftLockOn, ns: rwby.Combat.AttackEvents, asm: rwby.csharp}
       data:

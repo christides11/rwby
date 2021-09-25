@@ -22,6 +22,7 @@ namespace rwby
         public FighterHurtboxManager HurtboxManager { get { return hurtboxManager; } }
         public SoundbankContainer SoundbankContainer { get { return soundbankContainer; } }
         public EffectbankContainer EffectbankContainer { get { return effectbankContainer; } }
+        public Transform TargetOrigin { get { return targetOrigin; } }
 
         [Networked] public NetworkBool TargetableNetworked { get; set; }
         public bool Targetable { get { return TargetableNetworked; } }
@@ -50,6 +51,7 @@ namespace rwby
         [SerializeField] protected CapsuleCollider capsuleCollider;
         [SerializeField] protected SoundbankContainer soundbankContainer;
         [SerializeField] protected EffectbankContainer effectbankContainer;
+        [SerializeField] protected Transform targetOrigin;
         public Transform visualTransform;
 
         [Header("Lock On")]
@@ -161,7 +163,7 @@ namespace rwby
 
         private void TryLockon()
         {
-            if (inputManager.GetLockOn(out int bOffset).isDown == false) return;
+            if (inputManager.GetLockOn(out int bOffset).firstPress == false) return;
             PickLockonTarget();
             HardTargeting = true;
         }
@@ -173,8 +175,8 @@ namespace rwby
             {
                 dist = Vector3.Distance(transform.position, CurrentTarget.transform.position);
             }
-            if ((dist <= lockonMaxDistance+0.5f)
-                && (inputManager.GetLockOn(out int bOffset).isDown == true && (CurrentTarget != null && CurrentTarget.GetComponent<ITargetable>().Targetable == true)) ) return;
+            if ((dist <= lockonMaxDistance + 0.5f) 
+                && (inputManager.GetLockOn(out int bOffset).firstPress == false && (CurrentTarget != null && CurrentTarget.GetComponent<ITargetable>().Targetable == true)) ) return;
             CurrentTarget = null;
             HardTargeting = false;
         }

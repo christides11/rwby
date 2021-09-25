@@ -1,4 +1,5 @@
 using UnityEngine;
+using Cinemachine;
 
 namespace rwby
 {
@@ -9,7 +10,7 @@ namespace rwby
         public string mainMenuSceneName = "MainMenu";
         public AddressablesModDefinition baseMod;
         public PlayerCamera playerCameraPrefab;
-        public GameObject followVirtualCameraPrefab;
+        public CinemachineStateDrivenCamera playerVirtualCameraPrefab;
         public Hurtbox hurtboxPrefab;
         public bool showHitboxes;
         public BaseHUD baseUI;

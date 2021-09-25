@@ -8,7 +8,7 @@ namespace rwby
     public class CinemachineShake : MonoBehaviour
     {
         [SerializeField] protected CinemachineVirtualCamera virtualCamera;
-        [SerializeField] protected CinemachineBasicMultiChannelPerlin perlin;
+        [System.NonSerialized] protected CinemachineBasicMultiChannelPerlin perlin;
 
         protected float shakeTime;
         protected float timer;

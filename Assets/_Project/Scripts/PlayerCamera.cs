@@ -21,30 +21,23 @@ namespace rwby
 
         public static PlayerCamera instance;
 
+        private FighterManager followTarget;
+        private GameObject LockOnTarget;
+        private ITargetable lockOnTargetable;
+        Rewired.Player p = null;
+
         [Header("References")]
         [SerializeField] private Camera cam;
-        [SerializeField] private ThirdPersonCamera thirdPersonaCamera;
 
-        [Header("CineMachine Follow Cam")]
+        [Header("Cinemachine")]
         public CinemachineBrain cinemachineBrain;
-        public CinemachineVirtualCamera freeLook;
-        public CinemachineInputProvider inputProvider;
-
-        [Header("Mouse")]
-        [SerializeField] private float mouseDeadzone = 0.05f;
-        [SerializeField] private float mouseXAxisSpeed = 1.0f;
-        [SerializeField] private float mouseYAxisSpeed = 1.0f;
-
-        [Header("Controller")]
-        [SerializeField] private float stickDeadzone = 0.2f;
-        [SerializeField] private float stickAxialDeadZone = 0.15f;
-        [SerializeField] private float stickXAxisSpeed = 1.0f;
-        [SerializeField] private float stickYAxisSpeed = 1.0f;
-
-        [SerializeField] private FighterManager followTarget;
-        [SerializeField] private GameObject LockOnTarget;
-
-        Rewired.Player p = null;
+        [System.NonSerialized] public CinemachineStateDrivenCamera virtualStateDrivenCamera;
+        [System.NonSerialized] public Animator virtualCameraAnimator;
+        public CinemachineTargetGroup targetGroup;
+        [System.NonSerialized] public CinemachineVirtualCamera[] virtualCameras;
+        [System.NonSerialized] public CinemachinePOV[] virtualCameraPOV;
+        [System.NonSerialized] public CinemachineShake[] virtualCameraShake;
+        [System.NonSerialized] public CinemachineInputProvider[] inputProvider;
 
         [Header("Lock On")]
         public LayerMask lockonLayerMask;
@@ -58,9 +51,19 @@ namespace rwby
             instance = this;
             currentCameraState = CameraState.THIRDPERSON;
             p = ReInput.players.GetPlayer(0);
-            thirdPersonaCamera.SetCameraState(ThirdPersonCamera.CamStates.Off);
-            freeLook = GameObject.Instantiate(GameManager.singleton.settings.followVirtualCameraPrefab, transform.position, Quaternion.identity).GetComponent<CinemachineVirtualCamera>();
-            inputProvider = freeLook.GetComponent<CinemachineInputProvider>();
+            virtualStateDrivenCamera = GameObject.Instantiate(GameManager.singleton.settings.playerVirtualCameraPrefab, transform.position, Quaternion.identity);
+            
+            virtualCameraAnimator = virtualStateDrivenCamera.GetComponent<Animator>();
+            inputProvider = virtualStateDrivenCamera.GetComponentsInChildren<CinemachineInputProvider>();
+            virtualCameras = virtualStateDrivenCamera.GetComponentsInChildren<CinemachineVirtualCamera>();
+
+            virtualCameraPOV = new CinemachinePOV[virtualCameras.Length];
+            virtualCameraShake = new CinemachineShake[virtualCameras.Length];
+            for(int i = 0; i < virtualCameras.Length; i++)
+            {
+                virtualCameraPOV[i] = virtualCameras[i].GetCinemachineComponent<CinemachinePOV>();
+                virtualCameraShake[i] = virtualCameras[i].GetComponent<CinemachineShake>();
+            } 
         }
 
         public virtual void CamUpdate()
@@ -91,79 +94,68 @@ namespace rwby
         private void LockOnToTarget(GameObject target)
         {
             LockOnTarget = target;
-            thirdPersonaCamera.InitiateLockOn(target);
+            lockOnTargetable = target.GetComponent<ITargetable>();
+            targetGroup.m_Targets[1].target = lockOnTargetable.TargetOrigin;
+            virtualStateDrivenCamera.Follow = targetGroup.transform;
+            virtualStateDrivenCamera.LookAt = targetGroup.transform;
+            //SetVirtualCameraInputs(0);
+            virtualCameraAnimator.Play("Target");
+            lockon2DMode = false;
             currentCameraState = CameraState.LOCK_ON;
         }
 
+        bool lockon2DMode = false;
         private void HandleLockOn()
         {
-            thirdPersonaCamera.ManualUpdate();
+            cinemachineBrain.ManualUpdate();
+            Vector3 lookDir = (lockOnTargetable.TargetOrigin.position - followTarget.TargetOrigin.position).normalized;
+            lookDir.y = 0;
+            targetGroup.transform.rotation = Quaternion.LookRotation(lookDir);
+            targetGroup.transform.rotation *= Quaternion.Euler(0, -90, 0);
             TryLockoff();
         }
 
         private void TryLockoff()
         {
             if (followTarget.HardTargeting == true && followTarget.CurrentTarget != null) return;
-            thirdPersonaCamera.ExitLockOn();
+            virtualStateDrivenCamera.Follow = followTarget.TargetOrigin;
+            virtualStateDrivenCamera.LookAt = followTarget.TargetOrigin;
+            //SetVirtualCameraInputs(1);
+            virtualCameraAnimator.Play("Follow");
             currentCameraState = CameraState.THIRDPERSON;
+        }
+
+        private void SetVirtualCameraInputs(int currentIndex)
+        {
+            for(int i = 0; i < 2; i++)
+            {
+                virtualCameraPOV[i].m_VerticalAxis = virtualCameraPOV[currentIndex].m_VerticalAxis;
+                virtualCameraPOV[i].m_HorizontalAxis = virtualCameraPOV[currentIndex].m_HorizontalAxis;
+            }
         }
 
         public virtual void Update()
         {
             Vector2 stickInput = p.GetAxis2D(Action.Camera_X, Action.Camera_Y);
+            bool cameraSwitch = p.GetButtonDown(Action.Camera_Switch);
 
-            // TODO: modify input based on if M&K or controller
-
-            inputProvider.input = stickInput;
-            thirdPersonaCamera.cameraX = stickInput.x;
-            thirdPersonaCamera.cameraY = stickInput.y;
-
-            /*
-            Mahou.Input.GlobalInputManager inputManager = (Mahou.Input.GlobalInputManager)GlobalInputManager.instance;
-            Vector2 stickInput = inputManager.GetAxis2D(0, Input.Action.Camera_X, Input.Action.Camera_Y);
-
-            switch (inputManager.GetCurrentInputMethod(0))
+            for (int i = 0; i < inputProvider.Length; i++)
             {
-                case CurrentInputMethod.MK:
-                    if (Mathf.Abs(stickInput.x) <= mouseDeadzone)
-                    {
-                        stickInput.x = 0;
-                    }
-                    if (Mathf.Abs(stickInput.y) <= mouseDeadzone)
-                    {
-                        stickInput.y = 0;
-                    }
-                    stickInput.x *= mouseXAxisSpeed;
-                    stickInput.y *= mouseYAxisSpeed;
-                    break;
-                case CurrentInputMethod.CONTROLLER:
-                    if (stickInput.magnitude < stickDeadzone)
-                    {
-                        stickInput = Vector2.zero;
-                    }
-                    else
-                    {
-                        float d = ((stickInput.magnitude - stickDeadzone) / (1.0f - stickDeadzone));
-                        d = Mathf.Min(d, 1.0f);
-                        d *= d;
-                        stickInput = stickInput.normalized * d;
-                    }
-                    if (Mathf.Abs(stickInput.x) < stickAxialDeadZone)
-                    {
-                        stickInput.x = 0;
-                    }
-                    if (Mathf.Abs(stickInput.y) < stickAxialDeadZone)
-                    {
-                        stickInput.y = 0;
-                    }
-                    stickInput.x *= stickXAxisSpeed;
-                    stickInput.y *= stickYAxisSpeed;
-                    break;
+                inputProvider[i].input = stickInput;
             }
 
-            inputProvider.input = stickInput;
-            thirdPersonaCamera.cameraX = stickInput.x;
-            thirdPersonaCamera.cameraY = stickInput.y;*/
+            if (cameraSwitch && currentCameraState == CameraState.LOCK_ON)
+            {
+                lockon2DMode = !lockon2DMode;
+                if (lockon2DMode)
+                {
+                    virtualCameraAnimator.Play("Target2D");
+                }
+                else
+                {
+                    virtualCameraAnimator.Play("Target");
+                }
+            }
         }
 
         public void LookAt(Vector3 position)
@@ -183,9 +175,9 @@ namespace rwby
 
         public void SetLookAtTarget(FighterManager target)
         {
-            thirdPersonaCamera.Follow = target.transform;
-            freeLook.Follow = target.transform;
-            freeLook.LookAt = target.transform;
+            virtualStateDrivenCamera.Follow = target.TargetOrigin;
+            virtualStateDrivenCamera.LookAt = target.TargetOrigin;
+            targetGroup.m_Targets[0].target = target.TargetOrigin;
             followTarget = target;
         }
 
@@ -211,7 +203,10 @@ namespace rwby
 
         public void ShakeCamera(float intensity, float time)
         {
-            freeLook.GetComponent<CinemachineShake>().ShakeCamera(intensity, time);
+            for (int i = 0; i < virtualCameraShake.Length; i++)
+            {
+                virtualCameraShake[i].ShakeCamera(intensity, time);
+            }
         }
     }
 }
