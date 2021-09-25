@@ -16,6 +16,7 @@ namespace rwby.fighters.states
             base.Initialize();
             manager.ResetVariablesOnGround();
             manager.CombatManager.BlockState = BlockStateType.HIGH;
+            manager.guardEffect.PlayEffect(true);
         }
 
         public override void OnUpdate()
@@ -40,6 +41,7 @@ namespace rwby.fighters.states
         {
             manager.HurtboxManager.ResetHurtboxes();
             manager.CombatManager.BlockState = BlockStateType.NONE;
+            manager.guardEffect.StopEffect(ParticleSystemStopBehavior.StopEmittingAndClear);
         }
 
         public override bool CheckInterrupt()

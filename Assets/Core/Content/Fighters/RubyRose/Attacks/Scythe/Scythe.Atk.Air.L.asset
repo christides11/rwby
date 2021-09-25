@@ -96,7 +96,7 @@ MonoBehaviour:
       type: {class: AttackEventDefinition, ns: HnSF.Combat, asm: HnSF}
       data:
         nickname: Clamp.Gravity
-        active: 1
+        active: 0
         onHitCheck: 0
         onHitHitboxGroup: 0
         onHitIDGroup: 0
@@ -168,7 +168,7 @@ MonoBehaviour:
         offset: {x: 0, y: 1, z: 1}
         size: {x: 2, y: 2, z: 2}
         rotation: {x: 0, y: 0, z: 0}
-        radius: 1
+        radius: 1.5
         height: 0
     00000007:
       type: {class: HitInfo, ns: rwby, asm: rwby.csharp}
@@ -243,49 +243,23 @@ MonoBehaviour:
           m_Curve:
           - serializedVersion: 3
             time: 0
-            value: 0
-            inSlope: 0
-            outSlope: 0
-            tangentMode: 0
-            weightedMode: 0
-            inWeight: 0
-            outWeight: 0.07215447
-          - serializedVersion: 3
-            time: 0.1
-            value: 0
-            inSlope: 0
-            outSlope: 0
-            tangentMode: 0
-            weightedMode: 0
-            inWeight: 0.33333334
-            outWeight: 0.33333334
-          - serializedVersion: 3
-            time: 0.42383772
-            value: 0.6107498
-            inSlope: 1.5396999
-            outSlope: 1.5396999
-            tangentMode: 34
-            weightedMode: 0
-            inWeight: 0.33333334
-            outWeight: 0.33333334
-          - serializedVersion: 3
-            time: 0.75
             value: 1
             inSlope: 0
             outSlope: 0
-            tangentMode: 0
+            tangentMode: 34
             weightedMode: 0
-            inWeight: 0.33333334
-            outWeight: 0.33333334
+            inWeight: 0
+            outWeight: 0
           - serializedVersion: 3
             time: 1
             value: 1
             inSlope: 0
             outSlope: 0
-            tangentMode: 0
+            tangentMode: 34
             weightedMode: 0
-            inWeight: 0.07825202
+            inWeight: 0
             outWeight: 0
           m_PreInfinity: 2
           m_PostInfinity: 2
           m_RotationOrder: 4
+        fallMulti: 1

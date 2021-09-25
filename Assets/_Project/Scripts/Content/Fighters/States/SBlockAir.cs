@@ -21,6 +21,7 @@ namespace rwby.fighters.states
                 manager.apexTime = manager.StatManager.MaxJumpTime / 2.0f;
                 manager.gravity = (-2.0f * manager.StatManager.MaxJumpHeight) / Mathf.Pow(manager.apexTime, 2.0f);
             }
+            manager.guardEffect.PlayEffect(true);
         }
 
         public override void OnUpdate()
@@ -41,6 +42,7 @@ namespace rwby.fighters.states
         {
             manager.HurtboxManager.ResetHurtboxes();
             manager.CombatManager.BlockState = BlockStateType.NONE;
+            manager.guardEffect.StopEffect(ParticleSystemStopBehavior.StopEmittingAndClear);
         }
 
         public override bool CheckInterrupt()

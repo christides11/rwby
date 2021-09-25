@@ -52,6 +52,7 @@ namespace rwby
         [SerializeField] protected SoundbankContainer soundbankContainer;
         [SerializeField] protected EffectbankContainer effectbankContainer;
         [SerializeField] protected Transform targetOrigin;
+        public ParticleSystemEffect guardEffect;
         public Transform visualTransform;
 
         [Header("Lock On")]

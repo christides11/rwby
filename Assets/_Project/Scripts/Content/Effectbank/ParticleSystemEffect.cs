@@ -2,6 +2,7 @@ using Fusion;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static UnityEngine.Rendering.SplashScreen;
 
 namespace rwby
 {
@@ -42,6 +43,12 @@ namespace rwby
             if (restart)
             {
                 startTick = Runner.Simulation.Tick;
+                for (int i = 0; i < particleSystems.Length; i++)
+                {
+                    particleSystems[i].Play(true);
+                    particleSystems[i].time = 0;
+                    particleSystems[i].Pause(true);
+                }
             }
             playMode = AudioPlayMode.Play;
         }

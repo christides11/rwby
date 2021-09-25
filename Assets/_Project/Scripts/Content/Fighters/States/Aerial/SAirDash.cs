@@ -38,6 +38,7 @@ namespace rwby.fighters.states
                     }
                 }
 
+                manager.PhysicsManager.SetRotation(movement.normalized);
                 manager.PhysicsManager.forceMovement = movement * manager.StatManager.airDashForce;
 
                 /*

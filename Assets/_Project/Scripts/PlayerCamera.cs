@@ -98,7 +98,7 @@ namespace rwby
             targetGroup.m_Targets[1].target = lockOnTargetable.TargetOrigin;
             virtualStateDrivenCamera.Follow = targetGroup.transform;
             virtualStateDrivenCamera.LookAt = targetGroup.transform;
-            //SetVirtualCameraInputs(0);
+            SetVirtualCameraInputs(0);
             virtualCameraAnimator.Play("Target");
             lockon2DMode = false;
             currentCameraState = CameraState.LOCK_ON;
@@ -120,7 +120,7 @@ namespace rwby
             if (followTarget.HardTargeting == true && followTarget.CurrentTarget != null) return;
             virtualStateDrivenCamera.Follow = followTarget.TargetOrigin;
             virtualStateDrivenCamera.LookAt = followTarget.TargetOrigin;
-            //SetVirtualCameraInputs(1);
+            SetVirtualCameraInputs(1);
             virtualCameraAnimator.Play("Follow");
             currentCameraState = CameraState.THIRDPERSON;
         }
