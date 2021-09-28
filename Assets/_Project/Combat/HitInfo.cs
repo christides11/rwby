@@ -32,6 +32,10 @@ namespace rwby
         public string effectbankName;
         public string effectName;
 
+        //
+        public string blockSoundbankName;
+        public string blockSoundName;
+
 
         public HitInfo() : base()
         {

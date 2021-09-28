@@ -93,11 +93,12 @@ namespace rwby
         protected virtual void HurtHurtbox(HitboxGroup hitboxGroup, int hitboxIndex, Hurtbox hurtbox, GameObject attacker, Vector3 hitPoint)
         {
             HitReaction reaction = (HitReaction)hurtbox.hurtable.Hurt(BuildHurtInfo(hitboxGroup, hitboxIndex, hurtbox, attacker, hitPoint));
+            HitInfo hi = (hitboxGroup.hitboxHitInfo as HitInfo);
+
             switch (reaction.reaction)
             {
                 case HitReactionType.HIT:
                     combatManager.SetHitStop((hitboxGroup.hitboxHitInfo as HitInfo).attackerHitstop);
-                    HitInfo hi = (hitboxGroup.hitboxHitInfo as HitInfo);
                     if (string.IsNullOrEmpty(hi.effectbankName) == false) {
                         BaseEffect be = manager.EffectbankContainer.CreateEffect(hurtbox.transform.position + Vector3.up + (-transform.forward.normalized * 0.25f), 
                             attacker.transform.rotation, hi.effectbankName, hi.effectName);
@@ -115,8 +116,12 @@ namespace rwby
                 case HitReactionType.BLOCKED:
                     combatManager.SetHitStop((hitboxGroup.hitboxHitInfo as HitInfo).blockHitstopAttacker);
                     BaseEffect bb = manager.EffectbankContainer.CreateEffect(hurtbox.transform.position + Vector3.up + (-transform.forward.normalized * 0.5f),
-                            attacker.transform.rotation * Quaternion.Euler(0, 90, 0), "global", "shieldhit1");
+                            attacker.transform.rotation * Quaternion.Euler(0, 180, 0), "global", "shieldhit1");
                     bb.PlayEffect(true, false);
+                    if (string.IsNullOrEmpty(hi.blockSoundbankName) == false)
+                    {
+                        manager.SoundbankContainer.PlaySound(hi.blockSoundbankName, hi.blockSoundName);
+                    }
                     break;
             }
         }

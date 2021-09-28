@@ -109,7 +109,8 @@ MonoBehaviour:
   Flags: 2305
   NetworkGuid:
     RawGuidValue: d8c849d4b476dd84eaed34e3a947439a
-  NestedObjects: []
+  NestedObjects:
+  - {fileID: 7945096121541014490}
   NetworkedBehaviours:
   - {fileID: 728284172682202706}
   - {fileID: 832128857849921822}
@@ -124,6 +125,7 @@ MonoBehaviour:
   - {fileID: 1765053112054983048}
   - {fileID: 5710829672531719765}
   - {fileID: 4006742894894194177}
+  - {fileID: 4275241288035171677}
   SimulationBehaviours: []
 --- !u!114 &728284172682202706
 MonoBehaviour:
@@ -224,6 +226,7 @@ MonoBehaviour:
   hurtboxManager: {fileID: 5886531129838790707}
   movesets: []
   abilityButtons: 0c0000000d0000000e0000000f000000
+  stickDirectionCheck: 2
   autoLinkForcePercentage: 0.85
   _BlockState: 0
   _HitStun: 0
@@ -5518,11 +5521,12 @@ MonoBehaviour:
   DefaultPropertyGroups: []
   DestroyWhenStateAuthorityLeaves: 0
   AoiPosition: {fileID: 0}
-  Flags: 0
+  Flags: 3073
   NetworkGuid:
     RawGuidValue: 00000000000000000000000000000000
   NestedObjects: []
-  NetworkedBehaviours: []
+  NetworkedBehaviours:
+  - {fileID: 678739726598552823}
   SimulationBehaviours: []
 --- !u!114 &678739726598552823
 MonoBehaviour:

@@ -10,13 +10,13 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7bf9a8a0f22d37c43902ca4d8d9a9197, type: 3}
-  m_Name: Scythe.Atk.Grd.H
+  m_Name: Scythe.Atk.Grd.B+H
   m_EditorClassIdentifier: 
-  attackName: Ground H
+  attackName: Ground B+H
   description: 
   useState: 0
   stateOverride: 0
-  length: 30
+  length: 25
   hurtboxDefinition: {fileID: 0}
   chargeWindows: []
   hitboxGroups:
@@ -25,6 +25,8 @@ MonoBehaviour:
   - id: 1
   - id: 2
   - id: 3
+  - id: 4
+  - id: 5
   cancels: []
   firstActableFrame: 100
   references:
@@ -33,29 +35,29 @@ MonoBehaviour:
       type: {class: HitboxGroup, ns: rwby, asm: rwby.csharp}
       data:
         ID: 0
-        activeFramesStart: 8
-        activeFramesEnd: 8
+        activeFramesStart: 6
+        activeFramesEnd: 6
         boxes:
-        - id: 4
+        - id: 6
         attachToEntity: 1
         attachTo: 
         chargeLevelNeeded: -1
         chargeLevelMax: 1
         hitboxHitInfo:
-          id: 5
+          id: 7
         attachPoint: 
     00000001:
       type: {class: AttackEventDefinition, ns: HnSF.Combat, asm: HnSF}
       data:
-        nickname: Clamp.Move
+        nickname: Lockon.Rot
         active: 1
         onHitCheck: 0
         onHitHitboxGroup: 0
         onHitIDGroup: 0
         startFrame: 1
-        endFrame: 1
+        endFrame: 5
         attackEvent:
-          id: 6
+          id: 8
         conditions: []
         inputCheckTiming: 0
         inputCheckStartFrame: 1
@@ -70,15 +72,15 @@ MonoBehaviour:
     00000002:
       type: {class: AttackEventDefinition, ns: HnSF.Combat, asm: HnSF}
       data:
-        nickname: Friction.Move
+        nickname: Clamp.Move
         active: 1
         onHitCheck: 0
         onHitHitboxGroup: 0
         onHitIDGroup: 0
         startFrame: 1
-        endFrame: 30
+        endFrame: 1
         attackEvent:
-          id: 7
+          id: 9
         conditions: []
         inputCheckTiming: 0
         inputCheckStartFrame: 1
@@ -93,15 +95,15 @@ MonoBehaviour:
     00000003:
       type: {class: AttackEventDefinition, ns: HnSF.Combat, asm: HnSF}
       data:
-        nickname: sfx
+        nickname: Friction.Move
         active: 1
         onHitCheck: 0
         onHitHitboxGroup: 0
         onHitIDGroup: 0
-        startFrame: 7
-        endFrame: 7
+        startFrame: 1
+        endFrame: 25
         attackEvent:
-          id: 8
+          id: 10
         conditions: []
         inputCheckTiming: 0
         inputCheckStartFrame: 1
@@ -114,15 +116,61 @@ MonoBehaviour:
         chargeLevelMin: 0
         chargeLevelMax: 0
     00000004:
+      type: {class: AttackEventDefinition, ns: HnSF.Combat, asm: HnSF}
+      data:
+        nickname: PSFX
+        active: 1
+        onHitCheck: 0
+        onHitHitboxGroup: 0
+        onHitIDGroup: 0
+        startFrame: 4
+        endFrame: 4
+        attackEvent:
+          id: 11
+        conditions: []
+        inputCheckTiming: 0
+        inputCheckStartFrame: 1
+        inputCheckEndFrame: 1
+        input:
+          executeWindow: 3
+          executeInputs: []
+          sequenceWindow: 8
+          sequenceInputs: []
+        chargeLevelMin: 0
+        chargeLevelMax: 0
+    00000005:
+      type: {class: AttackEventDefinition, ns: HnSF.Combat, asm: HnSF}
+      data:
+        nickname: Jump Cancel
+        active: 1
+        onHitCheck: 0
+        onHitHitboxGroup: 0
+        onHitIDGroup: 0
+        startFrame: 7
+        endFrame: 25
+        attackEvent:
+          id: 12
+        conditions: []
+        inputCheckTiming: 0
+        inputCheckStartFrame: 1
+        inputCheckEndFrame: 1
+        input:
+          executeWindow: 3
+          executeInputs: []
+          sequenceWindow: 8
+          sequenceInputs: []
+        chargeLevelMin: 0
+        chargeLevelMax: 0
+    00000006:
       type: {class: BoxDefinition, ns: HnSF.Combat, asm: HnSF}
       data:
         shape: 1
         offset: {x: 0, y: 1, z: 1}
         size: {x: 2, y: 2, z: 2}
         rotation: {x: 0, y: 0, z: 0}
-        radius: 1.7
+        radius: 1
         height: 0
-    00000005:
+    00000007:
       type: {class: HitInfo, ns: rwby, asm: rwby.csharp}
       data:
         hitType: 0
@@ -134,9 +182,9 @@ MonoBehaviour:
         autoLink: 0
         forceType: 0
         forceRelation: 0
-        attackerHitstop: 6
-        hitstop: 6
-        hitstun: 25
+        attackerHitstop: 4
+        hitstop: 4
+        hitstun: 20
         airOnly: 0
         groundOnly: 0
         causesTumble: 0
@@ -146,7 +194,7 @@ MonoBehaviour:
         wallBounces: 0
         wallBounceForce: 0
         damageOnHit: 10
-        opponentForce: {x: 0, y: 0, z: 10}
+        opponentForce: {x: 0, y: 10, z: 0}
         forceIncludeYForce: 0
         opponentForceMultiplier: 1
         opponentMaxMagnitude: 1
@@ -154,32 +202,42 @@ MonoBehaviour:
         throwConfirm: {fileID: 0}
         holdVelocityTime: 0
         opponentForceAir: {x: 0, y: 0, z: 0}
-        opponentFriction: 0
+        opponentFriction: 10
         opponentGravity: 0
         hitSound: {fileID: 0}
         hangTime: 0
         blockType: 0
-        blockstun: 0
-        blockForce: {x: 0, y: 0, z: 0}
+        blockstun: 5
+        blockForce: {x: 0, y: 0, z: 5}
         blockForceAir: {x: 0, y: 0, z: 0}
+        blockHitstopAttacker: 4
+        blockHitstopDefender: 4
         hitSoundbankName: global
         hitSoundName: hita
-        shakeValue: 1
+        shakeValue: 0
         effectbankName: global
         effectName: hit1
-    00000006:
+        blockSoundbankName: global
+        blockSoundName: guarda
+    00000008:
+      type: {class: SoftLockOn, ns: rwby.Combat.AttackEvents, asm: rwby.csharp}
+      data:
+        rotSpeed: 30
+    00000009:
       type: {class: ClampMovement, ns: rwby.Combat.AttackEvents, asm: rwby.csharp}
       data:
         maxLength: 10
-    00000007:
+    0000000A:
       type: {class: ApplyFriction, ns: rwby.Combat.AttackEvents, asm: rwby.csharp}
       data:
         useXZFriction: 1
         useYFriction: 0
         xzFriction: 30
         yFriction: 0
-    00000008:
+    0000000B:
       type: {class: PlaySFX, ns: rwby.Combat.AttackEvents, asm: rwby.csharp}
       data:
         sndbkName: global
-        sfxName: swingc
+        sfxName: swingb
+    0000000C:
+      type: {class: JumpCancel, ns: rwby.Combat.AttackEvents, asm: rwby.csharp}

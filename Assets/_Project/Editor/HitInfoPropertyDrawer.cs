@@ -32,6 +32,10 @@ namespace rwby
             yPosition += lineSpacing;
             EditorGUI.PropertyField(new Rect(position.x, yPosition, position.width, lineHeight), property.FindPropertyRelative("hitSoundName"));
             yPosition += lineSpacing;
+            EditorGUI.PropertyField(new Rect(position.x, yPosition, position.width, lineHeight), property.FindPropertyRelative("blockSoundbankName"));
+            yPosition += lineSpacing;
+            EditorGUI.PropertyField(new Rect(position.x, yPosition, position.width, lineHeight), property.FindPropertyRelative("blockSoundName"));
+            yPosition += lineSpacing;
             EditorGUI.PropertyField(new Rect(position.x, yPosition, position.width, lineHeight), property.FindPropertyRelative("shakeValue"), new GUIContent("Camera Shake"));
             yPosition += lineSpacing;
             return yPosition;

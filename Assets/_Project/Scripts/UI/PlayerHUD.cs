@@ -10,6 +10,7 @@ namespace rwby
     {
         [SerializeField] protected Image healthFill;
         [SerializeField] protected Image healthRedFill;
+        [SerializeField] protected TextMeshProUGUI atkLvl;
         [SerializeField] protected TextMeshProUGUI stateText;
         [SerializeField] protected TextMeshProUGUI speedText;
         [SerializeField] protected TextMeshProUGUI gravityText;
@@ -23,6 +24,7 @@ namespace rwby
             stateText.text = client.inMan.manager.StateManager.GetCurrentStateName();
             speedText.text = client.inMan.manager.PhysicsManager.forceMovement.magnitude.ToString("F1");
             gravityText.text = client.inMan.manager.PhysicsManager.forceGravity.ToString("F1");
+            atkLvl.text = client.inMan.manager.CombatManager.AttackLevel.ToString();
         }
 
         private void FixedUpdate()

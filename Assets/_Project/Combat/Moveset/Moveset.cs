@@ -14,5 +14,13 @@ namespace rwby
         [Header("Abilities")]
         public List<MovesetAttackNode> groundAbilityNodes;
         public List<MovesetAttackNode> airAbilityNodes;
+
+        [Header("Attack Level System")]
+        public List<MovesetAttackNode> groundLV1StartNodes;
+        public List<MovesetAttackNode> groundLV2StartNodes;
+        public List<MovesetAttackNode> groundLV3StartNodes;
+        public List<MovesetAttackNode> airLV1StartNodes;
+        public List<MovesetAttackNode> airLV2StartNodes;
+        public List<MovesetAttackNode> airLV3StartNodes;
     }
 }

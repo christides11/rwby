@@ -95,11 +95,17 @@ namespace rwby
         public override void FixedUpdateNetwork()
         {
             base.FixedUpdateNetwork();
-
             visualTransform.gameObject.SetActive(Visible);
 
-            HitstopShake();
+            if(inputManager.GetExtra2(out int bo).firstPress)
+            {
+                combatManager.DecreaseAttackLevel();
+            } else if(inputManager.GetExtra3(out int bb).firstPress)
+            {
+                combatManager.IncreaseAttackLevel();
+            }
 
+            HitstopShake();
             HandleLockon();
 
             if (CombatManager.HitStop == 0)
@@ -564,6 +570,20 @@ namespace rwby
         {
             Vector3 forward = inputManager.GetCameraForward();
             Vector3 right = inputManager.GetCameraRight();
+
+            forward.y = 0;
+            right.y = 0;
+
+            forward.Normalize();
+            right.Normalize();
+
+            return forward * vertical + right * horizontal;
+        }
+
+        public virtual Vector3 GetVisualMovementVector(float horizontal, float vertical)
+        {
+            Vector3 forward = transform.forward;
+            Vector3 right = transform.right;
 
             forward.y = 0;
             right.y = 0;

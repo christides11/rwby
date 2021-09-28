@@ -61,6 +61,8 @@ namespace rwby
 
         [Networked] public int hitstopCounter { get; set; }
 
+        [Networked] public byte AttackLevel { get; set; }
+
         public virtual void CLateUpdate()
         {
 
@@ -91,6 +93,26 @@ namespace rwby
         public virtual void AddHitStun(int value)
         {
             HitStun += value;
+        }
+
+        public virtual void DecreaseAttackLevel()
+        {
+            if(AttackLevel == 0)
+            {
+                AttackLevel = 2;
+                return;
+            }
+            AttackLevel--;
+        }
+
+        public virtual void IncreaseAttackLevel()
+        {
+            if(AttackLevel == 2)
+            {
+                AttackLevel = 0;
+                return;
+            }
+            AttackLevel++;
         }
 
         public void Cleanup()
@@ -464,6 +486,7 @@ namespace rwby
             return -1;
         }
 
+        public LockonDirType stickDirectionCheck;
         protected virtual bool CheckStickDirection(HnSF.Input.InputDefinition sequenceInput, int framesBack)
         {
             Vector2 stickDir = inputManager.GetMovement(framesBack);
@@ -472,11 +495,27 @@ namespace rwby
                 return false;
             }
 
-            if (Vector2.Dot(stickDir, sequenceInput.stickDirection) >= sequenceInput.directionDeviation)
+            switch (stickDirectionCheck)
             {
-                return true;
+                case LockonDirType.TargetRelative:
+                    return false;
+                case LockonDirType.AttackerForward:
+                    Vector3 aForwardDir = manager.GetVisualMovementVector(stickDir.x, stickDir.y);
+                    Vector3 aWantedDir = manager.GetVisualMovementVector(sequenceInput.stickDirection.x, sequenceInput.stickDirection.y);
+                    if (Vector3.Dot(aForwardDir, aWantedDir) >= sequenceInput.directionDeviation)
+                    {
+                        return true;
+                    }
+                    return false;
+                case LockonDirType.Absolute:
+                    if (Vector2.Dot(stickDir, sequenceInput.stickDirection) >= sequenceInput.directionDeviation)
+                    {
+                        return true;
+                    }
+                    return false;
+                default:
+                    return false;
             }
-            return false;
         }
 
         protected virtual void ClearBuffer()

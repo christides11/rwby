@@ -29,6 +29,9 @@ namespace rwby
         protected InputButtonData[] Ability3 = new InputButtonData[inputCapacity];
         protected InputButtonData[] Ability4 = new InputButtonData[inputCapacity];
         protected InputButtonData[] Extra1 = new InputButtonData[inputCapacity];
+        protected InputButtonData[] Extra2 = new InputButtonData[inputCapacity];
+        protected InputButtonData[] Extra3 = new InputButtonData[inputCapacity];
+        protected InputButtonData[] Extra4 = new InputButtonData[inputCapacity];
 
         public FighterManager manager;
 
@@ -54,6 +57,9 @@ namespace rwby
             Ability3[frame % inputCapacity] = new InputButtonData(inputData.IsDown(NetworkInputData.BUTTON_ABILITY_THREE), Ability3[(frame - 1) % inputCapacity]);
             Ability4[frame % inputCapacity] = new InputButtonData(inputData.IsDown(NetworkInputData.BUTTON_ABILITY_FOUR), Ability4[(frame - 1) % inputCapacity]);
             Extra1[frame % inputCapacity] = new InputButtonData(inputData.IsDown(NetworkInputData.BUTTON_Extra_1), Extra1[(frame - 1) % inputCapacity]);
+            Extra2[frame % inputCapacity] = new InputButtonData(inputData.IsDown(NetworkInputData.BUTTON_Extra_2), Extra2[(frame - 1) % inputCapacity]);
+            Extra3[frame % inputCapacity] = new InputButtonData(inputData.IsDown(NetworkInputData.BUTTON_Extra_3), Extra3[(frame - 1) % inputCapacity]);
+            Extra4[frame % inputCapacity] = new InputButtonData(inputData.IsDown(NetworkInputData.BUTTON_Extra_4), Extra4[(frame - 1) % inputCapacity]);
         }
 
         public virtual Vector2 GetMovement(int startOffset = 0)
@@ -131,6 +137,21 @@ namespace rwby
             return GetButton(ref Extra1, out buttonOffset, startOffset, bufferFrames);
         }
 
+        public virtual InputButtonData GetExtra2(out int buttonOffset, int startOffset = 0, int bufferFrames = 0)
+        {
+            return GetButton(ref Extra2, out buttonOffset, startOffset, bufferFrames);
+        }
+
+        public virtual InputButtonData GetExtra3(out int buttonOffset, int startOffset = 0, int bufferFrames = 0)
+        {
+            return GetButton(ref Extra3, out buttonOffset, startOffset, bufferFrames);
+        }
+
+        public virtual InputButtonData GetExtra4(out int buttonOffset, int startOffset = 0, int bufferFrames = 0)
+        {
+            return GetButton(ref Extra4, out buttonOffset, startOffset, bufferFrames);
+        }
+
         public virtual InputButtonData GetButton(PlayerInputType button, out int buttonOffset, int startOffset = 0, int bufferFrames = 0)
         {
             buttonOffset = startOffset;
@@ -156,6 +177,12 @@ namespace rwby
                     return GetLockOn(out buttonOffset, startOffset, bufferFrames);
                 case PlayerInputType.EXTRA_1:
                     return GetExtra1(out buttonOffset, startOffset, bufferFrames);
+                case PlayerInputType.EXTRA_2:
+                    return GetExtra2(out buttonOffset, startOffset, bufferFrames);
+                case PlayerInputType.EXTRA_3:
+                    return GetExtra3(out buttonOffset, startOffset, bufferFrames);
+                case PlayerInputType.EXTRA_4:
+                    return GetExtra4(out buttonOffset, startOffset, bufferFrames);
                 default:
                     return new InputButtonData();
             }

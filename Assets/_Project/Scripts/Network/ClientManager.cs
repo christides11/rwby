@@ -61,6 +61,9 @@ namespace rwby
 		bool buttonAbility3;
 		bool buttonAbility4;
 		bool buttonExtra1;
+		bool buttonExtra2;
+		bool buttonExtra3;
+		bool buttonExtra4;
 		public void BeforeUpdate()
 		{
 			if (p != null)
@@ -77,6 +80,9 @@ namespace rwby
 				if (p.GetButton(Action.Ability_3)) { buttonAbility3 = true; }
 				if (p.GetButton(Action.Ability_4)) { buttonAbility4 = true; }
 				if (p.GetButton(Action.Extra1)) { buttonExtra1 = true; }
+				if (p.GetButton(Action.Extra2)) { buttonExtra2 = true; }
+				if (p.GetButton(Action.Extra3)) { buttonExtra3 = true; }
+				if (p.GetButton(Action.Extra4)) { buttonExtra4 = true; }
 			}
 		}
 
@@ -99,6 +105,9 @@ namespace rwby
 			buttonAbility3 = false;
 			buttonAbility4 = false;
 			buttonExtra1 = false;
+			buttonExtra2 = false;
+			buttonExtra3 = false;
+			buttonExtra4 = false;
 		}
 
 		private void GamemodeSetupSuccess()
@@ -232,6 +241,9 @@ namespace rwby
 			if (buttonAbility3) { frameworkInput.Buttons |= NetworkInputData.BUTTON_ABILITY_THREE; }
 			if (buttonAbility4) { frameworkInput.Buttons |= NetworkInputData.BUTTON_ABILITY_FOUR; }
 			if (buttonExtra1) { frameworkInput.Buttons |= NetworkInputData.BUTTON_Extra_1; }
+			if (buttonExtra2) { frameworkInput.Buttons |= NetworkInputData.BUTTON_Extra_2; }
+			if (buttonExtra3) { frameworkInput.Buttons |= NetworkInputData.BUTTON_Extra_3; }
+			if (buttonExtra4) { frameworkInput.Buttons |= NetworkInputData.BUTTON_Extra_4; }
 			// Hand over the data to Fusion
 			input.Set(frameworkInput);
 		}

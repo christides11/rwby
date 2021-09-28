@@ -19,7 +19,7 @@ namespace rwby.Combat.AttackEvents
             Vector3 mDir = manager.GetMovementVector();
 
             // Pointing in direction using movement.
-            if(mDir.sqrMagnitude > 0)
+            if(manager.HardTargeting == false && mDir.sqrMagnitude > 0)
             {
                 manager.RotateVisual(mDir, rotSpeed);
                 return AttackEventReturnType.NONE;

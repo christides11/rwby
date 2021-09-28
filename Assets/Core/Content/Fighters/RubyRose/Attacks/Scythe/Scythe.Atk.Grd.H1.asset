@@ -1,0 +1,197 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7bf9a8a0f22d37c43902ca4d8d9a9197, type: 3}
+  m_Name: Scythe.Atk.Grd.H1
+  m_EditorClassIdentifier: 
+  attackName: Ground H
+  description: 
+  useState: 0
+  stateOverride: 0
+  length: 30
+  hurtboxDefinition: {fileID: 0}
+  chargeWindows: []
+  hitboxGroups:
+  - id: 0
+  events:
+  - id: 1
+  - id: 2
+  - id: 3
+  cancels:
+  - id: 4
+  firstActableFrame: 100
+  references:
+    version: 1
+    00000000:
+      type: {class: HitboxGroup, ns: rwby, asm: rwby.csharp}
+      data:
+        ID: 0
+        activeFramesStart: 8
+        activeFramesEnd: 8
+        boxes:
+        - id: 5
+        attachToEntity: 1
+        attachTo: 
+        chargeLevelNeeded: -1
+        chargeLevelMax: 1
+        hitboxHitInfo:
+          id: 6
+        attachPoint: 
+    00000001:
+      type: {class: AttackEventDefinition, ns: HnSF.Combat, asm: HnSF}
+      data:
+        nickname: Clamp.Move
+        active: 1
+        onHitCheck: 0
+        onHitHitboxGroup: 0
+        onHitIDGroup: 0
+        startFrame: 1
+        endFrame: 1
+        attackEvent:
+          id: 7
+        conditions: []
+        inputCheckTiming: 0
+        inputCheckStartFrame: 1
+        inputCheckEndFrame: 1
+        input:
+          executeWindow: 3
+          executeInputs: []
+          sequenceWindow: 8
+          sequenceInputs: []
+        chargeLevelMin: 0
+        chargeLevelMax: 0
+    00000002:
+      type: {class: AttackEventDefinition, ns: HnSF.Combat, asm: HnSF}
+      data:
+        nickname: Friction.Move
+        active: 1
+        onHitCheck: 0
+        onHitHitboxGroup: 0
+        onHitIDGroup: 0
+        startFrame: 1
+        endFrame: 30
+        attackEvent:
+          id: 8
+        conditions: []
+        inputCheckTiming: 0
+        inputCheckStartFrame: 1
+        inputCheckEndFrame: 1
+        input:
+          executeWindow: 3
+          executeInputs: []
+          sequenceWindow: 8
+          sequenceInputs: []
+        chargeLevelMin: 0
+        chargeLevelMax: 0
+    00000003:
+      type: {class: AttackEventDefinition, ns: HnSF.Combat, asm: HnSF}
+      data:
+        nickname: sfx
+        active: 1
+        onHitCheck: 0
+        onHitHitboxGroup: 0
+        onHitIDGroup: 0
+        startFrame: 7
+        endFrame: 7
+        attackEvent:
+          id: 9
+        conditions: []
+        inputCheckTiming: 0
+        inputCheckStartFrame: 1
+        inputCheckEndFrame: 1
+        input:
+          executeWindow: 3
+          executeInputs: []
+          sequenceWindow: 8
+          sequenceInputs: []
+        chargeLevelMin: 0
+        chargeLevelMax: 0
+    00000004:
+      type: {class: CancelListDefinition, ns: HnSF.Combat, asm: HnSF}
+      data:
+        startFrame: 9
+        endFrame: 30
+        cancelListID: 0
+        conditions: []
+    00000005:
+      type: {class: BoxDefinition, ns: HnSF.Combat, asm: HnSF}
+      data:
+        shape: 1
+        offset: {x: 0, y: 1, z: 1}
+        size: {x: 2, y: 2, z: 2}
+        rotation: {x: 0, y: 0, z: 0}
+        radius: 1.7
+        height: 0
+    00000006:
+      type: {class: HitInfo, ns: rwby, asm: rwby.csharp}
+      data:
+        hitType: 0
+        hitKills: 1
+        continuousHit: 0
+        spaceBetweenHits: 0
+        opponentResetXForce: 1
+        opponentResetYForce: 1
+        autoLink: 0
+        forceType: 0
+        forceRelation: 0
+        attackerHitstop: 6
+        hitstop: 6
+        hitstun: 25
+        airOnly: 0
+        groundOnly: 0
+        causesTumble: 0
+        knockdown: 0
+        groundBounces: 0
+        groundBounceForce: 0
+        wallBounces: 0
+        wallBounceForce: 0
+        damageOnHit: 10
+        opponentForce: {x: 0, y: 0, z: 3}
+        forceIncludeYForce: 0
+        opponentForceMultiplier: 1
+        opponentMaxMagnitude: 1
+        opponentMinMagnitude: 1
+        throwConfirm: {fileID: 0}
+        holdVelocityTime: 0
+        opponentForceAir: {x: 0, y: 0, z: 0}
+        opponentFriction: 0
+        opponentGravity: 0
+        hitSound: {fileID: 0}
+        hangTime: 0
+        blockType: 0
+        blockstun: 20
+        blockForce: {x: 0, y: 0, z: 10}
+        blockForceAir: {x: 0, y: 0, z: 10}
+        blockHitstopAttacker: 6
+        blockHitstopDefender: 6
+        hitSoundbankName: global
+        hitSoundName: hita
+        shakeValue: 0.1
+        effectbankName: global
+        effectName: hit1
+        blockSoundbankName: global
+        blockSoundName: guardb
+    00000007:
+      type: {class: ClampMovement, ns: rwby.Combat.AttackEvents, asm: rwby.csharp}
+      data:
+        maxLength: 10
+    00000008:
+      type: {class: ApplyFriction, ns: rwby.Combat.AttackEvents, asm: rwby.csharp}
+      data:
+        useXZFriction: 1
+        useYFriction: 0
+        xzFriction: 30
+        yFriction: 0
+    00000009:
+      type: {class: PlaySFX, ns: rwby.Combat.AttackEvents, asm: rwby.csharp}
+      data:
+        sndbkName: global
+        sfxName: swingc

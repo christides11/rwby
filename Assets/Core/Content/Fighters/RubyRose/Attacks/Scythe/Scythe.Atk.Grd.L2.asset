@@ -10,9 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7bf9a8a0f22d37c43902ca4d8d9a9197, type: 3}
-  m_Name: Scythe.Atk.Grd.L
+  m_Name: Scythe.Atk.Grd.L2
   m_EditorClassIdentifier: 
-  attackName: Ground L
+  attackName: Ground L2
   description: 
   useState: 0
   stateOverride: 0
@@ -26,7 +26,8 @@ MonoBehaviour:
   - id: 2
   - id: 3
   - id: 4
-  cancels: []
+  cancels:
+  - id: 5
   firstActableFrame: 100
   references:
     version: 1
@@ -37,13 +38,13 @@ MonoBehaviour:
         activeFramesStart: 6
         activeFramesEnd: 6
         boxes:
-        - id: 5
+        - id: 6
         attachToEntity: 1
         attachTo: 
         chargeLevelNeeded: -1
         chargeLevelMax: 1
         hitboxHitInfo:
-          id: 6
+          id: 7
         attachPoint: 
     00000001:
       type: {class: AttackEventDefinition, ns: HnSF.Combat, asm: HnSF}
@@ -56,7 +57,7 @@ MonoBehaviour:
         startFrame: 1
         endFrame: 5
         attackEvent:
-          id: 7
+          id: 8
         conditions: []
         inputCheckTiming: 0
         inputCheckStartFrame: 1
@@ -79,7 +80,7 @@ MonoBehaviour:
         startFrame: 1
         endFrame: 1
         attackEvent:
-          id: 8
+          id: 9
         conditions: []
         inputCheckTiming: 0
         inputCheckStartFrame: 1
@@ -102,7 +103,7 @@ MonoBehaviour:
         startFrame: 1
         endFrame: 25
         attackEvent:
-          id: 9
+          id: 10
         conditions: []
         inputCheckTiming: 0
         inputCheckStartFrame: 1
@@ -125,7 +126,7 @@ MonoBehaviour:
         startFrame: 4
         endFrame: 4
         attackEvent:
-          id: 10
+          id: 11
         conditions: []
         inputCheckTiming: 0
         inputCheckStartFrame: 1
@@ -138,6 +139,13 @@ MonoBehaviour:
         chargeLevelMin: 0
         chargeLevelMax: 0
     00000005:
+      type: {class: CancelListDefinition, ns: HnSF.Combat, asm: HnSF}
+      data:
+        startFrame: 7
+        endFrame: 25
+        cancelListID: 0
+        conditions: []
+    00000006:
       type: {class: BoxDefinition, ns: HnSF.Combat, asm: HnSF}
       data:
         shape: 1
@@ -146,7 +154,7 @@ MonoBehaviour:
         rotation: {x: 0, y: 0, z: 0}
         radius: 1
         height: 0
-    00000006:
+    00000007:
       type: {class: HitInfo, ns: rwby, asm: rwby.csharp}
       data:
         hitType: 0
@@ -183,30 +191,34 @@ MonoBehaviour:
         hitSound: {fileID: 0}
         hangTime: 0
         blockType: 0
-        blockstun: 0
-        blockForce: {x: 0, y: 0, z: 0}
+        blockstun: 5
+        blockForce: {x: 0, y: 0, z: 5}
         blockForceAir: {x: 0, y: 0, z: 0}
+        blockHitstopAttacker: 4
+        blockHitstopDefender: 4
         hitSoundbankName: global
-        hitSoundName: hitc
+        hitSoundName: hitb
         shakeValue: 0
         effectbankName: global
         effectName: hit1
-    00000007:
+        blockSoundbankName: global
+        blockSoundName: guarda
+    00000008:
       type: {class: SoftLockOn, ns: rwby.Combat.AttackEvents, asm: rwby.csharp}
       data:
         rotSpeed: 30
-    00000008:
+    00000009:
       type: {class: ClampMovement, ns: rwby.Combat.AttackEvents, asm: rwby.csharp}
       data:
         maxLength: 10
-    00000009:
+    0000000A:
       type: {class: ApplyFriction, ns: rwby.Combat.AttackEvents, asm: rwby.csharp}
       data:
         useXZFriction: 1
         useYFriction: 0
         xzFriction: 30
         yFriction: 0
-    0000000A:
+    0000000B:
       type: {class: PlaySFX, ns: rwby.Combat.AttackEvents, asm: rwby.csharp}
       data:
         sndbkName: global
