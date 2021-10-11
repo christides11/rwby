@@ -4,6 +4,11 @@
         <name>Fusion.Runtime</name>
     </assembly>
     <members>
+        <member name="T:Fusion.PageShiftValues">
+            <summary>
+            Page Bit Shift Lookup Table
+            </summary>
+        </member>
         <member name="T:Fusion.AccuracyAttribute">
             <summary>
             Additional companion attribute to NetworkedAttribute, which indicates how floats should be compressed.
@@ -318,6 +323,21 @@
             Determines if a slider power of 0 results in an actual value of one, or zero.
             </summary>
         </member>
+        <member name="P:Fusion.ScriptHelpAttribute.Url">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:Fusion.ScriptHelpAttribute.BackColor">
+            <summary>
+            Color of the inspector header for this component type. None indicates no header graphic should be used.
+            </summary>
+        </member>
+        <member name="P:Fusion.ScriptHelpAttribute.Icon">
+            <summary>
+            Icon used for the inspector header for this component type. None indicates no header graphic should be used.
+            </summary>
+        </member>
         <member name="T:Fusion.Units">
             <summary>
             Unit Type for a certain field.
@@ -596,6 +616,11 @@
         <member name="P:Fusion.CloudServices.IsNATPunchthroughEnabled">
             <summary>
             Signal if the local peer will try or accept connections using NAT Punch
+            </summary>
+        </member>
+        <member name="P:Fusion.CloudServices.CustomSTUNServer">
+            <summary>
+            Custom STUN Server
             </summary>
         </member>
         <member name="M:Fusion.CloudServices.#ctor(Fusion.NetworkRunner)">
@@ -1095,16 +1120,6 @@
         <member name="F:Fusion.NetworkBehaviour.InterpolationDataSources.NoInterpolation">
             <summary>
             Interpolation will not be calculated nor applied.
-            </summary>
-        </member>
-        <member name="P:Fusion.NetworkBehaviour.EditorHeaderBackColor">
-            <summary>
-            Color of the inspector header for this component type. None indicates no header graphic should be used.
-            </summary>
-        </member>
-        <member name="P:Fusion.NetworkBehaviour.EditorHeaderIcon">
-            <summary>
-            Icon used for the inspector header for this component type. None indicates no header graphic should be used.
             </summary>
         </member>
         <member name="F:Fusion.NetworkBehaviour.Ptr">
@@ -1932,16 +1947,6 @@
             If a parent <see cref="T:Fusion.NetworkObject"/> is found, this component will also be associated with that network entity.
             </summary>
         </member>
-        <member name="P:Fusion.SimulationBehaviour.EditorHeaderBackColor">
-            <summary>
-            Color of the inspector header for this component type. None indicates no header graphic should be used.
-            </summary>
-        </member>
-        <member name="P:Fusion.SimulationBehaviour.EditorHeaderIcon">
-            <summary>
-            Icon used for the inspector header for this component type. None indicates no header graphic should be used.
-            </summary>
-        </member>
         <member name="F:Fusion.SimulationBehaviour.Runner">
             <summary>
             The <see cref="T:Fusion.NetworkRunner"/> this component is associated with.
@@ -2594,26 +2599,6 @@
             This allows for components that work both in Unity, as well as the Photon relays.
             </summary>
         </member>
-        <member name="P:Fusion.Behaviour.EditorHeaderClickTarget">
-            <summary>
-            Indicates the target when the header graphic is clicked. Typically a string URL. Can also be used to ping an asset.
-            </summary>
-        </member>
-        <member name="P:Fusion.Behaviour.EditorHeaderName">
-            <summary>
-            The name that will be displayed on the inspector header graphic for this component. Null will use the component name.
-            </summary>
-        </member>
-        <member name="P:Fusion.Behaviour.EditorHeaderBackColor">
-            <summary>
-            Color of the inspector header for this component type. None indicates no header graphic should be used.
-            </summary>
-        </member>
-        <member name="P:Fusion.Behaviour.EditorHeaderIcon">
-            <summary>
-            Icon used for the inspector header for this component type. None indicates no header graphic should be used.
-            </summary>
-        </member>
         <member name="P:Fusion.Behaviour.IsEnabled">
             <summary>
             Wrapper for Monobehaviour.enabled
@@ -2904,11 +2889,6 @@
             The <see cref="T:Fusion.NetworkRunner"/> this entity is associated with.
             </summary>
         </member>
-        <member name="F:Fusion.NetworkObject.AoiMode">
-            <summary>
-            
-            </summary>
-        </member>
         <member name="F:Fusion.NetworkObject.DefaultPropertyGroups">
             <summary>
             
@@ -3038,6 +3018,11 @@
         <member name="M:Fusion.NetworkObject.RemoveStateAuthority">
             <summary>
             Removes state authority from whichever player has it for this object, this gives state authority back to the server.
+            </summary>
+        </member>
+        <member name="T:Fusion.NetworkPrefabRef">
+            <summary>
+            A decoupled <see cref="T:Fusion.NetworkObject"/> prefab reference. Internally stored as a GUID.
             </summary>
         </member>
         <member name="T:Fusion.NetworkPrefabAsset">
@@ -3222,7 +3207,7 @@
         </member>
         <member name="F:Fusion.NetworkProjectConfig.Scenes">
             <summary>
-            Scenes registered with Fusion.
+            Scenes registered with Fusion. Stored as full paths.
             </summary>
         </member>
         <member name="F:Fusion.NetworkProjectConfig.PhysicsEngine">
@@ -3253,6 +3238,11 @@
         <member name="F:Fusion.NetworkProjectConfig.AccuracyDefaults">
             <summary>
             The named global accuracies used by this project.
+            </summary>
+        </member>
+        <member name="F:Fusion.NetworkProjectConfig.AssembliesToWeave">
+            <summary>
+            Names of assemblies Fusion is going to weave. Not case sensetive.
             </summary>
         </member>
         <member name="M:Fusion.NetworkProjectConfig.Serialize(Fusion.NetworkProjectConfig)">
@@ -3346,12 +3336,6 @@
             <summary>
             Get Fusion.Runtime.dll build type.
             </summary>
-        </member>
-        <member name="P:Fusion.NetworkRunner.EditorHeaderBackColor">
-            <inheritdoc />
-        </member>
-        <member name="P:Fusion.NetworkRunner.EditorHeaderIcon">
-            <inheritdoc />
         </member>
         <member name="T:Fusion.NetworkRunner.OnBeforeSpawned">
             <summary>
@@ -4010,6 +3994,11 @@
             Session Custom Lobby to be published in
             </summary>
         </member>
+        <member name="F:Fusion.StartGameArgs.CustomSTUNServer">
+            <summary>
+            Specify a Custom STUN Server used to Resolve the peer Reflexive Addresses
+            </summary>
+        </member>
         <member name="T:Fusion.GameMode">
             <summary>
             Fusion Game Mode.
@@ -4294,15 +4283,6 @@
             </summary>
             <param name="runner">The runner this message is for</param>
             <param name="message">The message pointer</param>
-        </member>
-        <member name="M:Fusion.INetworkRunnerCallbacks.OnObjectWordsChanged(Fusion.NetworkRunner,Fusion.NetworkObject,System.Collections.Generic.HashSet{System.Int32},Fusion.NetworkObjectMemoryPtr)">
-            <summary>
-            This callback is invoked when the backing memory of an object has changed
-            </summary>
-            <param name="runner">The runner this object exists on</param>
-            <param name="networkedObject">The object whos memory changed</param>
-            <param name="changedWords">Which words changed in the memory</param>
-            <param name="oldMemory">If not null it's a pointer to the old memory block which contains the old values for this object</param>
         </member>
         <member name="M:Fusion.INetworkRunnerCallbacks.OnSessionListUpdated(Fusion.NetworkRunner,System.Collections.Generic.List{Fusion.SessionInfo})">
             <summary>
@@ -4659,6 +4639,31 @@
         <member name="F:Fusion.NetworkSimulationConfiguration.AdditionalLoss">
             <summary>
             After the Oscillation pattern between Min and Max is calculated, this additional loss chance is added.
+            </summary>
+        </member>
+        <member name="T:Fusion.SimulationGlobalState">
+            <summary>
+            Stores the global state of a simulation
+            </summary>
+        </member>
+        <member name="F:Fusion.SimulationGlobalState.SIZE">
+            <summary>
+            Total size of the Global State
+            </summary>
+        </member>
+        <member name="F:Fusion.SimulationGlobalState.Scene">
+            <summary>
+            Current Scene Ref
+            </summary>
+        </member>
+        <member name="F:Fusion.SimulationGlobalState.ServerMode">
+            <summary>
+            Current Simulation Mode
+            </summary>
+        </member>
+        <member name="F:Fusion.SimulationGlobalState.PlayerCount">
+            <summary>
+            Current player count
             </summary>
         </member>
         <member name="T:Fusion.SimulationModes">

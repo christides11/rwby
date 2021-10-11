@@ -38,6 +38,12 @@ namespace rwby
             yPosition += lineSpacing;
             EditorGUI.PropertyField(new Rect(position.x, yPosition, position.width, lineHeight), property.FindPropertyRelative("shakeValue"), new GUIContent("Camera Shake"));
             yPosition += lineSpacing;
+            EditorGUI.PropertyField(new Rect(position.x, yPosition, position.width, lineHeight), property.FindPropertyRelative("forcesRestand"), new GUIContent("Restands", "Forces a Restand"));
+            yPosition += lineSpacing;
+            EditorGUI.PropertyField(new Rect(position.x, yPosition, position.width, lineHeight), property.FindPropertyRelative("hardKnockdown"), new GUIContent("Hard Knockdown", "Forces a Hard Knockdown"));
+            yPosition += lineSpacing;
+            EditorGUI.PropertyField(new Rect(position.x, yPosition, position.width, lineHeight), property.FindPropertyRelative("causesTrip"), new GUIContent("Trips", "Forces opponent to trip"));
+            yPosition += lineSpacing;
             return yPosition;
         }
 

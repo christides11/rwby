@@ -1,6 +1,223 @@
+# 0.8.0
+
+## Beta Nightly
+
+### Build 318 (Oct 08, 2021)
+
+**What's New**
+
+- Added NetwokRunner.TryGetNetworkBehaviour<T> to convert NetworkBehaviourId to a NetworkBehaviour
+- Added NetworkDictionary<K, V>.Get
+- Added NetworkDictionary<K, V>.Set
+
+### Build 317 (Oct 07, 2021)
+
+**Changes**
+
+- Increased STUN Attempts
+
+**Bug Fixes**
+
+- Fixed: Occasional null error in NetworkRunner inspector editor code, when running in single player mode
+
+### Build 316 (Oct 07, 2021)
+
+**Bug Fixes**
+
+- Fixed: Inverted NetworkDictionary.TryGet case
+- Fixed: `NetworkObjectGuid` and `NetworkPrefabRef` not being accepted as Rpc parameters
+
+### Build 315 (Oct 07, 2021)
+
+**What's New**
+
+- Added indexer on NetworkDictionary
+- Added ContainsValue on NetworkDictionary
+
+**Changes**
+
+- Renamed NetworkDictionary.Contains to NetworkDictionary.ContainsKey to be consistent with .NET dictionary API
+- Moved call to InvokeSceneLoadStart to happen in base class instead
+
+**Bug Fixes**
+
+- Fixed: AddCallbacks and RemoveCallbacks now check for existance of internal callback list and can be called before NetworkRunner.StartGame
+- Fixed: Issues with network dictionary memory alignment
+
+### Build 314 (Oct 06, 2021)
+
+**What's New**
+
+- Standard Unity property attributes for `[Networked]` properties - UnityHeader, UnityRange etc
+
+**Improvements**
+
+- Odin compatibility
+- ILWeaver - `[Networked]` property attributes that can also be used on a field (depending on their `AttributeTargets`) are now applied to the underlying field as well. This means Odin attributes can be used directly on `[Networked]` properties
+
+**Changes**
+
+- InlineHelpAttribute visibility to public
+- ProvideInput is now true by default for Client and Host
+
+### Build 313 (Oct 06, 2021)
+
+**What's New**
+
+- Added NetworkDelegates which is similar to NetworkEvents but using regular C# delegates instead of Unity Events
+- Added INetworkRunnerCallbacks.OnSceneLoadStart
+- Added INetworkRunnerCallbacks.OnSceneLoadDone
+
+**Changes**
+
+- Removed INetworkRunnerCallbacks.OnObjectWordsChanged as it was no longer called/used
+
+**Bug Fixes**
+
+- Fixed: Constructor on NetworkDictionary<K, V> is now public
+
+### Build 311 (Oct 05, 2021)
+
+**Changes**
+
+- NetworkBehaviourId now implements IEquatable<T>, == and != operator overloads and GetHashCode()
+
+**Bug Fixes**
+
+- Fixed: Issue where it would not be possible to spawn networked objects in ISceneLoadDone callback
+- Fixed: NetworkDictionary<K, V> now accepts enums as K generic argument
+
+### Build 310 (Oct 05, 2021)
+
+**What's New**
+
+- Added support to weaver for System.Guid
+
+**Changes**
+
+- Exposed NetworkRunner.IsSharedModeMasterClient
+
+### Build 309 (Oct 04, 2021)
+
+**What's New**
+
+- Added support for NetworkDictionary<K, V>
+
 # 0.7.0
 
 ## Beta Nightly
+
+### Build 308 (Oct 03, 2021)
+
+**What's New**
+
+- HelpURL references added to components
+
+**Changes**
+
+- Clicking headers always pings the script in the Project folder, even if the header is tied to launch a URL
+
+### Build 307 (Oct 02, 2021)
+
+**What's New**
+
+- IPv6 Support
+- Support to Custom STUN Server
+
+**Changes**
+
+- STUN Servers Resolution
+- Disable NAT Punch when no Reflexive Info is found
+
+### Build 306 (Oct 01, 2021)
+
+**What's New**
+
+- Added ISceneLoadStart
+- Fixed issues with ISceneLoaded not being called
+
+**Changes**
+
+- Renamed ISceneLoaded to ISceneLoadDone
+
+**Bug Fixes**
+
+- Fixed: Issue with ISceneLoadStart not being registered as a callback interface
+- Fixed: Issue with Refused connection not being sent from server
+
+### Build 304 (Sep 30, 2021)
+
+**Bug Fixes**
+
+- Fixed: Issue with scene object staying disabled on server in certain scenario
+- Fixed: New Odin handling was hiding Odin's virtual OnEnable in NetworkBehaviourEditor.cs
+
+### Build 303 (Sep 29, 2021)
+
+**Changes**
+
+- Scene objects are now disabled by default after being loaded and only enabled once their replicated data is received
+
+**Bug Fixes**
+
+- Fixed: Inline help for Odin editor not being visible. Odin editor for Fusion types can be disabled with `FUSION_ODIN_DISABLED` define
+- Fixed: Inline help sizing issues when there's no vertical scrollbar
+- Fixed: Inline help does not try do load xml doc for Unity assemblies
+- Fixed: Connection Accept/Refuse in OnConnectRequest callback
+
+### Build 302 (Sep 28, 2021)
+
+**Improvements**
+
+- Inspector inline help loading times
+
+**Bug Fixes**
+
+- Fixed: Auto-generated `NetworkBehaviour.Defaults()` overrides not invoking base class' implementation
+
+### Build 300 (Sep 27, 2021)
+
+**What's New**
+
+- `NetworkPrefabTable.Count` and `NetworkPrefabTable.LastId`
+- Added non-generic NetworkBehaviour.GetInterpolator to get a RawInterpolator struct to allow for interpolation of user defined structs
+
+**Changes**
+
+- Inline help button is placed on the left again
+- Exposed Simulation.SnapshotHistory buffer for low level access
+
+**Bug Fixes**
+
+- Fixed: Issue with objects not being released back to pool
+- Fixed: Issue with calling shutdown inside of FUN
+
+### Build 299 (Sep 24, 2021)
+
+**Breaking Changes**
+
+- Removed Fusion.Odin.asmdef and all `Fusion.*Odin` behaviour types. Use regular Fusion behaviour classes instead, `Fusion.BehaviourEditor` is Odin-aware. Due to Unity limitations, `Assets/Photon/Scripts/Odin` needs to be removed manually, if this build is used to update existing Fusion integration
+- Removed Fusion.Odin.asmdef and all `Fusion.*Odin` behaviour types. Use regular Fusion behaviour classes instead, `Fusion.BehaviourEditor` is Odin-aware
+
+### Build 298 (Sep 23, 2021)
+
+**What's New**
+
+- `AssemblyNameAttribute` and `AssemblyNameAttributeDrawer`, put to use in `NetworkProjectConfig.AssembliesToWeave`
+
+**Improvements**
+
+- Inspector: Inline help works for arrays now
+- Inspector: Improved compatibility with custom drawers
+
+**Changes**
+
+- Inspector: Inline help button is displayed on the right side of a property value
+- ILWeaver: assembly names are now case insensitive
+
+**Removed**
+
+- `Fusion.Behaviour.Editor*` properties. Use `[ScriptHelp]` attribute from now on
 
 ### Build 297 (Sep 22, 2021)
 

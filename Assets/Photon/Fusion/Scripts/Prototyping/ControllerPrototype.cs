@@ -3,11 +3,8 @@ using UnityEngine;
 using Fusion;
 
 [OrderBefore(typeof(NetworkTransformAnchor))]
+[ScriptHelp(BackColor = EditorHeaderBackColor.Steel)]
 public class ControllerPrototype : Fusion.NetworkBehaviour {
-
-#if UNITY_EDITOR
-  public override EditorHeaderBackColor EditorHeaderBackColor => EditorHeaderBackColor.Steel;
-#endif
 
   protected NetworkCharacterController _ncc;
   protected NetworkRigidbody _nrb;

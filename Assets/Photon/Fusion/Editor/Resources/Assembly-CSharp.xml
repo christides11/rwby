@@ -14,16 +14,6 @@
             Available if AllowClientObjects is enabled in the NetworkProjectConfig, this allows players to be spawned with client StateAuthority.
             </summary>
         </member>
-        <member name="T:NetworkDebugStartGUI">
-            <summary>
-            Companion component for <see cref="T:NetworkDebugStart"/>. Automatically added as needed for rendering in-game networking IMGUI.
-            </summary>
-        </member>
-        <member name="F:NetworkDebugStartGUI.EnableHotkeys">
-            <summary>
-            When enabled, the in-game user interface buttons can be activated with the keys H (Host), S (Server) and C (Client).
-            </summary>
-        </member>
         <member name="T:ISpawnPointPrototype">
             <summary>
             Flag interface to identify GameObjects that should be used as markers for spawn points. 
@@ -39,127 +29,6 @@
             <summary>
             Example definition of an INetworkStruct.
             </summary>
-        </member>
-        <member name="T:NetworkDebugStart">
-            <summary>
-            A Fusion prototyping class for starting up basic networking. Add this component to your startup scene, and supply a <see cref="F:NetworkDebugStart.RunnerPrefab"/>.
-            Can be set to automatically startup the network, display an in-game menu, or allow simplified start calls like <see cref="M:NetworkDebugStart.StartHost"/>.
-            </summary>
-        </member>
-        <member name="T:NetworkDebugStart.ServerModes">
-            <summary>
-            Enumeration of Server Modes. Server starts a server peer without a local player. Host starts a server peer with a local player.
-            Shared indicates that no peer should be started, and the Photon cloud will act as the server.
-            </summary>
-        </member>
-        <member name="T:NetworkDebugStart.StartModes">
-            <summary>
-            Selection for how <see cref="T:NetworkDebugStart"/> will behave at startup.
-            </summary>
-        </member>
-        <member name="F:NetworkDebugStart.RunnerPrefab">
-            <summary>
-            Supply a Prefab or a scene object which has the <see cref="T:Fusion.NetworkRunner"/> component on it, 
-            as well as any runner dependent components which implement <see cref="T:Fusion.INetworkRunnerCallbacks"/>, 
-            such as <see cref="T:Fusion.NetworkEvents"/> or your own custom INetworkInput implementations.
-            </summary>
-        </member>
-        <member name="F:NetworkDebugStart.StartMode">
-            <summary>
-            Select how network startup will be triggered. Automatically, by in-game menu selection, or exclusively by script.
-            </summary>
-        </member>
-        <member name="F:NetworkDebugStart.Server">
-            <summary>
-            When <see cref="F:NetworkDebugStart.StartMode"/> is set to <see cref="F:NetworkDebugStart.StartModes.Automatic"/>, this option selects if the <see cref="T:Fusion.NetworkRunner"/> 
-            will be started as a dedicated server, or as a host (which is a server with a local player).
-            </summary>
-        </member>
-        <member name="F:NetworkDebugStart.AutoClients">
-            <summary>
-            The number of client <see cref="T:Fusion.NetworkRunner"/> instances that will be created if running in Mulit-Peer Mode. 
-            When using the Select start mode, this number will be the default value for the additional clients option box.
-            </summary>
-        </member>
-        <member name="F:NetworkDebugStart.ServerPort">
-            <summary>
-            The port that server/host <see cref="T:Fusion.NetworkRunner"/> will use.
-            </summary>
-        </member>
-        <member name="F:NetworkDebugStart.DefaultRoomName">
-            <summary>
-            The default room name to use when connecting to photon cloud.
-            </summary>
-        </member>
-        <member name="M:NetworkDebugStart.StartServer">
-            <summary>
-            Start a server instance.
-            </summary>
-        </member>
-        <member name="M:NetworkDebugStart.StartHost">
-            <summary>
-            Start a host instance. This is a server instance, with a local player.
-            </summary>
-        </member>
-        <member name="M:NetworkDebugStart.StartClient">
-            <summary>
-            Start a client instance.
-            </summary>
-        </member>
-        <member name="M:NetworkDebugStart.StartServerPlusClients">
-            <summary>
-            Start a Fusion server instance, and the number of client instances indicated by <see cref="F:NetworkDebugStart.AutoClients"/>. 
-            InstanceMode must be set to Multi-Peer mode, as this requires multiple <see cref="T:Fusion.NetworkRunner"/> instances.
-            </summary>
-        </member>
-        <member name="M:NetworkDebugStart.StartHostPlusClients">
-            <summary>
-            Start a Fusion host instance, and the number of client instances indicated by <see cref="F:NetworkDebugStart.AutoClients"/>. 
-            InstanceMode must be set to Multi-Peer mode, as this requires multiple <see cref="T:Fusion.NetworkRunner"/> instances.
-            </summary>
-        </member>
-        <member name="M:NetworkDebugStart.StartServerPlusClients(System.Int32)">
-            <summary>
-            Start a Fusion server instance, and the indicated number of client instances. 
-            InstanceMode must be set to Multi-Peer mode, as this requires multiple <see cref="T:Fusion.NetworkRunner"/> instances.
-            </summary>
-        </member>
-        <member name="M:NetworkDebugStart.StartHostPlusClients(System.Int32)">
-            <summary>
-            Start a Fusion host instance (server with local player), and the indicated number of additional client instances. 
-            InstanceMode must be set to Multi-Peer mode, as this requires multiple <see cref="T:Fusion.NetworkRunner"/> instances.
-            </summary>
-        </member>
-        <member name="M:NetworkDebugStart.StartMultipleClients(System.Int32)">
-            <summary>
-            Start a Fusion host instance (server with local player), and the indicated number of additional client instances. 
-            InstanceMode must be set to Multi-Peer mode, as this requires multiple <see cref="T:Fusion.NetworkRunner"/> instances.
-            </summary>
-        </member>
-        <member name="M:NetworkDebugStart.StartMultipleSharedClients(System.Int32)">
-            <summary>
-            Start as Room on the Photon cloud, and connects as one or more clients.
-            </summary>
-            <param name="clientCount"></param>
-        </member>
-        <member name="M:FusionScalableIMGUI.GetScaledSkin">
-            <summary>
-            Get the custom scalable skin, already resized to the current screen.
-            </summary>
-            <returns></returns>
-        </member>
-        <member name="M:FusionScalableIMGUI.GetScaledSkin(System.Single@,System.Single@,System.Int32@,System.Int32@)">
-            <summary>
-            Get the custom scalable skin, already resized to the current screen. Provides the height, width, padding and margin used.
-            </summary>
-            <returns></returns>
-        </member>
-        <member name="M:FusionScalableIMGUI.ScaleGuiSkinToScreenHeight(UnityEngine.GUISkin)">
-            <summary>
-            Modifies a skin to make it scale with screen height.
-            </summary>
-            <param name="skin"></param>
-            <returns>Returns (height, width, padding, margin) values applied to the GuiSkin</returns>
         </member>
         <member name="T:SpawnPointManagerPrototype`1">
             <summary>
@@ -229,11 +98,6 @@
             Flag component to identify GameObjects that should be used as markers for spawn points.
             </summary>
         </member>
-        <member name="F:ControllerPrototype.Speed">
-            <summary>
-            If object is not using <see cref="T:Fusion.NetworkCharacterController"/>, this controls how much change is applied to the transform/rigidbody.
-            </summary>
-        </member>
         <member name="T:PlayerAOIPrototype">
             <summary>
             Prototyping component for Fusion. Updates the Player's AOI every tick to be a radius around this object.
@@ -249,6 +113,171 @@
         <member name="T:FusionStats">
             <summary>
             Fusion Telemetry component.
+            </summary>
+        </member>
+        <member name="T:NetworkDebugStartGUI">
+            <summary>
+            Companion component for <see cref="T:NetworkDebugStart"/>. Automatically added as needed for rendering in-game networking IMGUI.
+            </summary>
+        </member>
+        <member name="F:NetworkDebugStartGUI.EnableHotkeys">
+            <summary>
+            When enabled, the in-game user interface buttons can be activated with the keys H (Host), S (Server) and C (Client).
+            </summary>
+        </member>
+        <member name="F:NetworkDebugStartGUI.BaseSkin">
+            <summary>
+            The GUISkin to use as the base for the scalable in-game UI.
+            </summary>
+        </member>
+        <member name="T:NetworkDebugStart">
+            <summary>
+            A Fusion prototyping class for starting up basic networking. Add this component to your startup scene, and supply a <see cref="F:NetworkDebugStart.RunnerPrefab"/>.
+            Can be set to automatically startup the network, display an in-game menu, or allow simplified start calls like <see cref="M:NetworkDebugStart.StartHost"/>.
+            </summary>
+        </member>
+        <member name="T:NetworkDebugStart.StartModes">
+            <summary>
+            Selection for how <see cref="T:NetworkDebugStart"/> will behave at startup.
+            </summary>
+        </member>
+        <member name="T:NetworkDebugStart.Stage">
+            <summary>
+            The current stage of connection or shutdown.
+            </summary>
+        </member>
+        <member name="F:NetworkDebugStart.RunnerPrefab">
+            <summary>
+            Supply a Prefab or a scene object which has the <see cref="T:Fusion.NetworkRunner"/> component on it, 
+            as well as any runner dependent components which implement <see cref="T:Fusion.INetworkRunnerCallbacks"/>, 
+            such as <see cref="T:Fusion.NetworkEvents"/> or your own custom INetworkInput implementations.
+            </summary>
+        </member>
+        <member name="F:NetworkDebugStart.StartMode">
+            <summary>
+            Select how network startup will be triggered. Automatically, by in-game menu selection, or exclusively by script.
+            </summary>
+        </member>
+        <member name="F:NetworkDebugStart.AutoStartAs">
+            <summary>
+            When <see cref="F:NetworkDebugStart.StartMode"/> is set to <see cref="F:NetworkDebugStart.StartModes.Automatic"/>, this option selects if the <see cref="T:Fusion.NetworkRunner"/> 
+            will be started as a dedicated server, or as a host (which is a server with a local player).
+            </summary>
+        </member>
+        <member name="F:NetworkDebugStart.AutoHideGUI">
+            <summary>
+            <see cref="T:NetworkDebugStartGUI"/> will not render GUI elements while <see cref="P:NetworkDebugStart.CurrentStage"/> == <see cref="F:NetworkDebugStart.Stage.AllConnected"/>.
+            </summary>
+        </member>
+        <member name="F:NetworkDebugStart.AutoClients">
+            <summary>
+            The number of client <see cref="T:Fusion.NetworkRunner"/> instances that will be created if running in Mulit-Peer Mode. 
+            When using the Select start mode, this number will be the default value for the additional clients option box.
+            </summary>
+        </member>
+        <member name="F:NetworkDebugStart.ServerPort">
+            <summary>
+            The port that server/host <see cref="T:Fusion.NetworkRunner"/> will use.
+            </summary>
+        </member>
+        <member name="F:NetworkDebugStart.DefaultRoomName">
+            <summary>
+            The default room name to use when connecting to photon cloud.
+            </summary>
+        </member>
+        <member name="F:NetworkDebugStart.AlwaysShowStats">
+            <summary>
+            Will automatically enable <see cref="T:FusionStats"/> once peers have finished connecting.
+            </summary>
+        </member>
+        <member name="F:NetworkDebugStart.InitialScenePath">
+            <summary>
+            The Scene that will be loaded after network shutdown completes (all peers have disconnected). 
+            If this field is null or invalid, will be set to the current scene when <see cref="T:NetworkDebugStart"/> runs Awake().
+            </summary>
+        </member>
+        <member name="P:NetworkDebugStart.CurrentStage">
+            <summary>
+            Indicates which step of the startup process <see cref="T:NetworkDebugStart"/> is currently in.
+            </summary>
+        </member>
+        <member name="M:NetworkDebugStart.StartSinglePlayer">
+            <summary>
+            Start a single player instance.
+            </summary>
+        </member>
+        <member name="M:NetworkDebugStart.StartServer">
+            <summary>
+            Start a server instance.
+            </summary>
+        </member>
+        <member name="M:NetworkDebugStart.StartHost">
+            <summary>
+            Start a host instance. This is a server instance, with a local player.
+            </summary>
+        </member>
+        <member name="M:NetworkDebugStart.StartClient">
+            <summary>
+            Start a client instance.
+            </summary>
+        </member>
+        <member name="M:NetworkDebugStart.StartServerPlusClients">
+            <summary>
+            Start a Fusion server instance, and the number of client instances indicated by <see cref="F:NetworkDebugStart.AutoClients"/>. 
+            InstanceMode must be set to Multi-Peer mode, as this requires multiple <see cref="T:Fusion.NetworkRunner"/> instances.
+            </summary>
+        </member>
+        <member name="M:NetworkDebugStart.StartHostPlusClients">
+            <summary>
+            Start a Fusion host instance, and the number of client instances indicated by <see cref="F:NetworkDebugStart.AutoClients"/>. 
+            InstanceMode must be set to Multi-Peer mode, as this requires multiple <see cref="T:Fusion.NetworkRunner"/> instances.
+            </summary>
+        </member>
+        <member name="M:NetworkDebugStart.StartServerPlusClients(System.Int32)">
+            <summary>
+            Start a Fusion server instance, and the indicated number of client instances. 
+            InstanceMode must be set to Multi-Peer mode, as this requires multiple <see cref="T:Fusion.NetworkRunner"/> instances.
+            </summary>
+        </member>
+        <member name="M:NetworkDebugStart.StartHostPlusClients(System.Int32)">
+            <summary>
+            Start a Fusion host instance (server with local player), and the indicated number of additional client instances. 
+            InstanceMode must be set to Multi-Peer mode, as this requires multiple <see cref="T:Fusion.NetworkRunner"/> instances.
+            </summary>
+        </member>
+        <member name="M:NetworkDebugStart.StartMultipleClients(System.Int32)">
+            <summary>
+            Start a Fusion host instance (server with local player), and the indicated number of additional client instances. 
+            InstanceMode must be set to Multi-Peer mode, as this requires multiple <see cref="T:Fusion.NetworkRunner"/> instances.
+            </summary>
+        </member>
+        <member name="M:NetworkDebugStart.StartMultipleSharedClients(System.Int32)">
+            <summary>
+            Start as Room on the Photon cloud, and connects as one or more clients.
+            </summary>
+            <param name="clientCount"></param>
+        </member>
+        <member name="T:FusionScalableIMGUI">
+            <summary>
+            In-Game IMGUI style used for the <see cref="T:NetworkDebugStartGUI"/> interface.
+            </summary>
+        </member>
+        <member name="M:FusionScalableIMGUI.GetScaledSkin(UnityEngine.GUISkin,System.Single@,System.Single@,System.Int32@,System.Int32@,System.Single@)">
+            <summary>
+            Get the custom scalable skin, already resized to the current screen. Provides the height, width, padding and margin used.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:FusionScalableIMGUI.ScaleGuiSkinToScreenHeight">
+            <summary>
+            Modifies a skin to make it scale with screen height.
+            </summary>
+            <param name="skin"></param>
+            <returns>Returns (height, width, padding, top-margin, left-box-margin) values applied to the GuiSkin</returns>
+        </member>
+        <member name="F:ControllerPrototype.Speed">
+            <summary>
+            If object is not using <see cref="T:Fusion.NetworkCharacterController"/>, this controls how much change is applied to the transform/rigidbody.
             </summary>
         </member>
     </members>

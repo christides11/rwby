@@ -26,7 +26,7 @@ namespace rwby
         {
             for(int i = 0; i < sounds.Count; i++)
             {
-                soundMap.Add(sounds[i].id, i);
+                soundMap.Add(sounds[i].Name, i);
             }
         }
     }

@@ -31,6 +31,8 @@ namespace rwby
 
         [Networked(OnChanged = nameof(OnMatchSettingsChanged)), Capacity(120)] public string GamemodeContent { get; set; }
 
+        [Networked] public NetworkRNG EffectRNGenerator { get; set; }
+
         private void Awake()
         {
             DontDestroyOnLoad(gameObject);
@@ -184,6 +186,7 @@ namespace rwby
                 if (NetworkManager.singleton.FusionLauncher.NetworkRunner.GameMode != GameMode.Client)
                     NetworkManager.singleton.FusionLauncher.NetworkRunner.SetActiveScene(scene);
             }
+            EffectRNGenerator = new NetworkRNG(Runner.Simulation.Tick);
             await UniTask.Delay(TimeSpan.FromSeconds(1));
             initializingMatch = false;
             Debug.Log("Setup complete.");
@@ -226,6 +229,14 @@ namespace rwby
         {
             // All of the match management logic happens server-side, so bail if we're not the server.
             if (Object.HasStateAuthority == false) return;
+        }
+
+        public int GetIntRangeInclusive(int min, int max)
+        {
+            NetworkRNG tempRNG = EffectRNGenerator;
+            int value = tempRNG.RangeInclusive(min, max);
+            EffectRNGenerator = tempRNG;
+            return value;
         }
     }
 }

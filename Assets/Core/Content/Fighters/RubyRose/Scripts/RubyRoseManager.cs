@@ -11,15 +11,25 @@ namespace rwby.core.content
     {
         [Networked] public Vector3 TeleportPosition { get; set; }
 
+        // Teleport
         public float teleportHeight = 5;
         public float teleportDist = 3;
         public float teleportGravity = 20;
         public Vector3 teleportLockoffOffset;
 
+        // Gundash
+        [Networked] public int GundashCount { get; set; }
+
         public override async UniTask<bool> OnFighterLoaded()
         {
             bool globalSnbkLoadResult = await ContentManager.instance.LoadContentDefinition(ContentType.Soundbank, new ModObjectReference("core", "global"));
             if(globalSnbkLoadResult == false)
+            {
+                return false;
+            }
+
+            bool rubyRoseSnbkLoadResult = await ContentManager.instance.LoadContentDefinition(ContentType.Soundbank, new ModObjectReference("core", "rubyrose"));
+            if (rubyRoseSnbkLoadResult == false)
             {
                 return false;
             }
@@ -42,6 +52,13 @@ namespace rwby.core.content
             }
             soundbankContainer.AddSoundbank(globalSnbk.Name, globalSnbk);
 
+            ISoundbankDefinition rubyRoseSnbk = (ISoundbankDefinition)ContentManager.instance.GetContentDefinition(ContentType.Soundbank, new ModObjectReference("core", "rubyrose"));
+            if (rubyRoseSnbk == null)
+            {
+                Debug.LogError("Error loading global soundbank.");
+            }
+            soundbankContainer.AddSoundbank(rubyRoseSnbk.Name, rubyRoseSnbk);
+
             IEffectbankDefinition globalEffectbank = (IEffectbankDefinition)ContentManager.instance.GetContentDefinition(ContentType.Effectbank, new ModObjectReference("core", "global"));
             if (globalEffectbank == null)
             {
@@ -53,6 +70,7 @@ namespace rwby.core.content
         protected override void SetupStates()
         {
             stateManager.AddState(new RRTeleport(), (ushort)RubyRoseStates.TELEPORT);
+            stateManager.AddState(new RRGunDashGround(), (ushort)RubyRoseStates.GUN_DASH_GROUND);
             base.SetupStates();
         }
     }

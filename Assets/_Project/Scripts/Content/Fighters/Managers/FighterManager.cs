@@ -61,6 +61,8 @@ namespace rwby
         public float lockonMaxDistance = 20;
         public float lockonFudging = 0.1f;
 
+        [NonSerialized] public MatchManager matchManager;
+
         public virtual async UniTask<bool> OnFighterLoaded()
         {
             return true;
@@ -68,6 +70,7 @@ namespace rwby
 
         public virtual void Awake()
         {
+            matchManager = MatchManager.instance;
             networkManager = NetworkManager.singleton;
             combatManager.movesets = fighterDefinition.GetMovesets();
         }
@@ -278,6 +281,13 @@ namespace rwby
 
             StateManager.AddState(new SFlinchGround(), (ushort)FighterCmnStates.FLINCH_GROUND);
             StateManager.AddState(new SFlinchAir(), (ushort)FighterCmnStates.FLINCH_AIR);
+            StateManager.AddState(new STumble(), (ushort)FighterCmnStates.TUMBLE);
+            StateManager.AddState(new SGroundBounce(), (ushort)FighterCmnStates.GROUND_BOUNCE);
+            StateManager.AddState(new SGroundLay(), (ushort)FighterCmnStates.GROUND_LAY);
+            StateManager.AddState(new STechAir(), (ushort)FighterCmnStates.TECH_AIR);
+            StateManager.AddState(new STechGround(), (ushort)FighterCmnStates.TECH_GROUND);
+            StateManager.AddState(new STrip(), (ushort)FighterCmnStates.TRIP);
+            StateManager.AddState(new SGetup(), (ushort)FighterCmnStates.GROUND_GETUP);
 
             StateManager.AddState(new SBlockHigh(), (ushort)FighterCmnStates.BLOCK_HIGH);
             StateManager.AddState(new SBlockLow(), (ushort)FighterCmnStates.BLOCK_LOW);

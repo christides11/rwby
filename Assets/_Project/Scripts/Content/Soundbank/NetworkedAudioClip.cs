@@ -77,7 +77,7 @@ namespace rwby
             }
         }
 
-        public virtual void PlaySound(SoundbankContainer soundbankContainer, int soundbankIndex, int soundIndex)
+        public virtual void PlaySound(SoundbankContainer soundbankContainer, int soundbankIndex, int soundIndex, float volume = 1.0f)
         {
             this.soundbankContainer = soundbankContainer;
             this.soundbankIndex = soundbankIndex;
@@ -87,6 +87,7 @@ namespace rwby
             if (Runner.IsResimulation == false)
             {
                 audioSource.clip = soundbankContainer.soundbanks[soundbankIndex].Sounds[soundIndex].clip;
+                audioSource.volume = volume;
                 audioSource.Play();
             }
         }

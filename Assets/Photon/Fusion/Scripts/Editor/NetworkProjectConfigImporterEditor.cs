@@ -10,7 +10,6 @@
   [CustomEditor(typeof(NetworkProjectConfigImporter))]
   internal class NetworkProjectConfigImporterEditor : ScriptedImporterEditor {
 
-    private string _expandedHelpName;
     private Exception _initializeException;
 
     private static bool _versionExpanded;
@@ -27,7 +26,11 @@
         if (_initializeException != null) {
           EditorGUILayout.HelpBox(_initializeException.ToString(), MessageType.Error, true);
         } else {
-          VersionInfoGUI();
+
+          FusionEditorGUI.InjectPropertyDrawers(extraDataSerializedObject);
+          FusionEditorGUI.ScriptPropertyField(extraDataSerializedObject);
+
+          VersionInfoGUI(); 
 
           using (new EditorGUI.DisabledScope(HasModified())) {
             if (GUILayout.Button("Rebuild Object Table (Slow)")) {
@@ -39,8 +42,7 @@
             }
           }
 
-          //InlineHelpExtensions.OnInpsectorGUICustom(serializedObject, target, ref _expandedHelpName);
-          InlineHelpExtensions.OnInpsectorGUICustom(extraDataSerializedObject, target, ref _expandedHelpName);
+          FusionEditorGUI.DrawDefaultInspector(extraDataSerializedObject, drawScript: false);
         }
       } finally {
         ApplyRevertGUI();

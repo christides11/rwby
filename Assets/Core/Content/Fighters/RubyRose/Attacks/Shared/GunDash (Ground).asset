@@ -14,11 +14,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   attackName: Gun Dash (Ground)
   description: 
-  useState: 0
-  stateOverride: 0
+  useState: 1
+  stateOverride: 51
   length: 35
   hurtboxDefinition: {fileID: 0}
-  commandAttackCancelWindows: []
   chargeWindows: []
   hitboxGroups:
   - id: 0
@@ -26,6 +25,8 @@ MonoBehaviour:
   - id: 1
   - id: 2
   - id: 3
+  - id: 4
+  - id: 5
   cancels: []
   firstActableFrame: 100
   references:
@@ -35,15 +36,15 @@ MonoBehaviour:
       data:
         ID: 0
         activeFramesStart: 6
-        activeFramesEnd: 6
+        activeFramesEnd: 8
         boxes:
-        - id: 4
+        - id: 6
         attachToEntity: 1
         attachTo: 
         chargeLevelNeeded: -1
         chargeLevelMax: 1
         hitboxHitInfo:
-          id: 5
+          id: 7
         attachPoint: 
     00000001:
       type: {class: AttackEventDefinition, ns: HnSF.Combat, asm: HnSF}
@@ -56,13 +57,8 @@ MonoBehaviour:
         startFrame: 1
         endFrame: 1
         attackEvent:
-          id: 6
+          id: 8
         conditions: []
-        variables:
-          intVars: 
-          floatVars: []
-          objectVars: []
-          curveVars: []
         inputCheckTiming: 0
         inputCheckStartFrame: 1
         inputCheckEndFrame: 1
@@ -73,7 +69,6 @@ MonoBehaviour:
           sequenceInputs: []
         chargeLevelMin: 0
         chargeLevelMax: 0
-        inputCheckProcessed: 0
     00000002:
       type: {class: AttackEventDefinition, ns: HnSF.Combat, asm: HnSF}
       data:
@@ -85,13 +80,8 @@ MonoBehaviour:
         startFrame: 6
         endFrame: 6
         attackEvent:
-          id: 7
+          id: 9
         conditions: []
-        variables:
-          intVars: 
-          floatVars: []
-          objectVars: []
-          curveVars: []
         inputCheckTiming: 0
         inputCheckStartFrame: 1
         inputCheckEndFrame: 1
@@ -102,7 +92,6 @@ MonoBehaviour:
           sequenceInputs: []
         chargeLevelMin: 0
         chargeLevelMax: 0
-        inputCheckProcessed: 0
     00000003:
       type: {class: AttackEventDefinition, ns: HnSF.Combat, asm: HnSF}
       data:
@@ -111,16 +100,11 @@ MonoBehaviour:
         onHitCheck: 0
         onHitHitboxGroup: 0
         onHitIDGroup: 0
-        startFrame: 10
+        startFrame: 15
         endFrame: 35
         attackEvent:
-          id: 8
+          id: 10
         conditions: []
-        variables:
-          intVars: 
-          floatVars: []
-          objectVars: []
-          curveVars: []
         inputCheckTiming: 0
         inputCheckStartFrame: 1
         inputCheckEndFrame: 1
@@ -131,8 +115,53 @@ MonoBehaviour:
           sequenceInputs: []
         chargeLevelMin: 0
         chargeLevelMax: 0
-        inputCheckProcessed: 0
     00000004:
+      type: {class: AttackEventDefinition, ns: HnSF.Combat, asm: HnSF}
+      data:
+        nickname: Jump Cancel
+        active: 1
+        onHitCheck: 0
+        onHitHitboxGroup: 0
+        onHitIDGroup: 0
+        startFrame: 10
+        endFrame: 35
+        attackEvent:
+          id: 11
+        conditions: []
+        inputCheckTiming: 0
+        inputCheckStartFrame: 1
+        inputCheckEndFrame: 1
+        input:
+          executeWindow: 3
+          executeInputs: []
+          sequenceWindow: 8
+          sequenceInputs: []
+        chargeLevelMin: 0
+        chargeLevelMax: 0
+    00000005:
+      type: {class: AttackEventDefinition, ns: HnSF.Combat, asm: HnSF}
+      data:
+        nickname: Sound.Gun
+        active: 1
+        onHitCheck: 0
+        onHitHitboxGroup: 0
+        onHitIDGroup: 0
+        startFrame: 5
+        endFrame: 5
+        attackEvent:
+          id: 12
+        conditions: []
+        inputCheckTiming: 0
+        inputCheckStartFrame: 1
+        inputCheckEndFrame: 1
+        input:
+          executeWindow: 3
+          executeInputs: []
+          sequenceWindow: 8
+          sequenceInputs: []
+        chargeLevelMin: 0
+        chargeLevelMax: 0
+    00000006:
       type: {class: BoxDefinition, ns: HnSF.Combat, asm: HnSF}
       data:
         shape: 1
@@ -141,7 +170,7 @@ MonoBehaviour:
         rotation: {x: 0, y: 0, z: 0}
         radius: 1.5
         height: 0
-    00000005:
+    00000007:
       type: {class: HitInfo, ns: rwby, asm: rwby.csharp}
       data:
         hitType: 0
@@ -151,6 +180,7 @@ MonoBehaviour:
         opponentResetXForce: 1
         opponentResetYForce: 1
         autoLink: 0
+        autoLinkPercentage: 1
         forceType: 0
         forceRelation: 0
         attackerHitstop: 4
@@ -162,38 +192,58 @@ MonoBehaviour:
         knockdown: 0
         groundBounces: 0
         groundBounceForce: 0
-        wallBounces: 0
-        wallBounceForce: 0
+        wallBounces: 1
+        wallBounceForce: 10
         damageOnHit: 0
-        opponentForce: {x: 0, y: 0, z: -10}
+        opponentForce: {x: 0, y: 18, z: -10}
         forceIncludeYForce: 0
         opponentForceMultiplier: 1
         opponentMaxMagnitude: 1
         opponentMinMagnitude: 1
+        pushPullCenterOffset: {x: 0, y: 0, z: 0}
         throwConfirm: {fileID: 0}
         holdVelocityTime: 5
-        opponentForceAir: {x: 0, y: 0, z: 0}
+        opponentForceAir: {x: 0, y: 5, z: -10}
         opponentFriction: 50
         opponentGravity: 18
         hitSound: {fileID: 0}
         hangTime: 5
         blockType: 0
-        blockstun: 0
+        blockstun: 10
         blockForce: {x: 0, y: 0, z: 0}
         blockForceAir: {x: 0, y: 0, z: 0}
-    00000006:
+        blockHitstopAttacker: 4
+        blockHitstopDefender: 4
+        hitSoundbankName: 
+        hitSoundName: 
+        shakeValue: 0
+        effectbankName: 
+        effectName: 
+        blockSoundbankName: 
+        blockSoundName: 
+        forcesRestand: 0
+        hardKnockdown: 0
+        causesTrip: 0
+    00000008:
       type: {class: RotationSet, ns: rwby.Combat.AttackEvents, asm: rwby.csharp}
-    00000007:
+    00000009:
       type: {class: ForceSet, ns: rwby.Combat.AttackEvents, asm: rwby.csharp}
       data:
         applyXZForce: 1
         applyYForce: 0
-        xzForce: {x: 0, y: 18}
+        xzForce: {x: 0, y: 20}
         yForce: 0
-    00000008:
+    0000000A:
       type: {class: ApplyFriction, ns: rwby.Combat.AttackEvents, asm: rwby.csharp}
       data:
         useXZFriction: 1
         useYFriction: 0
         xzFriction: 50
         yFriction: 0
+    0000000B:
+      type: {class: JumpCancel, ns: rwby.Combat.AttackEvents, asm: rwby.csharp}
+    0000000C:
+      type: {class: PlaySFX, ns: rwby.Combat.AttackEvents, asm: rwby.csharp}
+      data:
+        sndbkName: rubyrose
+        sfxName: gun1

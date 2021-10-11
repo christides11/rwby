@@ -22,7 +22,6 @@ namespace rwby.fighters.states
             manager.HurtboxManager.CreateHurtboxes(0, 0);
             Vector3 movement = manager.GetMovementVector();
             movement.y = 0;
-            //manager.RotateVisual(movement.normalized, manager.StatManager.walkRotationSpeed);
             if (manager.HardTargeting)
             {
                 Vector3 faceDir = (manager.CurrentTarget.transform.position - manager.transform.position).normalized;

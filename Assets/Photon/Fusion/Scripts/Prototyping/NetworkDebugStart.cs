@@ -18,11 +18,8 @@ using Fusion.Editor;
 /// </summary>
 [DisallowMultipleComponent]
 [AddComponentMenu("Fusion/Prototyping/Network Debug Start")]
+[ScriptHelp(BackColor = EditorHeaderBackColor.Steel)]
 public class NetworkDebugStart : Fusion.Behaviour {
-
-#if UNITY_EDITOR
-  public override EditorHeaderBackColor EditorHeaderBackColor => EditorHeaderBackColor.Steel;
-#endif
 
   /// <summary>
   /// Selection for how <see cref="NetworkDebugStart"/> will behave at startup.
@@ -51,6 +48,7 @@ public class NetworkDebugStart : Fusion.Behaviour {
   /// such as <see cref="NetworkEvents"/> or your own custom INetworkInput implementations.
   /// </summary>
   [WarnIf(nameof(RunnerPrefab), 0, "No " + nameof(RunnerPrefab) + " supplied. Will search for a " + nameof(NetworkRunner) + " in the scene at startup.")]
+  [InlineHelp]
   public NetworkRunner RunnerPrefab;
 
   /// <summary>
@@ -63,6 +61,7 @@ public class NetworkDebugStart : Fusion.Behaviour {
                                                          nameof(StartHostPlusClients) + "(), or " +
                                                          nameof(StartServerPlusClients) + "()"
   )]
+  [InlineHelp]
   public StartModes StartMode = StartModes.UserInterface;
 
   /// <summary>
@@ -71,12 +70,14 @@ public class NetworkDebugStart : Fusion.Behaviour {
   /// </summary>
   [UnityEngine.Serialization.FormerlySerializedAs("Server")]
   [DrawIf(nameof(StartMode), (long)StartModes.Automatic, DrawIfHideType.Hide)]
+  [InlineHelp]
   public GameMode AutoStartAs = GameMode.Shared;
 
   /// <summary>
   /// <see cref="NetworkDebugStartGUI"/> will not render GUI elements while <see cref="CurrentStage"/> == <see cref="Stage.AllConnected"/>.
   /// </summary>
   [DrawIf(nameof(StartMode), (long)StartModes.UserInterface, DrawIfHideType.Hide)]
+  [InlineHelp]
   public bool AutoHideGUI = true;
 
   /// <summary>
@@ -84,6 +85,7 @@ public class NetworkDebugStart : Fusion.Behaviour {
   /// When using the Select start mode, this number will be the default value for the additional clients option box.
   /// </summary>
   [DrawIf(nameof(_showAutoClients), true, DrawIfHideType.Hide)]
+  [InlineHelp]
   public int AutoClients = 1;
 
   bool _usingMultiPeerMode => NetworkProjectConfig.Global.PeerMode == NetworkProjectConfig.PeerModes.Multiple;
@@ -92,16 +94,19 @@ public class NetworkDebugStart : Fusion.Behaviour {
   /// <summary>
   /// The port that server/host <see cref="NetworkRunner"/> will use.
   /// </summary>
+  [InlineHelp]
   public ushort ServerPort = 27015;
 
   /// <summary>
   /// The default room name to use when connecting to photon cloud.
   /// </summary>
+  [InlineHelp]
   public string DefaultRoomName = ""; // empty/null means Random Room Name
 
   /// <summary>
   /// Will automatically enable <see cref="FusionStats"/> once peers have finished connecting.
   /// </summary>
+  [InlineHelp]
   public bool AlwaysShowStats = false;
 
 
@@ -113,6 +118,7 @@ public class NetworkDebugStart : Fusion.Behaviour {
   /// If this field is null or invalid, will be set to the current scene when <see cref="NetworkDebugStart"/> runs Awake().
   /// </summary>
   [ScenePath]
+  [InlineHelp]
   public string InitialScenePath;
   static string _initialScenePath;
 
@@ -353,10 +359,6 @@ public class NetworkDebugStart : Fusion.Behaviour {
     // Avoid double clicks or disallow multiple startup calls.
     if (CurrentStage != Stage.Disconnected) {
       yield break;
-    }
-
-    if (serverMode == GameMode.Shared) {
-      DefaultRoomName = string.IsNullOrEmpty(DefaultRoomName) == false ? DefaultRoomName : Guid.NewGuid().ToString();
     }
 
     bool includesServerStart = serverMode != GameMode.Shared && serverMode != GameMode.Client;

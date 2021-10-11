@@ -38,7 +38,7 @@ MonoBehaviour:
       data:
         ID: 0
         activeFramesStart: 6
-        activeFramesEnd: 6
+        activeFramesEnd: 9
         boxes:
         - id: 8
         attachToEntity: 1
@@ -194,7 +194,7 @@ MonoBehaviour:
         onHitCheck: 0
         onHitHitboxGroup: 0
         onHitIDGroup: 0
-        startFrame: 7
+        startFrame: 10
         endFrame: 25
         attackEvent:
           id: 16
@@ -228,6 +228,7 @@ MonoBehaviour:
         opponentResetXForce: 1
         opponentResetYForce: 1
         autoLink: 0
+        autoLinkPercentage: 1
         forceType: 0
         forceRelation: 0
         attackerHitstop: 4
@@ -242,14 +243,15 @@ MonoBehaviour:
         wallBounces: 0
         wallBounceForce: 0
         damageOnHit: 10
-        opponentForce: {x: 0, y: 0, z: 2}
+        opponentForce: {x: 0, y: 0, z: 0}
         forceIncludeYForce: 0
         opponentForceMultiplier: 1
         opponentMaxMagnitude: 1
         opponentMinMagnitude: 1
+        pushPullCenterOffset: {x: 0, y: 0, z: 0}
         throwConfirm: {fileID: 0}
         holdVelocityTime: 0
-        opponentForceAir: {x: 0, y: 1, z: 2}
+        opponentForceAir: {x: 0, y: 10, z: 0}
         opponentFriction: 10
         opponentGravity: 0
         hitSound: {fileID: 0}
@@ -267,6 +269,9 @@ MonoBehaviour:
         effectName: hit1
         blockSoundbankName: global
         blockSoundName: guarda
+        forcesRestand: 0
+        hardKnockdown: 0
+        causesTrip: 0
     0000000A:
       type: {class: SoftLockOn, ns: rwby.Combat.AttackEvents, asm: rwby.csharp}
       data:

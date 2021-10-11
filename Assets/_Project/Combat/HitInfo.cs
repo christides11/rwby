@@ -36,6 +36,10 @@ namespace rwby
         public string blockSoundbankName;
         public string blockSoundName;
 
+        // ?
+        public bool forcesRestand;
+        public bool hardKnockdown;
+        public bool causesTrip;
 
         public HitInfo() : base()
         {

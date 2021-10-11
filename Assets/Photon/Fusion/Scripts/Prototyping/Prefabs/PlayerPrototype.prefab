@@ -376,7 +376,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   AoiMode: 0
-  DefaultPropertyGroups: []
   DestroyWhenStateAuthorityLeaves: 0
   AoiPosition: {fileID: 0}
   Flags: 2305
@@ -400,6 +399,8 @@ MonoBehaviour:
   m_Script: {fileID: -1101589486, guid: e725a070cec140c4caffb81624c8c787, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  WordOffset: 0
+  WordCount: 0
   _interpolationDataSource: 0
   _interpolationTarget: {fileID: 0}
   _space: 0
@@ -420,6 +421,17 @@ MonoBehaviour:
     MaxSlope: 60
     MaxSlopeSpeed: 5
     _gravity: {x: 0, y: -9.81, z: 0}
+  LastMovement:
+    Type: 0
+    NearestNormal: {x: 0, y: 0, z: 0}
+    AvgNormal: {x: 0, y: 0, z: 0}
+    GroundNormal: {x: 0, y: 0, z: 0}
+    Tangent: {x: 0, y: 0, z: 0}
+    SlopeTangent: {x: 0, y: 0, z: 0}
+    Correction: {x: 0, y: 0, z: 0}
+    Penetration: 0
+    Grounded: 0
+    Contacts: 0
 --- !u!114 &8815895893571785557
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -432,6 +444,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 00e2a674f00349f4ca3accde09d57809, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  WordOffset: 0
+  WordCount: 0
   _interpolationDataSource: 0
   TransformLocal: 0
   Speed: 6
@@ -461,6 +475,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 72872188c080b844a9c9d1015cf8e60a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  WordOffset: 0
+  WordCount: 0
   _interpolationDataSource: 0
   TargetPlayerBy: 1
   DrawAreaOfInterestRadius: 0

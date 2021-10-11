@@ -7,11 +7,8 @@ using Fusion.Editor;
 
 [DisallowMultipleComponent]
 [AddComponentMenu("Fusion/Prototyping/Toggle Runner Provide Input")]
+[ScriptHelp(BackColor = EditorHeaderBackColor.Steel)]
 public class ToggleRunnerProvideInput : Fusion.Behaviour {
-
-#if UNITY_EDITOR
-  public override EditorHeaderBackColor EditorHeaderBackColor => EditorHeaderBackColor.Steel;
-#endif
 
   private static ToggleRunnerProvideInput _instance;
 

@@ -10,6 +10,26 @@
             This can contains either a IPv4 or a IPv6 address
             </summary>
         </member>
+        <member name="P:Fusion.Sockets.NetAddress.ActorId">
+            <summary>
+            Retrieves the Remote Actor ID which this <see cref="T:Fusion.Sockets.NetAddress"/> Represents
+            </summary>
+        </member>
+        <member name="P:Fusion.Sockets.NetAddress.IsRelayAddr">
+            <summary>
+            Signal if the <see cref="T:Fusion.Sockets.NetAddress"/> is a Relayed connection
+            </summary>
+        </member>
+        <member name="P:Fusion.Sockets.NetAddress.IsIPv6">
+            <summary>
+            Signal if the <see cref="T:Fusion.Sockets.NetAddress"/> represents an IPv6 Address
+            </summary>
+        </member>
+        <member name="P:Fusion.Sockets.NetAddress.IsValid">
+            <summary>
+            Signal if this <see cref="T:Fusion.Sockets.NetAddress"/> is not default/empty
+            </summary>
+        </member>
         <member name="M:Fusion.Sockets.NetAddress.LocalhostIPv4(System.UInt16)">
             <summary>
             Create a new NetAddress on the LocalHost address with the desired Port 
@@ -17,9 +37,24 @@
             <param name="port">Port used to build the NetAddress</param>
             <returns>New NetAddress reference</returns>
         </member>
+        <member name="M:Fusion.Sockets.NetAddress.LocalhostIPv6(System.UInt16)">
+            <summary>
+            Create a new <see cref="T:Fusion.Sockets.NetAddress"/> on the LocalHost IPv6 Address with the desired Port
+            </summary>
+            <param name="port">Port used to build the NetAddress</param>
+            <returns>New NetAddress reference</returns>
+        </member>
         <member name="M:Fusion.Sockets.NetAddress.Any(System.UInt16)">
             <summary>
             Create a new NetAddress using the "Any" IPv4 Address representation (0.0.0.0)
+            with the Port passed as argument
+            </summary>
+            <param name="port">Port used to build the NetAddress</param>
+            <returns>New NetAddress reference</returns>
+        </member>
+        <member name="M:Fusion.Sockets.NetAddress.AnyIPv6(System.UInt16)">
+            <summary>
+            Create a new NetAddress using the "Any" IPv6 Address representation (::)
             with the Port passed as argument
             </summary>
             <param name="port">Port used to build the NetAddress</param>
@@ -339,20 +374,20 @@
         </member>
         <member name="T:Fusion.Sockets.Stun.StunClient">
             <summary>
-            This class implements STUN Client. Defined in RFC 5389
+            This class implements STUN Client. Defined in RFC 8489
             
-            <see cref="!:https://datatracker.ietf.org/doc/html/rfc5389"/>
-            <see cref="!:https://datatracker.ietf.org/doc/html/rfc5780"/>
+            <see cref="!:https://datatracker.ietf.org/doc/html/rfc8489"/> Session Traversal Utilities for NAT (STUN)
+            <see cref="!:https://datatracker.ietf.org/doc/html/rfc8656"/> Traversal Using Relays around NAT (TURN): Relay Extensions to Session Traversal Utilities for NAT(STUN)
+            <see cref="!:https://datatracker.ietf.org/doc/html/rfc8305"/> Happy Eyeballs Version 2: Better Connectivity Using Concurrency
+            <see cref="!:https://datatracker.ietf.org/doc/html/rfc5128"/> State of Peer-to-Peer (P2P) Communication across Network Address Translators(NATs)
             <see cref="!:https://www.netmanias.com/en/post/techdocs/6067/nat-network-protocol/nat-behavior-discovery-using-stun-rfc-5780"/>
             <see cref="!:https://www.voip-info.org/stun/"/>
+            <see cref="!:https://tailscale.com/blog/how-nat-traversal-works/"/>
+            <see cref="!:https://serverfault.com/questions/782627/udp-hole-punching-still-required-in-ipv6-even-without-nat"/>
+            <see cref="!:https://serverfault.com/questions/184524/switching-to-ipv6-implies-dropping-nat-is-that-a-good-thing"/>
             </summary>
         </member>
-        <member name="T:Fusion.Sockets.Stun.StunClient.StunServers">
-            <summary>
-            List of public STUN Servers
-            </summary>
-        </member>
-        <member name="T:Fusion.Sockets.Stun.StunClient.DnsServers">
+        <member name="T:Fusion.Sockets.Stun.StunClient.TestIPs">
             <summary>
             List of public DNS Servers
             </summary>
@@ -365,7 +400,7 @@
             <param name="socket">Network Socket reference</param>
             <returns>Running Task of the STUN Query Procedure</returns>
         </member>
-        <member name="M:Fusion.Sockets.Stun.StunClient.GetLocalAddress(System.Net.Sockets.AddressFamily)">
+        <member name="M:Fusion.Sockets.Stun.StunClient.GetLocalAddress(System.Net.Sockets.AddressFamily@,System.Net.IPAddress@)">
             <summary>
             Retrieve the Local IP Endpoint currently active
             </summary>
@@ -566,12 +601,30 @@
             Gets private IP end point.
             </summary>
         </member>
+        <member name="F:Fusion.Sockets.Stun.StunResult.Invalid">
+            <summary>
+            Invalid StunResult Reference
+            </summary>
+        </member>
         <member name="M:Fusion.Sockets.Stun.StunResult.#ctor(Fusion.Sockets.NetAddress,Fusion.Sockets.NetAddress)">
             <summary>
             Default constructor.
             </summary>
             <param name="netType">Specifies UDP network type.</param>
             <param name="publicEndPoint">Public IP end point.</param>
+        </member>
+        <member name="T:Fusion.Sockets.Stun.StunServers">
+            <summary>
+            List of public STUN Servers
+            </summary>
+        </member>
+        <member name="M:Fusion.Sockets.Stun.StunServers.BuildIP(System.String)">
+            <summary>
+            
+            <see cref="!:https://datatracker.ietf.org/doc/html/rfc5952#section-6"/>
+            </summary>
+            <param name="stunServer"></param>
+            <returns></returns>
         </member>
         <member name="P:Fusion.Protocol.BitStream.Size">
             <summary>

@@ -21,6 +21,11 @@ namespace rwby
         BLOCK_AIR = 17,
         WALL_RUN_V = 18,
         WALL_RUN_H = 19,
-        WALL_JUMP = 20
+        WALL_JUMP = 20,
+        TRIP = 21,
+        GROUND_LAY = 22,
+        TECH_AIR = 23,
+        TECH_GROUND = 24,
+        GROUND_GETUP = 25
     }
 }

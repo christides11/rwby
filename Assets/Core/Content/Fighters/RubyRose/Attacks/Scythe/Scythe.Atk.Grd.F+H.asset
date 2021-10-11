@@ -36,7 +36,7 @@ MonoBehaviour:
       data:
         ID: 0
         activeFramesStart: 17
-        activeFramesEnd: 17
+        activeFramesEnd: 20
         boxes:
         - id: 6
         attachToEntity: 1
@@ -141,8 +141,8 @@ MonoBehaviour:
     00000005:
       type: {class: CancelListDefinition, ns: HnSF.Combat, asm: HnSF}
       data:
-        startFrame: 7
-        endFrame: 25
+        startFrame: 21
+        endFrame: 40
         cancelListID: 0
         conditions: []
     00000006:
@@ -203,6 +203,9 @@ MonoBehaviour:
         effectName: hit1
         blockSoundbankName: global
         blockSoundName: guarda
+        forcesRestand: 0
+        hardKnockdown: 0
+        causesTrip: 0
     00000008:
       type: {class: SoftLockOn, ns: rwby.Combat.AttackEvents, asm: rwby.csharp}
       data:

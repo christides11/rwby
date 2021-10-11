@@ -150,7 +150,7 @@ namespace rwby
             {
                 case true:
                     int groundAbility = CheckAbilityNodes(ref moveset.groundAbilityNodes);
-                    if(groundAbility != -1)
+                    if (groundAbility != -1)
                     {
                         return groundAbility;
                     }
@@ -162,7 +162,7 @@ namespace rwby
                             return cancel;
                         }
                     }
-                    int groundNormal = CheckAttackNodes(ref moveset.groundAttackStartNodes);
+                    int groundNormal = CheckGroundNodes(moveset);
                     if (groundNormal != -1)
                     {
                         return groundNormal;
@@ -182,7 +182,7 @@ namespace rwby
                             return cancel;
                         }
                     }
-                    int airNormal = CheckAttackNodes(ref moveset.airAttackStartNodes);
+                    int airNormal = CheckAirNodes(moveset);
                     if (airNormal != -1)
                     {
                         return airNormal;
@@ -191,6 +191,35 @@ namespace rwby
             }
             return -1;
         }
+
+        private int CheckGroundNodes(rwby.Moveset moveset)
+        {
+            switch (AttackLevel)
+            {
+                case 0:
+                    return CheckAttackNodes(ref moveset.groundLV1StartNodes);
+                case 1:
+                    return CheckAttackNodes(ref moveset.groundLV2StartNodes);
+                case 2:
+                    return CheckAttackNodes(ref moveset.groundLV3StartNodes);
+            }
+            return -1;
+        }
+
+        private int CheckAirNodes(rwby.Moveset moveset)
+        {
+            switch (AttackLevel)
+            {
+                case 0:
+                    return CheckAttackNodes(ref moveset.airLV1StartNodes);
+                case 1:
+                    return CheckAttackNodes(ref moveset.airLV2StartNodes);
+                case 2:
+                    return CheckAttackNodes(ref moveset.airLV3StartNodes);
+            }
+            return -1;
+        }
+
 
         /// <summary>
         /// Checks the cancel windows of the current attack to see if we should transition to the next attack.
@@ -278,13 +307,16 @@ namespace rwby
                 return null;
             }
 
-            if(manager.InputManager.GetButton(inputT, out int bOff).firstPress == false)
+            node.inputSequence.executeInputs[0].buttonID = (int)inputT;
+
+            /*if (manager.InputManager.GetButton(inputT, out int bOff, 0, 5).firstPress == false)
             {
                 return null;
-            }
+            }*/
 
             if (CheckForInputSequence(node.inputSequence, 0, true))
             {
+                //node.inputSequence.executeInputs[0].buttonID = (int)inputT;
                 return node;
             }
             return null;
@@ -528,8 +560,12 @@ namespace rwby
             throw new System.NotImplementedException();
         }
 
-        public float autoLinkForcePercentage = 0.85f;
+        public float autoLinkForcePercentage = 0;
         [Networked, Capacity(10)] public NetworkArray<int> hurtboxHitCount { get; set; }
+        
+        [Networked] public NetworkBool HardKnockdown { get; set; }
+        [Networked] public NetworkBool GroundBounce { get; set; }
+
         public HitReactionBase Hurt(HurtInfoBase hurtInfoBase)
         {
             HurtInfo hurtInfo = hurtInfoBase as HurtInfo;
@@ -593,14 +629,33 @@ namespace rwby
                     physicsManager.forceGravity = baseForce.y;
                     physicsManager.forceMovement = forces;
                     break;
+                case HitboxForceType.PULL:
+                    Vector3 pullDir = Vector3.ClampMagnitude((hurtInfo.center - (transform.position + Vector3.up)) * hitInfo.opponentForceMultiplier, hitInfo.opponentMaxMagnitude);
+                    if (pullDir.magnitude < hitInfo.opponentMinMagnitude)
+                    {
+                        pullDir = (hurtInfo.center - (transform.position + Vector3.up) ).normalized * hitInfo.opponentMinMagnitude;
+                    }
+                    if (hitInfo.forceIncludeYForce)
+                    {
+                        physicsManager.forceGravity = pullDir.y;
+                    }
+                    pullDir.y = 0;
+                    physicsManager.forceMovement = pullDir;
+                    break;
             }
 
             if (hitInfo.autoLink)
             {
-                Vector3 temp = physicsManager.forceMovement;
-                temp.x += hurtInfo.attackerVelocity.x * autoLinkForcePercentage;
-                temp.z += hurtInfo.attackerVelocity.z * autoLinkForcePercentage;
+                //autoLinkForcePercentage = hitInfo.autoLinkPercentage;
+                Vector3 calcForce = hurtInfo.attackerVelocity * hitInfo.autoLinkPercentage;
+                physicsManager.forceGravity += calcForce.y;
+                calcForce.y = 0;
+                physicsManager.forceMovement += calcForce;
+                /*Vector3 temp = physicsManager.forceMovement;
+                temp = (temp * (1.0f - autoLinkForcePercentage)) + (hurtInfo.attackerVelocity * autoLinkForcePercentage);
+                temp.y = 0;
                 physicsManager.forceMovement = temp;
+                physicsManager.forceGravity = (physicsManager.forceGravity * (1.0f - autoLinkForcePercentage)) + (hurtInfo.attackerVelocity.y * autoLinkForcePercentage);*/
             }
             if (physicsManager.forceGravity > 0)
             {
@@ -611,18 +666,31 @@ namespace rwby
             {
                 manager.CombatManager.Cleanup();
             }
-            // Change into the correct state.
-            if (hitInfo.groundBounces && physicsManager.IsGrounded)
+
+            HardKnockdown = hitInfo.hardKnockdown;
+            GroundBounce = hitInfo.groundBounces;
+
+            if (physicsManager.IsGrounded == true)
             {
-                manager.StateManager.ChangeState((int)FighterCmnStates.GROUND_BOUNCE);
-            }
-            else if (hitInfo.causesTumble)
-            {
-                manager.StateManager.ChangeState((int)FighterCmnStates.TUMBLE);
+                if (hitInfo.causesTrip)
+                {
+                    manager.StateManager.ChangeState((int)FighterCmnStates.TRIP);
+                }
+                else
+                {
+                    manager.StateManager.ChangeState((int)FighterCmnStates.FLINCH_GROUND);
+                }
             }
             else
             {
-                manager.StateManager.ChangeState((ushort)(physicsManager.IsGrounded ? FighterCmnStates.FLINCH_GROUND : FighterCmnStates.FLINCH_AIR));
+                if (hitInfo.forcesRestand)
+                {
+                    manager.StateManager.ChangeState((int)FighterCmnStates.FLINCH_AIR);
+                }
+                else
+                {
+                    manager.StateManager.ChangeState((int)FighterCmnStates.TUMBLE);
+                }
             }
             return hitReaction;
         }

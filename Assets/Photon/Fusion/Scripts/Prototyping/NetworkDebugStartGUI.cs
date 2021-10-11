@@ -8,11 +8,8 @@ using System.Collections.Generic;
 /// </summary>
 [RequireComponent(typeof(NetworkDebugStart))]
 [AddComponentMenu("Fusion/Network Debug Start GUI")]
+[ScriptHelp(BackColor = EditorHeaderBackColor.Steel)]
 public class NetworkDebugStartGUI : Fusion.Behaviour {
-
-#if UNITY_EDITOR
-  public override EditorHeaderBackColor EditorHeaderBackColor => EditorHeaderBackColor.Steel;
-#endif
 
   /// <summary>
   /// When enabled, the in-game user interface buttons can be activated with the keys H (Host), S (Server) and C (Client).

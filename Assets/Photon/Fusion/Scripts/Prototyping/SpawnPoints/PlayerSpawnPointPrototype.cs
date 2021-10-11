@@ -6,6 +6,7 @@ using Fusion;
 /// <summary>
 /// Flag component to identify GameObjects that should be used as markers for spawn points.
 /// </summary>
+[ScriptHelp(BackColor = EditorHeaderBackColor.Steel)]
 public class PlayerSpawnPointPrototype : SimulationBehaviour, ISpawnPointPrototype
 {
   //public static List<PlayerSpawnPointPrototype> EnabledSpawns = new List<PlayerSpawnPointPrototype>();
@@ -17,10 +18,6 @@ public class PlayerSpawnPointPrototype : SimulationBehaviour, ISpawnPointPrototy
   //protected virtual void OnDisable() {
   //  EnabledSpawns.Remove(this);
   //}
-
-#if UNITY_EDITOR
-  public override EditorHeaderBackColor EditorHeaderBackColor => EditorHeaderBackColor.Steel;
-#endif
 
 #if UNITY_EDITOR
   private static bool _spawnPointIsSelected;

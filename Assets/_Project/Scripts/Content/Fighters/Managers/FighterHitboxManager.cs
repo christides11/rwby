@@ -1,5 +1,6 @@
 using Fusion;
 using HnSF.Combat;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -15,6 +16,9 @@ namespace rwby
         public LayerMask hitLayermask;
         public List<LagCompensatedHit> lch = new List<LagCompensatedHit>();
 
+        [Networked, Capacity(10)] public NetworkArray<IDGroupCollisionInfo> nd { get; set; }
+        [Networked] public byte ndCount { get; set; }
+
         private void Awake()
         {
             gameManager = GameManager.singleton;
@@ -22,7 +26,7 @@ namespace rwby
 
         public virtual void Reset()
         {
-
+            ndCount = 0;
         }
 
         protected List<Hurtbox> hurtboxes = new List<Hurtbox>();
@@ -39,12 +43,6 @@ namespace rwby
                 {
                     continue;
                 }
-
-                // Hit thing(s). Check if we should actually hurt them.
-                /*if (!collidedIHurtables.ContainsKey(hitboxGroup.ID))
-                {
-                    collidedIHurtables.Add(hitboxGroup.ID, new IDGroupCollisionInfo());
-                }*/
 
                 SortHitHurtboxes();
 
@@ -71,23 +69,43 @@ namespace rwby
         protected virtual bool TryHitHurtbox(HitboxGroup hitboxGroup, int hitboxIndex, int hurtboxIndex, int hitboxGroupIndex, GameObject attacker)
         {
             // Owner was already hit by this ID group or is null, ignore it.
-            if(hurtboxes[hurtboxIndex] == null)
+            if(hurtboxes[hurtboxIndex] == null || CheckHitHurtable(hitboxGroup.ID, hurtboxes[hurtboxIndex]) == true)
             {
                 return false;
             }
-            /*if (hurtboxes[hurtboxIndex] == null || collidedIHurtables[hitboxGroup.ID].hitIHurtables.Contains(hurtboxes[hurtboxIndex].Owner))
-            {
-                return false;
-            }*/
             // Additional filtering.
             if (ShouldHurt(hitboxGroup, hitboxIndex, hurtboxes[hurtboxIndex]) == false)
             {
                 return false;
             }
-            //collidedIHurtables[hitboxGroup.ID].hitIHurtables.Add(hurtboxes[hurtboxIndex].Owner);
-            //collidedIHurtables[hitboxGroup.ID].hitboxGroups.Add(hitboxGroupIndex);
+            AddCollidedHurtable(hitboxGroup.ID, hurtboxes[hurtboxIndex]);
             HurtHurtbox(hitboxGroup, hitboxIndex, hurtboxes[hurtboxIndex], attacker, lch[hurtboxIndex].Point);
             return true;
+        }
+
+        private void AddCollidedHurtable(int iD, Hurtbox hurtbox)
+        {
+            if(ndCount == nd.Length)
+            {
+                Debug.LogError("Can't add any more collided hurtable information.");
+                return;
+            }
+            nd.Set(ndCount, new IDGroupCollisionInfo() { hitByIDGroup = iD, hitIHurtableNetID = hurtbox.hurtableNetworkObject.Id });
+            ndCount++;
+        }
+
+        private bool CheckHitHurtable(int hitboxIDGroup, Hurtbox hurtbox)
+        {
+            for(int i = 0; i < ndCount; i++)
+            {
+               NetworkObject nb = Runner.FindObject(nd[i].hitIHurtableNetID);
+
+                if (nd[i].hitByIDGroup == hitboxIDGroup && nb.GetComponent<IHurtable>() == hurtbox.hurtable)
+                {
+                    return true;
+                }
+            }
+            return false;
         }
 
         protected virtual void HurtHurtbox(HitboxGroup hitboxGroup, int hitboxIndex, Hurtbox hurtbox, GameObject attacker, Vector3 hitPoint)
@@ -137,13 +155,13 @@ namespace rwby
                         transform.position, manager.transform.forward, manager.transform.right,
                         manager.PhysicsManager.GetOverallForce(), hitPoint);
                     break;
-                /*case HitboxForceRelation.HITBOX:
-                    Vector3 position = hitboxGroup.attachToEntity ? manager.transform.position + (hitboxGroup.boxes[hitboxIndex] as HnSF.Combat.BoxDefinition).offset
-                : referencePosition + (hitboxGroup.boxes[hitboxIndex] as HnSF.Combat.BoxDefinition).offset;
-                    hurtInfo = new HurtInfo((Combat.HitInfo)hitboxGroup.hitboxHitInfo, hurtbox.HurtboxGroup as Mahou.Combat.HurtboxGroup,
-                        position, manager.visual.transform.forward, manager.visual.transform.right,
-                        (manager.PhysicsManager as FighterPhysicsManager).GetOverallForce());
-                    break;*/
+                case HitboxForceRelation.HITBOX: 
+                   Vector3 position = hitboxGroup.attachToEntity ? manager.transform.position + (hitboxGroup.boxes[hitboxIndex] as HnSF.Combat.BoxDefinition).offset
+                        : Vector3.zero + (hitboxGroup.boxes[hitboxIndex] as HnSF.Combat.BoxDefinition).offset;
+                   hurtInfo = new HurtInfo((HitInfo)hitboxGroup.hitboxHitInfo, hurtbox.hurtboxGroup as HurtboxGroup,
+                        position, manager.transform.forward, manager.transform.right,
+                        manager.PhysicsManager.GetOverallForce(), hitPoint);
+                    break;
                 case HitboxForceRelation.WORLD:
                     hurtInfo = new HurtInfo((HitInfo)hitboxGroup.hitboxHitInfo, hurtbox.hurtboxGroup as HurtboxGroup,
                         transform.position, Vector3.forward, Vector3.right,
@@ -192,8 +210,7 @@ namespace rwby
                     }
                     break;
                 case BoxShape.Circle:
-                    cldAmt = Runner.LagCompensation.OverlapSphere(position, (hitboxGroup.boxes[boxIndex] as HnSF.Combat.BoxDefinition).radius, Runner.Simulation.Tick, lch, hitLayermask,
-                         HitOptions.DetailedHit);
+                    cldAmt = Runner.LagCompensation.OverlapSphere(position, (hitboxGroup.boxes[boxIndex] as HnSF.Combat.BoxDefinition).radius, Runner.Simulation.Tick, lch, hitLayermask);
                     if (gameManager.settings.showHitboxes)
                     {
                         ExtDebug.DrawWireSphere(position, (hitboxGroup.boxes[boxIndex] as HnSF.Combat.BoxDefinition).radius, Color.red, Runner.Simulation.DeltaTime, 3);

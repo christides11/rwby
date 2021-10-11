@@ -35,8 +35,8 @@ MonoBehaviour:
       type: {class: HitboxGroup, ns: rwby, asm: rwby.csharp}
       data:
         ID: 0
-        activeFramesStart: 6
-        activeFramesEnd: 6
+        activeFramesStart: 9
+        activeFramesEnd: 11
         boxes:
         - id: 6
         attachToEntity: 1
@@ -123,8 +123,8 @@ MonoBehaviour:
         onHitCheck: 0
         onHitHitboxGroup: 0
         onHitIDGroup: 0
-        startFrame: 4
-        endFrame: 4
+        startFrame: 8
+        endFrame: 8
         attackEvent:
           id: 11
         conditions: []
@@ -141,7 +141,7 @@ MonoBehaviour:
     00000005:
       type: {class: CancelListDefinition, ns: HnSF.Combat, asm: HnSF}
       data:
-        startFrame: 7
+        startFrame: 12
         endFrame: 25
         cancelListID: 0
         conditions: []
@@ -164,10 +164,11 @@ MonoBehaviour:
         opponentResetXForce: 1
         opponentResetYForce: 1
         autoLink: 0
+        autoLinkPercentage: 1
         forceType: 0
         forceRelation: 0
-        attackerHitstop: 4
-        hitstop: 4
+        attackerHitstop: 5
+        hitstop: 5
         hitstun: 20
         airOnly: 0
         groundOnly: 0
@@ -183,6 +184,7 @@ MonoBehaviour:
         opponentForceMultiplier: 1
         opponentMaxMagnitude: 1
         opponentMinMagnitude: 1
+        pushPullCenterOffset: {x: 0, y: 0, z: 0}
         throwConfirm: {fileID: 0}
         holdVelocityTime: 0
         opponentForceAir: {x: 0, y: 0, z: 0}
@@ -194,8 +196,8 @@ MonoBehaviour:
         blockstun: 5
         blockForce: {x: 0, y: 0, z: 5}
         blockForceAir: {x: 0, y: 0, z: 0}
-        blockHitstopAttacker: 4
-        blockHitstopDefender: 4
+        blockHitstopAttacker: 5
+        blockHitstopDefender: 5
         hitSoundbankName: global
         hitSoundName: hitb
         shakeValue: 0
@@ -203,6 +205,9 @@ MonoBehaviour:
         effectName: hit1
         blockSoundbankName: global
         blockSoundName: guarda
+        forcesRestand: 0
+        hardKnockdown: 0
+        causesTrip: 0
     00000008:
       type: {class: SoftLockOn, ns: rwby.Combat.AttackEvents, asm: rwby.csharp}
       data:
@@ -221,5 +226,6 @@ MonoBehaviour:
     0000000B:
       type: {class: PlaySFX, ns: rwby.Combat.AttackEvents, asm: rwby.csharp}
       data:
-        sndbkName: global
-        sfxName: swingb
+        sndbkName: rubyrose
+        sfxName: lt-swing-e
+        volume: 1

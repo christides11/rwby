@@ -12,6 +12,7 @@ using Fusion.Editor;
 /// Derived manager will only find that spawn point type, allowing for separate handling of player spawn points from other spawn-able items such as AI.
 /// </summary>
 /// <typeparam name="T"></typeparam>
+[ScriptHelp(BackColor = EditorHeaderBackColor.Steel)]
 public abstract class SpawnPointManagerPrototype<T> : Fusion.Behaviour, ISpawnPointManagerPrototype<T>
   where T : Component, ISpawnPointPrototype {
   public enum SpawnSequence {
@@ -19,10 +20,6 @@ public abstract class SpawnPointManagerPrototype<T> : Fusion.Behaviour, ISpawnPo
     RoundRobin,
     Random
   }
-
-#if UNITY_EDITOR
-  public override EditorHeaderBackColor EditorHeaderBackColor => EditorHeaderBackColor.Steel;
-#endif
 
   /// <summary>
   /// How spawn points will be selected from the <see cref="_spawnPoints"/> collection.

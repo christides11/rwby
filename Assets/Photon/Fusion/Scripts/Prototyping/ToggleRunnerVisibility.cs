@@ -8,11 +8,8 @@ using Fusion.Editor;
 
 [DisallowMultipleComponent]
 [AddComponentMenu("Fusion/Prototyping/Toggle Runner Visibility")]
+[ScriptHelp(BackColor = EditorHeaderBackColor.Steel)]
 public class ToggleRunnerVisibility : Fusion.Behaviour {
-
-#if UNITY_EDITOR
-  public override EditorHeaderBackColor EditorHeaderBackColor => EditorHeaderBackColor.Steel;
-#endif
 
   private static ToggleRunnerVisibility _instance;
 

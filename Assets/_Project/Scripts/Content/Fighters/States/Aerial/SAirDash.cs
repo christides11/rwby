@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Xml.Linq;
 using UnityEngine;
 
 namespace rwby.fighters.states
@@ -23,6 +24,9 @@ namespace rwby.fighters.states
         {
             if(manager.StateManager.CurrentStateFrame == manager.StatManager.airDashStartup)
             {
+                SoundbankContainer soundbankContainer = manager.SoundbankContainer;
+                soundbankContainer.PlaySound("global", "airdash", 0.5f);
+
                 Vector3 movement = manager.GetMovementVector();
                 if(movement == Vector3.zero)
                 {

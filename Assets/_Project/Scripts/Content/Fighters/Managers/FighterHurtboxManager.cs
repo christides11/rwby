@@ -23,6 +23,7 @@ namespace rwby
             settings = GameManager.singleton.settings;
             foreach(var hb in hRoot.Hitboxes)
             {
+                (hb as Hurtbox).hurtableNetworkObject = combatManager.GetComponent<NetworkObject>();
                 (hb as Hurtbox).hurtable = combatManager;
             }
         }

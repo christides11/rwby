@@ -3,12 +3,8 @@ using Fusion;
 using System.Collections.Generic;
 using UnityEngine;
 
-
-public class SpawnerPrototype<T> : SimulationBehaviour, IPlayerJoined, IPlayerLeft, ISpawned, ISceneLoaded where T : Component, ISpawnPointPrototype {
-
-#if UNITY_EDITOR
-  public override EditorHeaderBackColor EditorHeaderBackColor => EditorHeaderBackColor.Steel;
-#endif
+[ScriptHelp(BackColor = EditorHeaderBackColor.Steel)]
+public class SpawnerPrototype<T> : SimulationBehaviour, IPlayerJoined, IPlayerLeft, ISpawned, ISceneLoadDone where T : Component, ISpawnPointPrototype {
 
   protected Dictionary<PlayerRef, List<NetworkObject>> _spawnedLookup = new Dictionary<PlayerRef, List<NetworkObject>>();
 
@@ -51,7 +47,7 @@ public class SpawnerPrototype<T> : SimulationBehaviour, IPlayerJoined, IPlayerLe
     }
   }
 
-  public void SceneLoaded() {
+  public void SceneLoadDone() {
 
     if (SpawnMethod != SpawnMethods.AutoOnNetworkStart)
       return;

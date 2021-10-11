@@ -18,6 +18,7 @@ namespace rwby
         {
             manager.CombatManager.Charging = true;
             manager.HurtboxManager.ResetHurtboxes();
+            manager.CombatManager.HitboxManager.Reset();
             AttackDefinition currentAttack = (AttackDefinition)manager.CombatManager.CurrentAttackNode.attackDefinition;
             for (int i = 0; i < manager.attackEventInput.Length; i++)
             {

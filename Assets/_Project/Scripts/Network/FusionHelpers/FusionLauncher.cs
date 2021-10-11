@@ -180,5 +180,15 @@ namespace rwby
 		}
 
 		public void OnSessionListUpdated(NetworkRunner runner, List<SessionInfo> sessionList) { }
+
+        public void OnSceneLoadDone(NetworkRunner runner)
+        {
+
+        }
+
+        public void OnSceneLoadStart(NetworkRunner runner)
+        {
+
+        }
     }
 }
