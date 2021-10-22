@@ -148,9 +148,17 @@ namespace Fusion.Editor {
               GUI.Label(EditorGUILayout.GetControlRect(GUILayout.Width(isWide ? 94 : 40)), "");
             }
 
-            if (GUI.Button(EditorGUILayout.GetControlRect(GUILayout.Width(50)), "Stats")) {
+            if (GUI.Button(EditorGUILayout.GetControlRect(GUILayout.Width(75)), "<< Stats")) {
               // reflection hack
-              Type.GetType("FusionStats, Assembly-CSharp").GetMethod("SetActiveRunner").Invoke(null, new object[] { runner });
+              var stats = Type.GetType("FusionStats, Assembly-CSharp").GetMethod("CreateInternal", BindingFlags.NonPublic | BindingFlags.Static).Invoke(null, new object[] { runner, 1, null });
+              EditorGUIUtility.PingObject(((UnityEngine.Component)stats).gameObject);
+              Selection.activeObject = ((UnityEngine.Component)stats).gameObject;
+            }
+            if (GUI.Button(EditorGUILayout.GetControlRect(GUILayout.Width(75)), "Stats >>")) {
+              // reflection hack
+              var stats = Type.GetType("FusionStats, Assembly-CSharp").GetMethod("CreateInternal", BindingFlags.NonPublic | BindingFlags.Static).Invoke(null, new object[] { runner, 2, null });
+              EditorGUIUtility.PingObject(((UnityEngine.Component)stats).gameObject);
+              Selection.activeObject = ((UnityEngine.Component)stats).gameObject;
             }
           }
           EditorGUILayout.EndHorizontal();

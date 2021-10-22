@@ -13,7 +13,6 @@ namespace rwby.fighters.states
 
         public override void Initialize()
         {
-            Debug.Log("Getup.");
             base.Initialize();
         }
 

@@ -2317,6 +2317,305 @@ namespace Fusion.Editor {
 #endregion
 
 
+#region Assets/Photon/Fusion/Scripts/Editor/CustomTypes/NormalizedRectAttributeDrawer.cs
+
+
+namespace Fusion.Editor {
+  using System;
+  using UnityEditor;
+  using UnityEngine;
+
+#if UNITY_EDITOR
+  [CustomPropertyDrawer(typeof(NormalizedRectAttribute))]
+  public class NormalizedRectAttributeDrawer : PropertyDrawer {
+
+    bool isDragNewRect;
+    bool isDragXMin, isDragXMax, isDragYMin, isDragYMax, isDragAll;
+    MouseCursor lockCursorStyle;
+
+    Vector2 mouseDownStart;
+    static GUIStyle _compactLabelStyle;
+    static GUIStyle _compactValueStyle;
+
+    const float EXPANDED_HEIGHT = 140;
+    const float COLLAPSE_HEIGHT = 40;
+
+    public override float GetPropertyHeight(SerializedProperty property, GUIContent label) {
+      if (property.propertyType == SerializedPropertyType.Rect) {
+        return property.isExpanded ? EXPANDED_HEIGHT : COLLAPSE_HEIGHT;
+      } else {
+        return base.GetPropertyHeight(property, label);
+      }
+    }
+
+    public override void OnGUI(Rect position, SerializedProperty property, GUIContent label) {
+
+      EditorGUI.LabelField(new Rect(position) { height = 16 }, label);
+
+      var value = property.rectValue;
+
+      if (property.propertyType == SerializedPropertyType.Rect) {
+
+        var dragarea = new Rect(position) {
+          yMin = position.yMin + 16 + 3,
+          yMax = position.yMax - 2,
+          //xMin = position.xMin + 16,
+          //xMax = position.xMax - 4
+        };
+
+        // lower foldout box
+        GUI.Box(dragarea, GUIContent.none, EditorStyles.helpBox);
+
+        property.isExpanded = GUI.Toggle(new Rect(position) { xMin = dragarea.xMin + 2, yMin = dragarea.yMin + 2, width = 12, height = 16 }, property.isExpanded, GUIContent.none, EditorStyles.foldout);
+        bool isExpanded = property.isExpanded;
+
+        float border = isExpanded ? 4 : 2;
+        dragarea.xMin += 18;
+        dragarea.yMin += border;
+        dragarea.xMax -= border;
+        dragarea.yMax -= border;
+
+        // Simulated desktop rect
+        GUI.Box(dragarea, GUIContent.none, EditorStyles.helpBox);
+
+        var invertY = (attribute as NormalizedRectAttribute).InvertY;
+
+        Event e = Event.current;
+        
+        const int HANDLE_SIZE = 8;
+
+        var normmin = new Vector2(value.xMin, invertY ? 1f - value.yMin : value.yMin);
+        var normmax = new Vector2(value.xMax, invertY ? 1f - value.yMax : value.yMax);
+        var minreal = Rect.NormalizedToPoint(dragarea, normmin);
+        var maxreal = Rect.NormalizedToPoint(dragarea, normmax);
+        var lowerleftrect = new Rect(minreal.x              , minreal.y - (invertY ? HANDLE_SIZE : 0), HANDLE_SIZE, HANDLE_SIZE);
+        var upperrghtrect = new Rect(maxreal.x - HANDLE_SIZE, maxreal.y - (invertY ? 0 : HANDLE_SIZE), HANDLE_SIZE, HANDLE_SIZE);
+        var upperleftrect = new Rect(minreal.x              , maxreal.y - (invertY ? 0 : HANDLE_SIZE), HANDLE_SIZE, HANDLE_SIZE);
+        var lowerrghtrect = new Rect(maxreal.x - HANDLE_SIZE, minreal.y - (invertY ? HANDLE_SIZE : 0), HANDLE_SIZE, HANDLE_SIZE);
+
+        var currentrect = Rect.MinMaxRect(minreal.x, invertY ? maxreal.y : minreal.y, maxreal.x, invertY ? minreal.y : maxreal.y);
+
+        if (lockCursorStyle == MouseCursor.Arrow) {
+          if (isExpanded) {
+            EditorGUIUtility.AddCursorRect(lowerleftrect, MouseCursor.Link);
+            EditorGUIUtility.AddCursorRect(upperrghtrect, MouseCursor.Link);
+            EditorGUIUtility.AddCursorRect(upperleftrect, MouseCursor.Link);
+            EditorGUIUtility.AddCursorRect(lowerrghtrect, MouseCursor.Link);
+          }
+          EditorGUIUtility.AddCursorRect(currentrect, MouseCursor.MoveArrow);
+        } else {
+          // Lock cursor to a style while dragging, otherwise the slow inspector update causes rapid mouse icon changes.
+          EditorGUIUtility.AddCursorRect(dragarea, lockCursorStyle);
+        }
+
+        EditorGUI.DrawRect(lowerleftrect, Color.yellow);
+        EditorGUI.DrawRect(upperrghtrect, Color.yellow);
+        EditorGUI.DrawRect(upperleftrect, Color.yellow);
+        EditorGUI.DrawRect(lowerrghtrect, Color.yellow);
+
+        var mousepos = e.mousePosition;
+        if (e.button == 0) {
+          if (e.type == EventType.MouseUp) {
+            isDragXMin = false;
+            isDragYMin = false;
+            isDragXMax = false;
+            isDragYMax = false;
+            isDragAll  = false;
+            lockCursorStyle = MouseCursor.Arrow;
+            isDragNewRect   = false;
+
+            // Need to dirty, otherwise release of mouse may fail to repaint the cursor change.
+            EditorUtility.SetDirty(property.serializedObject.targetObject);
+          }
+
+          if (e.type == EventType.MouseDown ) {
+            if (isExpanded && lowerleftrect.Contains(mousepos)) {
+              isDragXMin = true;
+              isDragYMin = true;
+              lockCursorStyle = MouseCursor.Link;
+            } else if (isExpanded && upperrghtrect.Contains(mousepos)) {
+              isDragXMax = true;
+              isDragYMax = true;
+              lockCursorStyle = MouseCursor.Link;
+            } else if (isExpanded && upperleftrect.Contains(mousepos)) {
+              isDragXMin = true;
+              isDragYMax = true;
+              lockCursorStyle = MouseCursor.Link;
+            } else if (isExpanded && lowerrghtrect.Contains(mousepos)) {
+              isDragXMax = true;
+              isDragYMin = true;
+              lockCursorStyle = MouseCursor.Link;
+            } else if (currentrect.Contains(mousepos)) {
+              isDragAll = true;
+              // mouse start is stored as a normalized offset from the Min values.
+              mouseDownStart = Rect.PointToNormalized(dragarea, mousepos) - normmin;
+              lockCursorStyle = MouseCursor.MoveArrow;
+            } else if (isExpanded && dragarea.Contains(mousepos)) {
+              mouseDownStart = mousepos;
+              isDragNewRect = true;
+            }
+          }
+        }
+
+        if (e.type == EventType.MouseDrag) {
+
+          Rect rect;
+          if (isDragNewRect) {
+            var start = Rect.PointToNormalized(dragarea, mouseDownStart);
+            var end = Rect.PointToNormalized(dragarea, e.mousePosition);
+
+            if (invertY) {
+              rect = Rect.MinMaxRect(
+                  Math.Max(0f,      Math.Min(start.x, end.x)),
+                  Math.Max(0f, 1f - Math.Max(start.y, end.y)),
+                  Math.Min(1f,      Math.Max(start.x, end.x)),
+                  Math.Min(1f, 1f - Math.Min(start.y, end.y))
+                  );
+            } else {
+              rect = Rect.MinMaxRect(
+                  Math.Max(0f, Math.Min(start.x, end.x)),
+                  Math.Max(0f, Math.Min(start.y, end.y)),
+                  Math.Min(1f, Math.Max(start.x, end.x)),
+                  Math.Min(1f, Math.Max(start.y, end.y))
+                  );
+            }
+            property.rectValue = rect;
+            EditorUtility.SetDirty(property.serializedObject.targetObject);
+
+          } else if (isDragAll){
+            var normmouse = Rect.PointToNormalized(dragarea, e.mousePosition);
+            rect = new Rect(value) {
+              x = Math.Max(normmouse.x - mouseDownStart.x, 0),
+              y = Math.Max(invertY ? (1 - normmouse.y + mouseDownStart.y) : (normmouse.y - mouseDownStart.y), 0)
+            };
+
+            if (rect.xMax > 1) {
+              rect = new Rect(rect) { x = rect.x + (1f - rect.xMax)};
+            }
+            if (rect.yMax > 1) {
+              rect = new Rect(rect) { y = rect.y + (1f - rect.yMax) };
+            }
+
+            property.rectValue = rect;
+            EditorUtility.SetDirty(property.serializedObject.targetObject);
+
+          } else if (isDragXMin || isDragXMax || isDragYMin || isDragYMax) {
+
+            const float VERT_HANDLE_MIN_DIST = .2f;
+            const float HORZ_HANDLE_MIN_DIST = .05f;
+            var normmouse = Rect.PointToNormalized(dragarea, e.mousePosition);
+            if (invertY) {
+              rect = Rect.MinMaxRect(
+                isDragXMin ? Math.Min(     normmouse.x, value.xMax - HORZ_HANDLE_MIN_DIST) : value.xMin,
+                isDragYMin ? Math.Min(1f - normmouse.y, value.yMax - VERT_HANDLE_MIN_DIST) : value.yMin,
+                isDragXMax ? Math.Max(     normmouse.x, value.xMin + HORZ_HANDLE_MIN_DIST) : value.xMax,
+                isDragYMax ? Math.Max(1f - normmouse.y, value.yMin + VERT_HANDLE_MIN_DIST) : value.yMax 
+                );
+            } else {
+              rect = Rect.MinMaxRect(
+                isDragXMin ? Math.Min(normmouse.x, value.xMax - HORZ_HANDLE_MIN_DIST) : value.xMin,
+                isDragYMin ? Math.Min(normmouse.y, value.yMax - VERT_HANDLE_MIN_DIST) : value.yMin,
+                isDragXMax ? Math.Max(normmouse.x, value.xMin + HORZ_HANDLE_MIN_DIST) : value.xMax,
+                isDragYMax ? Math.Max(normmouse.y, value.yMin + VERT_HANDLE_MIN_DIST) : value.yMax
+                );
+            }
+
+            property.rectValue = rect;
+            EditorUtility.SetDirty(property.serializedObject.targetObject);
+          }
+        }
+
+        const float SPACING = 4f;
+        const int LABELS_WIDTH = 16;
+        const float COMPACT_THRESHOLD = 340f;
+
+        bool useCompact = position.width < COMPACT_THRESHOLD;
+
+        var labelwidth = EditorGUIUtility.labelWidth;
+        var fieldwidth = (position.width - labelwidth- 3 * SPACING) * 0.25f ;
+        var fieldbase = new Rect(position) { xMin = position.xMin + labelwidth, height = 16, width = fieldwidth - (useCompact ? 0 : LABELS_WIDTH) };
+        
+        if (_compactValueStyle == null) {
+          _compactLabelStyle = new GUIStyle(EditorStyles.miniLabel)     { fontSize = 9, alignment = TextAnchor.MiddleLeft, padding = new RectOffset(2, 0, 1, 0) };
+          _compactValueStyle = new GUIStyle(EditorStyles.miniTextField) { fontSize = 9, alignment = TextAnchor.MiddleLeft, padding = new RectOffset(2, 0, 1, 0) };
+        }
+        GUIStyle valueStyle = _compactValueStyle;
+
+        //if (useCompact) {
+        //  if (_compactStyle == null) {
+        //    _compactStyle = new GUIStyle(EditorStyles.miniTextField) { fontSize = 9, alignment = TextAnchor.MiddleLeft, padding = new RectOffset(2, 0, 1, 0) };
+        //  }
+        //  valueStyle = _compactStyle;
+        //} else {
+        //  valueStyle = EditorStyles.textField;
+        //}
+
+        // Only draw labels when not in compact
+        if (!useCompact) {
+          Rect l1 = new Rect(fieldbase) { x = fieldbase.xMin };
+          Rect l2 = new Rect(fieldbase) { x = fieldbase.xMin + 1 * (fieldwidth + SPACING) };
+          Rect l3 = new Rect(fieldbase) { x = fieldbase.xMin + 2 * (fieldwidth + SPACING) };
+          Rect l4 = new Rect(fieldbase) { x = fieldbase.xMin + 3 * (fieldwidth + SPACING) };
+          GUI.Label(l1, "L:", _compactLabelStyle);
+          GUI.Label(l2, "R:", _compactLabelStyle);
+          GUI.Label(l3, "T:", _compactLabelStyle);
+          GUI.Label(l4, "B:", _compactLabelStyle);
+        }
+
+        // Draw value fields
+        Rect f1 = new Rect(fieldbase) { x = fieldbase.xMin + 0 * fieldwidth + (useCompact ? 0 : LABELS_WIDTH) };
+        Rect f2 = new Rect(fieldbase) { x = fieldbase.xMin + 1 * fieldwidth + (useCompact ? 0 : LABELS_WIDTH) + 1 * SPACING };
+        Rect f3 = new Rect(fieldbase) { x = fieldbase.xMin + 2 * fieldwidth + (useCompact ? 0 : LABELS_WIDTH) + 2 * SPACING };
+        Rect f4 = new Rect(fieldbase) { x = fieldbase.xMin + 3 * fieldwidth + (useCompact ? 0 : LABELS_WIDTH) + 3 * SPACING };
+
+        using (var check = new EditorGUI.ChangeCheckScope()) {
+          float newxmin, newxmax, newymin, newymax;
+          if (invertY) {
+            newxmin = EditorGUI.DelayedFloatField(f1, (float)Math.Round(value.xMin, useCompact ? 2 : 3), valueStyle);
+            newxmax = EditorGUI.DelayedFloatField(f2, (float)Math.Round(value.xMax, useCompact ? 2 : 3), valueStyle);
+            newymax = EditorGUI.DelayedFloatField(f3, (float)Math.Round(value.yMax, useCompact ? 2 : 3), valueStyle);
+            newymin = EditorGUI.DelayedFloatField(f4, (float)Math.Round(value.yMin, useCompact ? 2 : 3), valueStyle);
+          } else {
+            newxmin = EditorGUI.DelayedFloatField(f1, (float)Math.Round(value.xMin, useCompact ? 2 : 3), valueStyle);
+            newxmax = EditorGUI.DelayedFloatField(f2, (float)Math.Round(value.xMax, useCompact ? 2 : 3), valueStyle);
+            newymin = EditorGUI.DelayedFloatField(f3, (float)Math.Round(value.yMin, useCompact ? 2 : 3), valueStyle);
+            newymax = EditorGUI.DelayedFloatField(f4, (float)Math.Round(value.yMax, useCompact ? 2 : 3), valueStyle);
+          }
+
+          if (check.changed) {
+            if (newxmin != value.xMin) value.xMin = Math.Min(newxmin, value.xMax - .05f);
+            if (newxmax != value.xMax) value.xMax = Math.Max(newxmax, value.xMin + .05f);
+            if (newymax != value.yMax) value.yMax = Math.Max(newymax, value.yMin + .05f);
+            if (newymin != value.yMin) value.yMin = Math.Min(newymin, value.yMax - .05f);
+            property.rectValue = value;
+            property.serializedObject.ApplyModifiedProperties();
+          }
+        }
+
+        var nmins = new Vector2(value.xMin, invertY ? 1f - value.yMin : value.yMin);
+        var nmaxs = new Vector2(value.xMax, invertY ? 1f - value.yMax : value.yMax);
+        var mins = Rect.NormalizedToPoint(dragarea, nmins);
+        var maxs = Rect.NormalizedToPoint(dragarea, nmaxs);
+        var area = Rect.MinMaxRect(minreal.x, invertY ? maxreal.y : minreal.y, maxreal.x, invertY ? minreal.y : maxreal.y);
+
+        EditorGUI.DrawRect(area, new Color(1f, 1f, 1f, .1f));
+        //GUI.DrawTexture(area, GUIContent.none, EditorStyles.helpBox);
+        //GUI.Box(area, GUIContent.none, EditorStyles.helpBox);
+
+      } else {
+        Debug.LogWarning($"{nameof(NormalizedRectAttribute)} only valid on UnityEngine.Rect fields. Will use default rendering for '{property.type} {property.name}' in class '{fieldInfo.DeclaringType}'.");
+        EditorGUI.PropertyField(position, property, label);
+      }
+    }
+  }
+#endif
+
+}
+
+
+#endregion
+
+
 #region Assets/Photon/Fusion/Scripts/Editor/CustomTypes/Pow2SliderAttributeDrawer.cs
 
 namespace Fusion.Editor {
@@ -9042,10 +9341,12 @@ namespace Fusion.Editor {
 
 
     static class Regexes {
-      public static readonly Regex SeeWithCref = new Regex(@"<see\w* cref=""(?:\w: ?)?([\w\.\d]*)"" ?\/>", RegexOptions.None);
+      public static readonly Regex SeeWithCref = new Regex(@"<see\w* cref=""(?:\w: ?)?([\w\.\d]*)(?:\(.*\))?"" ?\/>", RegexOptions.None);
       public static readonly Regex See = new Regex(@"<see\w* .*>([\w\.\d]*)<\/see\w*>", RegexOptions.None);
       public static readonly Regex WhitespaceString = new Regex(@"\s+");
       public static readonly Regex SquareBracketsWithContents = new Regex(@"\[.*\]");
+      public static readonly Regex XmlCodeBracket = new Regex(@"<code>([\s\S]*?)</code>");
+      public static readonly Regex XmlEmphasizeBrackets = new Regex(@"<\w>([\s\S]*?)</\w>");
     }
 
     // (Inline help summary, Tooltip summary)
@@ -9053,38 +9354,25 @@ namespace Fusion.Editor {
 
       // Tooltips don't support formatting tags. Inline help does.
       if (forTooltip) {
-        summary = summary.Replace(" < code>", "");
-        summary = summary.Replace("</code>", "");
         summary = Regexes.SeeWithCref.Replace(summary, "$1");
         summary = Regexes.See.Replace(summary, "$1");
-        summary = summary.Replace("<i>", "");
-        summary = summary.Replace("</i>", "");
-        summary = summary.Replace("<b>", "");
-        summary = summary.Replace("</b>", "");
+        summary = Regexes.XmlEmphasizeBrackets.Replace(summary, "$1");
 
       } else {
-        summary = summary.Replace("<code>", "<b>");
-        summary = summary.Replace("</code>", "</b>");
         string colorstring = proSkin ? "<color=#FFEECC>$1</color>" : "<color=#664400>$1</color>";
         summary = Regexes.SeeWithCref.Replace(summary, colorstring);
         summary = Regexes.See.Replace(summary, colorstring);
       }
+
+      summary = Regexes.XmlCodeBracket.Replace(summary, "$1");
+
       // Reduce all sequential whitespace characters into a single space.
       summary = Regexes.WhitespaceString.Replace(summary, " ");
 
-      // Turn <para> into line breaks
-      summary = summary.Replace("</para><para>", "\n\n"); // prevent back to back paras from producing 4 line returns.
-      summary = summary.Replace("</para> <para>", "\n\n");
-      summary = summary.Replace("<para>", "\n\n");
-      summary = summary.Replace("</para> ", "\n\n");
-      summary = summary.Replace("</para>", "\n\n");
-      summary = summary.Replace("<br/> ", "\n");
-      summary = summary.Replace("<br/>", "\n");
-      summary = summary.Replace("<br>", "");
-      summary = summary.Replace("<br /> ", "\n");
-      summary = summary.Replace("<br />", "\n");
-      summary = summary.Replace("</br> ", "\n");
-      summary = summary.Replace("</br>", "\n");
+      // Turn <para> and <br> into line breaks
+      summary = Regex.Replace(summary, @"</para>\s?<para>", "\n\n"); // prevent back to back paras from producing 4 line returns.
+      summary = Regex.Replace(summary, @"</?para>\s?", "\n\n");
+      summary = Regex.Replace(summary, @"</?br\s?/?>\s?", "\n\n");
 
       summary = summary.Trim();
 

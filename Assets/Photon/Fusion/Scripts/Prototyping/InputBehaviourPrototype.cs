@@ -90,6 +90,9 @@ public class InputBehaviourPrototype : Fusion.Behaviour, INetworkRunnerCallbacks
 
   public void OnSceneLoadStart(NetworkRunner runner) {
   }
+
+  public void OnCustomAuthenticationResponse(NetworkRunner runner, Dictionary<string, object> data) {
+  }
 }
 
 /// <summary>

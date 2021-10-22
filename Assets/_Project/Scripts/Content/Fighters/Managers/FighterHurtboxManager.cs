@@ -18,13 +18,15 @@ namespace rwby
 
         [Networked] public int CurrentHurtboxIdentifier { get; set; }
 
+        public Hurtbox[] hurtboxes;
+
         public void Awake()
         {
             settings = GameManager.singleton.settings;
-            foreach(var hb in hRoot.Hitboxes)
+            foreach(var hb in hurtboxes)
             {
-                (hb as Hurtbox).hurtableNetworkObject = combatManager.GetComponent<NetworkObject>();
-                (hb as Hurtbox).hurtable = combatManager;
+                hb.hurtableNetworkObject = combatManager.GetComponent<NetworkObject>();
+                hb.hurtable = combatManager;
             }
         }
 
@@ -46,7 +48,7 @@ namespace rwby
 
         public void ResetHurtboxes()
         {
-            foreach(Fusion.Hitbox hb in hRoot.Hitboxes)
+            foreach(Hurtbox hb in hurtboxes)
             {
                 hRoot.SetHitboxActive(hb, false);
             }
@@ -54,15 +56,15 @@ namespace rwby
 
         private void CheckHurtboxCount(int hurtboxCount)
         {
-            if(hurtboxCount < hRoot.Hitboxes.Length)
+            if(hurtboxCount < hurtboxes.Length)
             {
-                for(int i = hRoot.Hitboxes.Length-1; i >= hurtboxCount; i--)
+                for(int i = hurtboxes.Length-1; i >= hurtboxCount; i--)
                 {
-                    hRoot.SetHitboxActive(hRoot.Hitboxes[i], false);
+                    hRoot.SetHitboxActive(hurtboxes[i], false);
                 }
-            }else if(hurtboxCount > hRoot.Hitboxes.Length)
+            }else if (hurtboxCount >= hurtboxes.Length)
             {
-                Debug.LogError($"More hurtboxes requested than available for {gameObject}");
+                Debug.LogError($"More collboxes requested than available for {gameObject}");
             }
         }
 

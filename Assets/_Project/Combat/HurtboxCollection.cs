@@ -18,8 +18,8 @@ namespace rwby
         protected Dictionary<int, StateHurtboxDefinition> hurtboxDictionary = new Dictionary<int, StateHurtboxDefinition>();
         [SerializeField] protected HurtboxEntry[] hurtboxDefinitions = new HurtboxEntry[0];
 
-        protected Dictionary<int, StateHurtboxDefinition> pushboxDictionary = new Dictionary<int, StateHurtboxDefinition>();
-        [SerializeField] protected HurtboxEntry[] pushboxDefinitions = new HurtboxEntry[0];
+        protected Dictionary<int, StateHurtboxDefinition> collboxDictionary = new Dictionary<int, StateHurtboxDefinition>();
+        [SerializeField] protected HurtboxEntry[] collboxDefinitions = new HurtboxEntry[0];
 
         public void OnEnable()
         {
@@ -27,12 +27,12 @@ namespace rwby
             {
                 hurtboxDictionary = new Dictionary<int, StateHurtboxDefinition>();
             }
-            if (pushboxDictionary == null)
+            if (collboxDictionary == null)
             {
-                pushboxDictionary = new Dictionary<int, StateHurtboxDefinition>();
+                collboxDictionary = new Dictionary<int, StateHurtboxDefinition>();
             }
             hurtboxDictionary.Clear();
-            pushboxDictionary.Clear();
+            collboxDictionary.Clear();
             for (int i = 0; i < hurtboxDefinitions.Length; i++)
             {
                 if (hurtboxDictionary.ContainsKey(hurtboxDefinitions[i].identifier))
@@ -42,14 +42,14 @@ namespace rwby
                 }
                 hurtboxDictionary.Add(hurtboxDefinitions[i].identifier, hurtboxDefinitions[i].hurtboxDefinition);
             }
-            for (int i = 0; i < pushboxDefinitions.Length; i++)
+            for (int i = 0; i < collboxDefinitions.Length; i++)
             {
-                if (pushboxDictionary.ContainsKey(pushboxDefinitions[i].identifier))
+                if (collboxDictionary.ContainsKey(collboxDefinitions[i].identifier))
                 {
-                    Debug.LogError($"{name} PushboxCollection has a duplicate entry for {pushboxDefinitions[i].identifier}.");
+                    Debug.LogError($"{name} CollboxCollection has a duplicate entry for {collboxDefinitions[i].identifier}.");
                     continue;
                 }
-                pushboxDictionary.Add(pushboxDefinitions[i].identifier, pushboxDefinitions[i].hurtboxDefinition);
+                collboxDictionary.Add(collboxDefinitions[i].identifier, collboxDefinitions[i].hurtboxDefinition);
             }
         }
 
@@ -62,16 +62,16 @@ namespace rwby
             return null;
         }
 
-        public StateHurtboxDefinition GetPushbox(int identifier)
+        public StateHurtboxDefinition GetCollbox(int identifier)
         {
-            if (pushboxDictionary.TryGetValue(identifier, out StateHurtboxDefinition pushbox))
+            if (collboxDictionary.TryGetValue(identifier, out StateHurtboxDefinition pushbox))
             {
                 return pushbox;
             }
             return null;
         }
 
-        public bool TryGetAnimation(int identifier, out StateHurtboxDefinition hurtbox)
+        public bool TryGetHurtbox(int identifier, out StateHurtboxDefinition hurtbox)
         {
             hurtbox = null;
             if (hurtboxDictionary.TryGetValue(identifier, out hurtbox))

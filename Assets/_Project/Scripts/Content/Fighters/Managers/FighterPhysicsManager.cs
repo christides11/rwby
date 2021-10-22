@@ -139,5 +139,32 @@ namespace rwby
         {
             forceGravity = Mathf.MoveTowards(forceGravity, -maxFallSpeed, gravity * Runner.DeltaTime);
         }
+
+        List<LagCompensatedHit> colllch = new List<LagCompensatedHit>();
+        public LayerMask collisionBoxLayerMask;
+        public virtual void ApplyCollisionPush()
+        {
+            FighterCollboxManager cbm = manager.collboxManager;
+            int collboxCount = cbm.CollboxCount;
+
+            for(int i = 0; i < collboxCount; i++)
+            {
+                switch (cbm.collisionboxes[i].Type)
+                {
+                    case HitboxTypes.Box:
+                        break;
+                    case HitboxTypes.Sphere:
+                        Runner.LagCompensation.OverlapSphere(cbm.collisionboxes[i].Position, cbm.collisionboxes[i].SphereRadius, Runner.Simulation.Tick, colllch, collisionBoxLayerMask, HitOptions.DetailedHit,
+                            true, QueryTriggerInteraction.UseGlobal);
+                        break;
+                }
+
+                for(int j = 0; j < colllch.Count; j++)
+                {
+                    
+                }
+                //Runner.LagCompensation.PositionRotation(cbm.collisionboxes[i], Runner.Simulation.Tick, out Vector3 pos, out Quaternion rot);
+            }
+        }
     }
 }

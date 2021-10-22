@@ -190,5 +190,10 @@ namespace rwby
         {
 
         }
+
+        public void OnCustomAuthenticationResponse(NetworkRunner runner, Dictionary<string, object> data)
+        {
+
+        }
     }
 }

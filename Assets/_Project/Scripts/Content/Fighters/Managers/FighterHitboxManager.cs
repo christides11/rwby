@@ -14,6 +14,7 @@ namespace rwby
         [SerializeField] protected FighterCombatManager combatManager;
 
         public LayerMask hitLayermask;
+        public LayerMask grabLayermask;
         public List<LagCompensatedHit> lch = new List<LagCompensatedHit>();
 
         [Networked, Capacity(10)] public NetworkArray<IDGroupCollisionInfo> nd { get; set; }
@@ -30,7 +31,7 @@ namespace rwby
         }
 
         protected List<Hurtbox> hurtboxes = new List<Hurtbox>();
-        public virtual bool CheckForCollision(int hitboxGroupIndex, HitboxGroup hitboxGroup, GameObject attacker, List<GameObject> ignoreList = null)
+        public virtual bool CheckHit(int hitboxGroupIndex, HitboxGroup hitboxGroup, GameObject attacker, List<GameObject> ignoreList = null)
         {
             bool hurtboxHit = false;
             hurtboxes.Clear();
@@ -60,6 +61,55 @@ namespace rwby
             }
             return hurtboxHit;
         }
+
+        public virtual bool CheckGrab(int hitboxGroupIndex, HitboxGroup hitboxGroup, GameObject attacker, List<GameObject> ignoreList = null)
+        {
+            bool hurtboxHit = false;
+            hurtboxes.Clear();
+            for(int i = 0; i < hitboxGroup.boxes.Count; i++)
+            {
+                CheckBoxCollision(hitboxGroup, i);
+
+                // This hitbox hit nothing.
+                if (hurtboxes.Count == 0)
+                {
+                    continue;
+                }
+
+                SortHitHurtboxes();
+
+                for (int j = 0; j < hurtboxes.Count; j++)
+                {
+                    if (ignoreList != null && ignoreList.Contains(hurtboxes[j].Root.gameObject))
+                    {
+                        continue;
+                    }
+                    if (TryGrabHurtbox(hitboxGroup, i, j, hitboxGroupIndex, attacker))
+                    {
+                        hurtboxHit = true;
+                    }
+                }
+            }
+            return hurtboxHit;
+        }
+
+        protected virtual bool TryGrabHurtbox(HitboxGroup hitboxGroup, int hitboxIndex, int hurtboxIndex, int hitboxGroupIndex, GameObject attacker)
+        {
+            // Owner was already hit by this ID group or is null, ignore it.
+            if (hurtboxes[hurtboxIndex] == null || CheckHitHurtable(hitboxGroup.ID, hurtboxes[hurtboxIndex]) == true)
+            {
+                return false;
+            }
+            // Additional filtering.
+            if (ShouldHurt(hitboxGroup, hitboxIndex, hurtboxes[hurtboxIndex]) == false)
+            {
+                return false;
+            }
+            //AddCollidedHurtable(hitboxGroup.ID, hurtboxes[hurtboxIndex]);
+            //HurtHurtbox(hitboxGroup, hitboxIndex, hurtboxes[hurtboxIndex], attacker, lch[hurtboxIndex].Point);
+            return true;
+        }
+
 
         protected virtual void SortHitHurtboxes()
         {
@@ -201,16 +251,14 @@ namespace rwby
             switch (hitboxGroup.boxes[boxIndex].shape)
             {
                 case BoxShape.Rectangle:
-                    //cldAmt = Runner.GetPhysicsScene().OverlapBox(position, size / 2.0f, raycastHitList,
-                    //    Quaternion.Euler((hitboxGroup.boxes[boxIndex] as HnSF.Combat.BoxDefinition).rotation),
-                    //    hitLayermask);
+                    // ...
                     if (gameManager.settings.showHitboxes)
                     {
                         ExtDebug.DrawBox(position, size, Quaternion.Euler((hitboxGroup.boxes[boxIndex] as HnSF.Combat.BoxDefinition).rotation), Color.red, Runner.Simulation.DeltaTime);
                     }
                     break;
                 case BoxShape.Circle:
-                    cldAmt = Runner.LagCompensation.OverlapSphere(position, (hitboxGroup.boxes[boxIndex] as HnSF.Combat.BoxDefinition).radius, Runner.Simulation.Tick, lch, hitLayermask);
+                    cldAmt = Runner.LagCompensation.OverlapSphere(position, (hitboxGroup.boxes[boxIndex] as HnSF.Combat.BoxDefinition).radius, Runner.Simulation.Tick, lch, hitLayermask, HitOptions.DetailedHit);
                     if (gameManager.settings.showHitboxes)
                     {
                         ExtDebug.DrawWireSphere(position, (hitboxGroup.boxes[boxIndex] as HnSF.Combat.BoxDefinition).radius, Color.red, Runner.Simulation.DeltaTime, 3);

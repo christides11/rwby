@@ -2,6 +2,47 @@
 
 ## Beta Nightly
 
+### Build 322 (Oct 18, 2021)
+
+**What's New**
+
+- Support to Custom Authentication
+- New OnCustomAuthenticationResponse on INetworkRunnerCallbacks
+- New Shutdown Reasons related to Custom Authentication
+
+**Changes**
+
+- Re-work Async StartGame Handling exposing info about faulted initializations
+
+**Bug Fixes**
+
+- Fixed: Issue with spiking bandwidth when client would fall too far behind snapshot history
+- Fixed: VisibilityNode handling for nested NetworkObject spawning fixed
+
+### Build 321 (Oct 14, 2021)
+
+**What's New**
+
+- More control over FusionStats window at edit time and runtime
+- FusionStats enum to select which stats to display
+
+**Bug Fixes**
+
+- Fixed: FusionStats readable at all sizes and aspect ratios
+
+### Build 320 (Oct 13, 2021)
+
+**What's New**
+
+- NT/NRB/NCC/NTA all now encode extra state info for teleports, which act as lerp targets interpolating up to the teleport event (otherwise teleports freeze for one frame)
+- Added LocalScale sync to NT/NRB
+- Added more interpolation handling for parenting/scaling edge cases
+- Experimental option added for InterpolationTarget to detach from NetworkObject, and reparent as needed to improve scaling interpolation
+
+**Bug Fixes**
+
+- Fixed: Infinite loop in NetworkRunner.TryFindBehaviour<T>
+
 ### Build 318 (Oct 08, 2021)
 
 **What's New**

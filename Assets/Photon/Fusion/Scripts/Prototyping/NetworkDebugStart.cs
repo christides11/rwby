@@ -109,6 +109,18 @@ public class NetworkDebugStart : Fusion.Behaviour {
   [InlineHelp]
   public bool AlwaysShowStats = false;
 
+  /// <summary>
+  /// Selects which telemetry statistics will be enabled in the <see cref="FusionStats"/> overlay.
+  /// </summary>
+  [InlineHelp]
+  [DrawIf(nameof(AlwaysShowStats), true, DrawIfHideType.Hide)]
+  [VersaMask]
+  public Simulation.Statistics.FusionStatFlags includedStats;
+
+  [InlineHelp]
+  [DrawIf(nameof(AlwaysShowStats), true, DrawIfHideType.Hide)]
+  [NormalizedRect]
+  public Rect StatsPosition = new Rect(0, 0, 0.33f, 1.0f);
 
   [NonSerialized]
   NetworkRunner _server;
@@ -132,6 +144,7 @@ public class NetworkDebugStart : Fusion.Behaviour {
     if (TryGetComponent<NetworkDebugStartGUI>(out var ndsg) == false) {
       ndsg = gameObject.AddComponent<NetworkDebugStartGUI>();
     }
+    includedStats = FusionStats.DefaultMask;
   }
 
 #endif
@@ -415,7 +428,7 @@ public class NetworkDebugStart : Fusion.Behaviour {
       _server.name = serverMode.ToString();
       _server.ProvideInput = (serverMode == GameMode.Host || serverMode == GameMode.Single) && clientCount == 0;
 
-      InitializeNetworkRunner(_server, serverMode, NetAddress.Any(ServerPort), sceneRef, (runner) => {
+      var serverTask = InitializeNetworkRunner(_server, serverMode, NetAddress.Any(ServerPort), sceneRef, (runner) => {
 #if FUSION_DEV
         var name = _server.name; // closures do not capture values, need a local var to save it
         Debug.Log($"Server NetworkRunner '{name}' started.");
@@ -423,8 +436,22 @@ public class NetworkDebugStart : Fusion.Behaviour {
         // this action is called after InitializeNetworkRunner for the server has completed startup
         StartCoroutine(StartClients(clientCount, scene, serverMode, sceneRef));
       });
+
+      while(serverTask.IsCompleted == false) {
+        yield return new WaitForEndOfFrame();
+      }
+
+      if (serverTask.IsFaulted) {
+        ShutdownAll();
+      }
+
     } else {
       StartCoroutine(StartClients(clientCount, scene, serverMode, sceneRef));
+    }
+
+    // Add stats last, so that event systems that may be getting created are already in place.
+    if (AlwaysShowStats && serverMode != GameMode.Shared) {
+      FusionStats.Create(_server, FusionStats.DefaultLayouts.Left, includedStats);
     }
   }
 
@@ -459,6 +486,11 @@ public class NetworkDebugStart : Fusion.Behaviour {
 #endif
 
       clientTasks.Add(clientTask);
+
+      // Add stats last, so that event systems that may be getting created are already in place.
+      if (AlwaysShowStats && i == 0) {
+        FusionStats.Create(client, FusionStats.DefaultLayouts.Right, includedStats);
+      }
     }
 
     bool done;
@@ -468,6 +500,10 @@ public class NetworkDebugStart : Fusion.Behaviour {
       // yield until all tasks report as completed
       foreach (var task in clientTasks) {
         done &= task.IsCompleted;
+
+        if (done == false) {
+          break;
+        }
 
         if (task.IsFaulted) {
           Debug.LogWarning(task.Exception);
@@ -479,10 +515,10 @@ public class NetworkDebugStart : Fusion.Behaviour {
 
     CurrentStage = Stage.AllConnected;
 
-    // Add stats last, so that event systems that may be getting created are already in place.
-    if (AlwaysShowStats) {
-      FusionStats.Create();
-    }
+    //// Add stats last, so that event systems that may be getting created are already in place.
+    //if (AlwaysShowStats) {
+    //  FusionStats.Create(runner, includedStats);
+    //}
 
     // unload original scene if needed and has not been done yet.
     if (unload.HasValue) {

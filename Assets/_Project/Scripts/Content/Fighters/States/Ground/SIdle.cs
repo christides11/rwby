@@ -20,7 +20,9 @@ namespace rwby.fighters.states
         public override void OnUpdate()
         {
             manager.HurtboxManager.CreateHurtboxes(0, 0);
+            //manager.collboxManager.CreateCollboxes(0, 0);
             manager.PhysicsManager.ApplyMovementFriction();
+            //manager.PhysicsManager.ApplyCollisionPush();
 
             if (CheckInterrupt() == false)
             {

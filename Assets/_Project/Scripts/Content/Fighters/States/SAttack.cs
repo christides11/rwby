@@ -34,6 +34,7 @@ namespace rwby
         {
             AttackDefinition currentAttack = (AttackDefinition)manager.CombatManager.CurrentAttackNode.attackDefinition;
             manager.HurtboxManager.CreateHurtboxes(0, 0);
+            manager.collboxManager.CreateCollboxes(0, 0);
 
             if (currentAttack.useState)
             {
@@ -243,7 +244,7 @@ namespace rwby
             switch (boxGroup.hitboxHitInfo.hitType)
             {
                 case HnSF.Combat.HitboxType.HIT:
-                    bool hitResult = manager.CombatManager.HitboxManager.CheckForCollision(groupIndex, (HitboxGroup)boxGroup, manager.gameObject);
+                    bool hitResult = manager.CombatManager.HitboxManager.CheckHit(groupIndex, (HitboxGroup)boxGroup, manager.gameObject);
                     if (hitResult == true)
                     {
                         /*
@@ -251,6 +252,13 @@ namespace rwby
                         {
                             SimulationAudioManager.Play((boxGroup.hitboxHitInfo as HitInfo).hitSound, Manager.transform.position, AudioPlayMode.ROLLBACK);
                         }*/
+                    }
+                    break;
+                case HnSF.Combat.HitboxType.GRAB:
+                    bool grabResult = manager.CombatManager.HitboxManager.CheckGrab(groupIndex, (HitboxGroup)boxGroup, manager.gameObject);
+                    if (grabResult == true)
+                    {
+
                     }
                     break;
             }
