@@ -19,7 +19,7 @@ namespace rwby.fighters.states
 
         public override void OnUpdate()
         {
-            manager.HurtboxManager.CreateHurtboxes(0, 0);
+            manager.BoxManager.UpdateBoxes(0, 0);
             Vector3 movement = manager.GetMovementVector();
             movement.y = 0;
             if (manager.HardTargeting)

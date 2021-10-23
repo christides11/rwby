@@ -7,7 +7,7 @@ using UnityEngine;
 
 namespace rwby
 {
-    [OrderBefore(typeof(FighterManager), typeof(FighterPhysicsManager), typeof(FighterStateManager), typeof(FighterHurtboxManager), typeof(FighterHitboxManager), typeof(FighterCombatManager))]
+    [OrderBefore(typeof(FighterManager), typeof(FighterPhysicsManager), typeof(FighterStateManager), typeof(FighterBoxManager), typeof(FighterHitboxManager), typeof(FighterCombatManager))]
     public class FighterInputManager : NetworkBehaviour
     {
         public static int inputCapacity = 1024;

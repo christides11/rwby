@@ -20,7 +20,7 @@ namespace rwby
 
         public override void OnUpdate()
         {
-            manager.HurtboxManager.CreateHurtboxes((int)manager.StateManager.CurrentStateFrame, 0);
+            manager.BoxManager.UpdateBoxes((int)manager.StateManager.CurrentStateFrame, 0);
 
             if(manager.StateManager.CurrentStateFrame > manager.CombatManager.hitstunHoldVelocityTime)
             {

@@ -19,7 +19,7 @@ namespace rwby
         public FighterStateManager StateManager { get { return stateManager; } }
         public FighterStatManager StatManager { get { return statManager; } }
         public FighterPhysicsManager PhysicsManager { get { return physicsManager; } }
-        public FighterHurtboxManager HurtboxManager { get { return hurtboxManager; } }
+        public FighterBoxManager BoxManager { get { return boxManager; } }
         public SoundbankContainer SoundbankContainer { get { return soundbankContainer; } }
         public EffectbankContainer EffectbankContainer { get { return effectbankContainer; } }
         public Transform TargetOrigin { get { return targetOrigin; } }
@@ -45,14 +45,13 @@ namespace rwby
         [SerializeField] protected FighterCombatManager combatManager;
         [SerializeField] protected FighterStateManager stateManager;
         [SerializeField] protected FighterPhysicsManager physicsManager;
-        [SerializeField] protected FighterHurtboxManager hurtboxManager;
+        [SerializeField] protected FighterBoxManager boxManager;
         [SerializeField] protected FighterStatManager statManager;
         [SerializeField] protected IFighterDefinition fighterDefinition;
         [SerializeField] protected CapsuleCollider capsuleCollider;
         [SerializeField] protected SoundbankContainer soundbankContainer;
         [SerializeField] protected EffectbankContainer effectbankContainer;
         [SerializeField] protected Transform targetOrigin;
-        public FighterCollboxManager collboxManager;
         public ParticleSystemEffect guardEffect;
         public Transform visualTransform;
 

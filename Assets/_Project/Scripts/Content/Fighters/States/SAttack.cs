@@ -17,7 +17,7 @@ namespace rwby
         public override void Initialize()
         {
             manager.CombatManager.Charging = true;
-            manager.HurtboxManager.ResetHurtboxes();
+            manager.BoxManager.ClearBoxes();
             manager.CombatManager.HitboxManager.Reset();
             AttackDefinition currentAttack = (AttackDefinition)manager.CombatManager.CurrentAttackNode.attackDefinition;
             for (int i = 0; i < manager.attackEventInput.Length; i++)
@@ -33,8 +33,7 @@ namespace rwby
         public override void OnUpdate()
         {
             AttackDefinition currentAttack = (AttackDefinition)manager.CombatManager.CurrentAttackNode.attackDefinition;
-            manager.HurtboxManager.CreateHurtboxes(0, 0);
-            manager.collboxManager.CreateCollboxes(0, 0);
+            manager.BoxManager.UpdateBoxes(0, 0);
 
             if (currentAttack.useState)
             {

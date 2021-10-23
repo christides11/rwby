@@ -19,7 +19,7 @@ namespace rwby.fighters.states
 
         public override void OnUpdate()
         {
-            manager.HurtboxManager.CreateHurtboxes(0, 0);
+            manager.BoxManager.UpdateBoxes(0, 0);
             manager.PhysicsManager.ApplyMovementFriction();
 
             if (CheckInterrupt() == false)
@@ -30,7 +30,7 @@ namespace rwby.fighters.states
 
         public override void OnInterrupted()
         {
-            manager.HurtboxManager.ResetHurtboxes();
+            manager.BoxManager.ClearBoxes();
         }
 
         public override bool CheckInterrupt()

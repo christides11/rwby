@@ -21,7 +21,7 @@ namespace rwby.fighters.states
 
         public override void OnUpdate()
         {
-            manager.HurtboxManager.CreateHurtboxes(0, 0);
+            manager.BoxManager.UpdateBoxes(0, 0);
             manager.PhysicsManager.ApplyMovementFriction();
 
             Vector3 movement = manager.GetMovementVector();
@@ -39,7 +39,7 @@ namespace rwby.fighters.states
 
         public override void OnInterrupted()
         {
-            manager.HurtboxManager.ResetHurtboxes();
+            manager.BoxManager.ClearBoxes();
             manager.CombatManager.BlockState = BlockStateType.NONE;
             manager.guardEffect.StopEffect(ParticleSystemStopBehavior.StopEmittingAndClear);
         }

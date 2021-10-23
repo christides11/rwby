@@ -23,7 +23,7 @@ namespace rwby
 
         public override void OnUpdate()
         {
-            manager.HurtboxManager.CreateHurtboxes((int)manager.StateManager.CurrentStateFrame, 0);
+            manager.BoxManager.UpdateBoxes((int)manager.StateManager.CurrentStateFrame, 0);
 
             if (manager.PhysicsManager.forceGravity == 0 && manager.CombatManager.hitstunGravityHangTimer < manager.CombatManager.hitstunGravityHangTime)
             {

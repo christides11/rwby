@@ -140,7 +140,7 @@ namespace rwby
                 Debug.LogError("Can't add any more collided hurtable information.");
                 return;
             }
-            nd.Set(ndCount, new IDGroupCollisionInfo() { hitByIDGroup = iD, hitIHurtableNetID = hurtbox.hurtableNetworkObject.Id });
+            nd.Set(ndCount, new IDGroupCollisionInfo() { hitByIDGroup = iD, hitIHurtableNetID = hurtbox.ownerNetworkObject.Id });
             ndCount++;
         }
 

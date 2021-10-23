@@ -6,10 +6,9 @@ using Fusion;
 
 namespace rwby
 {
-    public class Hurtbox : Fusion.Hitbox
+    public class Custombox : Fusion.Hitbox
     {
-        public NetworkObject hurtableNetworkObject;
-        public IHurtable hurtable;
+        public NetworkObject ownerNetworkObject;
         public HurtboxGroup hurtboxGroup;
     }
 }

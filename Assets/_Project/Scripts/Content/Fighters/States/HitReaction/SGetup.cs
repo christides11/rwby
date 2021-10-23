@@ -28,7 +28,7 @@ namespace rwby.fighters.states
 
         public override void OnInterrupted()
         {
-            manager.HurtboxManager.ResetHurtboxes();
+            manager.BoxManager.ClearBoxes();
         }
 
         public override bool CheckInterrupt()

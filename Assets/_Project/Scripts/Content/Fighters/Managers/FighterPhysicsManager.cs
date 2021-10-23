@@ -144,6 +144,7 @@ namespace rwby
         public LayerMask collisionBoxLayerMask;
         public virtual void ApplyCollisionPush()
         {
+            /*
             FighterCollboxManager cbm = manager.collboxManager;
             int collboxCount = cbm.CollboxCount;
 
@@ -164,7 +165,7 @@ namespace rwby
                     
                 }
                 //Runner.LagCompensation.PositionRotation(cbm.collisionboxes[i], Runner.Simulation.Tick, out Vector3 pos, out Quaternion rot);
-            }
+            }*/
         }
     }
 }
