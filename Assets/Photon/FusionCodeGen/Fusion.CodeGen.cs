@@ -230,8 +230,6 @@ namespace Fusion.CodeGen {
     const string OBJECT_FIELD_NAME = nameof(NetworkBehaviour.Object);
     const string RUNNER_FIELD_NAME = nameof(NetworkBehaviour.Runner);
 
-    const string DEFAULTS_METHOD_NAME = nameof(NetworkBehaviour.Defaults);
-
     const string FIND_OBJECT_METHOD_NAME = nameof(NetworkRunner.FindObject);
 
     Dictionary<string, TypeMetaData> _typeData = new Dictionary<string, TypeMetaData>();
@@ -352,8 +350,8 @@ namespace Fusion.CodeGen {
         type = type.GetElementType();
       }
 
-      if (type.IsNetworkArray()) {
-        type = GetStaticArrayElementType(type);
+      if (type.IsNetworkArray(out var elementType)) {
+        type = elementType;
       }
 
       if (_typeData.TryGetValue(type.FullName, out var data) == false) {
@@ -946,9 +944,20 @@ namespace Fusion.CodeGen {
       }
     }
 
+    FieldDefinition AddInspectorField(ILWeaverAssembly asm, PropertyDefinition property, int index) {
 
-    FieldDefinition AddInspectorField(ILWeaverAssembly asm, PropertyDefinition property) {
-      var field = new FieldDefinition(GetInspectorFieldName(property.Name), FieldAttributes.Private, property.PropertyType);
+      TypeReference fieldType = property.PropertyType;
+      if (fieldType.IsNetworkArray(out var elementType)) {
+        fieldType = TypeReferenceRocks.MakeArrayType(elementType);
+      } else if (fieldType.IsNetworkDictionary(out var keyType, out var valueType)) {
+        if (ILWeaverSettings.UseSerializableDictionaryForNetworkDictionaryProperties()) {
+          fieldType = TypeReferenceRocks.MakeGenericInstanceType(asm.Import(typeof(SerializableDictionary<,>)), keyType, valueType);
+        } else {
+          fieldType = TypeReferenceRocks.MakeGenericInstanceType(asm.Import(typeof(Dictionary<,>)), keyType, valueType);
+        }
+      }
+
+      var field = new FieldDefinition(GetInspectorFieldName(property.Name), FieldAttributes.Private, fieldType);
       property.DeclaringType.Fields.Add(field);
 
       bool hasNonSerialized = false;
@@ -2256,17 +2265,48 @@ namespace Fusion.CodeGen {
         var dataField = GetFieldFromNetworkedBehaviour(asm, type, PTR_FIELD_NAME);
 
         // find onspawned method
-        var setDefaults = type.Methods.FirstOrDefault(x => x.Name == DEFAULTS_METHOD_NAME);
+        Func<string, MethodDefinition> createOverride = (name) => {
+          var result = type.Methods.FirstOrDefault(x => x.Name == name);
+          if (result != null) {
+            return result;
+          }
 
-        // base method
-        var baseMethod = FindMethodInParent(asm, type, DEFAULTS_METHOD_NAME, nameof(NetworkBehaviour));
+          result = new MethodDefinition(name, MethodAttributes.Public, asm.CecilAssembly.MainModule.ImportReference(typeof(void))) {
+            IsVirtual = true,
+            IsHideBySig = true,
+            IsReuseSlot = true
+          };
+
+          var baseMethod = FindMethodInParent(asm, type, name, nameof(NetworkBehaviour));
+
+          // call base method
+          if (baseMethod != null) {
+            var bodyIL = result.Body.GetILProcessor();
+            bodyIL.Append(Instruction.Create(OpCodes.Ldarg_0));
+            bodyIL.Append(Instruction.Create(OpCodes.Call, baseMethod));
+          }
+
+          type.Methods.Add(result);
+          return result;
+        };
+
+        var setDefaults = new Lazy<MethodDefinition>(() => createOverride(nameof(NetworkBehaviour.CopyBackingFieldsToState)));
+        var getDefaults = new Lazy<MethodDefinition>(() => createOverride(nameof(NetworkBehaviour.CopyStateToBackingFields)));
 
         foreach (var property in type.Properties) {
           if (IsWeavableProperty(property, out var propertyInfo) == false) {
             continue;
           }
 
-          propertyInfo.BackingField?.Remove();
+          // try to maintain fields order
+          int fieldIndex = type.Fields.Count;
+
+          if (propertyInfo.BackingField != null) {
+            fieldIndex = type.Fields.IndexOf(propertyInfo.BackingField);
+            if (fieldIndex >= 0) {
+              type.Fields.RemoveAt(fieldIndex);
+            }
+          }
 
           // prepare getter/setter methods
 
@@ -2287,46 +2327,99 @@ namespace Fusion.CodeGen {
           // inject attribute to poll weaver data during runtime
           AddAttribute<NetworkedWeavedAttribute, int, int>(asm, property, wordOffset, propertyWordCount);
 
-          // setup simple field
-          if (IsSimpleProperty(property) && property.HasAttribute<HideFromInspectorAttribute>() == false) {
-            if (setDefaults == null) {
-              setDefaults = new MethodDefinition(DEFAULTS_METHOD_NAME, MethodAttributes.Public, asm.CecilAssembly.MainModule.ImportReference(typeof(void)));
-              setDefaults.IsVirtual = true;
-              setDefaults.IsHideBySig = true;
-              setDefaults.IsReuseSlot = true;
-
-              // call base method
-              if (baseMethod != null) {
-                var bodyIL = setDefaults.Body.GetILProcessor();
-                bodyIL.Append(Instruction.Create(OpCodes.Ldarg_0));
-                bodyIL.Append(Instruction.Create(OpCodes.Call, baseMethod));
-              }
-
-              type.Methods.Add(setDefaults);
-            }
+          if (property.PropertyType.IsPointer) {
+            // ignore
+          } else if (property.HasAttribute<HideFromInspectorAttribute>() == false) {
 
             FieldDefinition defaultField;
 
             if (string.IsNullOrEmpty(propertyInfo.DefaultFieldName)) {
-              defaultField = AddInspectorField(asm, property);
+              defaultField = AddInspectorField(asm, property, fieldIndex);
             } else {
               defaultField = property.DeclaringType.GetFieldOrThrow(propertyInfo.DefaultFieldName);
             }
 
-            AddAttribute<DefaultForPropertyAttribute, string>(asm, defaultField, property.Name);
+            AddAttribute<DefaultForPropertyAttribute, string, int, int>(asm, defaultField, property.Name, wordOffset, propertyWordCount);
 
             {
-              var il = setDefaults.Body.GetILProcessor();
-              il.Append(Instruction.Create(OpCodes.Ldarg_0));
-              il.Append(Instruction.Create(OpCodes.Ldarg_0));
-              il.Append(Instruction.Create(OpCodes.Ldfld, defaultField));
-              il.Append(Instruction.Create(OpCodes.Call, setter));
+              var il = setDefaults.Value.Body.GetILProcessor();
+              if (property.PropertyType.IsNetworkDictionary(out var keyType, out var valueType)) {
+
+                var m = new GenericInstanceMethod(asm.NetworkBehaviourUtils.GetMethod(nameof(NetworkBehaviourUtils.InitializeNetworkedDictionary)));
+                m.GenericArguments.Add(defaultField.FieldType);
+                m.GenericArguments.Add(keyType);
+                m.GenericArguments.Add(valueType);
+
+                il.Append(Ldarg_0());
+                il.Append(Call(getter));
+                il.Append(Ldarg_0());
+                il.Append(Ldfld(defaultField));
+                il.Append(Ldstr(property.Name));
+                il.Append(Call(m));
+
+              } else if (property.PropertyType.IsNetworkArray(out var elementType)) {
+
+                var m = new GenericInstanceMethod(asm.NetworkBehaviourUtils.GetMethod(nameof(NetworkBehaviourUtils.InitializeNetworkedArray)));
+                m.GenericArguments.Add(elementType);
+
+                il.Append(Ldarg_0());
+                il.Append(Call(getter));
+                il.Append(Ldarg_0());
+                il.Append(Ldfld(defaultField));
+                il.Append(Ldstr(property.Name));
+                il.Append(Call(m));
+
+              } else {
+                Log.AssertMessage(setter != null, $"{property} expected to have a setter");
+                il.Append(Ldarg_0());
+                il.Append(Ldarg_0());
+                il.Append(Ldfld(defaultField));
+                il.Append(Call(setter));
+              }
+            }
+
+            {
+              var il = getDefaults.Value.Body.GetILProcessor();
+              if (property.PropertyType.IsNetworkDictionary(out var keyType, out var valueType)) {
+
+                var m = new GenericInstanceMethod(asm.NetworkBehaviourUtils.GetMethod(nameof(NetworkBehaviourUtils.CopyFromNetworkedDictionary)));
+                m.GenericArguments.Add(defaultField.FieldType);
+                m.GenericArguments.Add(keyType);
+                m.GenericArguments.Add(valueType);
+
+                il.Append(Ldarg_0());
+                il.Append(Call(getter));
+                il.Append(Ldarg_0());
+                il.Append(Ldflda(defaultField));
+                il.Append(Call(m));
+
+              } else if (property.PropertyType.IsNetworkArray(out var elementType)) {
+
+                var m = new GenericInstanceMethod(asm.NetworkBehaviourUtils.GetMethod(nameof(NetworkBehaviourUtils.CopyFromNetworkedArray)));
+                m.GenericArguments.Add(elementType);
+
+                il.Append(Ldarg_0());
+                il.Append(Call(getter));
+                il.Append(Ldarg_0());
+                il.Append(Ldflda(defaultField));
+                il.Append(Call(m));
+
+              } else {
+                Log.AssertMessage(getter != null, $"{property} expected to have a getter");
+                il.Append(Ldarg_0());
+                il.Append(Ldarg_0());
+                il.Append(Call(getter));
+                il.Append(Stfld(defaultField));
+              }
             }
           }
         }
 
-        if (setDefaults != null) {
-          setDefaults.Body.GetILProcessor().Append(Instruction.Create(OpCodes.Ret));
+        if (setDefaults.IsValueCreated) {
+          setDefaults.Value.Body.GetILProcessor().Append(Ret());
+        }
+        if (getDefaults.IsValueCreated) {
+          getDefaults.Value.Body.GetILProcessor().Append(Ret());
         }
 
         // add meta attribute
@@ -2691,6 +2784,10 @@ namespace Fusion.CodeGen {
 
         return _rpcInfo;
       }
+    }
+
+    public TypeReference Import(TypeReference type) {
+      return CecilAssembly.MainModule.ImportReference(type);
     }
 
     public MethodReference Import(MethodInfo method) {
@@ -3372,21 +3469,38 @@ namespace Fusion.CodeGen {
     }
 
     public static bool IsNetworkArray(this TypeReference type) {
-      if (!type.IsGenericInstance) {
+      return IsNetworkArray(type, out _);
+    }
+
+    public static bool IsNetworkArray(this TypeReference type, out TypeReference elementType) {
+      if (!type.IsGenericInstance || type.GetElementType().FullName != typeof(NetworkArray<>).FullName) {
+        elementType = default;
         return false;
       }
 
-      return type.GetElementType().FullName == typeof(NetworkArray<>).FullName;
+      var git = (GenericInstanceType)type;
+      elementType = git.GenericArguments[0];
+      return true;
     }
+
 
     public static bool IsNetworkDictionary(this TypeReference type) {
-      if (!type.IsGenericInstance) {
+      return IsNetworkDictionary(type, out _, out _);
+    }
+
+    public static bool IsNetworkDictionary(this TypeReference type, out TypeReference keyType, out TypeReference valueType) {
+      if (!type.IsGenericInstance || type.GetElementType().FullName != typeof(NetworkDictionary<,>).FullName) {
+        keyType = default;
+        valueType = default;
         return false;
       }
 
-      return type.GetElementType().FullName == typeof(NetworkDictionary<,>).FullName;
+      var git = (GenericInstanceType)type;
+      keyType = git.GenericArguments[0];
+      valueType = git.GenericArguments[1];
+      return true;
     }
-    
+
     public static bool Is<T>(this TypeReference type) {
       return Is(type, typeof(T));
     }
@@ -3606,6 +3720,15 @@ namespace Fusion.CodeGen {
       throw new ArgumentOutOfRangeException(nameof(fieldName), $"Field {fieldName} not found in {type}");
     }
 
+    public static MethodDefinition GetMethodOrThrow(this TypeDefinition type, string methodName) {
+      foreach (var method in type.Methods) {
+        if (method.Name == methodName) {
+          return method;
+        }
+      }
+      throw new ArgumentOutOfRangeException(nameof(methodName), $"Method {methodName} not found in {type}");
+    }
+
     public static Instruction AppendReturn(this ILProcessor il, Instruction instruction) {
       il.Append(instruction);
       return instruction;
@@ -3746,9 +3869,16 @@ namespace Fusion.CodeGen {
 
   partial class ILWeaverLog {
 
+    public void AssertMessage(bool condition, string message, [CallerFilePath] string filePath = null, [CallerLineNumber] int lineNumber = default) {
+      if (!condition) {
+        AssertFailed("Assert failed: " + message, filePath, lineNumber);
+      }
+    }
+
+
     public void Assert(bool condition, [CallerFilePath] string filePath = null, [CallerLineNumber] int lineNumber = default) {
       if (!condition) {
-        AssertFailed(filePath, lineNumber);
+        AssertFailed("Assertion failed", filePath, lineNumber);
       }
     }
 
@@ -3769,7 +3899,7 @@ namespace Fusion.CodeGen {
       LogExceptionImpl(ex);
     }
 
-    partial void AssertFailed(string filePath, int lineNumber);
+    partial void AssertFailed(string message, string filePath, int lineNumber);
 
     private void Log(LogType logType, string message, string filePath, int lineNumber) {
       LogImpl(logType, message, filePath, lineNumber);
@@ -3900,8 +4030,8 @@ namespace Fusion.CodeGen {
       });
     }
 
-    partial void AssertFailed(string filePath, int lineNumber) {
-      Error("Assertion failed", filePath, lineNumber);
+    partial void AssertFailed(string message, string filePath, int lineNumber) {
+      Error(message, filePath, lineNumber);
       throw new AssertException();
     }
 
@@ -3918,6 +4048,8 @@ namespace Fusion.CodeGen {
         msg.MessageData = msg.MessageData.Replace('\r', ';').Replace('\n', ';');
       }
     }
+
+
 
 #if FUSION_WEAVER_DEBUG
 #pragma warning disable CS0282 // There is no defined ordering between fields in multiple declarations of partial struct
@@ -3974,8 +4106,8 @@ namespace Fusion.CodeGen {
       Log(LogType.Log, $"{scope.Message} end {scope.Elapsed}", default, default);
     }
 
-    partial void AssertFailed(string filePath, int lineNumber) {
-      Error("Assertion failed", filePath, lineNumber);
+    partial void AssertFailed(string message, string filePath, int lineNumber) {
+      Error(message, filePath, lineNumber);
       throw new AssertException();
     }
 #endif
@@ -4455,9 +4587,17 @@ namespace Fusion.CodeGen {
       return Array.Find(references, x => x.Contains(RuntimeAssemblyName)) != null;
     }
 
+    internal static bool UseSerializableDictionaryForNetworkDictionaryProperties() {
+      bool result = true;
+      UseSerializableDictionaryForNetworkDictionaryPropertiesPartial(ref result);
+      return result;
+    }
+
     static partial void GetAccuracyPartial(string tag, ref float? accuracy);
 
-    static partial void IsAssemblyWeavablePartial(string name, ref bool result); 
+    static partial void IsAssemblyWeavablePartial(string name, ref bool result);
+
+    static partial void UseSerializableDictionaryForNetworkDictionaryPropertiesPartial(ref bool result);
   }
 }
 #endif
@@ -4530,7 +4670,6 @@ namespace Fusion.CodeGen {
       return defaults;
     });
 
-
     static partial void GetAccuracyPartial(string tag, ref float? accuracy) {
       try {
         if (_accuracyDefaults.Value.TryGetAccuracy(tag, out var result)) {
@@ -4543,6 +4682,13 @@ namespace Fusion.CodeGen {
 
     static partial void IsAssemblyWeavablePartial(string name, ref bool result) {
       result = _assembliesToWeave.Value.Contains(name);
+    }
+
+    static partial void UseSerializableDictionaryForNetworkDictionaryPropertiesPartial(ref bool result) {
+      var element = _config.Value.Root.Element(nameof(NetworkProjectConfig.UseSerializableDictionary));
+      if (element != null) {
+        result = (bool)element;
+      }
     }
 
     public static bool ValidateConfig(out ConfigStatus errorType, out Exception error) {
@@ -4653,6 +4799,10 @@ namespace Fusion.CodeGen {
       if (Array.Find(NetworkProjectConfig.Global.AssembliesToWeave, x => string.Compare(name, x, true) == 0) != null) {
         result = true;
       }
+    }
+
+    static partial void UseSerializableDictionaryForNetworkDictionaryPropertiesPartial(ref bool result) {
+      result = NetworkProjectConfig.Global.UseSerializableDictionary;
     }
   }
 }

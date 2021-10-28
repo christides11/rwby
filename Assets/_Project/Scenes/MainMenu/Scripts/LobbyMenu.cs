@@ -44,7 +44,7 @@ namespace rwby.menus
 
         public void Open()
         {
-            lobbyName.text = NetworkManager.singleton.SessionName;
+            lobbyName.text = NetworkManager.singleton.FusionLauncher.NetworkRunner.SessionInfo.Name;
             _ = ClearSelectables();
             gameObject.SetActive(true);
         }

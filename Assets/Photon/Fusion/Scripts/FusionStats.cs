@@ -139,8 +139,8 @@ public class FusionStats : Fusion.Behaviour {
   [InlineHelp]
   [SerializeField]
   //[Unit(Units.Units, -TITLE_HEIGHT, 200)]
-  [Range(-TITLE_HEIGHT, 60)]
-  int _buttonHeight = 40;
+  [Range(-TITLE_HEIGHT, 80)]
+  int _buttonHeight = 60;
   public int ButtonHeight {
     get => _buttonHeight;
     set {

@@ -3,6 +3,27 @@ Photon C# Client Library - Changelog
 Exit Games GmbH - www.photonengine.com - forum.photonengine.com
 
 
+Version 4.1.6.10 (21. October 2021 - rev6243)
+    Fixed: ReadCustomTypeArray to return an object[], if any item in the array is unreadable. This object[] contains any properly read custom types but also items of UnknownType. This is of course likely to cause exceptions in the dispatch callbacks.
+    Added: Exception handling to OnEvent and OnOperationResponse calls.
+
+Version 4.1.6.9 (12. October 2021 - rev6231)
+	Fixed: Reliable UDP protocol to send pings, if no reliable command was acknowledged or sent recently. This bug was preventing a client timeout in some cases.
+
+Version 4.1.6.8 (30. September 2021 - rev6222)
+    Fixed: ReadCustomType to not use custom deserialization methods, should the reported size be less than available bytes.
+    Fixed: ReadCustomType and ReadCustomTypeArray to also skip custom types when size is 0.
+
+Version 4.1.6.7 (27. September 2021 - rev6214)
+    Fixed: A bug in Protocol18 reader for very long arrays.
+
+Version 4.1.6.6 (21. September 2021 - rev6204)
+    Changed: Dns resolution. It is suspected to fail sometimes due to a Mono/Unity bug (issue 6940). Changing from only attempting Dns.GetHostEntry to first attempting Dns.GetHostAddresses followed by Dns.GetHostByName in case of an Exception (yes obsolete api but maybe a different implementation).
+    Removed: C# wrapper classes for native plugins (sockets and encryption). These classes will be part of the plugin packages.
+    Changed: PhotonPeer values NativeSocketLibAvailable, NativePayloadEncryptionLibAvailable and NativeDatagramEncryptionLibAvailable are now obsolete. Unity's IL2CPP does not implement PrelinkAll in IL2CPP and we moved the wrapper classes for native libs out of the assembly.
+    Added: PayloadEncryptorType and related usage to be able to set another Payload Encryption implementation. This is only for completeness. The managed implementation, which is used by default, is fine.
+    Fixed: TrafficStatsIncoming for PhotonClientWebSocket (used by default in WS/WSS connections in the .Net Standard 2.0 dll).
+
 Version 4.1.6.5 (24. August 2021 - rev6181)
     Fixed: Protocol16 to throw a NotSupportedException when a length value can not be serialized as short (as defined). This affects arrays (except byte[]), strings, hashtables, dictionaries and other variable length values.
     Updated: C# classes to the latest state of the native PhotonEncryptorPlugin API.

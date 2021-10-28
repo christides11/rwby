@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Fusion;
 using Fusion.Sockets;
@@ -84,6 +85,9 @@ public class InputBehaviourPrototype : Fusion.Behaviour, INetworkRunnerCallbacks
   public void OnObjectWordsChanged(NetworkRunner    runner, NetworkObject        obj, HashSet<int> changedWords, NetworkObjectMemoryPtr oldMemory) { }
   public void OnShutdown(NetworkRunner              runner, ShutdownReason       shutdownReason) { }
   public void OnSessionListUpdated(NetworkRunner    runner, List<SessionInfo>    sessionList)    {  }
+  public void OnReliableDataReceived(NetworkRunner runner, PlayerRef player, ArraySegment<byte> data) {
+  }
+
   public void OnSceneLoadDone(NetworkRunner runner) {
     
   }

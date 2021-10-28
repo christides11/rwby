@@ -31,6 +31,7 @@ namespace rwby
         }
 
         protected List<Hurtbox> hurtboxes = new List<Hurtbox>();
+        #region Hitbox
         public virtual bool CheckHit(int hitboxGroupIndex, HitboxGroup hitboxGroup, GameObject attacker, List<GameObject> ignoreList = null)
         {
             bool hurtboxHit = false;
@@ -61,55 +62,6 @@ namespace rwby
             }
             return hurtboxHit;
         }
-
-        public virtual bool CheckGrab(int hitboxGroupIndex, HitboxGroup hitboxGroup, GameObject attacker, List<GameObject> ignoreList = null)
-        {
-            bool hurtboxHit = false;
-            hurtboxes.Clear();
-            for(int i = 0; i < hitboxGroup.boxes.Count; i++)
-            {
-                CheckBoxCollision(hitboxGroup, i);
-
-                // This hitbox hit nothing.
-                if (hurtboxes.Count == 0)
-                {
-                    continue;
-                }
-
-                SortHitHurtboxes();
-
-                for (int j = 0; j < hurtboxes.Count; j++)
-                {
-                    if (ignoreList != null && ignoreList.Contains(hurtboxes[j].Root.gameObject))
-                    {
-                        continue;
-                    }
-                    if (TryGrabHurtbox(hitboxGroup, i, j, hitboxGroupIndex, attacker))
-                    {
-                        hurtboxHit = true;
-                    }
-                }
-            }
-            return hurtboxHit;
-        }
-
-        protected virtual bool TryGrabHurtbox(HitboxGroup hitboxGroup, int hitboxIndex, int hurtboxIndex, int hitboxGroupIndex, GameObject attacker)
-        {
-            // Owner was already hit by this ID group or is null, ignore it.
-            if (hurtboxes[hurtboxIndex] == null || CheckHitHurtable(hitboxGroup.ID, hurtboxes[hurtboxIndex]) == true)
-            {
-                return false;
-            }
-            // Additional filtering.
-            if (ShouldHurt(hitboxGroup, hitboxIndex, hurtboxes[hurtboxIndex]) == false)
-            {
-                return false;
-            }
-            //AddCollidedHurtable(hitboxGroup.ID, hurtboxes[hurtboxIndex]);
-            //HurtHurtbox(hitboxGroup, hitboxIndex, hurtboxes[hurtboxIndex], attacker, lch[hurtboxIndex].Point);
-            return true;
-        }
-
 
         protected virtual void SortHitHurtboxes()
         {
@@ -250,13 +202,6 @@ namespace rwby
             int cldAmt = 0;
             switch (hitboxGroup.boxes[boxIndex].shape)
             {
-                case BoxShape.Rectangle:
-                    // ...
-                    if (gameManager.settings.showHitboxes)
-                    {
-                        ExtDebug.DrawBox(position, size, Quaternion.Euler((hitboxGroup.boxes[boxIndex] as HnSF.Combat.BoxDefinition).rotation), Color.red, Runner.Simulation.DeltaTime);
-                    }
-                    break;
                 case BoxShape.Circle:
                     cldAmt = Runner.LagCompensation.OverlapSphere(position, (hitboxGroup.boxes[boxIndex] as HnSF.Combat.BoxDefinition).radius, Runner.Simulation.Tick, lch, hitLayermask, HitOptions.DetailedHit);
                     if (gameManager.settings.showHitboxes)
@@ -280,5 +225,98 @@ namespace rwby
                 }
             }
         }
-    }
+        #endregion
+
+        protected List<Throwablebox> hitThrowableboxes = new List<Throwablebox>();
+        #region Grabbox
+        public virtual bool CheckGrab(int hitboxGroupIndex, HitboxGroup hitboxGroup, GameObject attacker, List<GameObject> ignoreList = null)
+        {
+            bool hurtboxHit = false;
+            hurtboxes.Clear();
+            for (int i = 0; i < hitboxGroup.boxes.Count; i++)
+            {
+                //CheckBoxCollision(hitboxGroup, i);
+                CheckForThrowableboxes(hitboxGroup, i, ref hitThrowableboxes);
+
+                /*
+                // This hitbox hit nothing.
+                if (hurtboxes.Count == 0)
+                {
+                    continue;
+                }
+
+                SortHitHurtboxes();
+
+                for (int j = 0; j < hurtboxes.Count; j++)
+                {
+                    if (ignoreList != null && ignoreList.Contains(hurtboxes[j].Root.gameObject))
+                    {
+                        continue;
+                    }
+                    if (TryGrab(hitboxGroup, i, j, hitboxGroupIndex, attacker))
+                    {
+                        hurtboxHit = true;
+                    }
+                }*/
+            }
+            return hurtboxHit;
+        }
+
+        protected virtual void CheckForThrowableboxes<T>(HitboxGroup boxGroup, int boxIndex, ref List<T> grabbedBoxList ) where T : Custombox
+        {
+            Vector3 modifiedOffset = (boxGroup.boxes[boxIndex] as HnSF.Combat.BoxDefinition).offset;
+            modifiedOffset = modifiedOffset.x * transform.right
+                + modifiedOffset.z * transform.forward
+                + modifiedOffset.y * Vector3.up;
+            Vector3 position = transform.position + modifiedOffset;
+            Vector3 size = (boxGroup.boxes[boxIndex] as HnSF.Combat.BoxDefinition).size;
+
+            
+            int cldAmt = 0;
+            switch (boxGroup.boxes[boxIndex].shape)
+            {
+                case BoxShape.Circle:
+                    cldAmt = Runner.LagCompensation.OverlapSphere(position, (boxGroup.boxes[boxIndex] as HnSF.Combat.BoxDefinition).radius, Runner.Simulation.Tick, lch, hitLayermask, HitOptions.DetailedHit);
+                    if (gameManager.settings.showHitboxes)
+                    {
+                        ExtDebug.DrawWireSphere(position, (boxGroup.boxes[boxIndex] as HnSF.Combat.BoxDefinition).radius, Color.red, Runner.Simulation.DeltaTime, 3);
+                    }
+                    break;
+            }
+
+            
+            if (hurtboxes.Count < lch.Count)
+            {
+                hurtboxes.AddRange(new Hurtbox[lch.Count - hurtboxes.Count]);
+            }
+            /*
+            for (int i = 0; i < cldAmt; i++)
+            {
+                Hurtbox h = lch[i].GameObject.GetComponent<Hurtbox>();
+                if (h.HitboxActive == true && h.Root.gameObject != gameObject)
+                {
+                    hurtboxes[i] = h;
+                }
+            }*/
+        }
+
+        /*
+        protected virtual bool TryGrab(HitboxGroup hitboxGroup, int hitboxIndex, int hurtboxIndex, int hitboxGroupIndex, GameObject attacker)
+        {
+            // Owner was already hit by this ID group or is null, ignore it.
+            if (hurtboxes[hurtboxIndex] == null || CheckHitHurtable(hitboxGroup.ID, hurtboxes[hurtboxIndex]) == true)
+            {
+                return false;
+            }
+            // Additional filtering.
+            if (ShouldHurt(hitboxGroup, hitboxIndex, hurtboxes[hurtboxIndex]) == false)
+            {
+                return false;
+            }
+            //AddCollidedHurtable(hitboxGroup.ID, hurtboxes[hurtboxIndex]);
+            //HurtHurtbox(hitboxGroup, hitboxIndex, hurtboxes[hurtboxIndex], attacker, lch[hurtboxIndex].Point);
+            return true;
+        }*/
+        #endregion
+        }
 }

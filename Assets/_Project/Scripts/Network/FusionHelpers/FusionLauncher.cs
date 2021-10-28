@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Cysharp.Threading.Tasks;
 using Fusion;
 using Fusion.Sockets;
 using UnityEngine;
@@ -16,16 +17,20 @@ namespace rwby
 	public class FusionLauncher : MonoBehaviour, INetworkRunnerCallbacks
 	{
 		public delegate void EmptyAction();
+		public delegate void SessionListAction(NetworkRunner runner, List<SessionInfo> sessionList);
 		public delegate void ConnectionAction(NetworkRunner runner);
+		public delegate void ConnectionStatusAction(NetworkRunner runner, ConnectionStatus status);
 		public delegate void PlayerAction(NetworkRunner runner, PlayerRef player);
 		public delegate void ConnectFailedAction(NetworkRunner runner, NetAddress remoteAddress, NetConnectFailedReason reason);
 
 		public event EmptyAction OnStartHosting;
+		public event ConnectionStatusAction OnConnectionStatusChanged;
 		public event ConnectionAction ClientOnConnectedToServer;
 		public event ConnectionAction ClientOnDisconnectedFromServer;
 		public event PlayerAction HostOnPlayerJoin;
 		public event PlayerAction HostOnPlayerLeave;
 		public event ConnectFailedAction OnConnectionFailed;
+		public event SessionListAction OnSessionsUpdated;
 
 		public ConnectionStatus Status { get { return _status; } }
 		public Dictionary<PlayerRef, NetworkObject> Players { get { return _players; } }
@@ -37,36 +42,35 @@ namespace rwby
 		private ConnectionStatus _status;
 		private NetworkObject _playerPrefab;
 		private FusionObjectPoolRoot _pool;
+		
+		public NetworkSceneManager _networkSceneManager;
 
 		public enum ConnectionStatus { Disconnected, Connecting, Failed, Connected }
 
-		public async void Launch(GameMode mode, string roomName, NetworkObject playerPrefab, Action<NetworkRunner, ConnectionStatus> onConnect)
+		public async UniTask JoinSession()
+        {
+			_runner = gameObject.GetComponent<NetworkRunner>();
+			if (!_runner)
+				_runner = gameObject.AddComponent<NetworkRunner>();
+			_runner.AddCallbacks(this);
+
+			await _runner.JoinSessionLobby(SessionLobby.ClientServer);
+		}
+
+		public async void Launch(GameMode mode, string roomName, int playerCount, bool privateLobby, NetworkObject playerPrefab, Action<NetworkRunner, ConnectionStatus> onConnect)
 		{
 			_playerPrefab = playerPrefab;
 			_connectionCallback = onConnect;
 
 			SetConnectionStatus(ConnectionStatus.Connecting);
+			InitSingletions(mode != GameMode.Server);
 
-			//NetworkProjectConfigAsset.Instance.NetworkObjectPool = ScriptableObject.CreateInstance<FusionObjectPoolRoot>(); //gameObject.AddComponent<FusionObjectPoolRoot>();
-			/*
-			if (mode == GameMode.Shared)
-				NetworkProjectConfig.Global.Simulation.ReplicationMode = SimulationConfig.StateReplicationModes.EventualConsistency;
-			else
-				NetworkProjectConfig.Global.Simulation.ReplicationMode = SimulationConfig.StateReplicationModes.DeltaSnapshots;*/
+			await _runner.StartGame(new StartGameArgs() { GameMode = mode, SessionName = roomName, ObjectPool = _pool, SceneObjectProvider = _networkSceneManager, PlayerCount = playerCount });
+			if(_status == ConnectionStatus.Failed)
+            {
+				return;
+            }
 
-			_runner = gameObject.GetComponent<NetworkRunner>();
-			if (!_runner)
-				_runner = gameObject.AddComponent<NetworkRunner>();
-			_runner.name = name;
-			_runner.ProvideInput = mode != GameMode.Server;
-			_runner.AddCallbacks(this);
-
-			if (_pool == null)
-				_pool = gameObject.AddComponent<FusionObjectPoolRoot>();
-
-			await _runner.StartGame(new StartGameArgs() { GameMode = mode, SessionName = roomName, ObjectPool = _pool });
-
-			var current = SceneManager.GetActiveScene();
 			if (mode != GameMode.Client && TryGetSceneRef(out SceneRef scene))
 			{
 				_runner.SetActiveScene(scene);
@@ -78,22 +82,43 @@ namespace rwby
             }
 		}
 
-		private bool TryGetSceneRef(out SceneRef sceneRef)
-		{
-			var scenePath = SceneManager.GetActiveScene().path;
-			var config = NetworkProjectConfig.Global;
+		public async void JoinSession(GameMode mode, SessionInfo session, NetworkObject playerPrefab, Action<NetworkRunner, ConnectionStatus> onConnect)
+        {
+			_playerPrefab = playerPrefab;
+			_connectionCallback = onConnect;
 
-			if (config.TryGetSceneRef(scenePath, out sceneRef) == false)
+			SetConnectionStatus(ConnectionStatus.Connecting);
+			InitSingletions(mode != GameMode.Server);
+
+			await _runner.StartGame(mode, session);
+			if (_status == ConnectionStatus.Failed)
 			{
-
-				// Failed to find scene by full path, try with just name
-				if (config.TryGetSceneRef(SceneManager.GetActiveScene().name, out sceneRef) == false)
-				{
-					Debug.LogError($"Could not find scene reference to scene {scenePath}, make sure it's added to {nameof(NetworkProjectConfig)}.");
-					return false;
-				}
+				return;
 			}
-			return true;
+		}
+
+		protected void InitSingletions(bool provideInput)
+        {
+			_runner = gameObject.GetComponent<NetworkRunner>();
+			if (!_runner)
+				_runner = gameObject.AddComponent<NetworkRunner>();
+			_runner.name = name;
+			_runner.ProvideInput = provideInput;
+			_runner.AddCallbacks(this);
+
+			if (_pool == null)
+				_pool = gameObject.AddComponent<FusionObjectPoolRoot>();
+
+			_networkSceneManager = gameObject.GetComponent<NetworkSceneManager>();
+			if (!_networkSceneManager)
+				_networkSceneManager = gameObject.AddComponent<NetworkSceneManager>();
+		}
+
+		public bool TryGetSceneRef(out SceneRef sceneRef)
+		{
+			// Find the current scene in the list of scenes registered with Fusion and return the ref
+			var scenePath = SceneManager.GetActiveScene().path;
+			return NetworkSceneManager.TryGetSceneRefFromPathInBuildSettings(scenePath, out sceneRef);
 		}
 
 		private void SetConnectionStatus(ConnectionStatus status)
@@ -101,6 +126,7 @@ namespace rwby
 			_status = status;
 			if (_connectionCallback != null)
 				_connectionCallback(_runner, status);
+			OnConnectionStatusChanged?.Invoke(_runner, status);
 		}
 
 		public void OnInput(NetworkRunner runner, NetworkInput input)
@@ -179,7 +205,11 @@ namespace rwby
 			Debug.Log($"Shutdown ({shutdownReason.ToString()})");
 		}
 
-		public void OnSessionListUpdated(NetworkRunner runner, List<SessionInfo> sessionList) { }
+		public void OnSessionListUpdated(NetworkRunner runner, List<SessionInfo> sessionList) 
+		{
+			Debug.Log($"OnSessionListUpdated: {sessionList?.Count}");
+			OnSessionsUpdated?.Invoke(runner, sessionList);
+		}
 
         public void OnSceneLoadDone(NetworkRunner runner)
         {
@@ -192,6 +222,11 @@ namespace rwby
         }
 
         public void OnCustomAuthenticationResponse(NetworkRunner runner, Dictionary<string, object> data)
+        {
+
+        }
+
+        public void OnReliableDataReceived(NetworkRunner runner, PlayerRef player, ArraySegment<byte> data)
         {
 
         }

@@ -36,10 +36,6 @@
             if (GUILayout.Button("Rebuild Object Table (Slow)")) {
               NetworkProjectConfigUtilities.RebuildObjectTable();
             }
-
-            if (GUILayout.Button("Import Scenes From Build Settings")) {
-              NetworkProjectConfigUtilities.ImportScenesFromBuildSettings();
-            }
           }
 
           FusionEditorGUI.DrawDefaultInspector(extraDataSerializedObject, drawScript: false);

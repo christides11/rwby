@@ -372,6 +372,42 @@
             Local Peer Address is based on the current Player Actor Number inside the Room
             </summary>
         </member>
+        <member name="T:Fusion.Sockets.Stun.NATType">
+            <summary>
+            Specifies UDP network type.
+            </summary>
+        </member>
+        <member name="F:Fusion.Sockets.Stun.NATType.Invalid">
+            <summary>
+            Invalid NAT Type
+            </summary>
+        </member>
+        <member name="F:Fusion.Sockets.Stun.NATType.UdpBlocked">
+            <summary>
+            UDP is always blocked.
+            </summary>
+        </member>
+        <member name="F:Fusion.Sockets.Stun.NATType.OpenInternet">
+            <summary>
+            No NAT, public IP, no firewall.
+            </summary>
+        </member>
+        <member name="F:Fusion.Sockets.Stun.NATType.FullCone">
+            <summary>
+            A full cone NAT is one where all requests from the same internal IP address and port are 
+            mapped to the same external IP address and port. Furthermore, any external host can send 
+            a packet to the internal host, by sending a packet to the mapped external address.
+            </summary>
+        </member>
+        <member name="F:Fusion.Sockets.Stun.NATType.Symmetric">
+            <summary>
+            A symmetric NAT is one where all requests from the same internal IP address and port, 
+            to a specific destination IP address and port, are mapped to the same external IP address and
+            port.  If the same host sends a packet with the same source address and port, but to 
+            a different destination, a different mapping is used. Furthermore, only the external host that
+            receives a packet can send a UDP packet back to the internal host.
+            </summary>
+        </member>
         <member name="T:Fusion.Sockets.Stun.StunClient">
             <summary>
             This class implements STUN Client. Defined in RFC 8489
@@ -392,7 +428,7 @@
             List of public DNS Servers
             </summary>
         </member>
-        <member name="M:Fusion.Sockets.Stun.StunClient.Query(Fusion.Sockets.NetPeer*,Fusion.Sockets.INetSocket)">
+        <member name="M:Fusion.Sockets.Stun.StunClient.QueryPublicAddress(Fusion.Sockets.NetPeer*,Fusion.Sockets.INetSocket,System.Net.Sockets.AddressFamily,System.Guid@)">
             <summary>
             Run a STUN Binding Request against the Public STUN Server in order to discover peer reflexive addresses
             </summary>
@@ -483,12 +519,12 @@
             Gets or sets error info. Returns null if not specified.
             </summary>
         </member>
-        <member name="M:Fusion.Sockets.Stun.StunMessage.#ctor(Fusion.Sockets.Stun.StunMessage.StunMessageType)">
+        <member name="M:Fusion.Sockets.Stun.StunMessage.#ctor(System.Guid,Fusion.Sockets.Stun.StunMessage.StunMessageType)">
             <summary>
             Default constructor.
             </summary>
         </member>
-        <member name="M:Fusion.Sockets.Stun.StunMessage.TryParse(System.Byte[])">
+        <member name="M:Fusion.Sockets.Stun.StunMessage.TryParse(System.Byte*,System.Int32)">
             <summary>
             Parses STUN message from raw data packet.
             </summary>
@@ -500,7 +536,7 @@
             </summary>
             <returns>Returns raw STUN packet.</returns>
         </member>
-        <member name="M:Fusion.Sockets.Stun.StunMessage.ReadAttribute(System.Byte[],System.Int32@)">
+        <member name="M:Fusion.Sockets.Stun.StunMessage.ReadAttribute(System.Byte*,System.Int32@)">
             <summary>
             Parses attribute from data.
             </summary>
@@ -523,58 +559,6 @@
             <param name="endPoint">IP end point.</param>
             <param name="message">Buffer where to store.</param>
             <param name="offset">Offset in buffer.</param>
-        </member>
-        <member name="T:Fusion.Sockets.Stun.StunNatType">
-            <summary>
-            Specifies UDP network type.
-            </summary>
-        </member>
-        <member name="F:Fusion.Sockets.Stun.StunNatType.UdpBlocked">
-            <summary>
-            UDP is always blocked.
-            </summary>
-        </member>
-        <member name="F:Fusion.Sockets.Stun.StunNatType.OpenInternet">
-            <summary>
-            No NAT, public IP, no firewall.
-            </summary>
-        </member>
-        <member name="F:Fusion.Sockets.Stun.StunNatType.SymmetricUdpFirewall">
-            <summary>
-            No NAT, public IP, but symmetric UDP firewall.
-            </summary>
-        </member>
-        <member name="F:Fusion.Sockets.Stun.StunNatType.FullCone">
-            <summary>
-            A full cone NAT is one where all requests from the same internal IP address and port are 
-            mapped to the same external IP address and port. Furthermore, any external host can send 
-            a packet to the internal host, by sending a packet to the mapped external address.
-            </summary>
-        </member>
-        <member name="F:Fusion.Sockets.Stun.StunNatType.RestrictedCone">
-            <summary>
-            A restricted cone NAT is one where all requests from the same internal IP address and 
-            port are mapped to the same external IP address and port. Unlike a full cone NAT, an external
-            host (with IP address X) can send a packet to the internal host only if the internal host 
-            had previously sent a packet to IP address X.
-            </summary>
-        </member>
-        <member name="F:Fusion.Sockets.Stun.StunNatType.PortRestrictedCone">
-            <summary>
-            A port restricted cone NAT is like a restricted cone NAT, but the restriction 
-            includes port numbers. Specifically, an external host can send a packet, with source IP
-            address X and source port P, to the internal host only if the internal host had previously 
-            sent a packet to IP address X and port P.
-            </summary>
-        </member>
-        <member name="F:Fusion.Sockets.Stun.StunNatType.Symmetric">
-            <summary>
-            A symmetric NAT is one where all requests from the same internal IP address and port, 
-            to a specific destination IP address and port, are mapped to the same external IP address and
-            port.  If the same host sends a packet with the same source address and port, but to 
-            a different destination, a different mapping is used. Furthermore, only the external host that
-            receives a packet can send a UDP packet back to the internal host.
-            </summary>
         </member>
         <member name="T:Fusion.Sockets.Stun.StunResult">
             <summary>
@@ -960,6 +944,11 @@
         <member name="F:Fusion.Protocol.ProtocolMessageVersion.V1_2_0">
             <summary>
             Added Custom Data to all Protocol Messages
+            </summary>
+        </member>
+        <member name="F:Fusion.Protocol.ProtocolMessageVersion.V1_2_1">
+            <summary>
+            Added NAT Type to Reflexive Info
             </summary>
         </member>
         <member name="F:Fusion.Protocol.ProtocolMessageVersion.LATEST">

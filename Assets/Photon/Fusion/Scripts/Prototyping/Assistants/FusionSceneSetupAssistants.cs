@@ -141,7 +141,7 @@ namespace Fusion.Assistants {
     }
 
 
-    [MenuItem("GameObject/Fusion/Setup/Add Current Scene To Settings", false, FusionAssistants.PRIORITY)]
+    [MenuItem("GameObject/Fusion/Setup/Add Current Scene To Build Settings", false, FusionAssistants.PRIORITY)]
     public static void AddCurrentSceneToSettings() { DirtyAndSaveScene(SceneManager.GetActiveScene()); }
     public static void DirtyAndSaveScene(Scene scene) {
 
@@ -153,9 +153,8 @@ namespace Fusion.Assistants {
         UnityEditor.SceneManagement.EditorSceneManager.SaveModifiedScenesIfUserWantsTo(new Scene[] { scene });
         scenename = scene.path;
       }
-
+      
       // Add scene to Build and Fusion settings
-      scene.AddSceneToFusionConfig();
       if (scenename != "")
         scene.AddSceneToBuildSettings();
     }

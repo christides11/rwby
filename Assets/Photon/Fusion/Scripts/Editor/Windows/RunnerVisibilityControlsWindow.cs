@@ -122,7 +122,7 @@ namespace Fusion.Editor {
           EditorGUILayout.BeginHorizontal();
           {
             string runnerName = isWide ?
-              (runner.MultiPeerUnitySceneRoot ? runner.MultiPeerUnitySceneRoot.scene.name : "") :
+              (runner.MultiplePeerUnityScene.IsValid() ? runner.MultiplePeerUnityScene.name : "") :
               (runner.IsServer ? "S" : "C");
 
             if (VisibilitySettingLabel == null)

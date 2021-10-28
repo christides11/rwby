@@ -71,6 +71,7 @@ namespace rwby
 
             if (gamemodeContents.Length != gamemodeDef.ContentRequirements.Length)
             {
+                Debug.LogError($"Invalid content length. {GamemodeContent.Length} vs {gamemodeDef.ContentRequirements.Length}");
                 onMatchSettingsLoadFailed?.Invoke(MatchSettingsLoadFailedReason.INVALID_CONTENT);
                 return;
             }
@@ -87,6 +88,7 @@ namespace rwby
                 bool contentLoadResult = await ContentManager.instance.LoadContentDefinition(gamemodeDef.ContentRequirements[i], new ModObjectReference(gamemodeContents[i]));
                 if(contentLoadResult == false)
                 {
+                    Debug.LogError("Invalid loaded content.");
                     onMatchSettingsLoadFailed?.Invoke(MatchSettingsLoadFailedReason.INVALID_CONTENT);
                     return;
                 }
@@ -181,7 +183,7 @@ namespace rwby
 
             
             SceneManager.SetActiveScene(SceneManager.GetSceneByName(GameManager.singleton.currentMapSceneName));
-            if (TryGetSceneRef(out SceneRef scene))
+            if (NetworkManager.singleton.FusionLauncher.TryGetSceneRef(out SceneRef scene))
             {
                 if (NetworkManager.singleton.FusionLauncher.NetworkRunner.GameMode != GameMode.Client)
                     NetworkManager.singleton.FusionLauncher.NetworkRunner.SetActiveScene(scene);
@@ -191,24 +193,6 @@ namespace rwby
             initializingMatch = false;
             Debug.Log("Setup complete.");
             onMatchInitialized?.Invoke();
-        }
-
-        private bool TryGetSceneRef(out SceneRef sceneRef)
-        {
-            var scenePath = SceneManager.GetActiveScene().path;
-            var config = NetworkProjectConfig.Global;
-
-            if (config.TryGetSceneRef(scenePath, out sceneRef) == false)
-            {
-
-                // Failed to find scene by full path, try with just name
-                if (config.TryGetSceneRef(SceneManager.GetActiveScene().name, out sceneRef) == false)
-                {
-                    Debug.LogError($"Could not find scene reference to scene {scenePath}, make sure it's added to {nameof(NetworkProjectConfig)}.");
-                    return false;
-                }
-            }
-            return true;
         }
 
         [Rpc(RpcSources.StateAuthority, RpcTargets.Proxies)]

@@ -311,5 +311,10 @@ namespace rwby
         {
 
         }
+
+        public void OnReliableDataReceived(NetworkRunner runner, PlayerRef player, ArraySegment<byte> data)
+        {
+
+        }
     }
 }

@@ -112,7 +112,80 @@
         </member>
         <member name="T:FusionStats">
             <summary>
-            Fusion Telemetry component.
+            Creates and controls a Canvas with one or multiple telemetry graphs. Can be created as a scene object or prefab,
+            or be created at runtime using the <see cref="M:FusionStats.Create(Fusion.NetworkRunner,System.Nullable{UnityEngine.Rect},System.Nullable{Fusion.Simulation.Statistics.FusionStatFlags})"/> methods.
+            </summary>
+        </member>
+        <member name="M:FusionStats.Create(Fusion.NetworkRunner,System.Nullable{UnityEngine.Rect},System.Nullable{Fusion.Simulation.Statistics.FusionStatFlags})">
+            <summary>
+            Creates a new GameObject with a <see cref="T:FusionStats"/> component.
+            To generate the UI when not playing, call <see cref="M:FusionStats.Initialize"/> on the returned <see cref="T:FusionStats"/> component.
+            Initialize automatically runs on Awake().
+            </summary>
+            <param name="runner"></param>
+            <param name="normalizedRect">If not null, uses the supplied Rect as the initial position.</param>
+            <param name="statsMask">The stats to be enabled. If left null, default statistics will be used.</param>
+        </member>
+        <member name="M:FusionStats.Create(Fusion.NetworkRunner,FusionStats.DefaultLayouts,System.Nullable{Fusion.Simulation.Statistics.FusionStatFlags})">
+            <summary>
+            Creates a new GameObject with a <see cref="T:FusionStats"/> component.
+            To generate the UI when not playing, call <see cref="M:FusionStats.Initialize"/> on the returned <see cref="T:FusionStats"/> component.
+            Initialize automatically runs on Awake().
+            </summary>
+            <param name="runner"></param>
+            <param name="layout">Uses a predefined position.</param>
+            <param name="statsMask">The stats to be enabled. If left null, default statistics will be used.</param>
+            <returns></returns>
+        </member>
+        <member name="P:FusionStats.DefaultMask">
+            <summary>
+            Defines the stat types that should only be shown if explicitly asked for.
+            </summary>
+        </member>
+        <member name="F:FusionStats.RedrawInterval">
+            <summary>
+            Interval (in seconds) between Graph redraws. Lower values reduce CPU overhead, draw calls and garbage collection. 
+            </summary>
+        </member>
+        <member name="F:FusionStats._buttonHeight">
+            <summary>
+            Height of button region at top of the stats panel. Values less than or equal to 0 hide the buttons, and reduce the header size.
+            </summary>
+        </member>
+        <member name="F:FusionStats._position">
+            <summary>
+            The Rect that defines the position of the entire states overlay on the player. Sizes are normalized percentages.(ranges of 0f-1f).
+            </summary>
+        </member>
+        <member name="F:FusionStats.InitializeAllGraphs">
+            <summary>
+            Initializes a <see cref="T:FusionGraph"/> for all available stats, even if not initially included. 
+            If disabled, graphs added after initialization will be added to the bottom of the interface stack.
+            </summary>
+        </member>
+        <member name="F:FusionStats.ConnectTo">
+            <summary>
+            When <see cref="F:FusionStats._activeRunner"/> is null, will continuously attempt to find and connect to an active <see cref="T:Fusion.NetworkRunner"/> which matches these indicated modes.
+            </summary>
+        </member>
+        <member name="F:FusionStats._includedStats">
+            <summary>
+            Selects which stats should be displayed.
+            </summary>
+        </member>
+        <member name="F:FusionStats.EnforceSingle">
+            <summary>
+            Only one instance with the <see cref="F:FusionStats.Guid"/> can exist. Will destroy any clones on Awake.
+            </summary>
+        </member>
+        <member name="F:FusionStats.Guid">
+            <summary>
+            Identifier used to enforce single instances. Only one instance at a given time.
+            </summary>
+        </member>
+        <member name="F:FusionStats.GraphColor">
+            <summary>
+            The color used for the telemetry graph data.
             </summary>
         </member>
         <member name="T:NetworkDebugStartGUI">
@@ -188,6 +261,11 @@
         <member name="F:NetworkDebugStart.AlwaysShowStats">
             <summary>
             Will automatically enable <see cref="T:FusionStats"/> once peers have finished connecting.
+            </summary>
+        </member>
+        <member name="F:NetworkDebugStart.includedStats">
+            <summary>
+            Selects which telemetry statistics will be enabled in the <see cref="T:FusionStats"/> overlay.
             </summary>
         </member>
         <member name="F:NetworkDebugStart.InitialScenePath">
@@ -279,6 +357,12 @@
             <summary>
             If object is not using <see cref="T:Fusion.NetworkCharacterController"/>, this controls how much change is applied to the transform/rigidbody.
             </summary>
+        </member>
+        <member name="M:FusionGraph.Refresh">
+            <summary>
+            Returns true if the graph rendered. False if the size was too small and the graph was hidden.
+            </summary>
+            <returns></returns>
         </member>
     </members>
 </doc>

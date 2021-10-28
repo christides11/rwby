@@ -191,14 +191,20 @@ namespace Fusion.Editor {
     protected BehaviourActionInfo[] behaviourActions;
 
     public override void OnInspectorGUI() {
-
-      FusionEditorGUI.InjectPropertyDrawers(serializedObject);
-
+      PrepareInspectorGUI();
       base.DrawDefaultInspector();
+      DrawBehaviourActions();
+    }
 
+    protected void PrepareInspectorGUI() {
+      FusionEditorGUI.InjectPropertyDrawers(serializedObject);
+    }
+
+    protected void DrawBehaviourActions() {
       // Draw any BehaviourActionAttributes for this Component
-      if (behaviourActions == null)
+      if (behaviourActions == null) {
         behaviourActions = target.GetActionAttributes();
+      }
 
       target.DrawAllBehaviourActionAttributes(behaviourActions, ref _expandedHelpName);
     }
@@ -236,7 +242,7 @@ namespace Fusion.Editor {
   public static class BehaviourEditorUtils {
 
     // Getter to Delegate conversion magic for method that returns any kind of object and has no arguments
-    private static readonly MethodInfo CallPropertyDelegateMethod = typeof(NetworkBehaviourEditor).GetMethod(nameof(CallPropertyDelegate), BindingFlags.NonPublic | BindingFlags.Static);
+    private static readonly MethodInfo CallPropertyDelegateMethod = typeof(BehaviourEditorUtils).GetMethod(nameof(CallPropertyDelegate), BindingFlags.NonPublic | BindingFlags.Static);
     private static Func<object, object> CallPropertyDelegate<TDeclared, TProperty>(Func<TDeclared, TProperty> deleg) => instance => deleg((TDeclared)instance);
 
     public static Dictionary<Type, Dictionary<string, Func<object, object>>> GetValueDelegateLookups = new Dictionary<Type, Dictionary<string, Func<object, object>>>();
@@ -1297,76 +1303,6 @@ namespace Fusion.Editor {
 #endregion
 
 
-#region Assets/Photon/Fusion/Scripts/Editor/CustomTypes/DictionaryAdapterDrawer.cs
-
-﻿namespace Fusion.Editor {
-  using System;
-  using System.Collections.Generic;
-  using System.Linq;
-  using System.Reflection;
-  using System.Text;
-  using System.Threading.Tasks;
-  using UnityEditor;
-  using UnityEditorInternal;
-  using UnityEngine;
-
-  [CustomPropertyDrawer(typeof(DictionaryAdapter), true)]
-  public class DictionaryAdapterDrawer : PropertyDrawerWithErrorHandling {
-    const string ItemsPropertyName = "_items";
-    const string KeyPropertyName = "Key";
-
-    protected override void OnGUIInternal(Rect position, SerializedProperty property, GUIContent label) {
-      var entries = property.FindPropertyRelativeOrThrow(ItemsPropertyName);
-      entries.isExpanded = property.isExpanded;
-      using (new FusionEditorGUI.PropertyScope(position, label, property)) {
-        EditorGUI.PropertyField(position, entries, label, entries.isExpanded);
-        property.isExpanded = entries.isExpanded;
-
-        string error = VerifyDictionary(entries, KeyPropertyName);
-        if (error != null) {
-          SetError(error);
-        } else {
-          ClearError();
-        }
-      }
-    }
-    public override float GetPropertyHeight(SerializedProperty property, GUIContent label) {
-      var entries = property.FindPropertyRelativeOrThrow(ItemsPropertyName);
-      return EditorGUI.GetPropertyHeight(entries, label, property.isExpanded);
-    }
-
-    private static HashSet<SerializedProperty> _dictionaryKeyHash = new HashSet<SerializedProperty>(new SerializedPropertyUtilities.SerializedPropertyEqualityComparer());
-
-    private static string VerifyDictionary(SerializedProperty prop, string keyPropertyName) {
-      Debug.Assert(prop.isArray);
-      try {
-        for (int i = 0; i < prop.arraySize; ++i) {
-          var keyProperty = prop.GetArrayElementAtIndex(i).FindPropertyRelativeOrThrow(keyPropertyName);
-          if (!_dictionaryKeyHash.Add(keyProperty)) {
-
-            var groups = Enumerable.Range(0, prop.arraySize)
-                .GroupBy(x => prop.GetArrayElementAtIndex(x).FindPropertyRelative(keyPropertyName), x => x, _dictionaryKeyHash.Comparer)
-                .Where(x => x.Count() > 1)
-                .ToList();
-
-            // there are duplicates - take the slow and allocating path now
-            return string.Join("\n", groups.Select(x => $"Duplicate keys for elements: {string.Join(", ", x)}"));
-          }
-        }
-
-        return null;
-
-      } finally {
-        _dictionaryKeyHash.Clear();
-      }
-    }
-  }
-}
-
-
-#endregion
-
-
 #region Assets/Photon/Fusion/Scripts/Editor/CustomTypes/DoIfAttributeDrawer.cs
 
 ﻿namespace Fusion.Editor {
@@ -1849,6 +1785,34 @@ namespace Fusion.Editor {
       }
 
       return result;
+    }
+  }
+}
+
+#endregion
+
+
+#region Assets/Photon/Fusion/Scripts/Editor/CustomTypes/NetworkBoolDrawer.cs
+
+namespace Fusion.Editor {
+  using System;
+  using System.Collections.Generic;
+  using System.Reflection;
+  using UnityEditor;
+  using UnityEngine;
+
+  [CustomPropertyDrawer(typeof(NetworkBool))]
+  public class NetworkBoolDrawer : PropertyDrawer {
+    public override void OnGUI(Rect position, SerializedProperty property, GUIContent label) {
+      using (new FusionEditorGUI.PropertyScope(position, label, property)) {
+        var valueProperty = property.FindPropertyRelativeOrThrow("_value");
+        EditorGUI.BeginChangeCheck();
+        bool isChecked = EditorGUI.Toggle(position, label, valueProperty.intValue > 0);
+        if (EditorGUI.EndChangeCheck()) {
+          valueProperty.intValue = isChecked ? 1 : 0;
+          valueProperty.serializedObject.ApplyModifiedProperties();
+        }
+      }
     }
   }
 }
@@ -3044,6 +3008,76 @@ namespace Fusion.Editor {
   }
 }
 
+
+
+#endregion
+
+
+#region Assets/Photon/Fusion/Scripts/Editor/CustomTypes/SerializableDictionaryDrawer.cs
+
+﻿namespace Fusion.Editor {
+  using System;
+  using System.Collections.Generic;
+  using System.Linq;
+  using System.Reflection;
+  using System.Text;
+  using System.Threading.Tasks;
+  using UnityEditor;
+  using UnityEditorInternal;
+  using UnityEngine;
+
+  [CustomPropertyDrawer(typeof(SerializableDictionary), true)]
+  public class SerializableDictionaryDrawer : PropertyDrawerWithErrorHandling {
+    const string ItemsPropertyPath    = SerializableDictionary<int,int>.ItemsPropertyPath;
+    const string EntryKeyPropertyPath = SerializableDictionary<int, int>.EntryKeyPropertyPath;
+
+    protected override void OnGUIInternal(Rect position, SerializedProperty property, GUIContent label) {
+      var entries = property.FindPropertyRelativeOrThrow(ItemsPropertyPath);
+      entries.isExpanded = property.isExpanded;
+      using (new FusionEditorGUI.PropertyScope(position, label, property)) {
+        EditorGUI.PropertyField(position, entries, label, entries.isExpanded);
+        property.isExpanded = entries.isExpanded;
+
+        string error = VerifyDictionary(entries, EntryKeyPropertyPath);
+        if (error != null) {
+          SetError(error);
+        } else {
+          ClearError();
+        }
+      }
+    }
+    public override float GetPropertyHeight(SerializedProperty property, GUIContent label) {
+      var entries = property.FindPropertyRelativeOrThrow(ItemsPropertyPath);
+      return EditorGUI.GetPropertyHeight(entries, label, property.isExpanded);
+    }
+
+    private static HashSet<SerializedProperty> _dictionaryKeyHash = new HashSet<SerializedProperty>(new SerializedPropertyUtilities.SerializedPropertyEqualityComparer());
+
+    private static string VerifyDictionary(SerializedProperty prop, string keyPropertyName) {
+      Debug.Assert(prop.isArray);
+      try {
+        for (int i = 0; i < prop.arraySize; ++i) {
+          var keyProperty = prop.GetArrayElementAtIndex(i).FindPropertyRelativeOrThrow(keyPropertyName);
+          if (!_dictionaryKeyHash.Add(keyProperty)) {
+
+            var groups = Enumerable.Range(0, prop.arraySize)
+                .GroupBy(x => prop.GetArrayElementAtIndex(x).FindPropertyRelative(keyPropertyName), x => x, _dictionaryKeyHash.Comparer)
+                .Where(x => x.Count() > 1)
+                .ToList();
+
+            // there are duplicates - take the slow and allocating path now
+            return string.Join("\n", groups.Select(x => $"Duplicate keys for elements: {string.Join(", ", x)}"));
+          }
+        }
+
+        return null;
+
+      } finally {
+        _dictionaryKeyHash.Clear();
+      }
+    }
+  }
+}
 
 
 #endregion
@@ -4693,6 +4727,8 @@ namespace Fusion.Editor {
           hash.Append(path);
         }
 
+        hash.Append(cfg.UseSerializableDictionary ? 1 : 0);
+
         AssetDatabase.RegisterCustomDependency(DependencyName, hash);
         AssetDatabase.Refresh();
       } catch {
@@ -4747,6 +4783,7 @@ namespace Fusion.Editor {
 namespace Fusion.Editor {
   using System;
   using System.Collections.Generic;
+  using System.Linq;
   using System.Reflection;
   using UnityEditor;
   using UnityEngine;
@@ -4756,214 +4793,100 @@ namespace Fusion.Editor {
   public class NetworkBehaviourEditor : BehaviourEditor {
 
     internal const string NETOBJ_REQUIRED_WARN_TEXT = "This <b>" + nameof(NetworkBehaviour) + "</b> requires a <b>" + nameof(NetworkObject) + "</b> component to function.";
-    internal PropertyGetters[] _propertyGetters;
-    private bool _expandNetworkedValues;
+
+    IEnumerable<NetworkBehaviour> ValidTargets => targets
+      .Cast<NetworkBehaviour>()
+      .Where(x => x.Object && x.Object.IsValid);
 
     public override void OnInspectorGUI() {
-      base.OnInspectorGUI();
 
-      DrawNetworkObjectCheck(target as NetworkBehaviour);
-      // Append the Networked property monitor onto the end of the InspectorGUI
-      DrawNetworkedProperties(this, _propertyGetters, ref _expandNetworkedValues);
-    }
+      base.PrepareInspectorGUI();
+
+      // can networked properties be altered for all selected targets?
+      bool? hasStateAuthorityForAllTargets = null;
+      foreach (var target in ValidTargets) {
+        if (target.Object.HasStateAuthority) {
+          hasStateAuthorityForAllTargets = true;
+        } else {
+          hasStateAuthorityForAllTargets = false;
+          break;
+        }
+      }
+
+
+      // copy changes from the state
+      serializedObject.UpdateIfRequiredOrScript();
+      foreach (var target in ValidTargets) {
+        target.CopyStateToBackingFields();
+      }
+
+      EditorGUI.BeginChangeCheck();
 
 #if ODIN_INSPECTOR && !FUSION_ODIN_DISABLED
-    protected override void OnEnable() {
-      base.OnEnable();
+      base.DrawDefaultInspector();
 #else
-    private void OnEnable() {
+      SerializedProperty prop = serializedObject.GetIterator();
+      for (bool enterChildren = true; prop.NextVisible(enterChildren); enterChildren = false) {
+        var field = UnityInternal.ScriptAttributeUtility.GetFieldInfoFromProperty(prop, out var type);
+        var attributes = field?.GetCustomAttributes<DefaultForPropertyAttribute>() ?? Array.Empty<DefaultForPropertyAttribute>();
+        if (attributes.Any()) {
+          using (new EditorGUI.DisabledScope(hasStateAuthorityForAllTargets == false)) {
+            EditorGUILayout.PropertyField(prop, true);
+          }
+        } else {
+          using (new EditorGUI.DisabledScope(prop.propertyPath == FusionEditorGUI.ScriptPropertyName)) {
+            EditorGUILayout.PropertyField(prop, true);
+          }
+        }
+      }
 #endif
-      var type = target.GetType();
 
-      // Find all networked properties, and convert their reflection GetValue methods into delegates.
-      _propertyGetters = GetNetworkedProperties(target);
+      if (EditorGUI.EndChangeCheck()) {
+        serializedObject.ApplyModifiedProperties();
+
+        // move changes to the state
+        foreach (var target in ValidTargets) {
+          if (target.Object.HasStateAuthority) {
+            target.CopyBackingFieldsToState();
+          }
+          
+        }
+      }
+
+      DrawNetworkObjectCheck();
+      DrawBehaviourActions();
     }
 
-    // stored networked property info. Name and delegate info.
-    internal struct PropertyGetters {
-      public string Name;
-      public PropertyInfo PropertyInfo;
-      public Func<string> GetStringDelegate;
-      public Func<object, object> GetValueDelegate;
-    }
-
-    private static List<PropertyGetters> tempGetters = new List<PropertyGetters>();
     
-    // Getter to Delegate conversion magic
-    private static readonly MethodInfo CallPropertyDelegateMethod = typeof(NetworkBehaviourEditor).GetMethod(nameof(CallPropertyDelegate), BindingFlags.NonPublic | BindingFlags.Static);
-    private static Func<object, object> CallPropertyDelegate<TDeclared, TProperty>(Func<TDeclared, TProperty> deleg) => instance => deleg((TDeclared)instance);
-
-    // Find all Networked properties on this instance, and store their GetValue methods as delegates.
-    internal static PropertyGetters[] GetNetworkedProperties(object target) {
-      var type = target.GetType();
-
-      tempGetters.Clear();
-
-      if (!typeof(NetworkBehaviour).IsAssignableFrom(type))
-        return null;
-
-      var properties = type.GetProperties(BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance | BindingFlags.GetProperty | BindingFlags.SetProperty/* | BindingFlags.FlattenHierarchy*/);
-
-      var propertyList = new List<PropertyInfo>(properties);
-      var baseType = type.BaseType;
-      while (baseType != null && baseType != typeof(NetworkBehaviour)) {
-        var childprops = baseType.GetProperties(BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.GetProperty | BindingFlags.SetProperty);
-        propertyList.AddRange(childprops);
-        baseType = baseType.BaseType;
-      }
-
-      HashSet<string> usedNames = new HashSet<string>();
-
-      for(int i = 0, cnt = propertyList.Count; i < cnt; ++i ) {
-        var p = propertyList[i];
-        var pname = p.Name;
-        if (usedNames.Contains(pname))
-          continue;
-        usedNames.Add(pname);
-
-        if (p.GetCustomAttribute<NetworkedAttribute>() != null) {
-          var getMethod = p.GetMethod;
-          var declaring = p.DeclaringType;
-          var typeOfResult = p.PropertyType;
-
-          Func<object, object> getValueDelegate;
-          if (p.PropertyType.IsPointer) {
-            // pointers can't be converted to delegates
-            getValueDelegate = null;
-          } else {
-            // Elaborate mess for extracting a GetValue() delegate for this property.
-            var getMethodDelegateType = typeof(Func<,>).MakeGenericType(declaring, typeOfResult);
-            var getMethodDelegate = getMethod.CreateDelegate(getMethodDelegateType);
-            var getMethodGeneric = CallPropertyDelegateMethod.MakeGenericMethod(declaring, typeOfResult);
-            getValueDelegate = (Func<object, object>)getMethodGeneric.Invoke(null, new[] { getMethodDelegate });
-          }
-
-          // Get the ToString alternative if there is one. Null means use default ToString()
-          Func<string> getStringDelegate;
-          // The only current special rendering is NetworkArray<>
-          if (typeOfResult.IsGenericType && typeOfResult.GetGenericTypeDefinition() == typeof(NetworkArray<>)) {
-            var getStringMethod = typeOfResult.GetMethod("ToListString", BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance);
-            // we need to get the value of the property first, which is the instance of StaticArray<>
-            try {
-              var val = getValueDelegate.Invoke(target);
-              getStringDelegate = getStringMethod.CreateDelegate(typeof(Func<string>), val) as Func<string>;
-            } catch {
-              // NetworkArray doesn't allow invoking if the allocator isn't wired up - just fallback to ToString() here.
-              getStringDelegate = null;
-            }
-          } else {
-            // Null is used to indicate that just the default ToString() method should be used for values.
-            getStringDelegate = null;
-          }
-          tempGetters.Add(new PropertyGetters() { PropertyInfo = p, Name = pname, GetValueDelegate = getValueDelegate, GetStringDelegate = getStringDelegate });
-        }
-      }
-      return tempGetters.Count > 0 ? tempGetters.ToArray() : null;
-    }
-
-    private static GUIStyle _networkedPropertiesLblStyle, _networkedPropertiesBoxStyle;
-
-    internal static void DrawNetworkedProperties(Editor editor, PropertyGetters[] propertyGetters, ref bool expanded) {
-
-      if (propertyGetters == null || propertyGetters.Length == 0)
-        return;
-
-      expanded = EditorGUILayout.Foldout(expanded, "Network Properties");
-      if (expanded == false)
-        return;
-
-      // Draw only if we have any networked properties
-      if (propertyGetters != null && propertyGetters.Length > 0) {
-
-        EditorGUILayout.Space(4);
-
-        // Draw the property box
-        EditorGUILayout.BeginVertical(FusionGUIStyles.GroupBoxType.Info.GetStyle()/* _networkedPropertiesRegionStyle*/);
-        {
-
-          // cache our property box style if it doesn't exist yet
-          if (_networkedPropertiesLblStyle == null)
-            _networkedPropertiesLblStyle = new GUIStyle(EditorStyles.miniLabel) {
-              margin = new RectOffset(0, 0, 0, 0),
-              padding = new RectOffset(4, 4, 0, 2),
-            };
-
-          // cache our property box style if it doesn't exist yet
-          if (_networkedPropertiesBoxStyle == null)
-            _networkedPropertiesBoxStyle = new GUIStyle(EditorStyles.textField) {
-              margin = new RectOffset(0, 0, 2, 0),
-              padding = new RectOffset(4, 4, 2, 2),
-              font = EditorStyles.miniLabel.font,
-              fontSize = EditorStyles.miniLabel.fontSize,
-              wordWrap = true
-            };
-
-
-          for (int i = 0; i < propertyGetters.Length; ++i) {
-
-            var p = propertyGetters[i];
-            string str;
-
-            // TODO: Replace this Try with a proper null check?
-            try {
-              // if a delegate wasn't created, try to get the value the slow way.
-              if (p.GetValueDelegate == null) {
-                str = p.PropertyInfo.GetValue(editor.target).ToString();
-              } else {
-                var val = p.GetValueDelegate.Invoke(editor.target);
-                if (val == null) {
-                  str = "null";
-                } else if (p.GetStringDelegate == null) {
-                  str = val.ToString();
-                } else {
-                  str = p.GetStringDelegate();
-                }
-              }
-            } catch {
-              str = null;
-            }
-
-            EditorGUILayout.BeginHorizontal();
-            {
-              // property name
-              EditorGUILayout.LabelField(p.Name, _networkedPropertiesLblStyle, GUILayout.MaxWidth(EditorGUIUtility.labelWidth - 6));
-              // property value
-              EditorGUILayout.LabelField(str, _networkedPropertiesBoxStyle, GUILayout.ExpandHeight(true), GUILayout.ExpandWidth(true));
-            }
-            EditorGUILayout.EndHorizontal();
-
-          }
-        }
-        EditorGUILayout.EndVertical();
-
-        // Force a constant refresh of this component when networked vars are present.
-        if (Application.isPlaying)
-          editor.Repaint();
-      }
-    }
 
     /// <summary>
     /// Checks if GameObject or parent GameObject has a NetworkObject, and draws a warning and buttons for adding one if not.
     /// </summary>
     /// <param name="nb"></param>
-    internal static void DrawNetworkObjectCheck(NetworkBehaviour nb) {
-      if (nb.transform.GetParentComponent<NetworkObject>() == false) {
+    void DrawNetworkObjectCheck() {
+      var targetsWithoutNetworkObjects = targets.Cast<NetworkBehaviour>().Where(x => x.transform.GetParentComponent<NetworkObject>() == false).ToList();
+      if (targetsWithoutNetworkObjects.Any()) {
         EditorGUILayout.BeginVertical(FusionGUIStyles.GroupBoxType.Warn.GetStyle());
 
         BehaviourEditorUtils.DrawWarnBox(NETOBJ_REQUIRED_WARN_TEXT, MessageType.Warning, FusionGUIStyles.GroupBoxType.None);
         
         GUILayout.Space(4);
-        
+
+        IEnumerable<GameObject> gameObjects = null;
+
         if (GUI.Button(EditorGUILayout.GetControlRect(false, 22), "Add Network Object")) {
-          foreach (var go in Selection.gameObjects) {
-            Undo.AddComponent<NetworkObject>(go.gameObject);
-          }
+          gameObjects = targetsWithoutNetworkObjects.Select(x => x.gameObject).Distinct();
         }
         if (GUI.Button(EditorGUILayout.GetControlRect(false, 22), "Add Network Object to Root")) {
-          foreach (var go in Selection.gameObjects) {
-            Undo.AddComponent<NetworkObject>(go.transform.root.gameObject);
+          gameObjects = targetsWithoutNetworkObjects.Select(x => x.transform.root.gameObject).Distinct();
+        }
+
+        if (gameObjects != null) {
+          foreach (var go in gameObjects) {
+            Undo.AddComponent<NetworkObject>(go);
           }
         }
+
         EditorGUILayout.EndVertical();
       }
     }
@@ -6747,16 +6670,16 @@ namespace Fusion.Editor {
       public const float ButtonSize = 14.0f;
       public const float MarginInner = 2.0f;
       public const float MarginOuter = ButtonSize / 2;
-      public static LazyAuto<Texture2D> HelpIconCollapsed = LazyAutoCast.Create(() => {
+      public static LazyAuto<Texture2D> HelpIconCollapsed = LazyAuto.Create(() => {
         return Resources.Load<Texture2D>((EditorGUIUtility.isProSkin ? "Dark/" : "Light/") + "inline-help-ico-inactive");
       });
 
-      public static LazyAuto<Texture2D> HelpIconExpanded = LazyAutoCast.Create(() => {
+      public static LazyAuto<Texture2D> HelpIconExpanded = LazyAuto.Create(() => {
         return Resources.Load<Texture2D>((EditorGUIUtility.isProSkin ? "Dark/" : "Light/") + "inline-help-ico-active");
       });
 
       public static GUIContent HideInlineContent = new GUIContent("", "Hide");
-      public static LazyAuto<GUIStyle> InstructionStyleBox = LazyAutoCast.Create(() => new GUIStyle(FusionGUIStyles.HelpInnerGroupStyle) {
+      public static LazyAuto<GUIStyle> InstructionStyleBox = LazyAuto.Create(() => new GUIStyle(FusionGUIStyles.HelpInnerGroupStyle) {
         wordWrap = true,
         margin = new RectOffset(0, 8, 8, 8),
         padding = new RectOffset(8, 8, 8, 8),
@@ -6767,7 +6690,7 @@ namespace Fusion.Editor {
       public static GUIContent ShowInlineContent = new GUIContent("", "");
     }
 
-    internal static class LazyAutoCast {
+    internal static class LazyAuto {
 
       public static LazyAuto<T> Create<T>(Func<T> valueFactory) {
         return new LazyAuto<T>(valueFactory);
@@ -7178,6 +7101,8 @@ namespace Fusion.Editor {
 
     private const int IconHeight = 14;
 
+    public static Color PrefebOverridenColor => new Color(1f / 255f, 153f / 255f, 235f / 255f, 0.75f);
+
     public static Rect Decorate(Rect rect, string tooltip, MessageType messageType, bool hasLabel = false, bool drawBorder = true, bool drawButton = true) {
 
       if (hasLabel) {
@@ -7532,6 +7457,7 @@ namespace Fusion.Editor {
       // If trying to get instance returned null - create a new asset.
       Debug.Log($"{nameof(PhotonAppSettings)} not found. Creating one now.");
 
+
       photonConfig = ScriptableObject.CreateInstance<PhotonAppSettings>();
       string folder = EnsureConfigFolderExists();
       AssetDatabase.CreateAsset(photonConfig, folder + "/" + PhotonAppSettings.ExpectedAssetName);
@@ -7539,6 +7465,7 @@ namespace Fusion.Editor {
       EditorUtility.SetDirty(photonConfig);
       AssetDatabase.SaveAssets();
       AssetDatabase.Refresh();
+
 
 #if FUSION_WEAVER
       // QOL: Open the Fusion Hub window, as there will be no App Id yet.
@@ -7574,13 +7501,6 @@ namespace Fusion.Editor {
       SaveGlobalConfig();
     }
 
-    [MenuItem("Fusion/Import Scenes From Build Settings", priority = 100)]
-    public static void ImportScenesFromBuildSettings() {
-      NetworkProjectConfig.Global.Scenes = GetEnabledBuildScenes();
-      SaveGlobalConfig();
-    }
-
-
     public static void AddSceneToBuildSettings(this Scene scene) {
       var buildScenes = EditorBuildSettings.scenes;
       bool isInBuildScenes = false;
@@ -7599,26 +7519,6 @@ namespace Fusion.Editor {
       }
     }
 
-    public static void AddSceneToFusionConfig(this Scene scene) {
-      var fusionScenes = NetworkProjectConfig.Global.Scenes;
-
-      bool isInConfigScenes = false;
-      foreach (var bs in fusionScenes) {
-        if (NetworkSceneManagerBase.IsScenePathOrNameEqual(scene, bs)) { 
-          isInConfigScenes = true;
-          break;
-        }
-      }
-
-      if (isInConfigScenes == false) {
-        var sceneList = new List<string>(fusionScenes);
-        sceneList.Add(scene.path);
-        NetworkProjectConfig.Global.Scenes = sceneList.ToArray();
-        Debug.Log($"Added '{scene.path}' to Build Settings.");
-        SaveGlobalConfig();
-      }
-    }
-
     public static int GetSceneIndexInBuildSettings(this Scene scene) {
       TryGetSceneIndexInBuildSettings(scene, out var index);
       return index;
@@ -7629,25 +7529,6 @@ namespace Fusion.Editor {
       for (int i = 0; i < buildScenes.Length; ++i) {
         var bs = buildScenes[i];
         if (bs.path == scene.path) {
-          index = i;
-          return true;
-        }
-      }
-      index = -1;
-      return false;
-    }
-
-    public static int GetSceneIndexInFusionSettings(this Scene scene) {
-      TryGetSceneIndexInFusionConfig(scene, out var index);
-      return index;
-    }
-
-    public static bool TryGetSceneIndexInFusionConfig(Scene scene, out int index) {
-      var fusionScenes = NetworkProjectConfig.Global.Scenes;
-
-      for (int i = 0; i < fusionScenes.Length; ++i) {
-        var fs = fusionScenes[i];
-        if (NetworkSceneManagerBase.IsScenePathOrNameEqual(scene, fs)) { 
           index = i;
           return true;
         }
@@ -7803,7 +7684,6 @@ namespace Fusion.Editor {
 
     private static NetworkProjectConfig CreateDefaultConfig() {
       return new NetworkProjectConfig() {
-        Scenes = GetEnabledBuildScenes()
       };
     }
 

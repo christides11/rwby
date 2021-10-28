@@ -1,6 +1,135 @@
+# 0.9.0
+
+## Beta Nightly
+
+### Build 332 (Oct 27, 2021)
+
+**What's New**
+
+- Added support for sending reliable data between players
+
+**Changes**
+
+- If an attempt to send reliable data to a local player or to the server from itself, the data will invoke the OnReliableData callback
+- Renamed SendReliableDataFromServerToPlayer to SendReliableDataToPlayer
+- Renamed SendReliableDataFromClientToServer to SendReliableDataToServer
+
+**Bug Fixes**
+
+- Fixed: `NetworkBool` is now `[Serializable]` and has a dedicated drawer
+- Fixed: ILWeaver error for `[Networked]` pointer properties
+- Fixed: Missing PhotonAppSettings
+- Fixed: Spawning prefabs in `OnConnectedToServer` callback triggering an assertion in `NetworkSceneManagerDefault` in multiple peer mode
+
+### Build 331 (Oct 26, 2021)
+
+- Please remove the files at 'Assets\Photon\PhotonLibs\[Metro,WebSocket,Photon3Unity3D.*]' as they are not necessary anymore
+
+**What's New**
+
+- `NetworkArray` and `NetworkDictionary` properties are now Unity-editable
+- Arrays and reference type `[Networked]` properties can now have its defaults set in the inspector
+- A debug warning if no `INetworkSceneObjectProvider` is passed to the runner in Unity builds
+
+**Changes**
+
+- Photon Realtime SDK to v4.1.6.10
+- `NetworkBehaviour.Defaults` to `NetworkBehaviour.CopyBackingFieldsToState` and `NetworkBehaviour.ReadDefaults` to `NetworkBehaviour.CopyStateToBackingFields`
+- `NetworkBehaviour` inspector: networked properties are no longer displayed in a separate foldout. Instead, the "default" variables are updated
+
+**Bug Fixes**
+
+- Fixed: An issue in the interpolated prediction error correction of NRBs modified after the `NetworkPhysicsSimulation`
+- Fixed: Issue with shared mode backend not applying state updates from client and a regular interval
+- Fixed: `NetworkSceneManagerDefault` not registering GameObjects in `RunnerVisibilityNode`
+- Fixed: Nested scene `NetworkBehaviours` not being attached to
+- Fixed: `NullReferenceException` in `BehaviourEditorUtils.GetDelegateFromMember`
+
+### Build 330 (Oct 25, 2021)
+
+**Changes**
+
+- Expose Current Runner.NATType
+
+**Bug Fixes**
+
+- Fixed: NetworkMecanAnimator.SetTrigger() calls now will pass-through to Animator.SetTrigger() when HasInputAuthority is true
+
+### Build 329 (Oct 23, 2021)
+
+**What's New**
+
+- NAT Type Discovery
+
+**Changes**
+
+- Optimization on the Reflexive Address Query
+
+**Bug Fixes**
+
+- Fixed: Issue with delta snapshot discarding valid snapshots on server
+
+### Build 328 (Oct 22, 2021)
+
+**What's New**
+
+- Added support for predictive despawn on clients in server<>client topology
+
+**Bug Fixes**
+
+- Fixed: Missing check of PlayerCount from StartArgs
+- Fixed: A typo in `NetworkSceneManagerDefault`
+
 # 0.8.0
 
 ## Beta Nightly
+
+### Build 327 (Oct 21, 2021)
+
+**Breaking Changes**
+
+- Scene loading overhaul - Scene loading is now implemented on Unity's side with `INetworkSceneObjectProvider` interface. The default implementation is provided with `NetworkSceneManagerDefault`
+
+**What's New**
+
+- BitSet64, BitSet128, BitSet192, BitSet256
+- `BitSet` types
+- Added support for sending large chunks of reliable data via the NetworkRunner.SendReliableDataFromServerToPlayer and NetworkRunner.SendReliableDataFromClientToServer
+
+**Changes**
+
+- Multiple peer mode no longer uses "wrapper" scenes. Scenes are loaded and held on to just like with single peer mode
+- `OnBeforeSpawned` callback is now called before `PredictedSpawnSpawned` on the Client, instead of before the regular `Spawned`
+
+**Removed**
+
+- NetworkProjectConfig.Scenes. `NetworkSceneManagerDefault` treats `SceneRef` as the scene's build index instead, but generally speaking `SceneRef` can mean whatever `INetworkSceneObjectProvider` implementation wants it to - a build index, a bitfield etc
+
+**Bug Fixes**
+
+- Fixed: Bug with TimerDelta ignoring first delta
+
+### Build 325 (Oct 20, 2021)
+
+**What's New**
+
+- Interpolated error correction of the transform state on client-side prediction
+- Added per-object rpc stats
+
+### Build 324 (Oct 19, 2021)
+
+**What's New**
+
+- Added per object bandwidth stats in EC mode
+
+**Changes**
+
+- Show MaxPlayers and PlayerCount on Lobby
+
+**Bug Fixes**
+
+- Fixed: `Runner.IsFirstTick` and `IsLastTick` being swapped on client-side resimulations
+- Fixed: Shutdown State when reusing Fusion Runner
 
 ### Build 322 (Oct 18, 2021)
 

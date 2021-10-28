@@ -634,6 +634,11 @@
             Custom STUN Server
             </summary>
         </member>
+        <member name="P:Fusion.CloudServices.NATType">
+            <summary>
+            Exposes the current NAT Type from the local Peer
+            </summary>
+        </member>
         <member name="M:Fusion.CloudServices.#ctor(Fusion.NetworkRunner)">
             <summary>
             Builds a new CloudService reference
@@ -696,18 +701,6 @@
             </summary>
             <returns>Async Task of the disconnect from Photon Cloud process. Can be used to wait for the process to be finished</returns>
         </member>
-        <member name="M:Fusion.CloudServices.QueryReflexiveInfo">
-            <summary>
-            Run the STUN Service to retrieve the current Reflexive Addresses of the local peer
-            </summary>
-            <returns>Running Task of the STUN Query Procedure</returns>
-        </member>
-        <member name="M:Fusion.CloudServices.UpdateInitializeArgs(Fusion.NetworkRunnerInitializeArgs)">
-            <summary>
-            Update the internal <see cref="T:Fusion.NetworkRunnerInitializeArgs"/> used to start the Fusion Runner
-            </summary>
-            <param name="newArgs">New arguments</param>
-        </member>
         <member name="M:Fusion.CloudServices.OnInternalConnectionAttempt(Fusion.Sockets.NetConnection*,System.Int32,System.Int32,System.Boolean@,Fusion.Sockets.NetAddress@)">
             <summary>
             Callback fire on every connection attempt with a remote Server.
@@ -721,24 +714,10 @@
             <param name="shouldChange">Flag if target EndPoint should change</param>
             <param name="newAddress">New target EndPoint</param>
         </member>
-        <member name="M:Fusion.CloudServices.SendPing(Fusion.Sockets.NetAddress)">
+        <member name="M:Fusion.CloudServices.Dispose">
             <summary>
-            Send a "ping" to an EndPoint
+            Disposes the current <see cref="T:Fusion.CloudServices"/>
             </summary>
-            <param name="netAddress">EndPoint to send the ping</param>
-            <returns>True if the Ping was sent, false otherwise</returns>
-        </member>
-        <member name="M:Fusion.CloudServices.PerformPendingPings">
-            <summary>
-            Send pings to remote clients during the NAT Punch process.
-            This is necessary to map the remote client endpoint on the local NAT of the server.
-            </summary>
-        </member>
-        <member name="M:Fusion.CloudServices.CheckSubnet(Fusion.Sockets.NetAddress)">
-            <summary>
-            Check if Remote Private EndPoint appears to be in the same Subnet
-            </summary>
-            <returns>True if in same Subnet</returns>
         </member>
         <member name="M:Fusion.CloudServices.UpdateSessionInfo">
             <summary>
@@ -755,23 +734,6 @@
             Callback invoked when the Room list is updated with data from the Cloud
             </summary>
             <param name="roomList">New List of <see cref="T:Fusion.Photon.Realtime.RoomInfo"/></param>
-        </member>
-        <member name="M:Fusion.CloudServices.ConvertToSessionInfo(Fusion.Photon.Realtime.RoomInfo)">
-            <summary>
-            Converts a <see cref="T:Fusion.Photon.Realtime.RoomInfo"/> to a <see cref="T:Fusion.SessionInfo"/>
-            </summary>
-            <param name="roomInfo"><see cref="T:Fusion.Photon.Realtime.RoomInfo"/> ref</param>
-            <returns><see cref="T:Fusion.SessionInfo"/> ref</returns>
-        </member>
-        <member name="M:Fusion.CloudServices.InitRelayLogs">
-            <summary>
-            Initilize the Log system from the Realtime SDK to use the Fusion Log System
-            </summary>
-        </member>
-        <member name="M:Fusion.CloudServices.Dispose">
-            <summary>
-            Disposes the current <see cref="T:Fusion.CloudServices"/>
-            </summary>
         </member>
         <member name="M:Fusion.CloudServices.SendJoinMessage">
             <summary>
@@ -836,6 +798,107 @@
             </summary>
             <returns>True if the Join Confirmation was received, false otherwise</returns>
         </member>
+        <member name="M:Fusion.CloudServices.QueryReflexiveInfo">
+            <summary>
+            Run the STUN Service to retrieve the current Reflexive Addresses of the local peer
+            </summary>
+            <returns>Running Task of the STUN Query Procedure</returns>
+        </member>
+        <member name="M:Fusion.CloudServices.UpdateInitializeArgs(Fusion.NetworkRunnerInitializeArgs)">
+            <summary>
+            Update the internal <see cref="T:Fusion.NetworkRunnerInitializeArgs"/> used to start the Fusion Runner
+            </summary>
+            <param name="newArgs">New arguments</param>
+        </member>
+        <member name="M:Fusion.CloudServices.StartReversePing(Fusion.Sockets.NetAddress)">
+            <summary>
+            Reverse ping will send Empty UDP Packets to the RemoteAddr in order to setup the Routing Table
+            on the current NAT of the Server, forcing it to allow packages from the remote client to be received
+            </summary>
+            <param name="remoteAddr">Remove EndPoint to ping</param>
+        </member>
+        <member name="M:Fusion.CloudServices.SendPing(Fusion.Sockets.NetAddress)">
+            <summary>
+            Send a "ping" to an EndPoint
+            </summary>
+            <param name="netAddress">EndPoint to send the ping</param>
+            <returns>True if the Ping was sent, false otherwise</returns>
+        </member>
+        <member name="M:Fusion.CloudServices.CheckSubnet(Fusion.Sockets.NetAddress)">
+            <summary>
+            Check if Remote Private EndPoint appears to be in the same Subnet
+            </summary>
+            <returns>True if in same Subnet</returns>
+        </member>
+        <member name="M:Fusion.CloudServices.InitRelayLogs">
+            <summary>
+            Initilize the Log system from the Realtime SDK to use the Fusion Log System
+            </summary>
+        </member>
+        <member name="M:Fusion.CloudServices.ConvertToSessionInfo(Fusion.Photon.Realtime.RoomInfo)">
+            <summary>
+            Converts a <see cref="T:Fusion.Photon.Realtime.RoomInfo"/> to a <see cref="T:Fusion.SessionInfo"/>
+            </summary>
+            <param name="roomInfo"><see cref="T:Fusion.Photon.Realtime.RoomInfo"/> ref</param>
+            <returns><see cref="T:Fusion.SessionInfo"/> ref</returns>
+        </member>
+        <member name="T:Fusion.CloudServicesMetadata">
+            <summary>
+            Holds information about the local peer used to Join/Start/Connect to a remote Peer
+            using the Photon Cloud as backend
+            </summary>
+        </member>
+        <member name="F:Fusion.CloudServicesMetadata.JOIN_PM_TIMEOUT">
+            <summary>
+            Timeout between sending a <see cref="T:Fusion.Protocol.Join"/> Request and receive a Join Confirmation
+            </summary>
+        </member>
+        <member name="F:Fusion.CloudServicesMetadata.LobbyClientServer">
+            <summary>
+            Client Server Lobby
+            </summary>
+        </member>
+        <member name="F:Fusion.CloudServicesMetadata.LobbyShared">
+            <summary>
+            Shared Lobby
+            </summary>
+        </member>
+        <member name="P:Fusion.CloudServicesMetadata.RunnerInitializeArgs">
+            <summary>
+            Reference to the initialization arguments set by the user.
+            They are used to start the Fusion Runner
+            </summary>
+        </member>
+        <member name="P:Fusion.CloudServicesMetadata.CurrentPunchStage">
+            <summary>
+            Connection Stage related to the current EndPoint Type used by the client to connect a remote server
+            </summary>
+        </member>
+        <member name="P:Fusion.CloudServicesMetadata.CurrentJoinStage">
+            <summary>
+            Describes the current state of the Join process
+            </summary>
+        </member>
+        <member name="P:Fusion.CloudServicesMetadata.CurrentProtocolMessageVersion">
+            <summary>
+            Describe the current protocol version we are using to communicate with the Plugin
+            </summary>
+        </member>
+        <member name="P:Fusion.CloudServicesMetadata.RemoteReflexiveInfo">
+            <summary>
+            Remote Server Reflexive Info. Stores private and public EndPoint of the remote server.
+            </summary>
+        </member>
+        <member name="P:Fusion.CloudServicesMetadata.LocalReflexiveInfo">
+            <summary>
+            Local Reflexive Info. Stores private and public EndPoint of the local peer.
+            </summary>
+        </member>
+        <member name="F:Fusion.CloudServicesMetadata.ScheduledRequests">
+            <summary>
+            Stores requests sent by the plugin
+            </summary>
+        </member>
         <member name="T:Fusion.ScheduledRequests">
             <summary>
             Define a list of Requests that may be asked by the Plugin Server
@@ -854,11 +917,6 @@
         <member name="F:Fusion.ScheduledRequests.WaitForReflexiveInfo">
             <summary>
             Request to Wait for Remote Reflexive Info
-            </summary>
-        </member>
-        <member name="F:Fusion.ScheduledRequests.ForceRelay">
-            <summary>
-            Force a Relayed Connection
             </summary>
         </member>
         <member name="T:Fusion.NATPunchStage">
@@ -942,64 +1000,6 @@
         <member name="F:Fusion.PeerPing.ReflexiveInfo">
             <summary>
             Remote Client Reflexive Info, used to getter the Public EndPoint to send the ping
-            </summary>
-        </member>
-        <member name="T:Fusion.CloudServicesMetadata">
-            <summary>
-            Holds information about the local peer used to Join/Start/Connect to a remote Peer
-            using the Photon Cloud as backend
-            </summary>
-        </member>
-        <member name="F:Fusion.CloudServicesMetadata.JOIN_PM_TIMEOUT">
-            <summary>
-            Timeout between sending a <see cref="T:Fusion.Protocol.Join"/> Request and receive a Join Confirmation
-            </summary>
-        </member>
-        <member name="F:Fusion.CloudServicesMetadata.LobbyClientServer">
-            <summary>
-            Client Server Lobby
-            </summary>
-        </member>
-        <member name="F:Fusion.CloudServicesMetadata.LobbyShared">
-            <summary>
-            Shared Lobby
-            </summary>
-        </member>
-        <member name="P:Fusion.CloudServicesMetadata.RunnerInitializeArgs">
-            <summary>
-            Reference to the initialization arguments set by the user.
-            They are used to start the Fusion Runner
-            </summary>
-        </member>
-        <member name="P:Fusion.CloudServicesMetadata.CurrentPunchStage">
-            <summary>
-            Connection Stage related to the current EndPoint Type used by the client to connect a remote server
-            </summary>
-        </member>
-        <member name="P:Fusion.CloudServicesMetadata.CurrentJoinStage">
-            <summary>
-            Describes the current state of the Join process
-            </summary>
-        </member>
-        <member name="P:Fusion.CloudServicesMetadata.RemoteReflexiveInfo">
-            <summary>
-            Remote Server Reflexive Info. Stores private and public EndPoint of the remote server.
-            </summary>
-        </member>
-        <member name="P:Fusion.CloudServicesMetadata.LocalReflexiveInfo">
-            <summary>
-            Local Reflexive Info. Stores private and public EndPoint of the local peer.
-            </summary>
-        </member>
-        <member name="F:Fusion.CloudServicesMetadata.ScheduledRequests">
-            <summary>
-            Stores requests sent by the plugin
-            </summary>
-        </member>
-        <member name="F:Fusion.CloudServicesMetadata.PeersToPing">
-            <summary>
-            List of Peer the Server must send pings.
-            This is part of the NAT Punch implementation.
             </summary>
         </member>
         <member name="T:Fusion.ScheduledRequestsExt">
@@ -1159,6 +1159,16 @@
             This is for advanced use cases only, and cannot be used if <see cref="T:Fusion.NetworkedAttribute"/> is used in the derived class.  
             </summary>
         </member>
+        <member name="M:Fusion.NetworkBehaviour.CopyBackingFieldsToState">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Fusion.NetworkBehaviour.CopyStateToBackingFields">
+            <summary>
+            
+            </summary>
+        </member>
         <member name="M:Fusion.NetworkBehaviour.Spawned">
             <summary>
             Post spawn callback.
@@ -1177,6 +1187,23 @@
             <param name="data">The returned values.</param>
             <param name="force">Force interpolation to the current <see cref="T:Fusion.Simulation"/>s time frame</param>
             <returns>True valid state data was returned.</returns>
+        </member>
+        <member name="M:Fusion.NetworkBehaviour.GetInterpolationData(Fusion.InterpolationData@,System.Boolean@)">
+            <summary>
+            Get 'To' and 'From' states, and the Alpha (t) values needed for interpolation.
+            </summary>
+            <param name="data">The returned values.</param>
+            <param name="predicted">
+            If the interpolation data is in the predicted time frame (true) or between snapshots (false),
+            according to the <see cref="P:Fusion.NetworkBehaviour.InterpolationDataSource"/>.
+            </param>
+            <returns>True valid state data was returned.</returns>
+        </member>
+        <member name="M:Fusion.NetworkBehaviour.IsInterpolationDataPredicted">
+            <summary>
+            If the behaviour data should be interpolated between latest predicted states or between snapshots.
+            </summary>
+            <returns></returns>
         </member>
         <member name="M:Fusion.NetworkBehaviour.OnChangeClearAll">
             <summary>
@@ -1791,11 +1818,6 @@
         <member name="F:Fusion.NetworkTransformAnchor.Transform">
             <summary>
             Cached GameObject.transform reference.
-            </summary>
-        </member>
-        <member name="F:Fusion.NetworkTransformAnchor.NullParent">
-            <summary>
-            When running in Multi-Peer mode, this gameObject transform has the meaning as null.
             </summary>
         </member>
         <member name="M:Fusion.NetworkTransformAnchor.Copy2EngineAnchorState">
@@ -3060,6 +3082,11 @@
             If this is a predicted spawned object
             </summary>
         </member>
+        <member name="P:Fusion.NetworkObject.IsPredictedDespawn">
+            <summary>
+            If this is a predicted spawned object
+            </summary>
+        </member>
         <member name="P:Fusion.NetworkObject.IsInSimulation">
             <summary>
             If this object is inserted into the simulation
@@ -3314,11 +3341,6 @@
             Setting for whether multiple peers can run per Unity instance (typically to allow easy testing of multiple peers inside of the editor).
             </summary>
         </member>
-        <member name="F:Fusion.NetworkProjectConfig.Scenes">
-            <summary>
-            Scenes registered with Fusion. Stored as full paths.
-            </summary>
-        </member>
         <member name="F:Fusion.NetworkProjectConfig.PhysicsEngine">
             <summary>
             Setting for which physics engine Fusion will simulate with.
@@ -3352,6 +3374,13 @@
         <member name="F:Fusion.NetworkProjectConfig.AssembliesToWeave">
             <summary>
             Names of assemblies Fusion is going to weave. Not case sensetive.
+            </summary>
+        </member>
+        <member name="F:Fusion.NetworkProjectConfig.UseSerializableDictionary">
+            <summary>
+            Use Fusion.SerializableDictionary to store [Networked] dictionary properties initial value. If unchecked,
+            the weaver will emit System.Generic.Dictionary instead - a type that's not Unity-serializable, but custom
+            serializers (e.g. Odin) may support it.
             </summary>
         </member>
         <member name="M:Fusion.NetworkProjectConfig.Serialize(Fusion.NetworkProjectConfig)">
@@ -3602,10 +3631,16 @@
             Returns the Unity scene for this <see cref="T:Fusion.NetworkRunner"/>. With <see cref="F:Fusion.NetworkProjectConfig.PeerModes.Multiple"/>, multiple physics scenes may exist, and this getter should be used in place of SceneManager.GetActiveScene(). 
             </summary>
         </member>
-        <member name="P:Fusion.NetworkRunner.MultiPeerUnitySceneRoot">
+        <member name="P:Fusion.NetworkRunner.MultiplePeerUnityScene">
             <summary>
-            Returns the empty scene root object that all scene objects are re-parented to when running <see cref="F:Fusion.NetworkProjectConfig.PeerModes.Multiple"/>. Only valid when running <see cref="F:Fusion.NetworkProjectConfig.PeerModes.Multiple"/>.
+            A scene used when run in <see cref="F:Fusion.NetworkProjectConfig.PeerModes.Multiple"/> mode. 
             </summary>
+        </member>
+        <member name="M:Fusion.NetworkRunner.TryMultiplePeerAssignTempScene">
+            <summary>
+            
+            </summary>
+            <returns>false if the runner was on the temp scene already, true otherwise.</returns>
         </member>
         <member name="P:Fusion.NetworkRunner.Config">
             <summary>
@@ -3689,12 +3724,6 @@
             </summary>
             <param name="type"></param>
             <returns></returns>
-        </member>
-        <member name="M:Fusion.NetworkRunner.SetActiveScene(System.String)">
-            <summary>
-            
-            </summary>
-            <param name="pathOrName"></param>
         </member>
         <member name="M:Fusion.NetworkRunner.SetActiveScene(Fusion.SceneRef)">
             <summary>
@@ -3957,6 +3986,11 @@
             Check the current Connection Type with the Remote Server
             </summary>
         </member>
+        <member name="P:Fusion.NetworkRunner.NATType">
+            <summary>
+            Exposes the current NAT Type from the local Peer
+            </summary>
+        </member>
         <member name="P:Fusion.NetworkRunner.IsSharedModeMasterClient">
             <summary>
             Signal if the Local Peer is in a Room and is the Room Master Client
@@ -4064,6 +4098,11 @@
         <member name="F:Fusion.StartGameArgs.ObjectPool">
             <summary>
             Object pool to use
+            </summary>
+        </member>
+        <member name="F:Fusion.StartGameArgs.SceneObjectProvider">
+            <summary>
+            
             </summary>
         </member>
         <member name="F:Fusion.StartGameArgs.Config">
@@ -4232,6 +4271,16 @@
         <member name="P:Fusion.SessionInfo.Properties">
             <summary>
             Room Custom Properties
+            </summary>
+        </member>
+        <member name="P:Fusion.SessionInfo.PlayerCount">
+            <summary>
+            Current number of peers inside this Session, this includes the Server/Host and Clients
+            </summary>
+        </member>
+        <member name="P:Fusion.SessionInfo.MaxPlayers">
+            <summary>
+            Max number of peer that can join this Session, this value always include an extra slot for the Server/Host
             </summary>
         </member>
         <member name="M:Fusion.SessionInfo.op_Implicit(Fusion.SessionInfo)~System.Boolean">
@@ -4504,16 +4553,6 @@
             Attempts to get an accuracy from a hash value.
             </summary>
             <returns>Returns false if the hash is invalid (hash 0 is considered valid, and remaps to <see cref="P:Fusion.AccuracyDefaults.ZeroHashAccuracyRemap"/>)</returns>
-        </member>
-        <member name="P:Fusion.NetworkSceneManagerBase.IsAnySceneBeingLoaded">
-            <summary>
-            Are any of the managers loading a scene?
-            </summary>
-        </member>
-        <member name="P:Fusion.NetworkSceneManagerBase.IsLoadingScene">
-            <summary>
-            Is this manager a scene?
-            </summary>
         </member>
         <member name="T:Fusion.Simulation">
             <summary>
