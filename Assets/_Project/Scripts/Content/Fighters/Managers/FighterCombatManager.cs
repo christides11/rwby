@@ -561,7 +561,7 @@ namespace rwby
         }
 
         public float autoLinkForcePercentage = 0;
-        [Networked, Capacity(10)] public NetworkArray<int> hurtboxHitCount { get; set; }
+        [Networked, Capacity(10)] public NetworkArray<int> hurtboxHitCount { get; }
         
         [Networked] public NetworkBool HardKnockdown { get; set; }
         [Networked] public NetworkBool GroundBounce { get; set; }

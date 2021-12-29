@@ -7,6 +7,7 @@ using UnityEngine;
 
 namespace rwby
 {
+    
     public class GamemodeTraining : GameModeBase
     {
         public ModObjectReference botReference;
@@ -77,9 +78,9 @@ namespace rwby
         {
             NetworkInputData botInput = new NetworkInputData();
 
+            
             if (buttonBlock) { botInput.Buttons |= NetworkInputData.BUTTON_BLOCK; }
             if (buttonJump) { botInput.Buttons |= NetworkInputData.BUTTON_JUMP; }
-
             return botInput;
         }
     }

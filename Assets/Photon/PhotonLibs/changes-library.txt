@@ -3,6 +3,15 @@ Photon C# Client Library - Changelog
 Exit Games GmbH - www.photonengine.com - forum.photonengine.com
 
 
+Version 4.1.6.11 (23. November 2021 - rev6288)
+	Fixed: Payload encryption initialization (without DiffieHellman) for TCP connection.
+    Fixed: Protocol16.DeserializeCustom() to check if length of read bytes is available (else, a byte[] is returned).
+    Changed: Custom Type arrays will return UnknownType[] if the array's item-type is unknown. If the custom type is known but items do not read properly, they will be null.
+    Added: Checks if each generated Custom Type instance can be assigned to the Custom Type array (and skips those that are null or can't be assigned).
+    Changed: Protocol18Read.ReadCustomType() and ReadCustomTypeArray() to throw error for size < 0. In that case, it is not possible to continue reading and the data is compromized.
+    Removed: Some logging code that was specific for Unity.
+    Removed: Exception handling for OnEvent and OnOperationResponse calls. This turned out somewhat inflexible and was hiding valuable debug information. Instead of the low level try/catch, projects should wrap DispatchIncomingCommands in try/catch blocks.
+
 Version 4.1.6.10 (21. October 2021 - rev6243)
     Fixed: ReadCustomTypeArray to return an object[], if any item in the array is unreadable. This object[] contains any properly read custom types but also items of UnknownType. This is of course likely to cause exceptions in the dispatch callbacks.
     Added: Exception handling to OnEvent and OnOperationResponse calls.

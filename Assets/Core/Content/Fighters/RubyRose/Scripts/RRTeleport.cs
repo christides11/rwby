@@ -1,11 +1,11 @@
-using rwby.core.content;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace rwby.core
+namespace rwby.core.content
 {
+    /*
     public class RRTeleport : FighterState
     {
 
@@ -102,5 +102,5 @@ namespace rwby.core
         {
             return base.CheckInterrupt();
         }
-    }
+    }*/
 }

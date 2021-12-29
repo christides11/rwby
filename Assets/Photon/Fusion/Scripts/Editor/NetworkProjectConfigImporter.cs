@@ -1,4 +1,4 @@
-﻿namespace Fusion.Editor {
+namespace Fusion.Editor {
   using System;
   using System.Collections.Generic;
   using System.IO;

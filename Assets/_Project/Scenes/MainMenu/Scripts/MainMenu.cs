@@ -15,10 +15,20 @@ namespace rwby.menus
         [SerializeField] private TMP_InputField lobbyNameText;
         [SerializeField] private TMP_InputField usernameField;
 
+        public LobbyMenu lobbyMenu;
+
         public void Start()
         {
             usernameField.onValueChanged.AddListener(OnUsernameChanged);
             usernameField.text = $"User {UnityEngine.Random.Range(0, 1000)}";
+        }
+
+        private void OnEnable()
+        {
+            if(NetworkManager.singleton.FusionLauncher.Status == FusionLauncher.ConnectionStatus.Connected)
+            {
+                lobbyMenu.Open();
+            }
         }
 
         private void OnUsernameChanged(string arg0)

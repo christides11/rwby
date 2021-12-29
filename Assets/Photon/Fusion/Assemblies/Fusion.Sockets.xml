@@ -749,33 +749,33 @@
             List all Disconnect reason used by the Plugin to remove an Actor from the Room
             </summary>
         </member>
-        <member name="F:Fusion.Protocol.DisconnectReason.SERVER_LOGIC">
+        <member name="F:Fusion.Protocol.DisconnectReason.ServerLogic">
             <summary>
             Abstract disconnect reason
             </summary>
         </member>
-        <member name="F:Fusion.Protocol.DisconnectReason.INVALID_EVENT_CODE">
+        <member name="F:Fusion.Protocol.DisconnectReason.InvalidEventCode">
             <summary>
             Used when an event with other code other then the treated ones is received by the plugin
             </summary>
         </member>
-        <member name="F:Fusion.Protocol.DisconnectReason.INVALID_JOIN_MSG_TYPE">
+        <member name="F:Fusion.Protocol.DisconnectReason.InvalidJoinMsgType">
             <summary>
             When the Join Message is not of the Request Type
             </summary>
         </member>
-        <member name="F:Fusion.Protocol.DisconnectReason.INVALID_JOIN_GAME_MODE">
+        <member name="F:Fusion.Protocol.DisconnectReason.InvalidJoinGameMode">
             <summary>
             When the Join Message does not contain a valid Game Mode
             </summary>
         </member>
-        <member name="F:Fusion.Protocol.DisconnectReason.INCOMPATIBLE_CONFIGURATION">
+        <member name="F:Fusion.Protocol.DisconnectReason.IncompatibleConfiguration">
             <summary>
             When any of the major settings of a message does not align with the current settings, 
             like GameMode, Protocol Version, Serialization Version and Peer Mode
             </summary>
         </member>
-        <member name="F:Fusion.Protocol.DisconnectReason.SERVER_ALREADY_IN_ROOM">
+        <member name="F:Fusion.Protocol.DisconnectReason.ServerAlreadyInRoom">
             <summary>
             When there is already a Server running on the current Room
             </summary>

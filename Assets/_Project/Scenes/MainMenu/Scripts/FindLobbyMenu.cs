@@ -16,16 +16,18 @@ namespace rwby.menus
         [SerializeField] private LoadingMenu loadingMenu;
         [SerializeField] private Transform LobbyContentHolder;
         [SerializeField] private GameObject lobbyContentItem;
+
+        [Header("Menus")]
+        [SerializeField] private MainMenu mainMenu;
         [SerializeField] private LobbyMenu lobbyMenu;
 
         private CancellationTokenSource refreshLobbiesCancelToken = new CancellationTokenSource();
-
         private SessionInfo currentlyViewingLobby = null;
 
         public void OpenMenu()
         {
             NetworkManager.singleton.FusionLauncher.OnSessionsUpdated += OnSessionsUpdated;
-            _ = NetworkManager.singleton.FusionLauncher.JoinSession();
+            _ = NetworkManager.singleton.FusionLauncher.JoinSessionLobby();
             gameObject.SetActive(true);
         }
 
@@ -39,6 +41,15 @@ namespace rwby.menus
         private void OnDisable()
         {
             NetworkManager.singleton.FusionLauncher.OnSessionsUpdated -= OnSessionsUpdated;
+        }
+
+        private void Update()
+        {
+            if (Input.GetKeyDown(KeyCode.Escape))
+            {
+                mainMenu.gameObject.SetActive(true);
+                CloseMenu();
+            }
         }
 
         private void OnSessionsUpdated(NetworkRunner runner, List<SessionInfo> sessionList)

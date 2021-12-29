@@ -1,11 +1,11 @@
-using rwby.core.content;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace rwby.core
+namespace rwby.core.content
 {
+    /*
     public class RRGunDashGround : FighterState
     {
 
@@ -44,5 +44,5 @@ namespace rwby.core
         {
             return base.CheckInterrupt();
         }
-    }
+    }*/
 }

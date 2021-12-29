@@ -1,8 +1,8 @@
+using Cysharp.Threading.Tasks;
 using Fusion;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using static Cinemachine.CinemachineTriggerAction.ActionSettings;
 
 namespace rwby
 {
@@ -17,8 +17,6 @@ namespace rwby
         [SerializeField] private NetworkObject clientPrefab;
         [SerializeField] private NetworkObject matchManagerPrefab;
 
-        private FusionLauncher.ConnectionStatus connectionStatus;
-
         public void Awake()
         {
             singleton = this;
@@ -31,45 +29,31 @@ namespace rwby
 
         public void StartSinglePlayerHost()
         {
-            LaunchFusion(GameMode.Single, "", 1);
+            _ = fusionLauncher.HostSession("localSession", 8, false, clientPrefab, true);
         }
 
         public void StartHost(string lobbyName, int playerCount, bool privateLobby)
         {
-            LaunchFusion(GameMode.Host, lobbyName, playerCount);
+            if (string.IsNullOrEmpty(lobbyName))
+                lobbyName = $"{Random.Range(0, 10000)}";
+            _ = fusionLauncher.HostSession(lobbyName, playerCount, false, clientPrefab);
         }
 
         public void StartDedicatedServer(string lobbyName, int playerCount)
         {
-            LaunchFusion(GameMode.Server, lobbyName, 0);
+            if (string.IsNullOrEmpty(lobbyName))
+                lobbyName = $"{Random.Range(0, 10000)}";
+            _ = fusionLauncher.DedicateHostSession(lobbyName, playerCount, false, clientPrefab);
         }
 
         public void JoinHost(string roomName)
         {
-            LaunchFusion(GameMode.Client, roomName, 0);
+            _ = fusionLauncher.JoinSession(roomName, clientPrefab);
         }
 
         public void JoinHost(SessionInfo sessionInfo)
         {
-            LaunchFusion(sessionInfo);
-        }
-
-        private void LaunchFusion(GameMode gamemode, string roomName, int playerCount)
-        {
-            if (string.IsNullOrEmpty(roomName))
-                roomName = $"{Random.Range(0, 10000)}";
-            fusionLauncher.Launch(gamemode, roomName, playerCount, false, clientPrefab, OnConnectionStatusUpdate);
-        }
-
-        private void LaunchFusion(SessionInfo sessionInfo)
-        {
-            fusionLauncher.JoinSession(GameMode.Client, sessionInfo, clientPrefab, OnConnectionStatusUpdate);
-        }
-
-
-        private void OnConnectionStatusUpdate(NetworkRunner arg1, FusionLauncher.ConnectionStatus arg2)
-        {
-            connectionStatus = arg2;
+            _ = fusionLauncher.JoinSession(sessionInfo, clientPrefab);
         }
 
         private void SpawnMatchManager()

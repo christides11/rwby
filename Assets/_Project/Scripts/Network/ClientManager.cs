@@ -254,7 +254,7 @@ namespace rwby
 
 		[Networked] public NetworkInputData latestConfirmedInput { get; set; }
 
-		[Networked, Capacity(10)] public NetworkArray<NetworkInputData> inputBuffer { get; set; }
+		[Networked, Capacity(10)] public NetworkArray<NetworkInputData> inputBuffer { get; }
 		[Networked] public int inputBufferPosition { get; set; }
 
 		public int setInputBuffer = 3;

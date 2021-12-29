@@ -17,7 +17,7 @@ namespace rwby
         public LayerMask grabLayermask;
         public List<LagCompensatedHit> lch = new List<LagCompensatedHit>();
 
-        [Networked, Capacity(10)] public NetworkArray<IDGroupCollisionInfo> nd { get; set; }
+        [Networked, Capacity(10)] public NetworkArray<IDGroupCollisionInfo> nd { get; }
         [Networked] public byte ndCount { get; set; }
 
         private void Awake()

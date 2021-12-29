@@ -110,19 +110,6 @@ public class NetworkDebugStart : Fusion.Behaviour {
   [InlineHelp]
   public bool AlwaysShowStats = false;
 
-  /// <summary>
-  /// Selects which telemetry statistics will be enabled in the <see cref="FusionStats"/> overlay.
-  /// </summary>
-  [InlineHelp]
-  [DrawIf(nameof(AlwaysShowStats), true, DrawIfHideType.Hide)]
-  [VersaMask]
-  public Simulation.Statistics.FusionStatFlags includedStats;
-
-  [InlineHelp]
-  [DrawIf(nameof(AlwaysShowStats), true, DrawIfHideType.Hide)]
-  [NormalizedRect]
-  public Rect StatsPosition = new Rect(0, 0, 0.33f, 1.0f);
-
   [NonSerialized]
   NetworkRunner _server;
 
@@ -145,7 +132,6 @@ public class NetworkDebugStart : Fusion.Behaviour {
     if (TryGetComponent<NetworkDebugStartGUI>(out var ndsg) == false) {
       ndsg = gameObject.AddComponent<NetworkDebugStartGUI>();
     }
-    includedStats = FusionStats.DefaultMask;
   }
 
 #endif
@@ -269,6 +255,13 @@ public class NetworkDebugStart : Fusion.Behaviour {
     }
   }
 
+  [BehaviourButtonAction(nameof(StartAutoClient), true, false)]
+  public virtual void StartAutoClient() {
+    if (TryGetSceneRef(out var sceneRef)) {
+      StartCoroutine(StartWithClients(GameMode.AutoHostOrClient, sceneRef, 1));
+    }
+  }
+
   /// <summary>
   /// Start a Fusion server instance, and the number of client instances indicated by <see cref="AutoClients"/>. 
   /// InstanceMode must be set to Multi-Peer mode, as this requires multiple <see cref="NetworkRunner"/> instances.
@@ -348,6 +341,16 @@ public class NetworkDebugStart : Fusion.Behaviour {
     }
   }
 
+  public void StartMultipleAutoClients(int clientCount) {
+    if (NetworkProjectConfig.Global.PeerMode == NetworkProjectConfig.PeerModes.Multiple) {
+      if (TryGetSceneRef(out var sceneRef)) {
+        StartCoroutine(StartWithClients(GameMode.AutoHostOrClient, sceneRef, clientCount));
+      }
+    } else {
+      Debug.LogWarning($"Unable to start multiple {nameof(NetworkRunner)}s in Unique Instance mode.");
+    }
+  }
+
   public void ShutdownAll() {
 
     var runners = NetworkRunner.GetInstancesEnumerator();
@@ -372,7 +375,7 @@ public class NetworkDebugStart : Fusion.Behaviour {
       yield break;
     }
 
-    bool includesServerStart = serverMode != GameMode.Shared && serverMode != GameMode.Client;
+    bool includesServerStart = serverMode != GameMode.Shared && serverMode != GameMode.Client && serverMode != GameMode.AutoHostOrClient;
 
     if (!includesServerStart && clientCount == 0) {
       Debug.LogError($"{nameof(GameMode)} is set to {serverMode}, and {nameof(clientCount)} is set to zero. Starting no network runners.");
@@ -404,9 +407,9 @@ public class NetworkDebugStart : Fusion.Behaviour {
       }
     }
 
-    // If NDS is starting more than 1 shared client, they need to use the same Session Name, otherwise, they will end up on different Rooms
+    // If NDS is starting more than 1 shared or auto client, they need to use the same Session Name, otherwise, they will end up on different Rooms
     // as Fusion creates a Random Session Name when no name is passed on the args
-    if (serverMode == GameMode.Shared && clientCount > 1 && config.PeerMode == NetworkProjectConfig.PeerModes.Multiple) {
+    if ((serverMode == GameMode.Shared || serverMode == GameMode.AutoHostOrClient) && clientCount > 1 && config.PeerMode == NetworkProjectConfig.PeerModes.Multiple) {
       DefaultRoomName = string.IsNullOrEmpty(DefaultRoomName) == false ? DefaultRoomName : Guid.NewGuid().ToString();
     }
 
@@ -421,7 +424,6 @@ public class NetworkDebugStart : Fusion.Behaviour {
     if (includesServerStart) {
       _server = Instantiate(RunnerPrefab);
       _server.name = serverMode.ToString();
-      _server.ProvideInput = (serverMode == GameMode.Host || serverMode == GameMode.Single) && clientCount == 0;
 
       var serverTask = InitializeNetworkRunner(_server, serverMode, NetAddress.Any(ServerPort), sceneRef, (runner) => {
 #if FUSION_DEV
@@ -444,9 +446,9 @@ public class NetworkDebugStart : Fusion.Behaviour {
       StartCoroutine(StartClients(clientCount, serverMode, sceneRef));
     }
 
-    // Add stats last, so that event systems that may be getting created are already in place.
-    if (AlwaysShowStats && serverMode != GameMode.Shared) {
-      FusionStats.Create(_server, FusionStats.DefaultLayouts.Left, includedStats);
+    // Add stats last, so any event systems that may be getting created are already in place.
+    if (includesServerStart && AlwaysShowStats && serverMode != GameMode.Shared) {
+      FusionStats.Create(runner: _server, screenLayout: FusionStats.DefaultLayouts.Left, objectLayout: FusionStats.DefaultLayouts.Left);
     }
   }
 
@@ -461,10 +463,15 @@ public class NetworkDebugStart : Fusion.Behaviour {
       DontDestroyOnLoad(client);
 
       client.name = "Client#" + i;
-      client.ProvideInput = i == 0;
 
-      // if server mode is shared, then game client mode is shared also, otherwise its client
-      var mode = serverMode == GameMode.Shared ? GameMode.Shared : GameMode.Client;
+      // if server mode is Shared or AutoHostOrClient, then game client mode is the same as the server, otherwise it is client
+      var mode = GameMode.Client;
+      switch (serverMode) {
+        case GameMode.Shared:
+        case GameMode.AutoHostOrClient:
+          mode = serverMode;
+          break;
+      }
 
 #if FUSION_DEV
       var clientTask = InitializeNetworkRunner(client, mode, NetAddress.Any(), sceneRef, (runner) => {
@@ -479,7 +486,7 @@ public class NetworkDebugStart : Fusion.Behaviour {
 
       // Add stats last, so that event systems that may be getting created are already in place.
       if (AlwaysShowStats && i == 0) {
-        FusionStats.Create(client, FusionStats.DefaultLayouts.Right, includedStats);
+        FusionStats.Create(runner: client, screenLayout: FusionStats.DefaultLayouts.Right, objectLayout: FusionStats.DefaultLayouts.Right);
       }
     }
 
@@ -533,7 +540,7 @@ public class NetworkDebugStart : Fusion.Behaviour {
     var currentScene = SceneManager.GetActiveScene();
     if (currentScene.GetSceneIndexInBuildSettings() == -1) {
       GUILayout.Space(4);
-      var clicked = Fusion.Editor.BehaviourEditorUtils.DrawWarnButton(new GUIContent("Add Scene To Settings", "Will add current scene to both Unity Build Settings and Fusion scene lists."), MessageType.Warning);
+      var clicked = Fusion.Editor.BehaviourEditorUtils.DrawWarnButton(new GUIContent("Add Scene To Settings", "Will add current scene to Unity Build Settings list."), MessageType.Warning);
       if (clicked) {
         if (currentScene.name == "") {
           UnityEditor.SceneManagement.EditorSceneManager.SaveCurrentModifiedScenesIfUserWantsTo();

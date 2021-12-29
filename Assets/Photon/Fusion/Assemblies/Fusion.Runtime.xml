@@ -4,7 +4,7 @@
         <name>Fusion.Runtime</name>
     </assembly>
     <members>
-        <member name="T:Fusion.PageShiftValues">
+        <member name="T:Fusion.PageSizes">
             <summary>
             Page Bit Shift Lookup Table
             </summary>
@@ -151,6 +151,12 @@
             Typically null, as the action method can have its own logic. This member can be a property, field or method. 
             The return value of any of these is converted into a double. True = 1, False = 0. Null = 0.</param>
         </member>
+        <member name="T:Fusion.CastEnumAttribute">
+            <summary>
+            Casts an enum or int value in the inspector to specific enum type for rendering of its popup list. 
+            Supplying a method name rather than a type allows a property with the type Type to be used to dynamically get the enum type.
+            </summary>
+        </member>
         <member name="T:Fusion.DrawIfHideType">
             <summary>
             Options for hiding a field.
@@ -262,11 +268,31 @@
         </member>
         <member name="T:Fusion.NetworkedAttribute">
             <summary>
+            <para>
             Flags a property of <see cref="T:Fusion.NetworkBehaviour"/> for network state synchronization. 
-            The property should have empty get and set defines, which will automatically be replaced with networking code.
-            <code>[Networked]<br></br>
-            MyProperty { get; set; }</code>
-            OnChanged can be assigned a method name to receive a callback whenever this value has changed.
+            The property should have empty get and set defines, which will automatically be replaced with networking code via IL Weaving.
+            OnChanged can be assigned with the name of a method in the same NetworkBehaviour. 
+            The named method will get called whenever this property value has been changed by the State Authority.
+            <code>
+            | [Networked(OnChanged = nameof(MyCallbackMethod)]<br></br>
+            | public int MyProperty { get; set; }
+            |
+            | protected static void MyCallbackMethod(Changed&lt;ChangedCallbackParent&gt; changed) {
+            |   changed.LoadNew();
+            |   var newval = changed.Behaviour.MyProperty;
+            |   changed.LoadOld();
+            |   var oldval = changed.Behaviour.MyProperty;
+            |   Debug.Log($"Changed from {oldval} to {newval}");
+            | }
+            </code>
+            </para>
+            <para>
+            Inside of INetworkStruct, do not use AutoProperties (get; set;), as these will introduce managed types into the struct, which are not allowed. Instead use '=> default'.
+            <code>
+            | [Networked]<br></br>
+            | public string StringProp { get => default; set { } }
+            </code>
+            </para>
             </summary>
         </member>
         <member name="P:Fusion.NetworkedAttribute.OnChanged">
@@ -317,11 +343,12 @@
             Enables a special inspector drawer for Unity Rect type, specially designed for editing RectTransforms using normalized values.
             </summary>
         </member>
-        <member name="M:Fusion.NormalizedRectAttribute.#ctor(System.Boolean)">
+        <member name="M:Fusion.NormalizedRectAttribute.#ctor(System.Boolean,System.Single)">
             <summary>
             Constructor for <see cref="T:Fusion.NormalizedRectAttribute"/>. InvertY inverts Y handling, for RectTransforms which treat lowerRight as origin, rather than upper left.
             </summary>
             <param name="invertY"></param>
+            <param name="aspectRatio">Expressed as Width/Height, this defines the ratio of the box shown in the inspector. Value of 0 indicates game window resolution will be used.</param>
         </member>
         <member name="T:Fusion.Pow2SliderAttribute">
             <summary>
@@ -609,6 +636,11 @@
             Signal if the local peer is connected to the Photon Cloud and can perform extra actions, like creating/joining a Room.
             </summary>
         </member>
+        <member name="P:Fusion.CloudServices.UserId">
+            <summary>
+            Photon Client UserID
+            </summary>
+        </member>
         <member name="P:Fusion.CloudServices.IsInRoom">
             <summary>
             Signal if the local peer is already inside a Room
@@ -617,6 +649,11 @@
         <member name="P:Fusion.CloudServices.IsMasterClient">
             <summary>
             Signal if the local peer is also the Master Client of the Current Room
+            </summary>
+        </member>
+        <member name="P:Fusion.CloudServices.AuthenticationValues">
+            <summary>
+            Get the internal <see cref="P:Fusion.CloudServices.AuthenticationValues"/> used by the Client to perform the authentication
             </summary>
         </member>
         <member name="P:Fusion.CloudServices.Communicator">
@@ -650,10 +687,12 @@
             Update and perform all pending actions related to the Photon Cloud communication
             </summary>
         </member>
-        <member name="M:Fusion.CloudServices.ConnectToCloud(Fusion.Photon.Realtime.AuthenticationValues)">
+        <member name="M:Fusion.CloudServices.ConnectToCloud(Fusion.Photon.Realtime.AuthenticationValues,Fusion.Photon.Realtime.AppSettings)">
             <summary>
             Connect the local peer to Photon Cloud using an async process.
             </summary>
+            <param name="authentication">Custom Authentication Values used to Auth the local peer</param>
+            <param name="customAppSettings">Custom Photon App Settings</param>
             <returns>Async Task of the connect to Photon Cloud process. Can be used to wait for the process to be finished</returns>
         </member>
         <member name="M:Fusion.CloudServices.JoinSessionLobby(Fusion.SessionLobby,System.String)">
@@ -684,22 +723,18 @@
              <param name="args">Start Game Args ref</param>
              <returns>Task of the Join Room process</returns>
         </member>
-        <member name="M:Fusion.CloudServices.CreateOrJoinRoomAsync(Fusion.Photon.Realtime.EnterRoomParams,Fusion.Photon.Realtime.OpJoinRandomRoomParams,System.Boolean,System.Boolean,System.Boolean)">
-            <summary>
-            Create or Join a Photon Room using the Room Name as identifier.
-            </summary>
-            <param name="enterRoomParams">Create/Enter Room Params</param>
-            <param name="joinParams">Random Room Join Params</param>
-            <param name="forceRoomCreation">Force the Room Creation first, then try to Join</param>
-            <param name="tryJoinRandom">Signal if the peer should try to join a Random Room first</param>
-            <param name="enableRoomCreateFallback">Signal if the peer should create a Room if no Room is found on Random Join</param>
-            <returns>Async Task of the room creation process. Can be used to wait for the process to be finished</returns>
-        </member>
         <member name="M:Fusion.CloudServices.DisconnectFromCloud">
             <summary>
             Disconnect the Local Peer from the Photon Cloud.
             </summary>
             <returns>Async Task of the disconnect from Photon Cloud process. Can be used to wait for the process to be finished</returns>
+        </member>
+        <member name="M:Fusion.CloudServices.GetActorUserID(System.Int32)">
+            <summary>
+            Get the UserID of another Player Actor in the Room
+            </summary>
+            <param name="actorID">ActorID of a Player inside the Room</param>
+            <returns>Player UserID</returns>
         </member>
         <member name="M:Fusion.CloudServices.OnInternalConnectionAttempt(Fusion.Sockets.NetConnection*,System.Int32,System.Int32,System.Boolean@,Fusion.Sockets.NetAddress@)">
             <summary>
@@ -713,6 +748,13 @@
             <param name="totalConnectionAttempts">Max number of attempts</param>
             <param name="shouldChange">Flag if target EndPoint should change</param>
             <param name="newAddress">New target EndPoint</param>
+        </member>
+        <member name="M:Fusion.CloudServices.Connect(Fusion.NATPunchStage,Fusion.Sockets.NetAddress)">
+            <summary>
+            Start the connection process with a Remote Server
+            </summary>
+            <param name="punchStage">Starting NAT Punch state, see <see cref="T:Fusion.NATPunchStage"/> for more info</param>
+            <param name="endPoint">Remote Server EndPoint to connect to</param>
         </member>
         <member name="M:Fusion.CloudServices.Dispose">
             <summary>
@@ -914,11 +956,6 @@
             Request for the Local Reflexive Info
             </summary>
         </member>
-        <member name="F:Fusion.ScheduledRequests.WaitForReflexiveInfo">
-            <summary>
-            Request to Wait for Remote Reflexive Info
-            </summary>
-        </member>
         <member name="T:Fusion.NATPunchStage">
             <summary>
             Describes the current Target Address Type used in the NAT Punch procedure
@@ -1005,6 +1042,191 @@
         <member name="T:Fusion.ScheduledRequestsExt">
             <summary>
             Extension methods to <see cref="T:Fusion.ScheduledRequests"/>
+            </summary>
+        </member>
+        <member name="T:Fusion.IAfterAllTicks">
+            <summary>
+            Interface for <see cref="M:Fusion.IAfterAllTicks.AfterAllTicks(System.Boolean,System.Int32)"/> callback. 
+            Called after the resimulation loop (when applicable), and also after the forward simulation loop.
+            Implement this interface on <see cref="T:Fusion.SimulationBehaviour"/> and <see cref="T:Fusion.NetworkBehaviour"/> classes.
+            </summary>
+        </member>
+        <member name="M:Fusion.IAfterAllTicks.AfterAllTicks(System.Boolean,System.Int32)">
+            <summary>
+            Called after the resimulation loop (when applicable), and also after the forward simulation loop.
+            Only called on Updates where resimulation or forward ticks are processed.
+            </summary>
+            <param name="resimulation">True if this is being called during the resimulation loop. False if during the forward simulation loop.</param>
+            <param name="tickCount">How many resimulation or forward ticks are going to be processed.</param>
+        </member>
+        <member name="T:Fusion.IAfterClientPredictionReset">
+            <summary>
+            Interface for <see cref="M:Fusion.IAfterClientPredictionReset.AfterClientPredictionReset"/> callback.
+            Called at the very end of the resimulation loop (on clients with prediction enabled).
+            Implement this interface on <see cref="T:Fusion.SimulationBehaviour"/> and <see cref="T:Fusion.NetworkBehaviour"/> classes.
+            </summary>
+        </member>
+        <member name="M:Fusion.IAfterClientPredictionReset.AfterClientPredictionReset">
+            <summary>
+            Called at the very end of the resimulation loop (on clients with prediction enabled), right before the forward simulation loop begins.
+            </summary>
+        </member>
+        <member name="T:Fusion.IAfterPhysicsStep">
+            <summary>
+            Interface for <see cref="M:Fusion.IAfterPhysicsStep.AfterPhysicsStep"/> callback. Called immediately after Physics.Simulate().
+            Implement this interface on <see cref="T:Fusion.SimulationBehaviour"/> and <see cref="T:Fusion.NetworkBehaviour"/> classes.
+            </summary>
+        </member>
+        <member name="M:Fusion.IAfterPhysicsStep.AfterPhysicsStep">
+            <summary>
+            Called immediately after Physics.Simulate().
+            </summary>
+        </member>
+        <member name="T:Fusion.IAfterTick">
+            <summary>
+            Interface for <see cref="M:Fusion.IAfterTick.AfterTick"/> callback. 
+            Called after each tick simulation completes.
+            Implement this interface on <see cref="T:Fusion.SimulationBehaviour"/> and <see cref="T:Fusion.NetworkBehaviour"/> classes.
+            </summary>
+        </member>
+        <member name="M:Fusion.IAfterTick.AfterTick">
+            <summary>
+            Called after each tick simulation completes.
+            </summary>
+        </member>
+        <member name="T:Fusion.IAfterUpdate">
+            <summary>
+            Interface for the <see cref="M:Fusion.IAfterUpdate.AfterUpdate"/> callback, which is called at the end of each Fusion Update segment. 
+            Implement this interface on <see cref="T:Fusion.SimulationBehaviour"/> and <see cref="T:Fusion.NetworkBehaviour"/> classes.
+            </summary>
+        </member>
+        <member name="M:Fusion.IAfterUpdate.AfterUpdate">
+            <summary>
+            Called at the end of the Fusion Update loop, before all Unity MonoBehaviour.Update() callbacks.
+            </summary>
+        </member>
+        <member name="T:Fusion.IBeforeAllTicks">
+            <summary>
+            Interface for <see cref="M:Fusion.IBeforeAllTicks.BeforeAllTicks(System.Boolean,System.Int32)"/> callback. 
+            Called before the resimulation loop (when applicable), and also before the forward simulation loop.
+            Implement this interface on <see cref="T:Fusion.SimulationBehaviour"/> and <see cref="T:Fusion.NetworkBehaviour"/> classes.
+            </summary>
+        </member>
+        <member name="M:Fusion.IBeforeAllTicks.BeforeAllTicks(System.Boolean,System.Int32)">
+            <summary>
+            Called before the resimulation loop (when applicable), and also before the forward simulation loop. 
+            Only called on Updates where resimulation or forward ticks are processed.
+            </summary>
+            <param name="resimulation">True if this is being called during the resimulation loop. False if during the forward simulation loop.</param>
+            <param name="tickCount">How many resimulation or forward ticks are going to be processed.</param>
+        </member>
+        <member name="T:Fusion.IBeforeClientPredictionReset">
+            <summary>
+            Interface for <see cref="M:Fusion.IBeforeClientPredictionReset.BeforeClientPredictionReset"/> callback.
+            Called at the very start of the resimulation loop (on clients with prediction enabled), before state is set to the latest server snapshot.
+            Implement this interface on <see cref="T:Fusion.SimulationBehaviour"/> and <see cref="T:Fusion.NetworkBehaviour"/> classes.
+            </summary>
+        </member>
+        <member name="M:Fusion.IBeforeClientPredictionReset.BeforeClientPredictionReset">
+            <summary>
+            Called at the very start of the resimulation loop (on clients with prediction enabled), 
+            before state is set to the latest server snapshot.
+            </summary>
+        </member>
+        <member name="T:Fusion.IBeforePhysicsStep">
+            <summary>
+            Interface for <see cref="M:Fusion.IBeforePhysicsStep.BeforePhysicsStep"/> callback. Called immediately before Physics.Simulate().
+            Implement this interface on <see cref="T:Fusion.SimulationBehaviour"/> and <see cref="T:Fusion.NetworkBehaviour"/> classes.
+            </summary>
+        </member>
+        <member name="M:Fusion.IBeforePhysicsStep.BeforePhysicsStep">
+            <summary>
+            Called immediately before Physics.Simulate().
+            </summary>
+        </member>
+        <member name="T:Fusion.IBeforeTick">
+            <summary>
+            Interface for <see cref="M:Fusion.IBeforeTick.BeforeTick"/> callback. 
+            Called before each tick is simulated.
+            Implement this interface on <see cref="T:Fusion.SimulationBehaviour"/> and <see cref="T:Fusion.NetworkBehaviour"/> classes.
+            </summary>
+        </member>
+        <member name="M:Fusion.IBeforeTick.BeforeTick">
+            <summary>
+            Called before each tick is simulated.
+            </summary>
+        </member>
+        <member name="T:Fusion.IBeforeUpdate">
+            <summary>
+            Interface for the <see cref="M:Fusion.IBeforeUpdate.BeforeUpdate"/> callback, which is called at the beginning of each Fusion Update segment. 
+            Implement this interface on <see cref="T:Fusion.SimulationBehaviour"/> and <see cref="T:Fusion.NetworkBehaviour"/> classes.
+            </summary>
+        </member>
+        <member name="M:Fusion.IBeforeUpdate.BeforeUpdate">
+            <summary>
+            Called at the start of the Fusion Update loop, before the Fusion simulation loop.
+            </summary>
+        </member>
+        <member name="T:Fusion.IPredictedSpawnBehaviour">
+            <summary>
+            Interface for predicted spawn callbacks.
+            Implement this interface on <see cref="T:Fusion.SimulationBehaviour"/> and <see cref="T:Fusion.NetworkBehaviour"/> classes.
+            </summary>
+        </member>
+        <member name="M:Fusion.IPredictedSpawnBehaviour.PredictedSpawnSpawned">
+            <summary>
+            Called in place of Spawned(), when the predicted object is initially created locally on the client.
+            </summary>
+        </member>
+        <member name="M:Fusion.IPredictedSpawnBehaviour.PredictedSpawnUpdate">
+            <summary>
+            Called every tick in place of FixedUpdateNetwork(), until <see cref="M:Fusion.IPredictedSpawnBehaviour.PredictedSpawnSuccess"/> or <see cref="M:Fusion.IPredictedSpawnBehaviour.PredictedSpawnFailed"/> occur.
+            </summary>
+        </member>
+        <member name="M:Fusion.IPredictedSpawnBehaviour.PredictedSpawnRender">
+            <summary>
+            Called every tick in place of Render(), until <see cref="M:Fusion.IPredictedSpawnBehaviour.PredictedSpawnSuccess"/> or <see cref="M:Fusion.IPredictedSpawnBehaviour.PredictedSpawnFailed"/> occur.
+            </summary>
+        </member>
+        <member name="M:Fusion.IPredictedSpawnBehaviour.PredictedSpawnFailed">
+            <summary>
+            Called when Server does not produce the spawn that has been predicted. 
+            The spawn did not actually happen, and this callback may be used to clean up after the missed prediction.
+            </summary>
+        </member>
+        <member name="M:Fusion.IPredictedSpawnBehaviour.PredictedSpawnSuccess">
+            <summary>
+            Called when Server spawn was has been confirmed, and the predicted spawn object has been added to the simulation.
+            </summary>
+        </member>
+        <member name="T:Fusion.ISimulationEnter">
+            <summary>
+            Interface for <see cref="M:Fusion.ISimulationEnter.SimulationEnter"/> callback.
+            Called when the <see cref="T:Fusion.NetworkObject"/> joins AreaOfInterest.
+            Implement this interface on <see cref="T:Fusion.SimulationBehaviour"/> and <see cref="T:Fusion.NetworkBehaviour"/> classes.
+            Only applicable to <see cref="F:Fusion.SimulationConfig.StateReplicationModes.EventualConsistency"/>. 
+            </summary>
+        </member>
+        <member name="M:Fusion.ISimulationEnter.SimulationEnter">
+            <summary>
+            Called when the <see cref="T:Fusion.NetworkObject"/> joins AreaOfInterest.
+            Object is now receiving snapshot updates.
+            Object will execute <see cref="T:Fusion.NetworkBehaviour"/> FixedUpdateNetwork() and Render() methods until the object leaves simulation.
+            </summary>
+        </member>
+        <member name="T:Fusion.ISimulationExit">
+            <summary>
+            Interface for the <see cref="M:Fusion.ISimulationExit.SimulationExit"/> callback.
+            Called when the <see cref="T:Fusion.NetworkObject"/> leaves AreaOfInterest. 
+            Implement this interface on <see cref="T:Fusion.SimulationBehaviour"/> and <see cref="T:Fusion.NetworkBehaviour"/> classes.
+            Only applicable to <see cref="F:Fusion.SimulationConfig.StateReplicationModes.EventualConsistency"/>. 
+            </summary>
+        </member>
+        <member name="M:Fusion.ISimulationExit.SimulationExit">
+            <summary>
+            Called when the <see cref="T:Fusion.NetworkObject"/> leaves AreaOfInterest. 
+            Object is no longer receiving snapshot updates.
+            Object will stop executing <see cref="T:Fusion.NetworkBehaviour"/> FixedUpdateNetwork() and Render() methods until the object rejoins simulation.
             </summary>
         </member>
         <member name="T:Fusion.WriteAccuracy">
@@ -1148,9 +1370,19 @@
             Indicates whether the state authority snapshot tick data, or prediction tick data (if available in the current mode for the current peer) should be used for interpolation.
             </summary>
         </member>
+        <member name="P:Fusion.NetworkBehaviour.WordInfo">
+            <summary>
+            Gives access to the offset (in 32 bit words) and count (in 32 bit words) of this behaviour backing data
+            </summary>
+        </member>
         <member name="P:Fusion.NetworkBehaviour.InterpolationDataSource">
             <summary>
             Get/Set the time frame this object is rendered in.
+            </summary>
+        </member>
+        <member name="P:Fusion.NetworkBehaviour.Id">
+            <summary>
+            The unique identifier for this network behaviour. 
             </summary>
         </member>
         <member name="P:Fusion.NetworkBehaviour.DynamicWordCount">
@@ -1159,7 +1391,7 @@
             This is for advanced use cases only, and cannot be used if <see cref="T:Fusion.NetworkedAttribute"/> is used in the derived class.  
             </summary>
         </member>
-        <member name="M:Fusion.NetworkBehaviour.CopyBackingFieldsToState">
+        <member name="M:Fusion.NetworkBehaviour.CopyBackingFieldsToState(System.Boolean)">
             <summary>
             
             </summary>
@@ -1248,6 +1480,46 @@
             <para>The returned input struct originates from the <see cref="P:Fusion.NetworkObject.InputAuthority"/>, 
             and if valid contains the inputs supplied by that <see cref="T:Fusion.PlayerRef"/> for the current simulation tick.</para>
             </summary>
+        </member>
+        <member name="M:Fusion.NetworkBehaviour.Interpolator`1.TryGetValues(`0@,`0@,System.Single@,System.Nullable{System.Boolean})">
+            <summary>
+            Try and get 'To' and 'From' states, and the Alpha (t) values needed for interpolation.
+            </summary>
+            <param name="from">Value on the state the interpolation is going from.</param>
+            <param name="to">Value on the state the interpolation is going to.</param>
+            <param name="alpha">Interpolant factor between the two states.</param>
+            <param name="force">
+            Force interpolation to the current <see cref="T:Fusion.Simulation"/>s time frame (as opposed to between snapshots).
+            If no value is forced, interpolation data will be retrieved according to the <see cref="P:Fusion.NetworkBehaviour.InterpolationDataSource"/>.
+            </param>
+            <returns>True if the interpolation data is available, false otherwise.</returns>
+        </member>
+        <member name="M:Fusion.NetworkBehaviour.Interpolator`1.GetValues(System.Nullable{System.Boolean})">
+            <summary>
+            Get 'To' and 'From' states, and the Alpha (t) values needed for interpolation.
+            </summary>
+            <param name="force">
+            Force interpolation to the current <see cref="T:Fusion.Simulation"/>s time frame (as opposed to between snapshots).
+            If no value is forced, interpolation data will be retrieved according to the <see cref="P:Fusion.NetworkBehaviour.InterpolationDataSource"/>.
+            </param>
+            <returns>A tuple containing the values. Null if interpolation data is not available.</returns>
+        </member>
+        <member name="M:Fusion.NetworkBehaviour.MakeInitializer``1(``0[])">
+            <summary>
+            This is a special method that is meant to be used only for [Networked] properties inline initialization.
+            </summary>
+        </member>
+        <member name="M:Fusion.NetworkBehaviour.MakeInitializer``2(System.Collections.Generic.Dictionary{``0,``1})">
+            <summary>
+            This is a special method that is meant to be used only for [Networked] properties inline initialization.
+            </summary>
+        </member>
+        <member name="M:Fusion.NetworkBehaviour.op_Implicit(Fusion.NetworkBehaviour)~Fusion.NetworkBehaviourId">
+            <summary>
+            Converts NetworkBehaviour to NetworkBehaviourId
+            </summary>
+            <param name="behaviour"></param>
+            <returns></returns>
         </member>
         <member name="T:Fusion.NetworkBehaviourCallbackReference">
             <summary>
@@ -1597,15 +1869,15 @@
         </member>
         <member name="M:Fusion.NetworkMecanimAnimator.SetTrigger(System.Int32)">
             <summary>
-            Calls Animator.SetTrigger() and also queues the trigger with this sync. 
-            Triggers are prone to getting lost by animation syncs, as they may get reset before the value is synced.
+            Queues a trigger with this animator. Call this instead of Animator.SetTrigger for the State Authority.
+            Triggers are prone to getting lost by animation syncs, as they may get reset before the value is synced. Setting triggers with this method ensures they get captured.
             </summary>
             <param name="triggerHash"></param>
         </member>
         <member name="M:Fusion.NetworkMecanimAnimator.SetTrigger(System.String)">
             <summary>
-            Calls Animator.SetTrigger() and also queues the trigger with this sync. 
-            Triggers are prone to getting lost by animation syncs, as they may get reset before the value is synced.
+            Queues a trigger with this animator. Call this instead of Animator.SetTrigger for the State Authority.
+            Triggers are prone to getting lost by animation syncs, as they may get reset before the value is synced. Setting triggers with this method ensures they get captured.
             </summary>
             <param name="trigger"></param>
         </member>
@@ -1730,6 +2002,16 @@
         <member name="F:Fusion.NetworkTransform.LastInterpolatedAtTime">
             <summary>
             Stores the last UnityEngine.Time.time when interpolation was run for this component. Used to ensure interpolation is only run once per screen refresh.
+            </summary>
+        </member>
+        <member name="M:Fusion.NetworkTransform.WriteReadVector3(UnityEngine.Vector3,Fusion.WriteAccuracy,Fusion.ReadAccuracy)">
+            <summary>
+            Emulates the accuracy loss when writing and reading a Vector3 to/from a buffer, according to the given accuracies.
+            </summary>
+        </member>
+        <member name="M:Fusion.NetworkTransform.WriteReadQuaternion(UnityEngine.Quaternion,Fusion.WriteAccuracy,Fusion.ReadAccuracy)">
+            <summary>
+            Emulates the accuracy loss when writing and reading a Quaternion to/from a buffer, according to the given accuracies.
             </summary>
         </member>
         <member name="F:Fusion.NetworkTransform._queuedTeleport">
@@ -1977,6 +2259,11 @@
             Guid is used for common objects (user flagged nodes that should only run in one instance), to identify matching clones.
             </summary>
         </member>
+        <member name="P:Fusion.RunnerVisibilityNode.DefaultState">
+            <summary>
+            Set to false to indicate that this object should remain disabled even when <see cref="P:Fusion.NetworkRunner.IsVisible"/> is set to true.
+            </summary>
+        </member>
         <member name="M:Fusion.RunnerVisibilityNode.SetEnabled(System.Boolean)">
             <summary>
             Sets the visibility state of this node.
@@ -2070,6 +2357,26 @@
         <member name="M:Fusion.SimulationBehaviour.Render">
             <summary>
             Post simulation frame rendering callback. Runs after all simulations have finished. Use in place of Unity's Update when Fusion is handling Physics.
+            </summary>
+        </member>
+        <member name="T:Fusion.SimulationBehaviourAttribute">
+            <summary>
+            Attribute for specifying which <see cref="T:Fusion.SimulationStages"/> and <see cref="T:Fusion.SimulationModes"/> this <see cref="T:Fusion.SimulationBehaviour"/> will execute in.
+            Can be used to limit execution to only Host, Server or Client peers, or to only execute on Resimulation or Forward ticks.
+            Usage:
+            <code>
+            [SimulationBehaviour(Stages = SimulationStages.Forward, Modes = SimulationModes.Server | SimulationModes.Host)]
+            </code>
+            </summary>
+        </member>
+        <member name="P:Fusion.SimulationBehaviourAttribute.Stages">
+            <summary>
+            Flag for which stages of the simulation loop this component will execute this script.
+            </summary>
+        </member>
+        <member name="P:Fusion.SimulationBehaviourAttribute.Modes">
+            <summary>
+            Flag for which indicated peers in <see cref="T:Fusion.SimulationModes"/> will execute this script.
             </summary>
         </member>
         <member name="P:Fusion.SimulationBehaviourUpdater.CallbackInterfacesDefualts">
@@ -2380,12 +2687,12 @@
             <param name="length">Raycast length</param>
             <param name="player">Player who "owns" this raycast. Used by the server to find the exact hitbox snapshots to check against.</param>
             <param name="hit">Raycast results will be filled in here.</param>
-            <param name="layermask">Only objects with matching layers will be checked against.</param>
+            <param name="layerMask">Only objects with matching layers will be checked against.</param>
             <param name="options">Opt-in flags to compute with sub-tick accuracy (<see cref="F:Fusion.HitOptions.SubtickAccuracy"/>) and/or to include PhysX (<see cref="F:Fusion.HitOptions.IncludePhysX"/>).</param>
             <param name="queryTriggerInteraction">Trigger interaction behavior when also querying PhysX.</param>
             <returns>true is something is hit</returns>
         </member>
-        <member name="M:Fusion.HitboxManager.Raycast(UnityEngine.Vector3,UnityEngine.Vector3,System.Single,System.Int32,Fusion.LagCompensatedHit@,System.Int32,Fusion.HitOptions,UnityEngine.QueryTriggerInteraction)">
+        <member name="M:Fusion.HitboxManager.Raycast(UnityEngine.Vector3,UnityEngine.Vector3,System.Single,System.Int32,System.Nullable{System.Int32},System.Nullable{System.Single},Fusion.LagCompensatedHit@,System.Int32,Fusion.HitOptions,UnityEngine.QueryTriggerInteraction)">
             <summary>
             Performs a lag-compensated raycast query against all registered hitboxes.
             If the <see cref="F:Fusion.HitOptions.IncludePhysX"/> flag is indicated, query will also include PhysX colliders, 
@@ -2395,8 +2702,19 @@
             <param name="direction">Raycast direction, in world-space</param>
             <param name="length">Raycast length</param>
             <param name="tick">Simulation tick number to use as the time reference for the lag compensation (use this for server AI, and similar).</param>
+            <param name="tickTo">
+            Simulation tick number to use as the time reference for the lag compensation.
+            If provided, must be combined with the <paramref name="alpha"/> parameter for interpolation between <paramref name="tick"/> and <paramref name="tickTo"/>.
+            If <see cref="F:Fusion.HitOptions.SubtickAccuracy"/> is included on <paramref name="options"/>, this query will be resolved against hitbox colliders interpolated between the specified ticks.
+            Otherwise, only one of the two ticks will be considered, according to the rounded value of <paramref name="alpha"/>.
+            </param>
+            <param name="alpha">
+            Interpolation value when querying between <paramref name="tick"/> and <paramref name="tickTo"/>.
+            If <see cref="F:Fusion.HitOptions.SubtickAccuracy"/> is included on <paramref name="options"/>, this query will be resolved against hitbox colliders interpolated between the specified ticks.
+            Otherwise, only one of the two ticks will be considered, according to the rounded alpha value.
+            </param>
             <param name="hit">Raycast results will be filled in here.</param>
-            <param name="layermask">Only objects with matching layers will be checked against.</param>
+            <param name="layerMask">Only objects with matching layers will be checked against.</param>
             <param name="options">Opt-in flags to compute with sub-tick accuracy (<see cref="F:Fusion.HitOptions.SubtickAccuracy"/>) and/or to include PhysX (<see cref="F:Fusion.HitOptions.IncludePhysX"/>).</param>
             <param name="queryTriggerInteraction">Trigger interaction behavior when also querying PhysX.</param>
             <returns>true is something is hit</returns>
@@ -2413,13 +2731,13 @@
             <param name="length">Raycast length</param>
             <param name="player">Player who "owns" this raycast. Used by the server to find the exact hitbox snapshots to check against.</param>
             <param name="hits">List to be filled with hits (both hitboxes and/or PhysX colliders, if included).</param>
-            <param name="layermask">Only objects with matching layers will be checked against.</param>
+            <param name="layerMask">Only objects with matching layers will be checked against.</param>
             <param name="options">Opt-in flags to compute with sub-tick accuracy (<see cref="F:Fusion.HitOptions.SubtickAccuracy"/>) and/or to include PhysX (<see cref="F:Fusion.HitOptions.IncludePhysX"/>).</param>
             <param name="clearHits">Clear list of hits before filling with new ones (defaults to true).</param>
             <param name="queryTriggerInteraction">Trigger interaction behavior when also querying PhysX.</param>
             <returns>total number of hits</returns>
         </member>
-        <member name="M:Fusion.HitboxManager.RaycastAll(UnityEngine.Vector3,UnityEngine.Vector3,System.Single,System.Int32,System.Collections.Generic.List{Fusion.LagCompensatedHit},System.Int32,System.Boolean,Fusion.HitOptions,UnityEngine.QueryTriggerInteraction)">
+        <member name="M:Fusion.HitboxManager.RaycastAll(UnityEngine.Vector3,UnityEngine.Vector3,System.Single,System.Int32,System.Nullable{System.Int32},System.Nullable{System.Single},System.Collections.Generic.List{Fusion.LagCompensatedHit},System.Int32,System.Boolean,Fusion.HitOptions,UnityEngine.QueryTriggerInteraction)">
             <summary>
             Performs a lag-compensated raycast query against all registered hitboxes.
             If the <see cref="F:Fusion.HitOptions.IncludePhysX"/> flag is indicated, query will also include PhysX colliders, 
@@ -2430,8 +2748,19 @@
             <param name="direction">Raycast direction, in world-space</param>
             <param name="length">Raycast length</param>
             <param name="tick">Simulation tick number to use as the time reference for the lag compensation (use this for server AI, and similar).</param>
+            <param name="tickTo">
+            Simulation tick number to use as the time reference for the lag compensation.
+            If provided, must be combined with the <paramref name="alpha"/> parameter for interpolation between <paramref name="tick"/> and <paramref name="tickTo"/>.
+            If <see cref="F:Fusion.HitOptions.SubtickAccuracy"/> is included on <paramref name="options"/>, this query will be resolved against hitbox colliders interpolated between the specified ticks.
+            Otherwise, only one of the two ticks will be considered, according to the rounded value of <paramref name="alpha"/>.
+            </param>
+            <param name="alpha">
+            Interpolation value when querying between <paramref name="tick"/> and <paramref name="tickTo"/>.
+            If <see cref="F:Fusion.HitOptions.SubtickAccuracy"/> is included on <paramref name="options"/>, this query will be resolved against hitbox colliders interpolated between the specified ticks.
+            Otherwise, only one of the two ticks will be considered, according to the rounded alpha value.
+            </param>
             <param name="hits">List to be filled with hits (both hitboxes and/or PhysX colliders, if included).</param>
-            <param name="layermask">Only objects with matching layers will be checked against.</param>
+            <param name="layerMask">Only objects with matching layers will be checked against.</param>
             <param name="options">Opt-in flags to compute with sub-tick accuracy (<see cref="F:Fusion.HitOptions.SubtickAccuracy"/>) and/or to include PhysX (<see cref="F:Fusion.HitOptions.IncludePhysX"/>).</param>
             <param name="clearHits">Clear list of hits before filling with new ones (defaults to true).</param>
             <param name="queryTriggerInteraction">Trigger interaction behavior when also querying PhysX.</param>
@@ -2447,13 +2776,13 @@
             <param name="radius">Sphere radius</param>
             <param name="player">Player who "owns" this overlap. Used by the server to find the exact hitbox snapshots to check against.</param>
             <param name="hits">List to be filled with hits (both hitboxes and/or PhysX colliders, if included).</param>
-            <param name="layermask">Only objects with matching layers will be checked against.</param>
+            <param name="layerMask">Only objects with matching layers will be checked against.</param>
             <param name="options">Opt-in flags to compute with sub-tick accuracy (<see cref="F:Fusion.HitOptions.SubtickAccuracy"/>) and/or to include PhysX (<see cref="F:Fusion.HitOptions.IncludePhysX"/>).</param>
             <param name="clearHits">Clear list of hits before filling with new ones (defaults to true).</param>
             <param name="queryTriggerInteraction">Trigger interaction behavior when also querying PhysX.</param>
             <returns>total number of hits</returns>
         </member>
-        <member name="M:Fusion.HitboxManager.OverlapSphere(UnityEngine.Vector3,System.Single,System.Int32,System.Collections.Generic.List{Fusion.LagCompensatedHit},System.Int32,Fusion.HitOptions,System.Boolean,UnityEngine.QueryTriggerInteraction)">
+        <member name="M:Fusion.HitboxManager.OverlapSphere(UnityEngine.Vector3,System.Single,System.Int32,System.Nullable{System.Int32},System.Nullable{System.Single},System.Collections.Generic.List{Fusion.LagCompensatedHit},System.Int32,Fusion.HitOptions,System.Boolean,UnityEngine.QueryTriggerInteraction)">
             <summary>
             Performs a lag-compensated overlap sphere query against all registered hitboxes.
             If the <see cref="F:Fusion.HitOptions.IncludePhysX"/> flag is indicated, query will also include PhysX colliders, 
@@ -2462,19 +2791,86 @@
             <param name="origin">Sphere center, in world-space</param>
             <param name="radius">Sphere radius</param>
             <param name="tick">The tick to be queried</param>
+            <param name="tickTo">
+            Simulation tick number to use as the time reference for the lag compensation.
+            If provided, must be combined with the <paramref name="alpha"/> parameter for interpolation between <paramref name="tick"/> and <paramref name="tickTo"/>.
+            If <see cref="F:Fusion.HitOptions.SubtickAccuracy"/> is included on <paramref name="options"/>, this query will be resolved against hitbox colliders interpolated between the specified ticks.
+            Otherwise, only one of the two ticks will be considered, according to the rounded value of <paramref name="alpha"/>.
+            </param>
+            <param name="alpha">
+            Interpolation value when querying between <paramref name="tick"/> and <paramref name="tickTo"/>.
+            If <see cref="F:Fusion.HitOptions.SubtickAccuracy"/> is included on <paramref name="options"/>, this query will be resolved against hitbox colliders interpolated between the specified ticks.
+            Otherwise, only one of the two ticks will be considered, according to the rounded alpha value.
+            </param>
             <param name="hits">List to be filled with hits (both hitboxes and/or PhysX colliders, if included).</param>
-            <param name="layermask">Only objects with matching layers will be checked against.</param>
+            <param name="layerMask">Only objects with matching layers will be checked against.</param>
             <param name="options">Opt-in flags to compute with sub-tick accuracy (<see cref="F:Fusion.HitOptions.SubtickAccuracy"/>) and/or to include PhysX (<see cref="F:Fusion.HitOptions.IncludePhysX"/>).</param>
             <param name="clearHits">Clear list of hits before filling with new ones (defaults to true).</param>
             <param name="queryTriggerInteraction">Trigger interaction behavior when also querying PhysX.</param>
             <returns>total number of hits</returns>
         </member>
-        <member name="M:Fusion.HitboxManager.PositionRotation(Fusion.Hitbox,System.Int32,UnityEngine.Vector3@,UnityEngine.Quaternion@,System.Boolean)">
+        <member name="M:Fusion.HitboxManager.OverlapBox(UnityEngine.Vector3,UnityEngine.Vector3,UnityEngine.Quaternion,Fusion.PlayerRef,System.Collections.Generic.List{Fusion.LagCompensatedHit},System.Int32,Fusion.HitOptions,System.Boolean,UnityEngine.QueryTriggerInteraction)">
+            <summary>
+            Performs a lag-compensated box overlap query against all registered hitboxes.
+            If the <see cref="F:Fusion.HitOptions.IncludePhysX"/> flag is indicated, query will also include PhysX colliders, 
+            PhysX colliders are recommended for static geometry, rather than Hitboxes.
+            </summary>
+            <param name="center">Center of the box in world space.</param>
+            <param name="extents">Half of the size of the box in each dimension.</param>
+            <param name="orientation">Rotation of the box.</param>
+            <param name="player">Player who "owns" this overlap. Used by the server to find the exact hitbox snapshots to check against.</param>
+            <param name="hits">List to be filled with hits (both hitboxes and/or PhysX colliders, if included).</param>
+            <param name="layerMask">Only objects with matching layers will be checked against.</param>
+            <param name="options">Opt-in flags to compute with sub-tick accuracy (<see cref="F:Fusion.HitOptions.SubtickAccuracy"/>) and/or to include PhysX (<see cref="F:Fusion.HitOptions.IncludePhysX"/>).</param>
+            <param name="clearHits">Clear list of hits before filling with new ones (defaults to true).</param>
+            <param name="queryTriggerInteraction">Trigger interaction behavior when also querying PhysX.</param>
+            <returns>The total number of hits found.</returns>
+        </member>
+        <member name="M:Fusion.HitboxManager.OverlapBox(UnityEngine.Vector3,UnityEngine.Vector3,UnityEngine.Quaternion,System.Int32,System.Nullable{System.Int32},System.Nullable{System.Single},System.Collections.Generic.List{Fusion.LagCompensatedHit},System.Int32,Fusion.HitOptions,System.Boolean,UnityEngine.QueryTriggerInteraction)">
+            <summary>
+            Performs a lag-compensated box overlap query against all registered hitboxes.
+            If the <see cref="F:Fusion.HitOptions.IncludePhysX"/> flag is indicated, query will also include PhysX colliders, 
+            PhysX colliders are recommended for static geometry, rather than Hitboxes.
+            </summary>
+            <param name="center">Center of the box in world space.</param>
+            <param name="extents">Half of the size of the box in each dimension.</param>
+            <param name="orientation">Rotation of the box.</param>
+            <param name="tick">The exact tick to be queried</param>
+            <param name="tickTo">
+            Simulation tick number to use as the time reference for the lag compensation.
+            If provided, must be combined with the <paramref name="alpha"/> parameter for interpolation between <paramref name="tick"/> and <paramref name="tickTo"/>.
+            If <see cref="F:Fusion.HitOptions.SubtickAccuracy"/> is included on <paramref name="options"/>, this query will be resolved against hitbox colliders interpolated between the specified ticks.
+            Otherwise, only one of the two ticks will be considered, according to the rounded value of <paramref name="alpha"/>.
+            </param>
+            <param name="alpha">
+            Interpolation value when querying between <paramref name="tick"/> and <paramref name="tickTo"/>.
+            If <see cref="F:Fusion.HitOptions.SubtickAccuracy"/> is included on <paramref name="options"/>, this query will be resolved against hitbox colliders interpolated between the specified ticks.
+            Otherwise, only one of the two ticks will be considered, according to the rounded alpha value.
+            </param>
+            <param name="hits">List to be filled with hits (both hitboxes and/or PhysX colliders, if included).</param>
+            <param name="layerMask">Only objects with matching layers will be checked against.</param>
+            <param name="options">Opt-in flags to compute with sub-tick accuracy (<see cref="F:Fusion.HitOptions.SubtickAccuracy"/>) and/or to include PhysX (<see cref="F:Fusion.HitOptions.IncludePhysX"/>).</param>
+            <param name="clearHits">Clear list of hits before filling with new ones (defaults to true).</param>
+            <param name="queryTriggerInteraction">Trigger interaction behavior when also querying PhysX.</param>
+            <returns>The total number of hits found.</returns>
+        </member>
+        <member name="M:Fusion.HitboxManager.PositionRotation(Fusion.Hitbox,System.Int32,UnityEngine.Vector3@,UnityEngine.Quaternion@,System.Boolean,System.Nullable{System.Int32},System.Nullable{System.Single})">
             <summary>
             Performs a lag-compensated query for a specific Hitbox position and rotation.
             </summary>
             <param name="hitbox">The target hitbox to be queried in the past</param>
             <param name="tick">The tick to be queried</param>
+            <param name="tickTo">
+            Simulation tick number to use as the time reference for the lag compensation.
+            If provided, must be combined with the <paramref name="alpha"/> parameter for interpolation between <paramref name="tick"/> and <paramref name="tickTo"/>.
+            If <paramref name="subtickAccuracy"/> is requested, the query will return the hitbox state interpolated between the specified ticks.
+            Otherwise, only one of the two ticks will be considered, according to the rounded value of <paramref name="alpha"/>.
+            </param>
+            <param name="alpha">
+            Interpolation value when querying between <paramref name="tick"/> and <paramref name="tickTo"/>.
+            If <paramref name="subtickAccuracy"/> is requested, the query will return the hitbox state interpolated between the specified ticks.
+            Otherwise, only one of the two ticks will be considered, according to the rounded alpha value.
+            </param>
             <param name="position">Will be filled with the hitbox position at the time of the tick</param>
             <param name="rotation">Will be filled with the hitbox rotation at the time of the tick</param>
             <param name="subtickAccuracy">If the query should interpolate between ticks to reflect exactly what was seen on the client.</param>
@@ -2745,6 +3141,12 @@
             Previous values can be obtained by calling changed.Behaviour.LoadOld(), then accessing the networked properties of changed.behaviour.
             </summary>
         </member>
+        <member name="M:Fusion.Changed`1.Rescan">
+            <summary>
+            Tells the OnChanged callback system that this object needs to be re-scanned for changes after the current change scan is completed.
+            Call this is you are changing data inside an OnChange callback and can't wait for the next tick to execute until the callback is triggered.
+            </summary>
+        </member>
         <member name="M:Fusion.Changed`1.LoadOld">
             <summary>
             Sets the changed behaviour to represent the previous state before the triggering change occurred.
@@ -2775,22 +3177,441 @@
             <param name="str"></param>
             <returns></returns>
         </member>
+        <member name="T:Fusion.InterpolatedErrorCorrectionSettings">
+            <summary>
+            A set of parameters that tune the interpolated correction of prediction error on transform data.
+            </summary>
+        </member>
+        <member name="F:Fusion.InterpolatedErrorCorrectionSettings.MinRate">
+            <summary>
+            <para>
+            A factor with dimension of 1/s (Hz) that works as a lower limit for how much
+            of the accumulated prediction error is corrected every frame.
+            This factor affects both the position and the rotation correction.
+            Suggested values are greater than zero and smaller than <see cref="F:Fusion.InterpolatedErrorCorrectionSettings.MaxRate">MaxRate</see>.
+            </para>
+            <para>
+            E.g.: MinRate = 3, rendering delta time = (1/60)s: at least 5% (3 * 1/60) of the accumulated error
+            will be corrected on this rendered frame. 
+            </para>
+            <para>
+            This threshold might not be respected if the resultant correction magnitude is
+            below the <see cref="F:Fusion.InterpolatedErrorCorrectionSettings.PosMinCorrection">PosMinCorrection</see>
+            or above the <see cref="F:Fusion.InterpolatedErrorCorrectionSettings.PosTeleportDistance">PosTeleportDistance</see>, for the position error,
+            or above the <see cref="F:Fusion.InterpolatedErrorCorrectionSettings.RotTeleportRadians">RotTeleportRadians</see>, for the rotation error.
+            </para>
+            </summary>
+        </member>
+        <member name="F:Fusion.InterpolatedErrorCorrectionSettings.MaxRate">
+            <summary>
+            <para>
+            A factor with dimension of 1/s (Hz) that works as a upper limit for how much
+            of the accumulated prediction error is corrected every frame.
+            This factor affects both the position and the rotation correction.
+            Suggested values are greater than <see cref="F:Fusion.InterpolatedErrorCorrectionSettings.MinRate">MinRate</see>
+            and smaller than half of a target rendering rate.
+            </para>
+            <para>
+            E.g.: MaxRate = 15, rendering delta time = (1/60)s: at maximum 25% (15 * 1/60) of the accumulated error
+            will be corrected on this rendered frame. 
+            </para>
+            <para>
+            This threshold might not be respected if the resultant correction magnitude is
+            below the <see cref="F:Fusion.InterpolatedErrorCorrectionSettings.PosMinCorrection">PosMinCorrection</see> or
+            above the <see cref="F:Fusion.InterpolatedErrorCorrectionSettings.PosTeleportDistance">PosTeleportDistance</see>, for the position error,
+            or above the <see cref="F:Fusion.InterpolatedErrorCorrectionSettings.RotTeleportRadians">RotTeleportRadians</see>, for the rotation error.
+            </para>
+            </summary>
+        </member>
+        <member name="F:Fusion.InterpolatedErrorCorrectionSettings.PosBlendStart">
+            <summary>
+            <para>
+            The reference for the magnitude of the accumulated position error, in meters,
+            at which the position error will be corrected at the <see cref="F:Fusion.InterpolatedErrorCorrectionSettings.MinRate">MinRate</see>.
+            Suggested values are greater than <see cref="F:Fusion.InterpolatedErrorCorrectionSettings.PosMinCorrection">PosMinCorrection</see>
+            and smaller than <see cref="F:Fusion.InterpolatedErrorCorrectionSettings.PosBlendEnd">PosBlendEnd</see>.
+            </para>
+            <para>
+            In other words, if the magnitude of the accumulated error is equal to or smaller than this threshold,
+            it will be corrected at the <see cref="F:Fusion.InterpolatedErrorCorrectionSettings.MinRate">MinRate</see>.
+            If, instead, the magnitude is between this threshold and <see cref="F:Fusion.InterpolatedErrorCorrectionSettings.PosBlendEnd">PosBlendEnd</see>,
+            the error is corrected at a rate between <see cref="F:Fusion.InterpolatedErrorCorrectionSettings.MinRate">MinRate</see>
+            and <see cref="F:Fusion.InterpolatedErrorCorrectionSettings.MaxRate">MaxRate</see>, proportionally.
+            If it is equal to or greater than <see cref="F:Fusion.InterpolatedErrorCorrectionSettings.PosBlendEnd">PosBlendEnd</see>,
+            it will be corrected at the <see cref="F:Fusion.InterpolatedErrorCorrectionSettings.MaxRate">MaxRate</see>.
+            </para>
+            <para>
+            Note: as the factor is expressed in distance units (meters), it might need to be scaled
+            proportionally to the overall scale of objects in the scene and speeds at which they move,
+            which are factors that affect the expected magnitude of prediction errors.
+            </para>
+            </summary>
+        </member>
+        <member name="F:Fusion.InterpolatedErrorCorrectionSettings.PosBlendEnd">
+            <summary>
+            <para>
+            The reference for the magnitude of the accumulated position error, in meters,
+            at which the position error will be corrected at the <see cref="F:Fusion.InterpolatedErrorCorrectionSettings.MaxRate">MaxRate</see>.
+            Suggested values are greater than <see cref="F:Fusion.InterpolatedErrorCorrectionSettings.PosBlendStart">PosBlendStart</see>
+            and smaller than <see cref="F:Fusion.InterpolatedErrorCorrectionSettings.PosTeleportDistance">PosTeleportDistance</see>.
+            </para>
+            <para>
+            In other words, if the magnitude of the accumulated error is equal to or greater than this threshold,
+            it will be corrected at the <see cref="F:Fusion.InterpolatedErrorCorrectionSettings.MaxRate">MaxRate</see>.
+            If, instead, the magnitude is between <see cref="F:Fusion.InterpolatedErrorCorrectionSettings.PosBlendStart">PosBlendStart</see> and this threshold,
+            the error is corrected at a rate between <see cref="F:Fusion.InterpolatedErrorCorrectionSettings.MinRate">MinRate</see>
+            and <see cref="F:Fusion.InterpolatedErrorCorrectionSettings.MaxRate">MaxRate</see>, proportionally.
+            If it is equal to or smaller than <see cref="F:Fusion.InterpolatedErrorCorrectionSettings.PosBlendStart">PosBlendStart</see>,
+            it will be corrected at the <see cref="F:Fusion.InterpolatedErrorCorrectionSettings.MinRate">MinRate</see>.
+            </para>
+            <para>
+            Note: as the factor is expressed in distance units (meters), it might need to be scaled
+            proportionally to the overall scale of objects in the scene and speeds at which they move,
+            which are factors that affect the expected magnitude of prediction errors.
+            </para>
+            </summary>
+        </member>
+        <member name="F:Fusion.InterpolatedErrorCorrectionSettings.PosMinCorrection">
+            <summary>
+            <para>
+            The value, in meters, that represents the minimum magnitude of the accumulated position error
+            that will be corrected in a single frame, until it is fully corrected.
+            </para>
+            <para>
+            This setting has priority over the resultant correction rate, i.e. the restriction
+            will be respected even if it makes the effective correction rate be different than
+            the one computed according to the min/max rates and start/end blend values.
+            Suggested values are greater than zero and smaller than <see cref="F:Fusion.InterpolatedErrorCorrectionSettings.PosBlendStart">PosBlendStart</see>.
+            </para>
+            <para>
+            Note: as the factor is expressed in distance units (meters), it might need to be scaled
+            proportionally to the overall scale of objects in the scene and speeds at which they move,
+            which are factors that affect the expected magnitude of prediction errors.
+            </para>
+            </summary>
+        </member>
+        <member name="F:Fusion.InterpolatedErrorCorrectionSettings.PosTeleportDistance">
+            <summary>
+            <para>
+            The value, in meters, that represents the magnitude of the accumulated
+            position error above which the error will be instantaneously corrected,
+            effectively teleporting the rendered object to its correct position.
+            Suggested values are greater than <see cref="F:Fusion.InterpolatedErrorCorrectionSettings.PosBlendEnd">PosBlendEnd</see>.
+            </para>
+            <para>
+            This setting has priority over the resultant correction rate, i.e. the restriction
+            will be respected even if it makes the effective correction rate be different than
+            the one computed according to the min/max rates and start/end blend values.
+            </para>
+            <para>
+            Note: as the factor is expressed in distance units (meters), it might need to be scaled
+            proportionally to the overall scale of objects in the scene and speeds at which they move,
+            which are factors that affect the expected magnitude of prediction errors.
+            </para>
+            </summary>
+        </member>
+        <member name="F:Fusion.InterpolatedErrorCorrectionSettings.RotBlendStart">
+            <summary>
+            <para>
+            The reference for the magnitude of the accumulated rotation error, in radians,
+            at which the rotation error will be corrected at the <see cref="F:Fusion.InterpolatedErrorCorrectionSettings.MinRate">MinRate</see>.
+            Suggested values are smaller than <see cref="F:Fusion.InterpolatedErrorCorrectionSettings.RotBlendEnd">RotBlendEnd</see>.
+            </para>
+            <para>
+            In other words, if the magnitude of the accumulated error is equal to or smaller than this threshold,
+            it will be corrected at the <see cref="F:Fusion.InterpolatedErrorCorrectionSettings.MinRate">MinRate</see>.
+            If, instead, the magnitude is between this threshold and <see cref="F:Fusion.InterpolatedErrorCorrectionSettings.RotBlendEnd">RotBlendEnd</see>,
+            the error is corrected at a rate between <see cref="F:Fusion.InterpolatedErrorCorrectionSettings.MinRate">MinRate</see>
+            and <see cref="F:Fusion.InterpolatedErrorCorrectionSettings.MaxRate">MaxRate</see>, proportionally.
+            If it is equal to or greater than <see cref="F:Fusion.InterpolatedErrorCorrectionSettings.RotBlendEnd">RotBlendEnd</see>,
+            it will be corrected at the <see cref="F:Fusion.InterpolatedErrorCorrectionSettings.MaxRate">MaxRate</see>.
+            </para>
+            </summary>
+        </member>
+        <member name="F:Fusion.InterpolatedErrorCorrectionSettings.RotBlendEnd">
+            <summary>
+            <para>
+            The reference for the magnitude of the accumulated rotation error, in radians,
+            at which the rotation error will be corrected at the <see cref="F:Fusion.InterpolatedErrorCorrectionSettings.MaxRate">MaxRate</see>.
+            Suggested values are greater than <see cref="F:Fusion.InterpolatedErrorCorrectionSettings.RotBlendStart">RotBlendStart</see>
+            and smaller than <see cref="F:Fusion.InterpolatedErrorCorrectionSettings.RotTeleportRadians">RotTeleportRadians</see>.
+            </para>
+            <para>
+            In other words, if the magnitude of the accumulated error is equal to or greater than this threshold,
+            it will be corrected at the <see cref="F:Fusion.InterpolatedErrorCorrectionSettings.MaxRate">MaxRate</see>.
+            If, instead, the magnitude is between <see cref="F:Fusion.InterpolatedErrorCorrectionSettings.RotBlendStart">RotBlendStart</see> and this threshold,
+            the error is corrected at a rate between <see cref="F:Fusion.InterpolatedErrorCorrectionSettings.MinRate">MinRate</see>
+            and <see cref="F:Fusion.InterpolatedErrorCorrectionSettings.MaxRate">MaxRate</see>, proportionally.
+            If it is equal to or smaller than <see cref="F:Fusion.InterpolatedErrorCorrectionSettings.RotBlendStart">RotBlendStart</see>,
+            it will be corrected at the <see cref="F:Fusion.InterpolatedErrorCorrectionSettings.MinRate">MinRate</see>.
+            </para>
+            </summary>
+        </member>
+        <member name="F:Fusion.InterpolatedErrorCorrectionSettings.RotTeleportRadians">
+            <summary>
+            <para>
+            The value, in radians, that represents the magnitude of the accumulated
+            rotation error above which the error will be instantaneously corrected,
+            effectively teleporting the rendered object to its correct orientation.
+            Suggested values are greater than <see cref="F:Fusion.InterpolatedErrorCorrectionSettings.RotBlendEnd">RotBlendEnd</see>.
+            </para>
+            <para>
+            This setting has priority over the resultant correction rate, i.e. the restriction
+            will be respected even if it makes the effective correction rate be different than
+            the one computed according to the min/max rates and start/end blend values.
+            </para>
+            </summary>
+        </member>
         <member name="T:Fusion.NetworkArray`1">
             <summary>
-            Fusion type for networking arrays.
-            Sample Usage:
+            Fusion type for networking arrays. Capacity is fixed, and needs to be set the maximum possible number of entries.<br></br><br></br>
+            Typical Usage:
             <code>
-            [Capacity(4)]<br></br>
-            NetworkArray&lt;float&gt; myNetworkArray { get; set; }<br></br>
+            [Networked, Capacity(4)]<br></br>
+            NetworkArray&lt;float&gt; syncedArray => default;
+            </code>
+            Optional usage (for NetworkBehaviours ONLY - this is not legal in INetworkStructs):
+            <code>
+            [Networked, Capacity(4)]<br></br>
+            NetworkArray&lt;int&gt; syncedArray { get; } = MakeInitializer(new int[] { 1, 2, 3, 4 });<br></br>
+            </code>
+            Internally this struct does not contain the actual array data, and is only a wrapper for memory operations.<br></br>
+            Usage for modifying data:
+            <code>
+            var array = syncedArray;
+            array.Set(123);
+            array[0] = 456;
             </code>
             </summary>
-            <typeparam name="T"></typeparam>
+            <typeparam name="T">T can be a primitive, or an INetworkStruct.</typeparam>
+        </member>
+        <member name="P:Fusion.NetworkArray`1.Length">
+            <summary>
+            The fixed size of the array.
+            </summary>
+        </member>
+        <member name="P:Fusion.NetworkArray`1.Item(System.Int32)">
+            <summary>
+            Indexer of array elements.
+            </summary>
+        </member>
+        <member name="M:Fusion.NetworkArray`1.#ctor(System.Byte*,System.Int32,Fusion.IElementReaderWriter{`0})">
+            <summary>
+            NetworkArray constructor.
+            </summary>
+        </member>
+        <member name="M:Fusion.NetworkArray`1.Get(System.Int32)">
+            <summary>
+            Returns the array value at supplied index.
+            </summary>
+        </member>
+        <member name="M:Fusion.NetworkArray`1.Set(System.Int32,`0)">
+            <summary>
+            Sets the array value at the supplied index.
+            </summary>
+        </member>
+        <member name="M:Fusion.NetworkArray`1.ToArray">
+            <summary>
+            Allocates a new array and copies values from the dictionary to that array. For a non-alloc alternative use <see cref="M:Fusion.NetworkArray`1.CopyTo(System.Collections.Generic.List{`0})"/>.
+            </summary>
+        </member>
+        <member name="M:Fusion.NetworkArray`1.CopyTo(System.Collections.Generic.List{`0})">
+            <summary>
+            Adds each value to the supplied List. This does not clear the list, so values will be appended to the existing list.
+            </summary>
+        </member>
+        <member name="M:Fusion.NetworkArray`1.CopyTo(`0[],System.Boolean)">
+            <summary>
+            Copies values to the supplied array.
+            </summary>
+            <param name="array"></param>
+            <param name="throwIfOverflow">If true, this method will throw an error if the supplied array is smaller than this <see cref="T:Fusion.NetworkArray`1"/>. If false, will only copy as many elements as the target array can hold.</param>
+        </member>
+        <member name="M:Fusion.NetworkArray`1.CopyFrom(`0[],System.Int32,System.Int32)">
+            <summary>
+            Copies a range of values in from a supplied source array.
+            </summary>
+            <param name="sourceOffset">Starting index of elements in source.</param>
+            <param name="sourceCount">Number of sequential source elements to copy in.</param>
+        </member>
+        <member name="M:Fusion.NetworkArray`1.CopyFrom(System.Collections.Generic.List{`0},System.Int32,System.Int32)">
+            <summary>
+            Copies a range of values in from a supplied source list.
+            </summary>
+            <param name="sourceOffset">Starting index of elements in source.</param>
+            <param name="sourceCount">Number of sequential source elements to copy in.</param>
         </member>
         <member name="M:Fusion.NetworkArray`1.ToListString">
             <summary>
             Returns the elements of this array as a string, with value separated by \n characters. Specifically for use in the Unity inspector.
             This is private and only is found by NetworkBehaviourEditor using reflection, so do not rename this method.
             </summary>
+        </member>
+        <member name="T:Fusion.NetworkDictionary`2">
+            <summary>
+            Fusion type for networking Dictionaries. Capacity is fixed, and needs to be set the maximum possible number of entries.<br></br><br></br>
+            Typical Usage:
+            <code>
+            [Networked, Capacity(10)]<br></br>
+            NetworkDictionary&lt;int, float&gt; syncedDict => default;<br></br>
+            </code>
+            Internally this struct does not contain the actual dictionary data, and is only a wrapper for memory operations.<br></br>
+            Usage for modifying data:
+            <code>
+            var dict = syncedDict;
+            dict.Add(5, 123);
+            dict[5] = 456;
+            dict.Remove(5);
+            </code>
+            </summary>
+            <typeparam name="K">Key can be a primitive, or an INetworkStruct.</typeparam>
+            <typeparam name="V">Value can be a primitive, or an INetworkStruct.</typeparam>
+        </member>
+        <member name="P:Fusion.NetworkDictionary`2.Count">
+            <summary>
+            Current number of key/value entries in the Dictionary.
+            </summary>
+        </member>
+        <member name="P:Fusion.NetworkDictionary`2.Capacity">
+            <summary>
+            The maximum number of entries this dictionary may contain.
+            </summary>
+        </member>
+        <member name="P:Fusion.NetworkDictionary`2.Item(`0)">
+            <summary>
+            Key indexer. Gets/Sets value for specified key.
+            </summary>
+        </member>
+        <member name="M:Fusion.NetworkDictionary`2.Clear">
+            <summary>
+            Remove all entries from the Dictionary, and clear backing memory.
+            </summary>
+        </member>
+        <member name="M:Fusion.NetworkDictionary`2.ContainsKey(`0)">
+            <summary>
+            Returns true if the Dictionary contains an entry for the given key.
+            </summary>
+        </member>
+        <member name="M:Fusion.NetworkDictionary`2.ContainsValue(`1,System.Collections.Generic.IEqualityComparer{`1})">
+            <summary>
+            Returns true if the Dictionary contains an entry value which compares as equal to given value.
+            </summary>
+            <param name="value">The value to compare against.</param>
+            <param name="equalityComparer">Specify custom IEqualityComparer to be used for compare.</param>
+        </member>
+        <member name="M:Fusion.NetworkDictionary`2.Get(`0)">
+            <summary>
+            Returns the value for the given key. Will throw an error if the key is not found.
+            </summary>
+        </member>
+        <member name="M:Fusion.NetworkDictionary`2.Set(`0,`1)">
+            <summary>
+            Sets the value for the given key. Will add a new key if the key does not already exist.
+            </summary>
+        </member>
+        <member name="M:Fusion.NetworkDictionary`2.Add(`0,`1)">
+            <summary>
+            Adds a new key value pair to the Dictionary. If the key already exists, will return false.
+            </summary>
+        </member>
+        <member name="M:Fusion.NetworkDictionary`2.TryGet(`0,`1@)">
+            <summary>
+            Attempts to get the value for a given key. If found, returns true.
+            </summary>
+            <param name="key">The key to remove.</param>
+            <param name="value">Returns value of removed item. Returns default value if key did not exist.</param>
+            <returns>Returns true if key was found.</returns>
+        </member>
+        <member name="M:Fusion.NetworkDictionary`2.Remove(`0)">
+            <summary>
+            Remove entry from Dictionary.
+            </summary>
+            <param name="key"></param>
+            <returns>Returns true if key was found.</returns>
+        </member>
+        <member name="M:Fusion.NetworkDictionary`2.Remove(`0,`1@)">
+            <summary>
+            Removes entry from Dictionary. If successful (key existed), returns true and the value of removed item.
+            </summary>
+            <param name="key">The key to remove.</param>
+            <param name="value">Returns value of removed item. Returns default value if key did not exist.</param>
+            <returns>Returns true if key was found.</returns>
+        </member>
+        <member name="T:Fusion.NetworkLinkedList`1">
+            <summary>
+            Fusion type for networking LinkedLists. Capacity is fixed, and needs to be set the maximum possible number of entries.<br></br><br></br>
+            Typical Usage:
+            <code>
+            [Networked, Capacity(10)]<br></br>
+            NetworkLinkedList&lt;int&gt; syncedLinkedList => default;
+            </code>
+            Optional usage (for NetworkBehaviours ONLY - this is not legal in INetworkStructs):
+            <code>
+            [Networked, Capacity(4)]<br></br>
+            NetworkLinkedList&lt;int&gt; syncedLinkedList { get; } = MakeInitializer(new int[] { 1, 2, 3, 4 });<br></br>
+            </code>
+            Internally this struct does not contain the actual list data, and is only a wrapper for memory operations.<br></br>
+            Usage for modifying data:
+            <code>
+            var list = syncedLinkedList;
+            list.Add(123);
+            list[0] = 456;
+            list.Remove(0);
+            </code>
+            </summary>
+            <typeparam name="T">T can be a primitive, or an INetworkStruct.</typeparam>
+        </member>
+        <member name="P:Fusion.NetworkLinkedList`1.Count">
+            <summary>
+            Returns the current element count.
+            </summary>
+        </member>
+        <member name="P:Fusion.NetworkLinkedList`1.Capacity">
+            <summary>
+            Returns the max element count.
+            </summary>
+        </member>
+        <member name="P:Fusion.NetworkLinkedList`1.Item(System.Int32)">
+            <summary>
+            Element indexer.
+            </summary>
+        </member>
+        <member name="M:Fusion.NetworkLinkedList`1.Clear">
+            <summary>
+            Removes and clears all list elements.
+            </summary>
+        </member>
+        <member name="M:Fusion.NetworkLinkedList`1.Contains(`0)">
+            <summary>
+            Returns true if the value already exists in the list.
+            </summary>
+        </member>
+        <member name="M:Fusion.NetworkLinkedList`1.Contains(`0,System.Collections.Generic.IEqualityComparer{`0})">
+            <summary>
+            Returns true if the value already exists in the list.
+            </summary>
+        </member>
+        <member name="M:Fusion.NetworkLinkedList`1.Remove(`0)">
+            <summary>
+            Removes the first found element with indicated value.
+            </summary>
+        </member>
+        <member name="M:Fusion.NetworkLinkedList`1.Remove(`0,System.Collections.Generic.IEqualityComparer{`0})">
+            <summary>
+            Removes the first found element with indicated value.
+            </summary>
+        </member>
+        <member name="M:Fusion.NetworkLinkedList`1.AddLast(`0)">
+            <summary>
+            Adds a value to the end of the list.
+            </summary>
+            <param name="value"></param>
+        </member>
+        <member name="M:Fusion.NetworkLinkedList`1.Add(`0)">
+            <summary>
+            Adds a value to the end of the list.
+            </summary>
+            <param name="value"></param>
         </member>
         <member name="T:Fusion.NetworkRNG">
             <summary>
@@ -2993,11 +3814,6 @@
             
             </summary>
         </member>
-        <member name="P:Fusion.NetworkId.IsLocal">
-            <summary>
-            
-            </summary>
-        </member>
         <member name="M:Fusion.NetworkId.ToNamePrefixString">
             <summary>
             String conversion specifically for use in prefixing names of GameObjects.
@@ -3141,19 +3957,9 @@
             Sets which <see cref="T:Fusion.PlayerRef"/> has Input Authority for this Object.
             </summary>
         </member>
-        <member name="M:Fusion.NetworkObject.AssignStateAuthority(Fusion.PlayerRef)">
-            <summary>
-            Sets which <see cref="T:Fusion.PlayerRef"/> has Input Authority for this Object.
-            </summary>
-        </member>
         <member name="M:Fusion.NetworkObject.RemoveInputAuthority">
             <summary>
             Removes input authority from whichever player has it for this object
-            </summary>
-        </member>
-        <member name="M:Fusion.NetworkObject.RemoveStateAuthority">
-            <summary>
-            Removes state authority from whichever player has it for this object, this gives state authority back to the server.
             </summary>
         </member>
         <member name="T:Fusion.NetworkPrefabRef">
@@ -3480,6 +4286,11 @@
             Delegate type for on before spawned callback
             </summary>
         </member>
+        <member name="T:Fusion.NetworkRunner.DeferredShutdownParams">
+            <summary>
+            Stores the Shutdown parameters used when requesting a Shutdown from inside a Runner Callback
+            </summary>
+        </member>
         <member name="F:Fusion.NetworkRunner.BurstDeltaCompressor">
             <summary>
             
@@ -3498,7 +4309,17 @@
             <param name="gameObject"></param>
             <returns></returns>
         </member>
-        <member name="F:Fusion.NetworkRunner.ProvideInput">
+        <member name="F:Fusion.NetworkRunner._initializeOperation">
+            <summary>
+            Completion Source for the startup Photon Cloud Operations
+            </summary>
+        </member>
+        <member name="P:Fusion.NetworkRunner.IsVisible">
+            <summary>
+            Change the visibility of this NetworkRunner when running in Multiple Peer Mode
+            </summary>
+        </member>
+        <member name="P:Fusion.NetworkRunner.ProvideInput">
             <summary>
             Indicates if this <see cref="T:Fusion.NetworkRunner"/> is collecting <see cref="T:Fusion.PlayerRef"/> <see cref="T:Fusion.INetworkInput"/>.
             </summary>
@@ -3673,7 +4494,7 @@
             Connect this <see cref="T:Fusion.NetworkRunner"/> as a client to a Server.
             </summary>
         </member>
-        <member name="M:Fusion.NetworkRunner.Shutdown(System.Boolean,System.Threading.Tasks.Task,Fusion.ShutdownReason)">
+        <member name="M:Fusion.NetworkRunner.Shutdown(System.Boolean,Fusion.ShutdownReason)">
             <summary>
             Initiates a <see cref="M:Fusion.Simulation.Dispose"/>.
             </summary>
@@ -3681,6 +4502,21 @@
         <member name="M:Fusion.NetworkRunner.Initialize(Fusion.NetworkRunnerInitializeArgs)">
             <summary>
             Starts <see cref="T:Fusion.NetworkRunner"/> using the supplied arguments.
+            </summary>
+        </member>
+        <member name="M:Fusion.NetworkRunner.SinglePlayerPause">
+            <summary>
+            Pauses the game in single player
+            </summary>
+        </member>
+        <member name="M:Fusion.NetworkRunner.SinglePlayerContinue">
+            <summary>
+            Continues a paused game in single player
+            </summary>
+        </member>
+        <member name="M:Fusion.NetworkRunner.SinglePlayerPause(System.Boolean)">
+            <summary>
+            Sets the paused state in a single player
             </summary>
         </member>
         <member name="M:Fusion.NetworkRunner.SetPropertyGroup(Fusion.NetworkObject,Fusion.PlayerRef,System.String,System.Boolean)">
@@ -3692,6 +4528,34 @@
             <param name="group"></param>
             <param name="enabled"></param>
         </member>
+        <member name="M:Fusion.NetworkRunner.GetPlayerActorId(Fusion.PlayerRef)">
+            <summary>
+            Gets Player's Actor Number (ID). Only usable in shared mode. 
+            </summary>
+            <param name="player">PlayerRef to get the Actor Number (ID)</param>
+            <returns>Actor Number associated with the PlayerRef, otherwise null.</returns>
+        </member>
+        <member name="M:Fusion.NetworkRunner.GetPlayerUserId(Fusion.PlayerRef)">
+            <summary>
+            Gets Player's UserID. Only usable in shared mode.
+            </summary>
+            <param name="player">PlayerRef to get the UserID</param>
+            <returns>UserID if valid player found, otherwise null.</returns>
+        </member>
+        <member name="M:Fusion.NetworkRunner.SetPlayerObject(Fusion.PlayerRef,Fusion.NetworkObject)">
+            <summary>
+            Sets the network object associated with this player
+            </summary>
+            <param name="player"></param>
+            <param name="networkObject"></param>
+        </member>
+        <member name="M:Fusion.NetworkRunner.GetPlayerObject(Fusion.PlayerRef)">
+            <summary>
+            Gets the network object associated with a specific player
+            </summary>
+            <param name="player"></param>
+            <returns>Network object if one is associated with the player</returns>
+        </member>
         <member name="M:Fusion.NetworkRunner.GetPlayerRtt(Fusion.PlayerRef)">
             <summary>
             Returns the player round trip time (ping) in seconds
@@ -3700,9 +4564,16 @@
         </member>
         <member name="M:Fusion.NetworkRunner.SendRpc(Fusion.SimulationMessage*)">
             <summary>
-            
+            Sends RPC message. Not meant to be used directly, ILWeaver calls this.
             </summary>
             <param name="message"></param>
+        </member>
+        <member name="M:Fusion.NetworkRunner.SendRpc(Fusion.SimulationMessage*,Fusion.RpcInvokeInfo.RemoteInfo@)">
+            <summary>
+            Sends RPC message. Not meant to be used directly, ILWeaver calls this.
+            </summary>
+            <param name="message"></param>
+            <param name="info"></param>
         </member>
         <member name="M:Fusion.NetworkRunner.IsPlayerValid(Fusion.PlayerRef)">
             <summary>
@@ -3785,6 +4656,16 @@
             Moves an object to the scene of this runner
             </summary>
             <param name="go">Object to move</param>
+        </member>
+        <member name="M:Fusion.NetworkRunner.EnsureRunnerSceneIsActive(UnityEngine.SceneManagement.Scene@)">
+            <summary>
+            If running in <see cref="F:Fusion.NetworkProjectConfig.PeerModes.Multiple"/> peer mode and the current active 
+            scene is different than <see cref="P:Fusion.NetworkRunner.MultiplePeerUnityScene"/>, switches active scene to <see cref="P:Fusion.NetworkRunner.MultiplePeerUnityScene"/>,
+            stores the previous active scene in <paramref name="previousActiveScene"/> and returns true.
+            Returns false otherwise.
+            </summary>
+            <param name="previousActiveScene"></param>
+            <returns>True if an actual change occurred.</returns>
         </member>
         <member name="M:Fusion.NetworkRunner.SetPlayerAlwaysInterested(Fusion.PlayerRef,Fusion.NetworkObject,System.Boolean)">
             <summary>
@@ -3949,26 +4830,20 @@
             <param name="networkObject">The object to attach</param>
             <param name="inputAuthority">If assigned who is the default input authority for this object</param>
         </member>
-        <member name="M:Fusion.NetworkRunner.GetString(System.Int32*,System.String@)">
-            <summary>
-            
-            </summary>
-            <param name="ptr"></param>
-            <param name="cache"></param>
-            <returns></returns>
-        </member>
-        <member name="M:Fusion.NetworkRunner.SetString(System.Int32*,System.Int32,System.String,System.String@)">
-            <summary>
-            
-            </summary>
-            <param name="ptr"></param>
-            <param name="maxLength"></param>
-            <param name="value"></param>
-            <param name="cache"></param>
-        </member>
         <member name="P:Fusion.NetworkRunner.IsCloudReady">
             <summary>
             Signal if the Local Peer is connected to Photon Cloud and is able to Create/Join Room but also receive Lobby Updates
+            </summary>
+        </member>
+        <member name="P:Fusion.NetworkRunner.UserId">
+            <summary>
+            Photon Client UserID
+            </summary>
+            <remarks>Returns null if Peer is not connected to Photon Cloud</remarks>
+        </member>
+        <member name="P:Fusion.NetworkRunner.AuthenticationValues">
+            <summary>
+            <see cref="P:Fusion.NetworkRunner.AuthenticationValues"/> used by this Runner to Authenticate the local peer.
             </summary>
         </member>
         <member name="P:Fusion.NetworkRunner.GameMode">
@@ -3996,26 +4871,40 @@
             Signal if the Local Peer is in a Room and is the Room Master Client
             </summary>
         </member>
+        <member name="F:Fusion.NetworkRunner._cloudOperation">
+            <summary>
+            Completion Source for the startup Photon Cloud Operations
+            </summary>
+        </member>
         <member name="F:Fusion.NetworkRunner._cloudServices">
             <summary>
             Responsible to manage the Photon Cloud related Services
             </summary>
         </member>
-        <member name="M:Fusion.NetworkRunner.ConnectToCloud(Fusion.Photon.Realtime.AuthenticationValues)">
-            <summary>
-            Connect the local peer to Photon Cloud using an async process.
-            </summary>
-            <param name="authentication">Authentication Values used to authenticate this peer</param>
-            <returns>Async Task of the connect to Photon Cloud process. Can be used to wait for the process to be finished.</returns>
-        </member>
-        <member name="M:Fusion.NetworkRunner.JoinSessionLobby(Fusion.SessionLobby,System.String,Fusion.Photon.Realtime.AuthenticationValues)">
+        <member name="M:Fusion.NetworkRunner.JoinSessionLobby(Fusion.SessionLobby,System.String,Fusion.Photon.Realtime.AuthenticationValues,Fusion.Photon.Realtime.AppSettings)">
             <summary>
             Join the Peer to a specific Lobby, either a prebuild or a custom one
             </summary>
             <param name="sessionLobby">Lobby Type to Join</param>
             <param name="lobbyID">Lobby ID</param>
             <param name="authentication">Authentication Values used to authenticate this peer</param>
+            <param name="customAppSettings">Custom Photon Application Settings</param>
             <returns>Async Task to Join a Session Lobby. Can be used to wait for the process to be finished.</returns>
+        </member>
+        <member name="M:Fusion.NetworkRunner.StartGame(Fusion.StartGameArgs)">
+            <summary>
+            Starts the local Fusion Runner and takes care of all major setup necessary
+            </summary>
+            <param name="args">Custom arguments used to setup the Fusion Simulation</param>
+            <returns>Task that can be awaited to chain actions</returns>
+        </member>
+        <member name="M:Fusion.NetworkRunner.ConnectToCloud(Fusion.Photon.Realtime.AuthenticationValues,Fusion.Photon.Realtime.AppSettings)">
+            <summary>
+            Connect the local peer to Photon Cloud using an async process.
+            </summary>
+            <param name="authentication">Authentication Values used to authenticate this peer</param>
+            <param name="customAppSettings">Custom Photon Application Settings</param>
+            <returns>Async Task of the connect to Photon Cloud process. Can be used to wait for the process to be finished.</returns>
         </member>
         <member name="M:Fusion.NetworkRunner.DisconnectFromCloud">
             <summary>
@@ -4024,23 +4913,6 @@
             If the Cloud Services were not initialized, it just returns immediately
             </summary>
             <returns></returns>
-        </member>
-        <member name="M:Fusion.NetworkRunner.StartGame(Fusion.GameMode,Fusion.SessionInfo)">
-            <summary>
-            Start Game to join a specific <see cref="P:Fusion.NetworkRunner.SessionInfo"/>.
-            Only <see cref="F:Fusion.GameMode.Client"/> and <see cref="F:Fusion.GameMode.Shared"/> are accepted in this case 
-            as the local peer is joining a already running session and must not be creating one.
-            </summary>
-            <param name="gameMode">Starting GameMode</param>
-            <param name="session">Session to Join</param>
-            <returns>Task that can be awaited to chain actions</returns>
-        </member>
-        <member name="M:Fusion.NetworkRunner.StartGame(Fusion.StartGameArgs)">
-            <summary>
-            Starts the local Fusion Runner and takes care of all major setup necessary
-            </summary>
-            <param name="args">Custom arguments used to setup the Fusion Simulation</param>
-            <returns>Task that can be awaited to chain actions</returns>
         </member>
         <member name="M:Fusion.NetworkRunner.StartGameModeSinglePlayer(Fusion.StartGameArgs)">
             <summary>
@@ -4056,11 +4928,12 @@
             <param name="args">Initialization Arguments</param>
             <returns>A running Task of the initialization process</returns>
         </member>
-        <member name="M:Fusion.NetworkRunner.WaitOnStart">
+        <member name="M:Fusion.NetworkRunner.ShutdownWithException(System.Exception)">
             <summary>
-            Wait for Fusion to be fully started
+            Shutdown the Fusion Runner based on a arbitrary Exception
             </summary>
-            <returns></returns>
+            <param name="e">Exception used as base for the Shutdown procedure</param>
+            <returns>Awaitable Task of the Shutdown procedure</returns>
         </member>
         <member name="M:Fusion.NetworkRunner.UpdateSessionList(System.Collections.Generic.List{Fusion.SessionInfo})">
             <summary>
@@ -4102,7 +4975,7 @@
         </member>
         <member name="F:Fusion.StartGameArgs.SceneObjectProvider">
             <summary>
-            
+            Custom <see cref="T:Fusion.INetworkSceneObjectProvider"/> reference
             </summary>
         </member>
         <member name="F:Fusion.StartGameArgs.Config">
@@ -4160,6 +5033,16 @@
             Custom Authentication Data
             </summary>
         </member>
+        <member name="F:Fusion.StartGameArgs.CustomPhotonAppSettings">
+            <summary>
+            Custom Photon Application Settings
+            </summary>
+        </member>
+        <member name="F:Fusion.StartGameArgs.DisableClientSessionCreation">
+            <summary>
+            Disables the Session creation when starting a Client with an specific Session Name
+            </summary>
+        </member>
         <member name="T:Fusion.GameMode">
             <summary>
             Fusion Game Mode.
@@ -4190,6 +5073,11 @@
         <member name="F:Fusion.GameMode.Client">
             <summary>
             Client Mode: starts a Game Client, which will connect to a peer in either <see cref="F:Fusion.GameMode.Server"/> or <see cref="F:Fusion.GameMode.Host"/> Modes.
+            </summary>
+        </member>
+        <member name="F:Fusion.GameMode.AutoHostOrClient">
+            <summary>
+            Automatically start as Host or Client
             </summary>
         </member>
         <member name="T:Fusion.ConnectionType">
@@ -4225,7 +5113,7 @@
         </member>
         <member name="F:Fusion.SessionLobby.ClientServer">
             <summary>
-            Server Client Lobby
+            ClientServer Lobby
             </summary>
         </member>
         <member name="F:Fusion.SessionLobby.Shared">
@@ -4300,6 +5188,49 @@
             String representation of a <see cref="T:Fusion.SessionInfo"/>
             </summary>
             <returns>Formatted <see cref="T:Fusion.SessionInfo"/></returns>
+        </member>
+        <member name="T:Fusion.StartGameResult">
+            <summary>
+            Represents the result of starting the Fusion Simulation
+            </summary>
+        </member>
+        <member name="P:Fusion.StartGameResult.Ok">
+            <summary>
+            Signal if the Start was OK
+            </summary>
+        </member>
+        <member name="P:Fusion.StartGameResult.ShutdownReason">
+            <summary>
+            Start Game Shutdown Reason
+            </summary>
+        </member>
+        <member name="M:Fusion.StartGameResult.ToString">
+            <summary>
+            StartGameResult to String
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:Fusion.StartGameException">
+            <summary>
+            Describe an Exception that Occurred while starting the Fusion Simulation
+            </summary>
+        </member>
+        <member name="P:Fusion.StartGameException.ShutdownReason">
+            <summary>
+            ShutdownReason that caused this exception
+            </summary>
+        </member>
+        <member name="M:Fusion.StartGameException.ToString">
+            <summary>
+            StartGameException to String
+            </summary>
+        </member>
+        <member name="M:Fusion.StartGameException.Convert(System.Exception)">
+            <summary>
+            Convert arbitrary Exceptions into a StartGameException to public use
+            </summary>
+            <param name="e">Exception to be converted</param>
+            <returns>Reference to a StartGameException holding a ShutdownReason</returns>
         </member>
         <member name="T:Fusion.NetworkRunnerCallbackArgs">
             <summary>
@@ -4399,6 +5330,16 @@
         <member name="F:Fusion.ShutdownReason.AuthenticationTicketExpired">
             <summary>
             Raised when the Authentication Ticket has expired
+            </summary>
+        </member>
+        <member name="F:Fusion.ShutdownReason.PhotonCloudTimeout">
+            <summary>
+            Timeout on the Connection with the Photon Cloud
+            </summary>
+        </member>
+        <member name="F:Fusion.ShutdownReason.AlreadyRunning">
+            <summary>
+            Raised when Fusion is already running and the StartGame is invoked again
             </summary>
         </member>
         <member name="T:Fusion.INetworkRunnerCallbacks">
@@ -4559,6 +5500,60 @@
             Main simulation class
             </summary>
         </member>
+        <member name="P:Fusion.Simulation.IsResimulation">
+            <summary>
+            Use inside of FixedUpdateNetwork to determine if the tick currently being simulated has previously been simulated locally.
+            Resimulation occurs in client prediction when new states arrive from the StateAuthority. 
+            Networked objects are set to the most current authority state tick, and simulations are repeated from that tick to the local current tick.
+            </summary>
+        </member>
+        <member name="P:Fusion.Simulation.IsLastTick">
+            <summary>
+            Use in conjunction with IsResimulation/IsForward inside of FixedUpdateNetwork to determine if the current tick being simulated 
+            is the last tick of the resimulation or forward phase of the simulation loop.
+            <para>
+            'Resimulation' describes simulating a tick that has been previously been simulated.<br></br> 
+            'Forward' describes simulating a tick that is being simulated for the first time locally.<br></br>
+            'Prediction' describes simulating ticks higher than the most current known StateAuthority snapshot tick.
+            </para>
+            </summary>
+        </member>
+        <member name="P:Fusion.Simulation.IsFirstTick">
+            <summary>
+            Use in conjunction with IsResimulation/IsForward inside of FixedUpdateNetwork to determine if the current tick being simulated 
+            is the first tick of the resimulation or forward phase of the simulation loop.
+            <para>
+            'Resimulation' describes simulating a tick that has been previously been simulated.<br></br> 
+            'Forward' describes simulating a tick that is being simulated for the first time locally.<br></br>
+            'Prediction' describes simulating ticks higher than the most current known StateAuthority snapshot tick.
+            </para>
+            </summary>
+        </member>
+        <member name="P:Fusion.Simulation.IsForward">
+            <summary>
+            Use inside of FixedUpdateNetwork to determine if the tick currently being simulated has NOT previously been simulated locally.
+            </summary>
+        </member>
+        <member name="P:Fusion.Simulation.IsLocalPlayerFirstExecution">
+            <summary>
+            True if the current stage of the simulation loop is Forward. False during resimulations.
+            <para>
+            'Resimulation' describes simulating a tick that has been previously been simulated.<br></br> 
+            'Forward' describes simulating a tick that is being simulated for the first time locally.<br></br>
+            'Prediction' describes simulating ticks higher than the most current known StateAuthority snapshot tick.
+            </para>
+            </summary>
+        </member>
+        <member name="P:Fusion.Simulation.Tick">
+            <summary>
+            The tick associated with the current state of networked objects.
+            </summary>
+        </member>
+        <member name="P:Fusion.Simulation.Topology">
+            <summary>
+            Indicates if a Server/Client or Shared Mode (relay server) topology is being used.
+            </summary>
+        </member>
         <member name="P:Fusion.Simulation.Mode">
             <summary>
             Gets the <see cref="T:Fusion.SimulationModes"/> flags for The type of network peer this simulation represents.
@@ -4569,9 +5564,44 @@
             Gets the current <see cref="T:Fusion.SimulationStages"/> value.
             </summary>
         </member>
+        <member name="P:Fusion.Simulation.Config">
+            <summary>
+            The <see cref="T:Fusion.SimulationConfig"/> file used by this <see cref="T:Fusion.Simulation"/>.
+            </summary>
+        </member>
+        <member name="P:Fusion.Simulation.ProjectConfig">
+            <summary>
+            The <see cref="T:Fusion.NetworkProjectConfig"/> file used by this <see cref="T:Fusion.Simulation"/>.
+            </summary>
+        </member>
         <member name="P:Fusion.Simulation.DeltaTime">
             <summary>
             Gets the fixed tick time interval. Derived from the <see cref="F:Fusion.SimulationConfig.TickRate"/>.
+            </summary>
+        </member>
+        <member name="P:Fusion.Simulation.IsClient">
+            <summary>
+            If this peer is a client. True for client peers in Server/Client topologies, and true for all peers in Shared Mode.
+            </summary>
+        </member>
+        <member name="P:Fusion.Simulation.IsServer">
+            <summary>
+            If this peer is the server. True for the Server or Host peer in Server/Client topologies, and always false for all peers in Shared Mode (the relay is the server). 
+            </summary>
+        </member>
+        <member name="P:Fusion.Simulation.IsPlayer">
+            <summary>
+            True for any peer that represents a human player. This is true for all peers except a dedicated server.
+            </summary>
+        </member>
+        <member name="P:Fusion.Simulation.IsSinglePlayer">
+            <summary>
+            Indicates that this simulation is operating in Single Player mode, which is a Host that accepts no connections.
+            </summary>
+        </member>
+        <member name="P:Fusion.Simulation.IsMasterClient">
+            <summary>
+            Only valid in Shared Mode. Indicates if this peer is flagged as the MasterClient, which means it is default StateAuthority
             </summary>
         </member>
         <member name="P:Fusion.Simulation.IsRunning">
@@ -4586,24 +5616,89 @@
             <param name="dt">Delta Time used to forward the simulation</param>
             <returns>How many Ticks executed on this Update</returns>
         </member>
-        <member name="T:Fusion.Simulation.Statistics.FusionStatFlags">
+        <member name="T:Fusion.Simulation.Statistics.StatSourceTypes">
             <summary>
-            Flags variant of the <see cref="T:Fusion.Simulation.Statistics.FusionStats"/> enum.
+            Engine sources for <see cref="T:Fusion.IStatsBuffer"/> statistics.
             </summary>
         </member>
-        <member name="M:Fusion.Simulation.Statistics.GetStatBuffer(Fusion.Simulation.Statistics.FusionStatFlags)">
+        <member name="T:Fusion.Simulation.Statistics.NetStats">
             <summary>
-            Returns the requested <see cref="T:Fusion.Simulation.Statistics.StatsBuffer`1"/> associated with this <see cref="T:Fusion.Simulation"/>.
+            <see cref="T:Fusion.IStatsBuffer"/> telemetry available for the sockets layer.
             </summary>
         </member>
-        <member name="M:Fusion.Simulation.Statistics.GetStatBuffer(Fusion.Simulation.Statistics.FusionStats)">
+        <member name="T:Fusion.Simulation.Statistics.NetStatFlags">
             <summary>
-            Returns the requested <see cref="T:Fusion.Simulation.Statistics.StatsBuffer`1"/> associated with this <see cref="T:Fusion.Simulation"/>.
+            <see cref="T:Fusion.Simulation.Statistics.NetStats"/> as Flags.
             </summary>
         </member>
-        <member name="M:Fusion.Simulation.Statistics.ExtractDescription(System.Enum)">
+        <member name="T:Fusion.Simulation.Statistics.ObjStats">
             <summary>
-            Gets the long name for a statistic from the Description attribute.
+            <see cref="T:Fusion.IStatsBuffer"/> telemetry available for a <see cref="T:Fusion.NetworkObject"/>.
+            </summary>
+        </member>
+        <member name="T:Fusion.Simulation.Statistics.ObjStatFlags">
+            <summary>
+            <see cref="T:Fusion.Simulation.Statistics.ObjStats"/> as Flags.
+            </summary>
+        </member>
+        <member name="T:Fusion.Simulation.Statistics.SimStats">
+            <summary>
+            <see cref="T:Fusion.IStatsBuffer"/> telemetry available for <see cref="T:Fusion.Simulation"/>.
+            </summary>
+        </member>
+        <member name="T:Fusion.Simulation.Statistics.SimStatFlags">
+            <summary>
+            <see cref="T:Fusion.Simulation.Statistics.SimStats"/> as Flags.
+            </summary>
+        </member>
+        <member name="M:Fusion.Simulation.Statistics.GetStatBuffer(Fusion.Simulation.Statistics.SimStats)">
+            <summary>
+            Returns the requested <see cref="T:Fusion.Simulation.Statistics.FloatStatsBuffer"/> associated with this <see cref="T:Fusion.Simulation"/>.
+            </summary>
+        </member>
+        <member name="M:Fusion.Simulation.Statistics.GetStatBuffer(Fusion.Simulation.Statistics.NetStats,Fusion.NetworkRunner)">
+            <summary>
+            Returns the requested <see cref="T:Fusion.IStatsBuffer"/> associated with this <see cref="T:Fusion.Simulation"/>.
+            </summary>
+        </member>
+        <member name="F:Fusion.SendMessageResult.SentToServerForForwarding">
+            <summary>
+            Client sent to the server, server will send to the target client.
+            </summary>
+        </member>
+        <member name="F:Fusion.SendMessageResult.SentToTargetClient">
+            <summary>
+            Server sent to a specific client (a targeted message).
+            </summary>
+        </member>
+        <member name="F:Fusion.SendMessageResult.SentBroadcast">
+            <summary>
+            Server attempted to send to all the clients and at least one succeded.
+            </summary>
+        </member>
+        <member name="F:Fusion.SendMessageResult.NotSentTargetObjectNotConfirmed">
+            <summary>
+            Target object not confirmed on the client.
+            </summary>
+        </member>
+        <member name="F:Fusion.SendMessageResult.NotSentTargetObjectNotInAOI">
+            <summary>
+            Target object not in client's AoI.
+            </summary>
+        </member>
+        <member name="F:Fusion.SendMessageResult.NotSentTargetClientNotAvailable">
+            <summary>
+            Target client not connected (a targeted message).
+            </summary>
+        </member>
+        <member name="F:Fusion.SendMessageResult.NotSentBroadcastNoActiveConnections">
+            <summary>
+            Server attempted to send to all the clients, but none was connected.
+            </summary>
+        </member>
+        <member name="F:Fusion.SendMessageResult.NotSentBroadcastTargetObjectNotConfirmedOrNotInAOIForAllClients">
+            <summary>
+            Server attempted to send to all the clients, but the target object is not confirmed/not in AoI for all the client.
             </summary>
         </member>
         <member name="T:Fusion.SimulationConfig">
@@ -4666,6 +5761,11 @@
         <member name="F:Fusion.SimulationConfig.Topology">
             <summary>
             The topology used
+            </summary>
+        </member>
+        <member name="F:Fusion.SimulationConfig.HostMigration">
+            <summary>
+            If, in host mode, we should allow host migration if the current host leaves.
             </summary>
         </member>
         <member name="F:Fusion.SimulationConfig.InterestManagement">
@@ -4849,6 +5949,11 @@
             Stores the global state of a simulation
             </summary>
         </member>
+        <member name="F:Fusion.SimulationGlobalState.WORDS">
+            <summary>
+            Total size of the Global State in 4 byte words
+            </summary>
+        </member>
         <member name="F:Fusion.SimulationGlobalState.SIZE">
             <summary>
             Total size of the Global State
@@ -4864,9 +5969,14 @@
             Current Simulation Mode
             </summary>
         </member>
-        <member name="F:Fusion.SimulationGlobalState.PlayerCount">
+        <member name="F:Fusion.SimulationGlobalState.MaxPlayers">
             <summary>
             Current player count
+            </summary>
+        </member>
+        <member name="F:Fusion.SimulationGlobalState.PlayersActive">
+            <summary>
+            
             </summary>
         </member>
         <member name="T:Fusion.SimulationModes">

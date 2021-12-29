@@ -71,13 +71,13 @@ public class InputBehaviourPrototype : Fusion.Behaviour, INetworkRunnerCallbacks
   
   public void OnConnectFailed(NetworkRunner runner, NetAddress remoteAddress, NetConnectFailedReason reason) {
     // shutdown any client that has failed to connect
-    runner.Shutdown();
+    //runner.Shutdown();
   }
   public void OnConnectRequest(NetworkRunner runner, NetworkRunnerCallbackArgs.ConnectRequest request, byte[] token) { }
   
   public void OnDisconnectedFromServer(NetworkRunner runner) {
     // shutdown any client that has disconnected from server
-    runner.Shutdown();
+    //runner.Shutdown();
   }
   public void OnPlayerJoined(NetworkRunner          runner, PlayerRef            player)                                                           { }
   public void OnPlayerLeft(NetworkRunner            runner, PlayerRef            player)                                                           { }

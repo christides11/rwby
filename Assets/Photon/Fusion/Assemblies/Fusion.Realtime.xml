@@ -141,6 +141,14 @@
             <param name="customProperties">Optional Room Custom Properties</param>
             <returns>EnterRoomParams reference.</returns>
         </member>
+        <member name="M:Fusion.Photon.Realtime.FusionRelayClient.BuildJoinParams(Fusion.Photon.Realtime.TypedLobby,System.Collections.Generic.Dictionary{System.String,System.Int32})">
+            <summary>
+            Build a new OpJoinRandomRoomParams that will be used to setup which Room the local peer wants to join
+            </summary>
+            <param name="typedLobby">Type of Lobby to search rooms</param>
+            <param name="customProperties">Optional list of filter parameters</param>
+            <returns>OpJoinRandomRoomParams reference</returns>
+        </member>
         <member name="M:Fusion.Photon.Realtime.Async.LoadBalancingClientAsyncExtensions.ConnectToMasterAsync(Fusion.Photon.Realtime.LoadBalancingClient,Fusion.Photon.Realtime.AppSettings,System.Boolean)">
             <summary>
             Connect to master server.
@@ -343,6 +351,12 @@
             <summary>Checks if a string is a Guid by attempting to create one.</summary>
             <param name="val">The potential guid to check.</param>
             <returns>True if new Guid(val) did not fail.</returns>
+        </member>
+        <member name="M:Fusion.Photon.Realtime.AppSettings.GetCopy">
+            <summary>
+            Get a Copy from the <see cref="T:Fusion.Photon.Realtime.AppSettings"/> into a new instance.
+            </summary>
+            <returns>Copy of <see cref="T:Fusion.Photon.Realtime.AppSettings"/></returns>
         </member>
         <member name="P:Fusion.Photon.Realtime.ConnectionHandler.Client">
             <summary>
@@ -1792,11 +1806,18 @@
             </remarks>
         </member>
         <member name="M:Fusion.Photon.Realtime.IConnectionCallbacks.OnRegionListReceived(Fusion.Photon.Realtime.RegionHandler)">
-            <summary>
-            Called when the Name Server provided a list of regions for your title.
-            </summary>
-            <remarks>Check the RegionHandler class description, to make use of the provided values.</remarks>
-            <param name="regionHandler">The currently used RegionHandler.</param>
+             <summary>
+             Called when the Name Server provided a list of regions for your title.
+             </summary>
+             <remarks>
+             This callback is called as soon as the list is available. No pings were sent for Best Region selection yet.
+             If the client is set to connect to the Best Region (lowest ping), one or more regions get pinged.
+             Not all regions are pinged. As soon as the results are final, the client will connect to the best region,
+             so you can check the ping results when connected to the Master Server.
+            
+             Check the RegionHandler class description, to make use of the provided values.
+             </remarks>
+             <param name="regionHandler">The currently used RegionHandler.</param>
         </member>
         <member name="M:Fusion.Photon.Realtime.IConnectionCallbacks.OnCustomAuthenticationResponse(System.Collections.Generic.Dictionary{System.String,System.Object})">
              <summary>
@@ -2026,14 +2047,20 @@
              </remarks>
         </member>
         <member name="M:Fusion.Photon.Realtime.IInRoomCallbacks.OnRoomPropertiesUpdate(ExitGames.Client.Photon.Hashtable)">
-            <summary>
-            Called when a room's custom properties changed. The propertiesThatChanged contains all that was set via Room.SetCustomProperties.
-            </summary>
-            <remarks>
-            Since v1.25 this method has one parameter: Hashtable propertiesThatChanged.<br/>
-            Changing properties must be done by Room.SetCustomProperties, which causes this callback locally, too.
-            </remarks>
-            <param name="propertiesThatChanged"></param>
+             <summary>
+             Called when room properties changed. The propertiesThatChanged contain only the keys that changed.
+             </summary>
+             <remarks>
+             In most cases, this method gets called due to some player settings Room Properties.
+             However, there are also "Well Known Properties", which use byte keys and this callback may include them.
+             Especially when entering a room, the server will also send the required Well Known Properties and those
+             are not filtered out before Realtime calls OnRoomPropertiesUpdate.
+            
+             You can safely ignore the byte typed keys in propertiesThatChanged.
+             
+             Changing properties is usually done by Room.SetCustomProperties.
+             </remarks>
+             <param name="propertiesThatChanged"></param>
         </member>
         <member name="M:Fusion.Photon.Realtime.IInRoomCallbacks.OnPlayerPropertiesUpdate(Fusion.Photon.Realtime.Player,ExitGames.Client.Photon.Hashtable)">
             <summary>
@@ -2618,7 +2645,7 @@
             <summary>(32758) Join can fail if the room (name) is not existing (anymore). This can happen when players leave while you join.</summary>
         </member>
         <member name="F:Fusion.Photon.Realtime.ErrorCode.MaxCcuReached">
-             <summary>(32757) Authorization on the Photon Cloud failed becaus the concurrent users (CCU) limit of the app's subscription is reached.</summary>
+             <summary>(32757) Authorization on the Photon Cloud failed because the concurrent users (CCU) limit of the app's subscription is reached.</summary>
              <remarks>
              Unless you have a plan with "CCU Burst", clients might fail the authentication step during connect.
              Affected client are unable to call operations. Please note that players who end a game and return
@@ -2686,7 +2713,7 @@
         </member>
         <member name="F:Fusion.Photon.Realtime.ErrorCode.HttpLimitReached">
             <summary>
-            (32745)  for SetProerties and Raisevent (if flag HttpForward is true) requests. Indicates the maximum allowd http requests per minute was reached.
+            (32745)  for SetProperties and RaiseEvent (if flag HttpForward is true) requests. Indicates the maximum allowed http requests per minute was reached.
             </summary>
         </member>
         <member name="F:Fusion.Photon.Realtime.ErrorCode.ExternalHttpCallFailed">
@@ -3449,28 +3476,34 @@
             <summary>Use a custom authentication service. Currently the only implemented option.</summary>
         </member>
         <member name="F:Fusion.Photon.Realtime.CustomAuthenticationType.Steam">
-            <summary>Authenticates users by their Steam Account. Set auth values accordingly!</summary>
+            <summary>Authenticates users by their Steam Account. Set Steam's ticket as "ticket" via AddAuthParameter().</summary>
         </member>
         <member name="F:Fusion.Photon.Realtime.CustomAuthenticationType.Facebook">
-            <summary>Authenticates users by their Facebook Account. Set auth values accordingly!</summary>
+            <summary>Authenticates users by their Facebook Account.  Set Facebooks's tocken as "token" via AddAuthParameter().</summary>
         </member>
         <member name="F:Fusion.Photon.Realtime.CustomAuthenticationType.Oculus">
-            <summary>Authenticates users by their Oculus Account and token.</summary>
+            <summary>Authenticates users by their Oculus Account and token. Set Oculus' userid as "userid" and nonce as "nonce" via AddAuthParameter().</summary>
         </member>
         <member name="F:Fusion.Photon.Realtime.CustomAuthenticationType.PlayStation4">
-            <summary>Authenticates users by their PSN Account and token on PS4.</summary>
+            <summary>Authenticates users by their PSN Account and token on PS4. Set token as "token", env as "env" and userName as "userName" via AddAuthParameter().</summary>
         </member>
         <member name="F:Fusion.Photon.Realtime.CustomAuthenticationType.Xbox">
-            <summary>Authenticates users by their Xbox Account and XSTS token.</summary>
+            <summary>Authenticates users by their Xbox Account. Pass the XSTS token via SetAuthPostData().</summary>
         </member>
         <member name="F:Fusion.Photon.Realtime.CustomAuthenticationType.Viveport">
-            <summary>Authenticates users by their HTC Viveport Account and user token. Set AuthGetParameters to "userToken=[userToken]"</summary>
+            <summary>Authenticates users by their HTC Viveport Account. Set userToken as "userToken" via AddAuthParameter().</summary>
         </member>
         <member name="F:Fusion.Photon.Realtime.CustomAuthenticationType.NintendoSwitch">
-            <summary>Authenticates users by their NSA ID.</summary>
+            <summary>Authenticates users by their NSA ID. Set token  as "token" and appversion as "appversion" via AddAuthParameter(). The appversion is optional.</summary>
         </member>
         <member name="F:Fusion.Photon.Realtime.CustomAuthenticationType.PlayStation5">
-            <summary>Authenticates users by their PSN Account and token on PS5.</summary>
+            <summary>Authenticates users by their PSN Account and token on PS5. Set token as "token", env as "env" and userName as "userName" via AddAuthParameter().</summary>
+        </member>
+        <member name="F:Fusion.Photon.Realtime.CustomAuthenticationType.Epic">
+            <summary>Authenticates users with Epic Online Services (EOS). Set token as "token" and ownershipToken as "ownershipToken" via AddAuthParameter(). The ownershipToken is optional.</summary>
+        </member>
+        <member name="F:Fusion.Photon.Realtime.CustomAuthenticationType.FacebookGaming">
+            <summary>Authenticates users with Facebook Gaming api. Set token as "token" via AddAuthParameter().</summary>
         </member>
         <member name="F:Fusion.Photon.Realtime.CustomAuthenticationType.None">
             <summary>Disables custom authentication. Same as not providing any AuthenticationValues for connect (more precisely for: OpAuthenticate).</summary>
@@ -3782,10 +3815,13 @@
              </summary>
              <remarks>
              When a client uses a Name Server to fetch the list of available regions, the LoadBalancingClient will create a RegionHandler
-             and provide it via the OnRegionListReceived callback.
+             and provide it via the OnRegionListReceived callback, as soon as the list is available. No pings were sent for Best Region selection yet.
             
              Your logic can decide to either connect to one of those regional servers, or it may use PingMinimumOfRegions to test
-             which region provides the best ping.
+             which region provides the best ping. Alternatively the client may be set to connect to the Best Region (lowest ping), one or
+             more regions get pinged.
+             Not all regions will be pinged. As soon as the results are final, the client will connect to the best region,
+             so you can check the ping results when connected to the Master Server.
             
              It makes sense to make clients "sticky" to a region when one gets selected.
              This can be achieved by storing the SummaryToCache value, once pinging was done.

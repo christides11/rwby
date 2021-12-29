@@ -55,7 +55,7 @@ public abstract class SpawnPointManagerPrototype<T> : Fusion.Behaviour, ISpawnPo
   [BehaviourAction]
   protected void DrawFoundSpawnPointCount() {
     if (Application.isPlaying == false) {
-      GUILayout.BeginVertical(FusionGUIStyles.GroupBoxType.Sand.GetStyle());
+      GUILayout.BeginVertical(FusionGUIStyles.GroupBoxType.Info.GetStyle());
       GUILayout.Space(4);
       if (GUI.Button(EditorGUILayout.GetControlRect(), "Find Spawn Points")) {
         _spawnPoints.Clear();

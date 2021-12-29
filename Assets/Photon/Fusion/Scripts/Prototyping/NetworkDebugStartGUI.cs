@@ -123,6 +123,14 @@ public class NetworkDebugStartGUI : Fusion.Behaviour {
         }
       }
 
+      if (Input.GetKeyDown(KeyCode.A)) {
+        if (_isMultiplePeerMode) {
+          StartMultipleAutoClients(nds);
+        } else {
+          nds.StartAutoClient();
+        }
+      }
+
       if (Input.GetKeyDown(KeyCode.P)) {
         if (_isMultiplePeerMode) {
           StartMultipleSharedClients(nds);
@@ -216,6 +224,14 @@ public class NetworkDebugStartGUI : Fusion.Behaviour {
             }
           }
 
+          if (GUILayout.Button(EnableHotkeys ? "Start Auto Host Or Client (A)" : "Start Auto Host Or Client", GUILayout.Height(height))) {
+            if (_isMultiplePeerMode) {
+              StartMultipleAutoClients(nds);
+            } else {
+              nds.StartAutoClient();
+            }
+          }
+
           if (_isMultiplePeerMode) {
 
             GUILayout.BeginHorizontal(/*GUI.skin.button*/);
@@ -272,6 +288,11 @@ public class NetworkDebugStartGUI : Fusion.Behaviour {
       count = 0;
     }
     nds.StartMultipleClients(count);
+  }
+
+  private void StartMultipleAutoClients(NetworkDebugStart nds) {
+    int.TryParse(_clientCount, out int count);
+    nds.StartMultipleAutoClients(count);
   }
 
   private void StartMultipleSharedClients(NetworkDebugStart nds) {

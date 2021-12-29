@@ -37,10 +37,27 @@ namespace rwby.menus
             loadingMenu.OpenMenu("Attempting host...");
             int playerCount = playerCountDropdown.value + 1;
 
-            NetworkManager.singleton.FusionLauncher.OnConnectionStatusChanged += CheckConnectionStatus;
+            NetworkManager.singleton.FusionLauncher.OnHostingFailed += OnHostingFailed;
+            NetworkManager.singleton.FusionLauncher.OnStartHosting += OnHostingSuccess;
             NetworkManager.singleton.StartHost(lobbyNameTextMesh.text, playerCount, privateLobbyToggle.isOn);
         }
 
+        private void OnHostingSuccess()
+        {
+            NetworkManager.singleton.FusionLauncher.OnStartHosting -= OnHostingSuccess;
+            loadingMenu.CloseMenu();
+            ExitMenu();
+            LobbyMenu.Open();
+            //LobbyManager.singleton.maxPlayersPerClient = maxPlayersPerClientDropdown.value + 1;
+        }
+
+        private void OnHostingFailed()
+        {
+            NetworkManager.singleton.FusionLauncher.OnHostingFailed -= OnHostingFailed;
+            loadingMenu.CloseMenu();
+        }
+
+        /*
         private void CheckConnectionStatus(NetworkRunner runner, FusionLauncher.ConnectionStatus status)
         {
             if (status == FusionLauncher.ConnectionStatus.Connecting) return;
@@ -51,6 +68,6 @@ namespace rwby.menus
 
             LobbyMenu.Open();
             ExitMenu();
-        }
+        }*/
     }
 }

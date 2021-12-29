@@ -11,6 +11,30 @@ namespace rwby.menus
 {
     public class LobbyMenu : MonoBehaviour
     {
+        [SerializeField] private ContentSelect contentSelectMenu;
+
+        [SerializeField] private TextMeshProUGUI lobbyName;
+        [SerializeField] private Transform lobbyPlayerList;
+        [SerializeField] private Transform teamPlayerList;
+        [SerializeField] private GameObject lobbyPlayerListItem;
+        [SerializeField] private GameObject teamPlayerListItem;
+
+        public void Awake()
+        {
+            //contentSelect.OnMenuClosed += () => { gameObject.SetActive(true); };
+            //MatchManager.onMatchSettingsLoadSuccess += MatchSettingsLoadSuccess;
+            //MatchManager.onMatchSettingsLoadFailed += MatchSettingsLoadFailed;
+        }
+
+        public void Open()
+        {
+
+            //lobbyName.text = NetworkManager.singleton.FusionLauncher.NetworkRunner.SessionInfo.Name;
+            //_ = ClearSelectables();
+            //gameObject.SetActive(true);
+        }
+
+        /*
         [SerializeField] private Transform playerList;
 
         [SerializeField] private TextMeshProUGUI lobbyName;
@@ -170,5 +194,6 @@ namespace rwby.menus
             contentSelect.OnContentSelected -= OnCharacterSelected;
             contentSelect.CloseMenu();
         }
+        */
     }
 }

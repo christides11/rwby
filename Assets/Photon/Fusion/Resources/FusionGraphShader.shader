@@ -5,12 +5,14 @@ Shader "Fusion Graph Shader"
         _MainTex ("Texture", 2D) = "white" {}
         _GoodColor("Good Color", Color) = (0,1,0,1)
         _BadColor("Bad Color", Color) = (1,0,0,1)
-        
-        _BarsWidth("Bars Width", Range(0.0, 1.0)) = 0.5
+        _FlagColor("Flag Color", Color) = (1,1,0,1)
+        _NoneColor("Flag Color", Color) = (0,0,0,0)
+
+        _BarsWidth("Bars Width", Range(0.0, 1.0)) = 0.1// 0.5
         _CapsHeight("End Caps Size", Range(0.0, 5)) = 1.5
         
-		[MaterialToggle] EndCap("End Cap", Float) = 1
-		[MaterialToggle] AnimateInOut("Animate In/Out", Float) = 1
+		[MaterialToggle] EndCap("End Cap", Float) = 0 //1
+		[MaterialToggle] AnimateInOut("Animate In/Out", Float) = 0//1
     }
     SubShader
     {
@@ -59,9 +61,12 @@ Shader "Fusion Graph Shader"
             
             fixed4 _GoodColor;
             fixed4 _BadColor;
+            fixed4 _FlagColor;
+            fixed4 _NoneColor;
 
             // data for bar graph
-            uniform float _Data[512];
+            uniform float _Data[1024];
+            uniform float _Intensity[1024];
             uniform float _Count;
             uniform float _Height; 
              
@@ -117,6 +122,7 @@ Shader "Fusion Graph Shader"
                 #endif
 
                 const float rv = max(_Data[i], _CapsHeight / _Height);
+                const float fv = _Intensity[i];
 
                 #ifdef ENDCAP_ON
                 const float v = rv * ai * ao;
@@ -131,9 +137,15 @@ Shader "Fusion Graph Shader"
 
                 // calculate alpha and rgb
                 float4 c;
-				c.a = (((0.25 * b) * a) + (a * !b)) * r * a * ai * ao;
-                c.rgb = lerp(_BadColor.rgb, _GoodColor.rgb, rv) * c.a;
-
+                 //c.rgb = lerp(_BadColor.rgb, _GoodColor.rgb, rv) * c.a;
+                if (_Count == 0) {
+                    c.a = 0.1;
+                    c.rgb = _NoneColor.rgb;
+                }
+                else {
+                    c.a = (((0.25 * b) * a) + (a * !b)) * r * a * ai * ao;
+                    c.rgb = lerp(_GoodColor.rgb, _BadColor.rgb, fv) * c.a;
+                }
                 // apply desaturation
                 float3 hsv = RGB2HSV(c.rgb);
                 hsv.z *= ds;

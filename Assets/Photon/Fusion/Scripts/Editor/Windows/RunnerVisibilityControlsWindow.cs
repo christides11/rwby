@@ -1,22 +1,108 @@
 namespace Fusion.Editor {
   using System;
-  using System.Collections.Generic;
   using System.Reflection;
   using UnityEngine;
   using UnityEditor;
 
   public class RunnerVisibilityControlsWindow : EditorWindow {
 
-    const float WIDE_SWITCH_WIDTH = 194;
-    const double KEY_COOLDOWN = .2d;
+    const int WINDOW_MIN_W = 76;
+    const int WINDOW_MIN_H = 48;
+
+    const int STATS_BTTN_WIDE = 66;
+    const int STATS_BTTN_SLIM = 30;
+    const int RUNNR_BTTN_WIDE = 60;
+    const int RUNNR_BTTN_SLIM = 36;
+    const int FONT_SIZE = 10;
+
+    const float TEXT_SWITCH_WIDTH = 200;
+    const float WIDE_SWITCH_WIDTH = 340;
+
     const double REFRESH_RATE = 1f;
-    
+
+    private static Lazy<GUIStyle> s_labelStyle = new Lazy<GUIStyle>(() => {
+      var result = new GUIStyle(EditorStyles.label);
+      result.fontSize = FONT_SIZE;
+      return result;
+    });
+
+    private static Lazy<GUIStyle> s_buttonStyle = new Lazy<GUIStyle>(() => {
+      var result = new GUIStyle(EditorStyles.miniButton);
+      result.fontSize = FONT_SIZE;
+      return result;
+    });
+
+    private static Lazy<GUIStyle> s_toggleStyle = new Lazy<GUIStyle>(() => {
+      var result = new GUIStyle(EditorStyles.toggle);
+      result.fontSize = FONT_SIZE;
+      return result;
+    });
+
+    private static Lazy<GUIStyle> s_helpboxStyle = new Lazy<GUIStyle>(() => {
+      var result = new GUIStyle(EditorStyles.helpBox);
+      result.fontSize  = FONT_SIZE;
+      result.alignment = TextAnchor.MiddleCenter;
+      result.padding   = new RectOffset(6, 6, 6, 6);
+      return result;
+    });
+
+    static Lazy<GUIStyle> s_invisibleButtonStyle = new Lazy<GUIStyle>(() => {
+      var result = new GUIStyle(EditorStyles.label);
+      result.fontSize = FONT_SIZE;
+      result.padding  = new RectOffset();
+      return result;
+    });
+    static Lazy<GUIStyle> s_invisibleButtonGrayStyle = new Lazy<GUIStyle>(() => {
+      var result = new GUIStyle(EditorStyles.label);
+      result.fontSize          = FONT_SIZE;
+      result.normal.textColor  = Color.gray;
+      result.active.textColor  = Color.gray;
+      result.hover.textColor   = Color.gray;
+      result.focused.textColor = Color.gray;
+      result.padding = new RectOffset();
+      return result;
+    });
+
+
+    private static Lazy<string> Dark = new Lazy<string>(() => {
+      return EditorGUIUtility.isProSkin ? "d_" : "";
+    });
+
+    private static Lazy<GUIContent> s_toggleGuiContent = new Lazy<GUIContent>(() => {
+      return new GUIContent("", "Toggles IsVisible for this Runner. [Shift + Click] will solo the selected runner.");
+    });
+
+    private static Lazy<GUIContent> s_inputGuiContent = new Lazy<GUIContent>(() => {
+      return new GUIContent("", "Toggles ProvideInput for this runner. [Shift + Click] will solo for the selected runner.");
+    });
+
+    static Lazy<GUIContent> s_visibleIcon = new Lazy<GUIContent>(() => {
+      return new GUIContent(EditorGUIUtility.FindTexture(Dark.Value + "scenevis_visible_hover@2x"), "");
+    });
+
+    static Lazy<GUIContent> s_hiddenIcon = new Lazy<GUIContent>(() => {
+      return new GUIContent(EditorGUIUtility.FindTexture(Dark.Value + "scenevis_hidden@2x"), "");
+    });
+
+    static Lazy<GUIContent> s_inputIconLong = new Lazy<GUIContent>(() => {
+      return new GUIContent("\u2002Providing Inputs", EditorGUIUtility.FindTexture(Dark.Value + "UnityEditor.GameView@2x"), "");
+    });
+
+    static Lazy<GUIContent> s_inputIconShort = new Lazy<GUIContent>(() => {
+      return new GUIContent(null, EditorGUIUtility.FindTexture(Dark.Value + "UnityEditor.GameView@2x"), "");
+    });
+
+    static Lazy<GUIContent> s_noInputIconLong = new Lazy<GUIContent>(() => {
+      return new GUIContent("\u2002(No Inputs)", EditorGUIUtility.FindTexture(Dark.Value + "Toolbar Minus@2x"), "");
+    });
+
+    static Lazy<GUIContent> s_noInputIconShort = new Lazy<GUIContent>(() => {
+      return new GUIContent(null, EditorGUIUtility.FindTexture(Dark.Value + "Toolbar Minus@2x"), "");
+    });
+
+    // EditorGUIUtility.FindTexture( Dark + "UnityEditor.GameView@2x" )
+
     public static RunnerVisibilityControlsWindow Instance { get; private set; }
-    public static GUIContent VisibilitySettingLabel;
-    public static GUIContent InputSettingLabel;
-    public static GUIStyle WarnStyle;
-    public static GUIStyle EyeStyle;
-    public static GUIStyle InputStyle;
 
     Vector2 _scrollPosition;
     double _lastRepaintTime;
@@ -25,9 +111,11 @@ namespace Fusion.Editor {
     [MenuItem("Fusion/Windows/Runner Visibility Controls")]
     public static void ShowWindow() {
       var window = GetWindow(typeof(RunnerVisibilityControlsWindow), false, "Runner Visibility Controls");
-      window.minSize = new Vector2(76, 40);
+      window.minSize = new Vector2(WINDOW_MIN_W, WINDOW_MIN_H);
       Instance = (RunnerVisibilityControlsWindow)window;
     }
+
+
 
     private void Awake() {
       Instance = this;
@@ -41,34 +129,6 @@ namespace Fusion.Editor {
       Instance = null;
     }
 
-    private static void InitializeStyles() {
-
-      var txtcolor = EditorStyles.label.normal.textColor;
-      var dimcolor = new Color(txtcolor.r, txtcolor.g, txtcolor.b, txtcolor.a * .5f);
-
-      WarnStyle = new GUIStyle(EditorStyles.label) { wordWrap = true, margin = new RectOffset(8, 8, 8, 8) };
-
-      EyeStyle = new GUIStyle(EditorStyles.toggle);
-      EyeStyle.normal.background    = Resources.Load<Texture2D>("icons/visible-disabled-icon");
-      EyeStyle.active.background    = Resources.Load<Texture2D>("icons/visible-disabled-icon");
-      EyeStyle.hover.background     = Resources.Load<Texture2D>("icons/visible-disabled-icon");
-      EyeStyle.onNormal.background  = Resources.Load<Texture2D>("icons/visible-enabled-icon");
-      EyeStyle.onActive.background  = Resources.Load<Texture2D>("icons/visible-enabled-icon");
-      EyeStyle.onHover.background = Resources.Load<Texture2D>("icons/visible-enabled-icon");
-      EyeStyle.normal.textColor   = dimcolor;
-      EyeStyle.active.textColor   = dimcolor;
-      EyeStyle.hover.textColor    = dimcolor;
-      EyeStyle.focused.textColor  = dimcolor;
-      EyeStyle.padding = new RectOffset(19, 0, 0, 0);
-
-      InputStyle = new GUIStyle(EyeStyle);
-      InputStyle.normal.background    = Resources.Load<Texture2D>("icons/input-disabled-icon");
-      InputStyle.active.background    = Resources.Load<Texture2D>("icons/input-disabled-icon");
-      InputStyle.hover.background     = Resources.Load<Texture2D>("icons/input-disabled-icon");
-      InputStyle.onNormal.background  = Resources.Load<Texture2D>("icons/input-enabled-icon");
-      InputStyle.onHover.background   = Resources.Load<Texture2D>("icons/input-enabled-icon");
-      InputStyle.onActive.background  = Resources.Load<Texture2D>("icons/input-enabled-icon");
-    }
 
     private void Update() {
       // Force a repaint every x seconds in case runner count and runner settings have changed.
@@ -80,27 +140,14 @@ namespace Fusion.Editor {
 
       _lastRepaintTime = Time.realtimeSinceStartup;
 
+      var currentViewWidth = EditorGUIUtility.currentViewWidth;
+      bool isWide    = currentViewWidth > WIDE_SWITCH_WIDTH;
+      bool shortText = currentViewWidth < TEXT_SWITCH_WIDTH;
 
-      // When not playing, we use the config asset rather than runner configs to get the current mode settings.
-      if (!Application.isPlaying) {
-
-        var npc = NetworkProjectConfig.Global;
-
-        if (npc.PeerMode != NetworkProjectConfig.PeerModes.Multiple) {
-          BehaviourEditorUtils.DrawWarnBox("Runner Visibility Controls only apply to Multi-Peer mode.", MessageType.Info);
-        }
-        return;
-      }
-
-      if (EyeStyle == null) {
-        InitializeStyles();
-      }
-
-      bool isWide = EditorGUIUtility.currentViewWidth > WIDE_SWITCH_WIDTH;
       _scrollPosition = EditorGUILayout.BeginScrollView(_scrollPosition);
 
       if (!Application.isPlaying) {
-        BehaviourEditorUtils.DrawWarnBox("No Runners Active.", MessageType.Info);
+        EditorGUILayout.LabelField("No Active Runners", s_helpboxStyle.Value);
       } else {
         var enumerator = NetworkRunner.GetInstancesEnumerator();
         while (enumerator.MoveNext()) {
@@ -113,53 +160,61 @@ namespace Fusion.Editor {
 
           NetworkProjectConfig config = runner.Config;
 
-          // Check for MultiPeer using the runner.config, in case developer changed that prior to starting runner. (may disagree with asset config)
-          if (config.PeerMode != NetworkProjectConfig.PeerModes.Multiple) {
-            BehaviourEditorUtils.DrawWarnBox("Runner Visibility Controls only apply to Multi-Peer mode.", MessageType.Info);
-            break;
-          }
+          bool isSinglePeer = config.PeerMode == NetworkProjectConfig.PeerModes.Single;
 
           EditorGUILayout.BeginHorizontal();
           {
-            string runnerName = isWide ?
-              (runner.MultiplePeerUnityScene.IsValid() ? runner.MultiplePeerUnityScene.name : "") :
-              (runner.IsServer ? "S" : "C");
+            string runnerName = 
+              shortText ? (runner.IsServer ? (runner.IsSinglePlayer ? "SP" : runner.IsPlayer ? "H" : "S") : "C:" + runner.name.Substring(7)) : 
+              runner.name;
 
-            if (VisibilitySettingLabel == null)
-              VisibilitySettingLabel = new GUIContent(runnerName, "Toggles IsVisible for this Runner. [Shift + Click] will solo the selected runner.");
-            else
-              VisibilitySettingLabel.text = runnerName;
+            var toggleGuiContent = s_toggleGuiContent.Value;
 
-            bool newVisVal = GUI.Toggle(EditorGUILayout.GetControlRect(GUILayout.Width(isWide ? 76 : 30)), runner.IsVisible, VisibilitySettingLabel);
-            if (newVisVal != runner.IsVisible)
-              runner.IsVisible = newVisVal;
+            // Draw Runner Names/Buttons
+            toggleGuiContent.text = runnerName;
+            var runnerrect = EditorGUILayout.GetControlRect(GUILayout.ExpandWidth(true), GUILayout.MinWidth(isWide ? RUNNR_BTTN_WIDE : RUNNR_BTTN_SLIM));
+            if (GUI.Button(runnerrect, s_toggleGuiContent.Value, s_buttonStyle.Value)) {
+              EditorGUIUtility.PingObject(runner);
+              Selection.activeGameObject = runner.gameObject;
+            }
 
-            if (InputSettingLabel == null)
-              InputSettingLabel = new GUIContent("", $"Toggles ProvideInput for this runner. [Shift + Click] will solo for the selected runner.");
-            
-            InputSettingLabel.text = isWide ? "Provide Input" : "In";
+            // Draw Visibility Icons
+            using (new EditorGUI.DisabledGroupScope(isSinglePeer)) {
+              toggleGuiContent.text = "";
+              var togglerect = EditorGUILayout.GetControlRect(GUILayout.Width(18));
 
-            if (runner.Mode != SimulationModes.Server) {
-              bool newInpVal = GUI.Toggle(EditorGUILayout.GetControlRect(GUILayout.Width(isWide ? 94 : 40)), runner.ProvideInput, InputSettingLabel);
-              if (newInpVal != runner.ProvideInput) {
-                runner.ProvideInput = newInpVal;
+              if (GUI.Button(togglerect, runner.IsVisible ? s_visibleIcon.Value : s_hiddenIcon.Value, s_invisibleButtonStyle.Value)) {
+                runner.IsVisible = !runner.IsVisible;
               }
-            } else {
-              GUI.Label(EditorGUILayout.GetControlRect(GUILayout.Width(isWide ? 94 : 40)), "");
+            };
+
+
+            // Draw Provide Input icon/text
+            using (new EditorGUI.DisabledGroupScope(runner.Mode == SimulationModes.Server)) {
+              var inputToggleRect = EditorGUILayout.GetControlRect(GUILayout.Width(isWide ? 106 : 18));
+              var inputContent = isWide ?
+                (runner.ProvideInput ? s_inputIconLong.Value : s_noInputIconLong.Value) :
+                (runner.ProvideInput ? s_inputIconShort.Value : s_noInputIconShort.Value);
+
+              if (GUI.Button(inputToggleRect,inputContent, runner.ProvideInput ? s_invisibleButtonStyle.Value : s_invisibleButtonGrayStyle.Value)) {
+                runner.ProvideInput = !runner.ProvideInput;
+              }
             }
 
-            if (GUI.Button(EditorGUILayout.GetControlRect(GUILayout.Width(75)), "<< Stats")) {
-              // reflection hack
-              var stats = Type.GetType("FusionStats, Assembly-CSharp").GetMethod("CreateInternal", BindingFlags.NonPublic | BindingFlags.Static).Invoke(null, new object[] { runner, 1, null });
-              EditorGUIUtility.PingObject(((UnityEngine.Component)stats).gameObject);
-              Selection.activeObject = ((UnityEngine.Component)stats).gameObject;
-            }
-            if (GUI.Button(EditorGUILayout.GetControlRect(GUILayout.Width(75)), "Stats >>")) {
-              // reflection hack
-              var stats = Type.GetType("FusionStats, Assembly-CSharp").GetMethod("CreateInternal", BindingFlags.NonPublic | BindingFlags.Static).Invoke(null, new object[] { runner, 2, null });
-              EditorGUIUtility.PingObject(((UnityEngine.Component)stats).gameObject);
-              Selection.activeObject = ((UnityEngine.Component)stats).gameObject;
-            }
+            // Draw runtime stats creation buttons. Reflection used since this namespace can't see FusionStats.
+
+            var statsleftrect = EditorGUILayout.GetControlRect(GUILayout.ExpandWidth(true), GUILayout.MaxWidth(100), GUILayout.MinWidth(isWide ? STATS_BTTN_WIDE : STATS_BTTN_SLIM));
+            var statsrghtrect = EditorGUILayout.GetControlRect(GUILayout.ExpandWidth(true), GUILayout.MaxWidth(100), GUILayout.MinWidth(isWide ? STATS_BTTN_WIDE : STATS_BTTN_SLIM));
+            if (GUI.Button(statsleftrect, isWide ? "<< Stats" : "<<", s_buttonStyle.Value)) {
+                var stats = Type.GetType("FusionStats, Assembly-CSharp").GetMethod("CreateInternal", BindingFlags.NonPublic | BindingFlags.Static).Invoke(null, new object[] { runner, 1, null, null });
+                EditorGUIUtility.PingObject(((UnityEngine.Component)stats).gameObject);
+                Selection.activeObject = ((UnityEngine.Component)stats).gameObject;
+              }
+              if (GUI.Button(statsrghtrect, isWide ? "Stats >>" : ">>", s_buttonStyle.Value)) {
+                var stats = Type.GetType("FusionStats, Assembly-CSharp").GetMethod("CreateInternal", BindingFlags.NonPublic | BindingFlags.Static).Invoke(null, new object[] { runner, 2, null, null });
+                EditorGUIUtility.PingObject(((UnityEngine.Component)stats).gameObject);
+                Selection.activeObject = ((UnityEngine.Component)stats).gameObject;
+              }
           }
           EditorGUILayout.EndHorizontal();
         }

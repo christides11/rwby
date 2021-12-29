@@ -1,6 +1,425 @@
+# 0.13.0
+
+## RC Nightly
+
+### Build 373 (Dec 23, 2021)
+
+**Removed**
+
+- Duplicated NetworkRunner.StartGame()
+
+### Build 372 (Dec 22, 2021)
+
+**What's New**
+
+- Lite skin support for RunnerVisibilityControls window
+
+**Bug Fixes**
+
+- Fixed: Nested objects never getting attached if their root object has been initially ruled out by AoI, in EventualConsistency mode
+- Fixed: Nested object with global AoI not getting attached if parent is not in global AoI, in EventualConsistency mode
+
+### Build 371 (Dec 21, 2021)
+
+**What's New**
+
+- `RpcInvokeInfo` - a way to check how invoking a RPC went. The most basic syntax is `[Rpc] RpcInvokeInfo Test() { return default; }` and then `var info = Test(); Debug.Log(info);`
+
+**Changes**
+
+- Update Realtime SDK to v4.1.6.11
+
+### Build 370 (Dec 20, 2021)
+
+**Removed**
+
+- SimulationBehaviourAttribute OrderBefore and OrderAfter properties removed. Use [OrderBefore] and [OrderAfter] attributes instead
+
+**Bug Fixes**
+
+- Fixed: NanoSockets build for Linux IL2CPP
+- Fixed: Pinning the Guid of `Fusion.Runtime.xml.meta`
+
+### Build 368 (Dec 17, 2021)
+
+**Bug Fixes**
+
+- Fixed: GroupBoxInfo 'RectOffset?' was illegal
+
+### Build 367 (Dec 16, 2021)
+
+**Changes**
+
+- `OnChange` callback is no longer invoked for non-zeroed properties on object spawn
+
+### Build 366 (Dec 15, 2021)
+
+**What's New**
+
+- FusionStats can toggle between "avg per Tick", "avg per Sample" and "avg per Second" by clicking on the average value of a running fusion stat
+
+**Changes**
+
+- RPCs are now culled according to AoI (Area of Interest) in Eventual Consistency mode
+- `NetworkRigidbody` and `NetworkRigidbody2D` are no longer sealed classes
+
+### Build 365 (Dec 14, 2021)
+
+**Breaking Changes**
+
+- NetworkRunner.Despawn now defers the actual despawn until end of the current tick (or start of next tick, if Despawn is called outside of the simulation loop). This is a breaking change as previously objects would be removed from the network runner instantly
+
+**Changes**
+
+- Expose NetworkRunner.AuthenticationValues
+
+**Bug Fixes**
+
+- Fixed: The accumulated prediction error not being reset on `NetworkTransform` behaviours when the interpolated correction is toggled off
+
+### Build 363 (Dec 13, 2021)
+
+**What's New**
+
+- `INetworkInput` support for `[Networked]` properties
+- FusionStats Graphs will now gray out when not available, and will indicate why the stat is invalid in the current mode. Cases such as: Debug Only, Client Only, Non-State Authority Only, or EC Only - giving better indication why a stat isn't showing data
+
+**Bug Fixes**
+
+- Fixed: Added caching of Animator.parameters, Animator.layerCount and Animator.parameterCount properties to NetworkMecanAnimator
+- Fixed: An issue on `NetworkRigidbody` that could cause the client state to not be synced to the state authority when the RB is disabled and re-enabled on the latter while being asleep
+- Fixed: Issue with FixedUpdateNetwork skipping invokes if the .Next pointer on the simulation behaviour was invalidated during its own fixed update call
+- Fixed: Unity crashing when inspecting `[Networked]` collections in VS debugger
+
+### Build 360 (Dec 10, 2021)
+
+**What's New**
+
+- `[Networked]` `string` properties for `INetworkStructs`. To keep the struct unmanaged use following syntax: `[Networked] string Foo { get => default; set {} }`
+
+**Changes**
+
+- `[Networked]` strings are now encoded with UTF32
+
+### Build 359 (Dec 09, 2021)
+
+**Changes**
+
+- Nested NetworkObject inherit parent's input authority on spawn
+
+**Bug Fixes**
+
+- Fixed: `NetworkRigidbody` not syncing the transform on the client until the first modification in the transform is received, when running client-side physics prediction, which could result in an un-synced initial state
+- Fixed: NetworkDebugStart no longer overrides ProvideInput value for Server/Host. All Runners should default to ProvideInput == true
+- Fixed: Shutdown while resolving Reflexive address
+- Fixed: Despawning object in a callback handler preventing other listeners from being notified
+- Fixed: Possible `MissingReferenceException` when resolving scene objects
+
+### Build 358 (Dec 08, 2021)
+
+**What's New**
+
+- Runner.GetPlayerUserId(PlayerRef)
+- Runner.UserId
+
+**Bug Fixes**
+
+- Fixed: Shutdown Runner when connected to Lobby
+- Fixed: Large Rpcs overflow issue
+- Fixed: `NetBitBuffer` allowing for out of bounds reads/writes
+- Fixed: FusionStats correctly destroys the canvas guide object in builds now
+
+# 0.12.0
+
+## RC
+
+### Build 357 (Dec 07, 2021)
+
+**Breaking Changes**
+
+- Clients now receive PlayerJoined and PlayerLeft callbacks for all players joining and leaving the game, not just themselves. Additionally ActivePlayers now contains all current players on clients also
+
+**What's New**
+
+- Added NetworkRunner.GetPlayerActorId to get the photon realtime actor id of a specific player in shared mode
+- `NetworkRunner.EnsureRunnerSceneIsActive`
+- Added NetworkRunner.SetPlayerObject and NetworkRunner.GetPlayerObject
+- Added "bool? force = null" parameter to all methods on RawInterpolator
+- Added RawInterpolator.TryGetStruct<T>
+- Added TryGetArray/TryGetDictionary/TryGetLinkedList to RawInterpolator to get interpolated arrays/dicts/lists
+- Added SinglePlayerPause(bool paused) overload
+- Added NetworkLinkedList<T>.Remap to allow easy access to RawInterpolator data for linked lists
+- Added NetworkDictionary<K, V>.Remap to allow easy access to raw interpolator data for dictionaries
+- Added NetworkArray<T>.Remap to give easy access to raw interpolator arrays
+- Support to specifying the tick 'from' and 'to' and the interpolation alpha when performing lag-compensated queries
+- Can now add FusionStats at runtime to a gameobject or scene simply with FusionStats.Create(). Will detect if a NetworkObject is on the supplied parent, and enable Object stats if so.  
+Added more explicit control over graph stats display modes with the enum description
+- Added SimulationCount stat to FusionStats
+- `NetworkBehaviour.Id` property
+- XML documentation to the `InterpolatedErrorCorrectionSettings`, used to interpolate the prediction error correction on NT/NCC/NRB
+- Lag-compensated box overlaps, accessible through `Runner.LagCompensation.OverlapBox` overloads
+- FusionAddressablePrefabsPreloader
+- `NetworkPrefabTable.GetEntries()` - a way to iterate contents of the prefab table
+- Inspector support for pointer properties
+- Support for initializing pointer properties. The syntax is: `[Networked] public Foo* Prop => MakePtr(new Foo());`
+- Support for ref properties. The syntax is: `[Networked] public ref Foo Prop => ref MakeRef(new Foo());`
+- Added NetworkRunner.SinglePlayerPause and NetworkRunner.SinglePlayerContinue
+- `NetworkLinkedList<T>` inspector support
+- Expanded FusionStats to also work as billboarding ingame objects in addition to screen overlays
+- FusionStats can (and should) be added by selecting the menu 'GameObject>Fusion>Add Fusion Stats'. This will generate the appropriate stats UI based on whether a NetworkObject was selected or not
+- Histogram stats handling
+- FusionStatsMeterBar graph type
+- NetworkObject and Sockets stats options to FusionStats
+
+**Changes**
+
+- `NetworkRunner.InstantiateInRunnerScene`, if invoked in multiple peer mode, switches active scene to the runner's one before instantiating the GameObject. Previously active scene is restored after instantiation
+- Weaver: `OnChanged` callbacks signatures are now verified during weaving
+- Weaver: Missing config results in a warning rather than an error
+- ILWeaver reports an error if config is not found (previously: a warning)
+- A warning is emit when a float/boolean/vector type is used in a pointer/ref property
+- Addressable prefabs work out of the box and no longer need any preloading
+- PlayerJoined and PlayerLeft is now called on client as well as server for all players joining/leaving
+- ActivePlayers now returns all players on Clients also
+- Exceptions that get happen inside of connection flow always get logged now
+
+**Bug Fixes**
+
+- Fixed: `NetworkObject.Ptr` not getting nullified when the object is destroyed in some situations
+- Fixed: Using a struct with `[Networked]` property throwing an exception if `Allow unsafe code` is not enabled
+- Fixed: Unity 2020.2.5 inspector errors
+- Fixed: "Failed to unwrap" warnings spam for `NetworkObject`/`NetworkBehaviour` properties
+- Fixed: NetworkRunner.ProvideInput can now be set at any point during runner startup and initialization
+- Fixed: Issue with network object id conflicts in shared mode
+- Fixed: `Fusion/Toggle Debug Dlls` having hardcoded Dlls paths
+- Fixed: Issue with DestroyWhenStateAuthorityLeaves not working for master client
+- Fixed: Issue with destroying objects in state auth changed callback
+- Fixed: NetworkDebugStart AlwaysShowStats was producing two stats windows for clients in single peer mode
+- Fixed: `NetworkSceneManagerBase` not cleaning up its state on shutdown
+- Fixed: `NetworkObjectEditor` throwing exception if object header is missing
+- Fixed: MasterClient not updated when Master leaves
+- Fixed: Lag-compensated Hitboxes with negative radius/extents not being correctly detected by queries
+- Fixed: Lag-compensated sphere overlaps and raycasts always being performed with sub-tick accuracy, despite the hit option flag
+- Fixed: An issue on the computation of `NetworkRunner.InterpolationRenderTime` on the clients
+- Fixed: InterpolationRenderTime now correctly returns SimulationRenderTime on server
+- Fixed: NetworkRunner.SimulationRenderTime now uses correct calculation
+- Fixed: ILWeaver not recognizing `[field: NonSerialized]` attribute
+- Fixed: Issue with server/host trying to send  player left message when no clients connected
+- Fixed: RunnerVisibilityNode now automatically added for Runner Instantiated GameObjects. Previously these were only added for NetworkObjects
+
+# 0.11.0
+
+## RC Nightly
+
+### Build 353 (Nov 17, 2021)
+
+**What's New**
+
+- Inspector support for struct `[Networked]` properties multi-edit
+- Inspector support for `[Networked]` struct properties
+
+**Changes**
+
+- Field attributes (`[field: FooAttribute]`) applied to auto `[Networked]` properties are applied to the backing field
+
+### Build 352 (Nov 15, 2021)
+
+**Bug Fixes**
+
+- Fixed: Mono.Cecil being referenced if a struct had `[Networked]` property
+
+### Build 351 (Nov 12, 2021)
+
+**What's New**
+
+- Added support for state authority override toggle in shared mode
+- Added support for IEnumerable<T> to NetworkArray<T>
+- Added NetworkBehaviour.WordInfo which allows access to the low level word offset + count for each networkbehaviour
+- Added support for NetworkLinkList<T>
+
+### Build 350 (Nov 11, 2021)
+
+**What's New**
+
+- New ShutdownReasons
+
+**Changes**
+
+- Improved error handling of StartGame
+- Runner.StartGame now outputs the StartGameResult
+
+### Build 348 (Nov 10, 2021)
+
+**What's New**
+
+- Added pre-built NetworkButtons struct to represent 32 buttons as a single int, including detecting pressed/released evnts
+- Limited support for `[Networked]` properties for `INetworkStructs`. Currently there's no inspector for such properties. Also, `NetworkObject`/`NetworkBehaviour` properties are not supported
+- `NetworkArray<T>` and `NetworkDictionary<K, V>` support for managed types (e.g. `NetworkBehaviour`, `NetworkObject`). Initializing from the inspector half-works, because referenced objects may not have been spawned yet by the runner
+- `NetworkArray<T>` and `NetworkDictionary<T>` properties can now use `NetworkBehaviour` and `NetworkObject` types as well. Not that initializing from the inspector half-works, because some objects may not yet have been spawned, so their id is 0.  
+Remove: `ElementReader<T>` and `ElementWriter<T>`
+- `IElemenetReaderWriter<T>` (used internally by `NetworkArray<T>` and `NetworkDictionary<T>`)
+- [Networked] array and dictionary support for structs
+- Added implicit conversion operator from NetworkBehaviour to NetworkBehaviourId
+
+**Changes**
+
+- `NetworkArray<T>` uses `ElementWriter<T>` and `ElementReader<T>` delegates rather than nested `Writer/Reader` ones
+
+**Bug Fixes**
+
+- Fixed: NetConnectFailedReason parsing
+
+### Build 347 (Nov 10, 2021)
+
+**What's New**
+
+- Optional bool parameter on `NetworkBehaviour.Interpolator.TryGetValues` and `GetValues` to force retrieving the interpolation data from the current simulation time frame or between snapshots
+
+**Bug Fixes**
+
+- Fixed: An issue in the NT prediction error correction when `Space` was set to `Local`
+- Fixed: An issue in the NT rotation interpolation when `Space` was set to `Local`
+- Fixed: An issue on the NT/NCC/NRB prediction error correction that would cause it to run on the peer that has state authority
+- Fixed: An issue on the NT/NCC/NRB prediction error correction that could cause jitter, due to fields' limited accuracy
+
+### Build 346 (Nov 09, 2021)
+
+**What's New**
+
+- DisableClientSessionCreation to StartGame
+
+### Build 345 (Nov 08, 2021)
+
+**Bug Fixes**
+
+- Fixed: Issue with OnChanged callbacks being called continuously
+
+### Build 344 (Nov 05, 2021)
+
+**What's New**
+
+- Added Changed<T>.Rescan() method that can be invoked inside of an OnChange callback if you want a change done to state inside of the callback to be checked for additional callbacks to be invoked without waiting for the next tick
+
+**Bug Fixes**
+
+- Fixed: Logging from simulation constructor is only logged with debug dlls now
+- Fixed: Bug with OnChanged callback not being invoked on state authority if state was changed inside of an OnChanged callback
+
+### Build 343 (Nov 04, 2021)
+
+**Changes**
+
+- Moved RequestStateAuthority and ReleaseStateAuthority From NetworkRunner to NetworkObject
+- AssignInputAuthority only works in Client/Server, Client/Host _or_ if you have StateAuthority in Share Mode
+- Removed AssignStateAuthority and RemoveStateAuthority, use NetworkRunner.RequestStateAuthority and NetworkRunner.ReleaseStateAuthority
+
+**Bug Fixes**
+
+- Fixed: Issue with RPCs needing to be able toggled as "resim" to be usable in Spawned
+- Fixed: Added [UnmanagedFunctionPointer(CallingConvention.Cdecl)] to BurstInsertAndResolveDelegate to resolve warning in Unity 2021.2
+
+### Build 342 (Nov 03, 2021)
+
+**What's New**
+
+- Added support for 128kb and 256kb allocator pages
+
+**Changes**
+
+- Renamed PageShiftValues enum to PageSizes
+
+**Bug Fixes**
+
+- Fixed: Rendering of NRB not being predicted when running client-side physics and `InterpolationDataSources` was set to `Auto`
+- Fixed: Snapshots not being freed in shared mode
+- Fixed: Reduced static memory allocation on clients further
+- Fixed: Small memory leak when stopping play mode in editor
+
+### Build 341 (Nov 02, 2021)
+
+**What's New**
+
+- NetworkRunner.SetActiveScene accepting a scene path or name (an extension method)
+- New AutoHostOrClient GameMode
+- Added DefaultState property to RunnerVisibilityNode, which allow devs to modify the default state of the associated object when NetworkRunner.IsVisible is set to true
+
+**Changes**
+
+- `NetworkSceneManagerDefault` component gets added and a warning is printed if no `INetworkSceneObjectProvider` is passed to the runner
+
+**Bug Fixes**
+
+- Fixed: FusionStats disabling canvases in builds
+- Fixed: NetworkRunner not resetting IsMultiplePeerSceneTemp flag
+- Fixed: "missing snapshot" error on clients when large frame skips or stutter happens
+- Fixed: Reduced static memory consumption on clients
+- Fixed: Null reference exception on shutdown
+
+### Build 340 (Nov 01, 2021)
+
+**Changes**
+
+- Removed ability to run socket on background thread
+
+### Build 339 (Oct 31, 2021)
+
+**What's New**
+
+- RunnerVisibilityControls now work with vary narrow window sizes (allowing for docking to the left side of windows)
+- RunnerVisibilityControls now uses icons rather than default toggles for 'Visibility' and 'Provide Input', allowing for more condensed window sizes
+- Runner names in RunnerVisibilityControls now are clickable, and will ping/select their associated runner gameobject.  
+Changed GUIStyle statics to use Lazy<>
+- Runner overlays on the hierarchy now act as buttons and will ping/select the associated NetworkRunner gameobject
+
+**Bug Fixes**
+
+- Fixed: RunnerVisibilityControls use the Runner name rather than the associated Scene name (required due to changes in scene naming in Multi-Peer mode)
+
+### Build 338 (Oct 30, 2021)
+
+**Bug Fixes**
+
+- Fixed: CodeGen exception due to 'MakeInitializer' having no implementation
+
+### Build 336 (Oct 29, 2021)
+
+- Initial 0.11.0 version
+
+# 0.10.0
+
+## RC
+
+### Build 335 (Oct 29, 2021)
+
+**What's New**
+
+- `[UnitySerializeField]` attribute - apply on a private `[Networked]` property to have the backing field available in the inspector
+- `[UnityFormerlySerializedAsAttribute]` attribute - apply on a `[Networked]` property to have `[FormerlySerializedAsAttribute]` attribute added to the backing field
+- Support for inline [Networked] property initializers. This is now valid: `[Networked] public int Foo { get; set; } = 1;`. For arrays and dictionaries use `MakeInitializer`, e.g. `[Networked] public NetworkArray<int> Foo { get; } = MakeInitializer(new[] { 0, 1, 2 });`
+- Support for inline [Networked] property initializers. For arrays and dictionaries use `MakeInitializer`, e.g. `[Networked] public NetworkArray<int> Foo { get; } = MakeInitializer(new[] { 0, 1, 2 });`
+
+**Changes**
+
+- `[Networked]` array or dictionary properties can't have setters
+
+**Bug Fixes**
+
+- Fixed: NT/NCC state being reset on the State Authority peer, reverting any modifications done on the editor/backing fields
+
 # 0.9.0
 
 ## Beta Nightly
+
+### Build 333 (Oct 28, 2021)
+
+**What's New**
+
+- Custom PhotonAppSettings on StartGameArgs
+- Raw `bool` `[Networked]` properties support for `NetworkBehaviour`. `NetworkBool` still needs to be used in structs
+
+**Bug Fixes**
+
+- Fixed: Reverted NetworkMecanAnimator.SetTrigger() method to previous handling. Input Authority no longer passes the trigger through to the Animator, and this call is only meant to be used on the State Authority
 
 ### Build 332 (Oct 27, 2021)
 

@@ -23,14 +23,20 @@ namespace Fusion {
     public override string EditorSummary => $"[Address: {Address}]";
 
     public override void Load(in NetworkPrefabLoadContext context) {
+      Debug.Assert(!Address.OperationHandle.IsValid());
       var op = Address.LoadAssetAsync();
       if (op.IsDone) {
         context.Loaded(op.Result);
       } else {
-        var c = context;
-        op.Completed += (_op) => {
-          c.Loaded(_op.Result);
-        };
+        if (context.HasFlag(NetworkPrefabLoadContext.FLAGS_PREFER_ASYNC)) {
+          var c = context;
+          op.Completed += (_op) => {
+            c.Loaded(_op.Result);
+          };
+        } else {
+          var result = op.WaitForCompletion();
+          context.Loaded(result);
+        }
       }
     }
 

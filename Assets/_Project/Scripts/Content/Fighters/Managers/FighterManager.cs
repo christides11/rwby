@@ -2,7 +2,6 @@ using Cysharp.Threading.Tasks;
 using Fusion;    
 using HnSF.Combat;
 using HnSF.Fighters;
-using KinematicCharacterController;
 using rwby.fighters.states;
 using System;
 using System.Collections;
@@ -11,7 +10,7 @@ using UnityEngine;
 
 namespace rwby
 {
-    [OrderBefore(typeof(Fusion.HitboxManager), typeof(FighterPhysicsManager), typeof(FighterStateManager), typeof(FighterHurtboxManager), typeof(FighterHitboxManager), typeof(FighterCombatManager))]
+    [OrderBefore(typeof(Fusion.HitboxManager), typeof(FighterPhysicsManager), typeof(FighterStateManager), typeof(FighterBoxManager), typeof(FighterHitboxManager), typeof(FighterCombatManager))]
     public class FighterManager : NetworkBehaviour, IFighterBase, ITargetable
     {
         public FighterInputManager InputManager { get { return inputManager; } }
@@ -37,7 +36,7 @@ namespace rwby
         [Networked] public float currentAerialDash { get; set; }
         [Networked] public float apexTime { get; set; }
         [Networked] public float gravity { get; set; }
-        [Networked, Capacity(10)] public NetworkArray<NetworkBool> attackEventInput { get; set; }
+        [Networked, Capacity(10)] public NetworkArray<NetworkBool> attackEventInput { get; }
 
         [Header("References")]
         [NonSerialized] public NetworkManager networkManager;
