@@ -35,7 +35,7 @@ namespace rwby
             singleton = this;
             managersObject = GameObject.Instantiate(managersPrefab, Vector3.zero, Quaternion.identity);
             DontDestroyOnLoad(managersObject);
-            managersObject.GetComponentInChildren<GameManager>().Initialize();
+            await managersObject.GetComponentInChildren<GameManager>().Initialize();
 
             /*
             await UniTask.WaitForEndOfFrame();

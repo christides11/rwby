@@ -24,6 +24,11 @@ namespace rwby
 
         //[SerializeField] private AssetReference sceneReference;
 
+        public override async UniTask<bool> Load()
+        {
+            return true;
+        }
+
         public override async UniTask LoadMap(UnityEngine.SceneManagement.LoadSceneMode loadMode)
         {
             await SceneManager.LoadSceneAsync(sceneName, loadMode);
@@ -33,6 +38,11 @@ namespace rwby
         public override async UniTask UnloadMap()
         {
 
+        }
+
+        public override bool Unload()
+        {
+            return true;
         }
     }
 }

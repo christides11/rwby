@@ -9,6 +9,7 @@ namespace rwby
     [System.Serializable]
     public class ModInfo
     {
+        public ModBackingType backingType;
         public Uri path;
         public string modName;
         public string fileName;

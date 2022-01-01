@@ -159,9 +159,9 @@ namespace rwby
             {
                 case PlayerInputType.JUMP:
                     return GetJump(out buttonOffset, startOffset, bufferFrames);
-                case PlayerInputType.LIGHT_ATTACK:
+                case PlayerInputType.A:
                     return GetLightAttack(out buttonOffset, startOffset, bufferFrames);
-                case PlayerInputType.HEAVY_ATTACK:
+                case PlayerInputType.B:
                     return GetHeavyAttack(out buttonOffset, startOffset, bufferFrames);
                 case PlayerInputType.DASH:
                     return GetDash(out buttonOffset, startOffset, bufferFrames);

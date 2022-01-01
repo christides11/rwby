@@ -15,7 +15,7 @@ namespace rwby
 
         [SerializeField] private FusionLauncher fusionLauncher;
         [SerializeField] private NetworkObject clientPrefab;
-        [SerializeField] private NetworkObject matchManagerPrefab;
+        [SerializeField] private NetworkObject lobbyManagerPrefab;
 
         public void Awake()
         {
@@ -58,7 +58,7 @@ namespace rwby
 
         private void SpawnMatchManager()
         {
-            fusionLauncher.NetworkRunner.Spawn(matchManagerPrefab, Vector3.zero, Quaternion.identity);
+            fusionLauncher.NetworkRunner.Spawn(lobbyManagerPrefab, Vector3.zero, Quaternion.identity);
         }
     }
 }

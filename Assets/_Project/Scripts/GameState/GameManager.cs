@@ -19,12 +19,11 @@ namespace rwby
 
         public string currentMapSceneName;
 
-        public void Initialize()
+        public async UniTask Initialize()
         {
             singleton = this;
-            modLoader.Initialize();
+            await modLoader.Initialize();
             contentManager.Initialize();
-            modLoader.loadedMods.Add("core", new LoadedModDefinition(null, settings.baseMod));
         }
 
         private void Update()
@@ -44,6 +43,8 @@ namespace rwby
 
         public virtual async UniTask<bool> LoadMap(ModObjectReference map)
         {
+            return false;
+            /*
             await contentManager.LoadContentDefinitions(ContentType.Map, map.modIdentifier);
             IMapDefinition mapDefinition = (IMapDefinition)contentManager.GetContentDefinition(ContentType.Map, map);
 
@@ -61,7 +62,7 @@ namespace rwby
             }
 
             currentMapSceneName = mapDefinition.SceneName;
-            return true;
+            return true;*/
         }
     }
 }

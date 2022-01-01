@@ -11,17 +11,11 @@ namespace rwby
 	[OrderBefore(typeof(FighterInputManager), typeof(FighterManager))]
 	public class ClientManager : NetworkBehaviour, INetworkRunnerCallbacks, IBeforeUpdate, IAfterUpdate
 	{
-		public delegate void EmptyAction();
-		public static event EmptyAction OnStartHosting;
-
 		public static ClientManager local;
-
 		public static List<ClientManager> clientManagers = new List<ClientManager>();
 
 		[Networked] public string PlayerName { get; set; }
 		[Networked, Capacity(50)] public string SelectedCharacter { get; set; }
-		[Networked] public NetworkBool LobbyReadyStatus { get; set; }
-		[Networked] public NetworkBool MatchReadyStatus { get; set; }
 
 		[Networked] public NetworkObject ClientFighter { get; set; }
 
@@ -36,8 +30,6 @@ namespace rwby
 		protected virtual void Awake()
 		{
 			networkManager = NetworkManager.singleton;
-			MatchManager.onMatchSettingsLoadFailed += MatchSettingsLoadFail;
-			MatchManager.onMatchSettingsLoadSuccess += MatchSettingsLoadSuccess;
 			DontDestroyOnLoad(gameObject);
 		}
 
@@ -110,27 +102,14 @@ namespace rwby
 			buttonExtra4 = false;
 		}
 
-		private void GamemodeSetupSuccess()
-		{
-			RPC_SetMatchReadyStatus(true);
-		}
-
-		private void GamemodeSetupFailure()
-		{
-			RPC_SetMatchReadyStatus(false);
-		}
-
 		public override void Spawned()
 		{
 			clientManagers.Add(this);
 			if (Object.HasInputAuthority)
 			{
 				SetControllerID(0);
-				GameModeBase.OnSetupFailure += GamemodeSetupFailure;
-				GameModeBase.OnSetupSuccess += GamemodeSetupSuccess;
 				local = this;
 				Runner.AddCallbacks(this);
-				RPC_Configure(GameManager.singleton.localUsername);
 				BaseHUD bhud = GameObject.Instantiate(GameManager.singleton.settings.baseUI, transform, false);
 				bhud.SetClient(this);
 			}
@@ -142,66 +121,10 @@ namespace rwby
 			clientManagers.Remove(this);
 		}
 
-		private void MatchSettingsLoadSuccess()
-		{
-			if (Object.HasStateAuthority)
-			{
-				LobbyReadyStatus = false;
-			}
-			if (Object.HasInputAuthority)
-			{
-				RPC_ReportReadyStatus(true);
-			}
-		}
-
-		private void MatchSettingsLoadFail(MatchSettingsLoadFailedReason reason)
-		{
-			if (Object.HasStateAuthority)
-			{
-				LobbyReadyStatus = false;
-			}
-			if (Object.HasInputAuthority)
-			{
-				Debug.Log($"Match settings failed to load: {reason}");
-				RPC_ReportReadyStatus(false);
-			}
-		}
-
-		[Rpc(RpcSources.InputAuthority, RpcTargets.StateAuthority)]
-		private void RPC_SetMatchReadyStatus(NetworkBool status)
-		{
-			MatchReadyStatus = status;
-		}
-
-		[Rpc(RpcSources.InputAuthority, RpcTargets.StateAuthority)]
-		public void RPC_Configure(string name)
-		{
-			PlayerName = name;
-		}
-
-		[Rpc(RpcSources.InputAuthority, RpcTargets.StateAuthority)]
-		public void RPC_SetCharacter(string characterIdentifier)
-		{
-			SelectedCharacter = characterIdentifier;
-		}
-
-		[Rpc(RpcSources.InputAuthority, RpcTargets.StateAuthority)]
-		public void RPC_ReportReadyStatus(NetworkBool readyToPlay)
-		{
-			LobbyReadyStatus = readyToPlay;
-		}
-
 		public virtual void SetControllerID(int controllerID)
 		{
 			p = ReInput.players.GetPlayer(controllerID);
 		}
-
-		/*
-		[Rpc(RpcSources.StateAuthority, RpcTargets.All)]
-		public void RPC_SetPlayer(NetworkObject player)
-        {
-			inputManager = player.GetComponent<FighterInputManager>();
-        }*/
 
 		/// <summary>
 		/// Get Unity input and store them in a struct for Fusion

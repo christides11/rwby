@@ -23,7 +23,7 @@ namespace rwby
         [NonSerialized] private Moveset[] movesets = null;
         [NonSerialized] private GameObject fighter = null;
 
-        public override async UniTask<bool> LoadFighter()
+        public override async UniTask<bool> Load()
         {
             if (fighter != null)
             {
@@ -42,24 +42,24 @@ namespace rwby
                     return false;
                 }
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 Debug.LogError(e.Message);
                 return false;
             }
 
-            
+
             // Load movesets.
             try
             {
                 movesets = new Moveset[movesetReferences.Length];
-                for(int i = 0; i < movesetReferences.Length; i++)
+                for (int i = 0; i < movesetReferences.Length; i++)
                 {
                     var movesetLoadResult = await AddressablesManager.LoadAssetAsync(movesetReferences[i]);
                     movesets[i] = movesetLoadResult;
                 }
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 Debug.LogError(e.Message);
                 return false;
@@ -84,15 +84,16 @@ namespace rwby
             return movesets;
         }
 
-        public override void UnloadFighter()
+        public override bool Unload()
         {
             fighter = null;
             movesets = null;
-            for(int i = 0; i < movesetReferences.Length; i++)
+            for (int i = 0; i < movesetReferences.Length; i++)
             {
                 AddressablesManager.ReleaseAsset(movesetReferences[i]);
             }
             AddressablesManager.ReleaseAsset(fighterReference);
+            return true;
         }
     }
 }

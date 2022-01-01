@@ -28,7 +28,7 @@ namespace rwby
             singleton = this;
             if (Object.HasStateAuthority)
             {
-                MatchManager.onMatchInitialized += StartGamemode;
+                //MatchManager.onMatchInitialized += StartGamemode;
             }
         }
 
@@ -37,7 +37,7 @@ namespace rwby
             base.Despawned(runner, hasState);
             if (Object.HasStateAuthority)
             {
-                MatchManager.onMatchInitialized -= StartGamemode;
+                //MatchManager.onMatchInitialized -= StartGamemode;
             }
         }
 
@@ -53,17 +53,18 @@ namespace rwby
 
         public virtual async UniTask<bool> SetupGamemode(ModObjectReference[] componentReferences, List<ModObjectReference> content)
         {
+            /*
             foreach (ClientManager cm in ClientManager.clientManagers)
             {
                 ModObjectReference characterReference = new ModObjectReference(cm.SelectedCharacter);
-                bool cLoadResult = await ContentManager.instance.LoadContentDefinition(ContentType.Fighter, characterReference);
+                bool cLoadResult = await ContentManager.singleton.LoadContentDefinition<IFighterDefinition>(characterReference);
                 if(cLoadResult == false)
                 {
                     OnSetupFailure?.Invoke();
                     return false;
                 }
 
-                IFighterDefinition fighterDefinition = (IFighterDefinition)ContentManager.instance.GetContentDefinition(ContentType.Fighter, characterReference);
+                IFighterDefinition fighterDefinition = ContentManager.singleton.GetContentDefinition<IFighterDefinition>(characterReference);
 
                 bool fighterLoadResult = await fighterDefinition.LoadFighter();
                 if(fighterLoadResult == false)
@@ -71,17 +72,7 @@ namespace rwby
                     OnSetupFailure?.Invoke();
                     return false;
                 }
-            }
-
-            for (int i = 0; i < componentReferences.Length; i++)
-            {
-                bool cResult = await ContentManager.instance.LoadContentDefinition(ContentType.GamemodeComponent, componentReferences[i]);
-                if(cResult == false)
-                {
-                    OnSetupFailure?.Invoke();
-                    return false;
-                }
-            }
+            }*/
 
             OnSetupSuccess?.Invoke();
             return true;

@@ -6,72 +6,60 @@ using System;
 using Cysharp.Threading.Tasks;
 using UnityEngine.EventSystems;
 using rwby;
+using Rewired.Integration.UnityUI;
 
 namespace rwby.menus
 {
     public class ContentSelect : MonoBehaviour
     {
-        public delegate void EmptyAction();
-        public delegate void ContentAction(ModObjectReference gamemodeReference);
-        public event EmptyAction OnMenuClosed;
-        public event ContentAction OnContentSelected;
+        public static ContentSelect singleton;
 
-        public GameObject contentPrefab;
-        public Transform contentHolderPrefab;
+        [SerializeField] GameObject contentBrowserLarge;
+        //[SerializeField] GameObject contentBrowserInfo;
 
-        public TextMeshProUGUI contentName;
+        [SerializeField] GameObject contentBrowserLarge_Content;
 
-        private ModObjectReference currentSelectedContent;
-
-        private ContentType contentType;
-
-        public void CloseMenu()
+        public void Awake()
         {
-            gameObject.SetActive(false);
-            OnMenuClosed?.Invoke();
+            singleton = this;
         }
 
-        public async UniTask OpenMenu(ContentType contentType)
+        public async UniTask OpenMenu<T>(UnityEngine.Events.UnityAction<PlayerPointerEventData, ModObjectReference> selectAction) where T : IContentDefinition
         {
-            this.contentType = contentType;
-            await FillContentHolder();
-            gameObject.SetActive(true);
-        }
-
-        private async UniTask FillContentHolder()
-        {
-            foreach (Transform child in contentHolderPrefab)
+            foreach (Transform child in contentBrowserLarge.transform)
             {
                 Destroy(child.gameObject);
             }
 
-            bool loadResult = await ContentManager.instance.LoadContentDefinitions(contentType);
+            await ContentManager.singleton.LoadContentDefinitions<T>();
+            List<ModObjectReference> conts = ContentManager.singleton.GetContentDefinitionReferences<T>();
 
-            List<ModObjectReference> contentReferences = ContentManager.instance.GetContentDefinitionReferences(contentType);
-
-            foreach (ModObjectReference contentRef in contentReferences)
+            if (conts.Count == 0)
             {
-                ModObjectReference cref = contentRef;
-                GameObject gamemodeContentObject = GameObject.Instantiate(contentPrefab, contentHolderPrefab, false);
-                gamemodeContentObject.GetComponentInChildren<TextMeshProUGUI>().text = cref.ToString();
-                gamemodeContentObject.GetComponent<EventTrigger>().AddOnSubmitListeners((data) => { SelectContent(cref); });
+                CloseMenu();
+                return;
             }
 
-            if (contentReferences.Count > 0)
+            foreach (ModObjectReference con in conts)
             {
-                SelectContent(contentReferences[0]);
+                GameObject contentItem = GameObject.Instantiate(contentBrowserLarge_Content, contentBrowserLarge.transform, false);
+                PlayerPointerEventTrigger eventTrigger = contentItem.GetComponentInChildren<PlayerPointerEventTrigger>();
+                ModObjectReference objectReference = con;
+                eventTrigger.OnPointerClickEvent.AddListener((data) => { selectAction.Invoke(data, objectReference); });
+                //eventTrigger.OnPointerClickEvent.AddListener((data) => { OnContentSelected?.Invoke(data, objectReference); CloseMenu(); });
             }
+
+            contentBrowserLarge.SetActive(true);
         }
 
-        private void SelectContent(ModObjectReference contentReference)
+        public void CloseMenu()
         {
-            currentSelectedContent = contentReference;
-            contentName.text = contentReference.ToString();
-        }
+            foreach (Transform child in contentBrowserLarge.transform)
+            {
+                Destroy(child.gameObject);
+            }
 
-        public void SelectContent()
-        {
-            OnContentSelected?.Invoke(currentSelectedContent);
+            contentBrowserLarge.SetActive(false);
         }
     }
 }

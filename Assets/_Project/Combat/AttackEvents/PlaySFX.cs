@@ -19,7 +19,7 @@ namespace rwby.Combat.AttackEvents
         public override AttackEventReturnType Evaluate(int frame, int endFrame, IFighterBase controller)
         {
             FighterManager fm = (controller as FighterManager);
-            if ((playChance != 100 && playChance == 0) || fm.matchManager.GetIntRangeInclusive(1, 100) >= playChance)
+            if ((playChance != 100 && playChance == 0) || fm.lobbyManager.GetIntRangeInclusive(1, 100) >= playChance)
             {
                 return AttackEventReturnType.NONE;
             }

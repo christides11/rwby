@@ -43,22 +43,23 @@ namespace rwby
         {
             base.StartGamemode();
 
+            /*
             int xOff = 0;
             foreach(var c in NetworkManager.singleton.FusionLauncher.Players)
             {
                 ClientManager cm = c.Value.GetComponent<ClientManager>();
 
                 ModObjectReference characterReference = new ModObjectReference(cm.SelectedCharacter);
-                IFighterDefinition fighterDefinition = (IFighterDefinition)ContentManager.instance.GetContentDefinition(ContentType.Fighter, characterReference);
+                IFighterDefinition fighterDefinition = (IFighterDefinition)ContentManager.singleton.GetContentDefinition<IFighterDefinition>(characterReference);
 
                 FighterInputManager fim = NetworkManager.singleton.FusionLauncher.NetworkRunner.Spawn(fighterDefinition.GetFighter().GetComponent<FighterInputManager>(), new Vector3(xOff, 5, 0), Quaternion.identity, c.Key);
                 fim.gameObject.name = $"Player {cm.PlayerName}";
                 cm.ClientFighter = fim.GetComponent<NetworkObject>();
                 xOff += 5;
-            }
+            }*/
 
             // Spawn BOT
-            IFighterDefinition botDefinition = (IFighterDefinition)ContentManager.instance.GetContentDefinition(ContentType.Fighter, botReference);
+            IFighterDefinition botDefinition = (IFighterDefinition)ContentManager.singleton.GetContentDefinition<IFighterDefinition>(botReference);
             botInputManager = NetworkManager.singleton.FusionLauncher.NetworkRunner.Spawn(botDefinition.GetFighter().GetComponent<FighterInputManager>(), new Vector3(0, 0, 5), Quaternion.identity, null);
             botInputManager.gameObject.name = $"Bot";
         }

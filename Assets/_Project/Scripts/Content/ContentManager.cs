@@ -1,90 +1,82 @@
-using System.Collections;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using UnityEngine;
 using Cysharp.Threading.Tasks;
 using System;
-using rwby;
 
 namespace rwby
 {
     public class ContentManager : MonoBehaviour
     {
-        public static ContentManager instance;
+        public static ContentManager singleton;
 
         [SerializeField] private ModLoader modLoader;
 
         public void Initialize()
         {
-            instance = this;
+            singleton = this;
         }
 
-        #region General
-        public bool ContentExist(ContentType contentType, ModObjectReference objectReference)
+        public bool ContentExist<T>(ModObjectReference objectReference) where T : IContentDefinition
         {
-            if (!modLoader.loadedMods.ContainsKey(objectReference.modIdentifier))
-            {
-                return false;
-            }
-            return modLoader.loadedMods[objectReference.modIdentifier].definition.ContentExist(contentType, objectReference.objectIdentifier);
+            if (!modLoader.TryGetLoadedMod(objectReference.modIdentifier, out LoadedModDefinition mod)) return false;
+            if (mod.definition == null) return false;
+            if (!mod.definition.ContentParsers.TryGetValue(typeof(T), out IContentParser parser)) return false;
+            return parser.ContentExist(objectReference.objectIdentifier);
         }
 
-        public async UniTask<bool> LoadContentDefinitions(ContentType contentType)
+        #region Loading
+        public async UniTask LoadContentDefinitions<T>() where T : IContentDefinition
         {
-            bool result = true;
             foreach (string m in modLoader.loadedMods.Keys)
             {
-                bool r = await LoadContentDefinitions(contentType, m);
-                if (r == false)
-                {
-                    result = false;
-                }
+                await LoadContentDefinitions<T>(m);
             }
-            return result;
         }
 
-        public async UniTask<bool> LoadContentDefinitions(ContentType contentType, string modIdentifier)
+        public async UniTask<bool> LoadContentDefinitions<T>(string modIdentifier) where T : IContentDefinition
         {
-            if (!modLoader.loadedMods.ContainsKey(modIdentifier))
-            {
-                return false;
-            }
-            return await modLoader.loadedMods[modIdentifier].definition.LoadContentDefinitions(contentType);
+            if (!modLoader.TryGetLoadedMod(modIdentifier, out LoadedModDefinition mod)) return false;
+            if (mod.definition == null) return true;
+            if (!mod.definition.ContentParsers.TryGetValue(typeof(T), out IContentParser parser)) return false;
+            return await parser.LoadContentDefinitions();
         }
 
-        public async UniTask<bool> LoadContentDefinition(ContentType contentType, ModObjectReference objectReference)
+        public async UniTask<bool> LoadContentDefinition<T>(ModObjectReference objectReference) where T : IContentDefinition
         {
-            if (!modLoader.loadedMods.ContainsKey(objectReference.modIdentifier))
-            {
-                Debug.LogError($"Error loading content {objectReference}: mod {objectReference.modIdentifier} not found.");
-                return false;
-            }
-            return await modLoader.loadedMods[objectReference.modIdentifier].definition.LoadContentDefinition(contentType, objectReference.objectIdentifier);
+            return await LoadContentDefinition(typeof(T), objectReference);
         }
 
-        public List<ModObjectReference> GetContentDefinitionReferences(ContentType contentType)
+        public async UniTask<bool> LoadContentDefinition(Type t, ModObjectReference objectReference)
+        {
+            if (!modLoader.TryGetLoadedMod(objectReference.modIdentifier, out LoadedModDefinition mod)) return false;
+            if (mod.definition == null) return false;
+            if (!mod.definition.ContentParsers.TryGetValue(t, out IContentParser parser)) return false;
+            return await parser.LoadContentDefinition(objectReference.objectIdentifier);
+        }
+        #endregion
+
+        #region Getting
+        public List<ModObjectReference> GetContentDefinitionReferences<T>() where T : IContentDefinition
         {
             List<ModObjectReference> content = new List<ModObjectReference>();
             foreach (string m in modLoader.loadedMods.Keys)
             {
-                content.InsertRange(content.Count, GetContentDefinitionReferences(contentType, m));
+                content.InsertRange(content.Count, GetContentDefinitionReferences<T>(m));
             }
             return content;
         }
 
-        public List<ModObjectReference> GetContentDefinitionReferences(ContentType contentType, string modIdentifier)
+        public List<ModObjectReference> GetContentDefinitionReferences<T>(string modIdentifier) where T : IContentDefinition
         {
             List<ModObjectReference> content = new List<ModObjectReference>();
-            // Mod does not exist.
-            if (!modLoader.loadedMods.ContainsKey(modIdentifier))
-            {
-                return content;
-            }
-            List<IContentDefinition> fds = modLoader.loadedMods[modIdentifier].definition.GetContentDefinitions(contentType);
-            if (fds == null)
-            {
-                return content;
-            }
+
+            if (!modLoader.TryGetLoadedMod(modIdentifier, out LoadedModDefinition mod)) return content;
+            if (mod.definition == null) return content;
+            if (!mod.definition.ContentParsers.TryGetValue(typeof(T), out IContentParser parser)) return content;
+
+            List<IContentDefinition> fds = parser.GetContentDefinitions();
+            if (fds == null) return content;
+
             foreach (IContentDefinition fd in fds)
             {
                 content.Add(new ModObjectReference(modIdentifier, fd.Identifier));
@@ -92,51 +84,75 @@ namespace rwby
             return content;
         }
 
-        public IContentDefinition GetContentDefinition(ContentType contentType, ModObjectReference reference)
+        public List<T> GetContentDefinitions<T>() where T : IContentDefinition
         {
-            if (!modLoader.loadedMods.ContainsKey(reference.modIdentifier))
-            {
-                return null;
-            }
+            List<T> contents = new List<T>();
 
-            IContentDefinition g = modLoader.loadedMods[reference.modIdentifier].definition.GetContentDefinition(contentType, reference.objectIdentifier);
-            return g;
-        }
-
-        public void UnloadContentDefinitions(ContentType contentType)
-        {
             foreach (string m in modLoader.loadedMods.Keys)
             {
-                UnloadContentDefinitions(contentType, m);
+                contents.InsertRange(contents.Count, GetContentDefinitions<T>(m));
             }
+            return contents;
         }
 
-        public void UnloadContentDefinitions(ContentType contentType, string modIdentifier)
+        public List<T> GetContentDefinitions<T>(string modIdentifier) where T : IContentDefinition
         {
-            if (!modLoader.loadedMods.ContainsKey(modIdentifier))
+            List<T> contents = new List<T>();
+
+            if (!modLoader.TryGetLoadedMod(modIdentifier, out LoadedModDefinition mod)) return contents;
+            if (mod.definition == null) return contents;
+            if (!mod.definition.ContentParsers.TryGetValue(typeof(T), out IContentParser parser)) return contents;
+
+            List<IContentDefinition> l = parser.GetContentDefinitions();
+            if (l == null) return contents;
+
+            foreach (IContentDefinition d in l)
             {
-                return;
+                contents.Add((T)d);
             }
-            modLoader.loadedMods[modIdentifier].definition.UnloadContentDefinitions(contentType);
+            return contents;
+        }
+
+        public T GetContentDefinition<T>(ModObjectReference reference) where T : IContentDefinition
+        {
+            if (!modLoader.TryGetLoadedMod(reference.modIdentifier, out LoadedModDefinition mod)) return null;
+            if (mod.definition == null) return null;
+            if (!mod.definition.ContentParsers.TryGetValue(typeof(T), out IContentParser parser)) return null;
+            return (T)parser.GetContentDefinition(reference.objectIdentifier);
+        }
+
+        public IContentDefinition GetContentDefinition(Type t, ModObjectReference reference)
+        {
+            if (!modLoader.TryGetLoadedMod(reference.modIdentifier, out LoadedModDefinition mod)) return null;
+            if (mod.definition == null) return null;
+            if (!mod.definition.ContentParsers.TryGetValue(t, out IContentParser parser)) return null;
+            return parser.GetContentDefinition(reference.objectIdentifier);
         }
         #endregion
 
-        #region Stages
-        public async UniTask<bool> LoadMap(ModObjectReference map)
+        #region Unloading
+        public void UnloadContentDefinitions<T>() where T : IContentDefinition
         {
-            if (!modLoader.loadedMods.TryGetValue(map.modIdentifier, out LoadedModDefinition mod))
+            foreach (string m in modLoader.loadedMods.Keys)
             {
-                return false;
+                UnloadContentDefinitions<T>(m);
             }
+        }
 
-            IMapDefinition sd = (IMapDefinition)mod.definition.GetContentDefinition(ContentType.Map, map.objectIdentifier);
-            if (sd == null)
-            {
-                return false;
-            }
+        public void UnloadContentDefinitions<T>(string modIdentifier) where T : IContentDefinition
+        {
+            if (!modLoader.TryGetLoadedMod(modIdentifier, out LoadedModDefinition mod)) return;
+            if (mod.definition == null) return;
+            if (!mod.definition.ContentParsers.TryGetValue(typeof(T), out IContentParser parser)) return;
+            parser.UnloadContentDefinitions();
+        }
 
-            await sd.LoadMap(UnityEngine.SceneManagement.LoadSceneMode.Additive);
-            return true;
+        public void UnloadContentDefinition<T>(ModObjectReference reference) where T : IContentDefinition
+        {
+            if (!modLoader.TryGetLoadedMod(reference.modIdentifier, out LoadedModDefinition mod)) return;
+            if (mod.definition == null) return;
+            if (!mod.definition.ContentParsers.TryGetValue(typeof(T), out IContentParser parser)) return;
+            parser.UnloadContentDefinition(reference.objectIdentifier);
         }
         #endregion
     }

@@ -1,3 +1,4 @@
+using Cysharp.Threading.Tasks;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -28,6 +29,16 @@ namespace rwby
             {
                 soundMap.Add(sounds[i].Name, i);
             }
+        }
+
+        public override async UniTask<bool> Load()
+        {
+            return true;
+        }
+
+        public override bool Unload()
+        {
+            return true;
         }
     }
 }

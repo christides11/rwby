@@ -12,8 +12,6 @@ namespace rwby
         public virtual ModObjectReference[] GameModeComponentReferences { get; }
         public virtual ContentType[] ContentRequirements { get; }
 
-        public abstract UniTask<bool> LoadGamemode();
         public abstract GameModeBase GetGamemode();
-        public abstract void UnloadGamemode();
     }
 }

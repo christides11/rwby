@@ -25,7 +25,7 @@ namespace rwby
 
         [NonSerialized] private GameObject gamemode;
 
-        public override async UniTask<bool> LoadGamemode()
+        public override async UniTask<bool> Load()
         {
             if (gamemode != null)
             {
@@ -37,7 +37,8 @@ namespace rwby
                 var hh = await Addressables.LoadAssetAsync<GameObject>(gamemodeReference).Task;
                 gamemode = hh;
                 return true;
-            }catch(Exception e)
+            }
+            catch (Exception e)
             {
                 Debug.Log(e.Message);
                 return false;
@@ -54,9 +55,10 @@ namespace rwby
             return gamemode.GetComponent<GameModeBase>();
         }
 
-        public override void UnloadGamemode()
+        public override bool Unload()
         {
             Addressables.Release<GameObject>(gamemode);
+            return true;
         }
     }
 }

@@ -60,7 +60,7 @@ namespace rwby
         public float lockonMaxDistance = 20;
         public float lockonFudging = 0.1f;
 
-        [NonSerialized] public MatchManager matchManager;
+        [NonSerialized] public LobbyManager lobbyManager;
 
         public virtual async UniTask<bool> OnFighterLoaded()
         {
@@ -69,7 +69,7 @@ namespace rwby
 
         public virtual void Awake()
         {
-            matchManager = MatchManager.instance;
+            lobbyManager = LobbyManager.singleton;
             networkManager = NetworkManager.singleton;
             combatManager.movesets = fighterDefinition.GetMovesets();
         }
