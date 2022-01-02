@@ -19,6 +19,9 @@ namespace rwby.menus
         [SerializeField] private GameObject lobbyPlayerListItem;
         [SerializeField] private GameObject teamPlayerListItem;
 
+        [SerializeField] private Transform gamemodeOptionsList;
+        [SerializeField] private GameObject gamemodeOptionsContentPrefab;
+
         public void Awake()
         {
             //contentSelect.OnMenuClosed += () => { gameObject.SetActive(true); };
@@ -28,16 +31,23 @@ namespace rwby.menus
 
         public void Open()
         {
+            LobbyManager.OnLobbySettingsChanged += UpdateLobbyInfo;
             lobbyName.text = NetworkManager.singleton.FusionLauncher.NetworkRunner.SessionInfo.Name;
             FillTeamList();
             FillLobbyPlayerList();
-            FillGamemodeOptions();
+            UpdateLobbyInfo();
             gameObject.SetActive(true);
         }
 
         public void Close()
         {
+            LobbyManager.OnLobbySettingsChanged -= UpdateLobbyInfo;
             gameObject.SetActive(false);
+        }
+
+        private void UpdateLobbyInfo()
+        {
+            FillGamemodeOptions();
         }
 
         private void FillTeamList()
@@ -46,8 +56,6 @@ namespace rwby.menus
             {
                 Destroy(child.gameObject);
             }
-
-
         }
 
         private void FillLobbyPlayerList()
@@ -56,13 +64,34 @@ namespace rwby.menus
             {
                 Destroy(child.gameObject);
             }
-
-
         }
 
         private void FillGamemodeOptions()
         {
+            foreach(Transform child in gamemodeOptionsList)
+            {
+                Destroy(child.gameObject);
+            }
 
+            GameObject gamemodeOb = GameObject.Instantiate(gamemodeOptionsContentPrefab, gamemodeOptionsList, false);
+            TextMeshProUGUI[] textMeshes = gamemodeOb.GetComponentsInChildren<TextMeshProUGUI>();
+            textMeshes[0].text = LobbyManager.singleton.Settings.gamemodeReference;
+            PlayerPointerEventTrigger ppet = gamemodeOb.GetComponentInChildren<PlayerPointerEventTrigger>();
+            ppet.OnPointerClickEvent.AddListener((d) => { _ = OpenGamemodeSelection(); });
+            
+            if (LobbyManager.singleton.CurrentGameMode == null) return;
+            //LobbyManager.singleton.CurrentGameMode.AddGamemodeSettings(this);
+        }
+
+        private async UniTask OpenGamemodeSelection()
+        {
+            await contentSelectMenu.OpenMenu<IGameModeDefinition>((a, b) => { OnGamemodeSelection(b); });
+        }
+
+        private async void OnGamemodeSelection(ModObjectReference gamemodeReference)
+        {
+            contentSelectMenu.CloseMenu();
+            await LobbyManager.singleton.TrySetGamemode(gamemodeReference);
         }
     }
 }

@@ -14,6 +14,17 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   modIdentifier: core
   description: 
-  contentParsers: []
+  contentParsers:
+  - id: 0
   references:
     version: 1
+    00000000:
+      type: {class: AddressablesGameModeParser, ns: rwby, asm: rwby.csharp}
+      data:
+        references:
+        - identifier: training
+          asset:
+            m_AssetGUID: 6d98f37477091d440b654f77346f0c24
+            m_SubObjectName: 
+            m_SubObjectType: 
+            m_EditorAssetChanged: 0

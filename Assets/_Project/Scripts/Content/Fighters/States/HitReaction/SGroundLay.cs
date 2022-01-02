@@ -46,7 +46,7 @@ namespace rwby.fighters.states
 
             if (manager.StateManager.CurrentStateFrame <= 5)
             {
-                if (manager.InputManager.GetLightAttack(out int bOff).isDown)
+                if (manager.InputManager.GetA(out int bOff).isDown)
                 {
                     manager.StateManager.ChangeState((ushort)FighterCmnStates.TECH_GROUND);
                     return true;

@@ -15,7 +15,6 @@ namespace rwby.menus
         public static ContentSelect singleton;
 
         [SerializeField] GameObject contentBrowserLarge;
-        //[SerializeField] GameObject contentBrowserInfo;
 
         [SerializeField] GameObject contentBrowserLarge_Content;
 
@@ -46,9 +45,10 @@ namespace rwby.menus
                 PlayerPointerEventTrigger eventTrigger = contentItem.GetComponentInChildren<PlayerPointerEventTrigger>();
                 ModObjectReference objectReference = con;
                 eventTrigger.OnPointerClickEvent.AddListener((data) => { selectAction.Invoke(data, objectReference); });
-                //eventTrigger.OnPointerClickEvent.AddListener((data) => { OnContentSelected?.Invoke(data, objectReference); CloseMenu(); });
+                contentItem.GetComponentInChildren<TextMeshProUGUI>().text = con.ToString();
             }
 
+            gameObject.SetActive(true);
             contentBrowserLarge.SetActive(true);
         }
 
@@ -59,6 +59,7 @@ namespace rwby.menus
                 Destroy(child.gameObject);
             }
 
+            gameObject.SetActive(false);
             contentBrowserLarge.SetActive(false);
         }
     }

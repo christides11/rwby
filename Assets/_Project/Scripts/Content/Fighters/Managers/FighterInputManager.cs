@@ -17,11 +17,11 @@ namespace rwby
         protected Vector2[] Movement = new Vector2[inputCapacity];
         protected Vector3[] CameraForward = new Vector3[inputCapacity];
         protected Vector3[] CameraRight = new Vector3[inputCapacity];
-        protected InputButtonData[] LightAttack = new InputButtonData[inputCapacity];
-        protected InputButtonData[] HeavyAttack = new InputButtonData[inputCapacity];
+        protected InputButtonData[] A = new InputButtonData[inputCapacity];
+        protected InputButtonData[] B = new InputButtonData[inputCapacity];
+        protected InputButtonData[] C = new InputButtonData[inputCapacity];
         protected InputButtonData[] Jump = new InputButtonData[inputCapacity];
         protected InputButtonData[] Block = new InputButtonData[inputCapacity];
-        protected InputButtonData[] Grab = new InputButtonData[inputCapacity];
         protected InputButtonData[] Dash = new InputButtonData[inputCapacity];
         protected InputButtonData[] LockOn = new InputButtonData[inputCapacity];
         protected InputButtonData[] Ability1 = new InputButtonData[inputCapacity];
@@ -45,11 +45,11 @@ namespace rwby
             Movement[frame % inputCapacity] = inputData.movement;
             CameraForward[frame % inputCapacity] = inputData.forward;
             CameraRight[frame % inputCapacity] = inputData.right;
-            LightAttack[frame % inputCapacity] = new InputButtonData(inputData.IsDown(NetworkInputData.BUTTON_LIGHT_ATTACK), LightAttack[(frame-1) % inputCapacity]);
-            HeavyAttack[frame % inputCapacity] = new InputButtonData(inputData.IsDown(NetworkInputData.BUTTON_HEAVY_ATTACK), HeavyAttack[(frame-1) % inputCapacity]);
+            A[frame % inputCapacity] = new InputButtonData(inputData.IsDown(NetworkInputData.BUTTON_A), A[(frame-1) % inputCapacity]);
+            B[frame % inputCapacity] = new InputButtonData(inputData.IsDown(NetworkInputData.BUTTON_B), B[(frame-1) % inputCapacity]);
+            C[frame % inputCapacity] = new InputButtonData(inputData.IsDown(NetworkInputData.BUTTON_C), C[(frame - 1) % inputCapacity]);
             Jump[frame % inputCapacity] = new InputButtonData(inputData.IsDown(NetworkInputData.BUTTON_JUMP), Jump[(frame-1) % inputCapacity]);
             Block[frame % inputCapacity] = new InputButtonData(inputData.IsDown(NetworkInputData.BUTTON_BLOCK), Block[(frame-1) % inputCapacity]);
-            Grab[frame % inputCapacity] = new InputButtonData(inputData.IsDown(NetworkInputData.BUTTON_GRAB), Grab[(frame-1) % inputCapacity]);
             Dash[frame % inputCapacity] = new InputButtonData(inputData.IsDown(NetworkInputData.BUTTON_DASH), Dash[(frame-1) % inputCapacity]);
             LockOn[frame % inputCapacity] = new InputButtonData(inputData.IsDown(NetworkInputData.BUTTON_LOCK_ON), LockOn[(frame-1) % inputCapacity]);
             Ability1[frame % inputCapacity] = new InputButtonData(inputData.IsDown(NetworkInputData.BUTTON_ABILITY_ONE), Ability1[(frame - 1) % inputCapacity]);
@@ -77,14 +77,19 @@ namespace rwby
             return CameraRight[(Runner.Simulation.Tick - startOffset) % inputCapacity];
         }
 
-        public virtual InputButtonData GetLightAttack(out int buttonOffset, int startOffset = 0, int bufferFrames = 0)
+        public virtual InputButtonData GetA(out int buttonOffset, int startOffset = 0, int bufferFrames = 0)
         {
-            return GetButton(ref LightAttack, out buttonOffset, startOffset, bufferFrames);
+            return GetButton(ref A, out buttonOffset, startOffset, bufferFrames);
         }
 
-        public virtual InputButtonData GetHeavyAttack(out int buttonOffset, int startOffset = 0, int bufferFrames = 0)
+        public virtual InputButtonData GetB(out int buttonOffset, int startOffset = 0, int bufferFrames = 0)
         {
-            return GetButton(ref HeavyAttack, out buttonOffset, startOffset, bufferFrames);
+            return GetButton(ref B, out buttonOffset, startOffset, bufferFrames);
+        }
+
+        public virtual InputButtonData GetC(out int buttonOffset, int startOffset = 0, int bufferFrames = 0)
+        {
+            return GetButton(ref C, out buttonOffset, startOffset, bufferFrames);
         }
 
         public virtual InputButtonData GetJump(out int buttonOffset, int startOffset = 0, int bufferFrames = 0)
@@ -100,11 +105,6 @@ namespace rwby
         public virtual InputButtonData GetBlock(out int buttonOffset, int startOffset = 0, int bufferFrames = 0)
         {
             return GetButton(ref Block, out buttonOffset, startOffset, bufferFrames);
-        }
-
-        public virtual InputButtonData GetGrab(out int buttonOffset, int startOffset = 0, int bufferFrames = 0)
-        {
-            return GetButton(ref Grab, out buttonOffset, startOffset, bufferFrames);
         }
 
         public virtual InputButtonData GetLockOn(out int buttonOffset, int startOffset = 0, int bufferFrames = 0)
@@ -160,9 +160,11 @@ namespace rwby
                 case PlayerInputType.JUMP:
                     return GetJump(out buttonOffset, startOffset, bufferFrames);
                 case PlayerInputType.A:
-                    return GetLightAttack(out buttonOffset, startOffset, bufferFrames);
+                    return GetA(out buttonOffset, startOffset, bufferFrames);
                 case PlayerInputType.B:
-                    return GetHeavyAttack(out buttonOffset, startOffset, bufferFrames);
+                    return GetB(out buttonOffset, startOffset, bufferFrames);
+                case PlayerInputType.C:
+                    return GetC(out buttonOffset, startOffset, bufferFrames);
                 case PlayerInputType.DASH:
                     return GetDash(out buttonOffset, startOffset, bufferFrames);
                 case PlayerInputType.ABILITY_1:

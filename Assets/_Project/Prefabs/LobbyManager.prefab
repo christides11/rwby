@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 8637228851506255113}
   - component: {fileID: 4277970008745366763}
   - component: {fileID: -583825843932926835}
+  - component: {fileID: 1334026102863918720}
   m_Layer: 0
   m_Name: LobbyManager
   m_TagString: Untagged
@@ -56,7 +57,9 @@ MonoBehaviour:
   NestedObjects: []
   NetworkedBehaviours:
   - {fileID: 4277970008745366763}
-  SimulationBehaviours: []
+  - {fileID: 1334026102863918720}
+  SimulationBehaviours:
+  - {fileID: -583825843932926835}
 --- !u!114 &4277970008745366763
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -70,6 +73,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _interpolationDataSource: 0
+  clientContentLoaderService: {fileID: 1334026102863918720}
+  _maxPlayersPerClient: 4
+  _CurrentGameMode: {fileID: 0}
 --- !u!114 &-583825843932926835
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -82,3 +88,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0fc3da84c7b1bab4aa09ae6dfdca9834, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &1334026102863918720
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3083336178892963970}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 57768ac4374716449aacbcbb341c4c60, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _interpolationDataSource: 0
+  timeoutTime: 5
+  loadRequestCounter: 0

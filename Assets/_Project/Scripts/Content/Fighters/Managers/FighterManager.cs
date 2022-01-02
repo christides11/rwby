@@ -99,14 +99,6 @@ namespace rwby
             base.FixedUpdateNetwork();
             visualTransform.gameObject.SetActive(Visible);
 
-            if(inputManager.GetExtra2(out int bo).firstPress)
-            {
-                combatManager.DecreaseAttackLevel();
-            } else if(inputManager.GetExtra3(out int bb).firstPress)
-            {
-                combatManager.IncreaseAttackLevel();
-            }
-
             HitstopShake();
             HandleLockon();
 

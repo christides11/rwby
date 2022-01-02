@@ -14,11 +14,11 @@ namespace rwby
 	{
 		public const uint BUTTON_JUMP = 1 << 0;
 		public const uint BUTTON_BLOCK = 1 << 1;
-		public const uint BUTTON_LIGHT_ATTACK = 1 << 2;
-		public const uint BUTTON_HEAVY_ATTACK = 1 << 3;
+		public const uint BUTTON_A = 1 << 2;
+		public const uint BUTTON_B = 1 << 3;
 		public const uint BUTTON_DASH = 1 << 4;
 		public const uint BUTTON_LOCK_ON = 1 << 5;
-		public const uint BUTTON_GRAB = 1 << 6;
+		public const uint BUTTON_C = 1 << 6;
 		
 		public const uint BUTTON_Extra_1 = 1 << 7;
 		public const uint BUTTON_Extra_2 = 1 << 8;

@@ -5,6 +5,7 @@ using UnityEngine.AddressableAssets;
 using System.Threading.Tasks;
 using Cysharp.Threading.Tasks;
 using System;
+using UnityEngine.ResourceManagement.AsyncOperations;
 
 namespace rwby
 {
@@ -19,45 +20,42 @@ namespace rwby
 
         [SerializeField] private string gamemodeName;
         [SerializeField] [TextArea] private string description;
-        [SerializeField] private AssetReference gamemodeReference;
         [SerializeField] private ModObjectReference[] componentReferences;
         [SerializeField] private ContentType[] contentRequirements;
 
-        [NonSerialized] private GameObject gamemode;
+        [SerializeField] private AssetReference gamemodeReference;
+        [NonSerialized] private AsyncOperationHandle<GameObject> gamemodeHandle;
 
         public override async UniTask<bool> Load()
         {
-            if (gamemode != null)
-            {
-                return true;
-            }
-
             try
             {
-                var hh = await Addressables.LoadAssetAsync<GameObject>(gamemodeReference).Task;
-                gamemode = hh;
-                return true;
+                if (gamemodeHandle.IsValid() == false)
+                {
+                    gamemodeHandle = Addressables.LoadAssetAsync<GameObject>(gamemodeReference);
+                }
+                if (gamemodeHandle.IsDone == false)
+                {
+                    await gamemodeHandle;
+                }
+                if (gamemodeHandle.Status != AsyncOperationStatus.Succeeded) return false;
             }
             catch (Exception e)
             {
-                Debug.Log(e.Message);
+                Debug.LogError($"GameMode Load Error: {e.Message}");
                 return false;
             }
+            return true;
         }
 
-        public override GameModeBase GetGamemode()
+        public override GameObject GetGamemode()
         {
-            if(gamemode == null)
-            {
-                Debug.Log("Null gamemode");
-                return null;
-            }
-            return gamemode.GetComponent<GameModeBase>();
+            return gamemodeHandle.Result;
         }
 
         public override bool Unload()
         {
-            Addressables.Release<GameObject>(gamemode);
+            Addressables.Release(gamemodeHandle);
             return true;
         }
     }

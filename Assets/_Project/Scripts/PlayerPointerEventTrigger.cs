@@ -23,7 +23,7 @@ namespace rwby
 
         public void OnPointerClick(PointerEventData eventData)
         {
-            if(eventData is PlayerPointerEventData)
+            if (eventData is PlayerPointerEventData)
             {
                 PlayerPointerEventData playerEventData = (PlayerPointerEventData)eventData;
                 OnPointerClickEvent?.Invoke(playerEventData);

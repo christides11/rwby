@@ -14,6 +14,9 @@ namespace rwby
 		public static ClientManager local;
 		public static List<ClientManager> clientManagers = new List<ClientManager>();
 
+		// Client players.
+		[Networked, Capacity(4)] public NetworkLinkedList<ClientPlayerDefinition> ClientPlayers { get; }
+
 		[Networked] public string PlayerName { get; set; }
 		[Networked, Capacity(50)] public string SelectedCharacter { get; set; }
 
@@ -33,6 +36,19 @@ namespace rwby
 			DontDestroyOnLoad(gameObject);
 		}
 
+		public override void Spawned()
+		{
+			clientManagers.Add(this);
+			if (Object.HasInputAuthority)
+			{
+				SetControllerID(0);
+				Runner.AddCallbacks(this);
+				local = this;
+				//BaseHUD bhud = GameObject.Instantiate(GameManager.singleton.settings.baseUI, transform, false);
+				//bhud.SetClient(this);
+			}
+		}
+
 		public override void Render()
 		{
 			if (camera)
@@ -42,11 +58,11 @@ namespace rwby
 		}
 
 		bool buttonJump;
-		bool buttonLightAttack;
-		bool buttonHeavyAttack;
+		bool buttonA;
+		bool buttonB;
 		bool buttonBlock;
 		bool buttonDash;
-		bool buttonGrab;
+		bool buttonC;
 		bool buttonLockOn;
 		bool buttonAbility1;
 		bool buttonAbility2;
@@ -61,11 +77,11 @@ namespace rwby
 			if (p != null)
 			{
 				if (p.GetButton(Action.Jump)) { buttonJump = true; }
-				if (p.GetButton(Action.Light_Attack)) { buttonLightAttack = true; }
-				if (p.GetButton(Action.Heavy_Attack)) { buttonHeavyAttack = true; }
+				if (p.GetButton(Action.A)) { buttonA = true; }
+				if (p.GetButton(Action.B)) { buttonB = true; }
 				if (p.GetButton(Action.Block)) { buttonBlock = true; }
 				if (p.GetButton(Action.Dash)) { buttonDash = true; }
-				if (p.GetButton(Action.Grab)) { buttonGrab = true; }
+				if (p.GetButton(Action.C)) { buttonC = true; }
 				if (p.GetButton(Action.Lock_On)) { buttonLockOn = true; }
 				if (p.GetButton(Action.Ability_1)) { buttonAbility1 = true; }
 				if (p.GetButton(Action.Ability_2)) { buttonAbility2 = true; }
@@ -86,11 +102,11 @@ namespace rwby
 		protected virtual void ClearInputs()
 		{
 			buttonJump = false;
-			buttonLightAttack = false;
-			buttonHeavyAttack = false;
+			buttonA = false;
+			buttonB = false;
 			buttonBlock = false;
 			buttonDash = false;
-			buttonGrab = false;
+			buttonC = false;
 			buttonLockOn = false;
 			buttonAbility1 = false;
 			buttonAbility2 = false;
@@ -100,19 +116,6 @@ namespace rwby
 			buttonExtra2 = false;
 			buttonExtra3 = false;
 			buttonExtra4 = false;
-		}
-
-		public override void Spawned()
-		{
-			clientManagers.Add(this);
-			if (Object.HasInputAuthority)
-			{
-				SetControllerID(0);
-				local = this;
-				Runner.AddCallbacks(this);
-				BaseHUD bhud = GameObject.Instantiate(GameManager.singleton.settings.baseUI, transform, false);
-				bhud.SetClient(this);
-			}
 		}
 
 		public override void Despawned(NetworkRunner runner, bool hasState)
@@ -153,11 +156,11 @@ namespace rwby
 				frameworkInput.right = Vector3.right;
 			}
 			if (buttonJump) { frameworkInput.Buttons |= NetworkInputData.BUTTON_JUMP; }
-			if (buttonLightAttack) { frameworkInput.Buttons |= NetworkInputData.BUTTON_LIGHT_ATTACK; }
-			if (buttonHeavyAttack) { frameworkInput.Buttons |= NetworkInputData.BUTTON_HEAVY_ATTACK; }
+			if (buttonA) { frameworkInput.Buttons |= NetworkInputData.BUTTON_A; }
+			if (buttonB) { frameworkInput.Buttons |= NetworkInputData.BUTTON_B; }
 			if (buttonBlock) { frameworkInput.Buttons |= NetworkInputData.BUTTON_BLOCK; }
 			if (buttonDash) { frameworkInput.Buttons |= NetworkInputData.BUTTON_DASH; }
-			if (buttonGrab) { frameworkInput.Buttons |= NetworkInputData.BUTTON_GRAB; }
+			if (buttonC) { frameworkInput.Buttons |= NetworkInputData.BUTTON_C; }
 			if (buttonLockOn) { frameworkInput.Buttons |= NetworkInputData.BUTTON_LOCK_ON; }
 			if (buttonAbility1) { frameworkInput.Buttons |= NetworkInputData.BUTTON_ABILITY_ONE; }
 			if (buttonAbility2) { frameworkInput.Buttons |= NetworkInputData.BUTTON_ABILITY_TWO; }

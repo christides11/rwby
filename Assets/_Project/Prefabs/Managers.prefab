@@ -142,7 +142,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 100, y: 100}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &6649374790591610498
 MonoBehaviour:
@@ -156,8 +156,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 151fc06a01a7c824ba5f23a1cd7495ca, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _hideHardwarePointer: 1
-  _autoSort: 1
+  _hideHardwarePointer: 0
+  _autoSort: 0
 --- !u!1 &3324613261778082933
 GameObject:
   m_ObjectHideFlags: 0
@@ -211,14 +211,14 @@ MonoBehaviour:
     - _name: Horizontal
       _elementType: 2
       _enabled: 1
-      _actionId: -1
+      _actionId: 23
       _coordinateMode: 1
       _absoluteToRelativeSensitivity: 600
       _repeatRate: 4
     - _name: Vertical
       _elementType: 2
       _enabled: 1
-      _actionId: -1
+      _actionId: 25
       _coordinateMode: 1
       _absoluteToRelativeSensitivity: 600
       _repeatRate: 4
@@ -247,7 +247,7 @@ MonoBehaviour:
     - _name: Left Button
       _elementType: 0
       _enabled: 1
-      _actionId: -1
+      _actionId: 26
       _coordinateMode: 0
       _absoluteToRelativeSensitivity: 1
       _repeatRate: 4
@@ -258,7 +258,7 @@ MonoBehaviour:
     - _name: Right Button
       _elementType: 0
       _enabled: 1
-      _actionId: -1
+      _actionId: 24
       _coordinateMode: 0
       _absoluteToRelativeSensitivity: 1
       _repeatRate: 4
@@ -366,7 +366,7 @@ Canvas:
   m_SortingBucketNormalizedSize: 0
   m_AdditionalShaderChannelsFlag: 0
   m_SortingLayerID: 0
-  m_SortingOrder: 100
+  m_SortingOrder: 10
   m_TargetDisplay: 0
 --- !u!114 &5883884252350312552
 MonoBehaviour:
@@ -467,7 +467,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
@@ -683,21 +683,21 @@ MonoBehaviour:
         exportConsts_actionsClassName: Action
         exportConsts_actionsIncludeActionCategory: 0
         exportConsts_actionsCreateClassesForActionCategories: 0
-        exportConsts_mapCategories: 1
+        exportConsts_mapCategories: 0
         exportConsts_mapCategoriesClassName: Category
-        exportConsts_layouts: 1
+        exportConsts_layouts: 0
         exportConsts_layoutsClassName: Layout
-        exportConsts_players: 1
+        exportConsts_players: 0
         exportConsts_playersClassName: Player
         exportConsts_inputBehaviors: 0
         exportConsts_inputBehaviorsClassName: InputBehavior
-        exportConsts_customControllers: 1
+        exportConsts_customControllers: 0
         exportConsts_customControllersClassName: CustomController
         exportConsts_customControllersAxesClassName: Axis
         exportConsts_customControllersButtonsClassName: Button
-        exportConsts_layoutManagerRuleSets: 1
+        exportConsts_layoutManagerRuleSets: 0
         exportConsts_layoutManagerRuleSetsClassName: LayoutManagerRuleSet
-        exportConsts_mapEnablerRuleSets: 1
+        exportConsts_mapEnablerRuleSets: 0
         exportConsts_mapEnablerRuleSetsClassName: MapEnablerRuleSet
         exportConsts_allCapsConstantNames: 0
     players:
@@ -726,12 +726,21 @@ MonoBehaviour:
       _startPlaying: 1
       _defaultJoystickMaps:
       - _enabled: 1
+        _categoryId: 2
+        _layoutId: 0
+      - _enabled: 1
         _categoryId: 1
         _layoutId: 0
-      _defaultMouseMaps: []
+      _defaultMouseMaps:
+      - _enabled: 1
+        _categoryId: 2
+        _layoutId: 0
       _defaultKeyboardMaps:
       - _enabled: 1
         _categoryId: 1
+        _layoutId: 0
+      - _enabled: 1
+        _categoryId: 2
         _layoutId: 0
       _defaultCustomControllerMaps: []
       _startingCustomControllers: []
@@ -792,18 +801,18 @@ MonoBehaviour:
       _userAssignable: 1
       _categoryId: 1
     - _id: 6
-      _name: Light Attack
+      _name: A
       _type: 1
-      _descriptiveName: Light Attack
+      _descriptiveName: A
       _positiveDescriptiveName: 
       _negativeDescriptiveName: 
       _behaviorId: 0
       _userAssignable: 1
       _categoryId: 1
     - _id: 7
-      _name: Heavy Attack
+      _name: B
       _type: 1
-      _descriptiveName: Heavy Attack
+      _descriptiveName: B
       _positiveDescriptiveName: 
       _negativeDescriptiveName: 
       _behaviorId: 0
@@ -828,9 +837,9 @@ MonoBehaviour:
       _userAssignable: 1
       _categoryId: 1
     - _id: 10
-      _name: Grab
+      _name: C
       _type: 1
-      _descriptiveName: Grab
+      _descriptiveName: C
       _positiveDescriptiveName: 
       _negativeDescriptiveName: 
       _behaviorId: 0
@@ -935,12 +944,53 @@ MonoBehaviour:
       _behaviorId: 0
       _userAssignable: 1
       _categoryId: 1
+    - _id: 23
+      _name: UIMovement X
+      _type: 0
+      _descriptiveName: UIMovement X
+      _positiveDescriptiveName: UIMovement Right
+      _negativeDescriptiveName: UIMovement Left
+      _behaviorId: 0
+      _userAssignable: 1
+      _categoryId: 2
+    - _id: 24
+      _name: Deny
+      _type: 1
+      _descriptiveName: Deny
+      _positiveDescriptiveName: 
+      _negativeDescriptiveName: 
+      _behaviorId: 0
+      _userAssignable: 1
+      _categoryId: 2
+    - _id: 25
+      _name: UIMovement Y
+      _type: 0
+      _descriptiveName: UIMovement Y
+      _positiveDescriptiveName: UIMovement Up
+      _negativeDescriptiveName: UIMovement Down
+      _behaviorId: 0
+      _userAssignable: 1
+      _categoryId: 2
+    - _id: 26
+      _name: Confirm
+      _type: 1
+      _descriptiveName: Confirm
+      _positiveDescriptiveName: 
+      _negativeDescriptiveName: 
+      _behaviorId: 0
+      _userAssignable: 1
+      _categoryId: 2
     actionCategories:
     - _name: Default
       _descriptiveName: Default
       _tag: 
       _id: 0
       _userAssignable: 0
+    - _name: UI
+      _descriptiveName: UI
+      _tag: 
+      _id: 2
+      _userAssignable: 1
     - _name: Gameplay
       _descriptiveName: Gameplay
       _tag: 
@@ -952,6 +1002,8 @@ MonoBehaviour:
         actionIds: 
       - categoryId: 1
         actionIds: 0100000002000000030000000400000005000000060000000700000008000000090000000a0000000b0000000d0000000e0000000f00000010000000110000001200000013000000140000001500000016000000
+      - categoryId: 2
+        actionIds: 17000000190000001a00000018000000
     inputBehaviors:
     - _id: 0
       _name: Default
@@ -981,6 +1033,13 @@ MonoBehaviour:
       _descriptiveName: Default
       _tag: 
       _id: 0
+      _userAssignable: 1
+      _checkConflictsWithAllCategories: 1
+      _checkConflictsCategoryIds: 
+    - _name: UI
+      _descriptiveName: UI
+      _tag: 
+      _id: 2
       _userAssignable: 1
       _checkConflictsWithAllCategories: 1
       _checkConflictsCategoryIds: 
@@ -1463,23 +1522,125 @@ MonoBehaviour:
         _modifierKey1: 0
         _modifierKey2: 0
         _modifierKey3: 0
-    mouseMaps: []
+    - id: 3
+      categoryId: 2
+      layoutId: 0
+      name: 
+      hardwareGuidString: 
+      customControllerUid: 0
+      actionElementMaps:
+      - _actionCategoryId: 0
+        _actionId: 26
+        _elementType: 1
+        _elementIdentifierId: -1
+        _axisRange: 0
+        _invert: 0
+        _axisContribution: 0
+        _keyboardKeyCode: 105
+        _modifierKey1: 0
+        _modifierKey2: 0
+        _modifierKey3: 0
+      - _actionCategoryId: 0
+        _actionId: 24
+        _elementType: 1
+        _elementIdentifierId: -1
+        _axisRange: 0
+        _invert: 0
+        _axisContribution: 0
+        _keyboardKeyCode: 111
+        _modifierKey1: 0
+        _modifierKey2: 0
+        _modifierKey3: 0
+      - _actionCategoryId: 0
+        _actionId: 23
+        _elementType: 1
+        _elementIdentifierId: -1
+        _axisRange: 0
+        _invert: 0
+        _axisContribution: 0
+        _keyboardKeyCode: 100
+        _modifierKey1: 0
+        _modifierKey2: 0
+        _modifierKey3: 0
+      - _actionCategoryId: 0
+        _actionId: 23
+        _elementType: 1
+        _elementIdentifierId: -1
+        _axisRange: 0
+        _invert: 0
+        _axisContribution: 1
+        _keyboardKeyCode: 97
+        _modifierKey1: 0
+        _modifierKey2: 0
+        _modifierKey3: 0
+      - _actionCategoryId: 0
+        _actionId: 25
+        _elementType: 1
+        _elementIdentifierId: -1
+        _axisRange: 0
+        _invert: 0
+        _axisContribution: 0
+        _keyboardKeyCode: 119
+        _modifierKey1: 0
+        _modifierKey2: 0
+        _modifierKey3: 0
+      - _actionCategoryId: 0
+        _actionId: 25
+        _elementType: 1
+        _elementIdentifierId: -1
+        _axisRange: 0
+        _invert: 0
+        _axisContribution: 1
+        _keyboardKeyCode: 115
+        _modifierKey1: 0
+        _modifierKey2: 0
+        _modifierKey3: 0
+    mouseMaps:
+    - id: 1
+      categoryId: 2
+      layoutId: 0
+      name: 
+      hardwareGuidString: 
+      customControllerUid: 0
+      actionElementMaps:
+      - _actionCategoryId: 0
+        _actionId: 26
+        _elementType: 1
+        _elementIdentifierId: 3
+        _axisRange: 0
+        _invert: 0
+        _axisContribution: 0
+        _keyboardKeyCode: 0
+        _modifierKey1: 0
+        _modifierKey2: 0
+        _modifierKey3: 0
+      - _actionCategoryId: 0
+        _actionId: 24
+        _elementType: 1
+        _elementIdentifierId: 4
+        _axisRange: 0
+        _invert: 0
+        _axisContribution: 0
+        _keyboardKeyCode: 0
+        _modifierKey1: 0
+        _modifierKey2: 0
+        _modifierKey3: 0
     customControllerMaps: []
     customControllers: []
     controllerMapLayoutManagerRuleSets: []
     controllerMapEnablerRuleSets: []
     playerIdCounter: 2
-    actionIdCounter: 23
-    actionCategoryIdCounter: 2
+    actionIdCounter: 27
+    actionCategoryIdCounter: 3
     inputBehaviorIdCounter: 1
-    mapCategoryIdCounter: 2
+    mapCategoryIdCounter: 3
     joystickLayoutIdCounter: 1
     keyboardLayoutIdCounter: 2
     mouseLayoutIdCounter: 2
     customControllerLayoutIdCounter: 1
     joystickMapIdCounter: 1
-    keyboardMapIdCounter: 3
-    mouseMapIdCounter: 1
+    keyboardMapIdCounter: 4
+    mouseMapIdCounter: 2
     customControllerMapIdCounter: 0
     customControllerIdCounter: 0
     controllerMapLayoutManagerSetIdCounter: 1
@@ -1599,19 +1760,19 @@ MonoBehaviour:
   useAllRewiredGamePlayers: 1
   useRewiredSystemPlayer: 1
   rewiredPlayerIds: 00000000
-  usePlayingPlayersOnly: 0
+  usePlayingPlayersOnly: 1
   playerMice:
   - {fileID: 1659669670358352933}
   moveOneElementPerAxisPress: 0
-  setActionsById: 0
-  horizontalActionId: -1
-  verticalActionId: -1
-  submitActionId: -1
-  cancelActionId: -1
-  m_HorizontalAxis: UIHorizontal
-  m_VerticalAxis: UIVertical
-  m_SubmitButton: UISubmit
-  m_CancelButton: UICancel
+  setActionsById: 1
+  horizontalActionId: 23
+  verticalActionId: 25
+  submitActionId: 26
+  cancelActionId: 24
+  m_HorizontalAxis: UIMovement X
+  m_VerticalAxis: UIMovement Y
+  m_SubmitButton: Confirm
+  m_CancelButton: Deny
   m_InputActionsPerSecond: 4.5
   m_RepeatDelay: 0
   m_allowMouseInput: 1

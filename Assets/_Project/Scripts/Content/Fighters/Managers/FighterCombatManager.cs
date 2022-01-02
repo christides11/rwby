@@ -61,8 +61,6 @@ namespace rwby
 
         [Networked] public int hitstopCounter { get; set; }
 
-        [Networked] public byte AttackLevel { get; set; }
-
         public virtual void CLateUpdate()
         {
 
@@ -93,26 +91,6 @@ namespace rwby
         public virtual void AddHitStun(int value)
         {
             HitStun += value;
-        }
-
-        public virtual void DecreaseAttackLevel()
-        {
-            if(AttackLevel == 0)
-            {
-                AttackLevel = 2;
-                return;
-            }
-            AttackLevel--;
-        }
-
-        public virtual void IncreaseAttackLevel()
-        {
-            if(AttackLevel == 2)
-            {
-                AttackLevel = 0;
-                return;
-            }
-            AttackLevel++;
         }
 
         public void Cleanup()
@@ -162,7 +140,7 @@ namespace rwby
                             return cancel;
                         }
                     }
-                    int groundNormal = CheckGroundNodes(moveset);
+                    int groundNormal = CheckAttackNodes(ref moveset.groundAttackStartNodes);
                     if (groundNormal != -1)
                     {
                         return groundNormal;
@@ -182,7 +160,7 @@ namespace rwby
                             return cancel;
                         }
                     }
-                    int airNormal = CheckAirNodes(moveset);
+                    int airNormal = CheckAttackNodes(ref moveset.airAttackStartNodes);
                     if (airNormal != -1)
                     {
                         return airNormal;
@@ -191,35 +169,6 @@ namespace rwby
             }
             return -1;
         }
-
-        private int CheckGroundNodes(rwby.Moveset moveset)
-        {
-            switch (AttackLevel)
-            {
-                case 0:
-                    return CheckAttackNodes(ref moveset.groundLV1StartNodes);
-                case 1:
-                    return CheckAttackNodes(ref moveset.groundLV2StartNodes);
-                case 2:
-                    return CheckAttackNodes(ref moveset.groundLV3StartNodes);
-            }
-            return -1;
-        }
-
-        private int CheckAirNodes(rwby.Moveset moveset)
-        {
-            switch (AttackLevel)
-            {
-                case 0:
-                    return CheckAttackNodes(ref moveset.airLV1StartNodes);
-                case 1:
-                    return CheckAttackNodes(ref moveset.airLV2StartNodes);
-                case 2:
-                    return CheckAttackNodes(ref moveset.airLV3StartNodes);
-            }
-            return -1;
-        }
-
 
         /// <summary>
         /// Checks the cancel windows of the current attack to see if we should transition to the next attack.
