@@ -20,7 +20,7 @@ MonoBehaviour:
     buildCounter: 0
     buildVersion: 
     versionTemplate: 1.0.0.$BUILD
-    autoGenerate: 1
+    autoGenerate: 0
     syncWithPlayerSettings: 0
   _releaseTypeList:
     releaseTypes:
@@ -65,7 +65,8 @@ MonoBehaviour:
     treeView: 0
     selectedKeyChain: 
   _preBuildActions:
-    buildActions: []
+    buildActions:
+    - {fileID: 5276092195832768191}
   _postBuildActions:
     buildActions: []
 --- !u!114 &12252119849156343
@@ -96,3 +97,22 @@ MonoBehaviour:
   platformName: PC
   dataDirNameFormat: '{0}_Data'
   targetGroup: 1
+--- !u!114 &5276092195832768191
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b9935c3ee131d1948b5eef56c7e49713, type: 3}
+  m_Name: BuildAddressables
+  m_EditorClassIdentifier: 
+  actionType: 1
+  actionName: BuildAddressables
+  note: 
+  actionEnabled: 1
+  filter:
+    condition: 0
+    clauses: []

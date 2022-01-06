@@ -1,9 +1,8 @@
 using Fusion;
 using Fusion.Sockets;
-using Rewired;
 using System;
-using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace rwby
@@ -11,24 +10,32 @@ namespace rwby
 	[OrderBefore(typeof(FighterInputManager), typeof(FighterManager))]
 	public class ClientManager : NetworkBehaviour, INetworkRunnerCallbacks, IBeforeUpdate, IAfterUpdate
 	{
+		public delegate void ClientAction(ClientManager clientManager);
+		public static event ClientAction OnPlayersChanged;
+
 		public static ClientManager local;
 		public static List<ClientManager> clientManagers = new List<ClientManager>();
 
 		// Client players.
-		[Networked, Capacity(4)] public NetworkLinkedList<ClientPlayerDefinition> ClientPlayers { get; }
-
-		[Networked] public string PlayerName { get; set; }
-		[Networked, Capacity(50)] public string SelectedCharacter { get; set; }
-
-		[Networked] public NetworkObject ClientFighter { get; set; }
-
-		public FighterInputManager inMan;
+		[Networked(OnChanged = nameof(OnClientPlayersChanged)), Capacity(4)] public NetworkLinkedList<ClientPlayerDefinition> ClientPlayers { get; }
+		public Rewired.Player[] rewiredPlayers = new Rewired.Player[4];
+		public List<PlayerCamera> playerCameras = new List<PlayerCamera>();
 
 		protected NetworkManager networkManager;
 
-		Rewired.Player p = null;
+		// Input
+		[Networked] public NetworkClientInputData latestConfirmedInput { get; set; }
+		[Networked, Capacity(10)] public NetworkArray<NetworkClientInputData> inputBuffer { get; }
+		[Networked] public int inputBufferPosition { get; set; }
+		public int setInputDelay = 3;
 
-		public PlayerCamera camera;
+		// ?
+		[Networked] public float mapLoadPercent { get; set; }
+
+		private static void OnClientPlayersChanged(Changed<ClientManager> changed)
+		{
+			OnPlayersChanged?.Invoke(changed.Behaviour);
+		}
 
 		protected virtual void Awake()
 		{
@@ -41,7 +48,6 @@ namespace rwby
 			clientManagers.Add(this);
 			if (Object.HasInputAuthority)
 			{
-				SetControllerID(0);
 				Runner.AddCallbacks(this);
 				local = this;
 				//BaseHUD bhud = GameObject.Instantiate(GameManager.singleton.settings.baseUI, transform, false);
@@ -49,84 +55,112 @@ namespace rwby
 			}
 		}
 
-		public override void Render()
+		public override void Despawned(NetworkRunner runner, bool hasState)
 		{
-			if (camera)
-			{
-				camera.CamUpdate();
-			}
+			clientManagers.Remove(this);
 		}
 
-		bool buttonJump;
-		bool buttonA;
-		bool buttonB;
-		bool buttonBlock;
-		bool buttonDash;
-		bool buttonC;
-		bool buttonLockOn;
-		bool buttonAbility1;
-		bool buttonAbility2;
-		bool buttonAbility3;
-		bool buttonAbility4;
-		bool buttonExtra1;
-		bool buttonExtra2;
-		bool buttonExtra3;
-		bool buttonExtra4;
+		public override void Render()
+		{
+			for(int i = 0; i < playerCameras.Count; i++)
+            {
+				playerCameras[i].CamUpdate();
+            }
+		}
+
+		public void AddPlayer(Rewired.Player localPlayer)
+        {
+			if (rewiredPlayers.Contains(localPlayer)) return;
+
+			ClientPlayers.Add(new ClientPlayerDefinition());
+			rewiredPlayers[ClientPlayers.Count - 1] = localPlayer;
+        }
+
+		public int GetPlayerIndex(Rewired.Player localPlayer)
+        {
+			return Array.IndexOf(rewiredPlayers, localPlayer);
+		}
+
+		public void SetPlayerCharacter(Rewired.Player localPlayer, ModObjectReference characterReference)
+		{
+			if (!rewiredPlayers.Contains(localPlayer)) return;
+
+			SetPlayerCharacter(Array.IndexOf(rewiredPlayers, localPlayer), characterReference);
+		}
+
+		public void SetPlayerCharacter(int playerIndex, ModObjectReference characterReference)
+        {
+			var tempList = ClientPlayers;
+			ClientPlayerDefinition temp = tempList[playerIndex];
+			temp.characterReference = characterReference.ToString();
+			tempList[playerIndex] = temp;
+		}
+
+		public void SetPlayerTeam(int playerIndex, byte team)
+        {
+			var tempList = ClientPlayers;
+			ClientPlayerDefinition temp = tempList[playerIndex];
+			temp.team = team;
+			tempList[playerIndex] = temp;
+        }
+
+		Vector2[] buttonMovement = new Vector2[8];
+		Vector2[] buttonCamera = new Vector2[8];
+		Vector3[] buttonCameraForward = new Vector3[8];
+		Vector3[] buttonCameraRight = new Vector3[8];
+		bool[] buttonJump = new bool[4];
+		bool[] buttonA = new bool[4];
+		bool[] buttonB = new bool[4];
+		bool[] buttonC = new bool[4];
+		bool[] buttonBlock = new bool[4];
+		bool[] buttonDash = new bool[4];
+		bool[] buttonLockOn = new bool[4];
+		bool[] buttonAbility1 = new bool[4];
+		bool[] buttonAbility2 = new bool[4];
+		bool[] buttonAbility3 = new bool[4];
+		bool[] buttonAbility4 = new bool[4];
+		bool[] buttonExtra1 = new bool[4];
+		bool[] buttonExtra2 = new bool[4];
+		bool[] buttonExtra3 = new bool[4];
+		bool[] buttonExtra4 = new bool[4];
 		public void BeforeUpdate()
 		{
-			if (p != null)
+			if (Object.HasInputAuthority == false) return;
+
+			for (int j = 0; j < ClientPlayers.Count; j++)
 			{
-				if (p.GetButton(Action.Jump)) { buttonJump = true; }
-				if (p.GetButton(Action.A)) { buttonA = true; }
-				if (p.GetButton(Action.B)) { buttonB = true; }
-				if (p.GetButton(Action.Block)) { buttonBlock = true; }
-				if (p.GetButton(Action.Dash)) { buttonDash = true; }
-				if (p.GetButton(Action.C)) { buttonC = true; }
-				if (p.GetButton(Action.Lock_On)) { buttonLockOn = true; }
-				if (p.GetButton(Action.Ability_1)) { buttonAbility1 = true; }
-				if (p.GetButton(Action.Ability_2)) { buttonAbility2 = true; }
-				if (p.GetButton(Action.Ability_3)) { buttonAbility3 = true; }
-				if (p.GetButton(Action.Ability_4)) { buttonAbility4 = true; }
-				if (p.GetButton(Action.Extra1)) { buttonExtra1 = true; }
-				if (p.GetButton(Action.Extra2)) { buttonExtra2 = true; }
-				if (p.GetButton(Action.Extra3)) { buttonExtra3 = true; }
-				if (p.GetButton(Action.Extra4)) { buttonExtra4 = true; }
+				if (rewiredPlayers[j] == null) continue;
+				buttonMovement[j] = rewiredPlayers[j].GetAxis2D(Action.Movement_X, Action.Movement_Y);
+				buttonCamera[j] = rewiredPlayers[j].GetAxis2D(Action.Camera_X, Action.Camera_Y);
+				buttonCameraForward[j] = Vector3.forward;
+				buttonCameraRight[j] = Vector3.right;
+				if (rewiredPlayers[j].GetButton(Action.Jump)) buttonJump[j] = true;
+				if (rewiredPlayers[j].GetButton(Action.A)) buttonA[j] = true;
+				if (rewiredPlayers[j].GetButton(Action.B)) buttonB[j] = true;
+				if (rewiredPlayers[j].GetButton(Action.C)) buttonC[j] = true;
+				if (rewiredPlayers[j].GetButton(Action.Block)) buttonBlock[j] = true;
+				if (rewiredPlayers[j].GetButton(Action.Dash)) buttonDash[j] = true;
+				if (rewiredPlayers[j].GetButton(Action.Lock_On)) buttonLockOn[j] = true;
 			}
 		}
 
 		public void AfterUpdate()
 		{
-			ClearInputs();
+			ClearInput(ref buttonJump);
+			ClearInput(ref buttonA);
+			ClearInput(ref buttonB);
+			ClearInput(ref buttonC);
+			ClearInput(ref buttonBlock);
+			ClearInput(ref buttonDash);
+			ClearInput(ref buttonLockOn);
 		}
 
-		protected virtual void ClearInputs()
+		private void ClearInput(ref bool[] inputList)
 		{
-			buttonJump = false;
-			buttonA = false;
-			buttonB = false;
-			buttonBlock = false;
-			buttonDash = false;
-			buttonC = false;
-			buttonLockOn = false;
-			buttonAbility1 = false;
-			buttonAbility2 = false;
-			buttonAbility3 = false;
-			buttonAbility4 = false;
-			buttonExtra1 = false;
-			buttonExtra2 = false;
-			buttonExtra3 = false;
-			buttonExtra4 = false;
-		}
-
-		public override void Despawned(NetworkRunner runner, bool hasState)
-		{
-			base.Despawned(runner, hasState);
-			clientManagers.Remove(this);
-		}
-
-		public virtual void SetControllerID(int controllerID)
-		{
-			p = ReInput.players.GetPlayer(controllerID);
+			for (int i = 0; i < inputList.Length; i++)
+			{
+				inputList[i] = false;
+			}
 		}
 
 		/// <summary>
@@ -136,40 +170,43 @@ namespace rwby
 		/// <param name="input">The target input handler that we'll pass our data to</param>
 		public void OnInput(NetworkRunner runner, NetworkInput input)
 		{
-			// Instantiate our custom input structure
-			var frameworkInput = new NetworkInputData();
-			// Fill it with input data
-			if (p == null)
+			var frameworkInput = new NetworkClientInputData();
+
+			if (ClientPlayers.Count == 0)
 			{
 				input.Set(frameworkInput);
 				return;
 			}
-			frameworkInput.movement = p.GetAxis2D(Action.Movement_X, Action.Movement_Y);
-			if (camera)
-			{
-				frameworkInput.forward = camera.transform.forward;
-				frameworkInput.right = camera.transform.right;
+
+			for(int i = 0; i < ClientPlayers.Count; i++)
+            {
+				NetworkPlayerInputData playerInput = new NetworkPlayerInputData();
+
+				playerInput.movement = buttonMovement[i];
+				playerInput.forward = Vector3.forward;
+				playerInput.right = Vector3.right;
+				playerInput.buttons.Set(PlayerInputType.JUMP, buttonJump[i]);
+				playerInput.buttons.Set(PlayerInputType.A, buttonA[i]);
+				playerInput.buttons.Set(PlayerInputType.B, buttonB[i]);
+				playerInput.buttons.Set(PlayerInputType.C, buttonC[i]);
+
+				switch (i)
+				{
+					case 0:
+						frameworkInput.player1 = playerInput;
+						break;
+					case 1:
+						frameworkInput.player2 = playerInput;
+						break;
+					case 2:
+						frameworkInput.player3 = playerInput;
+						break;
+					case 3:
+						frameworkInput.player4 = playerInput;
+						break;
+				}
 			}
-			else
-			{
-				frameworkInput.forward = Vector3.forward;
-				frameworkInput.right = Vector3.right;
-			}
-			if (buttonJump) { frameworkInput.Buttons |= NetworkInputData.BUTTON_JUMP; }
-			if (buttonA) { frameworkInput.Buttons |= NetworkInputData.BUTTON_A; }
-			if (buttonB) { frameworkInput.Buttons |= NetworkInputData.BUTTON_B; }
-			if (buttonBlock) { frameworkInput.Buttons |= NetworkInputData.BUTTON_BLOCK; }
-			if (buttonDash) { frameworkInput.Buttons |= NetworkInputData.BUTTON_DASH; }
-			if (buttonC) { frameworkInput.Buttons |= NetworkInputData.BUTTON_C; }
-			if (buttonLockOn) { frameworkInput.Buttons |= NetworkInputData.BUTTON_LOCK_ON; }
-			if (buttonAbility1) { frameworkInput.Buttons |= NetworkInputData.BUTTON_ABILITY_ONE; }
-			if (buttonAbility2) { frameworkInput.Buttons |= NetworkInputData.BUTTON_ABILITY_TWO; }
-			if (buttonAbility3) { frameworkInput.Buttons |= NetworkInputData.BUTTON_ABILITY_THREE; }
-			if (buttonAbility4) { frameworkInput.Buttons |= NetworkInputData.BUTTON_ABILITY_FOUR; }
-			if (buttonExtra1) { frameworkInput.Buttons |= NetworkInputData.BUTTON_Extra_1; }
-			if (buttonExtra2) { frameworkInput.Buttons |= NetworkInputData.BUTTON_Extra_2; }
-			if (buttonExtra3) { frameworkInput.Buttons |= NetworkInputData.BUTTON_Extra_3; }
-			if (buttonExtra4) { frameworkInput.Buttons |= NetworkInputData.BUTTON_Extra_4; }
+
 			// Hand over the data to Fusion
 			input.Set(frameworkInput);
 		}
@@ -178,37 +215,41 @@ namespace rwby
 		{
 		}
 
-		[Networked] public NetworkInputData latestConfirmedInput { get; set; }
-
-		[Networked, Capacity(10)] public NetworkArray<NetworkInputData> inputBuffer { get; }
-		[Networked] public int inputBufferPosition { get; set; }
-
-		public int setInputBuffer = 3;
-		[NonSerialized] private int inputBufferCapacity = 10;
-
 		public override void FixedUpdateNetwork()
 		{
-
-			// Get our input struct and act accordingly. This method will only return data if we
-			// have Input or State Authority - meaning on the controlling player or the server.
-			if (GetInput(out NetworkInputData input))
+			if (GetInput(out NetworkClientInputData input))
 			{
-				inputBuffer.Set((inputBufferPosition+setInputBuffer)%(inputBufferCapacity), input);
+				inputBuffer.Set((inputBufferPosition + setInputDelay) % (inputBuffer.Length), input);
 			}
 
-			if (inMan == null)
-			{
-				if (ClientFighter != null)
-				{
-					inMan = ClientFighter.GetComponent<FighterInputManager>();
-				}
-				else
-				{
-					return;
-				}
-			}
+			for(int i = 0; i < ClientPlayers.Count; i++)
+            {
+				if (ClientPlayers[i].characterNetID.IsValid == false) continue;
+				FighterInputManager cim = Runner.TryGetNetworkedBehaviourFromNetworkedObjectRef<FighterInputManager>(ClientPlayers[i].characterNetID);
 
-			inMan.FeedInput(networkManager.FusionLauncher.NetworkRunner.Simulation.Tick, inputBuffer[(inputBufferPosition)%inputBufferCapacity]);
+				NetworkPlayerInputData playerInput;
+
+                switch (i)
+                {
+					case 0:
+						playerInput = inputBuffer[(inputBufferPosition) % inputBuffer.Length].player1;
+						break;
+					case 1:
+						playerInput = inputBuffer[(inputBufferPosition) % inputBuffer.Length].player2;
+						break;
+					case 2:
+						playerInput = inputBuffer[(inputBufferPosition) % inputBuffer.Length].player3;
+						break;
+					case 3:
+						playerInput = inputBuffer[(inputBufferPosition) % inputBuffer.Length].player4;
+						break;
+					default:
+						playerInput = new NetworkPlayerInputData();
+						break;
+                }
+
+				cim.FeedInput(Runner.Simulation.Tick, playerInput);
+			}
 			inputBufferPosition++;
 		}
 

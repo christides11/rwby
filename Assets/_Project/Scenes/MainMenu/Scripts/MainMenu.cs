@@ -25,9 +25,20 @@ namespace rwby.menus
 
         private void OnEnable()
         {
-            if(NetworkManager.singleton.FusionLauncher.Status == FusionLauncher.ConnectionStatus.Connected)
+            if (NetworkManager.singleton.FusionLauncher.NetworkRunner == null) return;
+            if(NetworkManager.singleton.FusionLauncher.NetworkRunner.IsConnectedToServer)
             {
                 lobbyMenu.Open();
+            }
+        }
+
+        private void Update()
+        {
+            if (NetworkManager.singleton.FusionLauncher.NetworkRunner == null) return;
+            if (NetworkManager.singleton.FusionLauncher.NetworkRunner.IsConnectedToServer)
+            {
+                lobbyMenu.Open();
+                gameObject.SetActive(false);
             }
         }
 

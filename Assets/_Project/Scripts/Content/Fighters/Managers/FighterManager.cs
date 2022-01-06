@@ -81,8 +81,8 @@ namespace rwby
             Visible = true;
             if (Object.HasInputAuthority)
             {
-                ClientManager.local.camera = GameObject.Instantiate(GameManager.singleton.settings.playerCameraPrefab, transform.position, transform.rotation);
-                ClientManager.local.camera.SetLookAtTarget(this);
+                //ClientManager.local.camera = GameObject.Instantiate(GameManager.singleton.settings.playerCameraPrefab, transform.position, transform.rotation);
+                //ClientManager.local.camera.SetLookAtTarget(this);
             }
             combatManager.Cleanup();
             combatManager.SetMoveset(0);

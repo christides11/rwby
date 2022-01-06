@@ -1,8 +1,10 @@
 using Cysharp.Threading.Tasks;
 using Fusion;
+using rwby.menus;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 namespace rwby
@@ -13,37 +15,62 @@ namespace rwby
         public ModObjectReference botReference;
         public FighterInputManager botInputManager;
 
-        public override async UniTask<bool> SetupGamemode(ModObjectReference[] componentReferences, List<ModObjectReference> content)
+        public ModObjectReference mapReference = new ModObjectReference();
+
+        public override void AddGamemodeSettings(LobbyMenu lobbyManager)
         {
-            bool baseResult = await base.SetupGamemode(componentReferences, content);
-            if (baseResult == false)
+            GameObject gamemodeOb = GameObject.Instantiate(lobbyManager.gamemodeOptionsContentPrefab, lobbyManager.gamemodeOptionsList, false);
+            TextMeshProUGUI[] textMeshes = gamemodeOb.GetComponentsInChildren<TextMeshProUGUI>();
+            textMeshes[0].text = mapReference.ToString();
+            gamemodeOb.GetComponentInChildren<PlayerPointerEventTrigger>().OnPointerClickEvent.AddListener((d) => { _ = OpenMapSelection(); });
+        }
+
+        private async UniTask OpenMapSelection()
+        {
+            await ContentSelect.singleton.OpenMenu<IMapDefinition>((a, b) => { 
+                ContentSelect.singleton.CloseMenu(); 
+                mapReference = b; 
+                LobbyManager.singleton.CallGamemodeSettingsChanged(); 
+            });
+        }
+
+        public override async UniTask<bool> VerifyGameModeSettings()
+        {
+            List<PlayerRef> failedLoadPlayers = await LobbyManager.singleton.clientContentLoaderService.TellClientsToLoad<IMapDefinition>(mapReference);
+            if (failedLoadPlayers == null)
             {
-                SetupFailed();
+                Debug.LogError("Load Map Local Failure");
                 return false;
             }
 
-            if (content.Count != 1)
+            foreach (var v in failedLoadPlayers)
             {
-                SetupFailed();
-                return false;
+                Debug.Log($"{v.PlayerId} failed to load {mapReference.ToString()}.");
             }
 
-            bool mapLoadResult = await GameManager.singleton.LoadMap(content[0]);
-            if (mapLoadResult == false)
-            {
-                SetupFailed();
-                return false;
-            }
+            if (failedLoadPlayers.Count != 0) return false;
 
-            SetupSuccess();
             return true;
         }
 
+        public override async void StartGamemode()
+        {
+            await LobbyManager.singleton.clientMapLoaderService.TellClientsToLoad(mapReference);
+
+            IMapDefinition mapDefinition = ContentManager.singleton.GetContentDefinition<IMapDefinition>(mapReference);
+
+            if (NetworkManager.singleton.FusionLauncher.TryGetSceneRef(out SceneRef scene))
+            {
+                Runner.SetActiveScene(scene);
+            }
+        }
+
+        /*
         public override void StartGamemode()
         {
             base.StartGamemode();
 
-            /*
+            
             int xOff = 0;
             foreach(var c in NetworkManager.singleton.FusionLauncher.Players)
             {
@@ -56,32 +83,33 @@ namespace rwby
                 fim.gameObject.name = $"Player {cm.PlayerName}";
                 cm.ClientFighter = fim.GetComponent<NetworkObject>();
                 xOff += 5;
-            }*/
+            }
 
             // Spawn BOT
             IFighterDefinition botDefinition = (IFighterDefinition)ContentManager.singleton.GetContentDefinition<IFighterDefinition>(botReference);
             botInputManager = NetworkManager.singleton.FusionLauncher.NetworkRunner.Spawn(botDefinition.GetFighter().GetComponent<FighterInputManager>(), new Vector3(0, 0, 5), Quaternion.identity, null);
             botInputManager.gameObject.name = $"Bot";
-        }
+        }*/
 
         public override void FixedUpdateNetwork()
         {
+            /*
             if (botInputManager)
             {
-                botInputManager.FeedInput(Runner.Simulation.Tick, CreateBotInput());
-            }
+                //botInputManager.FeedInput(Runner.Simulation.Tick, CreateBotInput());
+            }*/
         }
 
         public bool buttonBlock;
         public bool buttonJump;
 
-        private NetworkInputData CreateBotInput()
+        private NetworkClientInputData CreateBotInput()
         {
-            NetworkInputData botInput = new NetworkInputData();
+            NetworkClientInputData botInput = new NetworkClientInputData();
 
-            
-            if (buttonBlock) { botInput.Buttons |= NetworkInputData.BUTTON_BLOCK; }
-            if (buttonJump) { botInput.Buttons |= NetworkInputData.BUTTON_JUMP; }
+            /*
+            if (buttonBlock) { botInput.Buttons |= NetworkClientInputData.BUTTON_BLOCK; }
+            if (buttonJump) { botInput.Buttons |= NetworkClientInputData.BUTTON_JUMP; }*/
             return botInput;
         }
     }

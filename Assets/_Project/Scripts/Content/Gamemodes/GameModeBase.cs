@@ -17,30 +17,6 @@ namespace rwby
 
         [Networked(OnChanged = nameof(GamemodeStateChanged))] public GameModeState GamemodeState { get; set; }
 
-        public virtual void Awake()
-        {
-            DontDestroyOnLoad(gameObject);
-        }
-
-        public override void Spawned()
-        {
-            base.Spawned();
-            singleton = this;
-            if (Object.HasStateAuthority)
-            {
-                //MatchManager.onMatchInitialized += StartGamemode;
-            }
-        }
-
-        public override void Despawned(NetworkRunner runner, bool hasState)
-        {
-            base.Despawned(runner, hasState);
-            if (Object.HasStateAuthority)
-            {
-                //MatchManager.onMatchInitialized -= StartGamemode;
-            }
-        }
-
         public static void GamemodeStateChanged(Changed<GameModeBase> changed)
         {
             changed.Behaviour.GamemodeStateChanged();
@@ -51,56 +27,57 @@ namespace rwby
             OnGamemodeStateChanged?.Invoke();
         }
 
-        public virtual async UniTask<bool> SetupGamemode(ModObjectReference[] componentReferences, List<ModObjectReference> content)
+        public virtual async UniTask<bool> Load()
         {
-            /*
-            foreach (ClientManager cm in ClientManager.clientManagers)
-            {
-                ModObjectReference characterReference = new ModObjectReference(cm.SelectedCharacter);
-                bool cLoadResult = await ContentManager.singleton.LoadContentDefinition<IFighterDefinition>(characterReference);
-                if(cLoadResult == false)
-                {
-                    OnSetupFailure?.Invoke();
-                    return false;
-                }
-
-                IFighterDefinition fighterDefinition = ContentManager.singleton.GetContentDefinition<IFighterDefinition>(characterReference);
-
-                bool fighterLoadResult = await fighterDefinition.LoadFighter();
-                if(fighterLoadResult == false)
-                {
-                    OnSetupFailure?.Invoke();
-                    return false;
-                }
-            }*/
-
-            OnSetupSuccess?.Invoke();
             return true;
         }
 
-        protected void SetupFailed()
+        public virtual void Awake()
         {
-            OnSetupFailure?.Invoke();
+            DontDestroyOnLoad(gameObject);
         }
 
-        protected void SetupSuccess()
+        public override void Spawned()
         {
-            OnSetupSuccess?.Invoke();
+            singleton = this;
+            if (Object.HasStateAuthority)
+            {
+
+            }
         }
 
-        public virtual async UniTask BreakdownGamemode()
+        public override void Despawned(NetworkRunner runner, bool hasState)
+        {
+            base.Despawned(runner, hasState);
+            if (Object.HasStateAuthority)
+            {
+
+            }
+        }
+
+        public virtual void AddGamemodeSettings(menus.LobbyMenu lobbyManager)
         {
 
+        }
+
+        public virtual async UniTask<bool> VerifyGameModeSettings()
+        {
+            return true;
         }
 
         public virtual void StartGamemode()
         {
-            GamemodeState = GameModeState.PRE_GAMEMODE;
+
+        }
+
+        public override void Render()
+        {
+
         }
 
         public override void FixedUpdateNetwork()
         {
-            base.FixedUpdateNetwork();
+
         }
     }
 }

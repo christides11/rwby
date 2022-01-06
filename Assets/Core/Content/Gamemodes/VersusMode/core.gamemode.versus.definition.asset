@@ -10,15 +10,27 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 9bbf0bbe28e92c24f986f355c96289b1, type: 3}
-  m_Name: core.gamemode.training.definition
+  m_Name: core.gamemode.versus.definition
   m_EditorClassIdentifier: 
   minimumTeams: 0
-  maximumTeams: 0
-  teams: []
-  gamemodeName: Training
+  maximumTeams: 4
+  teams:
+  - color: {r: 1, g: 0, b: 0, a: 1}
+    minimumPlayers: 0
+    maximumPlayers: 4
+  - color: {r: 0, g: 0.04511404, b: 1, a: 1}
+    minimumPlayers: 0
+    maximumPlayers: 4
+  - color: {r: 0.03901875, g: 1, b: 0, a: 1}
+    minimumPlayers: 0
+    maximumPlayers: 4
+  - color: {r: 1, g: 0.9271912, b: 0, a: 1}
+    minimumPlayers: 0
+    maximumPlayers: 4
+  gamemodeName: Versus
   description: 
   gamemodeReference:
-    m_AssetGUID: a1c7258cbad69f8468a6d27aeb82ca76
+    m_AssetGUID: bcba8c78d36325d4d99aaa903d9cd0a8
     m_SubObjectName: 
     m_SubObjectType: 
     m_EditorAssetChanged: 0

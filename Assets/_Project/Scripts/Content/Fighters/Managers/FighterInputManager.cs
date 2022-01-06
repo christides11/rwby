@@ -40,26 +40,27 @@ namespace rwby
             base.Spawned();
         }
 
-        public void FeedInput(int frame, NetworkInputData inputData)
+        public void FeedInput(int frame, NetworkPlayerInputData inputData)
         {
             Movement[frame % inputCapacity] = inputData.movement;
             CameraForward[frame % inputCapacity] = inputData.forward;
             CameraRight[frame % inputCapacity] = inputData.right;
-            A[frame % inputCapacity] = new InputButtonData(inputData.IsDown(NetworkInputData.BUTTON_A), A[(frame-1) % inputCapacity]);
-            B[frame % inputCapacity] = new InputButtonData(inputData.IsDown(NetworkInputData.BUTTON_B), B[(frame-1) % inputCapacity]);
-            C[frame % inputCapacity] = new InputButtonData(inputData.IsDown(NetworkInputData.BUTTON_C), C[(frame - 1) % inputCapacity]);
-            Jump[frame % inputCapacity] = new InputButtonData(inputData.IsDown(NetworkInputData.BUTTON_JUMP), Jump[(frame-1) % inputCapacity]);
-            Block[frame % inputCapacity] = new InputButtonData(inputData.IsDown(NetworkInputData.BUTTON_BLOCK), Block[(frame-1) % inputCapacity]);
-            Dash[frame % inputCapacity] = new InputButtonData(inputData.IsDown(NetworkInputData.BUTTON_DASH), Dash[(frame-1) % inputCapacity]);
-            LockOn[frame % inputCapacity] = new InputButtonData(inputData.IsDown(NetworkInputData.BUTTON_LOCK_ON), LockOn[(frame-1) % inputCapacity]);
-            Ability1[frame % inputCapacity] = new InputButtonData(inputData.IsDown(NetworkInputData.BUTTON_ABILITY_ONE), Ability1[(frame - 1) % inputCapacity]);
-            Ability2[frame % inputCapacity] = new InputButtonData(inputData.IsDown(NetworkInputData.BUTTON_ABILITY_TWO), Ability2[(frame - 1) % inputCapacity]);
-            Ability3[frame % inputCapacity] = new InputButtonData(inputData.IsDown(NetworkInputData.BUTTON_ABILITY_THREE), Ability3[(frame - 1) % inputCapacity]);
-            Ability4[frame % inputCapacity] = new InputButtonData(inputData.IsDown(NetworkInputData.BUTTON_ABILITY_FOUR), Ability4[(frame - 1) % inputCapacity]);
-            Extra1[frame % inputCapacity] = new InputButtonData(inputData.IsDown(NetworkInputData.BUTTON_Extra_1), Extra1[(frame - 1) % inputCapacity]);
-            Extra2[frame % inputCapacity] = new InputButtonData(inputData.IsDown(NetworkInputData.BUTTON_Extra_2), Extra2[(frame - 1) % inputCapacity]);
-            Extra3[frame % inputCapacity] = new InputButtonData(inputData.IsDown(NetworkInputData.BUTTON_Extra_3), Extra3[(frame - 1) % inputCapacity]);
-            Extra4[frame % inputCapacity] = new InputButtonData(inputData.IsDown(NetworkInputData.BUTTON_Extra_4), Extra4[(frame - 1) % inputCapacity]);
+            A[frame % inputCapacity] = new InputButtonData(inputData.buttons.IsSet(PlayerInputType.A), A[(frame-1) % inputCapacity]);
+            B[frame % inputCapacity] = new InputButtonData(inputData.buttons.IsSet(PlayerInputType.B), B[(frame - 1) % inputCapacity]);
+            C[frame % inputCapacity] = new InputButtonData(inputData.buttons.IsSet(PlayerInputType.C), C[(frame - 1) % inputCapacity]);
+            Jump[frame % inputCapacity] = new InputButtonData(inputData.buttons.IsSet(PlayerInputType.JUMP), Jump[(frame - 1) % inputCapacity]);
+            Block[frame % inputCapacity] = new InputButtonData(inputData.buttons.IsSet(PlayerInputType.BLOCK), Block[(frame - 1) % inputCapacity]);
+            Dash[frame % inputCapacity] = new InputButtonData(inputData.buttons.IsSet(PlayerInputType.DASH), Dash[(frame - 1) % inputCapacity]);
+            LockOn[frame % inputCapacity] = new InputButtonData(inputData.buttons.IsSet(PlayerInputType.LOCK_ON), LockOn[(frame - 1) % inputCapacity]);
+            /*
+            Ability1[frame % inputCapacity] = new InputButtonData(inputData.IsDown(NetworkClientInputData.BUTTON_ABILITY_ONE), Ability1[(frame - 1) % inputCapacity]);
+            Ability2[frame % inputCapacity] = new InputButtonData(inputData.IsDown(NetworkClientInputData.BUTTON_ABILITY_TWO), Ability2[(frame - 1) % inputCapacity]);
+            Ability3[frame % inputCapacity] = new InputButtonData(inputData.IsDown(NetworkClientInputData.BUTTON_ABILITY_THREE), Ability3[(frame - 1) % inputCapacity]);
+            Ability4[frame % inputCapacity] = new InputButtonData(inputData.IsDown(NetworkClientInputData.BUTTON_ABILITY_FOUR), Ability4[(frame - 1) % inputCapacity]);
+            Extra1[frame % inputCapacity] = new InputButtonData(inputData.IsDown(NetworkClientInputData.BUTTON_Extra_1), Extra1[(frame - 1) % inputCapacity]);
+            Extra2[frame % inputCapacity] = new InputButtonData(inputData.IsDown(NetworkClientInputData.BUTTON_Extra_2), Extra2[(frame - 1) % inputCapacity]);
+            Extra3[frame % inputCapacity] = new InputButtonData(inputData.IsDown(NetworkClientInputData.BUTTON_Extra_3), Extra3[(frame - 1) % inputCapacity]);
+            Extra4[frame % inputCapacity] = new InputButtonData(inputData.IsDown(NetworkClientInputData.BUTTON_Extra_4), Extra4[(frame - 1) % inputCapacity]);*/
         }
 
         public virtual Vector2 GetMovement(int startOffset = 0)

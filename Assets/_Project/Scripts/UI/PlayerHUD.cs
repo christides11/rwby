@@ -19,10 +19,12 @@ namespace rwby
 
         public override void Update()
         {
+            /*
             if (client.inMan == null) return;
             stateText.text = client.inMan.manager.StateManager.GetCurrentStateName();
             speedText.text = client.inMan.manager.PhysicsManager.forceMovement.magnitude.ToString("F1");
             gravityText.text = client.inMan.manager.PhysicsManager.forceGravity.ToString("F1");
+            */
         }
 
         private void FixedUpdate()

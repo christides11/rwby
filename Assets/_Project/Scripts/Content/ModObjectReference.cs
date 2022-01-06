@@ -27,6 +27,12 @@ namespace rwby
             this.objectIdentifier = objectIdentifier;
         }
 
+        public bool IsEmpty()
+        {
+            if (string.IsNullOrEmpty(modIdentifier) || string.IsNullOrEmpty(objectIdentifier)) return true;
+            return false;
+        }
+
         public override string ToString()
         {
             return $"{modIdentifier}/{objectIdentifier}";

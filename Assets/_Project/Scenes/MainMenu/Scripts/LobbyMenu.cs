@@ -1,11 +1,11 @@
-using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using Cysharp.Threading.Tasks;
-using UnityEngine.EventSystems;
+using Rewired;
+using Rewired.Integration.UnityUI;
+using System;
 
 namespace rwby.menus
 {
@@ -15,34 +15,54 @@ namespace rwby.menus
 
         [SerializeField] private TextMeshProUGUI lobbyName;
         [SerializeField] private Transform lobbyPlayerList;
-        [SerializeField] private Transform teamPlayerList;
+        [SerializeField] private Transform localPlayerList;
         [SerializeField] private GameObject lobbyPlayerListItem;
-        [SerializeField] private GameObject teamPlayerListItem;
+        [SerializeField] private GameObject localPlayerListItem;
+        [SerializeField] private GameObject localPlayerListAddPlayerItem;
 
-        [SerializeField] private Transform gamemodeOptionsList;
-        [SerializeField] private GameObject gamemodeOptionsContentPrefab;
+        [SerializeField] public Transform gamemodeOptionsList;
+        [SerializeField] public GameObject gamemodeOptionsContentPrefab;
 
-        public void Awake()
-        {
-            //contentSelect.OnMenuClosed += () => { gameObject.SetActive(true); };
-            //MatchManager.onMatchSettingsLoadSuccess += MatchSettingsLoadSuccess;
-            //MatchManager.onMatchSettingsLoadFailed += MatchSettingsLoadFailed;
-        }
+        [SerializeField] private Button startMatchButton;
+
+        private ClientManager.ClientAction storedAction;
+
+        [Header("Player List")]
+        public GameObject lobbyPlayerTeamItem;
 
         public void Open()
         {
-            LobbyManager.OnLobbySettingsChanged += UpdateLobbyInfo;
             lobbyName.text = NetworkManager.singleton.FusionLauncher.NetworkRunner.SessionInfo.Name;
-            FillTeamList();
-            FillLobbyPlayerList();
+
+            storedAction = (a) => { UpdatePlayerInfo(); };
+            ClientManager.OnPlayersChanged += storedAction;
+            LobbyManager.OnLobbySettingsChanged += UpdateLobbyInfo;
+            LobbyManager.OnGamemodeSettingsChanged += UpdateLobbyInfo;
+            startMatchButton.GetComponentInChildren<PlayerPointerEventTrigger>().OnPointerClickEvent.AddListener((a) => { StartMatch(); } );
+            UpdatePlayerInfo();
             UpdateLobbyInfo();
+
             gameObject.SetActive(true);
         }
 
         public void Close()
         {
+            startMatchButton.GetComponentInChildren<PlayerPointerEventTrigger>().OnPointerClickEvent.RemoveAllListeners();
+            ClientManager.OnPlayersChanged -= storedAction;
             LobbyManager.OnLobbySettingsChanged -= UpdateLobbyInfo;
+            LobbyManager.OnGamemodeSettingsChanged -= UpdateLobbyInfo;
             gameObject.SetActive(false);
+        }
+
+        private void StartMatch()
+        {
+            _ = LobbyManager.singleton.TryStartMatch();
+        }
+
+        private void UpdatePlayerInfo()
+        {
+            FillLocalPlayerList();
+            FillLobbyPlayerList();
         }
 
         private void UpdateLobbyInfo()
@@ -50,13 +70,43 @@ namespace rwby.menus
             FillGamemodeOptions();
         }
 
-        private void FillTeamList()
+        private void FillLocalPlayerList()
         {
-            foreach(Transform child in teamPlayerList)
+            foreach(Transform child in localPlayerList)
             {
                 Destroy(child.gameObject);
             }
+
+            if (ClientManager.local == null) return;
+
+            for(int i = 0; i < ClientManager.local.ClientPlayers.Count; i++)
+            {
+                GameObject playerItem = GameObject.Instantiate(localPlayerListItem, localPlayerList, false);
+                TextMeshProUGUI[] textMeshes = playerItem.GetComponentsInChildren<TextMeshProUGUI>();
+                textMeshes[0].text = ClientManager.local.ClientPlayers[i].characterReference;
+                playerItem.GetComponentInChildren<PlayerPointerEventTrigger>().OnPointerClickEvent
+                    .AddListener((d) => { OpenCharacterSelection(); });
+
+                if (ClientManager.local.ClientPlayers[i].team == 0)
+                {
+                    playerItem.GetComponentsInChildren<TextMeshProUGUI>()[1].text = "No Team";
+                }
+                else
+                {
+                    playerItem.GetComponentsInChildren<TextMeshProUGUI>()[1].text = $"Team {ClientManager.local.ClientPlayers[i].team}";
+                }
+
+                playerItem.GetComponentsInChildren<PlayerPointerEventTrigger>()[1].OnPointerClickEvent.AddListener((a) => { ChangePlayerTeam(a); });
+            }
+
+            if (ClientManager.local.ClientPlayers.Count == 4) return;
+
+            GameObject playerAddItem = GameObject.Instantiate(localPlayerListAddPlayerItem, localPlayerList, false);
+            PlayerPointerEventTrigger ppet = playerAddItem.GetComponentInChildren<PlayerPointerEventTrigger>();
+            ppet.OnPointerClickEvent.AddListener((d) => { ClientManager.local.AddPlayer(ReInput.players.GetPlayer(d.playerId)); });
         }
+
+        Dictionary<byte, Transform> teamContainers = new Dictionary<byte, Transform>();
 
         private void FillLobbyPlayerList()
         {
@@ -64,6 +114,58 @@ namespace rwby.menus
             {
                 Destroy(child.gameObject);
             }
+
+            teamContainers.Clear();
+
+            var gamemodeRef = new ModObjectReference(LobbyManager.singleton.Settings.gamemodeReference);
+            IGameModeDefinition ll;
+            if(gamemodeRef.IsEmpty() == false) {
+                ll = ContentManager.singleton.GetContentDefinition<IGameModeDefinition>(gamemodeRef);
+
+                for (int i = 0; i < LobbyManager.singleton.Settings.teams; i++)
+                {
+                    GameObject teamContainer = GameObject.Instantiate(lobbyPlayerTeamItem, lobbyPlayerList, false);
+                    teamContainers.Add((byte)(i+1), teamContainer.transform);
+                }
+            }
+
+            for(int j = 0; j < ClientManager.clientManagers.Count; j++)
+            {
+                for (int k = 0; k < ClientManager.clientManagers[j].ClientPlayers.Count; k++)
+                {
+                    GameObject playerItem;
+                    if (ClientManager.clientManagers[j].ClientPlayers[k].team == 0)
+                    {
+                        playerItem = GameObject.Instantiate(lobbyPlayerListItem, lobbyPlayerList, false);
+                    }
+                    else
+                    {
+                        playerItem = GameObject.Instantiate(lobbyPlayerListItem, teamContainers[ClientManager.clientManagers[j].ClientPlayers[k].team].transform, false);
+                    }
+                }
+            }
+
+            foreach(var v in teamContainers)
+            {
+                if(v.Value.childCount == 0)
+                {
+                    Destroy(v.Value.gameObject);
+                }
+            }
+        }
+
+        private void ChangePlayerTeam(PlayerPointerEventData a)
+        {
+            int localPlayer = ClientManager.local.GetPlayerIndex(ReInput.players.GetPlayer(a.playerId));
+            byte currentTeam = ClientManager.local.ClientPlayers[localPlayer].team;
+
+            currentTeam++;
+            if(currentTeam > LobbyManager.singleton.Settings.teams)
+            {
+                currentTeam = 0;
+            }
+
+            ClientManager.local.SetPlayerTeam(localPlayer, currentTeam);
         }
 
         private void FillGamemodeOptions()
@@ -80,7 +182,18 @@ namespace rwby.menus
             ppet.OnPointerClickEvent.AddListener((d) => { _ = OpenGamemodeSelection(); });
             
             if (LobbyManager.singleton.CurrentGameMode == null) return;
-            //LobbyManager.singleton.CurrentGameMode.AddGamemodeSettings(this);
+            LobbyManager.singleton.CurrentGameMode.AddGamemodeSettings(this);
+        }
+
+        private void OpenCharacterSelection()
+        {
+            _ = contentSelectMenu.OpenMenu<IFighterDefinition>((a, b) => { OnCharacterSelection(a, b); });
+        }
+
+        private void OnCharacterSelection(PlayerPointerEventData a, ModObjectReference b)
+        {
+            contentSelectMenu.CloseMenu();
+            ClientManager.local.SetPlayerCharacter(ReInput.players.GetPlayer(a.playerId), b);
         }
 
         private async UniTask OpenGamemodeSelection()
