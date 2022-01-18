@@ -153,6 +153,8 @@ public class NetworkDebugStartGUI : Fusion.Behaviour {
       return;
     }
 
+    var holdskin = GUI.skin;
+
     GUI.skin = FusionScalableIMGUI.GetScaledSkin(BaseSkin, out var height, out var width, out var padding, out var margin, out var leftBoxMargin);
 
     GUILayout.BeginArea(new Rect(leftBoxMargin, margin, width, Screen.height));
@@ -258,6 +260,8 @@ public class NetworkDebugStartGUI : Fusion.Behaviour {
       }
     }
     GUILayout.EndArea();
+
+    GUI.skin = holdskin;
   }
 
   private void StartHostWithClients(NetworkDebugStart nds) {

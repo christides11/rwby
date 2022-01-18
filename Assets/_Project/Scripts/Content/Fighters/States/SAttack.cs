@@ -16,12 +16,14 @@ namespace rwby
 
         public override void Initialize()
         {
+            manager.CombatManager.ReportStringAttack();
             manager.CombatManager.Charging = true;
             manager.BoxManager.ClearBoxes();
             manager.CombatManager.HitboxManager.Reset();
             AttackDefinition currentAttack = (AttackDefinition)manager.CombatManager.CurrentAttackNode.attackDefinition;
             for (int i = 0; i < manager.attackEventInput.Length; i++)
             {
+                //manager.attackEventInput[i] = false;
                 manager.attackEventInput.Set(i, false);
             }
             if (currentAttack.useState)

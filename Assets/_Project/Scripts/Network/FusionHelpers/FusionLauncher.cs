@@ -189,6 +189,7 @@ namespace rwby
 		{
 			Debug.Log($"Player {player.PlayerId} joined the session.");
 			_players[player] = runner.Spawn(_playerPrefab, Vector3.zero, Quaternion.identity, player);
+			runner.SetPlayerObject(player, _players[player]);
 			if (runner.Mode == SimulationModes.Host && runner.LocalPlayer.IsValid && runner.LocalPlayer == player)
 			{
 				Debug.Log($"Hosting successful.");

@@ -8,7 +8,7 @@ namespace rwby
     public class GameModeBase : NetworkBehaviour 
     {
         public delegate void EmptyAction();
-        public delegate void GamemodeStateAction();
+        public delegate void GamemodeStateAction(GameModeBase gamemode);
         public static event EmptyAction OnSetupSuccess;
         public static event EmptyAction OnSetupFailure;
         public static event GamemodeStateAction OnGamemodeStateChanged;
@@ -24,7 +24,7 @@ namespace rwby
 
         public virtual void GamemodeStateChanged()
         {
-            OnGamemodeStateChanged?.Invoke();
+            OnGamemodeStateChanged?.Invoke(this);
         }
 
         public virtual async UniTask<bool> Load()

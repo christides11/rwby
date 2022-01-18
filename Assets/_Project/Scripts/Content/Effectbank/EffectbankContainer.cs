@@ -27,7 +27,7 @@ namespace rwby
             int effectIndex = effectbanks[effectbankIndex].EffectMap[effectName];
 
             var key = new NetworkObjectPredictionKey { Byte0 = (byte)Runner.Simulation.Tick, Byte1 = (byte)Object.InputAuthority.PlayerId, Byte2 = (byte)effectbankIndex, Byte3 = (byte)effectIndex };
-            BaseEffect effect = Runner.Spawn(effectbanks[effectbankIndex].Effects[effectIndex].effect, position, rotation, null, null, key);
+            BaseEffect effect = Runner.Spawn(effectbanks[effectbankIndex].Animations[effectIndex].effect, position, rotation, null, null, key);
             return effect;
         }
     }

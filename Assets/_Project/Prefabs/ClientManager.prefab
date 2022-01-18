@@ -47,6 +47,7 @@ MonoBehaviour:
   AoiMode: 0
   DefaultPropertyGroups: []
   DestroyWhenStateAuthorityLeaves: 0
+  AllowStateAuthorityOverride: 0
   AoiPosition: {fileID: 0}
   Flags: 2305
   NetworkGuid:
@@ -68,9 +69,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _interpolationDataSource: 0
-  inMan: {fileID: 0}
-  camera: {fileID: 0}
-  setInputBuffer: 3
-  _PlayerName: 
-  _SelectedCharacter: 
+  _ClientPlayers: []
+  playerCameras:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
   _inputBufferPosition: 0
+  setInputDelay: 3
+  _mapLoadPercent: 0

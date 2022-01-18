@@ -1401,6 +1401,16 @@
             
             </summary>
         </member>
+        <member name="P:Fusion.NetworkBehaviour.InvokeOnChangedForInitialNonZeroValues">
+            <summary>
+            Override this property to change whether initial non-zero values assigned
+            to [Networked] properties invoke OnChanged callbacks. For clients
+            the initial value comes from the simulation snapshot, not from what has
+            been set locally in the inspector.
+            
+            Returns "true" by default.
+            </summary>
+        </member>
         <member name="M:Fusion.NetworkBehaviour.Spawned">
             <summary>
             Post spawn callback.
@@ -2984,12 +2994,12 @@
         </member>
         <member name="F:Fusion.HitType.Hitbox">
             <summary>
-            <see cref="T:Fusion.LagCompensatedHit"/> is a Unity PhysX Collider.
+            <see cref="T:Fusion.LagCompensatedHit"/> is a Fusion <see cref="F:Fusion.HitType.Hitbox"/>.
             </summary>
         </member>
         <member name="F:Fusion.HitType.PhysX">
             <summary>
-            <see cref="T:Fusion.LagCompensatedHit"/> is a Fusion <see cref="F:Fusion.HitType.Hitbox"/>.
+            <see cref="T:Fusion.LagCompensatedHit"/> is a Unity PhysX Collider.
             </summary>
         </member>
         <member name="T:Fusion.HitboxTypes">
@@ -3942,6 +3952,11 @@
             Returns if <see cref="P:Fusion.Simulation.LocalPlayer"/> is neither the Input nor State Authority for this network entity.
             </summary>
         </member>
+        <member name="P:Fusion.NetworkObject.IsSpawnable">
+            <summary>
+            Toggles if this NetworkObject is included in the <see cref="F:Fusion.NetworkProjectConfig.PrefabTable"/>, which will include the prefab in builds as a Spawnable object.
+            </summary>
+        </member>
         <member name="M:Fusion.NetworkObject.GetLocalAuthorityMask">
             <summary>
             Gets a bitmask of <see cref="T:Fusion.AuthorityMasks"/> flags, representing the current local authority over this <see cref="T:Fusion.NetworkObject"/>.
@@ -4015,14 +4030,15 @@
             <summary>
             Flags a method as being a networked Remote Procedure Call.
             Only usable in a NetworkBehaviour. 
-            <para>Calls to this method (from the indicated allowed <see cref="T:Fusion.RpcSources"/>) will generate a network message,
-            which will execute the method remotely on the indicated <see cref="T:Fusion.RpcTargets"/>.</para>
-            The RPC method can include an empty <see cref="T:Fusion.RpcInfo"/> argument, that will include meta information about the RPC.
-            <para>Example:<br></br><code>
-            [Rpc(RpcSources.InputAuthority, RpcTargets.StateAuthority)]<br></br>
-            RPC_Configure(NetworkObject no, string name, Color color, RpcInfo info = default) {}
+            Calls to this method (from the indicated allowed <see cref="T:Fusion.RpcSources"/>) will generate a network message,
+            which will execute the method remotely on the indicated <see cref="T:Fusion.RpcTargets"/>.
+            The RPC method can include an empty <see cref="T:Fusion.RpcInfo"/> argument, that will include meta information about the RPC on the receiving peer.
+            <para>Usage Example:</para>
+            <code>
+            [Rpc(RpcSources.All, RpcTargets.All, InvokeLocal = false, InvokeResim = false, Channel = RpcChannel.Reliable, TickAligned = true)]<br></br>
+            public static void RPC_Configure(NetworkObject no, string name, Color color, RpcInfo info = default) { }
             </code>
-            </para>
+            
             </summary>
         </member>
         <member name="P:Fusion.RpcAttribute.Sources">
@@ -4053,8 +4069,8 @@
         <member name="P:Fusion.RpcAttribute.TickAligned">
             <summary>
             Indicates if this RPC's execution will be postponed until the local simulation catches up with the sender's Tick number.
-            Even if set to false the order of Rpcs is preserved, i.e. unaligned Rpcs have to wait for preceeding aligned Rpcs to be
-            executed first.
+            Even if set to false, the order of Rpcs is always preserved. Rpcs are deferred until all preceding Rpcs have
+            executed.
             </summary>
         </member>
         <member name="M:Fusion.RpcAttribute.#ctor(Fusion.RpcSources,Fusion.RpcTargets)">
@@ -4231,7 +4247,7 @@
         <member name="F:Fusion.NetworkProjectConfigAsset.Prefabs">
             <summary>
             An auto-generated list containing source information (e.g. Resource path, address, static reference) for all the prefabs that can be spawned, i.e. the ones with <see cref="T:Fusion.NetworkObject"/>
-            component and without <see cref="F:Fusion.NetworkObjectFlags.Ignore"/> flag.
+            component and <see cref="P:Fusion.NetworkObject.IsSpawnable"/> enabled.
             <br/>
             Additional prefabs can registered at runtime with <see cref="M:Fusion.NetworkPrefabTable.TryAdd(Fusion.NetworkObjectGuid,Fusion.INetworkPrefabSource,Fusion.NetworkPrefabId@)"/>.
             </summary>
@@ -5077,7 +5093,7 @@
         </member>
         <member name="F:Fusion.GameMode.AutoHostOrClient">
             <summary>
-            Automatically start as Host or Client
+            Automatically start as Host or Client. The first peer to connect to a room will be started as a Host, all others will connect as clients.
             </summary>
         </member>
         <member name="T:Fusion.ConnectionType">
@@ -5607,6 +5623,11 @@
         <member name="P:Fusion.Simulation.IsRunning">
             <summary>
             Signal if the Simulation is currently running
+            </summary>
+        </member>
+        <member name="P:Fusion.Simulation.LocalAddress">
+            <summary>
+            Bound Address of the internal socket
             </summary>
         </member>
         <member name="M:Fusion.Simulation.Update(System.Double)">

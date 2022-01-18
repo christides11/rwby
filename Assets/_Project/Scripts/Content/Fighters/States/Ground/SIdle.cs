@@ -15,6 +15,7 @@ namespace rwby.fighters.states
         {
             base.Initialize();
             manager.ResetVariablesOnGround();
+            manager.fighterAnimator.Play("rr", "idle");
         }
 
         public override void OnUpdate()
@@ -26,12 +27,14 @@ namespace rwby.fighters.states
             if (CheckInterrupt() == false)
             {
                 manager.StateManager.IncrementFrame();
+                manager.fighterAnimator.currentFrame++;
             }
         }
 
         public override void OnInterrupted()
         {
             manager.BoxManager.ClearBoxes();
+            manager.fighterAnimator.Stop();
         }
 
         public override bool CheckInterrupt()

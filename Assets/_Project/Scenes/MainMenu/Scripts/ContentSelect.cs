@@ -8,15 +8,15 @@ using UnityEngine.EventSystems;
 using rwby;
 using Rewired.Integration.UnityUI;
 
-namespace rwby.menus
+namespace rwby
 {
     public class ContentSelect : MonoBehaviour
     {
         public static ContentSelect singleton;
 
         [SerializeField] GameObject contentBrowserLarge;
-
         [SerializeField] GameObject contentBrowserLarge_Content;
+        [SerializeField] GameObject canvas;
 
         public void Awake()
         {
@@ -48,7 +48,7 @@ namespace rwby.menus
                 contentItem.GetComponentInChildren<TextMeshProUGUI>().text = con.ToString();
             }
 
-            gameObject.SetActive(true);
+            canvas.SetActive(true);
             contentBrowserLarge.SetActive(true);
         }
 
@@ -59,7 +59,7 @@ namespace rwby.menus
                 Destroy(child.gameObject);
             }
 
-            gameObject.SetActive(false);
+            canvas.SetActive(false);
             contentBrowserLarge.SetActive(false);
         }
     }

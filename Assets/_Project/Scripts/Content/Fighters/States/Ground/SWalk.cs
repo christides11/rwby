@@ -15,6 +15,7 @@ namespace rwby.fighters.states
         {
             base.Initialize();
             manager.ResetVariablesOnGround();
+            manager.fighterAnimator.Play("rr", "walk.f");
         }
 
         public override void OnUpdate()
@@ -40,6 +41,11 @@ namespace rwby.fighters.states
             if (CheckInterrupt() == false)
             {
                 manager.StateManager.IncrementFrame();
+                manager.fighterAnimator.currentFrame++;
+                if(manager.fighterAnimator.currentFrame >= 90)
+                {
+                    manager.fighterAnimator.currentFrame = 10;
+                }
             }
         }
 

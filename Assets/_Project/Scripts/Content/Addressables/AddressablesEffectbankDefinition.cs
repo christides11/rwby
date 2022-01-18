@@ -7,7 +7,7 @@ namespace rwby
     public class AddressablesEffectbankDefinition : IEffectbankDefinition
     {
         public override string Name { get { return effectbankName; } }
-        public override List<EffectbankEffectEntry> Effects { get { return effects; } }
+        public override List<EffectbankEffectEntry> Animations { get { return effects; } }
         public override Dictionary<string, int> EffectMap { get { return effectMap; } }
 
         [SerializeField] private string effectbankName;

@@ -61,6 +61,58 @@ namespace rwby
 
         [Networked] public int hitstopCounter { get; set; }
 
+        [Networked, Capacity(20)] public NetworkLinkedList<MovesetAttackStringIdentifier> attacksUsedInString { get; }
+
+        public bool StringAttackValid(byte moveset, byte attack, byte maxTimes)
+        {
+            bool found = false;
+            for(int i = 0; i < attacksUsedInString.Count; i++)
+            {
+                if(attacksUsedInString[i].moveset == moveset
+                    && attacksUsedInString[i].attack == attack)
+                {
+                    found = true;
+                    if (attacksUsedInString[i].timesUsed < maxTimes) return true;
+                }
+            }
+            if (!found) return true;
+            return false;
+        }
+
+        public void ReportStringAttack()
+        {
+            ReportStringAttack((byte)CurrentAttackMovesetIdentifier, (byte)CurrentAttackNodeIdentifier);
+        }
+
+        public void ReportStringAttack(byte moveset, byte attack)
+        {
+            var tempList = attacksUsedInString;
+            
+            for (int i = 0; i < attacksUsedInString.Count; i++)
+            {
+                if(attacksUsedInString[i].moveset == moveset
+                    && attacksUsedInString[i].attack == attack)
+                {
+                    var tempItem = tempList[i];
+                    tempItem.timesUsed++;
+                    tempList[i] = tempItem;
+                    return;
+                }
+            }
+
+            tempList.Add(new MovesetAttackStringIdentifier()
+            {
+                moveset = moveset,
+                attack = attack,
+                timesUsed = 1
+            });
+        }
+
+        public void ResetStringAttacks()
+        {
+            attacksUsedInString.Clear();
+        }
+
         public virtual void CLateUpdate()
         {
 
@@ -273,6 +325,8 @@ namespace rwby
 
         protected virtual bool CheckAttackNodeConditions(HnSF.Combat.MovesetAttackNode node)
         {
+            if (node.Identifier == CurrentAttackNodeIdentifier) return false;
+            if (StringAttackValid((byte)CurrentMovesetIdentifier, (byte)node.Identifier, (node as MovesetAttackNode).maxRepeatsInString) == false) return false;
             return true;
         }
 

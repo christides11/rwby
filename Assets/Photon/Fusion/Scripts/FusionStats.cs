@@ -15,12 +15,14 @@ using UnityEditor;
 public interface IFusionStats {
   Color FontColor        { get; }
   Color GraphColorGood   { get; }
+  Color GraphColorWarn   { get; }
   Color GraphColorBad    { get; }
   Color SimDataBackColor { get; }
   Color NetDataBackColor { get; }
   Color ObjDataBackColor { get; }
   NetworkRunner Runner   { get; }
   NetworkObject Object   { get; }
+  bool ModifyColors      { get; }
   FusionStats.StatCanvasTypes CanvasType { get; }
 }
 
@@ -35,12 +37,13 @@ public class FusionStats : Fusion.Behaviour, IFusionStats {
 
 #if UNITY_EDITOR
 
+  [MenuItem("Fusion/Add Fusion Stats", false, 1000)]
   [MenuItem("GameObject/Fusion/Add Fusion Stats")]
   public static void AddFusionStatsToScene() {
 
     var selected = Selection.activeGameObject;
 
-    if(selected && PrefabUtility.IsPartOfPrefabAsset(selected)) {
+    if (selected && PrefabUtility.IsPartOfPrefabAsset(selected)) {
       Debug.LogWarning("Open prefabs before running 'Add Fusion Stats' on them.");
       return;
     }
@@ -80,6 +83,7 @@ public class FusionStats : Fusion.Behaviour, IFusionStats {
     Right,
     UpperLeft,
     UpperRight,
+    Full,
   }
 
 
@@ -93,25 +97,6 @@ public class FusionStats : Fusion.Behaviour, IFusionStats {
   internal static FusionStats CreateInternal(NetworkRunner runner = null, DefaultLayouts layout = DefaultLayouts.Left, Stats.NetStatFlags? netStatsMask = null, Stats.SimStatFlags? simStatsMask = null) {
     return Create(null, runner, layout, layout, netStatsMask, simStatsMask);
   }
-
-  ///// <summary>
-  ///// Creates a new GameObject with a <see cref="FusionStats"/> component.
-  ///// To generate the UI when not playing, call <see cref="Initialize"/> on the returned <see cref="FusionStats"/> component.
-  ///// Initialize automatically runs on Awake().
-  ///// </summary>
-  ///// <param name="runner"></param>
-  ///// <param name="normalizedRect">If not null, uses the supplied Rect as the initial position.</param>
-  ///// <param name="neStatsMask">The network stats to be enabled. If left null, default statistics will be used.</param>
-  ///// <param name="simStatsMask">The simulation stats to be enabled. If left null, default statistics will be used.</param>
-  //public static FusionStats Create(NetworkRunner runner, Rect? normalizedRect, Stats.NetStatFlags? netStatsMask = null, Stats.SimStatFlags? simStatsMask = null) {
-
-  //  if (normalizedRect.HasValue) {
-  //    var simStats = Create(runner, DefaultLayouts.Custom, netStatsMask, simStatsMask);
-  //    simStats.GameObjectRect = normalizedRect.Value;
-  //    return simStats;
-  //  }
-  //  return Create(runner, DefaultLayouts.Left, netStatsMask, simStatsMask);
-  //}
 
   /// <summary>
   /// Creates a new GameObject with a <see cref="FusionStats"/> component, attaches it to any supplied parent, and generates Canvas/Graphs.
@@ -135,12 +120,6 @@ public class FusionStats : Fusion.Behaviour, IFusionStats {
     stats.ResetInternal(null, netStatsMask, simStatsMask, objectLayout, screenLayout);
 
     stats.Runner = runner;
-    //stats._includedNetStats = netStatsMask.HasValue ? netStatsMask.Value : DefaultNetStatsMask;
-    //stats._includedSimStats = simStatsMask.HasValue ? simStatsMask.Value : DefaultSimStatsMask;
-
-    //if (layout.HasValue) {
-    //  stats.ApplyDefaultLayout(layout.Value);
-    //}
 
     if (runner != null) {
       stats.AutoDestroy = true;
@@ -168,12 +147,12 @@ public class FusionStats : Fusion.Behaviour, IFusionStats {
 #endif
 
 
-  const int   SCREEN_SCALE_W = 1080;
-  const int   SCREEN_SCALE_H = 1080;
-  const float TEXT_MARGIN    = 0.25f;
-  const float TITLE_HEIGHT   = 20f;
-  const int   MARGIN         = FusionStatsUtilities.MARGIN;
-  const int   PAD            = FusionStatsUtilities.PAD;
+  const int SCREEN_SCALE_W = 1080;
+  const int SCREEN_SCALE_H = 1080;
+  const float TEXT_MARGIN = 0.25f;
+  const float TITLE_HEIGHT = 20f;
+  const int MARGIN = FusionStatsUtilities.MARGIN;
+  const int PAD = FusionStatsUtilities.PAD;
 
   const string PLAY_TEXT = "PLAY";
   const string PAUS_TEXT = "PAUSE";
@@ -192,12 +171,12 @@ public class FusionStats : Fusion.Behaviour, IFusionStats {
   const string CLSE_ICON = "x";
 
   // Used by DrawIfAttribute to determine inspector visibility of fields are runtime.
-  bool ShowColorControls => !Application.isPlaying && ModifyColors;
+  bool ShowColorControls => !Application.isPlaying && _modifyColors;
   bool IsPlaying => Application.isPlaying;
 
 
   /// <summary>
-  /// Interval (in seconds) between Graph redraws. Lower values reduce CPU overhead, draw calls and garbage collection. 
+  /// Interval (in seconds) between Graph redraws. Higher values (longer intervals) reduce CPU overhead, draw calls and garbage collection. 
   /// </summary>
   [InlineHelp]
   [Unit(Units.Seconds, 1f, 0f, DecimalPlaces = 2)]
@@ -260,23 +239,11 @@ public class FusionStats : Fusion.Behaviour, IFusionStats {
     }
   }
 
-  //[InlineHelp]
-  //[SerializeField]
-  //public int _graphMinWidth = ;
-
-  //public int GraphMinWidth {
-  //  get => _graphMinWidth;
-  //  set {
-  //    _graphMinWidth = value;
-  //    DirtyLayout();
-  //  }
-  //}
-
   /// <summary>
   ///  The size of the canvas when <see cref="CanvasType"/> is set to <see cref="StatCanvasTypes.GameObject"/>.
   /// </summary>
   [InlineHelp]
-  [DrawIf(nameof(_canvasType), (long)StatCanvasTypes.GameObject)]
+  [DrawIf(nameof(_canvasType), (long)StatCanvasTypes.GameObject, DrawIfHideType.Hide)]
   [Range(0, 20f)]
   public float CanvasScale = 5f;
 
@@ -284,7 +251,7 @@ public class FusionStats : Fusion.Behaviour, IFusionStats {
   /// The distance on the Z axis the canvas will be positioned. Allows moving the canvas in front of or behind the parent GameObject.
   /// </summary>
   [InlineHelp]
-  [DrawIf(nameof(_canvasType), (long)StatCanvasTypes.GameObject)]
+  [DrawIf(nameof(_canvasType), (long)StatCanvasTypes.GameObject, DrawIfHideType.Hide)]
   [Range(-10, 10f)]
   public float CanvasDistance = 0f;
 
@@ -322,8 +289,6 @@ public class FusionStats : Fusion.Behaviour, IFusionStats {
     }
   }
 
-
-
   /// <summary>
   /// Force graphs layout to use X number of columns.
   /// </summary>
@@ -332,15 +297,16 @@ public class FusionStats : Fusion.Behaviour, IFusionStats {
   public int GraphColumnCount = 1;
 
   /// <summary>
-  /// 
+  /// If <see cref="GraphColumnCount"/> is set to zero, then columns will automatically be added as needed to limit graphs to this width or less.
   /// </summary>
   [InlineHelp]
   [SerializeField]
   [DrawIf(nameof(GraphColumnCount), compareToValue: (long)0, DrawIfHideType.ReadOnly)]
   [Range(30, SCREEN_SCALE_W)]
   int _graphMaxWidth = SCREEN_SCALE_W / 4;
+
   /// <summary>
-  /// 
+  /// If <see cref="GraphColumnCount"/> is set to zero, then columns will automatically be added as needed to limit graphs to this width or less.
   /// </summary>
   public int GraphMaxWidth {
     get => _graphMaxWidth;
@@ -354,9 +320,9 @@ public class FusionStats : Fusion.Behaviour, IFusionStats {
   /// Enables/Disables all NetworkObject related elements.
   /// </summary>
   [Header("Network Object Stats")]
-
   [InlineHelp]
   [SerializeField]
+  [WarnIf(nameof(ShowMissingNetObjWarning), true, "No NetworkObject found on this GameObject, nor parent. Object stats will be unavailable.")]
   bool _enableObjectStats;
   public bool EnableObjectStats {
     get => _enableObjectStats;
@@ -366,13 +332,33 @@ public class FusionStats : Fusion.Behaviour, IFusionStats {
     }
   }
 
+  bool ShowMissingNetObjWarning {
+    get => _enableObjectStats && this.Object == null;
+  }
+
+  /// <summary>
+  /// The <see cref="NetworkObject"/> source for any <see cref="Stats.ObjStats"/> specific telemetry.
+  /// </summary>
+  [InlineHelp]
+  [SerializeField]
+  [DrawIf(nameof(EnableObjectStats), true)]
+  NetworkObject _object;
+  public NetworkObject Object {
+    get {
+      if (_object == null) {
+        _object = GetComponentInParent<NetworkObject>();
+      }
+      return _object;
+    }
+  }
+
   /// <summary>
   /// Height of Object title region at top of the stats panel.
   /// </summary>
   [InlineHelp]
   [SerializeField]
   [DrawIf(nameof(EnableObjectStats), true)]
-  [Unit(Units.None, 0, 200)]
+  [Range(0, 200)]
   int _objectTitleHeight = 48;
   public int ObjectTitleHeight {
     get => _objectTitleHeight;
@@ -382,14 +368,13 @@ public class FusionStats : Fusion.Behaviour, IFusionStats {
     }
   }
 
-
   /// <summary>
   /// Height of Object info region at top of the stats panel.
   /// </summary>
   [InlineHelp]
   [SerializeField]
   [DrawIf(nameof(EnableObjectStats), true)]
-  [Unit(Units.None, 0, 200)]
+  [Range(0, 200)]
   int _objectIdsHeight = 60;
   public int ObjectIdsHeight {
     get => _objectIdsHeight;
@@ -405,7 +390,7 @@ public class FusionStats : Fusion.Behaviour, IFusionStats {
   [InlineHelp]
   [SerializeField]
   [DrawIf(nameof(EnableObjectStats), true)]
-  [Unit(Units.None, 0, 200)]
+  [Range(0, 200)]
   int _objectMetersHeight = 90;
   public int ObjectMetersHeight {
     get => _objectMetersHeight;
@@ -416,10 +401,60 @@ public class FusionStats : Fusion.Behaviour, IFusionStats {
   }
 
   /// <summary>
+  /// The <see cref="NetworkRunner"/> currently associated with this <see cref="FusionStats"/> component and graphs.
+  /// </summary>
+  [Header("Data")]
+  [SerializeField]
+  [InlineHelp]
+  [EditorDisabled]
+  NetworkRunner _runner;
+  public NetworkRunner Runner {
+    get {
+
+      if (Application.isPlaying == false) {
+        return null;
+      }
+
+      // If the current runner shutdown, reset the runner so a new one can be found
+      if (_runner) {
+        if (_runner.IsShutdown) {
+          Runner = null;
+        } else {
+          return _runner;
+        }
+      }
+
+      if (Object) {
+        var runner = _object.Runner;
+        
+        if (runner && (!EnforceSingle || (runner.Mode & ConnectTo) != 0)) {
+          Runner = runner;
+          return _runner;
+        }
+      }
+
+      FusionStatsUtilities.TryFindActiveRunner(this, out var found, ConnectTo);
+
+      Runner = found;
+      return found;
+    }
+    set {
+      if (_runner == value) {
+        return;
+      }
+      // Keep track of which runners have active stats windows - needed so pause/unpause can affect all (since pause affects other panels)
+      DisassociateWithRunner(_runner);
+      _runner = value;
+      AssociateWithRunner(value);
+
+      UpdateTitle();
+    }
+  }
+
+  /// <summary>
   /// Initializes a <see cref="FusionGraph"/> for all available stats, even if not initially included. 
   /// If disabled, graphs added after initialization will be added to the bottom of the interface stack.
   /// </summary>
-  [Header("Data")]
   [InlineHelp]
   public bool InitializeAllGraphs;
 
@@ -476,12 +511,11 @@ public class FusionStats : Fusion.Behaviour, IFusionStats {
     }
   }
 
-  [Header("Life-Cycle")]
-
   /// <summary>
   /// Automatically destroys this <see cref="FusionStats"/> GameObject if the associated runner is null or inactive.
   /// Otherwise attempts will continuously be made to find an new active runner which is running in <see cref="SimulationModes"/> specified by <see cref="ConnectTo"/>, and connect to that.
   /// </summary>
+  [Header("Life-Cycle")]
   [InlineHelp]
   [SerializeField]
   public bool AutoDestroy;
@@ -494,7 +528,9 @@ public class FusionStats : Fusion.Behaviour, IFusionStats {
   public bool EnforceSingle = true;
 
   /// <summary>
-  /// Identifier used to enforce single instances. Only one instance at a given time.
+  /// Identifier used to enforce single instances of <see cref="FusionStats"/> when running in Multi-Peer mode. 
+  /// When <see cref="EnforceSingle"/> is enabled, only one instance of <see cref="FusionStats"/> with this GUID will be active at any time,
+  /// regardless of the total number of peers running.
   /// </summary>
   [InlineHelp]
   [DrawIf(nameof(EnforceSingle), true)]
@@ -506,48 +542,73 @@ public class FusionStats : Fusion.Behaviour, IFusionStats {
   /// Shows/hides controls in the inspector for defining element colors.
   /// </summary>
   [InlineHelp]
+  [SerializeField]
   [DrawIf(nameof(IsPlaying), false, DrawIfHideType.Hide)]
-  public bool ModifyColors;
+  private bool _modifyColors;
+  public bool ModifyColors => _modifyColors;
 
   /// <summary>
   /// The color used for the telemetry graph data.
   /// </summary>
+  [InlineHelp]
+  [SerializeField]
   [DrawIf(nameof(ShowColorControls), true, DrawIfHideType.Hide)]
-  public Color _graphColorGood = new Color(0.1f, 0.4f, 0.75f, 1f);
+  Color _graphColorGood = new Color(0.1f, 0.4f, 0.75f, 1f);
 
   /// <summary>
   /// The color used for the telemetry graph data.
   /// </summary>
+  [InlineHelp]
+  [SerializeField]
   [DrawIf(nameof(ShowColorControls), true, DrawIfHideType.Hide)]
-  public Color _graphColorBad = new Color(0.5f, 0.5f, 0.0f, 1f);
+  Color _graphColorWarn = new Color(0.9f, 0.6f, 0.0f, 1f);
 
+  /// <summary>
+  /// The color used for the telemetry graph data.
+  /// </summary>
+  [InlineHelp]
+  [SerializeField]
   [DrawIf(nameof(ShowColorControls), true, DrawIfHideType.Hide)]
-  public Color _fontColor = new Color(1.0f, 1.0f, 1.0f, 0.75f);
+  Color _graphColorBad = new Color(1.0f, 0.0f, 0.0f, 1f);
 
+  [InlineHelp]
+  [SerializeField]
   [DrawIf(nameof(ShowColorControls), true, DrawIfHideType.Hide)]
-  public Color PanelColor = new Color(0.3f, 0.3f, 0.3f, 0.9f);
+  Color _fontColor = new Color(1.0f, 1.0f, 1.0f, 0.75f);
 
+  [InlineHelp]
+  [SerializeField]
   [DrawIf(nameof(ShowColorControls), true, DrawIfHideType.Hide)]
-  public Color _simDataBackColor = new Color(0.1f, 0.08f, 0.08f, 1.0f);
+  Color PanelColor = new Color(0.3f, 0.3f, 0.3f, 0.9f);
 
+  [InlineHelp]
+  [SerializeField]
   [DrawIf(nameof(ShowColorControls), true, DrawIfHideType.Hide)]
-  public Color _netDataBackColor = new Color(0.15f, 0.14f, 0.09f, 1.0f);
+  Color _simDataBackColor = new Color(0.1f, 0.08f, 0.08f, 1.0f);
 
+  [InlineHelp]
+  [SerializeField]
   [DrawIf(nameof(ShowColorControls), true, DrawIfHideType.Hide)]
-  public Color _objDataBackColor = new Color(0.0f, 0.2f, 0.4f, 1.0f);
+  Color _netDataBackColor = new Color(0.15f, 0.14f, 0.09f, 1.0f);
+
+  [InlineHelp]
+  [SerializeField]
+  [DrawIf(nameof(ShowColorControls), true, DrawIfHideType.Hide)]
+  Color _objDataBackColor = new Color(0.0f, 0.2f, 0.4f, 1.0f);
 
   // IFusionStats interface requirements
   public Color FontColor        => _fontColor;
   public Color GraphColorGood   => _graphColorGood;
+  public Color GraphColorWarn   => _graphColorWarn;
   public Color GraphColorBad    => _graphColorBad;
   public Color SimDataBackColor => _simDataBackColor;
   public Color NetDataBackColor => _netDataBackColor;
   public Color ObjDataBackColor => _objDataBackColor;
 
-  [Header("Graph Connections")]
-  [SerializeField] /*[HideInInspector] */FusionGraph[] _simGraphs;
-  [SerializeField] /*[HideInInspector] */FusionGraph[] _objGraphs;
-  [SerializeField] /*[HideInInspector] */FusionGraph[] _netGraphs;
+  //[Header("Graph Connections")]
+  [SerializeField] [HideInInspector] FusionGraph[] _simGraphs;
+  [SerializeField] [HideInInspector] FusionGraph[] _objGraphs;
+  [SerializeField] [HideInInspector] FusionGraph[] _netGraphs;
   [NonSerialized] List<IFusionStatsView> _foundViews;
   [NonSerialized] List<FusionGraph> _foundGraphs;
 
@@ -580,8 +641,6 @@ public class FusionStats : Fusion.Behaviour, IFusionStats {
   [SerializeField] [HideInInspector] RectTransform _objectTitlePanelRT;
   [SerializeField] [HideInInspector] RectTransform _objectIdsGroupRT;
   [SerializeField] [HideInInspector] RectTransform _objectMetersPanelRT;
-
-
   [SerializeField] [HideInInspector] RectTransform _clientIdPanelRT;
   [SerializeField] [HideInInspector] RectTransform _authorityPanelRT;
 
@@ -592,59 +651,6 @@ public class FusionStats : Fusion.Behaviour, IFusionStats {
   [SerializeField] [HideInInspector] UI.Button _pauseButton;
   [SerializeField] [HideInInspector] UI.Button _closeButton;
   [SerializeField] [HideInInspector] UI.Button _canvsButton;
-
-
-  [SerializeField]
-  NetworkRunner _runner;
-  public NetworkRunner Runner {
-    get {
-
-      if (Application.isPlaying == false) {
-        return null;
-      }
-
-      // If the current runner shutdown, reset the runner so a new one can be found
-      if (_runner) {
-        if (_runner.IsShutdown) {
-          Runner = null;
-        } else {
-          return _runner;
-        }
-      }
-
-      if (Object) {
-        Runner = _object.Runner;
-        return _runner;
-      }
-
-      FusionStatsUtilities.TryFindActiveRunner(this, out var found, ConnectTo);
-
-      Runner = found;
-      return found;
-    }
-    set {
-      if (_runner == value) {
-        return;
-      }
-      // Keep track of which runners have active stats windows - needed so pause/unpause can affect all (since pause affects other panels)
-      DisassociateWithRunner(_runner);
-      _runner = value;
-      AssociateWithRunner(value);
-
-      UpdateTitle();
-    }
-  }
-
-  [SerializeField]
-  NetworkObject _object;
-  public NetworkObject Object {
-    get {
-      if (_object == null) {
-        _object = GetComponentInParent<NetworkObject>();
-      }
-      return _object;
-    }
-  }
 
   void UpdateTitle() {
     var runnername = _runner ? _runner.name : "Disconnected";
@@ -715,29 +721,40 @@ public class FusionStats : Fusion.Behaviour, IFusionStats {
       gameObject.AddComponent<FusionStatsBillboard>().UpdateLookAt();
     }
 
-
+    bool hasNetworkObject = GetComponentInParent<NetworkObject>();
     // If attached to a NetObject
-    if (enableObjectStats.GetValueOrDefault() || (enableObjectStats.GetValueOrDefault(true) && GetComponentInParent<NetworkObject>())) {
+    if (enableObjectStats.GetValueOrDefault() || (enableObjectStats.GetValueOrDefault(true) && hasNetworkObject)) {
       EnableObjectStats = true;
       _includedObjStats = Stats.ObjStatFlags.Buffer;
       _includedSimStats = simStatsMask.GetValueOrDefault();
       _includedNetStats = netStatsMask.GetValueOrDefault();
       _canvasType = StatCanvasTypes.GameObject;
       EnforceSingle = false;
-
+      GraphColumnCount = 1;
+    } 
+    else {
       // If not attached to a GameObject (sim only)
-    } else {
+
+      GraphColumnCount = 0;
+
+      if (transform.parent) {
+        _canvasType = StatCanvasTypes.GameObject;
+        EnforceSingle = false;
+      } else {
+        _canvasType = StatCanvasTypes.Overlay;
+        EnforceSingle = true;
+      }
       _includedSimStats = simStatsMask.GetValueOrDefault(DefaultSimStatsMask);
       _includedNetStats = netStatsMask.GetValueOrDefault(
         Stats.NetStatFlags.RoundTripTime | 
         Stats.NetStatFlags.SentPacketSizes | 
         Stats.NetStatFlags.ReceivedPacketSizes);
 
-      _canvasType = StatCanvasTypes.Overlay;
     }
 
-    ApplyDefaultLayout(objectLayout.GetValueOrDefault(DefaultLayouts.UpperRight), StatCanvasTypes.GameObject);
-    ApplyDefaultLayout(screenLayout.GetValueOrDefault(DefaultLayouts.Right),      StatCanvasTypes.Overlay);
+
+    ApplyDefaultLayout(objectLayout.GetValueOrDefault(hasNetworkObject ? DefaultLayouts.UpperRight : DefaultLayouts.Full), StatCanvasTypes.GameObject);
+    ApplyDefaultLayout(screenLayout.GetValueOrDefault(DefaultLayouts.Right),                                               StatCanvasTypes.Overlay);
 
     Guid = System.Guid.NewGuid().ToString().Substring(0, 13);
     GenerateGraphs();
@@ -909,6 +926,7 @@ public class FusionStats : Fusion.Behaviour, IFusionStats {
 
     _titleButton = _titleRT.gameObject.AddComponent<UI.Button>();
     _titleText   = _titleRT.AddText(_runner ? _runner.name : "Disconnected", TextAnchor.UpperCenter, _fontColor);
+    _titleText.raycastTarget = true;
 
     // Buttons
     _buttonsRT = _headerRT
@@ -951,6 +969,7 @@ public class FusionStats : Fusion.Behaviour, IFusionStats {
     
     _objectNameText = objectTitleRT.AddText("Object Name", TextAnchor.MiddleCenter, _fontColor);
     _objectNameText.alignByGeometry = false;
+    _objectNameText.raycastTarget = false;
 
     _objectIdsGroupRT = FusionStatsObjectIds.Create(_statsPanelRT, this);
 
@@ -1143,15 +1162,6 @@ public class FusionStats : Fusion.Behaviour, IFusionStats {
   }
 
 #if UNITY_EDITOR
-  //// Having this here makes dragging rect feel much more responsive, than relying on OnValidate only for repaints.
-  //private void OnDrawGizmosSelected() {
-  //  if (Application.isPlaying == false) {
-  //    if (_layoutDirty > 0) {
-  //      var rect = CurrentRect;
-  //      CalculateLayout();
-  //    }
-  //  }
-  //}
 
   private void OnDrawGizmos() {
     AutoGuideVisibility();
@@ -1547,6 +1557,11 @@ public class FusionStats : Fusion.Behaviour, IFusionStats {
       case DefaultLayouts.UpperRight: {
           objectrect =          Rect.MinMaxRect(0.7f, 0.5f, 1.0f, 1.0f);
           screenrect = isTall ? Rect.MinMaxRect(0.7f, 0.7f, 1.0f, 1.0f) : objectrect;
+          break;
+        }
+      case DefaultLayouts.Full: {
+          objectrect = Rect.MinMaxRect(0.0f, 0.0f, 1.0f, 1.0f);
+          screenrect = objectrect;
           break;
         }
       default: {

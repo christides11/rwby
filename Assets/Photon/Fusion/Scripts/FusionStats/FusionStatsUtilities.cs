@@ -58,14 +58,16 @@ namespace Fusion.StatsInternal {
       }
     }
 
+    const int METER_TEXTURE_WIDTH = 512;
     static Texture2D _meterTexture;
     static Texture2D MeterTexture {
       get {
         if (_meterTexture == null) {
-          var tex = new Texture2D(16, 16);
-          for (int i = 0; i < 16; ++i) {
-            for (int y = 0; y < 16; ++y) {
-              tex.SetPixel(i, y, i == 15 ? new Color(0.5f, 0.5f, 0.5f, 0.0f) : new Color(1f, 1f, 1f, 1f));
+          var tex = new Texture2D(METER_TEXTURE_WIDTH, 2);
+          for (int x = 0; x < METER_TEXTURE_WIDTH; ++x) {
+            for (int y = 0; y < 2; ++y) {
+              var color = (x != 0 && x % 16 == 0) ? new Color(1f, 1f, 1f, 0.0f) : new Color(1f, 1f, 1f, 1f);
+              tex.SetPixel(x, y, color);
             }
           }
           tex.Apply();
@@ -80,7 +82,7 @@ namespace Fusion.StatsInternal {
     public static Sprite MeterSprite {
       get {
         if (_meterSprite == null) {
-          _meterSprite = Sprite.Create(MeterTexture, new Rect(0, 0, 16, 16), new Vector2());
+          _meterSprite = Sprite.Create(MeterTexture, new Rect(0, 0, METER_TEXTURE_WIDTH, 2), new Vector2());
         }
         return _meterSprite;
       }
@@ -252,7 +254,7 @@ namespace Fusion.StatsInternal {
       text.font = Font;
       text.alignment = anchor;
       text.fontSize = FONT_SIZE;
-
+      text.raycastTarget = false;
       //text.alignByGeometry   = true;
       text.resizeTextMinSize = FONT_SIZE_MIN;
       text.resizeTextMaxSize = FONT_SIZE_MAX;
@@ -358,6 +360,7 @@ namespace Fusion.StatsInternal {
     public static RectTransform AddImage(this RectTransform rt, Color color) {
       var image = rt.gameObject.AddComponent<UI.Image>();
       image.color = color;
+      image.raycastTarget = false;
       return rt;
     }
 
@@ -372,6 +375,7 @@ namespace Fusion.StatsInternal {
       image.type = UI.Image.Type.Sliced;
       image.pixelsPerUnitMultiplier = 100f;
       image.color = color;
+      image.raycastTarget = false;
       return rt;
 
     }

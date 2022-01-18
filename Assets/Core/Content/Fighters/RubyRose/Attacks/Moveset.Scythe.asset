@@ -52,6 +52,7 @@ MonoBehaviour:
   attackDefinition: {fileID: 11400000, guid: 780a30c94c820be46a8923049a2f9a9c, type: 2}
   nextNode: []
   lockonRequired: 0
+  maxRepeatsInString: 1
 --- !u!114 &-3718041422948319744
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -104,6 +105,7 @@ MonoBehaviour:
   attackDefinition: {fileID: 11400000, guid: 7d219d8bc5b226f4ab92f9bb06e3b806, type: 2}
   nextNode: []
   lockonRequired: 0
+  maxRepeatsInString: 1
 --- !u!114 &-3217907378620375815
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -156,6 +158,7 @@ MonoBehaviour:
   attackDefinition: {fileID: 11400000, guid: b0f103f68b0f23c4cad9f0f9509aa599, type: 2}
   nextNode: []
   lockonRequired: 0
+  maxRepeatsInString: 1
 --- !u!114 &-2552742204646169340
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -208,6 +211,7 @@ MonoBehaviour:
   attackDefinition: {fileID: 11400000, guid: f7c3117c8f2651744aa4f3f66af14950, type: 2}
   nextNode: []
   lockonRequired: 0
+  maxRepeatsInString: 1
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -228,13 +232,17 @@ MonoBehaviour:
   - {fileID: -3217907378620375815}
   - {fileID: 6397012873814956192}
   - {fileID: 6161032809679467613}
-  nodeIDCounter: 15
+  - {fileID: 3535195484065427018}
+  - {fileID: 2701269509218317710}
+  nodeIDCounter: 17
   cancelLists:
   - ID: 0
     list: {fileID: 11400000, guid: 564924b93dba6f94d9862cd6d2aa6a06, type: 2}
   groundIdleCancelListID: -1
   groundAttackStartNodes:
   - {fileID: -3217907378620375815}
+  - {fileID: 2701269509218317710}
+  - {fileID: 3535195484065427018}
   - {fileID: 5433208356493312847}
   airIdleCancelListID: -1
   airAttackStartNodes:
@@ -250,6 +258,112 @@ MonoBehaviour:
   - {fileID: -2552742204646169340}
   - {fileID: 6397012873814956192}
   - {fileID: 6161032809679467613}
+--- !u!114 &2701269509218317710
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a020e6c3cba96ed45adef2c66abe6b7f, type: 3}
+  m_Name: Atk-Grd-C
+  m_EditorClassIdentifier: 
+  graph: {fileID: 11400000}
+  position: {x: -232, y: 200}
+  ports:
+    keys:
+    - lastNode
+    - nextNode
+    values:
+    - _fieldName: lastNode
+      _node: {fileID: 2701269509218317710}
+      _typeQualifiedName: HnSF.Combat.MovesetAttackNode, HnSF, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+      connections: []
+      _direction: 0
+      _connectionType: 0
+      _typeConstraint: 0
+      _dynamic: 0
+    - _fieldName: nextNode
+      _node: {fileID: 2701269509218317710}
+      _typeQualifiedName: System.Collections.Generic.List`1[[HnSF.Combat.MovesetAttackNode+nextNodeDefinition,
+        HnSF, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null]], mscorlib,
+        Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089
+      connections: []
+      _direction: 1
+      _connectionType: 0
+      _typeConstraint: 0
+      _dynamic: 0
+  Identifier: 16
+  lastNode: {fileID: 0}
+  inputSequence:
+    executeWindow: 3
+    executeInputs:
+    - inputType: 0
+      buttonID: 6
+      stickDirection: {x: 0, y: 0}
+      directionDeviation: 0
+    sequenceWindow: 8
+    sequenceInputs: []
+  attackDefinition: {fileID: 11400000, guid: 56512a0232d6ebd43b08bbce4adb65fb, type: 2}
+  nextNode: []
+  lockonRequired: 0
+  maxRepeatsInString: 1
+--- !u!114 &3535195484065427018
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a020e6c3cba96ed45adef2c66abe6b7f, type: 3}
+  m_Name: Atk-Grd-B
+  m_EditorClassIdentifier: 
+  graph: {fileID: 11400000}
+  position: {x: -232, y: -184}
+  ports:
+    keys:
+    - lastNode
+    - nextNode
+    values:
+    - _fieldName: lastNode
+      _node: {fileID: 3535195484065427018}
+      _typeQualifiedName: HnSF.Combat.MovesetAttackNode, HnSF, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+      connections: []
+      _direction: 0
+      _connectionType: 0
+      _typeConstraint: 0
+      _dynamic: 0
+    - _fieldName: nextNode
+      _node: {fileID: 3535195484065427018}
+      _typeQualifiedName: System.Collections.Generic.List`1[[HnSF.Combat.MovesetAttackNode+nextNodeDefinition,
+        HnSF, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null]], mscorlib,
+        Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089
+      connections: []
+      _direction: 1
+      _connectionType: 0
+      _typeConstraint: 0
+      _dynamic: 0
+  Identifier: 15
+  lastNode: {fileID: 0}
+  inputSequence:
+    executeWindow: 3
+    executeInputs:
+    - inputType: 0
+      buttonID: 3
+      stickDirection: {x: 0, y: 0}
+      directionDeviation: 0
+    sequenceWindow: 8
+    sequenceInputs: []
+  attackDefinition: {fileID: 11400000, guid: b58e957042ffe594388ac317b402336b, type: 2}
+  nextNode: []
+  lockonRequired: 0
+  maxRepeatsInString: 1
 --- !u!114 &5433208356493312847
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -263,7 +377,7 @@ MonoBehaviour:
   m_Name: Atk-Grd-A
   m_EditorClassIdentifier: 
   graph: {fileID: 11400000}
-  position: {x: -248, y: -296}
+  position: {x: -232, y: -568}
   ports:
     keys:
     - lastNode
@@ -302,6 +416,7 @@ MonoBehaviour:
   attackDefinition: {fileID: 11400000, guid: b92c5916872823d4495b6a63bcc69d48, type: 2}
   nextNode: []
   lockonRequired: 0
+  maxRepeatsInString: 1
 --- !u!114 &6161032809679467613
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -354,6 +469,7 @@ MonoBehaviour:
   attackDefinition: {fileID: 11400000, guid: 8b9d14e653688d343978ce1a538b5b04, type: 2}
   nextNode: []
   lockonRequired: 0
+  maxRepeatsInString: 1
 --- !u!114 &6397012873814956192
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -406,3 +522,4 @@ MonoBehaviour:
   attackDefinition: {fileID: 11400000, guid: 29d987d5d807b794aa13381839ea639f, type: 2}
   nextNode: []
   lockonRequired: 0
+  maxRepeatsInString: 1

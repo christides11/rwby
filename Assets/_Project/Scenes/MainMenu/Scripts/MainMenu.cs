@@ -25,8 +25,7 @@ namespace rwby.menus
 
         private void OnEnable()
         {
-            if (NetworkManager.singleton.FusionLauncher.NetworkRunner == null) return;
-            if(NetworkManager.singleton.FusionLauncher.NetworkRunner.IsConnectedToServer)
+            if(LobbyManager.singleton)
             {
                 lobbyMenu.Open();
             }
@@ -34,8 +33,7 @@ namespace rwby.menus
 
         private void Update()
         {
-            if (NetworkManager.singleton.FusionLauncher.NetworkRunner == null) return;
-            if (NetworkManager.singleton.FusionLauncher.NetworkRunner.IsConnectedToServer)
+            if (LobbyManager.singleton)
             {
                 lobbyMenu.Open();
                 gameObject.SetActive(false);
@@ -55,7 +53,23 @@ namespace rwby.menus
 
         public void ButtonSingleplayer()
         {
+            NetworkManager.singleton.FusionLauncher.OnHostingFailed += OnHostingFailed;
+            NetworkManager.singleton.FusionLauncher.OnStartHosting += OnHostingSuccess;
             NetworkManager.singleton.StartSinglePlayerHost();
+        }
+
+        private void OnHostingSuccess()
+        {
+            NetworkManager.singleton.FusionLauncher.OnStartHosting -= OnHostingSuccess;
+            //loadingMenu.CloseMenu();
+            gameObject.SetActive(false);
+            lobbyMenu.Open();
+        }
+
+        private void OnHostingFailed()
+        {
+            NetworkManager.singleton.FusionLauncher.OnHostingFailed -= OnHostingFailed;
+            //loadingMenu.CloseMenu();
         }
 
         public void ButtonFindLobby()

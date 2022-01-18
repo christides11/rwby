@@ -4,8 +4,10 @@ Shader "Fusion Graph Shader"
     {
         _MainTex ("Texture", 2D) = "white" {}
         _GoodColor("Good Color", Color) = (0,1,0,1)
+        _WarnColor("Warn Color", Color) = (.9,.6,0,1)
         _BadColor("Bad Color", Color) = (1,0,0,1)
         _FlagColor("Flag Color", Color) = (1,1,0,1)
+        _InvalidColor("Invalid Color", Color) = (0,1,1,1)
         _NoneColor("Flag Color", Color) = (0,0,0,0)
 
         _BarsWidth("Bars Width", Range(0.0, 1.0)) = 0.1// 0.5
@@ -60,8 +62,10 @@ Shader "Fusion Graph Shader"
             float _CapsHeight;
             
             fixed4 _GoodColor;
+            fixed4 _WarnColor;
             fixed4 _BadColor;
             fixed4 _FlagColor;
+            fixed4 _InvalidColor;
             fixed4 _NoneColor;
 
             // data for bar graph
@@ -144,12 +148,33 @@ Shader "Fusion Graph Shader"
                 }
                 else {
                     c.a = (((0.25 * b) * a) + (a * !b)) * r * a * ai * ao;
-                    c.rgb = lerp(_GoodColor.rgb, _BadColor.rgb, fv) * c.a;
+                    if (fv == 0) {
+                        c.rgb = _GoodColor.rgb * c.a;
+                    }
+                    else if (fv == .5) {
+                        c.rgb = _WarnColor.rgb * c.a;
+                    }
+                    else if (fv == 1) {
+                        c.rgb = _BadColor.rgb * c.a;
+                    }
+                    else if (fv < 0) {
+                        c.rgb = _InvalidColor.rgb * c.a;
+                    }
+                    else if (fv > 1) {
+                        c.rgb = _FlagColor.rgb * c.a;
+                    }
+                    else if (fv < 0.5) {
+                        c.rgb = lerp(_GoodColor.rgb, _WarnColor.rgb, fv * 2) * c.a;
+                    }
+                    else {
+                        c.rgb = lerp(_WarnColor.rgb, _BadColor.rgb, (fv - .5f) * 2) * c.a;
+                    }
                 }
-                // apply desaturation
-                float3 hsv = RGB2HSV(c.rgb);
-                hsv.z *= ds;
-                c.rgb = HSV2RGB(hsv);
+
+                //// apply desaturation
+                //float3 hsv = RGB2HSV(c.rgb);
+                //hsv.z *= ds;
+                //c.rgb = HSV2RGB(hsv);
                 
                 return c;
             }

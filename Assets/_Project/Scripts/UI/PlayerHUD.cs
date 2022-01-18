@@ -19,12 +19,11 @@ namespace rwby
 
         public override void Update()
         {
-            /*
-            if (client.inMan == null) return;
-            stateText.text = client.inMan.manager.StateManager.GetCurrentStateName();
-            speedText.text = client.inMan.manager.PhysicsManager.forceMovement.magnitude.ToString("F1");
-            gravityText.text = client.inMan.manager.PhysicsManager.forceGravity.ToString("F1");
-            */
+            if (client == null || client.ClientPlayers[playerIndex].characterNetID.IsValid == false) return;
+            FighterManager fm = client.Runner.TryGetNetworkedBehaviourFromNetworkedObjectRef<FighterManager>(client.ClientPlayers[playerIndex].characterNetID);
+            stateText.text = fm.StateManager.GetCurrentStateName();
+            speedText.text = fm.PhysicsManager.forceMovement.magnitude.ToString("F1");
+            gravityText.text = fm.PhysicsManager.forceGravity.ToString("F1");
         }
 
         private void FixedUpdate()

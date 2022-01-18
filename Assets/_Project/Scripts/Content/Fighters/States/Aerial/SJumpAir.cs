@@ -28,6 +28,8 @@ namespace rwby.fighters.states
 
             SoundbankContainer soundbankContainer = manager.SoundbankContainer;
             soundbankContainer.PlaySound("global", "air-jump", 0.5f);
+
+            manager.fighterAnimator.Play("rr", "jump");
         }
 
         public override void OnUpdate()

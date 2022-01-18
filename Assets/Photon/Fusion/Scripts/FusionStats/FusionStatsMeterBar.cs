@@ -9,9 +9,7 @@ public class FusionStatsMeterBar : FusionGraphBase
   public float WarningThreshold;
   public float ErrorThreshold;
 
-  //public Text TitleLabel;
   public Text ValueLabel;
-  public Image Mask;
   public Image Bar;
 
   public Color GoodColor  = new Color(0.0f, 0.5f, 0.0f, 1.0f);
@@ -42,11 +40,21 @@ public class FusionStatsMeterBar : FusionGraphBase
 
     // Prefabs lose editor generated sprites - recreate as needed.
     if (BackImage.sprite == null) {
-
       BackImage.sprite = FusionStatsUtilities.MeterSprite;
       Bar.sprite = BackImage.sprite;
-      Mask.sprite = BackImage.sprite;
     }
+
+    // TODO: Can remove these later. Backwards compat for mask removal on Dec 30 2021
+    BackImage.type = Image.Type.Simple;
+    if (Bar.rectTransform.parent != BackImage.rectTransform.parent) {
+      var oldMask = Bar.transform.parent;
+      Bar.rectTransform.SetParent(BackImage.rectTransform.parent);
+      Bar.transform.SetSiblingIndex(BackImage.transform.GetSiblingIndex() + 1);
+      //Destroy(oldMask);
+    }
+    Bar.type = Image.Type.Filled;
+    Bar.fillMethod = Image.FillMethod.Horizontal;
+    Bar.fillAmount = 0;
   }
 
   double _lastImportedSampleTickTime;
@@ -133,7 +141,7 @@ public class FusionStatsMeterBar : FusionGraphBase
 
   public void SetValue(double rawvalue) {
 
-    var info = _dataSourceInfo;
+    var info = StatSourceInfo;
 
     double multiplied = rawvalue * info.Multiplier;
 
@@ -142,7 +150,7 @@ public class FusionStatsMeterBar : FusionGraphBase
     }
 
     double clampedValue = System.Math.Max(System.Math.Min(multiplied, _max), 0);
-    var roundedValue = System.Math.Round(clampedValue, _dataSourceInfo.Decimals);
+    var roundedValue = System.Math.Round(clampedValue, info.Decimals);
     var newDisplayValue = _total > 0 ? _total : roundedValue;
 
     if (clampedValue >= _currentBarValue) {
@@ -167,7 +175,8 @@ public class FusionStatsMeterBar : FusionGraphBase
 
   void SetBar(double value) {
 
-    Mask.fillAmount = (float)(value / _max);
+    Bar.fillAmount = (float)(value / _max);
+
     _currentBarValue = value;
 
     if (value >= ErrorThreshold) {
@@ -216,10 +225,8 @@ public class FusionStatsMeterBar : FusionGraphBase
     var info = Stats.GetDescription(statSourceType, statId);
     var barRT = parent.CreateRectTransform(info.LongName, true);
     var bar   = barRT.gameObject.AddComponent<FusionStatsMeterBar>();
-    bar._dataSourceInfo = info;
+    bar.StatSourceInfo = info;
     bar._fusionStats = iFusionStats;
-    //bar.Multiplier   = info.multiplier;
-    //bar.PerFlags = info.per;
     bar.WarningThreshold = warnThreshold;
     bar.ErrorThreshold = alertThreshold;
     bar._statSourceType = statSourceType;
@@ -233,31 +240,24 @@ public class FusionStatsMeterBar : FusionGraphBase
     var info = Stats.GetDescription(_statSourceType, _statId);
     var backRT = transform.CreateRectTransform("Back", true);
     BackImage = backRT.gameObject.AddComponent<Image>();
+    BackImage.raycastTarget = false;
     BackImage.sprite = FusionStatsUtilities.MeterSprite;
     BackImage.color = BackColor;
-    BackImage.type = Image.Type.Tiled;
-    var maskRT  = transform.CreateRectTransform("Mask", true);
-    var barRT = maskRT.CreateRectTransform("Bar", true);
+    BackImage.type = Image.Type.Simple;
+    var barRT = transform.CreateRectTransform("Bar", true);
     Bar = barRT.gameObject.AddComponent<Image>();
+    Bar.raycastTarget = false;
     Bar.sprite = BackImage.sprite;
     Bar.color = GoodColor;
-    Bar.type = Image.Type.Tiled;
-
-    var texture = new Texture2D(2, 2);
-        texture.SetPixels(new Color[] { Color.white, Color.white, Color.white, Color.white });
-        texture.Apply();
-
-    Mask = maskRT.gameObject.AddComponent<Image>();
-    Mask.sprite = Sprite.Create(texture,new Rect(0,0,2,2), new Vector2(.5f,.5f));
-    Mask.type = Image.Type.Filled;
-    Mask.fillMethod = Image.FillMethod.Horizontal;
-    Mask.fillAmount = 0;
-    maskRT.gameObject.AddComponent<Mask>().showMaskGraphic = false;
+    Bar.type = Image.Type.Filled;
+    Bar.fillMethod = Image.FillMethod.Horizontal;
+    Bar.fillAmount = 0;
 
     var titleRT = transform.CreateRectTransform("Label", true)
       .ExpandAnchor()
       .SetAnchors(0.0f, 0.5f, 0.0f,1.0f)
       .SetOffsets(6, -6, 6, -6);
+
 
     LabelTitle = titleRT.AddText(info.LongName, TextAnchor.MiddleLeft, _fusionStats.FontColor);
     LabelTitle.alignByGeometry = false;

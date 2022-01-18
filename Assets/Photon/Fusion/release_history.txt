@@ -2,6 +2,113 @@
 
 ## RC Nightly
 
+### Build 390 (Jan 17, 2022)
+
+**What's New**
+
+- FusionStats handling for Good/Warn/Bad colors for bars
+- FusionStats histogram handling for more stat types
+- FusionStats color overrides for bar colors
+
+### Build 389 (Jan 16, 2022)
+
+**What's New**
+
+- FusionStats Histogram support for time based stats (like RTT) added
+
+### Build 388 (Jan 14, 2022)
+
+**What's New**
+
+- `NetworkBehaviour.InvokeOnChangedForInitialNonZeroValues`: returns true by default. Override and return false if you don't want `OnChanged` to be invoked for initial values
+
+**Improvements**
+
+- `NetworkObject` editor: inline help content for `IsSpawnable` property
+- `NetworkObject` editor: `PrefabInfo` section is now also visible when editing a prefab
+
+**Changes**
+
+- `OnChanged`: restored the old behaviour, where the callback is also invoked for each initial non-zero value
+
+### Build 387 (Jan 13, 2022)
+
+**What's New**
+
+- NetworkDebugStart added runtime Add Additional Client and Add Additional Shared Client buttons to the inspector, which allow for more clients to be added at any time after startup. Useful for simulating late joiners
+- FusionStats warning shown if no NetworkObject is found
+
+**Bug Fixes**
+
+- Fixed: Nested `NO` not attaching in some cases when using `EventualConsistency` without `AoI`
+- Fixed: Despawned/culled nested `NetworkObjects` not being handled by late-joining clients. Currently such objects will remain deactivated
+- Fixed: Referencing nested NetworkObjects is now possible
+- Fixed: Collections in structs not being displayed correctly in the debugger
+
+### Build 386 (Jan 12, 2022)
+
+**Removed**
+
+- PlayerTtl, now the client is deactivated as it leaves
+
+**Bug Fixes**
+
+- Fixed: Extra Session Slot only if starting a Server
+
+### Build 385 (Jan 11, 2022)
+
+**What's New**
+
+- 'Add Fusion Stats' and other 'GameObject > Fusion' menus added to Fusion menu as well
+
+### Build 384 (Jan 10, 2022)
+
+**What's New**
+
+- NetworkObject.IsSpawnable property for getting/setting the NetworkObjectFlag.Ignore flag
+
+**Changes**
+
+- Use Alternatives UDP Ports by default
+
+**Bug Fixes**
+
+- Fixed: NetworkDebugStartGUI caches previous GUI.skin and restores it after update, to avoid interfering with user IMGUI that also may be in use
+
+### Build 383 (Jan 07, 2022)
+
+**Changes**
+
+- Scene NOs have `Spawned` invoked after all of them have been attached. This enables `[Networked]` object references to work reliably
+
+**Bug Fixes**
+
+- Fixed: Don't set scene dirty when assigning to non-serialized `NetworkBehaviour.Object`
+- Fixed: Weaver: error when using collections with `INetworkStructs` from external assemblies
+- Fixed: Dictionaries not being drawn for some properties in Unity 2020.3.25
+
+### Build 382 (Jan 06, 2022)
+
+**Bug Fixes**
+
+- Fixed: An issue in the NRB rotation syncing when `Space` was set to `Local`
+
+### Build 381 (Jan 05, 2022)
+
+**Improvements**
+
+- Order of backing fields added to `[Networked]` properties
+
+**Bug Fixes**
+
+- Fixed: Dictionaries not being drawn in Unity 2020.3.25
+
+### Build 379 (Jan 02, 2022)
+
+**Bug Fixes**
+
+- Fixed: Unable to delete object warning when using older generated FusionStats meters with newer Fusion version
+
 ### Build 373 (Dec 23, 2021)
 
 **Removed**

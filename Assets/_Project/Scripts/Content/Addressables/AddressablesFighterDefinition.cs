@@ -35,12 +35,12 @@ namespace rwby
             {
                 OperationResult<GameObject> fighterLoadResult = await AddressablesManager.LoadAssetAsync(fighterReference);
                 fighter = fighterLoadResult.Value;
-                /*bool fighterRequirementsResult = await fighter.GetComponent<FighterManager>().OnFighterLoaded();
+                bool fighterRequirementsResult = await fighter.GetComponent<FighterManager>().OnFighterLoaded();
                 if (fighterRequirementsResult == false)
                 {
                     Debug.LogError($"Error loading fighter {Name}");
                     return false;
-                }*/
+                }
             }
             catch (Exception e)
             {

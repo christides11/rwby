@@ -46,7 +46,7 @@ namespace rwby
 
         public override void Spawned()
         {
-
+            Settings = new LobbySettings();
         }
 
         public void CallGamemodeSettingsChanged()
@@ -119,7 +119,6 @@ namespace rwby
                 if (failedLoadPlayers == null || failedLoadPlayers.Count > 0) return false;
             }
 
-            Debug.Log("Match Start Success");
             CurrentGameMode.StartGamemode();
             return true;
         }

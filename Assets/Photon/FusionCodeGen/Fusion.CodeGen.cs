@@ -65,7 +65,7 @@ namespace Fusion.CodeGen {
         // fixed buffers could be included directly in structs, but then again it would be impossible to provide a custom drawer;
         // that's why there's this proxy struct
         var storageType = new TypeDefinition("Fusion.CodeGen", $"FixedStorage@{wordCount}",
-          TypeAttributes.SequentialLayout | TypeAttributes.AnsiClass | TypeAttributes.Sealed | TypeAttributes.BeforeFieldInit | TypeAttributes.Serializable,
+          TypeAttributes.ExplicitLayout | TypeAttributes.AnsiClass | TypeAttributes.Sealed | TypeAttributes.BeforeFieldInit | TypeAttributes.Serializable,
           asm.ValueType);
 
         storageType.AddTo(asm.CecilAssembly);
@@ -75,6 +75,17 @@ namespace Fusion.CodeGen {
         FieldDefinition bufferField;
         if (Allocator.REPLICATE_WORD_SIZE == sizeof(int)) {
           bufferField = CreateFixedBufferField(asm, storageType, $"Data", asm.Import(typeof(int)), wordCount);
+          bufferField.Offset = 0;
+
+          // Unity debugger seems to copy only the first element of a buffer,
+          // the rest is garbage when inspected; let's add some additional
+          // fields to help it
+          for (int i = 1; i < wordCount; ++i) {
+            var unityDebuggerWorkaroundField = new FieldDefinition($"_{i}", FieldAttributes.Private | FieldAttributes.NotSerialized, asm.Import<int>());
+            unityDebuggerWorkaroundField.Offset = Allocator.REPLICATE_WORD_SIZE * i;
+            unityDebuggerWorkaroundField.AddTo(storageType);
+          }
+
         }
 
         entry = new FixedBufferInfo() {
@@ -270,15 +281,19 @@ namespace Fusion.CodeGen {
       string surrogateName;
 
       if (type.IsNetworkDictionary(out var keyType, out var valueType)) {
+        keyType = asm.Import(keyType);
+        valueType = asm.Import(valueType);
         var keyReaderWriterType = MakeElementReaderWriter(asm, property, keyType).Type;
         var valueReaderWriterType = MakeElementReaderWriter(asm, property, valueType).Type;
         baseType = asm.Import(typeof(Fusion.Internal.UnityDictionarySurrogate<,,,>)).MakeGenericInstanceType(keyType, keyReaderWriterType, valueType, valueReaderWriterType);
         surrogateName = "UnityDictionarySurrogate@" + keyReaderWriterType.Name + "@" + valueReaderWriterType.Name;
       } else if (type.IsNetworkArray(out var elementType)) {
+        elementType = asm.Import(elementType);
         var readerWriterType = MakeElementReaderWriter(asm, property, elementType).Type;
         baseType = asm.Import(typeof(Fusion.Internal.UnityArraySurrogate<,>)).MakeGenericInstanceType(elementType, readerWriterType);
         surrogateName = "UnityArraySurrogate@" + readerWriterType.Name;
       } else if (type.IsNetworkList(out elementType)) {
+        elementType = asm.Import(elementType);
         var readerWriterType = MakeElementReaderWriter(asm, property, elementType).Type;
         baseType = asm.Import(typeof(Fusion.Internal.UnityLinkedListSurrogate<,>)).MakeGenericInstanceType(elementType, readerWriterType);
         surrogateName = "UnityLinkedListSurrogate@" + readerWriterType.Name;
@@ -2760,7 +2775,7 @@ namespace Fusion.CodeGen {
 
   unsafe partial class ILWeaver {
 
-    FieldDefinition AddNetworkBehaviourBackingField(ILWeaverAssembly asm, PropertyDefinition property, int index) {
+    FieldDefinition AddNetworkBehaviourBackingField(ILWeaverAssembly asm, PropertyDefinition property) {
 
       TypeReference fieldType = property.PropertyType;
       if (fieldType.IsPointer || fieldType.IsByReference) {
@@ -2776,8 +2791,6 @@ namespace Fusion.CodeGen {
       }
 
       var field = new FieldDefinition(GetInspectorFieldName(property.Name), FieldAttributes.Private, fieldType);
-      property.DeclaringType.Fields.Add(field);
-
       return field;
     }
 
@@ -2937,6 +2950,9 @@ namespace Fusion.CodeGen {
         var setDefaults = new Lazy<MethodDefinition>(() => createOverride(nameof(NetworkBehaviour.CopyBackingFieldsToState)));
         var getDefaults = new Lazy<MethodDefinition>(() => createOverride(nameof(NetworkBehaviour.CopyStateToBackingFields)));
 
+        FieldDefinition lastAddedFieldWithKnownPosition = null;
+        List<FieldDefinition> fieldsWithUncertainPosition = new List<FieldDefinition>();
+
         foreach (var property in type.Properties) {
           if (IsWeavableProperty(property, out var propertyInfo) == false) {
             continue;
@@ -2955,15 +2971,17 @@ namespace Fusion.CodeGen {
             }
           }
 
+
           try {
-
             // try to maintain fields order
-            int fieldIndex = type.Fields.Count;
-
+            int backingFieldIndex = type.Fields.Count;
             if (propertyInfo.BackingField != null) {
-              fieldIndex = type.Fields.IndexOf(propertyInfo.BackingField);
-              if (fieldIndex >= 0) {
-                type.Fields.RemoveAt(fieldIndex);
+              backingFieldIndex = type.Fields.IndexOf(propertyInfo.BackingField);
+              if (backingFieldIndex >= 0) {
+                type.Fields.RemoveAt(backingFieldIndex);
+              } else {
+                Log.Warn($"Unable to find backing field for {property}");
+                backingFieldIndex = type.Fields.Count;
               }
             }
 
@@ -3085,9 +3103,39 @@ namespace Fusion.CodeGen {
               FieldDefinition defaultField;
 
               if (string.IsNullOrEmpty(propertyInfo.DefaultFieldName)) {
-                defaultField = AddNetworkBehaviourBackingField(asm, property, fieldIndex);
+                defaultField = AddNetworkBehaviourBackingField(asm, property);
                 if (propertyInfo.BackingField != null) {
+                  type.Fields.Insert(backingFieldIndex, defaultField);
                   MoveBackingFieldAttributes(asm, propertyInfo.BackingField, defaultField);
+
+                  if (lastAddedFieldWithKnownPosition == null) {
+                    // fixup fields that have been added without knowing their index
+                    foreach (var f in fieldsWithUncertainPosition) {
+                      type.Fields.Remove(f);
+                    }
+
+                    var index = type.Fields.IndexOf(defaultField);
+                    fieldsWithUncertainPosition.Reverse();
+                    foreach (var f in fieldsWithUncertainPosition) {
+                      type.Fields.Insert(index, f);
+                    }
+                  }
+
+                  lastAddedFieldWithKnownPosition = defaultField;
+
+                } else { 
+                  if (lastAddedFieldWithKnownPosition == null) {
+                    // not sure where to put this... append
+                    type.Fields.Add(defaultField);
+                    fieldsWithUncertainPosition.Add(defaultField);
+                  } else {
+                    // add after the previous field
+                    var index = type.Fields.IndexOf(lastAddedFieldWithKnownPosition);
+                    Log.Assert(index >= 0);
+
+                    type.Fields.Insert(index+1, defaultField);
+                    lastAddedFieldWithKnownPosition = defaultField;
+                  }
                 }
                 MovePropertyAttributesToBackingField(asm, property, defaultField);
               } else {

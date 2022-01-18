@@ -8,6 +8,7 @@ using UnityEngine;
 namespace rwby
 {
     [OrderBefore(typeof(FighterManager), typeof(FighterPhysicsManager), typeof(FighterStateManager), typeof(FighterBoxManager), typeof(FighterHitboxManager), typeof(FighterCombatManager))]
+    [OrderAfter(typeof(ClientManager))]
     public class FighterInputManager : NetworkBehaviour
     {
         public static int inputCapacity = 1024;
@@ -52,15 +53,14 @@ namespace rwby
             Block[frame % inputCapacity] = new InputButtonData(inputData.buttons.IsSet(PlayerInputType.BLOCK), Block[(frame - 1) % inputCapacity]);
             Dash[frame % inputCapacity] = new InputButtonData(inputData.buttons.IsSet(PlayerInputType.DASH), Dash[(frame - 1) % inputCapacity]);
             LockOn[frame % inputCapacity] = new InputButtonData(inputData.buttons.IsSet(PlayerInputType.LOCK_ON), LockOn[(frame - 1) % inputCapacity]);
-            /*
-            Ability1[frame % inputCapacity] = new InputButtonData(inputData.IsDown(NetworkClientInputData.BUTTON_ABILITY_ONE), Ability1[(frame - 1) % inputCapacity]);
-            Ability2[frame % inputCapacity] = new InputButtonData(inputData.IsDown(NetworkClientInputData.BUTTON_ABILITY_TWO), Ability2[(frame - 1) % inputCapacity]);
-            Ability3[frame % inputCapacity] = new InputButtonData(inputData.IsDown(NetworkClientInputData.BUTTON_ABILITY_THREE), Ability3[(frame - 1) % inputCapacity]);
-            Ability4[frame % inputCapacity] = new InputButtonData(inputData.IsDown(NetworkClientInputData.BUTTON_ABILITY_FOUR), Ability4[(frame - 1) % inputCapacity]);
-            Extra1[frame % inputCapacity] = new InputButtonData(inputData.IsDown(NetworkClientInputData.BUTTON_Extra_1), Extra1[(frame - 1) % inputCapacity]);
-            Extra2[frame % inputCapacity] = new InputButtonData(inputData.IsDown(NetworkClientInputData.BUTTON_Extra_2), Extra2[(frame - 1) % inputCapacity]);
-            Extra3[frame % inputCapacity] = new InputButtonData(inputData.IsDown(NetworkClientInputData.BUTTON_Extra_3), Extra3[(frame - 1) % inputCapacity]);
-            Extra4[frame % inputCapacity] = new InputButtonData(inputData.IsDown(NetworkClientInputData.BUTTON_Extra_4), Extra4[(frame - 1) % inputCapacity]);*/
+            Ability1[frame % inputCapacity] = new InputButtonData(inputData.buttons.IsSet(PlayerInputType.ABILITY_1), Ability1[(frame - 1) % inputCapacity]);
+            Ability2[frame % inputCapacity] = new InputButtonData(inputData.buttons.IsSet(PlayerInputType.ABILITY_2), Ability2[(frame - 1) % inputCapacity]);
+            Ability3[frame % inputCapacity] = new InputButtonData(inputData.buttons.IsSet(PlayerInputType.ABILITY_3), Ability3[(frame - 1) % inputCapacity]);
+            Ability4[frame % inputCapacity] = new InputButtonData(inputData.buttons.IsSet(PlayerInputType.ABILITY_4), Ability4[(frame - 1) % inputCapacity]);
+            Extra1[frame % inputCapacity] = new InputButtonData(inputData.buttons.IsSet(PlayerInputType.EXTRA_1), Extra1[(frame - 1) % inputCapacity]);
+            Extra2[frame % inputCapacity] = new InputButtonData(inputData.buttons.IsSet(PlayerInputType.EXTRA_2), Extra2[(frame - 1) % inputCapacity]);
+            Extra3[frame % inputCapacity] = new InputButtonData(inputData.buttons.IsSet(PlayerInputType.EXTRA_3), Extra3[(frame - 1) % inputCapacity]);
+            Extra4[frame % inputCapacity] = new InputButtonData(inputData.buttons.IsSet(PlayerInputType.EXTRA_4), Extra4[(frame - 1) % inputCapacity]);
         }
 
         public virtual Vector2 GetMovement(int startOffset = 0)

@@ -229,6 +229,7 @@ namespace Fusion.Editor {
     public string Summary;
     public Attribute Attribute;
     public Action Action;
+    public MemberInfo MemberInfo;
     public Func<object, object> Condition;
     public BehaviourActionInfo(string memberName, string summary, Attribute attribute, Action action, Func<object, object> condition) {
       Summary = summary;
@@ -348,6 +349,14 @@ namespace Fusion.Editor {
             continue;
           }
 
+          if (attr is BehaviourToggleAttribute toggleAttr) {
+            Func<object, object> condMethod = targetType.GetDelegateFromMember(toggleAttr.ConditionMember);
+            var actioninfo = new BehaviourActionInfo(member.Name, (member as PropertyInfo).GetXmlDocSummary(), attr, null, condMethod);
+            actioninfo.MemberInfo = member;
+            reusableAttributeList.Add(actioninfo);
+            continue;
+          }
+
           if (attr is BehaviourActionAttribute actionAttr) {
             Func<object, object> condMethod = targetType.GetDelegateFromMember(actionAttr.ConditionMember);
             reusableAttributeList.Add(new BehaviourActionInfo(member.Name, method.GetXmlDocSummary(), attr, (Action)method.CreateDelegate(typeof(Action), target), condMethod));
@@ -384,6 +393,11 @@ namespace Fusion.Editor {
           continue;
         }
 
+        if (attr is BehaviourToggleAttribute toggleAttr) {
+          toggleAttr.DrawEditorToggleAttribute(ba, target, ref expandedHelpName);
+          continue;
+        }
+
         // Action is the base class, so this needs to be last always if more derived classes are added
         if (attr is BehaviourActionAttribute actionAttr) {
           action.Invoke();
@@ -410,29 +424,17 @@ namespace Fusion.Editor {
     internal static void NoActionWarning() {
       Debug.LogWarning($"<B>No action defined for {nameof(BehaviourButtonActionAttribute)}.</b> Be sure to either add one to the attribute arguments, or place the attribute on a method.");
     }
-    /// <summary>
-    /// If the supplied object is a known BehaviourEditor attribute, Draw it.
-    /// </summary>
-    internal static void DrawBehaviourAttribute(this object attr, UnityEngine.Object target, Type targetType, ref string expandedPropertyName) {
-      if (attr is BehaviourButtonActionAttribute buttonAttr) {
-        Action action;
-        if (buttonAttr.ExecuteMethod == null) {
-          action = NoActionWarning;
-            //action = () => { Debug.LogWarning($"<B>No action defined</b> for {nameof(BehaviourButtonActionAttribute)} on '{target.name}'. Be sure to either add one to the attribute arguments, or place the attribute on a method."); };
-        } else {
-          action = targetType.GetActionDelegate(buttonAttr.ExecuteMethod, target);
+
+    internal static void DrawEditorToggleAttribute(this BehaviourToggleAttribute toggleAttr, BehaviourActionInfo actionInfo, UnityEngine.Object target, ref string expandedPropertyName) {
+      // If a condition member exists for this attribute, check it.
+      if (actionInfo.Condition != null) {
+        object valObj = actionInfo.Condition(target);
+        if (valObj == null || valObj.GetObjectValueAsDouble() == 0) {
+          return;
         }
-        // TODO: this segment is not tested, but may never be used.
-        Func<object, object> condMethod = targetType.GetDelegateFromMember(buttonAttr.ConditionMember);
-        var ba = new BehaviourActionInfo(buttonAttr.ExecuteMethod, targetType.GetMethod(buttonAttr.ExecuteMethod)?.GetXmlDocSummary(), (Attribute)attr, action, condMethod);
-        buttonAttr.DrawEditorButtonAttribute(ba, target, ref expandedPropertyName);
-        return;
       }
 
-      if (attr is BehaviourWarnAttribute warnAttr) {
-        warnAttr.DrawEditorWarnAttribute(target);
-        return;
-      }
+      DrawEditorToggleAttributeFinal(toggleAttr, target, actionInfo, ref expandedPropertyName);
     }
 
     internal static void DrawEditorButtonAttribute(this BehaviourButtonActionAttribute buttonAttr, BehaviourActionInfo actionInfo, UnityEngine.Object target, ref string expandedPropertyName) {
@@ -516,6 +518,48 @@ namespace Fusion.Editor {
       }
     }
 
+    static void DrawEditorToggleAttributeFinal(this BehaviourToggleAttribute toggleAttr, UnityEngine.Object target, BehaviourActionInfo actionInfo, ref string expandedPropertyName) {
+      var flags = toggleAttr.ConditionFlags;
+
+      if (ShouldShow(flags)) {
+        GUILayout.Space(4);
+        Rect rect = EditorGUILayout.GetControlRect();
+
+        if (!string.IsNullOrEmpty(actionInfo.Summary)) {
+          var wasExpanded = FusionEditorGUI.IsHelpExpanded(target, actionInfo.MemberName);
+          var buttonRect = FusionEditorGUI.GetInlineHelpButtonRect(InlineHelpButtonPlacement.BeforeLabel, rect, GUIContent.none, expectFoldout: false);
+
+          if (wasExpanded) {
+            var content = new GUIContent(actionInfo.Summary);
+
+            var contentRect = FusionEditorGUI.GetInlineHelpRect(content);
+            var totalRect = new Rect(rect.x, rect.y, rect.width, rect.height + contentRect.height);
+
+            EditorGUILayout.GetControlRect(false, contentRect.height, EditorStyles.helpBox);
+            FusionEditorGUI.DrawInlineHelp(content, totalRect, contentRect);
+          }
+
+          if (FusionEditorGUI.DrawInlineHelpButton(buttonRect, wasExpanded)) {
+            FusionEditorGUI.SetHelpExpanded(target, actionInfo.MemberName, !wasExpanded);
+            if (!wasExpanded) {
+              expandedPropertyName = actionInfo.MemberName;
+            }
+          }
+        }
+
+        var pinfo = actionInfo.MemberInfo as PropertyInfo;
+
+        var oldval = (bool)pinfo.GetValue(target);
+        var newval = EditorGUI.Toggle(rect, ObjectNames.NicifyVariableName(pinfo.Name), oldval);
+        if (newval != oldval) {
+          pinfo.SetValue(target, newval);
+          if ((flags & BehaviourActionAttribute.ActionFlags.DirtyAfterButton) == BehaviourActionAttribute.ActionFlags.DirtyAfterButton) {
+            EditorUtility.SetDirty(target);
+          }
+        }
+      }
+    }
+
     static void DrawEditorWarnAttributeFinal(this BehaviourWarnAttribute warnAttr) {
 
       if (ShouldShow(warnAttr.ConditionFlags)) {
@@ -553,7 +597,6 @@ namespace Fusion.Editor {
     public static void DrawWarnBox(string message, MessageType msgtype = MessageType.Warning, FusionGUIStyles.GroupBoxType? groupBoxType = null) {
 
       var style = groupBoxType.HasValue ? groupBoxType.Value.GetStyle() : ((FusionGUIStyles.GroupBoxType)msgtype).GetStyle();
-
       EditorGUILayout.BeginHorizontal(style/*, GUILayout.ExpandHeight(true)*/);
       {
 
@@ -770,7 +813,7 @@ namespace Fusion.Editor {
 
             string tooltip = "hash: " + key.GetHashDeterministic();
             GUI.Label(r, new GUIContent(key, tooltip));
-            string newKey = EditorGUI.DelayedTextField(new Rect(r) { width = LABEL_WIDTH - 4 }, key);
+            string newKey = GUI.TextField(new Rect(r) { width = LABEL_WIDTH - 4 }, key);
 
             float newVal = CustomSliders.Log10Slider(new Rect(r) { x = valueleft, width = valuewidth }, val, null, MIN, MAX, ZERO, 1);
 
@@ -1296,7 +1339,7 @@ namespace Fusion.Editor {
       if (_actualDrawer != null) {
         _actualDrawer.OnGUI(position, property, label);
       } else {
-        FusionEditorGUI.ForwardPropertyField(position, property, label, property.isExpanded);
+        FusionEditorGUI.ForwardPropertyField(position, property, label, property.IsArrayProperty() ? true : property.isExpanded);
       }
     }
     private void EnsureInitialized(SerializedProperty property) {
@@ -1463,8 +1506,8 @@ namespace Fusion.Editor {
         return base.GetPropertyHeight(property, label);
       }
 
-      // -1 is required rather than zero, otherwise a space is added for hidden fields.
-      return -1;
+      // -2 is required rather than zero, otherwise a space is added for hidden fields.
+      return -2;
     }
 
     public override void OnGUI(Rect position, SerializedProperty property, GUIContent label) {
@@ -2218,16 +2261,16 @@ namespace Fusion.Editor {
       var rootType = property.serializedObject.targetObject.GetType();
       var type = fieldInfo?.DeclaringType ?? rootType;
 
-      _helpInfo = FusionEditorGUI.GetInlineHelpInfo(property.name, type);
+      _helpInfo = type.GetInlineHelpInfo(property.name);
     }
 
     private void ReplaceTooltip(ref GUIContent label) {
-      if (!string.IsNullOrEmpty(_helpInfo.Tooltip)) {
+      if (!string.IsNullOrEmpty(_helpInfo.Label.tooltip)) {
         label = new GUIContent(label);
         if (string.IsNullOrEmpty(label.tooltip)) {
-          label.tooltip = _helpInfo.Tooltip;
+          label.tooltip = _helpInfo.Label.tooltip;
         } else {
-          label.tooltip += "\n" + _helpInfo.Tooltip;
+          label.tooltip += "\n" + _helpInfo.Label.tooltip;
         }
       }
     }
@@ -2823,7 +2866,7 @@ namespace Fusion.Editor {
 
       bool hasChanged = false;
 
-      EditorGUI.LabelField(new Rect(position) { height = 16 }, label);
+      EditorGUI.LabelField(new Rect(position) { height = 17 }, label);
 
       var value = property.rectValue;
 
@@ -3569,7 +3612,7 @@ namespace Fusion.Editor {
       var entries = property.FindPropertyRelativeOrThrow(ItemsPropertyPath);
       entries.isExpanded = property.isExpanded;
       using (new FusionEditorGUI.PropertyScope(position, label, property)) {
-        EditorGUI.PropertyField(position, entries, label, entries.isExpanded);
+        EditorGUI.PropertyField(position, entries, label, true);
         property.isExpanded = entries.isExpanded;
 
         string error = VerifyDictionary(entries, EntryKeyPropertyPath);
@@ -3582,7 +3625,7 @@ namespace Fusion.Editor {
     }
     public override float GetPropertyHeight(SerializedProperty property, GUIContent label) {
       var entries = property.FindPropertyRelativeOrThrow(ItemsPropertyPath);
-      return EditorGUI.GetPropertyHeight(entries, label, property.isExpanded);
+      return EditorGUI.GetPropertyHeight(entries, label, true);
     }
 
     private static HashSet<SerializedProperty> _dictionaryKeyHash = new HashSet<SerializedProperty>(new SerializedPropertyUtilities.SerializedPropertyEqualityComparer());
@@ -4408,6 +4451,19 @@ namespace Fusion.Editor {
     const string FONT_PATH = "ComponentHeaderGraphics/Fonts/Oswald-Header";
     const string ICON_PATH = "ComponentHeaderGraphics/Icons/";
 
+    // Extra safety code to deal with these styles being used in the inspector for a currently selected object.
+    // The styles array never gets nulled if they are being used for some reason, but the textures do get nulled.
+    // This OnPlayModeState change to exit detects this and nulls the styles manually.
+    static FusionGUIStyles() {
+      EditorApplication.playModeStateChanged += OnPlayModeState;
+    }
+    private static void OnPlayModeState(PlayModeStateChange state) {
+      if (state == PlayModeStateChange.EnteredEditMode) {
+        _groupBoxStyles = null;
+        _fusionHeaderStyles = null;
+      }
+    }
+
     private static Color[] _headerColors = new Color[12] {
       // none
       new Color(),
@@ -4492,8 +4548,94 @@ namespace Fusion.Editor {
       },
     };
 
-
     public const int HEADER_CORNER_RADIUS = 4;
+
+    // Creates the "?" inline help icon with pre-rendered alpha channel, to avoid resorting to an editor resource file.
+    static Texture2D _questionMarkTexture;
+    public static Texture2D QuestionMarkTexture {
+
+      get {
+        if (_questionMarkTexture == null) {
+          var alphas = new float[,]{
+{0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, },
+{0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, },
+{0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, },
+{0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, },
+{0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, },
+{0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, },
+{0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, },
+{0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, },
+{0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, },
+{0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, },
+{0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, },
+{0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, },
+{0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.14f, 0.57f, 0.57f, 0.43f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, },
+{0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.43f, 1.00f, 1.00f, 1.00f, 0.86f, 0.14f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, },
+{0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.71f, 0.71f, 0.43f, 0.00f, 0.29f, 0.57f, 0.57f, 0.14f, 0.00f, 0.00f, 0.00f, 0.00f, 1.00f, 1.00f, 1.00f, 1.00f, 0.71f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, },
+{0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 1.00f, 1.00f, 0.43f, 0.00f, 0.43f, 1.00f, 1.00f, 0.86f, 0.14f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.57f, 1.00f, 1.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, },
+{0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 1.00f, 1.00f, 0.43f, 0.00f, 0.43f, 0.86f, 1.00f, 1.00f, 0.86f, 0.29f, 0.00f, 0.00f, 0.00f, 0.00f, 0.43f, 1.00f, 1.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, },
+{0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.14f, 1.00f, 1.00f, 1.00f, 0.71f, 0.29f, 0.29f, 0.29f, 0.86f, 1.00f, 1.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, },
+{0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.14f, 0.86f, 1.00f, 1.00f, 1.00f, 1.00f, 1.00f, 1.00f, 1.00f, 0.43f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, },
+{0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.57f, 1.00f, 1.00f, 1.00f, 1.00f, 1.00f, 0.71f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, },
+{0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.07f, 0.33f, 0.47f, 0.40f, 0.23f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, },
+{0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, },
+{0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, },
+{0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, },
+{0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, },
+{0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, },
+{0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, },
+{0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, },
+{0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, },
+{0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, },
+{0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, },
+{0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, },
+};
+          var tex = new Texture2D(32, 32, TextureFormat.RGBA32, false);
+          for (int x = 0; x < 32; ++x) {
+            for (int y = 0; y < 32; ++y) {
+              tex.SetPixel(x, y, EditorGUIUtility.isProSkin ? new Color(1, 1, 1, alphas[x, y]) : new Color(0, 0, 0, alphas[x, y]));
+            }
+          }
+          tex.Apply();
+          _questionMarkTexture = tex;
+        }
+        return _questionMarkTexture;
+      }
+    }
+
+    static Texture2D _helpIconSelected;
+    public static Texture2D HelpIconSelected {
+      get {
+        if (_helpIconSelected == null) {
+          var tex = new Texture2D(32, 32, TextureFormat.RGBA32, false);
+          tex.ClearTexture(new Color(0.06f, 0.5f, 0.75f, 0));
+          tex.RenderCircle(13, new Color(0, .5f, 1, 1), false);
+          tex.OverlayTexture(QuestionMarkTexture, .9f);
+          tex.alphaIsTransparency = true;
+          tex.Apply();
+          _helpIconSelected = tex;
+        }
+        return _helpIconSelected;
+      }
+    }
+
+    static Texture2D _helpIconUnselected;
+    public static Texture2D HelpIconUnselected {
+      get {
+        if (_helpIconUnselected == null) {
+          var tex = new Texture2D(32, 32, TextureFormat.RGBA32, false);
+          tex.ClearTexture(new Color(1, 1, 1, 0));
+          tex.RenderCircle(13, EditorGUIUtility.isProSkin ? new Color(1, 1, 1, .15f) : new Color(0, 0 , 0, .2f), false);
+          tex.ClearCircle(11, true);
+          tex.OverlayTexture(QuestionMarkTexture, .35f);
+          tex.alphaIsTransparency = true;
+          tex.filterMode = FilterMode.Trilinear;
+          tex.Apply();
+          _helpIconUnselected = tex;
+        }
+        return _helpIconUnselected;
+      }
+    }
 
     static Texture2D[] _headerTextures;
     public static Texture2D[] HeaderTextures {
@@ -4521,14 +4663,28 @@ namespace Fusion.Editor {
       }
     }
 
+    static void OverlayTexture(this Texture2D tex, Texture2D overlay, float opacity) {
+      for (int x = 0; x < tex.width; ++x) {
+        for (int y = 0; y < tex.width; ++y) {
+          var b = tex.GetPixel(x, y);
+          var o = overlay.GetPixel(x, y) * new Color(1, 1, 1, opacity);
+          var c = Color.Lerp(b, o, o.a);
+          tex.SetPixel(x, y, c);
+        }
+      }
+    }
+
     static Texture2D GenerateRoundedBoxTexture(int radius, GroupBoxInfo info) {
       var tex = new Texture2D(radius * 2, radius * 2);
-      tex = new Texture2D(radius * 2, radius * 2);
+      tex = new Texture2D(radius * 2, radius * 2, TextureFormat.RGBA32, false);
       bool hasOutline = info.OutlineColor != null;
       var color = info.BackColor.GetValueOrDefault();
+      tex.ClearTexture(color * new Color(1, 1, 1, 0));
+      
       if (hasOutline) {
-        tex.RenderCircle(radius, info.OutlineColor.Value, false);
+        tex.RenderCircle(radius, info.OutlineColor.Value, true);
       }
+
       tex.RenderCircle(hasOutline ? radius - 1 : radius, new Color(color.r, color.g, color.b, 1f), info.OutlineColor != null);
       tex.ApplyAlpha(color.a);
       tex.alphaIsTransparency = true;
@@ -4538,19 +4694,62 @@ namespace Fusion.Editor {
       return tex;
     }
 
-    private static void RenderCircle(this Texture2D tex, int r, Color color, bool blend) {
-      int midx = tex.width / 2;
-      int midy = tex.height / 2;
+    private static void ClearTexture(this Texture2D tex, Color color) {
+      for(int x = 0; x < tex.width; ++x) {
+        for(int y = 0; y < tex.width; ++y) {
+          tex.SetPixel(x, y, color);
+        }
+      }
+    }
 
-      for (int x = 0; x < r; ++x) {
-        for (int y = 0; y < r; ++y) {
-          double h = System.Math.Abs(System.Math.Sqrt(x * x + y * y));
-          float a = h > r ? 0.0f : h < (r - 1) ? 1.0f : (float)(r - h);
+    private static void RenderCircle(this Texture2D tex, int r, Color color, bool blend, int? midX = null, int? midY = null) {
+      if (midX == null) {
+        midX = tex.width / 2;
+      }
+      
+      if (midY == null) {
+        midY = tex.height / 2;
+      }
+
+      var midx = midX.Value;
+      var midy = midY.Value;
+
+      for (int x = 0; x <= r; ++x) {
+        for (int y = 0; y <= r; ++y) {
+          double h = Math.Abs(Math.Sqrt(x * x + y * y));
+          float a = Mathf.Clamp01((float)(r - h));
           var e = tex.GetPixel(midx + x, midy + y);
           var c = color * new Color(1f, 1f, 1f, a);
           if (blend) {
             c = Color.Lerp(e, c, c.a);
           }
+          tex.SetPixel(midx + 0 + x, midy + 0 + y, c);
+          tex.SetPixel(midx - 1 - x, midy + 0 + y, c);
+          tex.SetPixel(midx + 0 + x, midy - 1 - y, c);
+          tex.SetPixel(midx - 1 - x, midy - 1 - y, c);
+
+        }
+      }
+    }
+
+    private static void ClearCircle(this Texture2D tex, int r, bool blend, int? midX = null, int? midY = null) {
+      if (midX == null) {
+        midX = tex.width / 2;
+      }
+
+      if (midY == null) {
+        midY = tex.height / 2;
+      }
+
+      var midx = midX.Value;
+      var midy = midY.Value;
+
+      for (int x = 0; x < tex.width; ++x) {
+        for (int y = 0; y < tex.height; ++y) {
+          double h = Math.Abs((Math.Sqrt(x * x + y * y)));
+          float a = Mathf.Clamp01((float)(h - r));
+          var e = tex.GetPixel(midx + x, midy + y);
+          var c = e * new Color(1f, 1f, 1f, a);
           tex.SetPixel(midx + 0 + x, midy + 0 + y, c);
           tex.SetPixel(midx - 1 - x, midy + 0 + y, c);
           tex.SetPixel(midx + 0 + x, midy - 1 - y, c);
@@ -4577,13 +4776,6 @@ namespace Fusion.Editor {
 
         }
       }
-    }
-
-
-    private static void RenderBorderedCircle(this Texture2D tex, int r, Color color, bool blend) {
-      tex.RenderCircle(HEADER_CORNER_RADIUS, new Color(0, 0, 0, 1f), false);
-      //_circle32Texture.Apply();
-      tex.RenderCircle(HEADER_CORNER_RADIUS - 1, new Color(.5f, .1f, .1f, 1f), true);
     }
 
     private static GUIStyle _warnLabelStyle;
@@ -5610,7 +5802,11 @@ namespace Fusion.Editor {
         var attributes = field?.GetCustomAttributes<DefaultForPropertyAttribute>() ?? Array.Empty<DefaultForPropertyAttribute>();
         if (attributes.Any()) {
           using (new EditorGUI.DisabledScope(hasStateAuthorityForAllTargets == false)) {
+#if FUSION_DEV
+            DrawNetworkedProperty(prop);
+#else
             EditorGUILayout.PropertyField(prop, true);
+#endif
           }
         } else {
           using (new EditorGUI.DisabledScope(prop.propertyPath == FusionEditorGUI.ScriptPropertyName)) {
@@ -5636,7 +5832,6 @@ namespace Fusion.Editor {
       DrawBehaviourActions();
     }
 
-    
 
     /// <summary>
     /// Checks if GameObject or parent GameObject has a NetworkObject, and draws a warning and buttons for adding one if not.
@@ -5670,6 +5865,192 @@ namespace Fusion.Editor {
       }
     }
 
+#if FUSION_DEV
+    private GUIContent _label = new GUIContent();
+    [NonSerialized]
+    private string _prefixSpacing;
+
+    private void DrawNetworkedProperty(SerializedProperty prop) {
+      var rect = EditorGUILayout.GetControlRect(true, EditorGUI.GetPropertyHeight(prop, true));
+
+      const float imageHeight = 14;
+
+
+      Texture2D image = FusionEditorGUI.NetworkedPropertyStyle.NetworkPropertyIcon;
+
+      var buttonRect    = rect;
+      buttonRect.height = EditorGUIUtility.singleLineHeight;
+      buttonRect.width  = image.width * EditorGUIUtility.singleLineHeight / image.height;
+
+      var imageRect    = buttonRect;
+      imageRect.y     += (buttonRect.height - imageHeight) / 2;
+      imageRect.height = imageHeight;
+      imageRect.width  = image.width * imageHeight / image.height;
+
+      EditorGUIUtility.AddCursorRect(buttonRect, MouseCursor.Link);
+      bool clicked = GUI.Button(buttonRect, GUIContent.none, GUIStyle.none);
+
+      // find out how many spaces we need
+      if (string.IsNullOrEmpty(_prefixSpacing)) {
+        GUIContent prefixContent = new GUIContent("  ");
+        while (EditorStyles.label.CalcSize(prefixContent).x <= imageRect.width) {
+          prefixContent.text += " ";
+        }
+        _prefixSpacing = prefixContent.text;
+      }
+
+      _label.text = $"{_prefixSpacing}{prop.displayName}";
+      _label.tooltip = string.Empty;
+      _label.image = null;
+
+
+      // draw the property
+      EditorGUI.PropertyField(rect, prop, _label, true);
+
+      // draw the icon
+      if (Event.current.type == EventType.Repaint) {
+        GUI.DrawTexture(imageRect, image);
+      }
+
+      if (clicked) {
+        PopupWindow.Show(buttonRect, new NetworkedPropertyPopupWindowContent(prop, rect.width));
+      }
+    }
+
+    unsafe class NetworkedPropertyPopupWindowContent : PopupWindowContent {
+
+      readonly SerializedProperty _property;
+      readonly FieldInfo _field;
+      readonly DefaultForPropertyAttribute[] _attributes;
+      readonly float _width;
+      readonly List<string> _placeholderStrings;
+      readonly GUIContent _placeholder;
+      readonly GUIStyle _rawStyle;
+      readonly byte*[] _pointers;
+
+      readonly GUIContent _wordOffsetLabel = new GUIContent("Word Offset");
+      readonly GUIContent _wordCountLabel  = new GUIContent("Word Count");
+
+      const int Margin = 2;
+
+      public NetworkedPropertyPopupWindowContent(SerializedProperty property, float width) {
+        _width              = width;
+        _property           = property;
+        _field              = UnityInternal.ScriptAttributeUtility.GetFieldInfoFromProperty(property, out _);
+        _attributes         = _field.GetCustomAttributes<DefaultForPropertyAttribute>().ToArray() ?? Array.Empty<DefaultForPropertyAttribute>();
+        _pointers           = new byte*[_property.serializedObject.targetObjects.Length];
+        _placeholder        = new GUIContent();
+
+        _placeholderStrings = _attributes
+          .Select(x => new string(Enumerable.Repeat('F', x.WordCount * 2 * Allocator.REPLICATE_WORD_SIZE).ToArray()))
+          .ToList();
+
+        _rawStyle           = new GUIStyle(EditorStyles.numberField) {
+          wordWrap          = true,
+        };
+      }
+
+      public override void OnGUI(Rect rect) {
+        {
+          var boxRect = rect;
+          boxRect.x      += Margin / 2;
+          boxRect.width  -= Margin;
+          boxRect.y      += Margin / 2;
+          boxRect.height -= Margin;
+          GUI.Box(boxRect, GUIContent.none, EditorStyles.helpBox);
+        }
+
+        var targets = _property.serializedObject.targetObjects.Cast<NetworkBehaviour>().ToArray();
+
+        rect.x      += Margin;
+        rect.width  -= 2 * Margin;
+        rect.y      += Margin;
+        rect.height -= 2 * Margin;
+
+        foreach (var (attribute, placeholder) in _attributes.Zip(_placeholderStrings, (a, b) => (a, b))) {
+
+          rect.height = EditorGUIUtility.singleLineHeight;
+
+          EditorGUI.LabelField(rect, attribute.PropertyName, EditorStyles.boldLabel);
+          rect.y += EditorGUIUtility.singleLineHeight + EditorGUIUtility.standardVerticalSpacing;
+
+          EditorGUI.SelectableLabel(EditorGUI.PrefixLabel(rect, _wordOffsetLabel), $"{attribute.WordOffset}");
+          rect.y += EditorGUIUtility.singleLineHeight + EditorGUIUtility.standardVerticalSpacing;
+
+          EditorGUI.SelectableLabel(EditorGUI.PrefixLabel(rect, _wordCountLabel), $"{attribute.WordCount}");
+          rect.y += EditorGUIUtility.singleLineHeight + EditorGUIUtility.standardVerticalSpacing;
+
+          _placeholder.text = placeholder;
+          rect.height = Mathf.Max(EditorGUIUtility.singleLineHeight, _rawStyle.CalcHeight(_placeholder, rect.width - EditorGUIUtility.labelWidth));
+
+          if (!targets.All(x => x && x.Object && x.Object.IsValid)) {
+            using (new EditorGUI.DisabledScope(true)) {
+              EditorGUI.TextField(rect, "Raw", "Target not valid");
+            }
+          } else {
+
+            string content;
+            bool readOnly = true;
+            bool mixedValues = false;
+            int byteCount = attribute.WordCount * Allocator.REPLICATE_WORD_SIZE;
+
+            readOnly = targets.Any(x => !x.Object.HasStateAuthority);
+
+            for (int i = 0; i < targets.Length; ++i) {
+              _pointers[i] = (byte*)(targets[i].Ptr + attribute.WordOffset);
+            }
+
+            for (int i = 1; i < _pointers.Length; ++i) {
+              if (Native.MemCmp(_pointers[0], _pointers[i], byteCount) != 0) {
+                mixedValues = true;
+                break;
+              }
+            }
+
+            if (mixedValues) {
+              content = string.Empty;
+            } else {
+              content = BinUtils.BytesToHex(_pointers[0], byteCount, columns: int.MaxValue, columnSeparator: "");
+            }
+
+            using (new EditorGUI.DisabledScope(readOnly)) {
+              using (new FusionEditorGUI.ShowMixedValueScope(mixedValues)) {
+                var id = GUIUtility.GetControlID(UnityInternal.EditorGUI.DelayedTextFieldHash, FocusType.Keyboard, rect);
+
+                EditorGUI.BeginChangeCheck();
+                var newStr = UnityInternal.EditorGUI.DelayedTextFieldInternal(rect, id, new GUIContent("Raw"), content, "0123456789abcdefABCDEF ", _rawStyle);
+                if (EditorGUI.EndChangeCheck()) {
+                  Native.MemClear(_pointers[0], byteCount);
+                  BinUtils.HexToBytes(newStr, _pointers[0], byteCount);
+                  for (int j = 1; j < _pointers.Length; ++j) {
+                    Native.MemCpy(_pointers[j], _pointers[0], byteCount);
+                  }
+                  _property.serializedObject.Update();
+                }
+              }
+            }
+          }
+
+          rect.y += rect.height + EditorGUIUtility.standardVerticalSpacing;
+        }
+      }
+
+      public override Vector2 GetWindowSize() {
+        var result = base.GetWindowSize();
+        result.x = _width;
+        result.y = 2 * Margin;
+
+        foreach (var (attribute, placeholder) in _attributes.Zip(_placeholderStrings, (a, b) => (a, b))) {
+          result.y += 3 * (EditorGUIUtility.singleLineHeight + EditorGUIUtility.standardVerticalSpacing);
+
+          _placeholder.text = placeholder;
+          result.y += _rawStyle.CalcHeight(_placeholder, _width - EditorGUIUtility.labelWidth - 2 * Margin);
+          result.y += EditorGUIUtility.standardVerticalSpacing;
+        }
+        return result;
+      }
+    }
+#endif
   }
 }
 
@@ -5763,7 +6144,7 @@ namespace Fusion.Editor {
             if (entry.Path.IsEqualOrAncestorOf(scriptEntry.Path)) {
               var script = scriptEntry.Script;
               if (script is NetworkBehaviour networkBehaviour) {
-                dirty |= Set(networkBehaviour, ref networkBehaviour.Object, entry.Object, setDirty);
+                networkBehaviour.Object = entry.Object;
                 networkBehaviourBuffer.Add(networkBehaviour);
               } else {
                 simulationBehaviourBuffer.Add(script);
@@ -5854,7 +6235,7 @@ namespace Fusion.Editor {
       FusionEditorGUI.InjectPropertyDrawers(serializedObject);
       FusionEditorGUI.ScriptPropertyField(serializedObject);
 
-      // these properties' isExpanded are going to be used for foldouts; that's the easiet
+      // these properties' isExpanded are going to be used for foldouts; that's the easiest
       // way to get quasi-persistent foldouts
       var guidProperty = serializedObject.FindPropertyOrThrow(nameof(NetworkObject.NetworkGuid));
       var flagsProperty = serializedObject.FindPropertyOrThrow(nameof(NetworkObject.Flags));
@@ -5875,7 +6256,7 @@ namespace Fusion.Editor {
       }
 
       if (targets.Length == 1) {
-        if (AssetDatabase.IsMainAsset(obj.gameObject)) {
+        if (AssetDatabase.IsMainAsset(obj.gameObject) || PrefabStageUtility.GetPrefabStage(obj.gameObject)?.prefabContentsRoot == obj.gameObject) {
           Debug.Assert(!AssetDatabaseUtils.IsSceneObject(obj.gameObject));
 
           if (!obj.Flags.IsVersionCurrent() || !obj.Flags.IsPrefab() || !obj.NetworkGuid.IsValid) {
@@ -5886,15 +6267,20 @@ namespace Fusion.Editor {
           } else {
             EditorGUILayout.Space();
             EditorGUILayout.LabelField("Prefab Settings", EditorStyles.boldLabel);
-            EditorGUI.BeginChangeCheck();
 
-            bool spawnable = EditorGUILayout.Toggle("Is Spawnable", !obj.Flags.IsIgnored());
-            EditorGUILayout.LabelField("Prefab Source", spawnable ? NetworkObjectEditor.GetLoadInfoString(obj) : "---");
+            // Is Spawnable
+            {
+              var rect = EditorGUILayout.GetControlRect();
+              GUIContent label =  this.DrawInlineHelp(rect, typeof(NetworkObject), nameof(NetworkObject.IsSpawnable));
 
-            if (EditorGUI.EndChangeCheck()) {
-              var value = obj.Flags.SetIgnored(!spawnable);
-              serializedObject.FindProperty(nameof(NetworkObject.Flags)).intValue = (int)value;
-              serializedObject.ApplyModifiedProperties();
+              EditorGUI.BeginChangeCheck();
+              bool spawnable = EditorGUI.Toggle(rect, label, !obj.Flags.IsIgnored());
+              if (EditorGUI.EndChangeCheck()) {
+                var value = obj.Flags.SetIgnored(!spawnable);
+                serializedObject.FindProperty(nameof(NetworkObject.Flags)).intValue = (int)value;
+                serializedObject.ApplyModifiedProperties();
+              }
+              EditorGUILayout.LabelField("Prefab Source", spawnable ? GetLoadInfoString(obj) : "---");
             }
           }
         } else if (AssetDatabaseUtils.IsSceneObject(obj.gameObject)) {
@@ -7346,9 +7732,13 @@ namespace Fusion.Editor {
       float size = InlineHelpStyle.ButtonSize;
       switch (buttonPlacement) {
         case InlineHelpButtonPlacement.BeforeLabel: {
-            var buttonRect = new Rect(position.x - size, position.y+1, size, size);
+            var buttonRect = new Rect(position.x - size, position.y + ((16 - size) / 2) + 1, size, size);
             using (new EditorGUI.IndentLevelScope(expectFoldout ? -1 : 0)) {
               buttonRect.x = EditorGUI.IndentedRect(buttonRect).x;
+              // give indented items a little extra padding - no need for them to be so crammed
+              if (buttonRect.x > 8) {
+                buttonRect.x -= 2;
+              }
             }
             return buttonRect;
           }
@@ -7370,7 +7760,6 @@ namespace Fusion.Editor {
 
     internal static bool DrawInlineHelpButton(Rect buttonRect, bool state, bool doButton = true, bool doIcon = true) {
       bool result = false;
-
       if (doButton) {
         EditorGUIUtility.AddCursorRect(buttonRect, MouseCursor.Link);
         using (GUI.enabled ? null : new FusionEditorGUI.EnabledScope(true)) {
@@ -7381,7 +7770,8 @@ namespace Fusion.Editor {
       if (doIcon) {
         // paint over what the inspector has drawn
         if (Event.current.type == EventType.Repaint) {
-          GUI.DrawTexture(buttonRect, state ? InlineHelpStyle.HelpIconExpanded : InlineHelpStyle.HelpIconCollapsed);
+          //GUI.DrawTexture(buttonRect, state ? InlineHelpStyle.HelpIconExpanded : InlineHelpStyle.HelpIconCollapsed);
+          GUI.DrawTexture(buttonRect, state ? FusionGUIStyles.HelpIconSelected : FusionGUIStyles.HelpIconUnselected);
         }
       }
 
@@ -7449,25 +7839,59 @@ namespace Fusion.Editor {
       }
     }
 
-    internal static PropertyInlineHelpInfo GetInlineHelpInfo(string serializedPropertyName, System.Type type) {
-      if (!s_codeDocCache.TryGetValue(type, out var propertyLookup)) {
+    /// <summary>
+    /// For drawing inline help using cached InlineHelpInfo.
+    /// </summary>
+    internal static GUIContent DrawInlineHelp(this PropertyInlineHelpInfo help, Rect rect, BehaviourEditor editor) {
+      
+      string path = help.Label.text;
+      Rect buttonRect = GetInlineHelpButtonRect(InlineHelpButtonPlacement.BeforeLabel, rect, GUIContent.none, false);
+      bool wasExpanded = IsHelpExpanded(editor, path);
+
+      if (wasExpanded) {
+        var helpRect = GetInlineHelpRect(help.Summary);
+        var r = EditorGUILayout.GetControlRect(false, helpRect.height + InlineHelpStyle.MarginInner * 3);
+        r.y = rect.y;
+        r.height += rect.height;
+        DrawInlineHelp(help.Summary, r, helpRect);
+      }
+
+      if (DrawInlineHelpButton(buttonRect, wasExpanded, doButton: true, doIcon: false)) {
+        SetHelpExpanded(editor, path, !wasExpanded);
+      }
+
+      DrawInlineHelpButton(buttonRect, wasExpanded, doButton: false, doIcon: true);
+
+      return help.Label;
+    }
+
+    /// <summary>
+    /// For drawing inline help manually with custom editors.
+    /// </summary>
+    internal static GUIContent DrawInlineHelp(this BehaviourEditor editor, Rect rect, Type monoBehaviourType, string memberName) {
+      var info = GetInlineHelpInfo(monoBehaviourType, memberName);
+      return DrawInlineHelp(info, rect, editor);
+    }
+
+    internal static PropertyInlineHelpInfo GetInlineHelpInfo(this Type monoBehaviourType, string memberName ) {
+      if (!s_codeDocCache.TryGetValue(monoBehaviourType, out var propertyLookup)) {
         propertyLookup = new Dictionary<string, PropertyInlineHelpInfo>();
-        s_codeDocCache.Add(type, propertyLookup);
+        s_codeDocCache.Add(monoBehaviourType, propertyLookup);
       }
 
       // Try and see if we have an entry for this property for this target object type yet.
-      if (propertyLookup.TryGetValue(serializedPropertyName, out var helpInfo)) {
+      if (propertyLookup.TryGetValue(memberName, out var helpInfo)) {
         return helpInfo;
       }
 
       // Failed to find existing record, do the heavy lifting of extracting it from the XMLDocumentation
-      FieldInfo propertyField = type.GetFieldIncludingBaseTypes(serializedPropertyName, stopAtType: typeof(Fusion.Behaviour));
+      FieldInfo propertyField = monoBehaviourType.GetFieldIncludingBaseTypes(memberName, stopAtType: typeof(Fusion.Behaviour));
 
       string fieldSummary, tooltipSummary;
 
       if (propertyField == null) {
-        fieldSummary = type.GetXmlDocSummary(false);
-        tooltipSummary = type.GetXmlDocSummary(true);
+        fieldSummary = monoBehaviourType.GetXmlDocSummary(false);
+        tooltipSummary = monoBehaviourType.GetXmlDocSummary(true);
       } else {
 
         tooltipSummary = XmlDocumentation.GetXmlDocSummary(propertyField, true);
@@ -7478,15 +7902,15 @@ namespace Fusion.Editor {
       }
 
       helpInfo = new PropertyInlineHelpInfo() {
-        Tooltip = tooltipSummary,
+        Label = new GUIContent(ObjectNames.NicifyVariableName(memberName), tooltipSummary),
         Summary = string.IsNullOrEmpty(fieldSummary) ? null : new GUIContent(fieldSummary),
       };
 
-      propertyLookup.Add(serializedPropertyName, helpInfo);
+      propertyLookup.Add(memberName, helpInfo);
       return helpInfo;
     }
 
-    internal static bool InjectPropertyDrawers(SerializedObject serializedObject, bool addScriptDrawer = true, bool fixArrayHelp = true, bool addForAllFields = false) {
+    public static bool InjectPropertyDrawers(SerializedObject serializedObject, bool addScriptDrawer = true, bool fixArrayHelp = true, bool addForAllFields = false) {
 
       var rootType = serializedObject.targetObject.GetType();
       var anyInjected = false;
@@ -7634,8 +8058,15 @@ namespace Fusion.Editor {
       return $"<b>[{type.Name}]</b> {summary}";
     }
 
+    internal static class NetworkedPropertyStyle {
+      public static LazyAuto<Texture2D> NetworkPropertyIcon = LazyAuto.Create(() => {
+        return Resources.Load<Texture2D>((EditorGUIUtility.isProSkin ? "Dark/" : "Light/") + "networked-property-icon");
+      });
+
+    }
+
     internal static class InlineHelpStyle {
-      public const float ButtonSize = 14.0f;
+      public const float ButtonSize = 16.0f;
       public const float MarginInner = 2.0f;
       public const float MarginOuter = ButtonSize / 2;
       public static LazyAuto<Texture2D> HelpIconCollapsed = LazyAuto.Create(() => {
@@ -7678,7 +8109,7 @@ namespace Fusion.Editor {
     // Cached help info
     internal class PropertyInlineHelpInfo {
       public GUIContent Summary;
-      public string Tooltip;
+      public GUIContent Label;
     }
   }
 }
@@ -8471,42 +8902,6 @@ namespace Fusion.Editor {
 
       AssetDatabase.Refresh();
       SaveGlobalConfig();
-    }
-
-    public static void AddSceneToBuildSettings(this Scene scene) {
-      var buildScenes = EditorBuildSettings.scenes;
-      bool isInBuildScenes = false;
-      foreach (var bs in buildScenes) {
-        if (bs.path == scene.path) {
-          isInBuildScenes = true;
-          break;
-        }
-      }
-      if (isInBuildScenes == false) {
-        var buildList = new List<EditorBuildSettingsScene>();
-        buildList.Add(new EditorBuildSettingsScene(scene.path, true));
-        buildList.AddRange(buildScenes);
-        Debug.Log($"Added '{scene.path}' as first entry in Build Settings.");
-        EditorBuildSettings.scenes = buildList.ToArray();
-      }
-    }
-
-    public static int GetSceneIndexInBuildSettings(this Scene scene) {
-      TryGetSceneIndexInBuildSettings(scene, out var index);
-      return index;
-    }
-
-    public static bool TryGetSceneIndexInBuildSettings(Scene scene, out int index) {
-      var buildScenes = EditorBuildSettings.scenes;
-      for (int i = 0; i < buildScenes.Length; ++i) {
-        var bs = buildScenes[i];
-        if (bs.path == scene.path) {
-          index = i;
-          return true;
-        }
-      }
-      index = -1;
-      return false;
     }
 
     public static string SaveGlobalConfig() {
@@ -9819,8 +10214,14 @@ namespace Fusion.Editor {
       public delegate string TextFieldInternalDelegate(int id, Rect position, string text, GUIStyle style);
       public static readonly TextFieldInternalDelegate TextFieldInternal = typeof(UnityEditor.EditorGUI).CreateMethodDelegate<TextFieldInternalDelegate>("TextFieldInternal");
 
+      public delegate string DelayedTextFieldInternalDelegate(Rect position, int id, GUIContent label, string value, string allowedLetters, GUIStyle style);
+      public static readonly DelayedTextFieldInternalDelegate DelayedTextFieldInternal = typeof(UnityEditor.EditorGUI).CreateMethodDelegate<DelayedTextFieldInternalDelegate>(nameof(DelayedTextFieldInternal));
+
       private static readonly FieldInfo s_TextFieldHash = typeof(UnityEditor.EditorGUI).GetFieldOrThrow(nameof(s_TextFieldHash));
       public static int TextFieldHash => (int)s_TextFieldHash.GetValue(null);
+
+      private static readonly FieldInfo s_DelayedTextFieldHash = typeof(UnityEditor.EditorGUI).GetFieldOrThrow(nameof(s_DelayedTextFieldHash));
+      public static int DelayedTextFieldHash => (int)s_DelayedTextFieldHash.GetValue(null);
 
       private static readonly StaticAccessor<float> s_indent = typeof(UnityEditor.EditorGUI).CreateStaticPropertyAccessor<float>(nameof(indent));
       internal static float indent => s_indent.GetValue();

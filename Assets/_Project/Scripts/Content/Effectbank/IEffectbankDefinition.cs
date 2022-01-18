@@ -7,7 +7,7 @@ namespace rwby
 {
     public class IEffectbankDefinition : IContentDefinition
     {
-        public virtual List<EffectbankEffectEntry> Effects { get; }
+        public virtual List<EffectbankEffectEntry> Animations { get; }
         public virtual Dictionary<string, int> EffectMap { get; }
 
         public override UniTask<bool> Load()

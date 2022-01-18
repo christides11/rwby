@@ -10,6 +10,7 @@ namespace Fusion.Assistants {
   public static class FusionSceneSetupAssistants {
 
 
+    [MenuItem("Fusion/GameObject/Setup Basic Fusion Scene", false, FusionAssistants.PRIORITY_LOW)]
     [MenuItem("GameObject/Fusion/Setup Basic Fusion Scene", false, FusionAssistants.PRIORITY)]
     public static void SetupBasicFusionScene() {
 
@@ -47,6 +48,7 @@ namespace Fusion.Assistants {
       DirtyAndSaveScene(nds.gameObject.scene);
     }
 
+    [MenuItem("Fusion/GameObject/Setup Basic Fusion Scene 2D", false, FusionAssistants.PRIORITY_LOW)]
     [MenuItem("GameObject/Fusion/Setup Basic Fusion Scene 2D", false, FusionAssistants.PRIORITY)]
     public static void SetupBasic2DFusionScene() {
 
@@ -85,6 +87,7 @@ namespace Fusion.Assistants {
       DirtyAndSaveScene(nds.gameObject.scene);
     }
 
+    [MenuItem("Fusion/GameObject/Setup/Add Networking To Scene", false, FusionAssistants.PRIORITY_LOW)]
     [MenuItem("GameObject/Fusion/Setup/Add Networking To Scene", false, FusionAssistants.PRIORITY)]
     public static void AddNetworkingToScene() {
       (NetworkDebugStart nds, NetworkRunner nr) n = AddNetworkStartup();
@@ -141,6 +144,7 @@ namespace Fusion.Assistants {
     }
 
 
+    [MenuItem("Fusion/GameObject/Setup/Add Current Scene To Build Settings", false, FusionAssistants.PRIORITY_LOW)]
     [MenuItem("GameObject/Fusion/Setup/Add Current Scene To Build Settings", false, FusionAssistants.PRIORITY)]
     public static void AddCurrentSceneToSettings() { DirtyAndSaveScene(SceneManager.GetActiveScene()); }
     public static void DirtyAndSaveScene(Scene scene) {
@@ -159,6 +163,7 @@ namespace Fusion.Assistants {
         scene.AddSceneToBuildSettings();
     }
 
+    [MenuItem("Fusion/GameObject/Setup/Add AudioListener Handling", false, FusionAssistants.PRIORITY_LOW)]
     [MenuItem("GameObject/Fusion/Setup/Add AudioListener Handling", false, FusionAssistants.PRIORITY)]
     public static void HandleAudioListeners() {
       int count = 0;

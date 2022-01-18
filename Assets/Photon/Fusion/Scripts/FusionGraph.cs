@@ -10,6 +10,9 @@ using System.Collections.Generic;
 using UnityEditor;
 #endif
 
+/// <summary>
+/// Individual graph components generated and used by <see cref="FusionStats"/>.
+/// </summary>
 public class FusionGraph : FusionGraphBase {
 
   public enum Layouts {
@@ -37,22 +40,19 @@ public class FusionGraph : FusionGraphBase {
     get => Resources.Load<Shader>("FusionGraphShader");
   }
 
+  /// <summary>
+  /// Padding added to text and other layout objects.
+  /// </summary>
+  [InlineHelp]
   public float Padding = 5f;
 
-  [SerializeField] public UI.Image GraphImg;
-  [SerializeField] public UI.Text LabelMin;
-  [SerializeField] public UI.Text LabelMax;
-  [SerializeField] public UI.Text LabelAvg;
-  [SerializeField] public UI.Text LabelLast;
-  [SerializeField] public UI.Text LabelPer;
+  // Not sure height is if much use anymore.
+  [SerializeField] [HideInInspector] public float  Height = 50;
 
-  [SerializeField] [HideInInspector] UI.Dropdown _viewDropdown;
-  [SerializeField] [HideInInspector] UI.Button   _avgBttn;
-
-  [SerializeField] public float  Height = 50;
-
-  [SerializeField] [HideInInspector] RectTransform _rt;
-
+  /// <summary>
+  /// Select between automatic formating (based on size and aspect ratio of the graph) and manual selection of the various graph layouts available.
+  /// </summary>
+  [InlineHelp]
   [SerializeField]
   Layouts _layout;
   public Layouts Layout {
@@ -63,6 +63,10 @@ public class FusionGraph : FusionGraphBase {
     }
   }
 
+  /// <summary>
+  /// Controls if the graph shader will render. Currently the graph shader only works in Overlay mode, so if forced to show Always here, it will not render correctly in 3d space.
+  /// </summary>
+  [InlineHelp]
   [SerializeField]
   ShowGraphOptions _showGraph = ShowGraphOptions.OverlayOnly;
   public ShowGraphOptions ShowGraph {
@@ -74,6 +78,11 @@ public class FusionGraph : FusionGraphBase {
     }
   }
 
+  /// <summary>
+  /// The graph shaded area (which is only visible in Overlay mode) will expand to the full extends of the <see cref="FusionGraph"/> component when this is enabled, regardless of size.
+  /// When false, the graph will automatically expand only as needed.
+  /// </summary>
+  [InlineHelp]
   [SerializeField]
   bool _alwaysExpandGraph;
   public bool AlwaysExpandGraph {
@@ -84,6 +93,30 @@ public class FusionGraph : FusionGraphBase {
       _layoutDirty = true;
     }
   }
+
+  /// <summary>
+  /// Exposes the UI labels and controls of <see cref="FusionGraph"/>, so they may be modified if customizing this graph.
+  /// </summary>
+  [InlineHelp]
+  [SerializeField] bool _showUITargets;
+
+  [DrawIf(nameof(_showUITargets), true, DrawIfHideType.Hide)]
+  public UI.Image GraphImg;
+  [DrawIf(nameof(_showUITargets), true, DrawIfHideType.Hide)]
+  public UI.Text LabelMin;
+  [DrawIf(nameof(_showUITargets), true, DrawIfHideType.Hide)]
+  public UI.Text LabelMax;
+  [DrawIf(nameof(_showUITargets), true, DrawIfHideType.Hide)]
+  public UI.Text LabelAvg;
+  [DrawIf(nameof(_showUITargets), true, DrawIfHideType.Hide)]
+  public UI.Text LabelLast;
+  [DrawIf(nameof(_showUITargets), true, DrawIfHideType.Hide)]
+  public UI.Text LabelPer;
+
+  [DrawIf(nameof(_showUITargets), true, DrawIfHideType.Hide)]
+  public UI.Dropdown _viewDropdown;
+  [DrawIf(nameof(_showUITargets), true, DrawIfHideType.Hide)]
+  public UI.Button _avgBttn;
 
   float _min;
   float _max;
@@ -150,10 +183,6 @@ public class FusionGraph : FusionGraphBase {
     ResetGraphShader();
   }
 
-  private void Awake() {
-    _rt = GetComponent<RectTransform>();
-  }
-
   public void Clear() {
     if (_values != null && _values.Length > 0) {
       Array.Clear(_values, 0, _values.Length);
@@ -182,10 +211,14 @@ public class FusionGraph : FusionGraphBase {
   void ResetGraphShader() {
     if (GraphImg) {
       GraphImg.material = new Material(Shader);
-      GraphImg.material.SetColor("_GoodColor", _fusionStats.GraphColorGood);
-      GraphImg.material.SetColor("_BadColor", _fusionStats.GraphColorBad);
-      GraphImg.material.SetInt("EndCap", 0);
-      GraphImg.material.SetInt("AnimateInOut", 0);
+      Debug.LogWarning("Resetting shader " + name + " " + _fusionStats.ModifyColors + " " + _fusionStats.GraphColorWarn);
+      if (_fusionStats.ModifyColors) {
+        GraphImg.material.SetColor("_GoodColor", _fusionStats.GraphColorGood);
+        GraphImg.material.SetColor("_WarnColor", _fusionStats.GraphColorWarn);
+        GraphImg.material.SetColor("_BadColor", _fusionStats.GraphColorBad);
+        GraphImg.material.SetInt("EndCap", 0);
+        GraphImg.material.SetInt("AnimateInOut", 0);
+      }
     }
   }
 
@@ -233,7 +266,7 @@ public class FusionGraph : FusionGraphBase {
     if (_values == null) {
       int size =
         visualization == FusionGraphVisualization.ContinuousTick ? statsBuffer.Capacity :
-        visualization == FusionGraphVisualization.ValueHistogram ? _histoBucketCount + 3 :
+        visualization == FusionGraphVisualization.ValueHistogram ? StatSourceInfo.HistoBucketCount + 3 :// _histoBucketCount + 3 :
         INTERMITTENT_DATA_ARRAYSIZE;
 
       _values    = new float[size];
@@ -274,7 +307,7 @@ public class FusionGraph : FusionGraphBase {
     var last = 0f;
 
     for (int i = 0; i < data.Count; ++i) {
-      var v = (float)(_dataSourceInfo.Multiplier * data.GetSampleAtIndex(i).FloatValue);
+      var v = (float)(StatSourceInfo.Multiplier * data.GetSampleAtIndex(i).FloatValue);
 
       min = Math.Min(v, min);
       max = Math.Max(v, max);
@@ -294,7 +327,8 @@ public class FusionGraph : FusionGraphBase {
 
   // Intermittent Tick pulls values from a very short buffer, so we collect those values and merge them into a larger cache.
   (int tick, float value)[] _cachedValues;
-  int _lastCachedTick;
+  double _lastCachedTickTime;
+  int    _lastCachedTick;
 
   void UpdateIntermittentTick(ref IStatsBuffer data) {
 
@@ -339,7 +373,7 @@ public class FusionGraph : FusionGraphBase {
       }
 
       _lastCachedTick = sampleTick;
-      _cachedValues[sampleTick % INTERMITTENT_DATA_ARRAYSIZE] = (sampleTick, (float)(_dataSourceInfo.Multiplier * sample.FloatValue));
+      _cachedValues[sampleTick % INTERMITTENT_DATA_ARRAYSIZE] = (sampleTick, (float)(StatSourceInfo.Multiplier * sample.FloatValue));
 
       gapcheck = sampleTick;
     }
@@ -375,7 +409,7 @@ public class FusionGraph : FusionGraphBase {
     var last = 0f;
 
     for (int i = 0; i < data.Count; ++i) {
-      var v = (float)(_dataSourceInfo.Multiplier * data.GetSampleAtIndex(i).FloatValue);
+      var v = (float)(StatSourceInfo.Multiplier * data.GetSampleAtIndex(i).FloatValue);
 
       min = Math.Min(v, min);
       max = Math.Max(v, max);
@@ -408,13 +442,21 @@ public class FusionGraph : FusionGraphBase {
     var r = _max - _min;
 
     for (int i = 0, len = _values.Length; i < len; ++i) {
-      _values[i] = Mathf.Clamp01((_values[i] - _min) / r);
+      var val = _values[i];
+      var intensity =
+        val < 0 ? -1f :
+        val <= StatSourceInfo.WarnThreshold ? 0 :
+        val <= StatSourceInfo.ErrorThreshold ? .5f :
+        1f;
+
+      _intensity[i] = intensity;
+      _values[i] = Mathf.Clamp01((val - _min) / r);
     }
   }
 
   void UpdateUiText(float min, float max, float avg, float last) {
 
-    var decimals = _dataSourceInfo.Decimals;
+    var decimals = StatSourceInfo.Decimals;
     // TODO: At some point this label null checks should be removed
     if (LabelMin) { LabelMin.text = Math.Round(min, decimals).ToString(); }
     if (LabelMax) { LabelMax.text = Math.Round(max, decimals).ToString(); }
@@ -423,6 +465,7 @@ public class FusionGraph : FusionGraphBase {
 
     if (GraphImg && GraphImg.enabled) {
       GraphImg.material.SetFloatArray("_Data", _values);
+      GraphImg.material.SetFloatArray("_Intensity", _intensity);
       GraphImg.material.SetFloat("_Count", _values.Length);
       GraphImg.material.SetFloat("_Height", Height);
     }
@@ -456,45 +499,60 @@ public class FusionGraph : FusionGraphBase {
     }
   }
 
-  int    _histoBucketCount    = 1024 - 4;
-  int    _histoBucketMaxValue = 1020;
+  //int    _histoBucketCount    = 1024 - 4;
+  //int    _histoBucketMaxValue = 1020;
   int    _histoHighestUsedBucketIndex;
   int    _histoAvgSampleCount;
-  double _histoStep;
+  double _histoStepInverse;
   double _histoHighestValue;
   double _histoAvg;
 
   void UpdateTickValueHistogram(ref IStatsBuffer data) {
 
-    // Determine histogram bucketsizes if they haven't yet been determined.
-    if (_histoStep == 0) {
-      _histoStep = (double)_histoBucketCount / _histoBucketMaxValue;
+    var histoBucketCount = StatSourceInfo.HistoBucketCount;
+    var histoMaxValue = StatSourceInfo.HistogMaxValue;
+
+    // Determine histogram bucket sizes if they haven't yet been determined.
+    if (_histoStepInverse == 0) {
+      _histoStepInverse = histoBucketCount / StatSourceInfo.HistogMaxValue;
     }
 
-    int latestServerStateTick = _fusionStats.Runner.Simulation.LatestServerState.Tick;
-    int mostCurrentBufferTick = data.GetSampleAtIndex(data.Count - 1).TickValue;
+    var mostCurrentSample = data.GetSampleAtIndex(data.Count - 1);
+    var mostCurrentTick = mostCurrentSample.TickValue;
+    var latestServerState = _fusionStats.Runner.Simulation.LatestServerState;
+    var usingTick = mostCurrentTick > 0;
+    double latestServerStateTickTime;
+    
+    if (usingTick) {
+      latestServerStateTickTime = latestServerState.Tick;
+      double mostCurrentSampleTickTime = mostCurrentTick;
 
-    // count non-existent ticks as zero values
-    if (mostCurrentBufferTick < latestServerStateTick) {
-      int countbackto = Math.Max(mostCurrentBufferTick, _lastCachedTick);
-      int newZeroCount = latestServerStateTick - countbackto;
-      float zerocountTotal = _histogram[0] + newZeroCount;
-      _histogram[0] = zerocountTotal;
+      // count non-existent ticks as zero values. Only for tick based data.
+      if (mostCurrentSampleTickTime < latestServerStateTickTime) {
+        int countbackto = Math.Max((int)mostCurrentSampleTickTime, (int)_lastCachedTickTime);
+        int newZeroCount = (int)latestServerStateTickTime - countbackto;
+        float zerocountTotal = _histogram[0] + newZeroCount;
+        _histogram[0] = zerocountTotal;
 
-      if (zerocountTotal > _max) {
-        _max = zerocountTotal;
+        if (zerocountTotal > _max) {
+          _max = zerocountTotal;
+        }
       }
+
+    } else {
+      latestServerStateTickTime = latestServerState.Time;
     }
 
-    double multiplier = _dataSourceInfo.Multiplier;
+    var info = StatSourceInfo;
+    double multiplier = info.Multiplier;
     // Read data in stat buffer backwards until we reach a tick already recorded
     for (int i = data.Count - 1; i >= 0; --i) {
       var v = (float)(multiplier * data.GetSampleAtIndex(i).FloatValue);
 
       var sample = data.GetSampleAtIndex(i);
-      var tick = sample.TickValue;
+      double ticktime = usingTick ? sample.TickValue : sample.TimeValue;
 
-      if (tick <= _lastCachedTick) {
+      if (ticktime <= _lastCachedTickTime) {
         break;
       }
 
@@ -504,15 +562,15 @@ public class FusionGraph : FusionGraphBase {
       if (val == 0) {
         bucketIndex = 0;
       }
-      else if (val == _histoBucketMaxValue) {
-        bucketIndex = _histoBucketCount;
+      else if (val == histoMaxValue) {
+        bucketIndex = histoBucketCount;
 
       } 
-      else if (val > _histoBucketMaxValue) {
-        bucketIndex = _histoBucketCount + 1;
+      else if (val > histoMaxValue) {
+        bucketIndex = histoBucketCount + 1;
       }      
       else {
-        bucketIndex = (int)(val * _histoStep) + 1;
+        bucketIndex = (int)(val * _histoStepInverse) + 1;
       }
 
       _histoAvg = (_histoAvg * _histoAvgSampleCount + val) / (++_histoAvgSampleCount);
@@ -524,11 +582,14 @@ public class FusionGraph : FusionGraphBase {
       }
       _histogram[bucketIndex] = newval;
 
-
-      if (val > _histoHighestValue) {
-        _histoHighestValue = val;
+      if (bucketIndex > _histoHighestUsedBucketIndex) {
         _histoHighestUsedBucketIndex = bucketIndex;
+        _histoHighestValue = _histoHighestUsedBucketIndex / _histoStepInverse;
       }
+      //if (val > _histoHighestValue) {
+      //  _histoHighestValue = val;
+      //  _histoHighestUsedBucketIndex = bucketIndex;
+      //}
     }
 
     int medianIndex = 0;
@@ -548,24 +609,24 @@ public class FusionGraph : FusionGraphBase {
       }
     }
 
-    _intensity[medianIndex] = 1f;
+    // Color the highest bar
+    _intensity[medianIndex] = 2f;
 
-    _lastCachedTick = latestServerStateTick;
+    _lastCachedTickTime = latestServerStateTickTime;
 
     if (GraphImg && GraphImg.enabled) {
       GraphImg.material.SetFloatArray("_Data", _values);
       GraphImg.material.SetFloatArray("_Intensity", _intensity);
-      GraphImg.material.SetFloat("_Count", _histoHighestUsedBucketIndex);
+      GraphImg.material.SetFloat("_Count", _histoHighestUsedBucketIndex + 1);
       GraphImg.material.SetFloat("_Height", Height);
     }
 
     _min = 0;
-
-    var decimals = _dataSourceInfo.Decimals;
-    LabelMax.text  = $"<color=yellow>{Math.Ceiling((medianIndex + 1) * _histoStep)}</color>";
+    var decimals = info.Decimals;
+    LabelMax.text  = $"<color=yellow>{Math.Ceiling((medianIndex + 1) / _histoStepInverse)}</color>";
     LabelAvg.text  = Math.Round(_histoAvg, decimals).ToString();
     LabelMin.text  = Math.Floor(_min).ToString();
-    LabelLast.text = Math.Round(_histoHighestValue - 2, decimals).ToString();
+    LabelLast.text = Math.Round((_histoHighestUsedBucketIndex + 1) / _histoStepInverse, decimals).ToString();
   }
 
   /// <summary>
@@ -589,10 +650,9 @@ public class FusionGraph : FusionGraphBase {
   public void Generate(Stats.StatSourceTypes type, int statId, RectTransform root) {
 
     _statSourceType = type;
-
-    if (_rt == null) {
-      _rt = GetComponent<RectTransform>();
-    }
+    
+    var rt = GetComponent<RectTransform>();
+    
     _statId = statId;
 
     root.anchorMin = new Vector2(0.5f, 0.5f);
@@ -604,12 +664,14 @@ public class FusionGraph : FusionGraphBase {
 
     BackImage = background.gameObject.AddComponent<UI.Image>();
     BackImage.color = BackColor;
+    BackImage.raycastTarget = false;
 
     var graphRT = background.CreateRectTransform("Graph")
       .SetAnchors(0.0f, 1.0f, 0.2f, 0.8f)
       .SetOffsets(0.0f, 0.0f, 0.0f, 0.0f);
 
     GraphImg = graphRT.gameObject.AddComponent<UI.Image>();
+    GraphImg.raycastTarget = false;
     ResetGraphShader();
 
     var fontColor = _fusionStats.FontColor;
@@ -622,6 +684,7 @@ public class FusionGraph : FusionGraphBase {
 
     LabelTitle = titleRT.AddText(name, TextAnchor.UpperRight, fontColor);
     LabelTitle.resizeTextMaxSize = MAX_FONT_SIZE_WITH_GRAPH;
+    LabelTitle.raycastTarget = true;
 
     // Top Left value
     var maxRT = root.CreateRectTransform("Max")
@@ -640,6 +703,7 @@ public class FusionGraph : FusionGraphBase {
       .SetOffsets(0.0f, 0.0f,  0.0f, 0.0f);
     avgRT.anchoredPosition = new Vector2(0, 0);
     LabelAvg = avgRT.AddText("-", TextAnchor.LowerCenter, fontColor);
+    LabelAvg.raycastTarget = true;
     _avgBttn = avgRT.gameObject.AddComponent<UI.Button>();
 
     // Main Center value
@@ -680,16 +744,14 @@ public class FusionGraph : FusionGraphBase {
 
     _layoutDirty = false;
 
-    if (_rt == null) {
-      _rt = GetComponent<RectTransform>();
-    }
+    var rt = GetComponent<RectTransform>();
 
     if (_statsBuffer == null) {
       TryConnect();
     }
     ApplyTitleText();
 
-    bool graphIsValid = _dataSourceInfo.InvalidReason == null;
+    bool graphIsValid = StatSourceInfo.InvalidReason == null;
 
     LabelMin.gameObject.SetActive(graphIsValid);
     LabelMax.gameObject.SetActive(graphIsValid);
@@ -699,6 +761,8 @@ public class FusionGraph : FusionGraphBase {
     if (!graphIsValid) {
       LabelTitle.rectTransform.ExpandAnchor(PAD);
       LabelTitle.alignment = TextAnchor.MiddleCenter;
+      LabelTitle.raycastTarget = false;
+      _viewDropdown.gameObject.SetActive(false);
       return;
     }
 
@@ -706,8 +770,8 @@ public class FusionGraph : FusionGraphBase {
 
     bool showGraph = ShowGraph == ShowGraphOptions.Always || (ShowGraph == ShowGraphOptions.OverlayOnly && isOverlayCanvas);
 
-    var height = _rt.rect.height;
-    var width  = _rt.rect.width;
+    var height = rt.rect.height;
+    var width  = rt.rect.width;
     bool expandGraph = _alwaysExpandGraph || !showGraph || (_layout != Layouts.Full && height < EXPAND_GRPH_THRESH);
     bool isSuperShort = height < MRGN * 3;
 

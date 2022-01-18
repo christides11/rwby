@@ -11,6 +11,7 @@ using UnityEngine;
 namespace rwby
 {
     [OrderBefore(typeof(Fusion.HitboxManager), typeof(FighterPhysicsManager), typeof(FighterStateManager), typeof(FighterBoxManager), typeof(FighterHitboxManager), typeof(FighterCombatManager))]
+    [OrderAfter(typeof(FighterInputManager))]
     public class FighterManager : NetworkBehaviour, IFighterBase, ITargetable
     {
         public FighterInputManager InputManager { get { return inputManager; } }
@@ -36,7 +37,7 @@ namespace rwby
         [Networked] public float currentAerialDash { get; set; }
         [Networked] public float apexTime { get; set; }
         [Networked] public float gravity { get; set; }
-        [Networked, Capacity(10)] public NetworkArray<NetworkBool> attackEventInput { get; }
+        [Networked, Capacity(10)] public NetworkArray<bool> attackEventInput { get; }
 
         [Header("References")]
         [NonSerialized] public NetworkManager networkManager;
@@ -50,6 +51,8 @@ namespace rwby
         [SerializeField] protected CapsuleCollider capsuleCollider;
         [SerializeField] protected SoundbankContainer soundbankContainer;
         [SerializeField] protected EffectbankContainer effectbankContainer;
+        public AnimationbankContainer animationbankContainer;
+        public FighterAnimator fighterAnimator;
         [SerializeField] protected Transform targetOrigin;
         public ParticleSystemEffect guardEffect;
         public Transform visualTransform;
@@ -79,11 +82,6 @@ namespace rwby
             base.Spawned();
             TargetableNetworked = true;
             Visible = true;
-            if (Object.HasInputAuthority)
-            {
-                //ClientManager.local.camera = GameObject.Instantiate(GameManager.singleton.settings.playerCameraPrefab, transform.position, transform.rotation);
-                //ClientManager.local.camera.SetLookAtTarget(this);
-            }
             combatManager.Cleanup();
             combatManager.SetMoveset(0);
             statManager.SetupStats((combatManager.movesets[0] as Moveset).fighterStats);
@@ -544,6 +542,7 @@ namespace rwby
             apexTime = 0;
             gravity = 0;
             PhysicsManager.forceGravity = 0;
+            combatManager.ResetStringAttacks();
         }
 
 

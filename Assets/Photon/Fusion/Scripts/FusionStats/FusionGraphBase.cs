@@ -12,12 +12,16 @@ public abstract class FusionGraphBase : Fusion.Behaviour, IFusionStatsView {
   protected const int MRGN = FusionStatsUtilities.MARGIN;
   protected const int MAX_FONT_SIZE_WITH_GRAPH = 24;
 
-  protected Stats.StatSourceInfo _dataSourceInfo;
+  //protected Stats.StatSourceInfo _dataSourceInfo;
 
   //[SerializeField] [HideInInspector] public int Places = 0;
   [SerializeField] [HideInInspector] protected UI.Text  LabelTitle;
   [SerializeField] [HideInInspector] protected UI.Image BackImage;
 
+  /// <summary>
+  /// Which section of the Fusion engine is being monitored. In combination with StatId, this selects the stat being monitored.
+  /// </summary>
+  [InlineHelp]
   [SerializeField]
   protected Stats.StatSourceTypes _statSourceType;
   public Stats.StatSourceTypes StateSourceType {
@@ -28,6 +32,10 @@ public abstract class FusionGraphBase : Fusion.Behaviour, IFusionStatsView {
     }
   }
 
+  /// <summary>
+  /// The specific stat being monitored.
+  /// </summary>
+  [InlineHelp]
   [SerializeField]
   [CastEnum(nameof(CastToStatType))]
   protected int _statId;
@@ -93,7 +101,7 @@ public abstract class FusionGraphBase : Fusion.Behaviour, IFusionStatsView {
 
   public virtual void CyclePer() {
 
-    var flags = _dataSourceInfo.PerFlags;
+    var flags = StatSourceInfo.PerFlags;
     switch (CurrentPer) {
       case Stats.StatsPer.Individual:
         if ((flags & Stats.StatsPer.Tick) == Stats.StatsPer.Tick) {
@@ -189,7 +197,6 @@ public abstract class FusionGraphBase : Fusion.Behaviour, IFusionStatsView {
       ApplyTitleText();
     }
 
-    _dataSourceInfo = StatSourceInfo;
 
     CurrentPer = StatSourceInfo.PerDefault;
 
@@ -198,6 +205,12 @@ public abstract class FusionGraphBase : Fusion.Behaviour, IFusionStatsView {
 
   protected void ApplyTitleText() {
     var info = StatSourceInfo;
+
+    // stat info is invalid
+    if (info.LongName == null) {
+      return;
+    }
+
     if (info.InvalidReason != null) {
       LabelTitle.text = info.InvalidReason;
       BackImage.gameObject.SetActive(false);

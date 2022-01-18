@@ -11,8 +11,6 @@ namespace rwby.menus
 {
     public class LobbyMenu : MonoBehaviour
     {
-        [SerializeField] private ContentSelect contentSelectMenu;
-
         [SerializeField] private TextMeshProUGUI lobbyName;
         [SerializeField] private Transform lobbyPlayerList;
         [SerializeField] private Transform localPlayerList;
@@ -56,6 +54,10 @@ namespace rwby.menus
 
         private void StartMatch()
         {
+            ClientManager.OnPlayersChanged -= storedAction;
+            LobbyManager.OnLobbySettingsChanged -= UpdateLobbyInfo;
+            LobbyManager.OnGamemodeSettingsChanged -= UpdateLobbyInfo;
+
             _ = LobbyManager.singleton.TryStartMatch();
         }
 
@@ -187,23 +189,23 @@ namespace rwby.menus
 
         private void OpenCharacterSelection()
         {
-            _ = contentSelectMenu.OpenMenu<IFighterDefinition>((a, b) => { OnCharacterSelection(a, b); });
+            _ = ContentSelect.singleton.OpenMenu<IFighterDefinition>((a, b) => { OnCharacterSelection(a, b); });
         }
 
         private void OnCharacterSelection(PlayerPointerEventData a, ModObjectReference b)
         {
-            contentSelectMenu.CloseMenu();
+            ContentSelect.singleton.CloseMenu();
             ClientManager.local.SetPlayerCharacter(ReInput.players.GetPlayer(a.playerId), b);
         }
 
         private async UniTask OpenGamemodeSelection()
         {
-            await contentSelectMenu.OpenMenu<IGameModeDefinition>((a, b) => { OnGamemodeSelection(b); });
+            await ContentSelect.singleton.OpenMenu<IGameModeDefinition>((a, b) => { OnGamemodeSelection(b); });
         }
 
         private async void OnGamemodeSelection(ModObjectReference gamemodeReference)
         {
-            contentSelectMenu.CloseMenu();
+            ContentSelect.singleton.CloseMenu();
             await LobbyManager.singleton.TrySetGamemode(gamemodeReference);
         }
     }

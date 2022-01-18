@@ -1,16 +1,18 @@
 
 using UnityEngine;
+using Fusion;
 
 /// <summary>
 /// Companion component for <see cref="FusionStats"/>, which automatically faces this GameObject toward the supplied Camera. If Camera == null, will face towards Camera.main.
 /// </summary>
-[Fusion.ScriptHelp(BackColor = Fusion.EditorHeaderBackColor.Olive)]
+[Fusion.ScriptHelp(BackColor = EditorHeaderBackColor.Olive)]
 [ExecuteAlways]
 public class FusionStatsBillboard : Fusion.Behaviour {
 
   /// <summary>
-  /// Force a particular camera to face. Leave null to use Camera.main.
+  /// Force a particular camera to billboard this object toward. Leave null to use Camera.main.
   /// </summary>
+  [InlineHelp]
   public Camera Camera;
 
   // Camera find is expensive, so do it once per update for ALL implementations

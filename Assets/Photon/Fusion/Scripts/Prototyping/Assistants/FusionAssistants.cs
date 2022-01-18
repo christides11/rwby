@@ -7,6 +7,7 @@ using UnityEditor;
 namespace Fusion.Assistants {
   public static class FusionAssistants {
     public const int PRIORITY = 0;
+    public const int PRIORITY_LOW = 1000;
 
     //// Default Material
     //private const string _prototypeMaterialGUID = "38fbbd3db9e06c54e8a11016e2381469";

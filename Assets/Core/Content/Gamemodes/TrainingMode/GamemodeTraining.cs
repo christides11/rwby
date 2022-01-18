@@ -1,5 +1,6 @@
 using Cysharp.Threading.Tasks;
 using Fusion;
+using Rewired.Integration.UnityUI;
 using rwby.menus;
 using System;
 using System.Collections;
@@ -7,15 +8,91 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
-namespace rwby
+namespace rwby.core.training
 {
-    
+    public struct CPUReference : INetworkStruct
+    {
+        [Networked, Capacity(15)] public string characterReference { get => default; set { } }
+        public NetworkId objectId;
+    }
+
     public class GamemodeTraining : GameModeBase
     {
+        public event EmptyAction OnCPUListUpdated;
+
         public ModObjectReference botReference;
         public FighterInputManager botInputManager;
 
         public ModObjectReference mapReference = new ModObjectReference();
+
+        public TrainingSettingsMenu settingsMenu;
+
+        [Networked(OnChanged = nameof(CpuListUpdated)), Capacity(4)] public NetworkLinkedList<CPUReference> cpus { get; }
+
+        private static void CpuListUpdated(Changed<GamemodeTraining> changed)
+        {
+            changed.Behaviour.OnCPUListUpdated?.Invoke();
+            _ = changed.Behaviour.CheckCPUList();
+        }
+
+        public override void Awake()
+        {
+            base.Awake();
+            settingsMenu.gameObject.SetActive(false);
+        }
+
+        private async UniTask CheckCPUList()
+        {
+            if (Object.HasStateAuthority == false) return;
+
+            for(int i = 0; i < cpus.Count; i++)
+            {
+                ModObjectReference objectReference = new ModObjectReference(cpus[i].characterReference);
+                if(objectReference.IsEmpty() == false && cpus[i].objectId.IsValid == false)
+                {
+                    List<PlayerRef> failedLoadPlayers = await LobbyManager.singleton.clientContentLoaderService.TellClientsToLoad<IFighterDefinition>(objectReference);
+                    if (failedLoadPlayers == null)
+                    {
+                        Debug.LogError($"Load CPU {objectReference} failure.");
+                        continue;
+                    }
+
+                    int indexTemp = i;
+                    IFighterDefinition fighterDefinition = ContentManager.singleton.GetContentDefinition<IFighterDefinition>(objectReference);
+                    NetworkObject no = Runner.Spawn(fighterDefinition.GetFighter().GetComponent<NetworkObject>(), Vector3.up, Quaternion.identity, null,
+                        (a, b) =>
+                        {
+                            b.gameObject.name = $"CPU.{b.Id} : {fighterDefinition.Name}";
+                            b.GetBehaviour<FighterCombatManager>().Team = 0;
+                            var list = cpus;
+                            CPUReference temp = list[indexTemp];
+                            temp.objectId = b.Id;
+                            list[indexTemp] = temp;
+                        });
+                }
+            }
+        }
+
+        public override void Spawned()
+        {
+            base.Spawned();
+
+            if (Object.HasStateAuthority)
+            {
+                PauseMenu.onOpened += OnPaused;
+            }
+        }
+
+        private void OnPaused()
+        {
+            PauseMenu.singleton.AddOption("Training Options", OpenSettingsMenu);
+        }
+
+        private void OpenSettingsMenu(PlayerPointerEventData arg0)
+        {
+            PauseMenu.singleton.currentSubmenu = settingsMenu;
+            settingsMenu.Open();
+        }
 
         public override void AddGamemodeSettings(LobbyMenu lobbyManager)
         {
@@ -53,8 +130,12 @@ namespace rwby
             return true;
         }
 
+        List<List<GameObject>> spawnPoints = new List<List<GameObject>>();
+        List<int> spawnPointsCurr = new List<int>();
         public override async void StartGamemode()
         {
+            GamemodeState = GameModeState.INITIALIZING;
+
             await LobbyManager.singleton.clientMapLoaderService.TellClientsToLoad(mapReference);
 
             IMapDefinition mapDefinition = ContentManager.singleton.GetContentDefinition<IMapDefinition>(mapReference);
@@ -63,54 +144,46 @@ namespace rwby
             {
                 Runner.SetActiveScene(scene);
             }
-        }
 
-        /*
-        public override void StartGamemode()
-        {
-            base.StartGamemode();
+            SpawnPointHolder[] spawnPointHolders = GameObject.FindObjectsOfType<SpawnPointHolder>();
 
-            
-            int xOff = 0;
-            foreach(var c in NetworkManager.singleton.FusionLauncher.Players)
+            spawnPoints.Add(new List<GameObject>());
+            spawnPointsCurr.Add(0);
+            foreach (SpawnPointHolder sph in spawnPointHolders)
             {
-                ClientManager cm = c.Value.GetComponent<ClientManager>();
-
-                ModObjectReference characterReference = new ModObjectReference(cm.SelectedCharacter);
-                IFighterDefinition fighterDefinition = (IFighterDefinition)ContentManager.singleton.GetContentDefinition<IFighterDefinition>(characterReference);
-
-                FighterInputManager fim = NetworkManager.singleton.FusionLauncher.NetworkRunner.Spawn(fighterDefinition.GetFighter().GetComponent<FighterInputManager>(), new Vector3(xOff, 5, 0), Quaternion.identity, c.Key);
-                fim.gameObject.name = $"Player {cm.PlayerName}";
-                cm.ClientFighter = fim.GetComponent<NetworkObject>();
-                xOff += 5;
+                if (sph.singleTeamOnly)
+                {
+                    spawnPoints.Add(sph.spawnPoints);
+                    spawnPointsCurr.Add(0);
+                }
+                else
+                {
+                    spawnPoints[0].AddRange(sph.spawnPoints);
+                }
             }
 
-            // Spawn BOT
-            IFighterDefinition botDefinition = (IFighterDefinition)ContentManager.singleton.GetContentDefinition<IFighterDefinition>(botReference);
-            botInputManager = NetworkManager.singleton.FusionLauncher.NetworkRunner.Spawn(botDefinition.GetFighter().GetComponent<FighterInputManager>(), new Vector3(0, 0, 5), Quaternion.identity, null);
-            botInputManager.gameObject.name = $"Bot";
-        }*/
+            foreach(PlayerRef playerRef in Runner.ActivePlayers)
+            {
+                ClientManager cm = Runner.GetPlayerObject(playerRef).GetBehaviour<ClientManager>();
+
+                for(int x = 0; x < cm.ClientPlayers.Count; x++)
+                {
+                    var clientPlayer = cm.ClientPlayers[x];
+
+                    NetworkObject no = cm.SpawnPlayer(playerRef, x, GetSpawnPosition(cm, clientPlayer));
+                    spawnPointsCurr[clientPlayer.team]++;
+                }
+            }
+        }
+
+        private Vector3 GetSpawnPosition(ClientManager cm, ClientPlayerDefinition clientPlayer)
+        {
+            return spawnPoints[clientPlayer.team][spawnPointsCurr[clientPlayer.team] % spawnPoints[clientPlayer.team].Count].transform.position;
+        }
 
         public override void FixedUpdateNetwork()
         {
-            /*
-            if (botInputManager)
-            {
-                //botInputManager.FeedInput(Runner.Simulation.Tick, CreateBotInput());
-            }*/
-        }
 
-        public bool buttonBlock;
-        public bool buttonJump;
-
-        private NetworkClientInputData CreateBotInput()
-        {
-            NetworkClientInputData botInput = new NetworkClientInputData();
-
-            /*
-            if (buttonBlock) { botInput.Buttons |= NetworkClientInputData.BUTTON_BLOCK; }
-            if (buttonJump) { botInput.Buttons |= NetworkClientInputData.BUTTON_JUMP; }*/
-            return botInput;
         }
     }
 }

@@ -15,6 +15,7 @@ namespace rwby.fighters.states
             base.Initialize();
             manager.apexTime = manager.StatManager.MaxJumpTime / 2.0f;
             manager.gravity = (-2.0f * manager.StatManager.MaxJumpHeight) / Mathf.Pow(manager.apexTime, 2.0f);
+            manager.fighterAnimator.Play("rr", "jumpsquat");
             //manager.initialJumpVelocity = (2 * manager.StatManager.MaxJumpHeight) / manager.apexTime;
         }
 

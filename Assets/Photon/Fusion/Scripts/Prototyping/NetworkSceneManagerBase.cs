@@ -10,7 +10,7 @@ using UnityEngine.SceneManagement;
 namespace Fusion {
  
 
-  public abstract class NetworkSceneManagerBase : MonoBehaviour, INetworkSceneObjectProvider {
+  public abstract class NetworkSceneManagerBase : Fusion.Behaviour, INetworkSceneObjectProvider {
 
     private static WeakReference<NetworkSceneManagerBase> s_currentlyLoading = new WeakReference<NetworkSceneManagerBase>(null);
 
@@ -121,10 +121,9 @@ namespace Fusion {
       }
 
       if (disable) {
+        // disable objects; each will be activated if there's a matching state object
         foreach (var sceneObject in result) {
-          if (sceneObject.gameObject.activeInHierarchy) {
-            sceneObject.gameObject.SetActive(false);
-          }
+          sceneObject.gameObject.SetActive(false);
         }
       }
 

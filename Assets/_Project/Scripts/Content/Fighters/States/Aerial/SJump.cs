@@ -18,6 +18,7 @@ namespace rwby.fighters.states
 
             manager.PhysicsManager.forceMovement *= manager.StatManager.JumpConversedMomentum;
             manager.PhysicsManager.forceMovement += manager.GetMovementVector() * manager.StatManager.JumpHorizontalVelocity;
+            manager.fighterAnimator.Play("rr", "jump");
         }
 
         public override void OnUpdate()

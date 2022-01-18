@@ -48,8 +48,15 @@ namespace rwby
         private async UniTask ClientTryLoad(IMapDefinition mapDefinition)
         {
             await mapDefinition.LoadMap(UnityEngine.SceneManagement.LoadSceneMode.Additive);
-            ClientManager.local.mapLoadPercent = 1.0f;
             SceneManager.SetActiveScene(SceneManager.GetSceneByName(mapDefinition.SceneName));
+            await UniTask.Delay(TimeSpan.FromSeconds(0.1f), ignoreTimeScale: true);
+            RPC_ReportLoadPercentage(1.0f);
+        }
+
+        [Rpc(RpcSources.All, RpcTargets.StateAuthority)]
+        private void RPC_ReportLoadPercentage(float percentage, RpcInfo info = default)
+        {
+            Runner.GetPlayerObject(info.Source).GetBehaviour<ClientManager>().mapLoadPercent = percentage;
         }
     }
 }

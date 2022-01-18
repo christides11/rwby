@@ -8,10 +8,12 @@ namespace rwby
     {
 
         protected ClientManager client;
+        protected int playerIndex;
 
-        public virtual void SetClient(ClientManager client)
+        public virtual void SetClient(ClientManager client, int playerIndex)
         {
             this.client = client;
+            this.playerIndex = playerIndex;
         }
 
         public virtual void Update()
