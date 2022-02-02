@@ -18,6 +18,7 @@ namespace rwby.fighters.states
             manager.PhysicsManager.forceGravity = 0;
             manager.apexTime = manager.StatManager.MaxJumpTime / 2.0f;
             manager.gravity = (-2.0f * manager.StatManager.MaxJumpHeight) / Mathf.Pow(manager.apexTime, 2.0f);
+            manager.fighterAnimator.Play("rr", "airdash");
         }
 
         public override void OnUpdate()
@@ -65,6 +66,11 @@ namespace rwby.fighters.states
 
             if (CheckInterrupt()) return;
             manager.StateManager.IncrementFrame();
+        }
+
+        public override void OnInterrupted()
+        {
+            manager.fighterAnimator.Stop();
         }
 
         public override bool CheckInterrupt()

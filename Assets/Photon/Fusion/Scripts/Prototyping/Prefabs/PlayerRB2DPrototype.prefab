@@ -101,7 +101,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   AoiMode: 0
+  DefaultPropertyGroups: []
   DestroyWhenStateAuthorityLeaves: 0
+  AllowStateAuthorityOverride: 0
   AoiPosition: {fileID: 0}
   Flags: 2305
   NetworkGuid:
@@ -142,10 +144,24 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   WordOffset: 0
   WordCount: 0
-  _interpolationDataSource: 3
+  _interpolationDataSource: 0
   _interpolationTarget: {fileID: 2402698497372269455}
-  _space: 0
-  _syncDragAndMass: 0
+  DetachInterpTarget: 0
+  SyncParent: 1
+  InterpolateErrorCorrection: 1
+  InterpolatedErrorCorrectionSettings:
+    MinRate: 3.3
+    MaxRate: 10
+    PosBlendStart: 0.25
+    PosBlendEnd: 1
+    PosMinCorrection: 0.025
+    PosTeleportDistance: 2
+    RotBlendStart: 0.1
+    RotBlendEnd: 0.5
+    RotTeleportRadians: 1.5
+  SyncScale: 0
+  Space: 0
+  SyncDragAndMass: 0
 --- !u!58 &7984011328971896858
 CircleCollider2D:
   m_ObjectHideFlags: 0

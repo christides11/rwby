@@ -23,6 +23,12 @@ public class PlayerSpawnerPrototype : SpawnerPrototype<PlayerSpawnPointPrototype
 
 #endif
 
+  protected override void RegisterPlayerAndObject(PlayerRef player, NetworkObject playerObject) {
+    base.RegisterPlayerAndObject(player, playerObject);
+
+    Runner.SetPlayerObject(player, playerObject);
+  }
+
 }
 
 

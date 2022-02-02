@@ -7,7 +7,7 @@ using UnityEngine;
 namespace rwby
 {
     [OrderBefore(typeof(FighterCombatManager))]
-    [OrderAfter(typeof(Fusion.HitboxManager))]
+    [OrderAfter(typeof(Fusion.HitboxManager), typeof(FighterManager))]
     public class FighterStateManager : NetworkBehaviour, IFighterStateManager
     {
         public delegate void StateAction(IFighterBase self, ushort from, uint fromStateFrame);

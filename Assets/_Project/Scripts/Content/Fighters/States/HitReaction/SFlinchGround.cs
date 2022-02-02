@@ -16,6 +16,7 @@ namespace rwby
         public override void Initialize()
         {
             base.Initialize();
+            manager.fighterAnimator.Play("rr", "flinch.high");
         }
 
         public override void OnUpdate()

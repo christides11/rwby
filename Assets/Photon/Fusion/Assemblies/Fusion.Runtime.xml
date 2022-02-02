@@ -877,10 +877,11 @@
             Initilize the Log system from the Realtime SDK to use the Fusion Log System
             </summary>
         </member>
-        <member name="M:Fusion.CloudServices.ConvertToSessionInfo(Fusion.Photon.Realtime.RoomInfo)">
+        <member name="M:Fusion.CloudServices.UpdateSessionInfo(Fusion.SessionInfo,Fusion.Photon.Realtime.RoomInfo)">
             <summary>
             Converts a <see cref="T:Fusion.Photon.Realtime.RoomInfo"/> to a <see cref="T:Fusion.SessionInfo"/>
             </summary>
+            <param name="sessionInfo"><see cref="T:Fusion.SessionInfo"/> </param>
             <param name="roomInfo"><see cref="T:Fusion.Photon.Realtime.RoomInfo"/> ref</param>
             <returns><see cref="T:Fusion.SessionInfo"/> ref</returns>
         </member>

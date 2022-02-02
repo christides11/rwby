@@ -34,15 +34,17 @@ namespace rwby.fighters.states
                 manager.RotateVisual(movement.normalized, manager.StatManager.walkRotationSpeed);
             }
 
-
             manager.PhysicsManager.HandleMovement(manager.StatManager.WalkBaseAccel, manager.StatManager.WalkAcceleration,
                 manager.StatManager.GroundFriction, manager.StatManager.WalkMinSpeed, manager.StatManager.WalkMaxSpeed, manager.StatManager.WalkAccelFromDot);
+        }
 
+        public override void OnLateUpdate()
+        {
             if (CheckInterrupt() == false)
             {
                 manager.StateManager.IncrementFrame();
                 manager.fighterAnimator.currentFrame++;
-                if(manager.fighterAnimator.currentFrame >= 90)
+                if (manager.fighterAnimator.currentFrame >= 90)
                 {
                     manager.fighterAnimator.currentFrame = 10;
                 }

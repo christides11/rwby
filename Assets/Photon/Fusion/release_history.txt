@@ -2,6 +2,32 @@
 
 ## RC Nightly
 
+### Build 393 (Jan 21, 2022)
+
+**What's New**
+
+- Local PlayerObject related fields added to NetworkRunner and NetworkObject runtime inspector
+
+**Bug Fixes**
+
+- Fixed: PlayerRB2DPrototype used in the Setup Basic Fusion Scene 2D had interpolation disabled. Corrected that to auto
+
+### Build 392 (Jan 20, 2022)
+
+**What's New**
+
+- Interpolator<T> now supports Boolean and Int32 types
+
+**Bug Fixes**
+
+- Fixed: Missing Properties after a Session Update
+
+### Build 391 (Jan 19, 2022)
+
+**Bug Fixes**
+
+- Fixed: Interpolator was not using specified Accuracy values (such as [Networked, Accuracy(.1f)]) and was defaulting to .001f
+
 ### Build 390 (Jan 17, 2022)
 
 **What's New**

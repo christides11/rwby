@@ -15,12 +15,12 @@ public class RRoseMan : FighterManager
         bool rubyRoseSnbkLoadResult = await ContentManager.singleton.LoadContentDefinition<ISoundbankDefinition>(new ModObjectReference("core", "rr"));
         if (rubyRoseSnbkLoadResult == false) return false;
 
-        /*
-        bool globalEffectbankLoadResult = await ContentManager.singleton.LoadContentDefinition(ContentType.Effectbank, new ModObjectReference("core", "global"));
+
+        bool globalEffectbankLoadResult = await ContentManager.singleton.LoadContentDefinition<IEffectbankDefinition>(new ModObjectReference("core", "global"));
         if (globalEffectbankLoadResult == false)
         {
             return false;
-        }*/
+        }
 
         bool animationbankLoadResult = await ContentManager.singleton.LoadContentDefinition<IAnimationbankDefinition>(new ModObjectReference("core", "rr"));
         if (animationbankLoadResult == false) return false;
@@ -45,19 +45,19 @@ public class RRoseMan : FighterManager
         }
         soundbankContainer.AddSoundbank(rubyRoseSnbk.Name, rubyRoseSnbk);
 
-        IAnimationbankDefinition rrAnbk = ContentManager.singleton.GetContentDefinition<IAnimationbankDefinition>(new ModObjectReference("core", "rr"));
-        if(rrAnbk == null)
-        {
-            Debug.LogError("Error loading ruby rose animationbank.");
-        }
-        animationbankContainer.AddAnimationbank(rrAnbk.Name, rrAnbk);
 
-        /*
-        IEffectbankDefinition globalEffectbank = (IEffectbankDefinition)ContentManager.instance.GetContentDefinition(ContentType.Effectbank, new ModObjectReference("core", "global"));
+        IEffectbankDefinition globalEffectbank = ContentManager.singleton.GetContentDefinition<IEffectbankDefinition>(new ModObjectReference("core", "global"));
         if (globalEffectbank == null)
         {
             Debug.LogError("Error loading global effectbank.");
         }
-        effectbankContainer.AddEffectbank(globalEffectbank.Name, globalEffectbank);*/
+        effectbankContainer.AddEffectbank(globalEffectbank.Name, globalEffectbank);
+
+        IAnimationbankDefinition rrAnbk = ContentManager.singleton.GetContentDefinition<IAnimationbankDefinition>(new ModObjectReference("core", "rr"));
+        if (rrAnbk == null)
+        {
+            Debug.LogError("Error loading ruby rose animationbank.");
+        }
+        animationbankContainer.AddAnimationbank(rrAnbk.Name, rrAnbk);
     }
 }

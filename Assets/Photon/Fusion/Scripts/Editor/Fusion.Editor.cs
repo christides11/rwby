@@ -6319,6 +6319,9 @@ namespace Fusion.Editor {
 
               EditorGUILayout.Toggle("Local Input Authority", obj.HasInputAuthority);
               EditorGUILayout.Toggle("Local State Authority", obj.HasStateAuthority);
+
+              EditorGUILayout.Toggle("Is Local PlayerObject", obj == obj.Runner.GetPlayerObject(obj.Runner.LocalPlayer));
+
             }
           }
         }
@@ -6665,6 +6668,10 @@ namespace Fusion.Editor {
           Label("Simulation Mode", runner.Mode);
           Label("Is Player", runner.IsPlayer);
           Label("Local Player", runner.LocalPlayer);
+
+          var localplayerobj = runner.LocalPlayer.IsValid ? runner.GetPlayerObject(runner.LocalPlayer) : null;
+          EditorGUILayout.ObjectField("Local PlayerObject", localplayerobj, typeof(NetworkObject), true);
+
           Label("Active Players", runner.ActivePlayers.Count());
           Label("Is Cloud Ready", runner.IsCloudReady);
           Label("Is SinglePlayer", runner.IsSinglePlayer);

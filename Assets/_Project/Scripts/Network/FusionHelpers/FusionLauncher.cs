@@ -64,32 +64,35 @@ namespace rwby
 			await _runner.JoinSessionLobby(SessionLobby.ClientServer);
 		}
 
-		public async UniTask DedicateHostSession(string roomName, int playerCount, bool privateLobby, NetworkObject playerPrefab)
+		public async UniTask<StartGameResult> DedicateHostSession(string roomName, int playerCount, bool privateLobby, NetworkObject playerPrefab)
 		{
 			_playerPrefab = playerPrefab;
 			_connectionCallback = OnConnectionStatusUpdate;
 			InitSingletions(false);
 
-			await _runner.StartGame(new StartGameArgs() { GameMode = GameMode.Server, SessionName = roomName, ObjectPool = _pool, SceneObjectProvider = _networkSceneManager, PlayerCount = playerCount });
-			if (_status == ConnectionStatus.Failed)
-			{
+			StartGameResult result = await _runner.StartGame(new StartGameArgs() { GameMode = GameMode.Server, SessionName = roomName, ObjectPool = _pool, SceneObjectProvider = _networkSceneManager, PlayerCount = playerCount });
+			if(result.Ok == false)
+            {
+				Debug.LogError(result.ShutdownReason);
 				OnHostingFailed?.Invoke();
-				return;
-			}
+				return result;
+            }
 
 			if (TryGetSceneRef(out SceneRef scene))
 			{
 				_runner.SetActiveScene(scene);
 			}
+
+			return result;
 		}
 
-		public async UniTask HostSession(string roomName, int playerCount, bool privateLobby, NetworkObject playerPrefab, bool local = false)
+		public async UniTask<StartGameResult> HostSession(string roomName, int playerCount, bool privateLobby, NetworkObject playerPrefab, bool local = false)
 		{
 			_playerPrefab = playerPrefab;
 			_connectionCallback = OnConnectionStatusUpdate;
 			InitSingletions(true);
 
-			await _runner.StartGame(new StartGameArgs()
+			StartGameResult result = await _runner.StartGame(new StartGameArgs()
 			{
 				GameMode = local ? GameMode.Single : GameMode.Host,
 				SessionName = roomName,
@@ -97,16 +100,18 @@ namespace rwby
 				SceneObjectProvider = _networkSceneManager,
 				PlayerCount = playerCount
 			});
-			if (_status == ConnectionStatus.Failed)
+			if (result.Ok == false)
 			{
+				Debug.LogError(result.ShutdownReason);
 				OnHostingFailed?.Invoke();
-				return;
+				return result;
 			}
 
 			if (TryGetSceneRef(out SceneRef scene))
 			{
 				_runner.SetActiveScene(scene);
 			}
+			return result;
 		}
 
 		public async UniTask JoinSession(SessionInfo session, NetworkObject playerPrefab)

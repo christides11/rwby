@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using Fusion;
+using Cysharp.Threading.Tasks;
 
 namespace rwby.menus
 {
@@ -53,23 +54,23 @@ namespace rwby.menus
 
         public void ButtonSingleplayer()
         {
-            NetworkManager.singleton.FusionLauncher.OnHostingFailed += OnHostingFailed;
-            NetworkManager.singleton.FusionLauncher.OnStartHosting += OnHostingSuccess;
-            NetworkManager.singleton.StartSinglePlayerHost();
+            _ = TryStartSingleplayer();
         }
 
-        private void OnHostingSuccess()
+        private async UniTaskVoid TryStartSingleplayer()
         {
-            NetworkManager.singleton.FusionLauncher.OnStartHosting -= OnHostingSuccess;
-            //loadingMenu.CloseMenu();
+            StartGameResult result = await NetworkManager.singleton.StartSinglePlayerHost();
+            if(result.Ok == false)
+            {
+                return;
+            }
             gameObject.SetActive(false);
-            lobbyMenu.Open();
-        }
 
-        private void OnHostingFailed()
-        {
-            NetworkManager.singleton.FusionLauncher.OnHostingFailed -= OnHostingFailed;
-            //loadingMenu.CloseMenu();
+            while(LobbyManager.singleton == null)
+            {
+                await UniTask.WaitForFixedUpdate();
+            }
+            lobbyMenu.Open();
         }
 
         public void ButtonFindLobby()

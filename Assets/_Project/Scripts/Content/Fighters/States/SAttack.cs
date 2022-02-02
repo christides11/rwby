@@ -72,6 +72,7 @@ namespace rwby
                 }
                 if (interrupted == true)
                 {
+                    Debug.Log("Interrupted.");
                     break;
                 }
             }
@@ -356,6 +357,7 @@ namespace rwby
 
         public override void OnInterrupted()
         {
+            manager.fighterAnimator.Stop();
             AttackDefinition currentAttack = (AttackDefinition)manager.CombatManager.CurrentAttackNode.attackDefinition;
             if (currentAttack.useState)
             {

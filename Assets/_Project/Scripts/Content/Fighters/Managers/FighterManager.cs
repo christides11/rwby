@@ -10,7 +10,7 @@ using UnityEngine;
 
 namespace rwby
 {
-    [OrderBefore(typeof(Fusion.HitboxManager), typeof(FighterPhysicsManager), typeof(FighterStateManager), typeof(FighterBoxManager), typeof(FighterHitboxManager), typeof(FighterCombatManager))]
+    [OrderBefore(typeof(FighterStateManager), typeof(Fusion.HitboxManager), typeof(FighterPhysicsManager), typeof(FighterBoxManager), typeof(FighterHitboxManager), typeof(FighterCombatManager))]
     [OrderAfter(typeof(FighterInputManager))]
     public class FighterManager : NetworkBehaviour, IFighterBase, ITargetable
     {
@@ -94,7 +94,6 @@ namespace rwby
 
         public override void FixedUpdateNetwork()
         {
-            base.FixedUpdateNetwork();
             visualTransform.gameObject.SetActive(Visible);
 
             HitstopShake();

@@ -14,6 +14,7 @@ namespace rwby.fighters.states
         public override void Initialize()
         {
             base.Initialize();
+            manager.fighterAnimator.Play("rr", "run.break");
         }
 
         public override void OnUpdate()

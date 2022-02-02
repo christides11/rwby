@@ -27,9 +27,9 @@ namespace rwby
             fusionLauncher.OnStartHosting += SpawnMatchManager;
         }
 
-        public void StartSinglePlayerHost()
+        public async UniTask<StartGameResult> StartSinglePlayerHost()
         {
-            _ = fusionLauncher.HostSession("localSession", 8, false, clientPrefab, true);
+            return await fusionLauncher.HostSession("localSession", 8, false, clientPrefab, true);
         }
 
         public void StartHost(string lobbyName, int playerCount, bool privateLobby)

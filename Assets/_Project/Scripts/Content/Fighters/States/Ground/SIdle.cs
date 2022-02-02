@@ -23,7 +23,10 @@ namespace rwby.fighters.states
             manager.BoxManager.UpdateBoxes(0, 0);
             manager.PhysicsManager.ApplyMovementFriction();
             //manager.PhysicsManager.ApplyCollisionPush();
+        }
 
+        public override void OnLateUpdate()
+        {
             if (CheckInterrupt() == false)
             {
                 manager.StateManager.IncrementFrame();

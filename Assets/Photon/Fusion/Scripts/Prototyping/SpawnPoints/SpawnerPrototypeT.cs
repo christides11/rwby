@@ -126,7 +126,7 @@ public class SpawnerPrototype<T> : SimulationBehaviour, IPlayerJoined, IPlayerLe
     }
   }
 
-  protected void RegisterPlayerAndObject(PlayerRef player, NetworkObject playerObject) {
+  protected virtual void RegisterPlayerAndObject(PlayerRef player, NetworkObject playerObject) {
     if (!_spawnedLookup.TryGetValue(player, out var objList)) {
       objList = new List<NetworkObject>();
       _spawnedLookup.Add(player, objList);

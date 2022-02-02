@@ -189,8 +189,9 @@ MonoBehaviour:
   - {fileID: 5710829672531719765}
   - {fileID: 4006742894894194177}
   - {fileID: 4275241288035171677}
-  - {fileID: 8828466035712802024}
   - {fileID: 842430728357501832}
+  - {fileID: 8828466035712802024}
+  - {fileID: 4017428576835799020}
   SimulationBehaviours: []
 --- !u!114 &728284172682202706
 MonoBehaviour:
@@ -260,7 +261,11 @@ MonoBehaviour:
   hitstopShakeDistance: 0.5
   hitstopDir: 1
   hitstopShakeFrames: 1
-  shakeDirs: []
+  shakeDirs:
+  - {x: -1, y: 0, z: 0}
+  - {x: 0, y: 0, z: 1}
+  - {x: 1, y: 0, z: 0}
+  - {x: 0, y: 0, z: -1}
   _currentShakeDirection: 0
   wallLayerMask:
     serializedVersion: 2
@@ -268,7 +273,7 @@ MonoBehaviour:
   wallCheckDistance: 0.7
   currentWall: {fileID: 0}
   ceilingCheckDistance: 1.2
-  wallRunDot: -0.9
+  wallRunDot: -0.5
   sideWallDistance: 0
   wallSide: 0
   wallRunHozMultiplier: 1
@@ -715,6 +720,9 @@ MonoBehaviour:
   _interpolationDataSource: 0
   container: {fileID: 842430728357501832}
   animancer: {fileID: 7881897747762219494}
+  _currentFrame: 0
+  _rollbackTickAccurate:
+    _value: 0
 --- !u!1 &3012196137317099199
 GameObject:
   m_ObjectHideFlags: 0
@@ -6417,6 +6425,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -3556281534840306111, guid: 8c7546cd8ef408941b16829f7d60cdfd, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: a1fa8c8e4210fb948af2d943db5276f4, type: 2}
     - target: {fileID: 919132149155446097, guid: 8c7546cd8ef408941b16829f7d60cdfd, type: 3}
       propertyPath: m_Name
       value: rr_rig
