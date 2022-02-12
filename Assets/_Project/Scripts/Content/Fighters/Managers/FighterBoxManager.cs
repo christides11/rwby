@@ -7,15 +7,22 @@ using UnityEngine;
 
 namespace rwby
 {
-    public class FighterBoxManager : NetworkBehaviour
+    [OrderAfter(typeof(Fusion.HitboxManager))]
+    public class FighterBoxManager : NetworkBehaviour, IBoxCollection
     {
         public HurtboxCollection BoxCollection { get { return boxCollection; } }
         [Networked] public int CurrentBoxCollectionIdentifier { get; set; }
+
+        public CustomHitbox[] Hitboxes { get { return hitboxes; } }
+        public Hurtbox[] Hurtboxes { get { return hurtboxes; } }
+        public Collbox[] Collboxes { get { return collboxes; } }
+
         [SerializeField] protected FighterCombatManager combatManager;
         [SerializeField] protected HurtboxCollection boxCollection;
         public HitboxRoot hRoot;
         public Settings settings;
 
+        public CustomHitbox[] hitboxes;
         public Hurtbox[] hurtboxes;
         public Collbox[] collboxes;
         public Throwablebox[] throwableboxes;
@@ -23,6 +30,10 @@ namespace rwby
         public void Awake()
         {
             settings = GameManager.singleton.settings;
+            foreach (var hitbox in hitboxes)
+            {
+                hitbox.ownerNetworkObject = combatManager.GetComponent<NetworkObject>();
+            }
             foreach (var hb in hurtboxes)
             {
                 hb.ownerNetworkObject = combatManager.GetComponent<NetworkObject>();
@@ -36,6 +47,29 @@ namespace rwby
             {
                 tb.ownerNetworkObject = combatManager.GetComponent<NetworkObject>();
             }
+        }
+
+        public Bounds combatBoxBounds;
+
+        public override void FixedUpdateNetwork()
+        {
+            combatBoxBounds = new Bounds(Vector3.zero, -Vector3.one);
+        
+            foreach(CustomHitbox hb in hitboxes)
+            {
+                switch (hb.Type)
+                {
+                    case HitboxTypes.Box:
+                        combatBoxBounds.Encapsulate(new Bounds(hb.transform.position+hb.Offset, hb.BoxExtents));
+                        break;
+                    case HitboxTypes.Sphere:
+                        combatBoxBounds.Encapsulate(new Bounds(hb.transform.position+hb.Offset, new Vector3(hb.SphereRadius, hb.SphereRadius, hb.SphereRadius)));
+                        break;
+                }
+            }
+
+            if (combatBoxBounds.size == -Vector3.one) return;
+            CombatPairFinder.singleton.RegisterObject(Object);
         }
 
         public BoxCollectionDefinition GetHurtboxDefinition()
@@ -57,6 +91,36 @@ namespace rwby
             {
                 hRoot.SetHitboxActive(tb, false);
             }
+        }
+
+        public void ClearHitboxes()
+        {
+            foreach(CustomHitbox hitbox in hitboxes)
+            {
+                hRoot.SetHitboxActive(hitbox, false);
+            }
+        }
+
+        public void UpdateHitbox(int hitboxNum, HitboxGroup hitboxGroup, int hitboxGroupIndex, int boxIndex)
+        {
+            CustomHitbox hb = hitboxes[hitboxNum];
+
+            switch (hitboxGroup.boxes[boxIndex].shape)
+            {
+                case HnSF.Combat.BoxShape.Rectangle:
+                    hb.Type = HitboxTypes.Box;
+                    hb.BoxExtents = (hitboxGroup.boxes[boxIndex] as HnSF.Combat.BoxDefinition).size / 2.0f;
+                    break;
+                case HnSF.Combat.BoxShape.Circle:
+                    hb.Type = HitboxTypes.Sphere;
+                    hb.SphereRadius = (hitboxGroup.boxes[boxIndex] as HnSF.Combat.BoxDefinition).radius;
+                    break;
+            }
+            hb.groupIndex = hitboxGroupIndex;
+            hb.hitboxGroup = hitboxGroup;
+            hb.hitboxIndex = boxIndex;
+            hb.transform.localPosition = (hitboxGroup.boxes[boxIndex] as HnSF.Combat.BoxDefinition).offset;
+            hb.Root.SetHitboxActive(hb, true);
         }
 
         public void UpdateBoxes(int frame, int boxCollectionIdentifier)
@@ -120,7 +184,7 @@ namespace rwby
                     box.SphereRadius = boxDef.radius;
                     break;
             }
-            box.Offset = boxDef.offset;
+            box.transform.localPosition = boxDef.offset;
             box.hurtboxGroup = hurtboxGroup;
             box.Root.SetHitboxActive(box, true);
         }

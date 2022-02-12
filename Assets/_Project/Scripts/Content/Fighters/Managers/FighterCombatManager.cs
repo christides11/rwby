@@ -39,10 +39,10 @@ namespace rwby
             }
         }
 
-        public FighterHitboxManager HitboxManager { get { return hitboxManager; } }
+        public FighterHitManager HitboxManager { get { return hitboxManager; } }
 
         [SerializeField] protected HealthManager healthManager;
-        [SerializeField] protected FighterHitboxManager hitboxManager;
+        [SerializeField] protected FighterHitManager hitboxManager;
         [SerializeField] protected FighterManager manager;
         [SerializeField] protected FighterInputManager inputManager;
         [SerializeField] protected FighterPhysicsManager physicsManager;
@@ -665,11 +665,6 @@ namespace rwby
                 physicsManager.SetGrounded(false);
             }
 
-            if(manager.StateManager.CurrentState == (ushort)FighterCmnStates.ATTACK)
-            {
-                manager.CombatManager.Cleanup();
-            }
-
             HardKnockdown = hitInfo.hardKnockdown;
             GroundBounce = hitInfo.groundBounces;
 
@@ -695,6 +690,7 @@ namespace rwby
                     manager.StateManager.ChangeState((int)FighterCmnStates.TUMBLE);
                 }
             }
+            manager.CombatManager.Cleanup();
             return hitReaction;
         }
     }

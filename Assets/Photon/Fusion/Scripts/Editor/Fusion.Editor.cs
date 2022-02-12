@@ -4451,18 +4451,18 @@ namespace Fusion.Editor {
     const string FONT_PATH = "ComponentHeaderGraphics/Fonts/Oswald-Header";
     const string ICON_PATH = "ComponentHeaderGraphics/Icons/";
 
-    // Extra safety code to deal with these styles being used in the inspector for a currently selected object.
-    // The styles array never gets nulled if they are being used for some reason, but the textures do get nulled.
-    // This OnPlayModeState change to exit detects this and nulls the styles manually.
-    static FusionGUIStyles() {
-      EditorApplication.playModeStateChanged += OnPlayModeState;
-    }
-    private static void OnPlayModeState(PlayModeStateChange state) {
-      if (state == PlayModeStateChange.EnteredEditMode) {
-        _groupBoxStyles = null;
-        _fusionHeaderStyles = null;
-      }
-    }
+    //// Extra safety code to deal with these styles being used in the inspector for a currently selected object.
+    //// The styles array never gets nulled if they are being used for some reason, but the textures do get nulled.
+    //// This OnPlayModeState change to exit detects this and nulls the styles manually.
+    //static FusionGUIStyles() {
+    //  EditorApplication.playModeStateChanged += OnPlayModeState;
+    //}
+    //private static void OnPlayModeState(PlayModeStateChange state) {
+    //  if (state == PlayModeStateChange.EnteredEditMode) {
+    //    _groupBoxStyles = null;
+    //    _fusionHeaderStyles = null;
+    //  }
+    //}
 
     private static Color[] _headerColors = new Color[12] {
       // none
@@ -4911,7 +4911,8 @@ namespace Fusion.Editor {
 
     private static GUIStyle[] _groupBoxStyles;
     private static GUIStyle GetGroupBoxStyle(GroupBoxType groupType) {
-      if (_groupBoxStyles == null || _groupBoxStyles[0] == null) {
+      // texture can be reset without the styles going null in some cases (scene changes, exiting play mode, etc), so need to make sure the texture itself has not gone null always.
+      if (_groupBoxStyles == null || _groupBoxStyles[0] == null || _groupBoxStyles[0].normal.background == null) {
         var len = Enum.GetNames(typeof(GroupBoxType)).Length;
         _groupBoxStyles = new GUIStyle[len];
         for (int i = 0; i < len; ++i) {
@@ -6093,8 +6094,12 @@ namespace Fusion.Editor {
   using System.Collections.Generic;
   using System.Linq;
   using UnityEditor;
-  using UnityEditor.Experimental.SceneManagement;
   using UnityEngine;
+#if UNITY_2021_2_OR_NEWER
+  using UnityEditor.SceneManagement;
+#else
+  using UnityEditor.Experimental.SceneManagement;
+#endif
 
   [CustomEditor(typeof(NetworkObject), true)]
   [InitializeOnLoad]
@@ -6110,7 +6115,7 @@ namespace Fusion.Editor {
       bool dirty = false;
 
       using (var pathCache = new TransformPathCache()) {
-        root.GetComponentsInChildren(networkObjectsBuffer);
+        root.GetComponentsInChildren(true, networkObjectsBuffer);
         if (networkObjectsBuffer.Count == 0) {
           return dirty;
         }
@@ -6120,7 +6125,7 @@ namespace Fusion.Editor {
           Object = x
         }).OrderByDescending(x => x.Path).ToList();
 
-        root.GetComponentsInChildren(simulationBehaviourBuffer);
+        root.GetComponentsInChildren(true, simulationBehaviourBuffer);
 
         // sort scripts in a descending way
         var networkScripts = simulationBehaviourBuffer.Select(x => new {
@@ -6184,8 +6189,7 @@ namespace Fusion.Editor {
           } else {
             flags = flags.SetType(entry.Path.Depth == 1 ? NetworkObjectFlags.TypePrefab : NetworkObjectFlags.TypePrefabChild);
             if (entry.Path.Depth > 1) {
-              // TODO: this does not seem to work with nested objects
-              //Set(entry.Object, ref entry.Object.NetworkGuid, string.Empty);
+              dirty |= Set(entry.Object, ref entry.Object.NetworkGuid, NetworkObjectGuid.Empty, setDirty);
             } else {
               if (prefabGuid?.IsValid != true) {
                 throw new ArgumentException($"Invalid value: {prefabGuid}", nameof(prefabGuid));
@@ -6195,10 +6199,9 @@ namespace Fusion.Editor {
             }
           }
 
+          flags = flags.SetActivatedByUser(entry.Object.gameObject.activeInHierarchy == false);
           dirty |= Set(entry.Object, ref entry.Object.Flags, flags, setDirty);
         }
-
-        Debug.Assert(networkScripts.Any(x => x.Script is NetworkBehaviour) == false);
 
         // what's left is nested network objects resolution
         for (int i = 0; i < networkObjects.Count; ++i) {
@@ -6319,6 +6322,7 @@ namespace Fusion.Editor {
 
               EditorGUILayout.Toggle("Local Input Authority", obj.HasInputAuthority);
               EditorGUILayout.Toggle("Local State Authority", obj.HasStateAuthority);
+              EditorGUILayout.Toggle("In Simulation", obj.InSimulation);
 
               EditorGUILayout.Toggle("Is Local PlayerObject", obj == obj.Runner.GetPlayerObject(obj.Runner.LocalPlayer));
 
@@ -6416,8 +6420,8 @@ namespace Fusion.Editor {
 
     int IOrderedCallback.callbackOrder => 0;
 
-    private static HashSet<string> _dirtyFusionPrefabs = new HashSet<string>();
-
+    private static HashSet<string> _pendingPrefabImports = new HashSet<string>();
+    private static string _prefabBeingBaked = null;
 
     static void OnPostprocessAllAssets(string[] importedAssets, string[] deletedAssets, string[] movedAssets, string[] movedFromAssetPaths) {
       FusionEditorLog.TraceImport($"Postprocessing imported assets [{importedAssets.Length}]:\n{string.Join("\n", importedAssets)}");
@@ -6429,26 +6433,42 @@ namespace Fusion.Editor {
           continue;
         }
 
-        if (_dirtyFusionPrefabs.Remove(path)) {
-          FusionEditorLog.TraceImport(path, "Was marked as dirty in OnPostprocessPrefab, going to reimport config");
-          configPossiblyDirty = true;
+        if (!_pendingPrefabImports.Remove(path)) {
+          FusionEditorLog.TraceImport(path, $"Skipping, not being marked as pending by OnPostprocessPrefab");
+          continue;
         }
 
-        // TODO: reduce the need to do it somehow?
-        var go = AssetDatabase.LoadAssetAtPath<GameObject>(path);
-        if (go) {
+        _prefabBeingBaked = path;
+        try {
+          var go = AssetDatabase.LoadAssetAtPath<GameObject>(path);
+          if (!go) {
+            continue;
+          }
+
           var no = go.GetComponent<NetworkObject>();
-          bool shouldHaveLabel = no && no.Flags.IsIgnored() == false;
-          if (AssetDatabaseUtils.SetLabel(go, NetworkProjectConfigImporter.FusionPrefabTag, shouldHaveLabel)) {
-            configPossiblyDirty = true;
-            AssetDatabase.ImportAsset(path);
-            FusionEditorLog.TraceImport(path, "Labels dirty, going to reimport the config, too");
+          if (no) {
+            FusionEditorLog.TraceImport(path, "Was marked as dirty in OnPostprocessPrefab, need to rebake");
+            if (BakePrefab(path, out var newRoot)) {
+#if FUSION_DEV
+              Debug.Assert(newRoot != null && newRoot == AssetDatabase.LoadMainAssetAtPath(path));
+#endif
+              go = newRoot;
+              no = go.GetComponent<NetworkObject>();
+            }
+          }
+
+          var isSpawnable = no && no.Flags.IsIgnored() == false;
+          if (AssetDatabaseUtils.SetLabel(go, NetworkProjectConfigImporter.FusionPrefabTag, isSpawnable)) {
+              configPossiblyDirty = true;
+              AssetDatabase.ImportAsset(path);
+              FusionEditorLog.TraceImport(path, "Labels dirty, going to reimport the config, too");
           } else if (no) {
             FusionEditorLog.TraceImport(path, "Labels up to date");
           }
+        } finally {
+          _prefabBeingBaked = null;
         }
       }
-
 
       if (configPossiblyDirty) {
         // configs needs to be reimported as well
@@ -6460,34 +6480,46 @@ namespace Fusion.Editor {
     }
 
     void OnPostprocessPrefab(GameObject prefab) {
-      // can't set labels here, Unity seems to only invoke this if it does not have a cached imported prefab already
-      // for instance, toggling a checkbox will only have the prefab imported twice, regardless of how many
-      // times the checkbox is toggled
-
-      var networkObject = prefab.GetComponent<NetworkObject>();
-
-      if (!networkObject) {
-        FusionEditorLog.TraceImport(assetPath, $"Not a {nameof(NetworkObject)}, not baking");
-        return;
+      // prefab is already loaded, so this is a good place to discriminate Fusion and non-Fusion prefabs
+      if (assetPath == _prefabBeingBaked) {
+        FusionEditorLog.TraceImport(assetPath, $"Ignoring OnPostprocessPrefab, being imported");
+      } else if (prefab.GetComponent<NetworkObject>() || AssetDatabaseUtils.HasLabel(assetPath, NetworkProjectConfigImporter.FusionPrefabTag)) {
+        FusionEditorLog.TraceImport(assetPath, $"Fusion prefab detected, going to bake in OnPostprocessAllAssets");
+        _pendingPrefabImports.Add(assetPath);
       }
+    }
 
-      var assetGuid = AssetDatabase.AssetPathToGUID(assetPath);
+
+    static bool BakePrefab(string prefabPath, out GameObject root) {
+
+      root = null;
+
+      var assetGuid = AssetDatabase.AssetPathToGUID(prefabPath);
       if (!NetworkObjectGuid.TryParse(assetGuid, out var guid)) {
-        context.LogImportError($"Unable to parse the guid of {assetPath}: {assetGuid}, not going to bake");
-        return;
+        FusionEditorLog.ErrorImport(prefabPath, $"Unable to parse guid: \"{assetGuid}\", not going to bake");
+        return false;
       }
 
-      // now do the baking
-      FusionEditorLog.TraceImport(assetPath, $"Prefab is a {nameof(NetworkObject)}, going to bake");
+      var stageGo = PrefabUtility.LoadPrefabContents(prefabPath);
+      if (!stageGo) {
+        FusionEditorLog.ErrorImport(prefabPath, $"Unable to load prefab contents");
+        return false;
+      }
 
-      var originalGuid = networkObject.NetworkGuid;
       var sw = System.Diagnostics.Stopwatch.StartNew();
-      var dirty = NetworkObjectEditor.BakeHierarchy(prefab.gameObject, guid);
-      FusionEditorLog.TraceImport(assetPath, $"Baking took {sw.Elapsed}, changes: {dirty}");
 
-      if (originalGuid != guid) {
-        FusionEditorLog.TraceImport(assetPath, $"Prefab has likely been cloned (outdated guid), going to reimport config");
-        _dirtyFusionPrefabs.Add(assetPath);
+      try {
+        bool dirty = NetworkObjectEditor.BakeHierarchy(stageGo, guid);
+        FusionEditorLog.TraceImport(prefabPath, $"Baking took {sw.Elapsed}, changed: {dirty}");
+
+        if (dirty) { 
+          root = PrefabUtility.SaveAsPrefabAsset(stageGo, prefabPath);
+          return true;
+        } else {
+          return false;
+        }
+      } finally {
+        PrefabUtility.UnloadPrefabContents(stageGo);
       }
     }
 
@@ -7577,6 +7609,17 @@ namespace Fusion.Editor {
       return ReferenceEquals(PrefabStageUtility.GetPrefabStage(go), null) && (PrefabUtility.IsPartOfPrefabAsset(go) == false || PrefabUtility.GetPrefabAssetType(go) == PrefabAssetType.NotAPrefab);
     }
 
+    public static bool HasLabel(string assetPath, string label) {
+      var guidStr = AssetDatabase.AssetPathToGUID(assetPath);
+      if (!GUID.TryParse(guidStr, out var guid)) {
+        return false;
+      }
+
+      var labels = AssetDatabase.GetLabels(guid);
+      var index = Array.IndexOf(labels, label);
+      return index >= 0;
+    }
+
     public static bool HasLabel(UnityEngine.Object obj, string label) {
       var labels = AssetDatabase.GetLabels(obj);
       var index = Array.IndexOf(labels, label);
@@ -8616,6 +8659,11 @@ namespace Fusion.Editor {
     public static void ErrorImport(string msg) {
       Debug.LogError($"{ImportPrefix} {msg}");
     }
+
+    public static void ErrorImport(string assetPath, string msg) {
+      Debug.LogError($"{ImportPrefix} {assetPath}: {msg}");
+    }
+
 
     internal static void WarnImport(string msg) {
       Debug.LogWarning($"{ImportPrefix} {msg}");

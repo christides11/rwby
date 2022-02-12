@@ -12,9 +12,6 @@ public abstract class FusionGraphBase : Fusion.Behaviour, IFusionStatsView {
   protected const int MRGN = FusionStatsUtilities.MARGIN;
   protected const int MAX_FONT_SIZE_WITH_GRAPH = 24;
 
-  //protected Stats.StatSourceInfo _dataSourceInfo;
-
-  //[SerializeField] [HideInInspector] public int Places = 0;
   [SerializeField] [HideInInspector] protected UI.Text  LabelTitle;
   [SerializeField] [HideInInspector] protected UI.Image BackImage;
 
@@ -47,6 +44,12 @@ public abstract class FusionGraphBase : Fusion.Behaviour, IFusionStatsView {
     }
   }
 
+  [InlineHelp]
+  public float WarnThreshold;
+
+  [InlineHelp]
+  public float ErrorThreshold;
+
   protected IStatsBuffer _statsBuffer;
   public IStatsBuffer StatsBuffer {
     get {
@@ -71,6 +74,8 @@ public abstract class FusionGraphBase : Fusion.Behaviour, IFusionStatsView {
     }
   }
 
+
+
   protected virtual Color BackColor {
     get {
       if (_statSourceType == Stats.StatSourceTypes.Simulation) {
@@ -88,12 +93,41 @@ public abstract class FusionGraphBase : Fusion.Behaviour, IFusionStatsView {
     (_statSourceType == Stats.StatSourceTypes.NetConnection) ? typeof(Stats.NetStats) : 
                                                                typeof(Stats.ObjStats);
 
-  protected IFusionStats _fusionStats;
+  protected FusionStats _fusionStats;
+  protected FusionStats LocateParentFusionStats() {
+    if (_fusionStats == null) {
+      _fusionStats = GetComponentInParent<FusionStats>();
+    }
+    return _fusionStats;
+  }
+
   protected bool _layoutDirty = true;
 
   protected Stats.StatsPer CurrentPer;
 
-  protected Stats.StatSourceInfo StatSourceInfo;
+  public Stats.StatSourceInfo StatSourceInfo;
+
+
+  // Track source values to detect changes in OnValidate.
+  [SerializeField]
+  [HideInInspector]
+  Stats.StatSourceTypes _prevStatSourceType;
+  
+  [SerializeField]
+  [HideInInspector]
+  int                   _prevStatId;
+
+#if UNITY_EDITOR
+
+  protected virtual void OnValidate() {
+    if (_statSourceType != _prevStatSourceType || _statId != _prevStatId) {
+      WarnThreshold = 0;
+      ErrorThreshold = 0;
+      _prevStatSourceType = _statSourceType;
+      _prevStatId = _statId;
+    }
+  }
+#endif
 
   public virtual void Initialize() {
 
@@ -138,12 +172,19 @@ public abstract class FusionGraphBase : Fusion.Behaviour, IFusionStatsView {
 
   protected virtual bool TryConnect() {
 
+    StatSourceInfo = Stats.GetDescription(_statSourceType, _statId);
+    // 
+    if (WarnThreshold == 0 && ErrorThreshold == 0) {
+      WarnThreshold = StatSourceInfo.WarnThreshold;
+      ErrorThreshold = StatSourceInfo.ErrorThreshold;
+    }
+
     if (gameObject.activeInHierarchy == false) {
       return false;
     }
 
     if (_fusionStats == null) {
-      _fusionStats = GetComponentInParent<IFusionStats>();
+      _fusionStats = GetComponentInParent<FusionStats>();
     }
 
     // Any data connection requires a runner for the statistics source.
@@ -152,7 +193,6 @@ public abstract class FusionGraphBase : Fusion.Behaviour, IFusionStatsView {
     var statistics = runner?.Simulation?.Stats;
     //Stats.StatSourceInfo info;
 
-    StatSourceInfo = Stats.GetDescription(_statSourceType, _statId);
 
     switch (_statSourceType) {
       case Stats.StatSourceTypes.Simulation: {

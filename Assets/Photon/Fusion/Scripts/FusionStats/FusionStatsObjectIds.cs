@@ -1,6 +1,5 @@
 
 using UnityEngine;
-using Fusion;
 using Fusion.StatsInternal;
 using UI = UnityEngine.UI;
 
@@ -9,7 +8,6 @@ public class FusionStatsObjectIds : Fusion.Behaviour, IFusionStatsView {
   protected const int PAD = FusionStatsUtilities.PAD;
   protected const int MARGIN = FusionStatsUtilities.MARGIN;
 
-  //[SerializeField] [HideInInspector] UI.Text _authorityText;
   [SerializeField] [HideInInspector] UI.Text _inputValueText;
   [SerializeField] [HideInInspector] UI.Text _stateValueText;
   [SerializeField] [HideInInspector] UI.Text _objectIdLabel;
@@ -17,14 +15,10 @@ public class FusionStatsObjectIds : Fusion.Behaviour, IFusionStatsView {
   [SerializeField] [HideInInspector] UI.Image _stateAuthBackImage;
   [SerializeField] [HideInInspector] UI.Image _inputAuthBackImage;
 
-  IFusionStats _fusionStats;
+  FusionStats _fusionStats;
 
   void Awake() {
     _fusionStats = GetComponentInParent<FusionStats>();
-    //// set to no auth state so current state matches the default state of _previousAuthority value.
-    //if (_authBackImage) {
-    //  _authBackImage.enabled = false;
-    //}
   }
 
   static Color _noneAuthColor  = new Color(0.2f, 0.2f, 0.2f, 0.9f);
@@ -35,7 +29,7 @@ public class FusionStatsObjectIds : Fusion.Behaviour, IFusionStatsView {
 
   }
 
-  public static RectTransform Create(RectTransform parent, IFusionStats fusionStats) {
+  public static RectTransform Create(RectTransform parent, FusionStats fusionStats) {
 
     var rt = parent.CreateRectTransform("Object Ids Panel")
       .ExpandTopAnchor(MARGIN);
@@ -62,8 +56,6 @@ public class FusionStatsObjectIds : Fusion.Behaviour, IFusionStatsView {
     var layoutRT = transform.CreateRectTransform("IDs Layout")
       .ExpandAnchor()
       .AddCircleSprite(_fusionStats.ObjDataBackColor)
-      //.AddImage(_fusionStats.ObjDataBackColor)
-      //.AddHorizontalLayoutGroup(MRGN);
       ;
 
     // Object ID panel on Left
@@ -95,27 +87,6 @@ public class FusionStatsObjectIds : Fusion.Behaviour, IFusionStatsView {
 
       AddAuthorityPanel(layoutRT, "State", ref _stateValueText, ref _stateAuthBackImage)
         .SetAnchors(0.7f, 1.0f, 0, 1);
-      //var authIdPanelRT = layoutRT.CreateRectTransform("Authority Id Panel", true)
-      //  .ExpandTopAnchor()
-      //  .SetAnchors(0.5f, 1, 0, 1)
-      //  .AddCircleSprite(_noneAuthColor, out _authBackImage);
-
-      ////// hasAuthority color background
-      ////_authBackImage = authIdPanelRT.gameObject.AddComponent<UI.Image>();
-      ////_authBackImage.color = FusionStatsUtilities.DARK_GREEN;
-
-      //var authLabelRT = authIdPanelRT.CreateRectTransform("Authority Label")
-      //  .SetAnchors(0, 1, LABEL_DIVIDING_POINT, 1)
-      //  .SetOffsets(TEXT_PAD_HORIZ, -TEXT_PAD_HORIZ, 0, -TEXT_PAD);
-      
-      //_authorityText = authLabelRT.AddText("AUTH", TextAnchor.MiddleCenter, fontColor);
-      //_authorityText.resizeTextMaxSize = MAX_TAG_FONT_SIZE;
-
-      //var authValueRT = authIdPanelRT.CreateRectTransform("Authority Value")
-      //  .SetAnchors(0, 1, 0, LABEL_DIVIDING_POINT)
-      //  .SetOffsets(TEXT_PAD_HORIZ, -TEXT_PAD_HORIZ, TEXT_PAD, 0);
-
-      //_stateValueText = authValueRT.AddText("P0", TextAnchor.MiddleCenter, fontColor);
     }
   }
 

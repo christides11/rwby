@@ -2,6 +2,108 @@
 
 ## RC Nightly
 
+### Build 405 (Feb 04, 2022)
+
+**Bug Fixes**
+
+- Fixed: Cached Transform in NetworkTransform classes checks for null, now that Fusion may access NBs which are disabled at startup (Awake has not run)
+- Fixed: Predicted Spawns will no longer fire PredictedSpawnUpdate on the same tick as PredictedSpawnSpawned
+- Fixed: Error if switch Shared and ClientServer modes
+
+### Build 404 (Feb 03, 2022)
+
+**Bug Fixes**
+
+- Fixed: Assert logged when baking a `NetworkObject` without any `NetworkBehaviours`
+
+### Build 403 (Feb 02, 2022)
+
+**Changes**
+
+- Extended Server ping to local IPs, instead of only public IPs
+
+**Bug Fixes**
+
+- Fixed: DisableNATPunchthrough flag
+- Fixed: MTU Default Size
+
+### Build 402 (Feb 01, 2022)
+
+**Bug Fixes**
+
+- Fixed: `SimulationBehaviour` static RPCs throwing `ArgumentOutOfRangeException`
+
+### Build 401 (Jan 31, 2022)
+
+**Changes**
+
+- Disabled/deactivated `NetworkObjects`, `NetworkBehaviours` and `SimulationBehaviours` are now picked up by the bake process; they are marked with `ActivatedByUser` flag and are not enabled/activated by Fusion when attaching a state object
+- `NetworkBehaviours` on deactivated GameObjects no longer have their callbacks invoked
+- `NetworkObjects` that are initially deactivated are no longer activated by Fusion. However, `NetworkBehaviours` on such objects still have `CopyBackingFieldsToState` (for server) and `Spawned` invoked
+- `Fusion.Behaviour.IsEnabled` now returns `MonoBehaviour.isActiveOrEnabled` (was: `MonoBehaviour.enabled`)
+
+### Build 399 (Jan 28, 2022)
+
+**Bug Fixes**
+
+- Fixed: RunnerVisibilityNodes Find buttons in Inspector now dirty the scene/object
+- Fixed: `NetworkObject` prefab showing outdated values and a rebake button (when opened)
+
+### Build 398 (Jan 27, 2022)
+
+**What's New**
+
+- FusionStats.NoGraphShader option added, for special VR cases where the shader will not render correctly in 3d space
+
+### Build 397 (Jan 26, 2022)
+
+**Bug Fixes**
+
+- Fixed: Overriding `NetworkBehaviour.CopyStateToBackingFields` and `NetworkBehaviour.CopyBackingFieldsToState`: `NetworkBehaviour.InvokeWeavedCode` needs to be called in overrides to instruct the weaver where to add instructions
+- Fixed: SerializableDictionary<,> throwing ArgumentNullException if a serialized key happens to be a null
+- Fixed: Unity 2022.1 compile error with `PrefabStageUtility.GetPrefabStage`
+
+### Build 396 (Jan 25, 2022)
+
+**Breaking Changes**
+
+- Session Custom Properties are now of type `Dictionary<string, SessionProperty>`
+
+**What's New**
+
+- RunnerVisibilityControlsWindow now shows PlayerRef ID (which when clicked will ping thePlayerObject for that runner), as well the UserID values
+- Custom Session Property support to strings
+- New SessionProperty type used to store supported Custom Session Properties
+- New ShutdownReason.InvalidArguments
+
+**Changes**
+
+- Max number of Session Custom properties is now 10 properties
+- Max size of Session Custom properties is now 500 bytes
+- Only the Server/Host or Shared Master Client can now update the Session Properties
+- SessionInfo.UpdateCustomProperties may fail if requirements are not met
+
+**Bug Fixes**
+
+- Fixed: NameServer when connecting to CN Region
+
+### Build 395 (Jan 24, 2022)
+
+**What's New**
+
+- FusionGraph meter bars now work with CanvasType GameObject , and not just Overlay
+- FusionStats added controls for warning/error thresholds, and customization support for these color and threshold values
+
+### Build 394 (Jan 22, 2022)
+
+**Changes**
+
+- Button overlay in Hierarchy name now uses PlayerRef ID value rather than the runner name. NetworkDebugStart also now names any client runners using sequential letters rather than numbers, to avoid confusion - as the numbers used were arbitrary and not related to the PlayerRef ID of the peer
+
+**Bug Fixes**
+
+- Fixed: Changing scenes would result in null textures for Inline Help and Fusion GroupBox styles
+
 ### Build 393 (Jan 21, 2022)
 
 **What's New**

@@ -596,27 +596,6 @@
             ID of this Communicator. This reflects the Actor Number of the Peer inside the Room
             </summary>
         </member>
-        <member name="M:Fusion.CloudCommunicator.Service">
-            <summary>
-            Keeps the Fusion Client up and running
-            </summary>
-        </member>
-        <member name="M:Fusion.CloudCommunicator.HandleProtocolPackage(System.Int32,System.Object)">
-            <summary>
-            Handles Protocol Msgs sent by the Fusion Plugin
-            
-            It converts the byte buffer into usable Protocol Msgs
-            </summary>
-            <param name="actorNr">Sender Actor of the Protocol Msg, generally the Plugin</param>
-            <param name="data">Object that stores the buffer to be converted</param>
-        </member>
-        <member name="M:Fusion.CloudCommunicator.HandleDataPackage(System.Int32,System.Object)">
-            <summary>
-            Handles Data Events
-            </summary>
-            <param name="actorNr">Sender Actor/Remote Connection</param>
-            <param name="data">Data buffer to be processed</param>
-        </member>
         <member name="T:Fusion.CloudServices">
             <summary>
             Responsible to deal with LoadBalancingClient Events
@@ -736,14 +715,13 @@
             <param name="actorID">ActorID of a Player inside the Room</param>
             <returns>Player UserID</returns>
         </member>
-        <member name="M:Fusion.CloudServices.OnInternalConnectionAttempt(Fusion.Sockets.NetConnection*,System.Int32,System.Int32,System.Boolean@,Fusion.Sockets.NetAddress@)">
+        <member name="M:Fusion.CloudServices.OnInternalConnectionAttempt(System.Int32,System.Int32,System.Boolean@,Fusion.Sockets.NetAddress@)">
             <summary>
             Callback fire on every connection attempt with a remote Server.
             
             It is used while trying to hole-punch the remote server and enables the manager to swap the target endpoint in between attempts.
             This is necessary to maintain a flow of attempts even if we exchange the local/public/relay endpoints
             </summary>
-            <param name="connection">Current connection ref</param>
             <param name="attempt">Current attempt number</param>
             <param name="totalConnectionAttempts">Max number of attempts</param>
             <param name="shouldChange">Flag if target EndPoint should change</param>
@@ -1062,14 +1040,16 @@
         </member>
         <member name="T:Fusion.IAfterClientPredictionReset">
             <summary>
-            Interface for <see cref="M:Fusion.IAfterClientPredictionReset.AfterClientPredictionReset"/> callback.
-            Called at the very end of the resimulation loop (on clients with prediction enabled).
+            Callback interface for <see cref="M:Fusion.IAfterClientPredictionReset.AfterClientPredictionReset"/>.
+            Called at the very start of the resimulation loop (on clients with prediction enabled), 
+            immediately after state is set to the latest server snapshot.
             Implement this interface on <see cref="T:Fusion.SimulationBehaviour"/> and <see cref="T:Fusion.NetworkBehaviour"/> classes.
             </summary>
         </member>
         <member name="M:Fusion.IAfterClientPredictionReset.AfterClientPredictionReset">
             <summary>
-            Called at the very end of the resimulation loop (on clients with prediction enabled), right before the forward simulation loop begins.
+            Called at the very start of the resimulation loop (on clients with prediction enabled), 
+            immediately after state is set to the latest server snapshot.
             </summary>
         </member>
         <member name="T:Fusion.IAfterPhysicsStep">
@@ -1123,8 +1103,9 @@
         </member>
         <member name="T:Fusion.IBeforeClientPredictionReset">
             <summary>
-            Interface for <see cref="M:Fusion.IBeforeClientPredictionReset.BeforeClientPredictionReset"/> callback.
-            Called at the very start of the resimulation loop (on clients with prediction enabled), before state is set to the latest server snapshot.
+            Callback interface for <see cref="M:Fusion.IBeforeClientPredictionReset.BeforeClientPredictionReset"/>.
+            Called at the very start of the resimulation loop (on clients with prediction enabled), 
+            before state is set to the latest server snapshot.
             Implement this interface on <see cref="T:Fusion.SimulationBehaviour"/> and <see cref="T:Fusion.NetworkBehaviour"/> classes.
             </summary>
         </member>
@@ -1531,6 +1512,13 @@
             </summary>
             <param name="behaviour"></param>
             <returns></returns>
+        </member>
+        <member name="M:Fusion.NetworkBehaviour.InvokeWeavedCode">
+            <summary>
+            This method needs to be invoked in user overrides of:
+            <see cref="M:Fusion.NetworkBehaviour.CopyBackingFieldsToState(System.Boolean)"/>
+            <see cref="M:Fusion.NetworkBehaviour.CopyStateToBackingFields"/>
+            </summary>
         </member>
         <member name="T:Fusion.NetworkBehaviourCallbackReference">
             <summary>
@@ -2030,18 +2018,7 @@
             Most recent unconsumed Teleport() command.
             </summary>
         </member>
-        <member name="M:Fusion.NetworkTransform.Teleport(System.Nullable{UnityEngine.Vector3},System.Nullable{Fusion.Rotation},System.Nullable{UnityEngine.Vector3},System.Boolean,System.Nullable{UnityEngine.Vector3},System.Nullable{UnityEngine.Vector3})">
-            <summary>
-            Teleport indicates that objects should not interpolate from the previous state to this new state.
-            </summary>
-            <param name="position">Sets the position or rigidbody.position to this value prior to state sync.</param>
-            <param name="rotation">If not null, Sets the position or rigidbody.rotation to this value prior to state sync. 
-            Accepts a Quaternion, Euler (Vector3), or 2d Z value (float)</param>
-            <param name="reset">Resets velocity, angular velocity, and controller states to default if applicable. 
-            Typically set to true if teleport is used for a respawn.</param>
-            <param name="velocity">Sets the velocity after teleport. Ignored if this is not a Rigidbody or CharacterController. Overrides reset.</param>
-            <param name="angularVelocity">Sets the angular velocity after teleport. Ignored if this is not a Rigidbody. Overrides reset.</param>
-        </member>
+        <!-- Badly formed XML comment ignored for member "M:Fusion.NetworkTransform.Teleport(System.Nullable{UnityEngine.Vector3},System.Nullable{Fusion.Rotation},System.Nullable{UnityEngine.Vector3},System.Boolean,System.Nullable{UnityEngine.Vector3},System.Nullable{UnityEngine.Vector3})" -->
         <member name="M:Fusion.NetworkTransform.PreTeleport">
             <summary>
             Captures the current state as the interpolation lerp TO target leading up to a teleport, and flags the next tick as a teleport.
@@ -2108,7 +2085,7 @@
             Indicates if Transform.parent will be synced. Parent syncing requires the parent of this object either be null or have a <see cref="T:Fusion.NetworkTransformAnchor"/> component.
             </summary>
         </member>
-        <member name="F:Fusion.NetworkTransformAnchor.Transform">
+        <member name="F:Fusion.NetworkTransformAnchor._transform">
             <summary>
             Cached GameObject.transform reference.
             </summary>
@@ -3113,7 +3090,7 @@
         </member>
         <member name="P:Fusion.Behaviour.IsEnabled">
             <summary>
-            Wrapper for Monobehaviour.enabled
+            Wrapper for Monobehaviour.isActiveAndEnabled
             </summary>
         </member>
         <member name="M:Fusion.Behaviour.AddBehaviour``1">
@@ -3466,7 +3443,6 @@
             [Networked, Capacity(10)]<br></br>
             NetworkDictionary&lt;int, float&gt; syncedDict => default;<br></br>
             </code>
-            Internally this struct does not contain the actual dictionary data, and is only a wrapper for memory operations.<br></br>
             Usage for modifying data:
             <code>
             var dict = syncedDict;
@@ -4447,6 +4423,11 @@
             If we are currently executing a client side prediction re-simulation.
             </summary>
         </member>
+        <member name="P:Fusion.NetworkRunner.IsResume">
+            <summary>
+            if this instance is a resume (host migration)
+            </summary>
+        </member>
         <member name="P:Fusion.NetworkRunner.State">
             <summary>
             The current state of the runner, if it's Starting, Running, Shutdown
@@ -4977,7 +4958,7 @@
         </member>
         <member name="F:Fusion.StartGameArgs.SessionName">
             <summary>
-            Photon Cloud Session Name used either to Create or Join
+            Photon Cloud Session Name used either to Create or Join a Session
             </summary>
         </member>
         <member name="F:Fusion.StartGameArgs.Address">
@@ -5032,7 +5013,9 @@
         </member>
         <member name="F:Fusion.StartGameArgs.SessionProperties">
             <summary>
-            Session Properties
+            Custom Session Properties.
+            This dictionary can be used to either setup the initial Session Properties when creating a Session
+            but also to set the matchmaking filters when joining a Random Session.
             </summary>
         </member>
         <member name="F:Fusion.StartGameArgs.CustomLobbyName">
@@ -5194,7 +5177,7 @@
             </summary>
             <param name="sessionInfo"></param>
         </member>
-        <member name="M:Fusion.SessionInfo.UpdateCustomProperties(System.Collections.Generic.Dictionary{System.String,System.Int32})">
+        <member name="M:Fusion.SessionInfo.UpdateCustomProperties(System.Collections.Generic.Dictionary{System.String,Fusion.SessionProperty})">
             <summary>
             Update or change the Custom Properties of the current joined Room
             </summary>
@@ -5357,6 +5340,11 @@
         <member name="F:Fusion.ShutdownReason.AlreadyRunning">
             <summary>
             Raised when Fusion is already running and the StartGame is invoked again
+            </summary>
+        </member>
+        <member name="F:Fusion.ShutdownReason.InvalidArguments">
+            <summary>
+            Raised when any of the StartGame arguments does not meet the requirements
             </summary>
         </member>
         <member name="T:Fusion.INetworkRunnerCallbacks">

@@ -18,6 +18,10 @@ namespace rwby.fighters.states
 
             manager.PhysicsManager.forceMovement *= manager.StatManager.JumpConversedMomentum;
             manager.PhysicsManager.forceMovement += manager.GetMovementVector() * manager.StatManager.JumpHorizontalVelocity;
+
+            SoundbankContainer soundbankContainer = manager.SoundbankContainer;
+            soundbankContainer.PlaySound("global", "jump", 0.5f);
+
             manager.fighterAnimator.Play("rr", "jump");
         }
 

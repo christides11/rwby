@@ -42,6 +42,12 @@ namespace rwby
                 manager.StateManager.GetState(currentAttack.stateOverride).OnUpdate();
             }
 
+            hCount = 0;
+            for (int i = 0; i < currentAttack.hitboxGroups.Count; i++)
+            {
+                HandleHitboxGroup(i, currentAttack.hitboxGroups[i]);
+            }
+
             if (TryCancelWindow(currentAttack))
             {
                 return;
@@ -96,10 +102,11 @@ namespace rwby
                 return;
             }
 
+            /*
             for (int i = 0; i < currentAttack.hitboxGroups.Count; i++)
             {
                 HandleHitboxGroup(i, currentAttack.hitboxGroups[i]);
-            }
+            }*/
 
             /*
             FighterManager entityManager = FighterManager;
@@ -222,6 +229,7 @@ namespace rwby
         /// </summary>
         /// <param name="groupIndex">The group number being processed.</param>
         /// <param name="boxGroup">The group being processed.</param>
+        int hCount = 0;
         protected virtual void HandleHitboxGroup(int groupIndex, HnSF.Combat.HitboxGroup boxGroup)
         {
             // Make sure we're in the frame window of the box.
@@ -242,26 +250,18 @@ namespace rwby
                 }
             }
 
-            // Hit check.
             switch (boxGroup.hitboxHitInfo.hitType)
             {
-                case HnSF.Combat.HitboxType.HIT:
-                    bool hitResult = manager.CombatManager.HitboxManager.CheckHit(groupIndex, (HitboxGroup)boxGroup, manager.gameObject);
-                    if (hitResult == true)
+                case HitboxType.HIT:
+                    // Create hitboxes.
+                    for (int i = 0; i < (boxGroup as HitboxGroup).boxes.Count; i++)
                     {
-                        /*
-                        if ((boxGroup.hitboxHitInfo as HitInfo).hitSound != null)
-                        {
-                            SimulationAudioManager.Play((boxGroup.hitboxHitInfo as HitInfo).hitSound, Manager.transform.position, AudioPlayMode.ROLLBACK);
-                        }*/
+                        manager.BoxManager.UpdateHitbox(hCount, boxGroup as HitboxGroup, groupIndex, i);
+                        hCount++;
                     }
                     break;
-                case HnSF.Combat.HitboxType.GRAB:
-                    bool grabResult = manager.CombatManager.HitboxManager.CheckGrab(groupIndex, (HitboxGroup)boxGroup, manager.gameObject);
-                    if (grabResult == true)
-                    {
-
-                    }
+                case HitboxType.GRAB:
+                    // TODO: Throwboxes.
                     break;
             }
         }

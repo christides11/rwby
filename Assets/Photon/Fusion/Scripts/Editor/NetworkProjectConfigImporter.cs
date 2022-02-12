@@ -133,7 +133,7 @@ namespace Fusion.Editor {
         try {
           prefabSource = NetworkPrefabSourceFactory.Create(assetPath);
 #if FUSION_EDITOR_TRACE
-          detailsLog.AppendLine($"{assetPath} -> {((INetworkPrefab)prefabAsset).EditorSummary}");
+          detailsLog.AppendLine($"{assetPath} -> {((INetworkPrefabSource)prefabSource).EditorSummary}");
 #endif
         } catch (Exception ex) {
           ctx.LogImportWarning($"Unable to create prefab asset for {assetPath}: {ex}");

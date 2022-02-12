@@ -2907,10 +2907,31 @@ namespace Fusion.CodeGen {
         var dataField = GetFieldFromNetworkedBehaviour(asm, type, PTR_FIELD_NAME);
 
         // find onspawned method
-        Func<string, MethodDefinition> createOverride = (name) => {
+        Func<string, (MethodDefinition, Instruction)> createOverride = (name) => {
           var result = type.Methods.FirstOrDefault(x => x.Name == name);
           if (result != null) {
-            return result;
+            // need to find the placeholder method
+            var placeholderMethodName = asm.NetworkedBehaviour.GetMethod(nameof(NetworkBehaviour.InvokeWeavedCode)).FullName;
+            var placeholders = result.Body.Instructions
+              .Where(x => x.OpCode == OpCodes.Call && x.Operand is MethodReference && ((MethodReference)x.Operand).FullName == placeholderMethodName)
+              .ToArray();
+
+            if (placeholders.Length != 1) {
+              throw new ILWeaverException($"When overriding {name} in a type with [Networked] properties, make sure to call {placeholderMethodName} exactly once somewhere.");
+            }
+
+            var placeholder = placeholders[0];
+            var il = result.Body.GetILProcessor();
+
+            var jumpTarget = Nop();
+            var returnTarget = Nop();
+
+            // this is where to jump after weaved code's done
+            il.InsertAfter(placeholder, returnTarget);
+            il.InsertAfter(placeholder, Br(jumpTarget));
+
+            il.Append(jumpTarget);
+            return (result, Br(returnTarget));
           }
 
           result = new MethodDefinition(name, MethodAttributes.Public, asm.CecilAssembly.MainModule.ImportReference(typeof(void))) {
@@ -2944,11 +2965,11 @@ namespace Fusion.CodeGen {
           }
 
           type.Methods.Add(result);
-          return result;
+          return (result, Ret());
         };
 
-        var setDefaults = new Lazy<MethodDefinition>(() => createOverride(nameof(NetworkBehaviour.CopyBackingFieldsToState)));
-        var getDefaults = new Lazy<MethodDefinition>(() => createOverride(nameof(NetworkBehaviour.CopyStateToBackingFields)));
+        var setDefaults = new Lazy<(MethodDefinition, Instruction)>(() => createOverride(nameof(NetworkBehaviour.CopyBackingFieldsToState)));
+        var getDefaults = new Lazy<(MethodDefinition, Instruction)>(() => createOverride(nameof(NetworkBehaviour.CopyStateToBackingFields)));
 
         FieldDefinition lastAddedFieldWithKnownPosition = null;
         List<FieldDefinition> fieldsWithUncertainPosition = new List<FieldDefinition>();
@@ -3025,8 +3046,7 @@ namespace Fusion.CodeGen {
 
               if (fieldInit?.Any() == true) {
                 // need to patch defaults with this, but only during the initial set
-                var il = setDefaults.Value.Body.GetILProcessor();
-                var localVariableStart = il.Body.Variables.Count;
+                var il = setDefaults.Value.Item1.Body.GetILProcessor();
                 var postInit = Nop();
                 il.Append(Ldarg_1());
                 il.Append(Brfalse(postInit));
@@ -3185,7 +3205,7 @@ namespace Fusion.CodeGen {
               defaultField.AddAttribute<DefaultForPropertyAttribute, string, int, int>(asm, property.Name, wordOffset, propertyWordCount);
 
               {
-                var il = setDefaults.Value.Body.GetILProcessor();
+                var il = setDefaults.Value.Item1.Body.GetILProcessor();
 
                 if (property.PropertyType.IsByReference || property.PropertyType.IsPointer) {
                   il.Append(Ldarg_0());
@@ -3243,7 +3263,7 @@ namespace Fusion.CodeGen {
               }
 
               {
-                var il = getDefaults.Value.Body.GetILProcessor();
+                var il = getDefaults.Value.Item1.Body.GetILProcessor();
 
                 if (property.PropertyType.IsByReference || property.PropertyType.IsPointer) {
                   il.Append(Ldarg_0());
@@ -3302,10 +3322,12 @@ namespace Fusion.CodeGen {
         }
 
         if (setDefaults.IsValueCreated) {
-          setDefaults.Value.Body.GetILProcessor().Append(Ret());
+          var (method, instruction) = setDefaults.Value;
+          method.Body.GetILProcessor().Append(instruction);
         }
         if (getDefaults.IsValueCreated) {
-          getDefaults.Value.Body.GetILProcessor().Append(Ret());
+          var (method, instruction) = getDefaults.Value;
+          method.Body.GetILProcessor().Append(instruction);
         }
 
         // add meta attribute

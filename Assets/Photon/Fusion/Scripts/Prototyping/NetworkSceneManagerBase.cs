@@ -105,12 +105,14 @@ namespace Fusion {
       // get all root gameobjects and move them to this runners scene
       foreach (var go in gameObjects) {
         networkObjects.Clear();
-        go.GetComponentsInChildren(networkObjects);
+        go.GetComponentsInChildren(true, networkObjects);
 
         foreach (var sceneObject in networkObjects) {
-          if (sceneObject.Flags.IsSceneObject() && sceneObject.gameObject.activeInHierarchy) {
-            Assert.Check(sceneObject.NetworkGuid.IsValid);
-            result.Add(sceneObject);
+          if (sceneObject.Flags.IsSceneObject()) {
+            if (sceneObject.gameObject.activeInHierarchy || sceneObject.Flags.IsActivatedByUser()) {
+              Assert.Check(sceneObject.NetworkGuid.IsValid);
+              result.Add(sceneObject);
+            }
           }
         }
 
@@ -271,24 +273,21 @@ namespace Fusion {
         return;
       }
 
-      if (Runner.MultiplePeerUnityScene.GetHashCode() != instanceId) {
-        return;
-      }
+      if (Runner.MultiplePeerUnityScene.GetHashCode() == instanceId) {
 
-      var rect = new Rect(position) { 
-        xMin = position.xMax - 50, 
-        xMax = position.xMax - 2,
-        yMin = position.yMin + 1,
-        //yMax = position.yMax - 2.25f 
-      };
+        var rect = new Rect(position) {
+          xMin = position.xMax - 56,
+          xMax = position.xMax - 2,
+          yMin = position.yMin + 1,
+        };
 
-      if (GUI.Button(rect, Runner.name, s_hierarchyOverlayLabelStyle.Value)) {
-        if (Runner) {
+        if (GUI.Button(rect, $"{Runner.Mode} {(Runner.LocalPlayer.IsValid ? "P" + Runner.LocalPlayer.PlayerId.ToString() : "")}", s_hierarchyOverlayLabelStyle.Value)) {
           UnityEditor.EditorGUIUtility.PingObject(Runner);
           UnityEditor.Selection.activeGameObject = Runner.gameObject;
         }
       }
     }
+
 #endif
   }
 }

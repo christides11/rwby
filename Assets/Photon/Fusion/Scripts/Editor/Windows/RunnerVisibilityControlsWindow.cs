@@ -6,17 +6,17 @@ namespace Fusion.Editor {
 
   public class RunnerVisibilityControlsWindow : EditorWindow {
 
-    const int WINDOW_MIN_W = 76;
+    const int WINDOW_MIN_W = 82;
     const int WINDOW_MIN_H = 48;
 
     const int STATS_BTTN_WIDE = 66;
-    const int STATS_BTTN_SLIM = 30;
+    const int STATS_BTTN_SLIM = 24;
     const int RUNNR_BTTN_WIDE = 60;
-    const int RUNNR_BTTN_SLIM = 36;
-    const int FONT_SIZE = 10;
+    const int RUNNR_BTTN_SLIM = 24;
+    const int FONT_SIZE = 9;
 
     const float TEXT_SWITCH_WIDTH = 200;
-    const float WIDE_SWITCH_WIDTH = 340;
+    const float WIDE_SWITCH_WIDTH = 380;
 
     const double REFRESH_RATE = 1f;
 
@@ -26,14 +26,20 @@ namespace Fusion.Editor {
       return result;
     });
 
-    private static Lazy<GUIStyle> s_buttonStyle = new Lazy<GUIStyle>(() => {
-      var result = new GUIStyle(EditorStyles.miniButton);
-      result.fontSize = FONT_SIZE;
+    private static Lazy<GUIStyle> s_labelTinyStyle = new Lazy<GUIStyle>(() => {
+      var result = new GUIStyle(s_labelStyle.Value);
+      result.fontSize = FONT_SIZE - 1;
       return result;
     });
 
-    private static Lazy<GUIStyle> s_toggleStyle = new Lazy<GUIStyle>(() => {
-      var result = new GUIStyle(EditorStyles.toggle);
+    private static Lazy<GUIStyle> s_labelCenterStyle = new Lazy<GUIStyle>(() => {
+      var result = new GUIStyle(s_labelStyle.Value);
+      result.alignment = TextAnchor.MiddleCenter;
+      return result;
+    });
+
+    private static Lazy<GUIStyle> s_buttonStyle = new Lazy<GUIStyle>(() => {
+      var result = new GUIStyle(EditorStyles.miniButton);
       result.fontSize = FONT_SIZE;
       return result;
     });
@@ -63,25 +69,20 @@ namespace Fusion.Editor {
       return result;
     });
 
-
     private static Lazy<string> Dark = new Lazy<string>(() => {
       return EditorGUIUtility.isProSkin ? "d_" : "";
     });
 
-    private static Lazy<GUIContent> s_toggleGuiContent = new Lazy<GUIContent>(() => {
+    private static Lazy<GUIContent> s_toggleGC = new Lazy<GUIContent>(() => {
       return new GUIContent("", "Toggles IsVisible for this Runner. [Shift + Click] will solo the selected runner.");
     });
 
-    private static Lazy<GUIContent> s_inputGuiContent = new Lazy<GUIContent>(() => {
-      return new GUIContent("", "Toggles ProvideInput for this runner. [Shift + Click] will solo for the selected runner.");
-    });
-
     static Lazy<GUIContent> s_visibleIcon = new Lazy<GUIContent>(() => {
-      return new GUIContent(EditorGUIUtility.FindTexture(Dark.Value + "scenevis_visible_hover@2x"), "");
+      return new GUIContent(EditorGUIUtility.FindTexture(Dark.Value + "scenevis_visible_hover@2x"), "Click to toggle this NetworkRunner visibility,");
     });
 
     static Lazy<GUIContent> s_hiddenIcon = new Lazy<GUIContent>(() => {
-      return new GUIContent(EditorGUIUtility.FindTexture(Dark.Value + "scenevis_hidden@2x"), "");
+      return new GUIContent(EditorGUIUtility.FindTexture(Dark.Value + "scenevis_hidden@2x"), "Click to toggle this NetworkRunner visibility,");
     });
 
     static Lazy<GUIContent> s_inputIconLong = new Lazy<GUIContent>(() => {
@@ -116,7 +117,6 @@ namespace Fusion.Editor {
     }
 
 
-
     private void Awake() {
       Instance = this;
     }
@@ -141,8 +141,8 @@ namespace Fusion.Editor {
       _lastRepaintTime = Time.realtimeSinceStartup;
 
       var currentViewWidth = EditorGUIUtility.currentViewWidth;
-      bool isWide    = currentViewWidth > WIDE_SWITCH_WIDTH;
-      bool shortText = currentViewWidth < TEXT_SWITCH_WIDTH;
+      bool isWide      = currentViewWidth > WIDE_SWITCH_WIDTH;
+      bool shortText   = currentViewWidth < TEXT_SWITCH_WIDTH;
 
       _scrollPosition = EditorGUILayout.BeginScrollView(_scrollPosition);
 
@@ -164,19 +164,40 @@ namespace Fusion.Editor {
 
           EditorGUILayout.BeginHorizontal();
           {
+            var lclplayer = runner.LocalPlayer;
+            var lclplayerid = lclplayer.IsValid ? "P" + lclplayer.PlayerId.ToString() : "--";
+
             string runnerName = 
-              shortText ? (runner.IsServer ? (runner.IsSinglePlayer ? "SP" : runner.IsPlayer ? "H" : "S") : "C:" + runner.name.Substring(7)) : 
+              shortText ? (runner.IsServer ? (runner.IsSinglePlayer ? "SP" : runner.IsPlayer ? "H" : "S") : "C") : 
               runner.name;
 
-            var toggleGuiContent = s_toggleGuiContent.Value;
+            var toggleGuiContent = s_toggleGC.Value;
+
 
             // Draw Runner Names/Buttons
             toggleGuiContent.text = runnerName;
             var runnerrect = EditorGUILayout.GetControlRect(GUILayout.ExpandWidth(true), GUILayout.MinWidth(isWide ? RUNNR_BTTN_WIDE : RUNNR_BTTN_SLIM));
-            if (GUI.Button(runnerrect, s_toggleGuiContent.Value, s_buttonStyle.Value)) {
+            if (GUI.Button(runnerrect, s_toggleGC.Value, s_buttonStyle.Value)) {
               EditorGUIUtility.PingObject(runner);
               Selection.activeGameObject = runner.gameObject;
             }
+
+
+            if (shortText == false) {
+
+              // Draw PlayerRef Id / Local Player Object buttons
+              var playerRefRect = EditorGUILayout.GetControlRect(GUILayout.Width(isWide ? 38 : 38));
+              var playerObj = runner.GetPlayerObject(lclplayer);
+              using (new EditorGUI.DisabledGroupScope(playerObj == false)) {
+
+                if (GUI.Button(playerRefRect, lclplayerid, s_buttonStyle.Value)) {
+                  if (playerObj) {
+                    EditorGUIUtility.PingObject(runner.GetPlayerObject(lclplayer));
+                  }
+                }
+              }
+            }
+
 
             // Draw Visibility Icons
             using (new EditorGUI.DisabledGroupScope(isSinglePeer)) {
@@ -199,13 +220,15 @@ namespace Fusion.Editor {
               if (GUI.Button(inputToggleRect,inputContent, runner.ProvideInput ? s_invisibleButtonStyle.Value : s_invisibleButtonGrayStyle.Value)) {
                 runner.ProvideInput = !runner.ProvideInput;
               }
-            }
+            };
+
 
             // Draw runtime stats creation buttons. Reflection used since this namespace can't see FusionStats.
 
-            var statsleftrect = EditorGUILayout.GetControlRect(GUILayout.ExpandWidth(true), GUILayout.MaxWidth(100), GUILayout.MinWidth(isWide ? STATS_BTTN_WIDE : STATS_BTTN_SLIM));
-            var statsrghtrect = EditorGUILayout.GetControlRect(GUILayout.ExpandWidth(true), GUILayout.MaxWidth(100), GUILayout.MinWidth(isWide ? STATS_BTTN_WIDE : STATS_BTTN_SLIM));
-            if (GUI.Button(statsleftrect, isWide ? "<< Stats" : "<<", s_buttonStyle.Value)) {
+            if (currentViewWidth >= WINDOW_MIN_W + 10) {
+              var statsleftrect = EditorGUILayout.GetControlRect(GUILayout.Width(isWide ? STATS_BTTN_WIDE : STATS_BTTN_SLIM));
+              var statsrghtrect = EditorGUILayout.GetControlRect(GUILayout.Width(isWide ? STATS_BTTN_WIDE : STATS_BTTN_SLIM));
+              if (GUI.Button(statsleftrect, isWide ? "<< Stats" : "<<", s_buttonStyle.Value)) {
                 var stats = Type.GetType("FusionStats, Assembly-CSharp").GetMethod("CreateInternal", BindingFlags.NonPublic | BindingFlags.Static).Invoke(null, new object[] { runner, 1, null, null });
                 EditorGUIUtility.PingObject(((UnityEngine.Component)stats).gameObject);
                 Selection.activeObject = ((UnityEngine.Component)stats).gameObject;
@@ -215,6 +238,15 @@ namespace Fusion.Editor {
                 EditorGUIUtility.PingObject(((UnityEngine.Component)stats).gameObject);
                 Selection.activeObject = ((UnityEngine.Component)stats).gameObject;
               }
+            }
+
+            // Draw UserID
+            if (currentViewWidth > 600) {
+              using (new EditorGUI.DisabledGroupScope(true)) {
+                var userIdRect = EditorGUILayout.GetControlRect(GUILayout.MinWidth(40), GUILayout.ExpandWidth(true));
+                GUI.Label(userIdRect, "UserID: " + ((runner.UserId == null) ? " --" : runner.UserId.ToString()), s_labelTinyStyle.Value);
+              }
+            }
           }
           EditorGUILayout.EndHorizontal();
         }

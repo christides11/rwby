@@ -5,6 +5,13 @@ using Fusion;
 
 public struct IDGroupCollisionInfo : INetworkStruct
 {
-    public int hitByIDGroup;
+    public IDGroupCollisionType collisionType;
     public NetworkId hitIHurtableNetID;
+    public int hitByIDGroup;
+}
+
+public enum IDGroupCollisionType
+{
+    Hurtbox,
+    Hitbox
 }

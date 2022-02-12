@@ -327,19 +327,24 @@
             Describe the type of a Networked Packet
             </summary>
         </member>
+        <member name="F:Fusion.Sockets.NetPeer.DEFAULT_HEADERS">
+            <summary>
+            IPv6 header: 40 bytes, UDP header: 8 bytes, Realtime Header: 96 bytes
+            </summary>
+        </member>
         <member name="F:Fusion.Sockets.NetPeer.MIN_MTU_BYTES">
             <summary>
-            MinimumTransferUnit bytes. (ipv6 header: 40 bytes, udp header: 8 bytes)
+            MinimumTransferUnit bytes. 
             </summary>
         </member>
         <member name="F:Fusion.Sockets.NetPeer.MIN_MTU_BITS">
             <summary>
-            MinimumTransferUnit bits. (ipv6 header: 40 bytes, udp header: 8 bytes)
+            MinimumTransferUnit bits.
             </summary>
         </member>
         <member name="F:Fusion.Sockets.NetPeer.MAX_MTU_BYTES">
             <summary>
-            MaximumTransferUnit bytes. (ipv6 header: 40 bytes, udp header: 8 bytes)
+            MaximumTransferUnit bytes.
             </summary>
         </member>
         <member name="F:Fusion.Sockets.NetPeer.MAX_MTU_BITS">
@@ -654,6 +659,21 @@
         <member name="P:Fusion.Protocol.BitStream.Data">
             <summary>
             Internal Byte Array
+            </summary>
+        </member>
+        <member name="M:Fusion.Protocol.CommunicatorBase.HandleProtocolPackage(System.Int32,System.Object)">
+            <summary>
+            Handles Protocol Msgs sent by the Fusion Plugin
+            
+            It converts the byte buffer into usable Protocol Msgs
+            </summary>
+            <param name="actorNr">Sender Actor of the Protocol Msg, generally the Plugin</param>
+            <param name="data">Object that stores the buffer to be converted</param>
+        </member>
+        <member name="M:Fusion.Protocol.CommunicatorBase.ConvertData(System.Object,System.Byte[]@,System.Int32@)">
+            <summary>
+            Convert the Data object into a usable Byte Buffer.
+            How the conversion happens depends on the the Type of Communicator
             </summary>
         </member>
         <member name="T:Fusion.Protocol.Message">

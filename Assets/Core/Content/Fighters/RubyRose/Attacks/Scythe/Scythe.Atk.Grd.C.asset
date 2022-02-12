@@ -26,9 +26,8 @@ MonoBehaviour:
   - id: 2
   - id: 3
   - id: 4
-  - id: 5
   cancels:
-  - id: 6
+  - id: 5
   firstActableFrame: 100
   references:
     version: 1
@@ -39,13 +38,13 @@ MonoBehaviour:
         activeFramesStart: 7
         activeFramesEnd: 9
         boxes:
-        - id: 7
+        - id: 6
         attachToEntity: 1
         attachTo: 
         chargeLevelNeeded: -1
         chargeLevelMax: 1
         hitboxHitInfo:
-          id: 8
+          id: 7
         attachPoint: 
     00000001:
       type: {class: AttackEventDefinition, ns: HnSF.Combat, asm: HnSF}
@@ -58,7 +57,7 @@ MonoBehaviour:
         startFrame: 1
         endFrame: 5
         attackEvent:
-          id: 9
+          id: 8
         conditions: []
         inputCheckTiming: 0
         inputCheckStartFrame: 1
@@ -81,7 +80,7 @@ MonoBehaviour:
         startFrame: 1
         endFrame: 1
         attackEvent:
-          id: 10
+          id: 9
         conditions: []
         inputCheckTiming: 0
         inputCheckStartFrame: 1
@@ -104,7 +103,7 @@ MonoBehaviour:
         startFrame: 1
         endFrame: 25
         attackEvent:
-          id: 11
+          id: 10
         conditions: []
         inputCheckTiming: 0
         inputCheckStartFrame: 1
@@ -119,7 +118,7 @@ MonoBehaviour:
     00000004:
       type: {class: AttackEventDefinition, ns: HnSF.Combat, asm: HnSF}
       data:
-        nickname: PSFX
+        nickname: WindSound
         active: 1
         onHitCheck: 0
         onHitHitboxGroup: 0
@@ -127,7 +126,7 @@ MonoBehaviour:
         startFrame: 6
         endFrame: 6
         attackEvent:
-          id: 12
+          id: 11
         conditions: []
         inputCheckTiming: 0
         inputCheckStartFrame: 1
@@ -140,36 +139,13 @@ MonoBehaviour:
         chargeLevelMin: 0
         chargeLevelMax: 0
     00000005:
-      type: {class: AttackEventDefinition, ns: HnSF.Combat, asm: HnSF}
-      data:
-        nickname: WindSound
-        active: 1
-        onHitCheck: 0
-        onHitHitboxGroup: 0
-        onHitIDGroup: 0
-        startFrame: 6
-        endFrame: 6
-        attackEvent:
-          id: 13
-        conditions: []
-        inputCheckTiming: 0
-        inputCheckStartFrame: 1
-        inputCheckEndFrame: 1
-        input:
-          executeWindow: 3
-          executeInputs: []
-          sequenceWindow: 8
-          sequenceInputs: []
-        chargeLevelMin: 0
-        chargeLevelMax: 0
-    00000006:
       type: {class: CancelListDefinition, ns: HnSF.Combat, asm: HnSF}
       data:
         startFrame: 10
         endFrame: 23
         cancelListID: 0
         conditions: []
-    00000007:
+    00000006:
       type: {class: BoxDefinition, ns: HnSF.Combat, asm: HnSF}
       data:
         shape: 1
@@ -178,7 +154,7 @@ MonoBehaviour:
         rotation: {x: 0, y: 0, z: 0}
         radius: 1
         height: 0
-    00000008:
+    00000007:
       type: {class: HitInfo, ns: rwby, asm: rwby.csharp}
       data:
         hitType: 0
@@ -232,32 +208,25 @@ MonoBehaviour:
         forcesRestand: 0
         hardKnockdown: 0
         causesTrip: 0
-    00000009:
+    00000008:
       type: {class: SoftLockOn, ns: rwby.Combat.AttackEvents, asm: rwby.csharp}
       data:
         rotSpeed: 30
-    0000000A:
+    00000009:
       type: {class: ClampMovement, ns: rwby.Combat.AttackEvents, asm: rwby.csharp}
       data:
         maxLength: 10
-    0000000B:
+    0000000A:
       type: {class: ApplyFriction, ns: rwby.Combat.AttackEvents, asm: rwby.csharp}
       data:
         useXZFriction: 1
         useYFriction: 0
         xzFriction: 30
         yFriction: 0
-    0000000C:
-      type: {class: PlaySFX, ns: rwby.Combat.AttackEvents, asm: rwby.csharp}
-      data:
-        sndbkName: rubyrose
-        sfxName: lt-swing-b
-        volume: 0.7
-        playChance: 100
-    0000000D:
+    0000000B:
       type: {class: PlaySFX, ns: rwby.Combat.AttackEvents, asm: rwby.csharp}
       data:
         sndbkName: global
-        sfxName: swing-sword-a
+        sfxName: swinga
         volume: 1
         playChance: 100

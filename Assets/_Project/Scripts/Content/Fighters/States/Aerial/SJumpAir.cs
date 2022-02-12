@@ -27,7 +27,7 @@ namespace rwby.fighters.states
             manager.PhysicsManager.forceMovement += movement * manager.StatManager.AirJumpHorizontalMomentum;
 
             SoundbankContainer soundbankContainer = manager.SoundbankContainer;
-            soundbankContainer.PlaySound("global", "air-jump", 0.5f);
+            soundbankContainer.PlaySound("global", "jump", 0.5f);
 
             manager.fighterAnimator.Play("rr", "jump");
         }

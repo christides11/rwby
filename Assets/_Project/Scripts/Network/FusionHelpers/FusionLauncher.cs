@@ -219,9 +219,7 @@ namespace rwby
 		{
 		}
 
-		public void OnObjectWordsChanged(NetworkRunner runner, NetworkObject obj, HashSet<int> changedWords, NetworkObjectMemoryPtr oldMemory)
-		{
-		}
+		//public void OnObjectWordsChanged(NetworkRunner runner, NetworkObject obj, HashSet<int> changedWords, NetworkObjectMemoryPtr oldMemory) { }
 
 		public void OnShutdown(NetworkRunner runner)
 		{

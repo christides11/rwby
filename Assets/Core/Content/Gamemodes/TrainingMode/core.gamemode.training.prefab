@@ -1242,6 +1242,8 @@ GameObject:
   - component: {fileID: 6588504900793457709}
   - component: {fileID: -2367205598055560534}
   - component: {fileID: -7702582740311327608}
+  - component: {fileID: 8481148300307289351}
+  - component: {fileID: 7242675761754256610}
   m_Layer: 0
   m_Name: core.gamemode.training
   m_TagString: Untagged
@@ -1287,7 +1289,9 @@ MonoBehaviour:
   NestedObjects: []
   NetworkedBehaviours:
   - {fileID: -7702582740311327608}
-  SimulationBehaviours: []
+  SimulationBehaviours:
+  - {fileID: 8481148300307289351}
+  - {fileID: 7242675761754256610}
 --- !u!114 &-7702582740311327608
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1310,6 +1314,41 @@ MonoBehaviour:
     modIdentifier: 
     objectIdentifier: 
   settingsMenu: {fileID: 6921723952494433063}
+--- !u!114 &8481148300307289351
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7011653979242441911}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4a1bbae5141d8294096c55d858108e80, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  broadphaseObjects: []
+  hitboxLayermask:
+    serializedVersion: 2
+    m_Bits: 1024
+  hurtboxLayermask:
+    serializedVersion: 2
+    m_Bits: 128
+  throwboxLayermask:
+    serializedVersion: 2
+    m_Bits: 512
+--- !u!114 &7242675761754256610
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7011653979242441911}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c9114e614f62cad468b753adf7611344, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  pairFinder: {fileID: 8481148300307289351}
 --- !u!1 &7125645665737823022
 GameObject:
   m_ObjectHideFlags: 0

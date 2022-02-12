@@ -52,7 +52,7 @@ namespace Fusion.StatsInternal {
       get {
         if (_font == null) {
           _font = Resources.GetBuiltinResource<Font>("Arial.ttf");
-          //_font = Font.CreateDynamicFontFromOSFont("Arial", FONT_SIZE);
+         
         }
         return _font;
       }
@@ -66,7 +66,7 @@ namespace Fusion.StatsInternal {
           var tex = new Texture2D(METER_TEXTURE_WIDTH, 2);
           for (int x = 0; x < METER_TEXTURE_WIDTH; ++x) {
             for (int y = 0; y < 2; ++y) {
-              var color = (x != 0 && x % 16 == 0) ? new Color(1f, 1f, 1f, 0.0f) : new Color(1f, 1f, 1f, 1f);
+              var color = (x != 0 && x % 16 == 0) ? new Color(1f, 1f, 1f, 0.75f) : new Color(1f, 1f, 1f, 1f);
               tex.SetPixel(x, y, color);
             }
           }

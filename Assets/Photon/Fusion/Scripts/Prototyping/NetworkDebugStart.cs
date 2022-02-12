@@ -502,7 +502,7 @@ public class NetworkDebugStart : Fusion.Behaviour {
     var client = Instantiate(RunnerPrefab);
     DontDestroyOnLoad(client);
 
-    client.name = $"Client {LastCreatedClientIndex++ }";
+    client.name = $"Client {(Char)(65 + LastCreatedClientIndex++)}";
 
     // if server mode is Shared or AutoHostOrClient, then game client mode is the same as the server, otherwise it is client
     var mode = GameMode.Client;
@@ -536,7 +536,6 @@ public class NetworkDebugStart : Fusion.Behaviour {
 
     var clientTasks = new List<Task>();
 
-    Debug.LogWarning("ConnectingClients");
     CurrentStage = Stage.ConnectingClients;
 
     for (int i = 0; i < clientCount; ++i) {
@@ -564,7 +563,6 @@ public class NetworkDebugStart : Fusion.Behaviour {
 
     } while (done == false);
 
-    Debug.LogWarning("AllConnected");
     CurrentStage = Stage.AllConnected;
     //ForceGUIUpdate();
   }

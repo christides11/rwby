@@ -20,11 +20,7 @@ namespace rwby.core.training
     {
         public event EmptyAction OnCPUListUpdated;
 
-        public ModObjectReference botReference;
-        public FighterInputManager botInputManager;
-
         public ModObjectReference mapReference = new ModObjectReference();
-
         public TrainingSettingsMenu settingsMenu;
 
         [Networked(OnChanged = nameof(CpuListUpdated)), Capacity(4)] public NetworkLinkedList<CPUReference> cpus { get; }
@@ -64,6 +60,7 @@ namespace rwby.core.training
                         {
                             b.gameObject.name = $"CPU.{b.Id} : {fighterDefinition.Name}";
                             b.GetBehaviour<FighterCombatManager>().Team = 0;
+                            _ = b.GetBehaviour<FighterManager>().OnFighterLoaded();
                             var list = cpus;
                             CPUReference temp = list[indexTemp];
                             temp.objectId = b.Id;
@@ -183,7 +180,23 @@ namespace rwby.core.training
 
         public override void FixedUpdateNetwork()
         {
+            for(int i = 0; i < cpus.Count; i++)
+            {
+                if (cpus[i].objectId.IsValid == false) continue;
+                NetworkObject no = Runner.FindObject(cpus[i].objectId);
+                FighterInputManager fim = no.GetBehaviour<FighterInputManager>();
+                fim.FeedInput(Runner.Simulation.Tick, CreateBotInput());
+            }
+        }
 
+        public bool flickerA = false;
+        private NetworkPlayerInputData CreateBotInput()
+        {
+            NetworkPlayerInputData npi = new NetworkPlayerInputData();
+
+            npi.buttons.Set(PlayerInputType.A, flickerA && Runner.Simulation.Tick%5 == 0 ? true : false);
+
+            return npi;
         }
     }
 }

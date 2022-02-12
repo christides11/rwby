@@ -109,7 +109,7 @@ namespace Fusion.Assistants {
       if (nr == null) {
 
         // Add NetworkRunner to scene if NetworkDebugStart doesn't have one set as a prefab already.
-        nr = FusionAssistants.EnsureExistsInScene<NetworkRunner>("Prototype Runner/Spawner/Inputs");
+        nr = FusionAssistants.EnsureExistsInScene<NetworkRunner>("Prototype Runner");
 
         nds.RunnerPrefab = nr;
         // The runner go is also our fallback spawn point... so raise it into the air a bit

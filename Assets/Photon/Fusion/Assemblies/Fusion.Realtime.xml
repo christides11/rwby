@@ -14,6 +14,11 @@
             
             This will deal with all communication done with the Photon Cloud
             </summary>
+            <summary>
+            Fusion Realtime Client
+            
+            This will deal with all communication done with the Photon Cloud
+            </summary>
         </member>
         <member name="F:Fusion.Photon.Realtime.FusionRelayClient.KeepAliveInBackground">
             <summary>Defines for how long the Fallback Thread should keep the connection, before it may time out as usual.</summary>
@@ -58,21 +63,6 @@
             </summary>
             <returns>True if the Thread should keep running, false otherwise.</returns>
         </member>
-        <member name="F:Fusion.Photon.Realtime.FusionRelayClient.FUSION_PLUGIN_NAME">
-            <summary>
-            Fusion Plugin Name for request
-            </summary>
-        </member>
-        <member name="P:Fusion.Photon.Realtime.FusionRelayClient.IsReadyAndInRoom">
-            <summary>
-            Flag to signal if the Client is Ready to perform cloud action and it is in a Room
-            </summary>
-        </member>
-        <member name="E:Fusion.Photon.Realtime.FusionRelayClient.OnRoomPropertiesChanged">
-            <summary>
-            Signal if some room property has changed
-            </summary>
-        </member>
         <member name="M:Fusion.Photon.Realtime.FusionRelayClient.OnEventHandler(ExitGames.Client.Photon.EventData)">
             <summary>
             Handles all received events from the Photon Cloud
@@ -90,7 +80,7 @@
             <param name="reliable">Flag to set reliability on the Event</param>
             <returns>True if the event was sent, false otherwise</returns>
         </member>
-        <member name="M:Fusion.Photon.Realtime.FusionRelayClient.ExtractData(System.Object,System.Byte*,System.Int32@)">
+        <member name="M:Fusion.Photon.Realtime.FusionRelayClient.ExtractData(System.Object,System.Byte[],System.Int32@)">
             <summary>
             Utility method used to extract the content of a <see cref="T:ExitGames.Client.Photon.ByteArraySlice"/> from a object holder.
             This is necessary so there are no references of Photon Lib DLLs other than on the Fusion.Realtime project
@@ -100,7 +90,27 @@
             <param name="bufferLength">Output size of the written buffer</param>
             <returns>True if the extraction was done correctly, false otherwise</returns>
         </member>
-        <member name="M:Fusion.Photon.Realtime.FusionRelayClient.UpdateRoomProperties(System.Collections.Generic.Dictionary{System.String,System.Int32})">
+        <member name="F:Fusion.Photon.Realtime.FusionRelayClient.FUSION_PLUGIN_NAME">
+            <summary>
+            Fusion Plugin Name for request
+            </summary>
+        </member>
+        <member name="F:Fusion.Photon.Realtime.FusionRelayClient.SERVER_HOST_CN">
+            <summary>
+            Alternative Name Server for CN Region
+            </summary>
+        </member>
+        <member name="P:Fusion.Photon.Realtime.FusionRelayClient.IsReadyAndInRoom">
+            <summary>
+            Flag to signal if the Client is Ready to perform cloud action and it is in a Room
+            </summary>
+        </member>
+        <member name="E:Fusion.Photon.Realtime.FusionRelayClient.OnRoomPropertiesChanged">
+            <summary>
+            Signal if some room property has changed
+            </summary>
+        </member>
+        <member name="M:Fusion.Photon.Realtime.FusionRelayClient.UpdateRoomProperties(System.Collections.Generic.Dictionary{System.String,Fusion.SessionProperty})">
             <summary>
             Change the Custom Properties of the current Room
             </summary>
@@ -132,7 +142,7 @@
             Used to keep the client communication
             </summary>
         </member>
-        <member name="M:Fusion.Photon.Realtime.FusionRelayClient.BuildEnterRoomParams(Fusion.Photon.Realtime.TypedLobby,System.String,System.Int32,System.Collections.Generic.Dictionary{System.String,System.Int32})">
+        <member name="M:Fusion.Photon.Realtime.FusionRelayClient.BuildEnterRoomParams(Fusion.Photon.Realtime.TypedLobby,System.String,System.Int32,System.Collections.Generic.Dictionary{System.String,Fusion.SessionProperty})">
             <summary>
             Build a new EnterRoomParams ref using the default configs and optional Room Name
             </summary>
@@ -141,13 +151,22 @@
             <param name="customProperties">Optional Room Custom Properties</param>
             <returns>EnterRoomParams reference.</returns>
         </member>
-        <member name="M:Fusion.Photon.Realtime.FusionRelayClient.BuildJoinParams(Fusion.Photon.Realtime.TypedLobby,System.Collections.Generic.Dictionary{System.String,System.Int32})">
+        <member name="M:Fusion.Photon.Realtime.FusionRelayClient.BuildJoinParams(Fusion.Photon.Realtime.TypedLobby,System.Collections.Generic.Dictionary{System.String,Fusion.SessionProperty})">
             <summary>
             Build a new OpJoinRandomRoomParams that will be used to setup which Room the local peer wants to join
             </summary>
             <param name="typedLobby">Type of Lobby to search rooms</param>
             <param name="customProperties">Optional list of filter parameters</param>
             <returns>OpJoinRandomRoomParams reference</returns>
+        </member>
+        <member name="M:Fusion.Photon.Realtime.FusionRelayClient.BuildSessionCustomPropertyHolders(System.Collections.Generic.Dictionary{System.String,Fusion.SessionProperty},ExitGames.Client.Photon.Hashtable@,System.String[]@)">
+            <summary>
+            Convert a <see cref="!:Dictionary&lt;string, SessionProperty&gt;"/> into a pair of <see cref="T:ExitGames.Client.Photon.Hashtable"/> and <see cref="!:string[]"/> respectively 
+            representing the custom properties of a session and the property names that will be published on the Lobby
+            </summary>
+            <param name="customProperties">Dictionary to be converted</param>
+            <param name="sessionCustomProperties">Hashtable with all allowed Custom Properties</param>
+            <param name="publicSessionProperties">String array with all public key names</param>
         </member>
         <member name="M:Fusion.Photon.Realtime.Async.LoadBalancingClientAsyncExtensions.ConnectToMasterAsync(Fusion.Photon.Realtime.LoadBalancingClient,Fusion.Photon.Realtime.AppSettings,System.Boolean)">
             <summary>
@@ -279,6 +298,37 @@
             <param name="client">Client</param>
             <param name="token">Cancellation token to stop the update loop</param>
             <param name="completionSource">Completion source is notified on an exception in Service()</param>
+        </member>
+        <member name="M:Fusion.Photon.Realtime.Extension.RealtimeExtensions_Hashtable.ConvertToDictionaryProperty(ExitGames.Client.Photon.Hashtable)">
+            <summary>
+            Convert a <see cref="T:ExitGames.Client.Photon.Hashtable"/> into a <see cref="!:Dictionary&lt;string, SessionProperty&gt;"/>
+            </summary>
+        </member>
+        <member name="M:Fusion.Photon.Realtime.Extension.RealtimeExtensions_Hashtable.ConvertToHashtable(System.Collections.Generic.Dictionary{System.String,Fusion.SessionProperty})">
+            <summary>
+            Convert a <see cref="!:Dictionary&lt;string, SessionProperty&gt;"/> into a <see cref="T:ExitGames.Client.Photon.Hashtable"/>
+            </summary>
+        </member>
+        <member name="M:Fusion.Photon.Realtime.Extension.RealtimeExtensions_Hashtable.CalculateTotalSize(ExitGames.Client.Photon.Hashtable)">
+            <summary>
+            Calculate the total size a <see cref="T:ExitGames.Client.Photon.Hashtable"/> would take when serialized
+            </summary>
+            <param name="hashtable">Hashtable to check the size</param>
+            <returns>Total size of the Hashtable in serialized format</returns>
+        </member>
+        <member name="M:Fusion.Photon.Realtime.Extension.RealtimeExtensions_RoomInfo.GetCustomProperties(Fusion.Photon.Realtime.RoomInfo)">
+            <summary>
+            Convert the Room Custom Properties into a <see cref="!:Dictionary&lt;string, SessionProperty&gt;"/>
+            </summary>
+            <param name="roomInfo">RoomInfo to extract the custom properties</param>
+            <returns><see cref="!:Dictionary&lt;string, SessionProperty&gt;"/> with the data</returns>
+        </member>
+        <member name="M:Fusion.Photon.Realtime.Extension.RealtimeExtensions_DictionaryProperties.CalculateTotalSize(System.Collections.Generic.Dictionary{System.String,Fusion.SessionProperty})">
+            <summary>
+            Calculate the total size a <see cref="!:Dictionary&lt;string, SessionProperty&gt;"/> would take when serialized
+            </summary>
+            <param name="dictionary">Dictionary to check the size</param>
+            <returns>Total size of the Dictionary in serialized format</returns>
         </member>
         <member name="T:Fusion.Photon.Realtime.AppSettings">
             <summary>
@@ -4392,6 +4442,66 @@
         </member>
         <member name="P:Fusion.Photon.Realtime.PhotonAppSettings.Instance">
             <summary>Serialized server settings, written by the Setup Wizard for use in ConnectUsingSettings.</summary>
+        </member>
+        <member name="T:Fusion.SessionProperty">
+            <summary>
+            Holds a Custom Session Property value
+            </summary>
+        </member>
+        <member name="P:Fusion.SessionProperty.PropertyValue">
+            <summary>
+            Internal stored value 
+            </summary>
+        </member>
+        <member name="P:Fusion.SessionProperty.PropertyType">
+            <summary>
+            Get the Type of the internal stored value 
+            </summary>
+        </member>
+        <member name="P:Fusion.SessionProperty.IsInt">
+            <summary>
+            Signal if this Session Property is a int value
+            </summary>
+        </member>
+        <member name="P:Fusion.SessionProperty.IsString">
+            <summary>
+            Signal if this Session Property is a string value
+            </summary>
+        </member>
+        <member name="M:Fusion.SessionProperty.op_Implicit(Fusion.SessionProperty)~System.Int32">
+            <summary>
+            Convert a <see cref="T:Fusion.SessionProperty"/> into int
+            </summary>
+        </member>
+        <member name="M:Fusion.SessionProperty.op_Implicit(System.Int32)~Fusion.SessionProperty">
+            <summary>
+            Convert a int into a <see cref="T:Fusion.SessionProperty"/>
+            </summary>
+        </member>
+        <member name="M:Fusion.SessionProperty.op_Implicit(Fusion.SessionProperty)~System.String">
+            <summary>
+            Convert a <see cref="T:Fusion.SessionProperty"/> into string
+            </summary>
+        </member>
+        <member name="M:Fusion.SessionProperty.op_Implicit(System.String)~Fusion.SessionProperty">
+            <summary>
+            Convert a string into a <see cref="T:Fusion.SessionProperty"/>
+            </summary>
+        </member>
+        <member name="M:Fusion.SessionProperty.Support(System.Object)">
+            <summary>
+            Signal if a particular object is supported as a <see cref="T:Fusion.SessionProperty"/>
+            </summary>
+            <param name="obj">Object ref to check</param>
+            <returns>True if obj is of a supported type, false otherwise</returns>
+        </member>
+        <member name="M:Fusion.SessionProperty.Convert(System.Object)">
+            <summary>
+            Convert a particular object into a <see cref="T:Fusion.SessionProperty"/>.
+            If the object type is not supported, null will be returned.
+            </summary>
+            <param name="obj">Object reference to be converted</param>
+            <returns>Instance of a <see cref="T:Fusion.SessionProperty"/> if type is supported, null otherwise</returns>
         </member>
     </members>
 </doc>

@@ -6,38 +6,63 @@ using Fusion.StatsInternal;
 
 public class FusionStatsMeterBar : FusionGraphBase
 {
-  public float WarningThreshold;
-  public float ErrorThreshold;
+  //public float WarningValueThreshold;
+  //public float ErrorValueThreshold;
 
+
+  public float HoldPeakTime = 0.1f;
+  public float DecayTime = 0.25f;
+
+  /// <summary>
+  /// Values greater than 0 will limit the meter to a range of 0 to MeterMax.
+  /// Value of 0 will adjust the max to the largest value occurance.
+  /// </summary>
+  [InlineHelp]
+  public int MeterMax = 0;
+
+
+  /// <summary>
+  /// Exposes the UI labels and controls of <see cref="FusionGraph"/>, so they may be modified if customizing this graph.
+  /// </summary>
+  [InlineHelp]
+  [SerializeField]
+  bool _showUITargets;
+
+  [DrawIf(nameof(_showUITargets), true, DrawIfHideType.Hide)]
   public Text ValueLabel;
+  [DrawIf(nameof(_showUITargets), true, DrawIfHideType.Hide)]
   public Image Bar;
 
-  public Color GoodColor  = new Color(0.0f, 0.5f, 0.0f, 1.0f);
-  public Color WarnColor  = new Color(0.5f, 0.5f, 0.0f, 1.0f);
-  public Color ErrorColor = new Color(0.5f, 0.0f, 0.0f, 1.0f);
 
-  public string CurrentLabel;
-  public double  _currentRawValue;
-  public double  _currentDisplayValue;
-  public double  _currentBarValue;
-  public Color  CurrentColor;
+  //public string CurrentLabel;
+  //double _currentRawValue;
+  double _currentDisplayValue;
+  double _currentBarValue;
+  Color CurrentColor;
 
-  public float DecayTime = 0.25f;
-  public float HoldPeakTime = 0.1f;
 
   protected override Color BackColor => base.BackColor * new Color(.5f, .5f, .5f, 1);
 
-  public void OnValidate() {
+#if UNITY_EDITOR
+
+  protected override void OnValidate() {
+    base.OnValidate();
+
+    if (MeterMax < 0) {
+      MeterMax = 0;
+    }
 
     if (Application.isPlaying == false) {
       TryConnect();
       _layoutDirty = true;
     }
   }
+#endif
 
   public override void Initialize() {
     base.Initialize();
 
+    _max = MeterMax;
     // Prefabs lose editor generated sprites - recreate as needed.
     if (BackImage.sprite == null) {
       BackImage.sprite = FusionStatsUtilities.MeterSprite;
@@ -145,9 +170,12 @@ public class FusionStatsMeterBar : FusionGraphBase
 
     double multiplied = rawvalue * info.Multiplier;
 
-    if (multiplied > _max) {
-      _max = multiplied;
+    if (MeterMax == 0) {
+      if (multiplied > _max) {
+        _max = multiplied;
+      }
     }
+
 
     double clampedValue = System.Math.Max(System.Math.Min(multiplied, _max), 0);
     var roundedValue = System.Math.Round(clampedValue, info.Decimals);
@@ -175,24 +203,29 @@ public class FusionStatsMeterBar : FusionGraphBase
 
   void SetBar(double value) {
 
+    var fusionStats = _fusionStats;
+
     Bar.fillAmount = (float)(value / _max);
 
     _currentBarValue = value;
 
-    if (value >= ErrorThreshold) {
-      if (CurrentColor != ErrorColor) {
-        Bar.color = ErrorColor;
-        CurrentColor = ErrorColor;
+    if (value < WarnThreshold) {
+      var GoodColor = fusionStats.GraphColorGood;
+      if (CurrentColor != GoodColor) {
+        CurrentColor = GoodColor;
+        Bar.color = GoodColor;
       }
-    } else if (value >= WarningThreshold) {
+    } else if (value < ErrorThreshold) {
+      var WarnColor = fusionStats.GraphColorWarn;
       if (CurrentColor != WarnColor) {
         Bar.color = WarnColor;
         CurrentColor = WarnColor;
       }
     } else {
-      if (CurrentColor != GoodColor) {
-        CurrentColor = GoodColor;
-        Bar.color = GoodColor;
+      var ErrorColor = fusionStats.GraphColorBad;
+      if (CurrentColor != ErrorColor) {
+        Bar.color = ErrorColor;
+        CurrentColor = ErrorColor;
       }
     }
   }
@@ -215,7 +248,7 @@ public class FusionStatsMeterBar : FusionGraphBase
   // unfinished
   public static FusionStatsMeterBar Create(
     RectTransform parent, 
-    IFusionStats iFusionStats,
+    FusionStats fusionStats,
     Stats.StatSourceTypes statSourceType, 
     int statId, 
     float warnThreshold,
@@ -226,9 +259,9 @@ public class FusionStatsMeterBar : FusionGraphBase
     var barRT = parent.CreateRectTransform(info.LongName, true);
     var bar   = barRT.gameObject.AddComponent<FusionStatsMeterBar>();
     bar.StatSourceInfo = info;
-    bar._fusionStats = iFusionStats;
-    bar.WarningThreshold = warnThreshold;
-    bar.ErrorThreshold = alertThreshold;
+    bar._fusionStats = fusionStats;
+    //bar.WarningValueThreshold = warnThreshold;
+    //bar.ErrorValueThreshold = alertThreshold;
     bar._statSourceType = statSourceType;
     bar._statId = statId;
     bar.GenerateMeter();
@@ -248,7 +281,7 @@ public class FusionStatsMeterBar : FusionGraphBase
     Bar = barRT.gameObject.AddComponent<Image>();
     Bar.raycastTarget = false;
     Bar.sprite = BackImage.sprite;
-    Bar.color = GoodColor;
+    Bar.color = _fusionStats.GraphColorGood;
     Bar.type = Image.Type.Filled;
     Bar.fillMethod = Image.FillMethod.Horizontal;
     Bar.fillAmount = 0;

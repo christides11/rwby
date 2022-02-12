@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Collections;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UI = UnityEngine.UI;
@@ -12,20 +11,6 @@ using Fusion.StatsInternal;
 using UnityEditor;
 #endif
 
-public interface IFusionStats {
-  Color FontColor        { get; }
-  Color GraphColorGood   { get; }
-  Color GraphColorWarn   { get; }
-  Color GraphColorBad    { get; }
-  Color SimDataBackColor { get; }
-  Color NetDataBackColor { get; }
-  Color ObjDataBackColor { get; }
-  NetworkRunner Runner   { get; }
-  NetworkObject Object   { get; }
-  bool ModifyColors      { get; }
-  FusionStats.StatCanvasTypes CanvasType { get; }
-}
-
 /// <summary>
 /// Creates and controls a Canvas with one or multiple telemetry graphs. Can be created as a scene object or prefab,
 /// or be created at runtime using the <see cref="Create"/> methods. If created as the child of a <see cref="NetworkObject"/>
@@ -33,7 +18,7 @@ public interface IFusionStats {
 /// </summary>
 [ScriptHelp(BackColor = EditorHeaderBackColor.Olive)]
 [ExecuteAlways]
-public class FusionStats : Fusion.Behaviour, IFusionStats {
+public class FusionStats : Fusion.Behaviour {
 
 #if UNITY_EDITOR
 
@@ -198,8 +183,8 @@ public class FusionStats : Fusion.Behaviour, IFusionStats {
     get => _canvasType;
     set {
       _canvasType = value;
-      _canvas.enabled = false;
-      DirtyLayout();
+      //_canvas.enabled = false;
+      DirtyLayout(2);
     }
   }
 
@@ -271,7 +256,7 @@ public class FusionStats : Fusion.Behaviour, IFusionStats {
     }
   }
 
-  public Rect CurrentRect => _canvasType == StatCanvasTypes.GameObject ? _gameObjectRect : _overlayRect;
+
 
   /// <summary>
   /// The Rect which defines the position of the stats canvas overlay on the screen. Sizes are normalized percentages.(ranges of 0f-1f).
@@ -285,6 +270,54 @@ public class FusionStats : Fusion.Behaviour, IFusionStats {
     get => _overlayRect;
     set {
       _overlayRect = value;
+      DirtyLayout();
+    }
+  }
+
+
+  /// <summary>
+  /// <see cref="FusionGraph.Layouts"/> value which all child <see cref="FusionGraph"/> components will use if their <see cref="FusionGraph.Layouts"/> value is set to Auto.
+  /// </summary>
+  [Header("Fusion Graphs Layout")]
+  [InlineHelp]
+  [SerializeField]
+  FusionGraph.Layouts _defaultLayout;
+  public FusionGraph.Layouts DefaultLayout {
+    get => _defaultLayout;
+    set {
+      _defaultLayout = value;
+      DirtyLayout();
+    }
+  }
+
+  /// <summary>
+  /// UI Text on FusionGraphs can only overlay the bar graph if the canvas is perfectly facing the camera. 
+  /// Any other angles will result in ZBuffer fighting between the text and the graph bar shader.
+  /// For uses where perfect camera billboarding is not possible (such as VR), this toggle prevents FusionGraph layouts being used where text and graphs overlap.
+  /// Normally leave this unchecked, unless you are experiencing corrupted text rendering.
+  /// </summary>
+  [InlineHelp]
+  [SerializeField]
+  bool _noTextOverlap;
+  public bool NoTextOverlap {
+    get => _noTextOverlap;
+    set {
+      _noTextOverlap = value;
+      DirtyLayout();
+    }
+  }
+
+  /// <summary>
+  /// Disables the bar graph in <see cref="FusionGraph"/>, and uses a text only layout.
+  /// Enable this if <see cref="FusionGraph"/> is not rendering correctly in VR.
+  /// </summary>
+  [InlineHelp]
+  [SerializeField]
+  bool _noGraphShader;
+  public bool NoGraphShader {
+    get => _noGraphShader;
+    set {
+      _noGraphShader = value;
       DirtyLayout();
     }
   }
@@ -553,7 +586,7 @@ public class FusionStats : Fusion.Behaviour, IFusionStats {
   [InlineHelp]
   [SerializeField]
   [DrawIf(nameof(ShowColorControls), true, DrawIfHideType.Hide)]
-  Color _graphColorGood = new Color(0.1f, 0.4f, 0.75f, 1f);
+  Color _graphColorGood = new Color(0.1f, 0.5f, 0.1f, 0.9f);
 
   /// <summary>
   /// The color used for the telemetry graph data.
@@ -561,7 +594,7 @@ public class FusionStats : Fusion.Behaviour, IFusionStats {
   [InlineHelp]
   [SerializeField]
   [DrawIf(nameof(ShowColorControls), true, DrawIfHideType.Hide)]
-  Color _graphColorWarn = new Color(0.9f, 0.6f, 0.0f, 1f);
+  Color _graphColorWarn = new Color(0.75f, 0.75f, 0.2f, 0.9f);
 
   /// <summary>
   /// The color used for the telemetry graph data.
@@ -569,12 +602,20 @@ public class FusionStats : Fusion.Behaviour, IFusionStats {
   [InlineHelp]
   [SerializeField]
   [DrawIf(nameof(ShowColorControls), true, DrawIfHideType.Hide)]
-  Color _graphColorBad = new Color(1.0f, 0.0f, 0.0f, 1f);
+  Color _graphColorBad = new Color(0.9f, 0.2f, 0.2f, 0.9f);
+
+  /// <summary>
+  /// The color used for the telemetry graph data.
+  /// </summary>
+  [InlineHelp]
+  [SerializeField]
+  [DrawIf(nameof(ShowColorControls), true, DrawIfHideType.Hide)]
+  Color _graphColorFlag = new Color(0.8f, 0.75f, 0.0f, 1.0f);
 
   [InlineHelp]
   [SerializeField]
   [DrawIf(nameof(ShowColorControls), true, DrawIfHideType.Hide)]
-  Color _fontColor = new Color(1.0f, 1.0f, 1.0f, 0.75f);
+  Color _fontColor = new Color(1.0f, 1.0f, 1.0f, 1f);
 
   [InlineHelp]
   [SerializeField]
@@ -601,6 +642,7 @@ public class FusionStats : Fusion.Behaviour, IFusionStats {
   public Color GraphColorGood   => _graphColorGood;
   public Color GraphColorWarn   => _graphColorWarn;
   public Color GraphColorBad    => _graphColorBad;
+  public Color GraphColorFlag    => _graphColorFlag;
   public Color SimDataBackColor => _simDataBackColor;
   public Color NetDataBackColor => _netDataBackColor;
   public Color ObjDataBackColor => _objDataBackColor;
@@ -625,8 +667,8 @@ public class FusionStats : Fusion.Behaviour, IFusionStats {
   [SerializeField] [HideInInspector] UI.Text _togglLabel;
   [SerializeField] [HideInInspector] UI.Text _closeLabel;
   [SerializeField] [HideInInspector] UI.Text _canvsLabel;
-
   [SerializeField] [HideInInspector] UI.Text _objectNameText;
+
   [SerializeField] [HideInInspector] UI.GridLayoutGroup _graphGridLayoutGroup;
 
   [SerializeField] [HideInInspector] Canvas _canvas;
@@ -652,6 +694,8 @@ public class FusionStats : Fusion.Behaviour, IFusionStats {
   [SerializeField] [HideInInspector] UI.Button _closeButton;
   [SerializeField] [HideInInspector] UI.Button _canvsButton;
 
+  public Rect CurrentRect => _canvasType == StatCanvasTypes.GameObject ? _gameObjectRect : _overlayRect;
+
   void UpdateTitle() {
     var runnername = _runner ? _runner.name : "Disconnected";
     if (_titleText) {
@@ -672,9 +716,9 @@ public class FusionStats : Fusion.Behaviour, IFusionStats {
   double _currentDrawTime;
   double _delayDrawUntil;
 
-  void DirtyLayout() {
-    if (_layoutDirty <= 0) {
-      _layoutDirty = 1;
+  void DirtyLayout(int minimumRefreshes = 1) {
+    if (_layoutDirty < minimumRefreshes) {
+      _layoutDirty = minimumRefreshes;
     }
   }
 
@@ -773,7 +817,7 @@ public class FusionStats : Fusion.Behaviour, IFusionStats {
       if (_canvas) {
         //// Hide canvas for rebuild, Unity makes this ugly.
         if (EditorApplication.isCompiling == false) {
-          _canvas.enabled = false;
+          //_canvas.enabled = false;
           UnityEditor.EditorApplication.delayCall += CalculateLayout;
 
         }
@@ -811,7 +855,7 @@ public class FusionStats : Fusion.Behaviour, IFusionStats {
       Initialize();
       _activeDirty = true;
       _layoutDirty = 2;
-      _canvas.enabled = false;
+      //_canvas.enabled = false;
 
     }
   }
@@ -1024,7 +1068,7 @@ public class FusionStats : Fusion.Behaviour, IFusionStats {
     }
 
     // Hide canvas for a tick. Unity makes some ugliness on the first update.
-    _canvas.enabled = false;
+    //_canvas.enabled = false;
     _activeDirty = true;
 
     _layoutDirty = 2;
@@ -1133,8 +1177,8 @@ public class FusionStats : Fusion.Behaviour, IFusionStats {
     }
 #endif
     _canvasType = (_canvasType == StatCanvasTypes.GameObject) ? StatCanvasTypes.Overlay : StatCanvasTypes.GameObject;
-    _canvas.enabled = false;
-    _layoutDirty = 2;
+    //_canvas.enabled = false;
+    _layoutDirty = 3;
     CalculateLayout();
   }
 
@@ -1358,7 +1402,6 @@ public class FusionStats : Fusion.Behaviour, IFusionStats {
 
   void CalculateLayout() {
 
-
     if (_rootPanelRT == null || _graphsLayoutRT == null) {
       return;
     }
@@ -1387,7 +1430,7 @@ public class FusionStats : Fusion.Behaviour, IFusionStats {
 #endif
 
     if (_layoutDirty <= 0 && _canvas.enabled == false) {
-      _canvas.enabled = true;
+      //_canvas.enabled = true;
     }
 
     if (_rootPanelRT) {

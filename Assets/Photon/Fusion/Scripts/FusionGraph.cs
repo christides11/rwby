@@ -17,15 +17,25 @@ public class FusionGraph : FusionGraphBase {
 
   public enum Layouts {
     Auto,
-    Full,
-    CenteredBasic,
-    Compact
+    FullAuto,
+    FullNoOverlap,
+    CenteredAuto,
+    CenteredNoGraph,
+    CenteredNoOverlap,
+    CompactAuto,
+    CompactNoGraph,
   }
 
   public enum ShowGraphOptions {
     Never,
     OverlayOnly,
     Always,
+  }
+
+  enum ShaderType {
+    None,
+    Overlay,
+    GameObject
   }
 
   const int GRPH_TOP_PAD = 36;
@@ -40,20 +50,15 @@ public class FusionGraph : FusionGraphBase {
     get => Resources.Load<Shader>("FusionGraphShader");
   }
 
-  /// <summary>
-  /// Padding added to text and other layout objects.
-  /// </summary>
-  [InlineHelp]
-  public float Padding = 5f;
-
-  // Not sure height is if much use anymore.
-  [SerializeField] [HideInInspector] public float  Height = 50;
+  // Not sure height is 0f much use anymore.
+  [SerializeField] [HideInInspector] public float Height = 50;
 
   /// <summary>
   /// Select between automatic formating (based on size and aspect ratio of the graph) and manual selection of the various graph layouts available.
   /// </summary>
   [InlineHelp]
   [SerializeField]
+  [Header("Graph Layout")]
   Layouts _layout;
   public Layouts Layout {
     get => _layout;
@@ -68,7 +73,7 @@ public class FusionGraph : FusionGraphBase {
   /// </summary>
   [InlineHelp]
   [SerializeField]
-  ShowGraphOptions _showGraph = ShowGraphOptions.OverlayOnly;
+  ShowGraphOptions _showGraph = ShowGraphOptions.Always;
   public ShowGraphOptions ShowGraph {
     get => _showGraph;
     set {
@@ -77,6 +82,12 @@ public class FusionGraph : FusionGraphBase {
       _layoutDirty = true;
     }
   }
+
+  /// <summary>
+  /// Padding added to text and other layout objects.
+  /// </summary>
+  [InlineHelp]
+  public float Padding = 5f;
 
   /// <summary>
   /// The graph shaded area (which is only visible in Overlay mode) will expand to the full extends of the <see cref="FusionGraph"/> component when this is enabled, regardless of size.
@@ -94,11 +105,13 @@ public class FusionGraph : FusionGraphBase {
     }
   }
 
+
   /// <summary>
   /// Exposes the UI labels and controls of <see cref="FusionGraph"/>, so they may be modified if customizing this graph.
   /// </summary>
   [InlineHelp]
-  [SerializeField] bool _showUITargets;
+  [SerializeField]
+  bool _showUITargets;
 
   [DrawIf(nameof(_showUITargets), true, DrawIfHideType.Hide)]
   public UI.Image GraphImg;
@@ -125,7 +138,10 @@ public class FusionGraph : FusionGraphBase {
   float[] _histogram;
 
 #if UNITY_EDITOR
-  private void OnValidate() {
+
+  
+  protected override void OnValidate() {
+    base.OnValidate();
     if (Application.isPlaying == false) {
       //This is here so when changes are made that affect graph names/colors they get applied immediately.
       TryConnect();
@@ -143,7 +159,10 @@ public class FusionGraph : FusionGraphBase {
   List<int> DropdownLookup = new List<int>();
 
   protected override bool TryConnect() {
-    if (base.TryConnect()) {
+
+    bool isConnected = base.TryConnect();
+
+    if (isConnected) {
 
       var flags = _statsBuffer.VisualizationFlags;
 
@@ -187,11 +206,12 @@ public class FusionGraph : FusionGraphBase {
     if (_values != null && _values.Length > 0) {
       Array.Clear(_values, 0, _values.Length);
       Array.Clear(_histogram, 0, _histogram.Length);
-      Array.Clear(_intensity, 0, _intensity.Length);
+      for (int i = 0; i < _intensity.Length; ++i) {
+        _intensity[i] = -2;
+      }
       _min = 0;
       _max = 0;
       _histoHighestUsedBucketIndex = 0;
-      _histoHighestValue = 0;
       _histoAvg = 0;
       _histoAvgSampleCount = 0;
     }
@@ -208,17 +228,38 @@ public class FusionGraph : FusionGraphBase {
     SetPerText();
   }
 
+  [BehaviourButtonAction("ResetShader")]
+  void ResetShaderButton() {
+    //TEST
+    _intensity = new float[200];
+    _values = new float[200];
+    for (int i = 0; i < _values.Length; ++i) {
+      _values[i] = (float)i / _values.Length;
+      _intensity[i] = (float)i / 200; ;
+    }
+
+    GraphImg.material.SetFloat("_ZeroCenter", .3f);
+    GraphImg.material.SetFloatArray("_Data", _values);
+    GraphImg.material.SetFloatArray("_Intensity", _intensity);
+    GraphImg.material.SetInt("_Count", _values.Length);
+  }
+
+  ShaderType _currentShader;
+  
   void ResetGraphShader() {
     if (GraphImg) {
+      ShaderType desiredShader = LocateParentFusionStats() != null ? (_fusionStats.CanvasType == FusionStats.StatCanvasTypes.GameObject ? ShaderType.GameObject : ShaderType.Overlay) : ShaderType.None;
+      //if (_currentShader != desiredShader) {
+      //  GraphImg.material = desiredShader == ShaderType.GameObject ? new Material(Shader3D) : new Material(Shader);
+      //  _currentShader = desiredShader;
+      //}
+      //GraphImg.material.renderQueue = 3000;
       GraphImg.material = new Material(Shader);
-      Debug.LogWarning("Resetting shader " + name + " " + _fusionStats.ModifyColors + " " + _fusionStats.GraphColorWarn);
-      if (_fusionStats.ModifyColors) {
-        GraphImg.material.SetColor("_GoodColor", _fusionStats.GraphColorGood);
-        GraphImg.material.SetColor("_WarnColor", _fusionStats.GraphColorWarn);
-        GraphImg.material.SetColor("_BadColor", _fusionStats.GraphColorBad);
-        GraphImg.material.SetInt("EndCap", 0);
-        GraphImg.material.SetInt("AnimateInOut", 0);
-      }
+      GraphImg.material.SetColor("_GoodColor", _fusionStats.GraphColorGood);
+      GraphImg.material.SetColor("_WarnColor", _fusionStats.GraphColorWarn);
+      GraphImg.material.SetColor("_BadColor", _fusionStats.GraphColorBad);
+      GraphImg.material.SetColor("_FlagColor", _fusionStats.GraphColorFlag);
+      GraphImg.material.SetInt("_ZWrite", (desiredShader == ShaderType.GameObject ? 1 : 0));
     }
   }
 
@@ -445,9 +486,10 @@ public class FusionGraph : FusionGraphBase {
       var val = _values[i];
       var intensity =
         val < 0 ? -1f :
-        val <= StatSourceInfo.WarnThreshold ? 0 :
-        val <= StatSourceInfo.ErrorThreshold ? .5f :
-        1f;
+        val >= ErrorThreshold ? 1f :
+        val >= WarnThreshold ? Mathf.Lerp(.5f, 1f, (val - WarnThreshold) / (ErrorThreshold - WarnThreshold)) :
+        //val <= ErrorThreshold ? Mathf.Lerp(.5f, 1f, (val / WarnThreshold) - .5f) : // .5f :
+        0f;
 
       _intensity[i] = intensity;
       _values[i] = Mathf.Clamp01((val - _min) / r);
@@ -468,6 +510,7 @@ public class FusionGraph : FusionGraphBase {
       GraphImg.material.SetFloatArray("_Intensity", _intensity);
       GraphImg.material.SetFloat("_Count", _values.Length);
       GraphImg.material.SetFloat("_Height", Height);
+      GraphImg.material.SetFloat("_ZeroCenter", min < 0 ? min / (min - max) : 0);
     }
 
     _min = Mathf.Lerp(_min, 0, Time.deltaTime);
@@ -499,12 +542,9 @@ public class FusionGraph : FusionGraphBase {
     }
   }
 
-  //int    _histoBucketCount    = 1024 - 4;
-  //int    _histoBucketMaxValue = 1020;
   int    _histoHighestUsedBucketIndex;
   int    _histoAvgSampleCount;
   double _histoStepInverse;
-  double _histoHighestValue;
   double _histoAvg;
 
   void UpdateTickValueHistogram(ref IStatsBuffer data) {
@@ -584,7 +624,6 @@ public class FusionGraph : FusionGraphBase {
 
       if (bucketIndex > _histoHighestUsedBucketIndex) {
         _histoHighestUsedBucketIndex = bucketIndex;
-        _histoHighestValue = _histoHighestUsedBucketIndex / _histoStepInverse;
       }
       //if (val > _histoHighestValue) {
       //  _histoHighestValue = val;
@@ -632,7 +671,7 @@ public class FusionGraph : FusionGraphBase {
   /// <summary>
   /// Creates a new GameObject with <see cref="FusionGraph"/> and attaches it to the specified parent.
   /// </summary>
-  public static FusionGraph Create(IFusionStats iFusionStats, Stats.StatSourceTypes statSourceType, int statId, RectTransform parentRT) {
+  public static FusionGraph Create(FusionStats iFusionStats, Stats.StatSourceTypes statSourceType, int statId, RectTransform parentRT) {
     
     var statInfo = Stats.GetDescription(statSourceType, statId);
 
@@ -741,7 +780,6 @@ public class FusionGraph : FusionGraphBase {
     if (gameObject.activeInHierarchy == false) {
       return;
     }
-
     _layoutDirty = false;
 
     var rt = GetComponent<RectTransform>();
@@ -766,13 +804,39 @@ public class FusionGraph : FusionGraphBase {
       return;
     }
 
-    bool isOverlayCanvas = _fusionStats != null && _fusionStats.CanvasType == FusionStats.StatCanvasTypes.Overlay;
+    GraphImg.material.SetInt("_ZWrite", (_fusionStats.CanvasType == FusionStats.StatCanvasTypes.GameObject ? 1 : 0));
 
-    bool showGraph = ShowGraph == ShowGraphOptions.Always || (ShowGraph == ShowGraphOptions.OverlayOnly && isOverlayCanvas);
+
+    bool isOverlayCanvas = _fusionStats.CanvasType == FusionStats.StatCanvasTypes.GameObject;
+    bool vrSafe = _fusionStats.NoGraphShader /*&& _fusionStats.CanvasType == FusionStats.StatCanvasTypes.GameObject*/;
 
     var height = rt.rect.height;
     var width  = rt.rect.width;
-    bool expandGraph = _alwaysExpandGraph || !showGraph || (_layout != Layouts.Full && height < EXPAND_GRPH_THRESH);
+    
+    Layouts layout;
+    if (_layout != Layouts.Auto) {
+      layout = _layout;
+    } else {
+      if (_fusionStats.DefaultLayout != Layouts.Auto) {
+        layout = _fusionStats.DefaultLayout;
+      } else {
+        if (height < COMPACT_THRESH) {
+          layout = Layouts.CompactAuto;
+        } else {
+          if (width < HIDE_XTRAS_WDTH) {
+            layout = Layouts.CenteredAuto;
+          } else {
+            layout = Layouts.FullAuto;
+          }
+        }
+      }
+    }
+
+    bool noGraph = vrSafe || layout == Layouts.CompactNoGraph || layout == Layouts.CenteredNoGraph || (_fusionStats.NoTextOverlap && layout == Layouts.CompactAuto);
+    bool noOverlap = _fusionStats.NoTextOverlap || layout == Layouts.FullNoOverlap || layout == Layouts.CenteredNoOverlap;
+    bool showGraph = !noGraph && (ShowGraph == ShowGraphOptions.Always || (ShowGraph == ShowGraphOptions.OverlayOnly && isOverlayCanvas));
+
+    bool expandGraph = !noOverlap && (_alwaysExpandGraph || !showGraph || layout == Layouts.CompactAuto || (!noOverlap && height < EXPAND_GRPH_THRESH));
     bool isSuperShort = height < MRGN * 3;
 
     var graphRT = GraphImg.rectTransform;
@@ -786,22 +850,7 @@ public class FusionGraph : FusionGraphBase {
       }
     }
 
-    Layouts layout;
-    if (_layout != Layouts.Auto) {
-      layout = _layout;
-    } else {
-      if (height < COMPACT_THRESH) {
-        layout = Layouts.Compact;
-      } else {
-        if (width < HIDE_XTRAS_WDTH) {
-          layout = Layouts.CenteredBasic;
-        } else {
-          layout = Layouts.Full;
-        }
-      }
-    }
-
-    bool showExtras = layout == Layouts.Full /*|| (layout == Layouts.Compact && width > HIDE_XTRAS_WDTH)*/;
+    bool showExtras = layout == Layouts.FullAuto || layout == Layouts.FullNoOverlap /*|| (layout == Layouts.Compact && width > HIDE_XTRAS_WDTH)*/;
 
     var titleRT = LabelTitle.rectTransform;
     var avgRT = LabelAvg.rectTransform;
@@ -817,10 +866,11 @@ public class FusionGraph : FusionGraphBase {
     var perRT = LabelPer.rectTransform;
 
     switch (layout) {
-      case Layouts.Full: {
+      case Layouts.FullNoOverlap:
+      case Layouts.FullAuto: {
           titleRT.anchorMin = new Vector2(showExtras ? 0.3f : 0.0f, expandGraph ? 0.5f : 0.8f);
           titleRT.anchorMax = new Vector2(1.0f, 1.0f);
-          titleRT.offsetMin = new Vector2(MRGN, MRGN);
+          titleRT.offsetMin = new Vector2(MRGN, 0);
           titleRT.offsetMax = new Vector2(-MRGN, -MRGN);
           LabelTitle.alignment = showExtras ? TextAnchor.UpperRight : TextAnchor.UpperCenter;
 
@@ -830,14 +880,17 @@ public class FusionGraph : FusionGraphBase {
           LabelAvg.alignment = TextAnchor.LowerCenter;
 
           perRT.SetAnchors(0.3f, 0.7f, 0.0f, expandGraph ? 0.2f : 0.1f);
+          LabelPer.alignment = TextAnchor.LowerCenter;
 
           break;
         }
-      case Layouts.CenteredBasic: {
-          titleRT.anchorMin = new Vector2(showExtras ? 0.3f : 0.0f, 0.5f);
-          titleRT.anchorMax = new Vector2(showExtras ? 0.7f : 1.0f, 1.0f);
-          titleRT.offsetMin = new Vector2(showExtras ? 0.0f :  MRGN,  MRGN);
-          titleRT.offsetMax = new Vector2(showExtras ? 0.0f : -MRGN, -MRGN);
+      case Layouts.CenteredNoOverlap:
+      case Layouts.CenteredNoGraph:
+      case Layouts.CenteredAuto: {
+          titleRT.anchorMin = new Vector2(0.0f, expandGraph ? 0.5f : 0.8f);
+          titleRT.anchorMax = new Vector2(1.0f, 1.0f);
+          titleRT.offsetMin = new Vector2( MRGN,  0);
+          titleRT.offsetMax = new Vector2(-MRGN, -MRGN);
           LabelTitle.alignment = TextAnchor.UpperCenter;
 
           avgRT.anchorMin = new Vector2(0.0f, expandGraph ? 0.15f : 0.10f);
@@ -845,23 +898,30 @@ public class FusionGraph : FusionGraphBase {
           avgRT.SetOffsets(MRGN, -MRGN, 0.0f, 0.0f);
 
           perRT.SetAnchors(0.0f, 1.0f, 0.0f, expandGraph ? 0.2f : 0.1f);
+          LabelPer.alignment = TextAnchor.LowerCenter;
 
           LabelAvg.alignment = TextAnchor.LowerCenter;
           break;
         }
-      case Layouts.Compact: {
-          titleRT.anchorMin = new Vector2(0.0f, 0.0f);
+
+      case Layouts.CompactNoGraph:
+      case Layouts.CompactAuto: {
+          titleRT.anchorMin = new Vector2(0.05f, 0.0f);
           titleRT.anchorMax = new Vector2(0.5f, 1.0f);
           if (isSuperShort) {
-            titleRT.SetOffsets(MRGN,     0, 0, 0);
-            avgRT  .SetOffsets(MRGN, -MRGN, 0, 0);
+            titleRT.SetOffsets(0,     0, 0, 0);
+            avgRT  .SetOffsets(MRGN, -0, 0, 0);
           } else {
-            titleRT.SetOffsets(MRGN, 0,  MRGN, -MRGN);
-            avgRT  .SetOffsets(0, -MRGN, MRGN, -MRGN);
+            titleRT.SetOffsets(0, 0,  MRGN, -MRGN);
+            avgRT  .SetOffsets(MRGN, -0, MRGN, -MRGN);
           }
           LabelTitle.alignment = TextAnchor.MiddleLeft;
 
-          avgRT.SetAnchors(0.5f, 1.0f, 0.0f, 1.0f);
+          avgRT.SetAnchors(0.5f, 0.95f, 0.0f, 1.0f);
+
+          perRT.SetAnchors(0.5f, 0.95f, 0.0f, 0.15f)
+               .SetOffsets(MRGN, -MRGN * 2, MRGN, 0.0f);
+          LabelPer.alignment = TextAnchor.LowerRight;
 
           LabelAvg.alignment = TextAnchor.MiddleRight;
           break;

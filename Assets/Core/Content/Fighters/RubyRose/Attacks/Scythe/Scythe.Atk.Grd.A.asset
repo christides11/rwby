@@ -28,9 +28,8 @@ MonoBehaviour:
   - id: 4
   - id: 5
   - id: 6
-  - id: 7
   cancels:
-  - id: 8
+  - id: 7
   firstActableFrame: 100
   references:
     version: 1
@@ -41,13 +40,13 @@ MonoBehaviour:
         activeFramesStart: 7
         activeFramesEnd: 9
         boxes:
-        - id: 9
+        - id: 8
         attachToEntity: 1
         attachTo: 
         chargeLevelNeeded: -1
         chargeLevelMax: 1
         hitboxHitInfo:
-          id: 10
+          id: 9
         attachPoint: 
     00000001:
       type: {class: AttackEventDefinition, ns: HnSF.Combat, asm: HnSF}
@@ -60,7 +59,7 @@ MonoBehaviour:
         startFrame: 1
         endFrame: 5
         attackEvent:
-          id: 11
+          id: 10
         conditions: []
         inputCheckTiming: 0
         inputCheckStartFrame: 1
@@ -83,7 +82,7 @@ MonoBehaviour:
         startFrame: 1
         endFrame: 1
         attackEvent:
-          id: 12
+          id: 11
         conditions: []
         inputCheckTiming: 0
         inputCheckStartFrame: 1
@@ -106,7 +105,7 @@ MonoBehaviour:
         startFrame: 1
         endFrame: 25
         attackEvent:
-          id: 13
+          id: 12
         conditions: []
         inputCheckTiming: 0
         inputCheckStartFrame: 1
@@ -121,15 +120,15 @@ MonoBehaviour:
     00000004:
       type: {class: AttackEventDefinition, ns: HnSF.Combat, asm: HnSF}
       data:
-        nickname: PSFX
-        active: 0
+        nickname: WindSound
+        active: 1
         onHitCheck: 0
         onHitHitboxGroup: 0
         onHitIDGroup: 0
         startFrame: 6
         endFrame: 6
         attackEvent:
-          id: 14
+          id: 13
         conditions: []
         inputCheckTiming: 0
         inputCheckStartFrame: 1
@@ -144,15 +143,15 @@ MonoBehaviour:
     00000005:
       type: {class: AttackEventDefinition, ns: HnSF.Combat, asm: HnSF}
       data:
-        nickname: WindSound
+        nickname: Play.Anim
         active: 1
         onHitCheck: 0
         onHitHitboxGroup: 0
         onHitIDGroup: 0
-        startFrame: 6
-        endFrame: 6
+        startFrame: 1
+        endFrame: 1
         attackEvent:
-          id: 15
+          id: 14
         conditions: []
         inputCheckTiming: 0
         inputCheckStartFrame: 1
@@ -167,15 +166,15 @@ MonoBehaviour:
     00000006:
       type: {class: AttackEventDefinition, ns: HnSF.Combat, asm: HnSF}
       data:
-        nickname: Play.Anim
+        nickname: Fwd.Anim
         active: 1
         onHitCheck: 0
         onHitHitboxGroup: 0
         onHitIDGroup: 0
-        startFrame: 1
-        endFrame: 1
+        startFrame: 2
+        endFrame: 23
         attackEvent:
-          id: 16
+          id: 15
         conditions: []
         inputCheckTiming: 0
         inputCheckStartFrame: 1
@@ -188,36 +187,13 @@ MonoBehaviour:
         chargeLevelMin: 0
         chargeLevelMax: 0
     00000007:
-      type: {class: AttackEventDefinition, ns: HnSF.Combat, asm: HnSF}
-      data:
-        nickname: Fwd.Anim
-        active: 1
-        onHitCheck: 0
-        onHitHitboxGroup: 0
-        onHitIDGroup: 0
-        startFrame: 2
-        endFrame: 23
-        attackEvent:
-          id: 17
-        conditions: []
-        inputCheckTiming: 0
-        inputCheckStartFrame: 1
-        inputCheckEndFrame: 1
-        input:
-          executeWindow: 3
-          executeInputs: []
-          sequenceWindow: 8
-          sequenceInputs: []
-        chargeLevelMin: 0
-        chargeLevelMax: 0
-    00000008:
       type: {class: CancelListDefinition, ns: HnSF.Combat, asm: HnSF}
       data:
         startFrame: 10
         endFrame: 23
         cancelListID: 0
         conditions: []
-    00000009:
+    00000008:
       type: {class: BoxDefinition, ns: HnSF.Combat, asm: HnSF}
       data:
         shape: 1
@@ -226,7 +202,7 @@ MonoBehaviour:
         rotation: {x: 0, y: 0, z: 0}
         radius: 1
         height: 0
-    0000000A:
+    00000009:
       type: {class: HitInfo, ns: rwby, asm: rwby.csharp}
       data:
         hitType: 0
@@ -270,8 +246,8 @@ MonoBehaviour:
         blockForceAir: {x: 0, y: 0, z: 0}
         blockHitstopAttacker: 5
         blockHitstopDefender: 5
-        hitSoundbankName: rr
-        hitSoundName: swing-a
+        hitSoundbankName: global
+        hitSoundName: hit-slash-a
         shakeValue: 0
         effectbankName: global
         effectName: hit1
@@ -280,41 +256,34 @@ MonoBehaviour:
         forcesRestand: 0
         hardKnockdown: 0
         causesTrip: 0
-    0000000B:
+    0000000A:
       type: {class: SoftLockOn, ns: rwby.Combat.AttackEvents, asm: rwby.csharp}
       data:
         rotSpeed: 30
-    0000000C:
+    0000000B:
       type: {class: ClampMovement, ns: rwby.Combat.AttackEvents, asm: rwby.csharp}
       data:
         maxLength: 10
-    0000000D:
+    0000000C:
       type: {class: ApplyFriction, ns: rwby.Combat.AttackEvents, asm: rwby.csharp}
       data:
         useXZFriction: 1
         useYFriction: 0
         xzFriction: 30
         yFriction: 0
-    0000000E:
-      type: {class: PlaySFX, ns: rwby.Combat.AttackEvents, asm: rwby.csharp}
-      data:
-        sndbkName: rubyrose
-        sfxName: lt-swing-b
-        volume: 0.7
-        playChance: 100
-    0000000F:
+    0000000D:
       type: {class: PlaySFX, ns: rwby.Combat.AttackEvents, asm: rwby.csharp}
       data:
         sndbkName: global
-        sfxName: swing-sword-a
+        sfxName: swinga
         volume: 1
         playChance: 100
-    00000010:
+    0000000E:
       type: {class: PlayAnimation, ns: rwby.Combat.AttackEvents, asm: rwby.csharp}
       data:
         animationbank: rr
         animationName: scythe.grd.a
-    00000011:
+    0000000F:
       type: {class: TickAnimation, ns: rwby.Combat.AttackEvents, asm: rwby.csharp}
       data:
         frameAdvance: 1

@@ -36,6 +36,7 @@ public class RRoseMan : FighterManager
         {
             Debug.LogError("Error loading global soundbank.");
         }
+        _ = globalSnbk.Load();
         soundbankContainer.AddSoundbank(globalSnbk.Name, globalSnbk);
 
         ISoundbankDefinition rubyRoseSnbk = ContentManager.singleton.GetContentDefinition<ISoundbankDefinition>(new ModObjectReference("core", "rr"));
@@ -43,6 +44,7 @@ public class RRoseMan : FighterManager
         {
             Debug.LogError("Error loading global soundbank.");
         }
+        _ = rubyRoseSnbk.Load();
         soundbankContainer.AddSoundbank(rubyRoseSnbk.Name, rubyRoseSnbk);
 
 
