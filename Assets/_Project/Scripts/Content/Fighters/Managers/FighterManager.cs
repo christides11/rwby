@@ -24,7 +24,7 @@ namespace rwby
         public EffectbankContainer EffectbankContainer { get { return effectbankContainer; } }
         public Transform TargetOrigin { get { return targetOrigin; } }
 
-        [Networked] public NetworkBool TargetableNetworked { get; set; }
+        [Networked] public bool TargetableNetworked { get; set; }
         public bool Targetable { get { return TargetableNetworked; } }
 
         [Networked] public NetworkBool HardTargeting { get; set; }

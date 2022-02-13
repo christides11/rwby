@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 3042043382621538611}
   - component: {fileID: 8317851289354921770}
   m_Layer: 0
-  m_Name: core.gamemode
+  m_Name: core.gamemode.versus
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -49,11 +49,12 @@ MonoBehaviour:
   DestroyWhenStateAuthorityLeaves: 0
   AllowStateAuthorityOverride: 0
   AoiPosition: {fileID: 0}
-  Flags: 0
+  Flags: 2305
   NetworkGuid:
-    RawGuidValue: 00000000000000000000000000000000
+    RawGuidValue: bcba8c78d36325d4d99aaa903d9cd0a8
   NestedObjects: []
-  NetworkedBehaviours: []
+  NetworkedBehaviours:
+  - {fileID: 8317851289354921770}
   SimulationBehaviours: []
 --- !u!114 &8317851289354921770
 MonoBehaviour:
