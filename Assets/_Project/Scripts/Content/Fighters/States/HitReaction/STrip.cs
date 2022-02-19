@@ -36,7 +36,7 @@ namespace rwby.fighters.states
 
         public override bool CheckInterrupt()
         {
-            if (manager.StateManager.CurrentStateFrame > 15)
+            if (manager.StateManager.CurrentStateFrame > 5)
             {
                 manager.PhysicsManager.CheckIfGrounded();
                 if (manager.PhysicsManager.IsGrounded)
