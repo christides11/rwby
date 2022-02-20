@@ -1,7 +1,9 @@
 namespace rwby
 {
+    [System.Serializable]
     public enum FighterCmnStates : ushort
     {
+        NULL = 0,
         IDLE = 1,
         WALK = 2,
         RUN = 3,

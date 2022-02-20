@@ -57,6 +57,7 @@ MonoBehaviour:
     attachToEntity: 1
     attachTo: 
   groupIndex: -1
+  hitboxIndex: -1
   references:
     version: 1
 --- !u!1 &1110560126876363751
@@ -148,6 +149,7 @@ MonoBehaviour:
     attachToEntity: 1
     attachTo: 
   groupIndex: -1
+  hitboxIndex: -1
   references:
     version: 1
 --- !u!1 &2975577266102549606
@@ -349,8 +351,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _interpolationDataSource: 0
-  _TargetableNetworked:
-    _value: 0
+  _TargetableNetworked: 0
   _HardTargeting:
     _value: 0
   _CurrentTarget: {fileID: 0}
@@ -405,6 +406,9 @@ MonoBehaviour:
   sideWallDistance: 0
   wallSide: 0
   wallRunHozMultiplier: 1
+  coreStates:
+  - state: 1
+    stateTimeline: {fileID: 11400000, guid: 9f68dc153d4b21842b44ad94fd0e9156, type: 2}
 --- !u!114 &7730901374118442406
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -435,7 +439,6 @@ MonoBehaviour:
   inputManager: {fileID: 728284172682202706}
   physicsManager: {fileID: 8508573390081789594}
   stateManager: {fileID: 1457010570893242128}
-  hurtboxManager: {fileID: 0}
   _Team: 0
   movesets: []
   _hitstunGravityHangTime: 0
@@ -489,7 +492,6 @@ MonoBehaviour:
   _interpolationDataSource: 0
   _CurrentBoxCollectionIdentifier: 0
   combatManager: {fileID: 7730901374118442406}
-  boxCollection: {fileID: 11400000, guid: 3d6a1c7304cd4ca4f8260a8fd37ae8c3, type: 2}
   hRoot: {fileID: 8828466035712802024}
   settings: {fileID: 11400000, guid: fa9f7c1fd91f42e4087fa739f9dd3614, type: 2}
   hitboxes:
@@ -5783,6 +5785,7 @@ MonoBehaviour:
     attachToEntity: 1
     attachTo: 
   groupIndex: -1
+  hitboxIndex: -1
   references:
     version: 1
 --- !u!1 &6567242689951991019
@@ -5842,6 +5845,7 @@ MonoBehaviour:
     attachToEntity: 1
     attachTo: 
   groupIndex: -1
+  hitboxIndex: -1
   references:
     version: 1
 --- !u!1 &6995350980475875829
@@ -5901,6 +5905,7 @@ MonoBehaviour:
     attachToEntity: 1
     attachTo: 
   groupIndex: -1
+  hitboxIndex: -1
   references:
     version: 1
 --- !u!1 &7413372779673764670
@@ -6064,6 +6069,7 @@ MonoBehaviour:
     attachToEntity: 1
     attachTo: 
   groupIndex: -1
+  hitboxIndex: -1
   references:
     version: 1
 --- !u!1 &8292587377889949266
@@ -6123,6 +6129,7 @@ MonoBehaviour:
     attachToEntity: 1
     attachTo: 
   groupIndex: -1
+  hitboxIndex: -1
   references:
     version: 1
 --- !u!1 &8349021664809990094
@@ -6182,6 +6189,7 @@ MonoBehaviour:
     attachToEntity: 1
     attachTo: 
   groupIndex: -1
+  hitboxIndex: -1
   references:
     version: 1
 --- !u!1 &9104840381035996468
@@ -6241,6 +6249,7 @@ MonoBehaviour:
     attachToEntity: 1
     attachTo: 
   groupIndex: -1
+  hitboxIndex: -1
   references:
     version: 1
 --- !u!1 &9163359282233763670
@@ -6300,6 +6309,7 @@ MonoBehaviour:
     attachToEntity: 1
     attachTo: 
   groupIndex: -1
+  hitboxIndex: -1
   references:
     version: 1
 --- !u!1001 &575502196097735155

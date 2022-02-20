@@ -86,6 +86,10 @@ namespace rwby
             lobbyManager = LobbyManager.singleton;
             networkManager = NetworkManager.singleton;
             combatManager.movesets = fighterDefinition.GetMovesets();
+            foreach (var moveset in combatManager.movesets)
+            {
+                (moveset as Moveset).Initialize();
+            }
         }
 
         public override void Spawned()
@@ -96,7 +100,6 @@ namespace rwby
             combatManager.Cleanup();
             combatManager.SetMoveset(0);
             statManager.SetupStats((combatManager.movesets[0] as Moveset).fighterStats);
-            SetupStates();
         }
 
         public float hitstopShakeDistance = 0.5f;
@@ -295,7 +298,7 @@ namespace rwby
                 {
                     FCombatManager.SetAttack(attackIdentifier);
                 }
-                FStateManager.ChangeState((int)FighterCmnStates.ATTACK, resetFrameCounter ? 0 : FStateManager.CurrentStateFrame);
+                //FStateManager.ChangeState((int)FighterCmnStates.ATTACK, resetFrameCounter ? 0 : FStateManager.CurrentStateFrame);
                 return true;
             }
             return false;

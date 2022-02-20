@@ -3,6 +3,7 @@ using HnSF.Fighters;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Playables;
 
 namespace rwby
 {
@@ -10,105 +11,127 @@ namespace rwby
     [OrderAfter(typeof(Fusion.HitboxManager), typeof(FighterManager))]
     public class FighterStateManager : NetworkBehaviour, IFighterStateManager
     {
-        public delegate void StateAction(IFighterBase self, int from, int fromStateFrame);
-        public delegate void StateFrameAction(IFighterBase self, int preChangeFrame);
-        public event StateAction OnStatePreChange;
-        public event StateAction OnStatePostChange;
-        public event StateFrameAction OnStateFrameSet;
-
+        [Networked] public int CurrentStateMoveset { get; set; }
         [Networked] public int CurrentState { get; set; }
         [Networked] public int CurrentStateFrame { get; set; }
-
-        protected Dictionary<int, HnSF.StateTimeline> states = new Dictionary<int, HnSF.StateTimeline>();
+        
         [SerializeField] protected FighterManager manager;
         [SerializeField] protected FighterCombatManager combatManager;
 
+        public PlayableDirector director;
+        
+        public bool markedForStateChange = false;
+        public int nextState = 0;
+        
         public void Tick()
         {
+            if (markedForStateChange)
+            {
+                ChangeState(nextState, 0, true);
+            }
             if (CurrentState == 0) return;
-            //states[CurrentState].OnUpdate();
+            director.Evaluate();
         }
-
-        public override void FixedUpdateNetwork()
-        {
-            if (CurrentState == 0) return;
-            //states[CurrentState].OnLateUpdate();
-        }
-
+        
         public void AddState(HnSF.StateTimeline state, int stateNumber)
         {
-            //(state as FighterState).manager = manager;
+            Debug.LogError("Cannot add states.");
             //states.Add(stateNumber, state);
         }
 
         public void RemoveState(int stateNumber)
         {
+            Debug.Log("Cannot remove states.");
+            /*
             if(CurrentState == stateNumber)
             {
+                Debug.LogError("Can't remove a state that is currently in progress.");
                 return;
             }
-            states.Remove(stateNumber);
+            states.Remove(stateNumber);*/
         }
 
+        public void MarkForStateChange(int state)
+        {
+            markedForStateChange = true;
+            nextState = state;
+        }
+        
         public bool ChangeState(int state, int stateFrame = 0, bool callOnInterrupt = true)
         {
-            /*
-            if (states.ContainsKey(state))
-            {
-                int oldState = CurrentState;
-                int oldStateFrame = CurrentStateFrame;
-
-                if (callOnInterrupt)
-                {
-                    if (oldState != 0)
-                    {
-                        states[oldState].OnInterrupted();
-                    }
-                }
-                CurrentStateFrame = stateFrame;
-                CurrentState = state;
-                OnStatePreChange?.Invoke(manager, oldState, oldStateFrame);
-                if (CurrentStateFrame == 0)
-                {
-                    states[CurrentState].Initialize();
-                    CurrentStateFrame = 1;
-                }
-                OnStatePostChange?.Invoke(manager, oldState, oldStateFrame);
-                return true;
-            }*/
-            return false;
+            ChangeState(manager.FCombatManager.CurrentMovesetIdentifier, state, stateFrame, callOnInterrupt);
+            return true;
         }
 
+        public void ChangeState(int stateMoveset, int state, int stateFrame = 0, bool callOnInterrupt = true)
+        {
+            markedForStateChange = false;
+            int oldStateMoveset = CurrentStateMoveset;
+            int oldState = CurrentState;
+            int oldStateFrame = CurrentStateFrame;
+
+            if (callOnInterrupt && oldState != 0)
+            {
+                SetFrame(manager.FCombatManager.GetMoveset().stateMap[CurrentState].totalFrames);
+                director.Evaluate();
+            }
+
+            CurrentStateMoveset = stateMoveset;
+            CurrentStateFrame = stateFrame;
+            CurrentState = state;
+            // OnStatePreChange?.Invoke(manager, oldState, oldStateFrame);
+            if (CurrentStateFrame == 0)
+            {
+                InitState();
+                SetFrame(1);
+            }
+            // OnStatePostChange?.Invoke(manager, oldState, oldStateFrame);
+        }
+
+        public void InitState()
+        {
+            if (CurrentState == 0)
+            {
+                director.playableAsset = null;
+                return;
+            }
+
+            director.playableAsset = GetState();
+            foreach (var pAO in director.playableAsset.outputs)
+            {
+                director.SetGenericBinding(pAO.sourceObject, manager);
+            }
+            director.Play();
+            SetFrame(0);
+            director.Evaluate();
+        }
+
+        public StateTimeline GetState()
+        {
+            return manager.FCombatManager.GetMoveset().stateMap[CurrentState];
+        }
+        
         public HnSF.StateTimeline GetState(int state)
         {
-            /*
-            if (states.ContainsKey(state))
-            {
-                return states[state];
-            }*/
-            return null;
+            return manager.FCombatManager.GetMoveset().stateMap[state];
         }
 
         public string GetCurrentStateName()
         {
-            return "";
-            /*
-            if(CurrentState == 0)
-            {
-                return "N/A";
-            }
-            return states[CurrentState].GetName();*/
+            return manager.FCombatManager.GetMoveset().stateMap[CurrentState].name;
         }
 
         public void IncrementFrame()
         {
             CurrentStateFrame++;
+            director.time = (float)CurrentStateFrame * Runner.Simulation.DeltaTime;
         }
 
         public void SetFrame(int frame)
         {
-            //uint preFrame = CurrentStateFrame;
-            //CurrentStateFrame = frame;
+            int preFrame = CurrentStateFrame;
+            CurrentStateFrame = frame;
+            director.time = (float)CurrentStateFrame * Runner.Simulation.DeltaTime;
             //OnStateFrameSet?.Invoke(manager, preFrame);
         }
     }

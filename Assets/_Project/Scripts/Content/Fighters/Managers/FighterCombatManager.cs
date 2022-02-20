@@ -475,13 +475,14 @@ namespace rwby
             CurrentMovesetIdentifier = movesetIdentifier;
         }
 
+        public rwby.Moveset GetMoveset()
+        {
+            return (rwby.Moveset)movesets[CurrentMovesetIdentifier];
+        }
+        
         public MovesetDefinition GetMoveset(int identifier)
         {
-            /*
-            if(identifier == 0)
-            {
-                return null;
-            }*/
+
             return movesets[identifier];
         }
 

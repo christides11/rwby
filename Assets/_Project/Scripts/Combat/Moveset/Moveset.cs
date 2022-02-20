@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -8,12 +9,27 @@ namespace rwby
     [CreateAssetMenu(fileName = "Moveset", menuName = "rwby/Combat/Moveset")]
     public class Moveset: HnSF.Combat.MovesetDefinition
     {
-        //public HurtboxCollection hurtboxCollection;
-        //public AnimationReferenceHolder animationCollection;
         public FighterStats fighterStats;
 
         [Header("Abilities")]
         public List<MovesetAttackNode> groundAbilityNodes;
         public List<MovesetAttackNode> airAbilityNodes;
+
+        [NonSerialized] public Dictionary<int, StateTimeline> stateMap;
+        [Header("States")] protected IntStateMap[] states = new IntStateMap[0];
+
+        public virtual void Initialize()
+        {
+            if (stateMap == null)
+            {
+                stateMap = new Dictionary<int, StateTimeline>();
+            }
+
+            if (stateMap.Count > 0) return;
+            foreach (var intStateMap in states)
+            {
+                stateMap.Add(intStateMap.state, intStateMap.stateTimeline);
+            }
+        }
     }
 }

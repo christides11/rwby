@@ -7,6 +7,8 @@ using Cysharp.Threading.Tasks;
 
 public class RRoseMan : FighterManager
 {
+    public EnumStateBinding[] coreStates = new EnumStateBinding[0];
+    
     public override async UniTask<bool> OnFighterLoaded()
     {
         bool globalSnbkLoadResult = await ContentManager.singleton.LoadContentDefinition<ISoundbankDefinition>(new ModObjectReference("core", "global"));
