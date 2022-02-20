@@ -44,6 +44,7 @@ namespace rwby
 
         protected virtual async UniTaskVoid SetupViewerScene()
         {
+            /*
             previewScene = AttackDefinitionPreviewScene.ShowWindow(null);
             await previewScene.manag.GetComponentInChildren<ModLoader>().Initialize();
             await ContentManager.singleton.LoadContentDefinition<IFighterDefinition>(new ModObjectReference(fighterString));
@@ -57,7 +58,7 @@ namespace rwby
             visualFighterPrefab = fd.GetFighter();
 
             Selection.activeObject = visualFighterSceneReference;
-            previewScene.FrameSelected();
+            previewScene.FrameSelected();*/
 
             //visualFighterSceneReference.GetComponent<FighterManager>().Awake();
             //visualFighterSceneReference.GetComponent<FighterManager>().Spawned();
@@ -71,21 +72,18 @@ namespace rwby
             previewScene.Close();
         }
 
-        protected override void CreateFighter()
-        {
-
-        }
-
         protected virtual void SetupFighter()
         {
+            /*
             FighterManager fman = visualFighterSceneReference.GetComponent<FighterManager>();
-            fman.Awake();
+            fman.Awake();*/
         }
 
+        /*
         protected override void ResetFighterVariables()
         {
-            visualFighterSceneReference.transform.position = new Vector3(0, 1, 0);
-        }
+            //visualFighterSceneReference.transform.position = new Vector3(0, 1, 0);
+        }*/
 
         protected override void IncrementForward()
         {

@@ -17,7 +17,7 @@ namespace rwby.Combat.AttackEvents
         public override AttackEventReturnType Evaluate(int frame, int endFrame, IFighterBase controller)
         {
             FighterManager manager = controller as FighterManager;
-            manager.PhysicsManager.forceGravity = Mathf.Clamp(manager.PhysicsManager.forceGravity, min, max);
+            manager.FPhysicsManager.forceGravity = Mathf.Clamp(manager.FPhysicsManager.forceGravity, min, max);
             return AttackEventReturnType.NONE;
         }
     }

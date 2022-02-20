@@ -17,7 +17,7 @@ namespace rwby.Combat.AttackEvents
         public override AttackEventReturnType Evaluate(int frame, int endFrame, IFighterBase controller)
         {
             FighterManager manager = (FighterManager)controller;
-            if (ignoreHitstop == false && manager.CombatManager.HitStop > 0) return AttackEventReturnType.NONE;
+            if (ignoreHitstop == false && manager.FCombatManager.HitStop > 0) return AttackEventReturnType.NONE;
             manager.fighterAnimator.currentFrame = manager.fighterAnimator.currentFrame + frameAdvance;
             return AttackEventReturnType.NONE;
         }

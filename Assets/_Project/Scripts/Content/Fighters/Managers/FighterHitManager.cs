@@ -127,7 +127,7 @@ namespace rwby
                 case HitboxForceRelation.ATTACKER:
                     hurtInfo = new HurtInfo((HitInfo)hitboxGroup.hitboxHitInfo, hurtbox.hurtboxGroup as HurtboxGroup,
                         transform.position, manager.transform.forward, manager.transform.right,
-                        manager.PhysicsManager.GetOverallForce(), hitPoint);
+                        manager.FPhysicsManager.GetOverallForce(), hitPoint);
                     break;
                 case HitboxForceRelation.HITBOX:
                     // TODO: Attack origin point.
@@ -135,17 +135,17 @@ namespace rwby
                          : Vector3.zero + (hitboxGroup.boxes[hitbox.hitboxIndex] as HnSF.Combat.BoxDefinition).offset;
                     hurtInfo = new HurtInfo((HitInfo)hitboxGroup.hitboxHitInfo, hurtbox.hurtboxGroup,
                          position, manager.transform.forward, manager.transform.right,
-                         manager.PhysicsManager.GetOverallForce(), hitPoint);
+                         manager.FPhysicsManager.GetOverallForce(), hitPoint);
                     break;
                 case HitboxForceRelation.WORLD:
                     hurtInfo = new HurtInfo((HitInfo)hitboxGroup.hitboxHitInfo, hurtbox.hurtboxGroup,
                         transform.position, Vector3.forward, Vector3.right,
-                        (manager.PhysicsManager as FighterPhysicsManager).GetOverallForce(), hitPoint);
+                        (manager.FPhysicsManager as FighterPhysicsManager).GetOverallForce(), hitPoint);
                     break;
                 default:
                     hurtInfo = new HurtInfo((HitInfo)hitboxGroup.hitboxHitInfo, hurtbox.hurtboxGroup,
                         transform.position, manager.transform.forward, manager.transform.right,
-                        manager.PhysicsManager.GetOverallForce(), hitPoint);
+                        manager.FPhysicsManager.GetOverallForce(), hitPoint);
                     break;
             }
             return hurtInfo;

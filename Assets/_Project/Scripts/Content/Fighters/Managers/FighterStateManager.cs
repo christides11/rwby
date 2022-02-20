@@ -10,38 +10,38 @@ namespace rwby
     [OrderAfter(typeof(Fusion.HitboxManager), typeof(FighterManager))]
     public class FighterStateManager : NetworkBehaviour, IFighterStateManager
     {
-        public delegate void StateAction(IFighterBase self, ushort from, uint fromStateFrame);
-        public delegate void StateFrameAction(IFighterBase self, uint preChangeFrame);
+        public delegate void StateAction(IFighterBase self, int from, int fromStateFrame);
+        public delegate void StateFrameAction(IFighterBase self, int preChangeFrame);
         public event StateAction OnStatePreChange;
         public event StateAction OnStatePostChange;
         public event StateFrameAction OnStateFrameSet;
 
-        [Networked] public ushort CurrentState { get; set; }
-        [Networked] public uint CurrentStateFrame { get; set; }
+        [Networked] public int CurrentState { get; set; }
+        [Networked] public int CurrentStateFrame { get; set; }
 
-        protected Dictionary<ushort, FighterStateBase> states = new Dictionary<ushort, FighterStateBase>();
+        protected Dictionary<int, HnSF.StateTimeline> states = new Dictionary<int, HnSF.StateTimeline>();
         [SerializeField] protected FighterManager manager;
         [SerializeField] protected FighterCombatManager combatManager;
 
         public void Tick()
         {
             if (CurrentState == 0) return;
-            states[CurrentState].OnUpdate();
+            //states[CurrentState].OnUpdate();
         }
 
         public override void FixedUpdateNetwork()
         {
             if (CurrentState == 0) return;
-            states[CurrentState].OnLateUpdate();
+            //states[CurrentState].OnLateUpdate();
         }
 
-        public void AddState(FighterStateBase state, ushort stateNumber)
+        public void AddState(HnSF.StateTimeline state, int stateNumber)
         {
-            (state as FighterState).manager = manager;
-            states.Add(stateNumber, state);
+            //(state as FighterState).manager = manager;
+            //states.Add(stateNumber, state);
         }
 
-        public void RemoveState(ushort stateNumber)
+        public void RemoveState(int stateNumber)
         {
             if(CurrentState == stateNumber)
             {
@@ -50,12 +50,13 @@ namespace rwby
             states.Remove(stateNumber);
         }
 
-        public bool ChangeState(ushort state, uint stateFrame = 0, bool callOnInterrupt = true)
+        public bool ChangeState(int state, int stateFrame = 0, bool callOnInterrupt = true)
         {
+            /*
             if (states.ContainsKey(state))
             {
-                ushort oldState = CurrentState;
-                uint oldStateFrame = CurrentStateFrame;
+                int oldState = CurrentState;
+                int oldStateFrame = CurrentStateFrame;
 
                 if (callOnInterrupt)
                 {
@@ -74,26 +75,29 @@ namespace rwby
                 }
                 OnStatePostChange?.Invoke(manager, oldState, oldStateFrame);
                 return true;
-            }
+            }*/
             return false;
         }
 
-        public FighterStateBase GetState(ushort state)
+        public HnSF.StateTimeline GetState(int state)
         {
+            /*
             if (states.ContainsKey(state))
             {
                 return states[state];
-            }
+            }*/
             return null;
         }
 
         public string GetCurrentStateName()
         {
+            return "";
+            /*
             if(CurrentState == 0)
             {
                 return "N/A";
             }
-            return states[CurrentState].GetName();
+            return states[CurrentState].GetName();*/
         }
 
         public void IncrementFrame()
@@ -101,11 +105,11 @@ namespace rwby
             CurrentStateFrame++;
         }
 
-        public void SetFrame(uint frame)
+        public void SetFrame(int frame)
         {
-            uint preFrame = CurrentStateFrame;
-            CurrentStateFrame = frame;
-            OnStateFrameSet?.Invoke(manager, preFrame);
+            //uint preFrame = CurrentStateFrame;
+            //CurrentStateFrame = frame;
+            //OnStateFrameSet?.Invoke(manager, preFrame);
         }
     }
 }

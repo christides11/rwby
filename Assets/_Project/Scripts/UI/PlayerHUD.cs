@@ -21,9 +21,9 @@ namespace rwby
         {
             if (client == null || client.ClientPlayers[playerIndex].characterNetID.IsValid == false) return;
             FighterManager fm = client.Runner.TryGetNetworkedBehaviourFromNetworkedObjectRef<FighterManager>(client.ClientPlayers[playerIndex].characterNetID);
-            stateText.text = fm.StateManager.GetCurrentStateName();
-            speedText.text = fm.PhysicsManager.forceMovement.magnitude.ToString("F1");
-            gravityText.text = fm.PhysicsManager.forceGravity.ToString("F1");
+            stateText.text = fm.FStateManager.GetCurrentStateName();
+            speedText.text = fm.FPhysicsManager.forceMovement.magnitude.ToString("F1");
+            gravityText.text = fm.FPhysicsManager.forceGravity.ToString("F1");
         }
 
         private void FixedUpdate()

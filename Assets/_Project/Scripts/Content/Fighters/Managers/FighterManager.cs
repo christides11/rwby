@@ -2,7 +2,6 @@ using Cysharp.Threading.Tasks;
 using Fusion;    
 using HnSF.Combat;
 using HnSF.Fighters;
-using rwby.fighters.states;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -14,11 +13,23 @@ namespace rwby
     [OrderAfter(typeof(FighterInputManager))]
     public class FighterManager : NetworkBehaviour, IFighterBase, ITargetable
     {
+        public IFighterCombatManager CombatManager
+        {
+            get { return combatManager; }
+        }
+        public IFighterStateManager StateManager
+        {
+            get { return stateManager; }
+        }
+        public IFighterPhysicsManager PhysicsManager
+        {
+            get { return physicsManager; }
+        }
         public FighterInputManager InputManager { get { return inputManager; } }
-        public FighterCombatManager CombatManager { get { return combatManager; } }
-        public FighterStateManager StateManager { get { return stateManager; } }
+        public FighterCombatManager FCombatManager { get { return combatManager; } }
+        public FighterStateManager FStateManager { get { return stateManager; } }
         public FighterStatManager StatManager { get { return statManager; } }
-        public FighterPhysicsManager PhysicsManager { get { return physicsManager; } }
+        public FighterPhysicsManager FPhysicsManager { get { return physicsManager; } }
         public FighterBoxManager BoxManager { get { return boxManager; } }
         public SoundbankContainer SoundbankContainer { get { return soundbankContainer; } }
         public EffectbankContainer EffectbankContainer { get { return effectbankContainer; } }
@@ -100,23 +111,23 @@ namespace rwby
             HitstopShake();
             HandleLockon();
 
-            if (CombatManager.HitStop == 0)
+            if (FCombatManager.HitStop == 0)
             {
-                if (CombatManager.BlockStun > 0)
+                if (FCombatManager.BlockStun > 0)
                 {
-                    CombatManager.BlockStun--;
+                    FCombatManager.BlockStun--;
                 }
-                PhysicsManager.CheckIfGrounded();
-                StateManager.Tick();
-                PhysicsManager.Tick();
+                FPhysicsManager.CheckIfGrounded();
+                FStateManager.Tick();
+                FPhysicsManager.Tick();
             }
             else
             {
-                CombatManager.hitstopCounter++;
-                PhysicsManager.Freeze();
-                if(CombatManager.hitstopCounter == CombatManager.HitStop)
+                FCombatManager.hitstopCounter++;
+                FPhysicsManager.Freeze();
+                if(FCombatManager.hitstopCounter == FCombatManager.HitStop)
                 {
-                    CombatManager.HitStop = 0;
+                    FCombatManager.HitStop = 0;
                     currentShakeDirection = 0;
                 }
             }
@@ -128,9 +139,9 @@ namespace rwby
         protected void HitstopShake()
         {
             // Shake during hitstop.
-            if (CombatManager.HitStop != 0
-                && (CombatManager.HitStun > 0 || CombatManager.BlockStun > 0)
-                && CombatManager.HitStop % hitstopShakeFrames == 0)
+            if (FCombatManager.HitStop != 0
+                && (FCombatManager.HitStun > 0 || FCombatManager.BlockStun > 0)
+                && FCombatManager.HitStop % hitstopShakeFrames == 0)
             {
                 Vector3 dir = shakeDirs[currentShakeDirection].z * transform.forward
                     + shakeDirs[currentShakeDirection].x * transform.right;
@@ -257,44 +268,16 @@ namespace rwby
 
         protected virtual void SetupStates()
         {
-            stateManager.AddState(new SIdle(), (ushort)FighterCmnStates.IDLE);
-            stateManager.AddState(new SWalk(), (ushort)FighterCmnStates.WALK);
-            stateManager.AddState(new SRun(), (ushort)FighterCmnStates.RUN);
-            stateManager.AddState(new SRunBrake(), (ushort)FighterCmnStates.RUN_BRAKE);
-            stateManager.AddState(new SJump(), (ushort)FighterCmnStates.JUMP);
-            stateManager.AddState(new SJumpAir(), (ushort)FighterCmnStates.AIR_JUMP);
-            stateManager.AddState(new SFall(), (ushort)FighterCmnStates.FALL);
-            StateManager.AddState(new SJumpSquat(), (ushort)FighterCmnStates.JUMPSQUAT);
-            StateManager.AddState(new SAirDash(), (ushort)FighterCmnStates.AIR_DASH);
-            StateManager.AddState(new SAttack(), (ushort)FighterCmnStates.ATTACK);
-
-            StateManager.AddState(new SFlinchGround(), (ushort)FighterCmnStates.FLINCH_GROUND);
-            StateManager.AddState(new SFlinchAir(), (ushort)FighterCmnStates.FLINCH_AIR);
-            StateManager.AddState(new STumble(), (ushort)FighterCmnStates.TUMBLE);
-            StateManager.AddState(new SGroundBounce(), (ushort)FighterCmnStates.GROUND_BOUNCE);
-            StateManager.AddState(new SGroundLay(), (ushort)FighterCmnStates.GROUND_LAY);
-            StateManager.AddState(new STechAir(), (ushort)FighterCmnStates.TECH_AIR);
-            StateManager.AddState(new STechGround(), (ushort)FighterCmnStates.TECH_GROUND);
-            StateManager.AddState(new STrip(), (ushort)FighterCmnStates.TRIP);
-            StateManager.AddState(new SGetup(), (ushort)FighterCmnStates.GROUND_GETUP);
-
-            StateManager.AddState(new SBlockHigh(), (ushort)FighterCmnStates.BLOCK_HIGH);
-            StateManager.AddState(new SBlockLow(), (ushort)FighterCmnStates.BLOCK_LOW);
-            StateManager.AddState(new SBlockAir(), (ushort)FighterCmnStates.BLOCK_AIR);
-
-            StateManager.AddState(new SWallRunH(), (ushort)FighterCmnStates.WALL_RUN_H);
-            StateManager.AddState(new SWallJump(), (ushort)FighterCmnStates.WALL_JUMP);
-
-            StateManager.ChangeState((ushort)FighterCmnStates.FALL);
+            
         }
 
         public virtual bool TryAttack()
         {
-            int man = CombatManager.TryAttack();
+            int man = FCombatManager.TryAttack();
             if (man != -1)
             {
-                CombatManager.SetAttack(man);
-                StateManager.ChangeState((int)FighterCmnStates.ATTACK);
+                FCombatManager.SetAttack(man);
+                FStateManager.ChangeState((int)FighterCmnStates.ATTACK);
                 return true;
             }
             return false;
@@ -306,13 +289,13 @@ namespace rwby
             {
                 if (attackMoveset != -1)
                 {
-                    CombatManager.SetAttack(attackIdentifier, attackMoveset);
+                    FCombatManager.SetAttack(attackIdentifier, attackMoveset);
                 }
                 else
                 {
-                    CombatManager.SetAttack(attackIdentifier);
+                    FCombatManager.SetAttack(attackIdentifier);
                 }
-                StateManager.ChangeState((int)FighterCmnStates.ATTACK, resetFrameCounter ? 0 : StateManager.CurrentStateFrame);
+                FStateManager.ChangeState((int)FighterCmnStates.ATTACK, resetFrameCounter ? 0 : FStateManager.CurrentStateFrame);
                 return true;
             }
             return false;
@@ -328,7 +311,7 @@ namespace rwby
             {
                 return false;
             }
-            StateManager.ChangeState((ushort)FighterCmnStates.JUMPSQUAT);
+            FStateManager.ChangeState((ushort)FighterCmnStates.JUMPSQUAT);
             return true;
         }
 
@@ -343,7 +326,7 @@ namespace rwby
                 return false;
             }
             currentAerialJump++;
-            StateManager.ChangeState((ushort)FighterCmnStates.AIR_JUMP);
+            FStateManager.ChangeState((ushort)FighterCmnStates.AIR_JUMP);
             return true;
         }
 
@@ -358,7 +341,7 @@ namespace rwby
                 return false;
             }
             currentAerialDash++;
-            StateManager.ChangeState((ushort)FighterCmnStates.AIR_DASH);
+            FStateManager.ChangeState((ushort)FighterCmnStates.AIR_DASH);
             return true;
         }
 
@@ -368,23 +351,23 @@ namespace rwby
             {
                 return false;
             }
-            if (PhysicsManager.IsGroundedNetworked)
+            if (FPhysicsManager.IsGroundedNetworked)
             {
-                StateManager.ChangeState((ushort)FighterCmnStates.BLOCK_HIGH);
+                FStateManager.ChangeState((ushort)FighterCmnStates.BLOCK_HIGH);
             }
             else
             {
-                StateManager.ChangeState((ushort)FighterCmnStates.BLOCK_AIR);
+                FStateManager.ChangeState((ushort)FighterCmnStates.BLOCK_AIR);
             }
             return true;
         }
 
         public bool TryLandCancel()
         {
-            PhysicsManager.CheckIfGrounded();
-            if (PhysicsManager.IsGroundedNetworked)
+            FPhysicsManager.CheckIfGrounded();
+            if (FPhysicsManager.IsGroundedNetworked)
             {
-                StateManager.ChangeState((ushort)FighterCmnStates.IDLE);
+                FStateManager.ChangeState((ushort)FighterCmnStates.IDLE);
                 return true;
             }
             return false;
@@ -415,7 +398,7 @@ namespace rwby
             if (dotProduct < wallRunDot)
             {
                 lastWallHit = rh;
-                StateManager.ChangeState((int)FighterCmnStates.WALL_RUN_H);
+                FStateManager.ChangeState((int)FighterCmnStates.WALL_RUN_H);
                 return true;
             }
             return false;
@@ -541,7 +524,7 @@ namespace rwby
             currentAerialJump = 0;
             apexTime = 0;
             gravity = 0;
-            PhysicsManager.forceGravity = 0;
+            FPhysicsManager.forceGravity = 0;
             combatManager.ResetStringAttacks();
         }
 

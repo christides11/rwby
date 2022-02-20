@@ -22,8 +22,8 @@ namespace rwby.Combat.AttackEvents
 
             float graviMulti = fallMulti ? manager.StatManager.fallGravityMultiplier : 1.0f;
 
-            manager.PhysicsManager.forceGravity += manager.gravity * graviMulti * gravityCurve.Evaluate((float)frame / (float)endFrame) * manager.Runner.DeltaTime;
-            manager.PhysicsManager.forceGravity = Mathf.Clamp(manager.PhysicsManager.forceGravity, -manager.StatManager.MaxFallSpeed, float.MaxValue);
+            manager.FPhysicsManager.forceGravity += manager.gravity * graviMulti * gravityCurve.Evaluate((float)frame / (float)endFrame) * manager.Runner.DeltaTime;
+            manager.FPhysicsManager.forceGravity = Mathf.Clamp(manager.FPhysicsManager.forceGravity, -manager.StatManager.MaxFallSpeed, float.MaxValue);
             return AttackEventReturnType.NONE;
         }
     }

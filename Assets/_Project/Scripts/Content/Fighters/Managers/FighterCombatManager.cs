@@ -47,7 +47,6 @@ namespace rwby
         [SerializeField] protected FighterInputManager inputManager;
         [SerializeField] protected FighterPhysicsManager physicsManager;
         [SerializeField] protected FighterStateManager stateManager;
-        [SerializeField] protected FighterHurtboxManager hurtboxManager;
 
         [Networked] public int Team { get; set; }
 
@@ -595,7 +594,7 @@ namespace rwby
                     SetHitStop(hitInfo.blockHitstopDefender);
                     BlockStun = hitInfo.blockstun;
 
-                    Vector3 baseBlockForce = manager.PhysicsManager.IsGrounded ? hitInfo.blockForce : hitInfo.blockForceAir;
+                    Vector3 baseBlockForce = manager.FPhysicsManager.IsGrounded ? hitInfo.blockForce : hitInfo.blockForceAir;
                     Vector3 blockForces = (baseBlockForce.x * hurtInfo.right) + (baseBlockForce.z * hurtInfo.forward);
                     physicsManager.forceGravity = baseBlockForce.y;
                     physicsManager.forceMovement = blockForces;
@@ -603,13 +602,13 @@ namespace rwby
                 }
             }
 
-            manager.PhysicsManager.SetRotation((hurtInfo.forward * -1).normalized);
+            manager.FPhysicsManager.SetRotation((hurtInfo.forward * -1).normalized);
             // Got hit, apply stun, damage, and forces.
             hitReaction.reaction = HitReactionType.HIT;
             SetHitStop(hitInfo.hitstop);
             SetHitStun(hitInfo.hitstun);
 
-            Vector3 baseForce = manager.PhysicsManager.IsGrounded ? hitInfo.opponentForce : hitInfo.opponentForceAir;
+            Vector3 baseForce = manager.FPhysicsManager.IsGrounded ? hitInfo.opponentForce : hitInfo.opponentForceAir;
             hitstunGravityHangTime = hitInfo.hangTime;
             hitstunHoldVelocityTime = hitInfo.holdVelocityTime;
             hitstunFriction = hitInfo.opponentFriction;
@@ -672,25 +671,25 @@ namespace rwby
             {
                 if (hitInfo.causesTrip)
                 {
-                    manager.StateManager.ChangeState((int)FighterCmnStates.TRIP);
+                    manager.FStateManager.ChangeState((int)FighterCmnStates.TRIP);
                 }
                 else
                 {
-                    manager.StateManager.ChangeState((int)FighterCmnStates.FLINCH_GROUND);
+                    manager.FStateManager.ChangeState((int)FighterCmnStates.FLINCH_GROUND);
                 }
             }
             else
             {
                 if (hitInfo.forcesRestand)
                 {
-                    manager.StateManager.ChangeState((int)FighterCmnStates.FLINCH_AIR);
+                    manager.FStateManager.ChangeState((int)FighterCmnStates.FLINCH_AIR);
                 }
                 else
                 {
-                    manager.StateManager.ChangeState((int)FighterCmnStates.TUMBLE);
+                    manager.FStateManager.ChangeState((int)FighterCmnStates.TUMBLE);
                 }
             }
-            manager.CombatManager.Cleanup();
+            manager.FCombatManager.Cleanup();
             return hitReaction;
         }
     }

@@ -10,7 +10,6 @@ namespace rwby
     [OrderAfter(typeof(Fusion.HitboxManager))]
     public class FighterBoxManager : NetworkBehaviour, IBoxCollection
     {
-        public HurtboxCollection BoxCollection { get { return boxCollection; } }
         [Networked] public int CurrentBoxCollectionIdentifier { get; set; }
 
         public CustomHitbox[] Hitboxes { get { return hitboxes; } }
@@ -18,7 +17,6 @@ namespace rwby
         public Collbox[] Collboxes { get { return collboxes; } }
 
         [SerializeField] protected FighterCombatManager combatManager;
-        [SerializeField] protected HurtboxCollection boxCollection;
         public HitboxRoot hRoot;
         public Settings settings;
 
@@ -71,12 +69,7 @@ namespace rwby
             if (combatBoxBounds.size == -Vector3.one) return;
             CombatPairFinder.singleton.RegisterObject(Object);
         }
-
-        public BoxCollectionDefinition GetHurtboxDefinition()
-        {
-            return BoxCollection.GetHurtbox(CurrentBoxCollectionIdentifier);
-        }
-
+        
         public void ClearBoxes()
         {
             foreach (Hurtbox hb in hurtboxes)
@@ -127,8 +120,8 @@ namespace rwby
         {
             CurrentBoxCollectionIdentifier = boxCollectionIdentifier;
             ClearBoxes();
-            BoxCollectionDefinition shd = GetHurtboxDefinition();
 
+            /*
             if(!ValidateBoxCount(shd.hurtboxCount, hurtboxes.Length, ref hurtboxes) 
                 || !ValidateBoxCount(shd.collboxCount, collboxes.Length, ref collboxes) 
                 || !ValidateBoxCount(shd.throwableboxCount, throwableboxes.Length, ref throwableboxes))
@@ -138,7 +131,7 @@ namespace rwby
 
             UpdateBoxes(ref shd.hurtboxGroups, ref hurtboxes);
             UpdateBoxes(ref shd.collboxGroups, ref collboxes);
-            UpdateBoxes(ref shd.throwableboxGroups, ref throwableboxes);
+            UpdateBoxes(ref shd.throwableboxGroups, ref throwableboxes);*/
         }
 
         private bool ValidateBoxCount<T>(int wantedCount, int maxCount, ref T[] boxList) where T : Fusion.Hitbox

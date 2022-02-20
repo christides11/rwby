@@ -17,7 +17,7 @@ namespace rwby.Combat.AttackEvents
         {
             FighterManager e = (FighterManager)controller;
 
-            e.CombatManager.SetMoveset(moveset);
+            e.FCombatManager.SetMoveset(moveset);
             return AttackEventReturnType.NONE;
         }
     }

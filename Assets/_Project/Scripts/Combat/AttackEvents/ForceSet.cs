@@ -37,11 +37,11 @@ namespace rwby.Combat.AttackEvents
 
             if (applyYForce)
             {
-                e.PhysicsManager.forceGravity = f.y;
+                e.FPhysicsManager.forceGravity = f.y;
             }
             if (applyXZForce)
             {
-                e.PhysicsManager.forceMovement = (f.x * e.transform.right) + (f.z * e.transform.forward);
+                e.FPhysicsManager.forceMovement = (f.x * e.transform.right) + (f.z * e.transform.forward);
             }
             return AttackEventReturnType.NONE;
         }

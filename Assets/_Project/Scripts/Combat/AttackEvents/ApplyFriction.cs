@@ -22,11 +22,11 @@ namespace rwby.Combat.AttackEvents
             FighterManager manager = controller as FighterManager;
             if (useXZFriction)
             {
-                manager.PhysicsManager.ApplyMovementFriction(xzFriction);
+                manager.FPhysicsManager.ApplyMovementFriction(xzFriction);
             }
             if (useYFriction)
             {
-                manager.PhysicsManager.ApplyGravityFriction(yFriction);
+                manager.FPhysicsManager.ApplyGravityFriction(yFriction);
             }
             return AttackEventReturnType.NONE;
         }

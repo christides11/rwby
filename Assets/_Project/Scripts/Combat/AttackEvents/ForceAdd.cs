@@ -34,11 +34,11 @@ namespace rwby.Combat.AttackEvents
 
             if (addYForce)
             {
-                e.PhysicsManager.forceGravity += f.y;
+                e.FPhysicsManager.forceGravity += f.y;
             }
             if (addXZForce)
             {
-                e.PhysicsManager.forceMovement += (f.x * e.transform.right) + (f.z * e.transform.forward);
+                e.FPhysicsManager.forceMovement += (f.x * e.transform.right) + (f.z * e.transform.forward);
             }
             return AttackEventReturnType.NONE;
         }
