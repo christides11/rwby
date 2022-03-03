@@ -61,7 +61,8 @@ namespace rwby
 
         public void ResetForces()
         {
-            throw new System.NotImplementedException();
+            forceMovement = Vector3.zero;
+            forceGravity = 0;
         }
 
         public void SetGrounded(bool value)
@@ -69,17 +70,20 @@ namespace rwby
             IsGroundedNetworked = value;
         }
 
-        public virtual void ApplyMovementFriction(float friction = -1)
+        public virtual Vector3 ApplyMovementFriction(float friction = -1)
         {
+            //TODO
             if (friction == -1)
             {
-                friction = manager.StatManager.GroundFriction;
+                friction = 0;
+                //friction = manager.StatManager.GroundFriction;
             }
-            Vector3 realFriction = forceMovement.normalized * friction;
-            Vector3 temp = forceMovement;
-            temp.x = ApplyFriction(forceMovement.x, Mathf.Abs(realFriction.x) * Runner.DeltaTime);
-            temp.z = ApplyFriction(forceMovement.z, Mathf.Abs(realFriction.z) * Runner.DeltaTime);
-            forceMovement = temp;
+            //Vector3 realFriction = forceMovement.normalized * friction;
+            //Vector3 temp = forceMovement;
+            //temp.x = ApplyFriction(forceMovement.x, Mathf.Abs(realFriction.x) * Runner.DeltaTime);
+            //temp.z = ApplyFriction(forceMovement.z, Mathf.Abs(realFriction.z) * Runner.DeltaTime);
+            //forceMovement = temp;
+            return Vector3.zero;
         }
 
         public virtual void ApplyGravityFriction(float friction)
@@ -87,6 +91,11 @@ namespace rwby
             forceGravity = ApplyFriction(forceGravity, friction * Runner.DeltaTime);
         }
 
+        public virtual float GetFrictionValue(float value, float traction)
+        {
+            return Mathf.MoveTowards(value, 0, traction) - value;
+        }
+        
         /// <summary>
         /// Applies friction on the given value based on the traction given.
         /// </summary>
@@ -114,7 +123,7 @@ namespace rwby
             return value;
         }
 
-        public virtual void HandleMovement(float baseAccel, float movementAccel, float deceleration, float minSpeed, float maxSpeed, AnimationCurve accelFromDot)
+        public virtual Vector3 HandleMovement(float baseAccel, float movementAccel, float deceleration, float minSpeed, float maxSpeed, AnimationCurve accelFromDot)
         {
             // Get wanted movement vector.
             Vector3 movement = manager.GetMovementVector();
@@ -132,7 +141,8 @@ namespace rwby
             Vector3 goalVelocity = movement.normalized * (minSpeed + (movement.magnitude * (maxSpeed - minSpeed)));
 
             // Move towards that goal based on our acceleration.
-            forceMovement = Vector3.MoveTowards(forceMovement, goalVelocity, accel * Runner.DeltaTime);
+            //forceMovement = Vector3.MoveTowards(forceMovement, goalVelocity, accel * Runner.DeltaTime);
+            return Vector3.MoveTowards(forceMovement, goalVelocity, accel * Runner.DeltaTime);
         }
 
         public virtual void HandleGravity(float maxFallSpeed, float gravity, float gravityScale)

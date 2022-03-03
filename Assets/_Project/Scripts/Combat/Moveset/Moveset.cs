@@ -16,7 +16,7 @@ namespace rwby
         public List<MovesetAttackNode> airAbilityNodes;
 
         [NonSerialized] public Dictionary<int, StateTimeline> stateMap;
-        [Header("States")] protected IntStateMap[] states = new IntStateMap[0];
+        [Header("States")] [SerializeField] protected IntStateMap[] states = new IntStateMap[0];
 
         public virtual void Initialize()
         {
@@ -25,7 +25,8 @@ namespace rwby
                 stateMap = new Dictionary<int, StateTimeline>();
             }
 
-            if (stateMap.Count > 0) return;
+            if (stateMap.Count == states.Length) return;
+            stateMap.Clear();
             foreach (var intStateMap in states)
             {
                 stateMap.Add(intStateMap.state, intStateMap.stateTimeline);

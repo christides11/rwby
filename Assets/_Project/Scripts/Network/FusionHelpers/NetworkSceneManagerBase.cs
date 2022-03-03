@@ -24,7 +24,6 @@ namespace rwby
 
         public NetworkRunner Runner { get; private set; }
 
-
         protected virtual void OnEnable()
         {
 #if UNITY_EDITOR

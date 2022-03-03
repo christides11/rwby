@@ -20,14 +20,14 @@ namespace rwby.Combat.AttackEvents
         public override AttackEventReturnType Evaluate(int frame, int endFrame, IFighterBase controller)
         {
             FighterManager manager = controller as FighterManager;
-            if (useXZFriction)
+            /*if (useXZFriction)
             {
                 manager.FPhysicsManager.ApplyMovementFriction(xzFriction);
             }
             if (useYFriction)
             {
                 manager.FPhysicsManager.ApplyGravityFriction(yFriction);
-            }
+            }*/
             return AttackEventReturnType.NONE;
         }
     }

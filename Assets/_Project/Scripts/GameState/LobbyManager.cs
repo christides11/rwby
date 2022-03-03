@@ -28,6 +28,8 @@ namespace rwby
 
         [Networked] private NetworkRNG MainRNGGenerator { get; set; }
 
+        [Networked, Capacity(4)] public NetworkLinkedList<CustomSceneRef> currentLoadedScenes { get; }
+
         private static void OnSettingsChanged(Changed<LobbyManager> changed)
         {
             OnLobbySettingsChanged?.Invoke();

@@ -25,8 +25,8 @@ public static class BuildConstants
         None,
     }
 
-    public static readonly System.DateTime buildDate = new System.DateTime(637644943564711442);
-    public const string version = "1.0.0.1";
+    public static readonly System.DateTime buildDate = new System.DateTime(637817661151868806);
+    public const string version = "";
     public const ReleaseType releaseType = ReleaseType.Release;
     public const Platform platform = Platform.PC;
     public const Architecture architecture = Architecture.Windows_x64;

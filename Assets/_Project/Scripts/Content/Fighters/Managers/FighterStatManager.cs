@@ -8,110 +8,81 @@ namespace rwby
 {
     public class FighterStatManager : NetworkBehaviour
     {
-
-        public float GroundFriction = 0;
-        public float JumpSquatFriction = 0;
+        //public Dictionary<FighterIntBaseStats, int> baseIntStats = new Dictionary<FighterIntBaseStats, int>();
+        //public Dictionary<FighterFloatBaseStats, float> baseFloatStats = new Dictionary<FighterFloatBaseStats, float>();
 
         // Walking
-        public float WalkMinSpeed = 0;
-        public float WalkMaxSpeed;
-        public float WalkBaseAccel;
-        public float WalkAcceleration;
-        public float walkRotationSpeed;
         public AnimationCurve WalkAccelFromDot;
 
         // Running
-        public float RunMinSpeed;
-        public float RunMaxSpeed;
-        public float RunBaseAccel;
-        public float RunAcceleration;
-        public float runRotationSpeed;
         public AnimationCurve RunAccelFromDot;
 
-        // Jump
-        public int MinJumpFrames;
-        public float MaxJumpTime;
-        public float MaxJumpHeight;
-        public int JumpSquatFrames;
-        public float JumpConversedMomentum;
-        public float JumpHorizontalVelocity;
-        public float fallGravityMultiplier;
-
-        // Air Jump
-        public int airJumps;
-        public int minAirJumpTime;
-        public float MaxAirJumpTime;
-        public float MaxAirJumpHeight;
-        public float AirJumpHorizontalMomentum;
-        public float AirJumpConversedMomentum;
-
-        // Wall Jump
-        public float MaxWallJumpTime;
-        public float MaxWallJumpHeight;
-        public float WallJumpConversedMomentum;
-        public float WallJumpHorizontalMomentum;
-
         // Aerial
-        public float MaxFallSpeed;
-        public float AerialMaxSpeed;
-        public float AerialBaseAcceleration;
-        public float AerialAcceleration;
-        public float AerialDeceleration;
         public AnimationCurve AerialAccelFromDot;
-        public float hitstunGravity;
-        public float aerialRotationSpeed;
 
         // Air dash
-        public int airDashes;
-        public int airDashFrames;
-        public int airDashStartup = 3;
-        public float airDashMaxMagnitude;
-        public float airDashForce;
-        public int airDashGravityDelay;
-        public int airDashFrictionDelay;
-        public float airDashFriction;
 
         // Wall run
-        public int wallRunHorizontalTime;
-        public float wallRunHorizontalSpeed;
-        public float wallRunGravity;
         public AnimationCurve wallRunGravityCurve;
 
+        private FighterStats fs;
+        
+        public FighterStats GetFighterStats()
+        {
+            return fs;
+        }
+        
+        public void InitStats()
+        {
+            /*
+            foreach (int i in Enum.GetValues(typeof(FighterIntBaseStats)))  
+            {
+                baseIntStats.Add((FighterIntBaseStats)i, 0);
+            }
+
+            foreach (int i in Enum.GetValues(typeof(FighterFloatBaseStats)))
+            {
+                baseFloatStats.Add((FighterFloatBaseStats)i, 0);
+            }*/
+        }
+        
         public void SetupStats(FighterStats cmnStats)
         {
-            GroundFriction = new StatFloat(cmnStats.groundFriction);
-            JumpSquatFriction = new StatFloat(cmnStats.jumpSquatFriction);
+            fs = cmnStats;
+            /*
+            baseFloatStats[FighterFloatBaseStats.GENERAL_groundFriction] = cmnStats.groundFriction;
+            baseFloatStats[FighterFloatBaseStats.JUMPSQUAT_friction] = cmnStats.jumpSquatFriction;
 
-            WalkBaseAccel = new StatFloat(cmnStats.walkBaseAcceleration);
-            WalkAcceleration = new StatFloat(cmnStats.walkAcceleration);
-            WalkMinSpeed = cmnStats.walkMinSpeed;
-            WalkMaxSpeed = new StatFloat(cmnStats.walkMaxSpeed);
+            baseFloatStats[FighterFloatBaseStats.WALK_baseAccel] = cmnStats.walkBaseAcceleration;
+            baseFloatStats[FighterFloatBaseStats.WALK_acceleration] = cmnStats.walkAcceleration;
+            baseFloatStats[FighterFloatBaseStats.WALK_minSpeed] = cmnStats.walkMinSpeed;
+            baseFloatStats[FighterFloatBaseStats.WALK_maxSpeed] = cmnStats.walkMaxSpeed;
+            baseFloatStats[FighterFloatBaseStats.WALK_rotationSpeed] = cmnStats.walkRotationSpeed;
             WalkAccelFromDot = cmnStats.walkAccelerationFromDot;
-            walkRotationSpeed = cmnStats.walkRotationSpeed;
 
-            RunBaseAccel = new StatFloat(cmnStats.runBaseAcceleration);
-            RunAcceleration = new StatFloat(cmnStats.runAcceleration);
-            RunMinSpeed = cmnStats.runMinSpeed;
-            RunMaxSpeed = new StatFloat(cmnStats.runMaxSpeed);
+            baseFloatStats[FighterFloatBaseStats.RUN_baseAccel] = cmnStats.runBaseAcceleration;
+            baseFloatStats[FighterFloatBaseStats.RUN_acceleration] = cmnStats.runAcceleration;
+            baseFloatStats[FighterFloatBaseStats.RUN_minSpeed] = cmnStats.runMinSpeed;
+            baseFloatStats[FighterFloatBaseStats.RUN_maxSpeed] = cmnStats.runMaxSpeed;
+            baseFloatStats[FighterFloatBaseStats.RUN_rotationSpeed] = cmnStats.runRotationSpeed;
             RunAccelFromDot = cmnStats.runAccelerationFromDot;
-            runRotationSpeed = cmnStats.runRotationSpeed;
 
-            MinJumpFrames = new StatInt(cmnStats.jumpMinimumFrames);
-            MaxJumpTime = new StatFloat(((float)cmnStats.jumpMaxTime)/60.0f);
-            MaxJumpHeight = new StatFloat(cmnStats.jumpMaxHeight);
-            JumpSquatFrames = new StatInt(cmnStats.jumpSquatFrames);
-            JumpHorizontalVelocity = cmnStats.jumpHorizontalVelocity;
-            JumpConversedMomentum = cmnStats.jumpConversedHorizontalMomentum;
-            fallGravityMultiplier = cmnStats.fallGravityMultiplier;
+            baseIntStats[FighterIntBaseStats.JUMP_minFrames] = cmnStats.jumpMinimumFrames;
+            baseFloatStats[FighterFloatBaseStats.JUMP_maxTime] = ((float)cmnStats.jumpMaxTime) / 60.0f;
+            baseFloatStats[FighterFloatBaseStats.JUMP_height] = cmnStats.jumpMaxHeight;
+            baseIntStats[FighterIntBaseStats.JUMPSQUAT_frames] = cmnStats.jumpSquatFrames;
+            baseFloatStats[FighterFloatBaseStats.JUMP_horizontalMomentum] = cmnStats.jumpHorizontalVelocity;
+            baseFloatStats[FighterFloatBaseStats.JUMP_conservedMomentum] = cmnStats.jumpConversedHorizontalMomentum;
+            baseFloatStats[FighterFloatBaseStats.FALL_gravityMultiplier] = cmnStats.fallGravityMultiplier;
+
+            baseIntStats[FighterIntBaseStats.AIRJUMP_count] = cmnStats.airJumps;
+            baseIntStats[FighterIntBaseStats.AIRJUMP_minFrames] = cmnStats.airJumpMinimumFrames;
+            baseFloatStats[FighterFloatBaseStats.AIRJUMP_maxTime] = ((float)cmnStats.airJumpMaxTime) / 60.0f;
+            baseFloatStats[FighterFloatBaseStats.AIRJUMP_height] = cmnStats.airJumpMaxHeight;
+            baseFloatStats[FighterFloatBaseStats.AIRJUMP_horizontalMomentum] = cmnStats.airJumpHorizontalMomentum;
+            baseFloatStats[FighterFloatBaseStats.AIRJUMP_conservedMomentum] =
+                cmnStats.airJumpConversedHorizontalMomentum;
             
-
-            airJumps = cmnStats.airJumps;
-            minAirJumpTime = cmnStats.airJumpMinimumFrames;
-            MaxAirJumpTime = new StatFloat(((float)cmnStats.airJumpMaxTime)/60.0f);
-            MaxAirJumpHeight = new StatFloat(cmnStats.airJumpMaxHeight);
-            AirJumpHorizontalMomentum = new StatFloat(cmnStats.airJumpHorizontalMomentum);
-            AirJumpConversedMomentum = cmnStats.airJumpConversedHorizontalMomentum;
-
             MaxWallJumpTime = (float)cmnStats.MaxWallJumpTime / 60.0f;
             MaxWallJumpHeight = cmnStats.MaxWallJumpHeight;
             WallJumpConversedMomentum = cmnStats.WallJumpConversedMomentum;
@@ -126,19 +97,19 @@ namespace rwby
             hitstunGravity = cmnStats.hitstunGravity;
             aerialRotationSpeed = cmnStats.aerialRotationSpeed;
 
-            airDashes = cmnStats.airDashes;
-            airDashFrames = cmnStats.airDashFrames;
-            airDashStartup = cmnStats.airDashStartup;
+            baseIntStats[FighterIntBaseStats.AIRDASH_count] = cmnStats.airDashes;
+            baseIntStats[FighterIntBaseStats.AIRDASH_frames] = cmnStats.airDashFrames;
+            baseIntStats[FighterIntBaseStats.AIRDASH_startup] = cmnStats.airDashStartup;
             airDashMaxMagnitude = cmnStats.airDashMaxMagnitude;
             airDashForce = cmnStats.airDashForce;
-            airDashGravityDelay = cmnStats.airDashGravityDelay;
-            airDashFrictionDelay = cmnStats.airDashFrictionDelay;
+            baseIntStats[FighterIntBaseStats.AIRDASH_gravityDelay] = cmnStats.airDashGravityDelay;
+            baseIntStats[FighterIntBaseStats.AIRDASH_frictionDelay] = cmnStats.airDashFrictionDelay;
             airDashFriction = cmnStats.airDashFriction;
 
-            wallRunHorizontalTime = cmnStats.wallRunHorizontalTime;
+            baseIntStats[FighterIntBaseStats.WALLRUN_HORIZONTAL_maxFrames] = cmnStats.wallRunHorizontalTime;
             wallRunHorizontalSpeed = cmnStats.wallRunHorizontalSpeed;
             wallRunGravity = cmnStats.wallRunGravity;
-            wallRunGravityCurve = cmnStats.wallRunGravityCurve;
+            wallRunGravityCurve = cmnStats.wallRunGravityCurve;*/
         }
     }
 }

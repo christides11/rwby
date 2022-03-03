@@ -12,195 +12,66 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 35e502ecbe84ff54e8b00da2946dc891, type: 3}
   m_Name: RRCmnStats
   m_EditorClassIdentifier: 
-  groundFriction: 60
-  jumpSquatFriction: 0
-  walkMinSpeed: 6
-  walkMaxSpeed: 7.5
-  walkBaseAcceleration: 18
-  walkAcceleration: 27
-  walkRotationSpeed: 20
-  walkAccelerationFromDot:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: -1
-      value: 2
-      inSlope: -1
-      outSlope: -1
-      tangentMode: 34
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0.33333334
-    - serializedVersion: 3
-      time: 0
-      value: 1
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    - serializedVersion: 3
-      time: 1
-      value: 1
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 34
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  runMinSpeed: 12
-  runMaxSpeed: 14
-  runBaseAcceleration: 10
-  runAcceleration: 20
-  runRotationSpeed: 10
-  runAccelerationFromDot:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: -1
-      value: 0.75
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0.05081302
-    - serializedVersion: 3
-      time: 0
-      value: 0.75
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    - serializedVersion: 3
-      time: 1
-      value: 1
-      inSlope: 0.25
-      outSlope: 0.25
-      tangentMode: 34
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  jumpSquatFrames: 4
-  jumpMinimumFrames: 0
-  jumpMaxTime: 38
-  jumpMaxHeight: 3.5
-  jumpConversedHorizontalMomentum: 0.5
-  jumpHorizontalVelocity: 4.5
-  fallGravityMultiplier: 1.6
-  airJumps: 1
-  airJumpMinimumFrames: 5
-  airJumpMaxTime: 40
-  airJumpMaxHeight: 2
-  airJumpConversedHorizontalMomentum: 0.2
-  airJumpHorizontalMomentum: 4
-  airDashes: 2
-  airDashFrames: 16
-  airDashStartup: 3
-  airDashMaxMagnitude: 20
-  airDashForce: 20
-  airDashGravityDelay: 14
-  airDashFrictionDelay: 11
-  airDashFriction: 100
-  MaxWallJumpTime: 25
-  MaxWallJumpHeight: 1
-  WallJumpConversedMomentum: 0.5
-  WallJumpHorizontalMomentum: 10
-  aerialMaxFallSpeed: 14
-  aerialMaxSpeed: 17
-  aerialBaseAcceleration: 5
-  aerialAcceleration: 7
-  aerialDeceleration: 0
-  aerialAccelerationFromDot:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: -1
-      value: 0.5
-      inSlope: 0.5
-      outSlope: 0.5
-      tangentMode: 34
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0.33333334
-    - serializedVersion: 3
-      time: 0
-      value: 1
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    - serializedVersion: 3
-      time: 1
-      value: 1
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 34
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  aerialRotationSpeed: 10
-  hitstunHoldPositionFor: 10
-  hitstunGravity: 46
-  hitstunMaxFallSpeed: 100
-  hitstunGroundFriction: 60
-  wallRunHorizontalTime: 90
-  wallRunHorizontalSpeed: 17
-  wallRunGravity: 14
-  wallRunGravityCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 34
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0.33333334
-    - serializedVersion: 3
-      time: 0.4
-      value: 0
-      inSlope: 0
-      outSlope: 0.23970574
-      tangentMode: 1
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.06997677
-    - serializedVersion: 3
-      time: 0.95
-      value: 1
-      inSlope: 2.3178966
-      outSlope: 0
-      tangentMode: 1
-      weightedMode: 0
-      inWeight: 0.031358857
-      outWeight: 0
-    - serializedVersion: 3
-      time: 1
-      value: 1
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  inertiaFriction: 0
+  intStats:
+    keys: 00000000010000000200000003000000040000000500000006000000070000000800000009000000
+    values: 000000000400000001000000050000000200000010000000030000000e0000000b00000005000000
+  floatStats:
+    keys: 000000000100000002000000030000000400000005000000060000000700000008000000090000000a0000000c0000000d0000000e0000000f000000100000001100000012000000130000001400000015000000160000001700000018000000190000001a0000001b0000001c0000001d0000001e0000001f000000200000002100000022000000
+    values:
+    - 0.5
+    - 0.5
+    - 0
+    - 0
+    - 0
+    - 0
+    - 0
+    - 0
+    - 0
+    - 0
+    - 0
+    - 0.55
+    - 2
+    - 10
+    - 1
+    - 1
+    - 0
+    - 0
+    - 0
+    - 0
+    - 0
+    - 0
+    - 20
+    - 8
+    - 0
+    - 0
+    - 0
+    - 0
+    - 0
+    - 0
+    - 0
+    - 0
+    - 0
+    - 0
+  animationCurveStats:
+    keys: 00000000010000000200000003000000
+    values:
+    - serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 0
+      m_PostInfinity: 0
+      m_RotationOrder: 0
+    - serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 0
+      m_PostInfinity: 0
+      m_RotationOrder: 0
+    - serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 0
+      m_PostInfinity: 0
+      m_RotationOrder: 0
+    - serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 0
+      m_PostInfinity: 0
+      m_RotationOrder: 0

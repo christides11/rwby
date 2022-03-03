@@ -28,6 +28,7 @@ namespace rwby
         GROUND_LAY = 22,
         TECH_AIR = 23,
         TECH_GROUND = 24,
-        GROUND_GETUP = 25
+        GROUND_GETUP = 25,
+        JUMP_END = 26
     }
 }

@@ -12,7 +12,6 @@ namespace rwby
         public override void ProcessFrame(Playable playable, FrameData info, object playerData)
         {
             FighterManager cm = playerData as FighterManager;
-            if (cm == null) return;
             cm.StateManager.SetFrame(frame);
         }
     }

@@ -8,7 +8,6 @@ namespace rwby
 {
     public class NetworkManager : MonoBehaviour
     {
-
         public static NetworkManager singleton;
 
         public FusionLauncher FusionLauncher { get { return fusionLauncher; } }

@@ -17,13 +17,14 @@ namespace rwby.Combat.AttackEvents
         public override AttackEventReturnType Evaluate(int frame, int endFrame, IFighterBase controller)
         {
             FighterManager manager = controller as FighterManager;
-            manager.apexTime = manager.StatManager.MaxAirJumpTime / 2.0f;
+            /*manager.apexTime = manager.StatManager.MaxAirJumpTime / 2.0f;
             manager.gravity = (-2.0f * manager.StatManager.MaxAirJumpHeight) / Mathf.Pow(manager.apexTime, 2.0f);
 
             float graviMulti = fallMulti ? manager.StatManager.fallGravityMultiplier : 1.0f;
 
             manager.FPhysicsManager.forceGravity += manager.gravity * graviMulti * gravityCurve.Evaluate((float)frame / (float)endFrame) * manager.Runner.DeltaTime;
             manager.FPhysicsManager.forceGravity = Mathf.Clamp(manager.FPhysicsManager.forceGravity, -manager.StatManager.MaxFallSpeed, float.MaxValue);
+            */
             return AttackEventReturnType.NONE;
         }
     }

@@ -39,6 +39,11 @@ namespace rwby
                     cMapper.Open();
                 }
             }
+
+            if (Input.GetKeyDown(KeyCode.F5))
+            {
+                QualitySettings.vSyncCount = QualitySettings.vSyncCount == 0 ? 1 : 0;
+            }
         }
 
         public virtual async UniTask<bool> LoadMap(ModObjectReference map)

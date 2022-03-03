@@ -24,11 +24,11 @@ MonoBehaviour:
     syncWithPlayerSettings: 0
   _releaseTypeList:
     releaseTypes:
-    - typeName: Release
+    - typeName: DevBuild
       bundleIdentifier: com.ChrisTides11.rwby
       companyName: ChrisTides11
       productName: rwby
-      buildOptions: 0
+      buildOptions: 1
       customDefines: 
       sceneList:
         enabledScenes:
@@ -38,26 +38,26 @@ MonoBehaviour:
     - {fileID: 12252119849156343}
   _projectConfigurations:
     configSet:
-      _Buckets: ffffffff0100000002000000
-      _HashCodes: 4bbe5b54510e9f592d6dfd48
-      _Next: ffffffffffffffff00000000
+      _Buckets: 01000000ffffffff02000000
+      _HashCodes: d7a5f34c7de9e336d9949a14
+      _Next: ffffffff00000000ffffffff
       _Count: 3
       _Version: 3
       _FreeList: -1
       _FreeCount: 0
       _Keys:
-      - Release/PC/Windows x64
-      - Release/PC
-      - Release
+      - DevBuild/PC/Windows x64
+      - DevBuild/PC
+      - DevBuild
       _Values:
       - enabled: 1
         childKeys: []
       - enabled: 1
         childKeys:
-        - Release/PC/Windows x64
+        - DevBuild/PC/Windows x64
       - enabled: 1
         childKeys:
-        - Release/PC
+        - DevBuild/PC
     showViewOptions: 0
     showConfigs: 0
     showBuildInfo: 0
@@ -112,7 +112,7 @@ MonoBehaviour:
   actionType: 1
   actionName: BuildAddressables
   note: 
-  actionEnabled: 1
+  actionEnabled: 0
   filter:
     condition: 0
     clauses: []

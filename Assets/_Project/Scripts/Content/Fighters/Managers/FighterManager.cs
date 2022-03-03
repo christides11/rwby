@@ -44,8 +44,8 @@ namespace rwby
 
         // Stats
         [Networked] public NetworkBool StoredRun { get; set; }
-        [Networked] public float currentAerialJump { get; set; }
-        [Networked] public float currentAerialDash { get; set; }
+        [Networked] public int currentAerialJump { get; set; }
+        [Networked] public int currentAerialDash { get; set; }
         [Networked] public float apexTime { get; set; }
         [Networked] public float gravity { get; set; }
         [Networked, Capacity(10)] public NetworkArray<bool> attackEventInput { get; }
@@ -99,6 +99,7 @@ namespace rwby
             Visible = true;
             combatManager.Cleanup();
             combatManager.SetMoveset(0);
+            statManager.InitStats();
             statManager.SetupStats((combatManager.movesets[0] as Moveset).fighterStats);
         }
 
@@ -108,7 +109,12 @@ namespace rwby
 
         public override void FixedUpdateNetwork()
         {
-            boxManager.ClearHitboxes();
+            if (Runner.Simulation.IsResimulation && Runner.Simulation.IsFirstTick)
+            {
+                stateManager.ResimulationSync();
+            }
+            
+            //boxManager.ClearHitboxes();
             visualTransform.gameObject.SetActive(Visible);
 
             HitstopShake();
@@ -324,7 +330,7 @@ namespace rwby
             {
                 return false;
             }
-            if(currentAerialJump == statManager.airJumps)
+            if(currentAerialJump == statManager.GetFighterStats().intStats[FighterIntBaseStats.AIRJUMP_count])
             {
                 return false;
             }
@@ -339,7 +345,7 @@ namespace rwby
             {
                 return false;
             }
-            if(currentAerialDash == statManager.airDashes)
+            if(currentAerialDash == statManager.GetFighterStats().intStats[FighterIntBaseStats.AIRDASH_count])
             {
                 return false;
             }

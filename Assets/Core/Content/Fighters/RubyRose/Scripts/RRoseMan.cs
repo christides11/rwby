@@ -7,8 +7,6 @@ using Cysharp.Threading.Tasks;
 
 public class RRoseMan : FighterManager
 {
-    public EnumStateBinding[] coreStates = new EnumStateBinding[0];
-    
     public override async UniTask<bool> OnFighterLoaded()
     {
         bool globalSnbkLoadResult = await ContentManager.singleton.LoadContentDefinition<ISoundbankDefinition>(new ModObjectReference("core", "global"));
@@ -63,5 +61,11 @@ public class RRoseMan : FighterManager
             Debug.LogError("Error loading ruby rose animationbank.");
         }
         animationbankContainer.AddAnimationbank(rrAnbk.Name, rrAnbk);
+    }
+
+    public override void Spawned()
+    {
+        base.Spawned();
+        FStateManager.ChangeState((int)FighterCmnStates.IDLE);
     }
 }

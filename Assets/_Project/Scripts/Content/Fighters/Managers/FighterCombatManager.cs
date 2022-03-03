@@ -616,12 +616,14 @@ namespace rwby
             
             if (hitstunFriction <= -1)
             {
-                hitstunFriction = manager.StatManager.GroundFriction;
+                //TODO
+                //hitstunFriction = manager.StatManager.GroundFriction;
             }
             hitstunGravity = hitInfo.opponentGravity;
             if (hitstunGravity <= -1)
             {
-                hitstunGravity = manager.StatManager.hitstunGravity;
+                //TODO
+                //hitstunGravity = manager.StatManager.hitstunGravity;
             }
 
             // Convert forces the attacker-based forward direction.

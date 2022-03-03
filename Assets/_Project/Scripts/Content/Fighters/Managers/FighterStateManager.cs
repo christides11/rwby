@@ -1,7 +1,5 @@
 using Fusion;
 using HnSF.Fighters;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Playables;
 
@@ -11,9 +9,9 @@ namespace rwby
     [OrderAfter(typeof(Fusion.HitboxManager), typeof(FighterManager))]
     public class FighterStateManager : NetworkBehaviour, IFighterStateManager
     {
-        [Networked] public int CurrentStateMoveset { get; set; }
-        [Networked] public int CurrentState { get; set; }
-        [Networked] public int CurrentStateFrame { get; set; }
+        [Networked] public int CurrentStateMoveset { get; set; } = 0;
+        [Networked] public int CurrentState { get; set; } = 0;
+        [Networked] public int CurrentStateFrame { get; set; } = 0;
         
         [SerializeField] protected FighterManager manager;
         [SerializeField] protected FighterCombatManager combatManager;
@@ -22,6 +20,13 @@ namespace rwby
         
         public bool markedForStateChange = false;
         public int nextState = 0;
+
+        public void ResimulationSync()
+        {
+            var currentState = manager.FCombatManager.GetMoveset().stateMap[CurrentState];
+            if (currentState == director.playableAsset) return;
+            InitState();
+        }
         
         public void Tick()
         {
@@ -36,19 +41,12 @@ namespace rwby
         public void AddState(HnSF.StateTimeline state, int stateNumber)
         {
             Debug.LogError("Cannot add states.");
-            //states.Add(stateNumber, state);
         }
 
         public void RemoveState(int stateNumber)
         {
             Debug.Log("Cannot remove states.");
-            /*
-            if(CurrentState == stateNumber)
-            {
-                Debug.LogError("Can't remove a state that is currently in progress.");
-                return;
-            }
-            states.Remove(stateNumber);*/
+
         }
 
         public void MarkForStateChange(int state)
@@ -68,24 +66,22 @@ namespace rwby
             markedForStateChange = false;
             int oldStateMoveset = CurrentStateMoveset;
             int oldState = CurrentState;
-            int oldStateFrame = CurrentStateFrame;
-
             if (callOnInterrupt && oldState != 0)
             {
-                SetFrame(manager.FCombatManager.GetMoveset().stateMap[CurrentState].totalFrames);
+                // TODO: Use old state moveset.
+                SetFrame(manager.FCombatManager.GetMoveset().stateMap[oldState].totalFrames);
                 director.Evaluate();
             }
-
             CurrentStateMoveset = stateMoveset;
             CurrentStateFrame = stateFrame;
             CurrentState = state;
-            // OnStatePreChange?.Invoke(manager, oldState, oldStateFrame);
             if (CurrentStateFrame == 0)
             {
                 InitState();
+                SetFrame(0);
+                director.Evaluate();
                 SetFrame(1);
             }
-            // OnStatePostChange?.Invoke(manager, oldState, oldStateFrame);
         }
 
         public void InitState()
@@ -102,8 +98,8 @@ namespace rwby
                 director.SetGenericBinding(pAO.sourceObject, manager);
             }
             director.Play();
-            SetFrame(0);
-            director.Evaluate();
+            //SetFrame(0);
+            //director.Evaluate();
         }
 
         public StateTimeline GetState()
@@ -129,10 +125,8 @@ namespace rwby
 
         public void SetFrame(int frame)
         {
-            int preFrame = CurrentStateFrame;
             CurrentStateFrame = frame;
             director.time = (float)CurrentStateFrame * Runner.Simulation.DeltaTime;
-            //OnStateFrameSet?.Invoke(manager, preFrame);
         }
     }
 }

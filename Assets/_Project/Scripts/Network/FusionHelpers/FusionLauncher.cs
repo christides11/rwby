@@ -39,7 +39,8 @@ namespace rwby
 		private ConnectionStatus _status;
 		private NetworkObject _playerPrefab;
 		private FusionObjectPoolRoot _pool;
-		public NetworkSceneManager _networkSceneManager;
+		//public NetworkSceneManager _networkSceneManager;
+		public CustomNetworkSceneManagerBase networkSceneManagerBase;
 
 		private void OnConnectionStatusUpdate(NetworkRunner arg1, FusionLauncher.ConnectionStatus status)
 		{
@@ -70,7 +71,7 @@ namespace rwby
 			_connectionCallback = OnConnectionStatusUpdate;
 			InitSingletions(false);
 
-			StartGameResult result = await _runner.StartGame(new StartGameArgs() { GameMode = GameMode.Server, SessionName = roomName, ObjectPool = _pool, SceneObjectProvider = _networkSceneManager, PlayerCount = playerCount });
+			StartGameResult result = await _runner.StartGame(new StartGameArgs() { GameMode = GameMode.Server, SessionName = roomName, ObjectPool = _pool, SceneObjectProvider = networkSceneManagerBase, PlayerCount = playerCount });
 			if(result.Ok == false)
             {
 				Debug.LogError(result.ShutdownReason);
@@ -97,7 +98,7 @@ namespace rwby
 				GameMode = local ? GameMode.Single : GameMode.Host,
 				SessionName = roomName,
 				ObjectPool = _pool,
-				SceneObjectProvider = _networkSceneManager,
+				SceneObjectProvider = networkSceneManagerBase,
 				PlayerCount = playerCount
 			});
 			if (result.Ok == false)
@@ -152,9 +153,10 @@ namespace rwby
 			if (_pool == null)
 				_pool = gameObject.AddComponent<FusionObjectPoolRoot>();
 
+			/*
 			_networkSceneManager = gameObject.GetComponent<NetworkSceneManager>();
 			if (!_networkSceneManager)
-				_networkSceneManager = gameObject.AddComponent<NetworkSceneManager>();
+				_networkSceneManager = gameObject.AddComponent<NetworkSceneManager>();*/
 		}
 
 		public void OnInput(NetworkRunner runner, NetworkInput input)
