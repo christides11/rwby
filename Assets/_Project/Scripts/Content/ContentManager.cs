@@ -27,13 +27,13 @@ namespace rwby
         #region Loading
         public async UniTask LoadContentDefinitions<T>() where T : IContentDefinition
         {
-            foreach (string m in modLoader.loadedMods.Keys)
+            foreach (var m in modLoader.loadedMods.Keys)
             {
                 await LoadContentDefinitions<T>(m);
             }
         }
 
-        public async UniTask<bool> LoadContentDefinitions<T>(string modIdentifier) where T : IContentDefinition
+        public async UniTask<bool> LoadContentDefinitions<T>(ModIdentifierTuple modIdentifier) where T : IContentDefinition
         {
             if (!modLoader.TryGetLoadedMod(modIdentifier, out LoadedModDefinition mod)) return false;
             if (mod.definition == null) return true;
@@ -59,14 +59,14 @@ namespace rwby
         public List<ModObjectReference> GetContentDefinitionReferences<T>() where T : IContentDefinition
         {
             List<ModObjectReference> content = new List<ModObjectReference>();
-            foreach (string m in modLoader.loadedMods.Keys)
+            foreach (var m in modLoader.loadedMods.Keys)
             {
                 content.InsertRange(content.Count, GetContentDefinitionReferences<T>(m));
             }
             return content;
         }
 
-        public List<ModObjectReference> GetContentDefinitionReferences<T>(string modIdentifier) where T : IContentDefinition
+        public List<ModObjectReference> GetContentDefinitionReferences<T>(ModIdentifierTuple modIdentifier) where T : IContentDefinition
         {
             List<ModObjectReference> content = new List<ModObjectReference>();
 
@@ -88,14 +88,14 @@ namespace rwby
         {
             List<T> contents = new List<T>();
 
-            foreach (string m in modLoader.loadedMods.Keys)
+            foreach (var m in modLoader.loadedMods.Keys)
             {
                 contents.InsertRange(contents.Count, GetContentDefinitions<T>(m));
             }
             return contents;
         }
 
-        public List<T> GetContentDefinitions<T>(string modIdentifier) where T : IContentDefinition
+        public List<T> GetContentDefinitions<T>(ModIdentifierTuple modIdentifier) where T : IContentDefinition
         {
             List<T> contents = new List<T>();
 
@@ -133,13 +133,13 @@ namespace rwby
         #region Unloading
         public void UnloadContentDefinitions<T>() where T : IContentDefinition
         {
-            foreach (string m in modLoader.loadedMods.Keys)
+            foreach (var m in modLoader.loadedMods.Keys)
             {
                 UnloadContentDefinitions<T>(m);
             }
         }
 
-        public void UnloadContentDefinitions<T>(string modIdentifier) where T : IContentDefinition
+        public void UnloadContentDefinitions<T>(ModIdentifierTuple modIdentifier) where T : IContentDefinition
         {
             if (!modLoader.TryGetLoadedMod(modIdentifier, out LoadedModDefinition mod)) return;
             if (mod.definition == null) return;

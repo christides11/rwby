@@ -2174,7 +2174,7 @@ namespace Fusion.Editor {
       }
 
       if (FusionEditorGUI.IsHelpExpanded(this, property.propertyPath)) {
-        height += FusionEditorGUI.GetInlineHelpRect(_helpInfo.Summary).height + FusionEditorGUI.InlineHelpStyle.MarginInner * 3;
+        height += FusionEditorGUI.GetInlineHelpRect(_helpInfo.Summary).height;
       }
 
       return height;
@@ -2217,7 +2217,7 @@ namespace Fusion.Editor {
         var helpRect = FusionEditorGUI.GetInlineHelpRect(_helpInfo.Summary);
         FusionEditorGUI.DrawInlineHelp(_helpInfo.Summary, position, helpRect);
         label = new GUIContent(label);
-        position.height = position.height - helpRect.height - FusionEditorGUI.InlineHelpStyle.MarginInner * 3;
+        position.height = position.height - helpRect.height;
         SetRequiredHeight(helpRect.height);
       } else {
         SetRequiredHeight(0.0f);
@@ -2823,6 +2823,75 @@ namespace Fusion.Editor {
     bool IFoldablePropertyDrawer.HasFoldout(SerializedProperty property) {
       return false;
     }
+  }
+}
+
+#endregion
+
+
+#region Assets/Photon/Fusion/Scripts/Editor/CustomTypes/NetworkStringDrawer.cs
+
+namespace Fusion.Editor {
+  using System;
+  using System.Collections.Generic;
+  using System.Reflection;
+  using System.Text;
+  using UnityEditor;
+  using UnityEngine;
+
+  [CustomPropertyDrawer(typeof(NetworkString<>))]
+  public class NetworkStringDrawer : PropertyDrawerWithErrorHandling, IFoldablePropertyDrawer {
+
+    private string _str = "";
+    private Action<int[], int> _write;
+    private Action<int[], int> _read;
+
+    public NetworkStringDrawer() {
+      _write = (buffer, count) => {
+        unsafe {
+          fixed (int* p = buffer) {
+            _str = new string((sbyte*)p, 0, count * 4, Encoding.UTF32);
+          }
+        }
+      };
+
+      _read = (buffer, count) => {
+        unsafe {
+          fixed (int* p = buffer) {
+            var charCount = UTF32Tools.Convert(_str, (uint*)p, count).CharacterCount;
+            if (charCount < _str.Length) {
+              _str = _str.Substring(0, charCount);
+            }
+          }
+        }
+      };
+    }
+
+    protected override void OnGUIInternal(Rect position, SerializedProperty property, GUIContent label) {
+
+      var length = property.FindPropertyRelativeOrThrow(nameof(NetworkString<_1>._length));
+      var data = property.FindPropertyRelativeOrThrow($"{nameof(NetworkString<_1>._data)}.Data");
+
+      data.UpdateFixedBuffer(_read, _write, false);
+
+      EditorGUI.BeginChangeCheck();
+
+      using (new FusionEditorGUI.ShowMixedValueScope(data.hasMultipleDifferentValues)) {
+        _str = EditorGUI.TextField(position, label, _str);
+      }
+
+      if (EditorGUI.EndChangeCheck()) {
+        if (data.UpdateFixedBuffer(_read, _write, true, data.hasMultipleDifferentValues)) {
+          length.intValue = Encoding.UTF32.GetByteCount(_str) / 4;
+          data.serializedObject.ApplyModifiedProperties();
+        }
+      }
+    }
+
+    bool IFoldablePropertyDrawer.HasFoldout(SerializedProperty property) {
+      return false;
+    }
+
   }
 }
 
@@ -3530,9 +3599,7 @@ namespace Fusion.Editor {
 namespace Fusion.Editor {
 
   using UnityEngine;
-  using System;
   using UnityEditor;
-  using System.Collections.Generic;
 
   internal class ScriptHeaderAttributeDrawer : PropertyDrawer {
 
@@ -3543,34 +3610,45 @@ namespace Fusion.Editor {
     internal new Attribute attribute => (Attribute)base.attribute;
 
     public override void OnGUI(Rect position, SerializedProperty property, GUIContent label) {
+      var settings = attribute.Settings;
 
-      if ( attribute.Settings == null ) {
+      if (settings == null ) {
         EditorGUI.PropertyField(position, property, label, property.isExpanded);
         return;
       }
 
-      // ensures exact height correctness (might slightly different due to scaling)
-      position.height = 24f;
+      bool useEnhancedHeader = settings.BackColor != EditorHeaderBackColor.None;
+
+      // ensures exact height correctness (might slightly differ due to scaling)
+      position.height = useEnhancedHeader ? 24f : 18;
 
       var scriptType = property.serializedObject.targetObject.GetType();
 
       EditorGUIUtility.AddCursorRect(position, MouseCursor.Link);
 
-      using (new FusionEditorGUI.EnabledScope(true)) {
-        Event e = Event.current;
-        if (e.type == EventType.MouseDown && position.Contains(e.mousePosition)) {
-          if (e.clickCount == 1) {
-            if (!string.IsNullOrEmpty(attribute.Settings.Url)) {
-              Application.OpenURL(attribute.Settings.Url);
+      if (useEnhancedHeader) {
+        using (new FusionEditorGUI.EnabledScope(true)) {
+          Event e = Event.current;
+          if (e.type == EventType.MouseDown && position.Contains(e.mousePosition)) {
+            if (e.clickCount == 1) {
+              if (!string.IsNullOrEmpty(settings.Url)) {
+                Application.OpenURL(settings.Url);
+              }
+              EditorGUIUtility.PingObject(MonoScript.FromMonoBehaviour(property.serializedObject.targetObject as MonoBehaviour));
+            } else {
+              AssetDatabase.OpenAsset(MonoScript.FromMonoBehaviour(property.serializedObject.targetObject as MonoBehaviour));
             }
-            EditorGUIUtility.PingObject(MonoScript.FromMonoBehaviour(property.serializedObject.targetObject as MonoBehaviour));
-          } else {
-            AssetDatabase.OpenAsset(MonoScript.FromMonoBehaviour(property.serializedObject.targetObject as MonoBehaviour));
           }
+          var scriptName = string.IsNullOrEmpty(settings.Title) ? scriptType.Name : settings.Title;
+          EditorGUI.LabelField(position, ObjectNames.NicifyVariableName(scriptName).ToUpper(), FusionGUIStyles.GetFusionHeaderBackStyle((int)settings.BackColor));
         }
-        var scriptName = string.IsNullOrEmpty(attribute.Settings.Title) ? scriptType.Name : attribute.Settings.Title;
-        EditorGUI.LabelField(position, ObjectNames.NicifyVariableName(scriptName).ToUpper(), FusionGUIStyles.GetFusionHeaderBackStyle((int)attribute.Settings.BackColor));
+      } else {
+        using (new FusionEditorGUI.EnabledScope(false)) {
+          SerializedProperty prop = property.serializedObject.FindProperty("m_Script");
+          EditorGUI.PropertyField(position, prop);
+        }
       }
+
 
       //// Draw Icon overlay
       //var icon = FusionGUIStyles.GetFusionIconTexture(attribute.Settings.Icon);
@@ -3580,7 +3658,8 @@ namespace Fusion.Editor {
     }
 
     public override float GetPropertyHeight(SerializedProperty property, GUIContent label) {
-      return attribute.Settings == null ? base.GetPropertyHeight(property, label) : 24.0f;
+      var settings = attribute.Settings;
+      return settings == null ? base.GetPropertyHeight(property, label) : settings.BackColor != EditorHeaderBackColor.None ? 24.0f : 18.0f;
     }
   }
 }
@@ -3652,6 +3731,38 @@ namespace Fusion.Editor {
       } finally {
         _dictionaryKeyHash.Clear();
       }
+    }
+  }
+}
+
+
+#endregion
+
+
+#region Assets/Photon/Fusion/Scripts/Editor/CustomTypes/ToggleLeftAttributeDrawer.cs
+
+﻿namespace Fusion.Editor {
+
+  using UnityEditor;
+  using UnityEngine;
+
+  [CustomPropertyDrawer(typeof(ToggleLeftAttribute))]
+  public class ToggleLeftAttributeDrawer : PropertyDrawer {
+
+    public override void OnGUI(Rect position, SerializedProperty property, GUIContent label) {
+
+      EditorGUI.BeginProperty(position, label, property);
+
+      EditorGUI.BeginChangeCheck();
+      var val = EditorGUI.ToggleLeft(position, label, property.boolValue);
+
+
+
+      if (EditorGUI.EndChangeCheck()) {
+        property.boolValue = val;
+      }
+
+      EditorGUI.EndProperty();
     }
   }
 }
@@ -4464,6 +4575,7 @@ namespace Fusion.Editor {
     //  }
     //}
 
+
     private static Color[] _headerColors = new Color[12] {
       // none
       new Color(),
@@ -4502,22 +4614,32 @@ namespace Fusion.Editor {
       Sand,
       InlineHelpOuter,
       InlineHelpInner,
+      Outline,
     }
 
     private struct GroupBoxInfo {
+      public string Name;
       public Color? BackColor;
       public Color? OutlineColor;
       public Color? FontColor;
       public int? Padding;
       public RectOffset Margin;
-      public GroupBoxInfo(Color? backColor = null, Color? outlineColor = null, Color? fontColor = null, int? padding = null, RectOffset margin = null) {
+      public int? BorderWidth;
+      public bool? RichTextBox;
+      public GroupBoxInfo(string name, Color? backColor = null, Color? outlineColor = null, Color? fontColor = null, int? padding = null, int? borderWidth = null, bool? richTextBox = null, RectOffset margin = null) {
+        Name = name;
         BackColor = backColor;
         OutlineColor = outlineColor;
         FontColor = fontColor;
         Padding = padding;
         Margin = margin;
+        BorderWidth = borderWidth;
+        RichTextBox = richTextBox;
       }
     }
+
+    static Color HelpOuterColor = EditorGUIUtility.isProSkin ? new Color(0.431f, 0.490f, 0.529f, 1.000f) : new Color(0.478f, 0.639f, 0.800f); //new Color(0.451f, 0.675f, 0.898f);
+    static Color HelpInnerColor = EditorGUIUtility.isProSkin ? new Color(0.317f, 0.337f, 0.352f, 1.000f) : new Color(0.686f, 0.776f, 0.859f);
 
     private static GroupBoxInfo[] _groupBoxInfo = new GroupBoxInfo[] {
       // None
@@ -4525,7 +4647,7 @@ namespace Fusion.Editor {
       // Info
       new GroupBoxInfo() { BackColor = new Color(0.50f, 0.50f, 0.50f, 0.20f),   OutlineColor = Color.black},
       // Warn
-      new GroupBoxInfo() { 
+      new GroupBoxInfo() {
         BackColor = EditorGUIUtility.isProSkin ? new Color(0.80f, 0.65f, 0.20f, 0.25f) : new Color(1.00f, 0.96f, 0.80f, 0.20f),   OutlineColor = Color.black},
       // Error
       new GroupBoxInfo() { BackColor = new Color(0.80f, 0.00f, 0.00f, 0.66f),   OutlineColor = Color.black},
@@ -4539,14 +4661,24 @@ namespace Fusion.Editor {
       new GroupBoxInfo() { BackColor = new Color(0.55f, 0.50f, 0.45f, 0.20f),   OutlineColor = Color.black},
       
       // Outer Help
-      new GroupBoxInfo() {  
-        BackColor = EditorGUIUtility.isProSkin ? new Color(0.55f, 0.60f, 0.65f, 0.20f) : new Color(0.50f, 0.65f, 0.80f, 0.20f), OutlineColor = null 
+      new GroupBoxInfo() {
+        BackColor = HelpOuterColor,
+        OutlineColor = HelpOuterColor,
       },
       // Inner Help
-      new GroupBoxInfo() { 
-        BackColor = EditorGUIUtility.isProSkin ? new Color(0.45f, 0.50f, 0.55f, 0.20f) : new Color(1.00f, 1.00f, 1.00f, 0.25f), OutlineColor = Color.black 
+      new GroupBoxInfo() {
+        BackColor =   HelpInnerColor,
+        OutlineColor = HelpOuterColor,
+        BorderWidth = 4,
+        Padding = 12,
+        RichTextBox = true
       },
+      // Outline
+      new GroupBoxInfo() { 
+        BackColor = new Color(0.0f, 0.0f, 0.0f, 0f),   
+        OutlineColor = EditorGUIUtility.isProSkin ? new Color(0,0,0, 0.5f) : new Color(0,0,0, 0.5f) },
     };
+
 
     public const int HEADER_CORNER_RADIUS = 4;
 
@@ -4556,40 +4688,78 @@ namespace Fusion.Editor {
 
       get {
         if (_questionMarkTexture == null) {
-          var alphas = new float[,]{
-{0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, },
-{0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, },
-{0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, },
-{0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, },
-{0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, },
-{0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, },
-{0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, },
-{0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, },
-{0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, },
-{0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, },
-{0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, },
-{0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, },
-{0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.14f, 0.57f, 0.57f, 0.43f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, },
-{0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.43f, 1.00f, 1.00f, 1.00f, 0.86f, 0.14f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, },
-{0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.71f, 0.71f, 0.43f, 0.00f, 0.29f, 0.57f, 0.57f, 0.14f, 0.00f, 0.00f, 0.00f, 0.00f, 1.00f, 1.00f, 1.00f, 1.00f, 0.71f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, },
-{0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 1.00f, 1.00f, 0.43f, 0.00f, 0.43f, 1.00f, 1.00f, 0.86f, 0.14f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.57f, 1.00f, 1.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, },
-{0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 1.00f, 1.00f, 0.43f, 0.00f, 0.43f, 0.86f, 1.00f, 1.00f, 0.86f, 0.29f, 0.00f, 0.00f, 0.00f, 0.00f, 0.43f, 1.00f, 1.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, },
-{0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.14f, 1.00f, 1.00f, 1.00f, 0.71f, 0.29f, 0.29f, 0.29f, 0.86f, 1.00f, 1.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, },
-{0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.14f, 0.86f, 1.00f, 1.00f, 1.00f, 1.00f, 1.00f, 1.00f, 1.00f, 0.43f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, },
-{0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.57f, 1.00f, 1.00f, 1.00f, 1.00f, 1.00f, 0.71f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, },
-{0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.07f, 0.33f, 0.47f, 0.40f, 0.23f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, },
-{0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, },
-{0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, },
-{0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, },
-{0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, },
-{0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, },
-{0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, },
-{0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, },
-{0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, },
-{0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, },
-{0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, },
-{0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, },
-};
+          var alphas
+       = new float[,]{
+      {0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, },
+      {0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, },
+      {0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, },
+      {0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, },
+      {0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, },
+      {0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, },
+      {0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, },
+      {0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, },
+      {0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, },
+      {0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, },
+      {0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, },
+      {0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.05f, 0.04f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, },
+      {0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.12f, 0.74f, 0.88f, 0.88f, 0.65f, 0.18f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, },
+      {0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.09f, 0.14f, 0.14f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.86f, 1.00f, 1.00f, 1.00f, 0.88f, 0.11f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, },
+      {0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.62f, 1.00f, 1.00f, 0.57f, 0.14f, 0.86f, 0.86f, 0.86f, 0.14f, 0.00f, 0.00f, 0.00f, 0.61f, 1.00f, 1.00f, 1.00f, 1.00f, 0.57f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, },
+      {0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.62f, 1.00f, 1.00f, 0.57f, 0.14f, 1.00f, 1.00f, 1.00f, 0.86f, 0.25f, 0.00f, 0.00f, 0.25f, 0.18f, 0.42f, 1.00f, 1.00f, 0.80f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, },
+      {0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.62f, 1.00f, 1.00f, 0.57f, 0.14f, 1.00f, 1.00f, 1.00f, 1.00f, 1.00f, 0.43f, 0.00f, 0.00f, 0.00f, 0.14f, 1.00f, 1.00f, 0.84f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, },
+      {0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.18f, 0.29f, 0.29f, 0.14f, 0.00f, 0.14f, 0.14f, 0.71f, 1.00f, 1.00f, 1.00f, 0.86f, 0.71f, 0.71f, 0.86f, 1.00f, 1.00f, 0.72f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, },
+      {0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.71f, 1.00f, 1.00f, 1.00f, 1.00f, 1.00f, 1.00f, 1.00f, 1.00f, 0.48f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, },
+      {0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.43f, 1.00f, 1.00f, 1.00f, 1.00f, 1.00f, 1.00f, 0.71f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, },
+      {0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.09f, 0.45f, 0.63f, 0.69f, 0.59f, 0.40f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, },
+      {0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, },
+      {0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, },
+      {0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, },
+      {0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, },
+      {0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, },
+      {0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, },
+      {0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, },
+      {0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, },
+      {0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, },
+      {0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, },
+      {0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, },
+      };
+
+      // Previous thinner question mark
+      //  = new float[,]{
+      //{0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, },
+      //{0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, },
+      //{0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, },
+      //{0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, },
+      //{0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, },
+      //{0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, },
+      //{0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, },
+      //{0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, },
+      //{0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, },
+      //{0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, },
+      //{0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, },
+      //{0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, },
+      //{0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.14f, 0.57f, 0.57f, 0.43f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, },
+      //{0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.43f, 1.00f, 1.00f, 1.00f, 0.86f, 0.14f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, },
+      //{0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.71f, 0.71f, 0.43f, 0.00f, 0.29f, 0.57f, 0.57f, 0.14f, 0.00f, 0.00f, 0.00f, 0.00f, 1.00f, 1.00f, 1.00f, 1.00f, 0.71f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, },
+      //{0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 1.00f, 1.00f, 0.43f, 0.00f, 0.43f, 1.00f, 1.00f, 0.86f, 0.14f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.57f, 1.00f, 1.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, },
+      //{0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 1.00f, 1.00f, 0.43f, 0.00f, 0.43f, 0.86f, 1.00f, 1.00f, 0.86f, 0.29f, 0.00f, 0.00f, 0.00f, 0.00f, 0.43f, 1.00f, 1.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, },
+      //{0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.14f, 1.00f, 1.00f, 1.00f, 0.71f, 0.29f, 0.29f, 0.29f, 0.86f, 1.00f, 1.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, },
+      //{0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.14f, 0.86f, 1.00f, 1.00f, 1.00f, 1.00f, 1.00f, 1.00f, 1.00f, 0.43f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, },
+      //{0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.57f, 1.00f, 1.00f, 1.00f, 1.00f, 1.00f, 0.71f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, },
+      //{0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.07f, 0.33f, 0.47f, 0.40f, 0.23f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, },
+      //{0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, },
+      //{0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, },
+      //{0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, },
+      //{0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, },
+      //{0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, },
+      //{0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, },
+      //{0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, },
+      //{0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, },
+      //{0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, },
+      //{0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, },
+      //{0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, },
+      //};
+
           var tex = new Texture2D(32, 32, TextureFormat.RGBA32, false);
           for (int x = 0; x < 32; ++x) {
             for (int y = 0; y < 32; ++y) {
@@ -4603,13 +4773,16 @@ namespace Fusion.Editor {
       }
     }
 
+    static Color HelpIconColorSelected   = EditorGUIUtility.isProSkin ? new Color(0.000f, 0.500f, 1.000f, 1.000f)  : new Color(0.502f, 0.749f, 1.000f, 1.000f);
+    static Color HelpIconColorUnselected = EditorGUIUtility.isProSkin ? new Color(1.000f, 1.000f, 1.000f, 0.250f)  : new Color(0.000f, 0.000f, 0.000f, 0.250f);
+
     static Texture2D _helpIconSelected;
     public static Texture2D HelpIconSelected {
       get {
         if (_helpIconSelected == null) {
           var tex = new Texture2D(32, 32, TextureFormat.RGBA32, false);
           tex.ClearTexture(new Color(0.06f, 0.5f, 0.75f, 0));
-          tex.RenderCircle(13, new Color(0, .5f, 1, 1), false);
+          tex.RenderCircle(13, HelpIconColorSelected, Blend.Overwrite);
           tex.OverlayTexture(QuestionMarkTexture, .9f);
           tex.alphaIsTransparency = true;
           tex.Apply();
@@ -4624,10 +4797,10 @@ namespace Fusion.Editor {
       get {
         if (_helpIconUnselected == null) {
           var tex = new Texture2D(32, 32, TextureFormat.RGBA32, false);
-          tex.ClearTexture(new Color(1, 1, 1, 0));
-          tex.RenderCircle(13, EditorGUIUtility.isProSkin ? new Color(1, 1, 1, .15f) : new Color(0, 0 , 0, .2f), false);
-          tex.ClearCircle(11, true);
-          tex.OverlayTexture(QuestionMarkTexture, .35f);
+          tex.ClearTexture(HelpIconColorUnselected * new Color(1, 1, 1, 0));
+          tex.RenderCircle(13, HelpIconColorUnselected, Blend.Overwrite);
+          tex.ClearCircle(EditorGUIUtility.pixelsPerPoint > 1 ? 10 : 11, true);
+          tex.OverlayTexture(QuestionMarkTexture, .25f);
           tex.alphaIsTransparency = true;
           tex.filterMode = FilterMode.Trilinear;
           tex.Apply();
@@ -4643,10 +4816,22 @@ namespace Fusion.Editor {
         if (_headerTextures == null || _headerTextures[0] == null) {
           _headerTextures = new Texture2D[_headerColors.Length];
           for(int i = 0; i < _headerColors.Length; ++i) {
-            _headerTextures[i] = GenerateRoundedBoxTexture(HEADER_CORNER_RADIUS, new GroupBoxInfo(_headerColors[i], Color.black));
+            _headerTextures[i] = GenerateRoundedBoxTexture(HEADER_CORNER_RADIUS, new GroupBoxInfo($"Header{i}", _headerColors[i], Color.black), false);
           }
         }
         return _headerTextures;
+      }
+    }
+    static Texture2D[] _headerTexturesHiRez;
+    public static Texture2D[] HeaderTexturesHiRez {
+      get {
+        if (_headerTexturesHiRez == null || _headerTexturesHiRez[0] == null) {
+          _headerTexturesHiRez = new Texture2D[_headerColors.Length];
+          for (int i = 0; i < _headerColors.Length; ++i) {
+            _headerTexturesHiRez[i] = GenerateRoundedBoxTexture(HEADER_CORNER_RADIUS, new GroupBoxInfo($"Header{i}", _headerColors[i], Color.black), true);
+          }
+        }
+        return _headerTexturesHiRez;
       }
     }
 
@@ -4656,10 +4841,23 @@ namespace Fusion.Editor {
         if (_groupBoxTextures == null || _groupBoxTextures[0] == null) {
           _groupBoxTextures = new Texture2D[_groupBoxInfo.Length];
           for (int i = 0; i < _groupBoxInfo.Length; ++i) {
-            _groupBoxTextures[i] = GenerateRoundedBoxTexture(HEADER_CORNER_RADIUS, _groupBoxInfo[i]);
+            _groupBoxTextures[i] = GenerateRoundedBoxTexture(HEADER_CORNER_RADIUS/* + _groupBoxInfo[i].BorderWidth.GetValueOrDefault(1)*/, _groupBoxInfo[i], false);
           }
         }
         return _groupBoxTextures;
+      }
+    }
+
+    static Texture2D[] _groupBoxTexturesHiRez;
+    public static Texture2D[] GroupBoxTexturesHiRez {
+      get {
+        if (_groupBoxTexturesHiRez == null || _groupBoxTexturesHiRez[0] == null) {
+          _groupBoxTexturesHiRez = new Texture2D[_groupBoxInfo.Length];
+          for (int i = 0; i < _groupBoxInfo.Length; ++i) {
+            _groupBoxTexturesHiRez[i] = GenerateRoundedBoxTexture(HEADER_CORNER_RADIUS/* + _groupBoxInfo[i].BorderWidth.GetValueOrDefault(1)*/, _groupBoxInfo[i], true);
+          }
+        }
+        return _groupBoxTexturesHiRez;
       }
     }
 
@@ -4674,19 +4872,31 @@ namespace Fusion.Editor {
       }
     }
 
-    static Texture2D GenerateRoundedBoxTexture(int radius, GroupBoxInfo info) {
-      var tex = new Texture2D(radius * 2, radius * 2);
-      tex = new Texture2D(radius * 2, radius * 2, TextureFormat.RGBA32, false);
+    static Texture2D GenerateRoundedBoxTexture(int radius, GroupBoxInfo info, bool hirez) {
+
+      if (hirez) {
+        radius *= 2;
+      }
+      var border = hirez ? info.BorderWidth.GetValueOrDefault(1) * 2 : info.BorderWidth.GetValueOrDefault(1);
+
+      var tex = new Texture2D((radius + border) * 2, (radius + border) * 2, TextureFormat.RGBA32, false);
       bool hasOutline = info.OutlineColor != null;
       var color = info.BackColor.GetValueOrDefault();
       tex.ClearTexture(color * new Color(1, 1, 1, 0));
-      
+      bool outlineOnly = color.a == 0;
+
       if (hasOutline) {
-        tex.RenderCircle(radius, info.OutlineColor.Value, true);
+        tex.RenderCircle(radius + border, info.OutlineColor.Value, Blend.Overwrite);
       }
 
-      tex.RenderCircle(hasOutline ? radius - 1 : radius, new Color(color.r, color.g, color.b, 1f), info.OutlineColor != null);
-      tex.ApplyAlpha(color.a);
+
+      if (outlineOnly) {
+        tex.RenderCircle(hasOutline ? radius /*- border */: radius, info.OutlineColor.GetValueOrDefault(), Blend.Subtract);
+      } else {
+        tex.RenderCircle(hasOutline ? radius /*- border*/ : radius, color/* new Color(color.r, color.g, color.b, 1f)*/, hasOutline ? Blend.Overlay : Blend.Overwrite);
+        tex.ApplyAlpha(color.a);
+      }
+
       tex.alphaIsTransparency = true;
       tex.filterMode = FilterMode.Point;
       tex.mipMapBias = 0;
@@ -4702,7 +4912,13 @@ namespace Fusion.Editor {
       }
     }
 
-    private static void RenderCircle(this Texture2D tex, int r, Color color, bool blend, int? midX = null, int? midY = null) {
+    enum Blend {
+      Overwrite,
+      Overlay,
+      Subtract
+    }
+
+    private static void RenderCircle(this Texture2D tex, int r, Color color, Blend blend, int? midX = null, int? midY = null) {
       if (midX == null) {
         midX = tex.width / 2;
       }
@@ -4714,14 +4930,26 @@ namespace Fusion.Editor {
       var midx = midX.Value;
       var midy = midY.Value;
 
-      for (int x = 0; x <= r; ++x) {
-        for (int y = 0; y <= r; ++y) {
+      for (int x = 0; x < r; ++x) {
+        for (int y = 0; y < r; ++y) {
           double h = Math.Abs(Math.Sqrt(x * x + y * y));
           float a = Mathf.Clamp01((float)(r - h));
+
           var e = tex.GetPixel(midx + x, midy + y);
           var c = color * new Color(1f, 1f, 1f, a);
-          if (blend) {
-            c = Color.Lerp(e, c, c.a);
+          if (blend == Blend.Overwrite) {
+            c = color * new Color(1, 1, 1, a * color.a);
+          }
+          else if (blend == Blend.Overlay) {
+            if (a > 0) {
+              c = Color.Lerp(e, c, a);
+              c.a = e.a;
+            } else {
+              c = e;
+            }
+          }
+          else if (blend == Blend.Subtract) {
+            c = new Color(e.r, e.g, e.b, a > 0 ? Math.Min(e.a, (1-a) * color.a) : e.a);
           }
           tex.SetPixel(midx + 0 + x, midy + 0 + y, c);
           tex.SetPixel(midx - 1 - x, midy + 0 + y, c);
@@ -4870,6 +5098,7 @@ namespace Fusion.Editor {
         for (int i = 1; i < colorNames.Length; ++i) {
           var style = new GUIStyle(BaseHeaderLabelStyle);
           style.normal.background = HeaderTextures[i];
+          style.normal.scaledBackgrounds = new Texture2D[] { HeaderTexturesHiRez[i] };
           style.border = new RectOffset(HEADER_CORNER_RADIUS, HEADER_CORNER_RADIUS, HEADER_CORNER_RADIUS, HEADER_CORNER_RADIUS);
           //style.fixedHeight = 24;
           style.normal.textColor = new Color(1, 1, 1, .9f);
@@ -4878,23 +5107,6 @@ namespace Fusion.Editor {
       }
       return _fusionHeaderStyles[colorIndex];
     }
-
-    //internal static GUIStyle GetFusionHeaderBackStyle(EditorHeaderBackColor color) {
-
-    //  if (_fusionHeaderStyles == null || _fusionHeaderStyles[0] == null) {
-    //    string[] colorNames = Enum.GetNames(typeof(EditorHeaderBackColor));
-    //    _fusionHeaderStyles = new GUIStyle[colorNames.Length];
-    //    for (int i = 1; i < colorNames.Length; ++i) {
-    //      var style = new GUIStyle(BaseHeaderLabelStyle);
-    //      style.normal.background = Resources.Load<Texture2D>(HEADER_BACKS_PATH + "FusionHeader" + colorNames[i]);
-    //      //style.border = new RectOffset(4, 4, 4, 4);
-    //      //style.fixedHeight = 24;
-    //      style.normal.textColor = new Color(1, 1, 1, .9f);
-    //      _fusionHeaderStyles[i] = style;
-    //    }
-    //  }
-    //  return _fusionHeaderStyles[(int)color];
-    //}
 
     static Texture2D[] _loadedIcons;
     public static Texture2D GetFusionIconTexture(EditorHeaderIcon icon) {
@@ -4927,45 +5139,24 @@ namespace Fusion.Editor {
       return GetGroupBoxStyle(type);
     }
 
-    //private static GUIStyle _helpGroupStyle;
-    public static GUIStyle HelpGroupStyle {
-      get {
-        return GetGroupBoxStyle(GroupBoxType.InlineHelpOuter);
-      }
-    }
-
-    //private static GUIStyle _helpInnerGroupStyle;
-    public static GUIStyle HelpInnerGroupStyle {
-      get {
-        return GetGroupBoxStyle(GroupBoxType.InlineHelpInner);
-      }
-    }
-
-    //private static GUIStyle CreateGroupStyle(string colorName, int border, int padding) {
-    //  var texture = Resources.Load<Texture2D>(GROUPBOX_FOLDER + colorName + "GroupBack");
-    //  // Fallback for unknown or None types is just the basic HelpBox.
-    //  if (texture == null) {
-    //    return null;
-    //  }
-    //  var style = new GUIStyle(EditorStyles.label);
-    //  style.border = new RectOffset(border, border, border, border);
-    //  style.padding = new RectOffset(padding, padding, padding, padding);
-    //  style.wordWrap = true;
-    //  style.normal.background = texture;
-    //  return style;
-    //}
-
     private static GUIStyle CreateGroupStyle(int groupBoxType, GroupBoxInfo info) {
 
       var style = new GUIStyle(EditorStyles.label);
-      var border = HEADER_CORNER_RADIUS;
+      var border = GroupBoxTextures[groupBoxType].width / 2;
+      //var border = HEADER_CORNER_RADIUS + info.BorderWidth.GetValueOrDefault(0);
       var padding = info.Padding.GetValueOrDefault(10);
       var margin  = info.Margin != null ? info.Margin : new RectOffset(5, 5, 5, 5);
       style.border = new RectOffset(border, border, border, border);
       style.padding = new RectOffset(padding, padding, padding, padding);
       style.margin = margin;
       style.wordWrap = true;
-      style.normal.background = GroupBoxTextures[(int)groupBoxType];
+      style.normal.background = GroupBoxTextures[groupBoxType];
+      style.normal.scaledBackgrounds = new Texture2D[] { GroupBoxTexturesHiRez[groupBoxType] };
+
+      if (info.RichTextBox.GetValueOrDefault()) {
+        style.alignment = TextAnchor.UpperLeft;
+        style.richText = true;
+      }
       return style;
     }
   }
@@ -5700,6 +5891,7 @@ namespace Fusion.Editor {
         }
 
         hash.Append(cfg.UseSerializableDictionary ? 1 : 0);
+        hash.Append(cfg.NullChecksForNetworkedProperties ? 1 : 0);
 
         AssetDatabase.RegisterCustomDependency(DependencyName, hash);
         AssetDatabase.Refresh();
@@ -5768,7 +5960,7 @@ namespace Fusion.Editor {
 
     IEnumerable<NetworkBehaviour> ValidTargets => targets
       .Cast<NetworkBehaviour>()
-      .Where(x => x.Object && x.Object.IsValid);
+      .Where(x => x.Object && x.Object.IsValid && x.Object.gameObject.activeInHierarchy);
 
     public override void OnInspectorGUI() {
 
@@ -6112,6 +6304,23 @@ namespace Fusion.Editor {
       var simulationBehaviourBuffer = new List<SimulationBehaviour>();
       var networkBehaviourBuffer = new List<NetworkBehaviour>();
 
+      Dictionary<Type, int> executionOrderCache = new Dictionary<Type, int>();
+
+      int GetExecutionOrderWarnIfFailed(MonoBehaviour obj) {
+        if (executionOrderCache.TryGetValue(obj.GetType(), out var result)) {
+          return result;
+        }
+        var monoScript = MonoScript.FromMonoBehaviour(obj);
+        if (monoScript) {
+          result = MonoImporter.GetExecutionOrder(monoScript);
+        } else {
+          Debug.LogWarning($"Unable to get execution order for deactivated {obj?.GetType().FullName}. Assuming 0.", obj);
+          result = 0;
+        }
+        executionOrderCache.Add(obj.GetType(), result);
+        return result;
+      }
+
       bool dirty = false;
 
       using (var pathCache = new TransformPathCache()) {
@@ -6136,6 +6345,11 @@ namespace Fusion.Editor {
         // start from the leaves
         for (int i = 0; i < networkObjects.Count; ++i) {
           var entry = networkObjects[i];
+          var objActive = entry.Object.gameObject.activeInHierarchy;
+          int objExecutionOrder = 0;
+          if (!objActive) {
+            objExecutionOrder = GetExecutionOrderWarnIfFailed(entry.Object);
+          }
 
           // find nested behaviours
           networkBehaviourBuffer.Clear();
@@ -6155,6 +6369,18 @@ namespace Fusion.Editor {
                 simulationBehaviourBuffer.Add(script);
               }
               networkScripts.RemoveAt(scriptIndex);
+
+              if (!objActive) {
+                // check if execution order is ok
+                int scriptExecutionOrder = GetExecutionOrderWarnIfFailed(script);
+
+                if (objExecutionOrder <= scriptExecutionOrder) {
+                  Debug.LogWarning($"{entry.Object?.GetType().FullName} execution order is less or equal than of the script {script?.GetType().FullName}. " +
+                    $"This will result in Spawned callback being invoked before the script's Awake.", script);
+                }
+              }
+
+
             } else if (entry.Path.CompareTo(scriptEntry.Path) < 0) {
               // can't discard it yet
             } else {
@@ -6232,7 +6458,6 @@ namespace Fusion.Editor {
     }
 
 
-
     public override void OnInspectorGUI() {
 
       FusionEditorGUI.InjectPropertyDrawers(serializedObject);
@@ -6243,20 +6468,7 @@ namespace Fusion.Editor {
       var guidProperty = serializedObject.FindPropertyOrThrow(nameof(NetworkObject.NetworkGuid));
       var flagsProperty = serializedObject.FindPropertyOrThrow(nameof(NetworkObject.Flags));
       var obj = (NetworkObject)base.target;
-
-      guidProperty.isExpanded = EditorGUILayout.Foldout(guidProperty.isExpanded, "Baked Data");
-      if (guidProperty.isExpanded) {
-        using (new EditorGUI.IndentLevelScope())
-        using (new EditorGUI.DisabledScope(true)) {
-          using (new FusionEditorGUI.ShowMixedValueScope(flagsProperty.hasMultipleDifferentValues)) {
-            FusionEditorGUI.LayoutSelectableLabel(EditorGUIUtility.TrTextContent(nameof(obj.Flags)), obj.Flags.ToString());
-          }
-          EditorGUILayout.PropertyField(serializedObject.FindPropertyOrThrow(nameof(NetworkObject.NetworkGuid)));
-          EditorGUILayout.PropertyField(serializedObject.FindPropertyOrThrow(nameof(NetworkObject.NestedObjects)));
-          EditorGUILayout.PropertyField(serializedObject.FindPropertyOrThrow(nameof(NetworkObject.SimulationBehaviours)));
-          EditorGUILayout.PropertyField(serializedObject.FindPropertyOrThrow(nameof(NetworkObject.NetworkedBehaviours)));
-        }
-      }
+      var netObjType = typeof(NetworkObject);
 
       if (targets.Length == 1) {
         if (AssetDatabase.IsMainAsset(obj.gameObject) || PrefabStageUtility.GetPrefabStage(obj.gameObject)?.prefabContentsRoot == obj.gameObject) {
@@ -6273,11 +6485,9 @@ namespace Fusion.Editor {
 
             // Is Spawnable
             {
-              var rect = EditorGUILayout.GetControlRect();
-              GUIContent label =  this.DrawInlineHelp(rect, typeof(NetworkObject), nameof(NetworkObject.IsSpawnable));
-
               EditorGUI.BeginChangeCheck();
-              bool spawnable = EditorGUI.Toggle(rect, label, !obj.Flags.IsIgnored());
+
+              bool spawnable = this.DrawToggleForProperty(nameof(NetworkObject.IsSpawnable), !obj.Flags.IsIgnored(), netObjType);
               if (EditorGUI.EndChangeCheck()) {
                 var value = obj.Flags.SetIgnored(!spawnable);
                 serializedObject.FindProperty(nameof(NetworkObject.Flags)).intValue = (int)value;
@@ -6295,69 +6505,108 @@ namespace Fusion.Editor {
         }
       }
 
-      EditorGUILayout.PropertyField(serializedObject.FindPropertyOrThrow("DefaultPropertyGroups"));
 
       if (EditorApplication.isPlaying && targets.Length == 1) {
         EditorGUILayout.Space();
         flagsProperty.isExpanded = EditorGUILayout.Foldout(flagsProperty.isExpanded, "Runtime Info");
         if (flagsProperty.isExpanded) {
           using (new EditorGUI.IndentLevelScope()) {
-            EditorGUILayout.Toggle("Is Valid", obj.IsValid);
-            if (obj.IsValid) {
-              EditorGUILayout.LabelField("Id", obj.Id.ToString());
-              
-              EditorGUILayout.IntField("Word Count", NetworkObject.GetWordCount(obj));
-              EditorGUILayout.Toggle("Is Scene Object", obj.IsSceneObject);
 
-              if (obj.Header != null) {
-                EditorGUILayout.LabelField("Nesting Root", obj.Header->NestingRoot.ToString());
-                EditorGUILayout.LabelField("Nesting Key", obj.Header->NestingKey.ToString());
-              } else {
-                EditorGUILayout.LabelField("Nesting Root", "---");
-                EditorGUILayout.LabelField("Nesting Key", "---");
+            EditorGUILayout.BeginVertical(FusionGUIStyles.GetStyle(FusionGUIStyles.GroupBoxType.Outline));
+            {
+              EditorGUILayout.Toggle("Is Valid", obj.IsValid);
+              if (obj.IsValid) {
+                //EditorGUILayout.LabelField("Id", obj.Id.ToString());
+                this.DrawLabelForProperty(nameof(NetworkObject.Id), obj.Id.ToString(), netObjType);
+
+                EditorGUILayout.IntField("Word Count", NetworkObject.GetWordCount(obj));
+                this.DrawToggleForProperty(nameof(NetworkObject.IsSceneObject),     obj.IsSceneObject, netObjType);
+
+                bool headerIsNull = obj.Header == null;
+                this.DrawLabelForProperty(nameof(NetworkObjectHeader.NestingRoot), headerIsNull ? "---" : obj.Header->NestingRoot.ToString(), typeof(NetworkObjectHeader));
+                this.DrawLabelForProperty(nameof(NetworkObjectHeader.NestingKey),  headerIsNull ? "---" : obj.Header->NestingKey.ToString(),  typeof(NetworkObjectHeader));
+
+                this.DrawLabelForProperty(nameof(NetworkObject.InputAuthority),     obj.InputAuthority.ToString(), netObjType);
+                this.DrawLabelForProperty(nameof(NetworkObject.StateAuthority),     obj.StateAuthority.ToString(), netObjType);
+
+                this.DrawToggleForProperty(nameof(NetworkObject.HasInputAuthority), obj.HasInputAuthority,         netObjType);
+                this.DrawToggleForProperty(nameof(NetworkObject.HasStateAuthority), obj.HasStateAuthority,         netObjType);
+                this.DrawToggleForProperty(nameof(NetworkObject.InSimulation),      obj.InSimulation,              netObjType);
+
+                EditorGUILayout.Toggle("Is Local PlayerObject", obj == obj.Runner.GetPlayerObject(obj.Runner.LocalPlayer));
+
               }
-
-              EditorGUILayout.LabelField("Input Authority", obj.InputAuthority.ToString());
-              EditorGUILayout.LabelField("State Authority", obj.StateAuthority.ToString());
-
-              EditorGUILayout.Toggle("Local Input Authority", obj.HasInputAuthority);
-              EditorGUILayout.Toggle("Local State Authority", obj.HasStateAuthority);
-              EditorGUILayout.Toggle("In Simulation", obj.InSimulation);
-
-              EditorGUILayout.Toggle("Is Local PlayerObject", obj == obj.Runner.GetPlayerObject(obj.Runner.LocalPlayer));
-
             }
+            EditorGUILayout.EndVertical();
+
           }
         }
       }
-      
+
       EditorGUI.BeginChangeCheck();
-      
-      EditorGUILayout.Space();
-      EditorGUILayout.LabelField("Shared Mode Settings", EditorStyles.boldLabel);
-      
-      var destroyWhenStateAuthLeaves = serializedObject.FindProperty("DestroyWhenStateAuthorityLeaves");
-      EditorGUILayout.PropertyField(destroyWhenStateAuthLeaves, new GUIContent("Destroy When State Auth Leaves"));
-      
-      var allowStateAuthorityOverride = serializedObject.FindProperty("AllowStateAuthorityOverride");
-      EditorGUILayout.PropertyField(allowStateAuthorityOverride, new GUIContent("Allow State Authority Override"));
-      
-      EditorGUILayout.Space();
-      EditorGUI.BeginDisabledGroup(EditorApplication.isPlaying);
-      EditorGUILayout.LabelField("Area Of Interest Settings", EditorStyles.boldLabel);
 
-      var isGlobal = serializedObject.FindProperty("AoiMode");
-      
-      EditorGUILayout.PropertyField(isGlobal, new GUIContent("Mode"));
+      var config = NetworkProjectConfig.Global;
+      var isPlaying = EditorApplication.isPlaying;
+      var ecIsEnabled = config.Simulation.ReplicationMode == SimulationConfig.StateReplicationModes.EventualConsistency;
 
-      if (isGlobal.intValue == (int)NetworkObject.AoiModes.Position) {
-        EditorGUILayout.PropertyField(serializedObject.FindProperty("AoiPosition"), new GUIContent("Position Source"));
+      using (new EditorGUI.DisabledScope(isPlaying)) {
+        EditorGUILayout.Space();
+        EditorGUILayout.LabelField("Shared Mode Settings", EditorStyles.boldLabel);
+
+        var destroyWhenStateAuthLeaves = serializedObject.FindProperty(nameof(NetworkObject.DestroyWhenStateAuthorityLeaves));
+        EditorGUILayout.PropertyField(destroyWhenStateAuthLeaves);
+
+        var allowStateAuthorityOverride = serializedObject.FindProperty(nameof(NetworkObject.AllowStateAuthorityOverride));
+        EditorGUILayout.PropertyField(allowStateAuthorityOverride);
+
+        EditorGUILayout.Space();
+        EditorGUILayout.LabelField("Interest Management Settings", EditorStyles.boldLabel);
+
+        if (ecIsEnabled) {
+
+          var objectInterest = serializedObject.FindProperty(nameof(NetworkObject.ObjectInterest));
+          EditorGUILayout.PropertyField(objectInterest);
+
+          if (objectInterest.intValue == (int)NetworkObject.ObjectInterestModes.AreaOfInterest) {
+            EditorGUILayout.PropertyField(serializedObject.FindProperty(nameof(NetworkObject.AoiPositionSource)));
+          }
+
+          using (new EditorGUI.IndentLevelScope()) {
+            EditorGUILayout.PropertyField(serializedObject.FindPropertyOrThrow(nameof(NetworkObject.DefaultInterestGroups)));
+          }
+        } else {
+          BehaviourEditorUtils.DrawWarnBox($"<b>Interest Management</b> requires <b>Eventual Consistency</b> to be enabled in <b>{nameof(NetworkProjectConfig)}</b>.", MessageType.Info);
+        }
       }
-
-      EditorGUI.EndDisabledGroup();
 
       if (EditorGUI.EndChangeCheck()) {
         serializedObject.ApplyModifiedProperties();
+      }
+
+      EditorGUILayout.Space();
+      EditorGUI.DrawRect(EditorGUILayout.GetControlRect(false, 1), Color.gray);
+      EditorGUILayout.Space();
+
+      guidProperty.isExpanded = EditorGUILayout.Foldout(guidProperty.isExpanded, "Baked Data", EditorStyles.foldoutHeader);
+      if (guidProperty.isExpanded) {
+
+        using (new EditorGUILayout.VerticalScope(new GUIStyle(FusionGUIStyles.GetStyle(FusionGUIStyles.GroupBoxType.Outline)))) {
+          using (new EditorGUI.DisabledScope(true)) {
+            using (new EditorGUI.IndentLevelScope()) {
+              using (new FusionEditorGUI.ShowMixedValueScope(flagsProperty.hasMultipleDifferentValues)) {
+                FusionEditorGUI.LayoutSelectableLabel(EditorGUIUtility.TrTextContent(nameof(obj.Flags)), obj.Flags.ToString());
+              }
+              EditorGUILayout.PropertyField(serializedObject.FindPropertyOrThrow(nameof(NetworkObject.NetworkGuid)));
+              using (new EditorGUI.IndentLevelScope()) {
+
+                EditorGUILayout.PropertyField(serializedObject.FindPropertyOrThrow(nameof(NetworkObject.NestedObjects)));
+                EditorGUILayout.PropertyField(serializedObject.FindPropertyOrThrow(nameof(NetworkObject.SimulationBehaviours)));
+                EditorGUILayout.PropertyField(serializedObject.FindPropertyOrThrow(nameof(NetworkObject.NetworkedBehaviours)));
+              }
+            }
+          }
+        }
+
       }
     }
 
@@ -7767,8 +8016,6 @@ namespace Fusion.Editor {
   using System.Collections.Generic;
   using System.Linq;
   using System.Reflection;
-  using System.Text;
-  using System.Threading.Tasks;
   using UnityEditor;
   using UnityEngine;
 
@@ -7820,7 +8067,6 @@ namespace Fusion.Editor {
       if (doIcon) {
         // paint over what the inspector has drawn
         if (Event.current.type == EventType.Repaint) {
-          //GUI.DrawTexture(buttonRect, state ? InlineHelpStyle.HelpIconExpanded : InlineHelpStyle.HelpIconCollapsed);
           GUI.DrawTexture(buttonRect, state ? FusionGUIStyles.HelpIconSelected : FusionGUIStyles.HelpIconUnselected);
         }
       }
@@ -7828,60 +8074,64 @@ namespace Fusion.Editor {
       return result;
     }
 
+    const float SCROLL_WIDTH = 16f;
+    const float LEFT_HELP_INDENT = 8f;
+
     internal static Rect GetInlineHelpRect(GUIContent content) {
 
       // well... we do this, because there's no way of knowing the indent and scroll bar existence
       // when property height is calculated
-      
-      var contextWidth = UnityInternal.EditorGUIUtility.contextWidth - InlineHelpStyle.MarginOuter - 17.0f;
+      var width = UnityInternal.EditorGUIUtility.contextWidth - /*InlineHelpStyle.MarginOuter -*/ SCROLL_WIDTH - LEFT_HELP_INDENT;
 
       if (content == null) {
         return default;
       }
 
-      var width = contextWidth - 2 * InlineHelpStyle.MarginInner;
-      var height = InlineHelpStyle.InstructionStyleBox.Value.CalcHeight(content, width) + InlineHelpStyle.MarginInner;
+      var height = FusionGUIStyles.GetStyle(FusionGUIStyles.GroupBoxType.InlineHelpInner).CalcHeight(content, width);
 
-      return new Rect(InlineHelpStyle.MarginOuter + InlineHelpStyle.MarginInner, 0, width, height);
+      return new Rect(InlineHelpStyle.MarginOuter, 0, width, height);
     }
 
     internal static void DrawInlineHelp(GUIContent help, Rect propertyRect, Rect helpRect) {
       using (new FusionEditorGUI.EnabledScope(true)) {
         if (Event.current.type == EventType.Repaint) {
 
-          const float LEFT_OFFSET = 8.0f;
           int extraPadding = 0;
           // main bar
-          {
-            var r = new Rect() {
-              xMin = propertyRect.xMin - LEFT_OFFSET - InlineHelpStyle.MarginInner,
-              xMax = propertyRect.xMax + InlineHelpStyle.MarginInner,
-              yMin = propertyRect.yMin - InlineHelpStyle.MarginInner,
-              yMax = propertyRect.yMax,
-            };
+          var rect = new Rect() {
+            xMin = LEFT_HELP_INDENT,
+            // This assumes that any style used has equal padding on left and right, and determines the padding/margin from the property xMin
+            xMax = propertyRect.xMax + propertyRect.xMin - SCROLL_WIDTH, 
+            yMin = propertyRect.yMin,
+            yMax = propertyRect.yMax,
+          };
 
-            // extra space that needs to be accounted for, like when there's no scrollbar
-            extraPadding = Mathf.FloorToInt(Mathf.Max(0, r.width - (helpRect.width + 2 * InlineHelpStyle.MarginInner)));
+          // extra space that needs to be accounted for, like when there's no scrollbar
+          extraPadding = Mathf.FloorToInt(Mathf.Max(0, rect.width - (helpRect.width)));
 
-            FusionGUIStyles.HelpGroupStyle.Draw(r, false, false, false, false);
-          }
+          var orect = new Rect(rect) {
+            width = helpRect.width + extraPadding,
+            yMin = rect.yMin - 2,
+          };
+
+          FusionGUIStyles.GetStyle(FusionGUIStyles.GroupBoxType.InlineHelpOuter).Draw(orect, false, false, false, false);
 
           if (helpRect.height > 0) {
-            Rect r = new Rect(helpRect) {
-              x = helpRect.x + 1,
-              y = propertyRect.yMax - helpRect.height - InlineHelpStyle.MarginInner,
+            Rect irect = new Rect(helpRect) {
+              x = rect.x,
+              y = propertyRect.yMax - helpRect.height,
             };
 
-
+            var innerStyle = FusionGUIStyles.GetStyle(FusionGUIStyles.GroupBoxType.InlineHelpInner);
             if (extraPadding > 0.0f) {
-              InlineHelpStyle.InstructionStyleBox.Value.padding.right += extraPadding;
-              r.width += extraPadding;
+              innerStyle.padding.right += extraPadding;
+              irect.width += extraPadding;
             }
             try {
-              InlineHelpStyle.InstructionStyleBox.Value.Draw(r, help, false, false, false, false);
+              innerStyle.Draw(irect, help, false, false, false, false);
             } finally {
               if (extraPadding > 0.0f) {
-                InlineHelpStyle.InstructionStyleBox.Value.padding.right -= extraPadding;
+                innerStyle.padding.right -= extraPadding;
               }
             }
           }
@@ -7893,25 +8143,25 @@ namespace Fusion.Editor {
     /// For drawing inline help using cached InlineHelpInfo.
     /// </summary>
     internal static GUIContent DrawInlineHelp(this PropertyInlineHelpInfo help, Rect rect, BehaviourEditor editor) {
-      
-      string path = help.Label.text;
-      Rect buttonRect = GetInlineHelpButtonRect(InlineHelpButtonPlacement.BeforeLabel, rect, GUIContent.none, false);
-      bool wasExpanded = IsHelpExpanded(editor, path);
+      if (help.Summary != null) {
+        string path = help.Label.text;
+        Rect buttonRect = GetInlineHelpButtonRect(InlineHelpButtonPlacement.BeforeLabel, rect, GUIContent.none, false);
+        bool wasExpanded = IsHelpExpanded(editor, path);
 
-      if (wasExpanded) {
-        var helpRect = GetInlineHelpRect(help.Summary);
-        var r = EditorGUILayout.GetControlRect(false, helpRect.height + InlineHelpStyle.MarginInner * 3);
-        r.y = rect.y;
-        r.height += rect.height;
-        DrawInlineHelp(help.Summary, r, helpRect);
+        if (wasExpanded) {
+          var helpRect = GetInlineHelpRect(help.Summary);
+          var r = EditorGUILayout.GetControlRect(false, helpRect.height);
+          r.y = rect.y;
+          r.height += rect.height;
+          DrawInlineHelp(help.Summary, r, helpRect);
+        }
+
+        if (DrawInlineHelpButton(buttonRect, wasExpanded, doButton: true, doIcon: false)) {
+          SetHelpExpanded(editor, path, !wasExpanded);
+        }
+
+        DrawInlineHelpButton(buttonRect, wasExpanded, doButton: false, doIcon: true);
       }
-
-      if (DrawInlineHelpButton(buttonRect, wasExpanded, doButton: true, doIcon: false)) {
-        SetHelpExpanded(editor, path, !wasExpanded);
-      }
-
-      DrawInlineHelpButton(buttonRect, wasExpanded, doButton: false, doIcon: true);
-
       return help.Label;
     }
 
@@ -7935,19 +8185,21 @@ namespace Fusion.Editor {
       }
 
       // Failed to find existing record, do the heavy lifting of extracting it from the XMLDocumentation
-      FieldInfo propertyField = monoBehaviourType.GetFieldIncludingBaseTypes(memberName, stopAtType: typeof(Fusion.Behaviour));
+      MemberInfo minfo = monoBehaviourType.GetMemberIncludingBaseTypes(memberName, stopAtType: typeof(Fusion.Behaviour));
 
       string fieldSummary, tooltipSummary;
 
-      if (propertyField == null) {
+      if (minfo == null) {
         fieldSummary = monoBehaviourType.GetXmlDocSummary(false);
         tooltipSummary = monoBehaviourType.GetXmlDocSummary(true);
       } else {
 
-        tooltipSummary = XmlDocumentation.GetXmlDocSummary(propertyField, true);
+        tooltipSummary = XmlDocumentation.GetXmlDocSummary(minfo, true);
         fieldSummary = string.Join("\n\n", new[] {
-          propertyField.GetXmlDocSummary(false),
-          GetFormattedTypeSummary(propertyField.FieldType)
+          minfo.GetXmlDocSummary(false),
+          minfo.MemberType == MemberTypes.Field ? GetFormattedTypeSummary((minfo as FieldInfo).FieldType) :
+          minfo.MemberType == MemberTypes.Property ? GetFormattedTypeSummary((minfo as PropertyInfo).PropertyType) :
+          null
         }.Where(x => !string.IsNullOrEmpty(x)));
       }
 
@@ -8110,32 +8362,14 @@ namespace Fusion.Editor {
 
     internal static class NetworkedPropertyStyle {
       public static LazyAuto<Texture2D> NetworkPropertyIcon = LazyAuto.Create(() => {
-        return Resources.Load<Texture2D>((EditorGUIUtility.isProSkin ? "Dark/" : "Light/") + "networked-property-icon");
+        return Resources.Load<Texture2D>("icons/networked-property-icon");
       });
-
     }
 
     internal static class InlineHelpStyle {
       public const float ButtonSize = 16.0f;
-      public const float MarginInner = 2.0f;
-      public const float MarginOuter = ButtonSize / 2;
-      public static LazyAuto<Texture2D> HelpIconCollapsed = LazyAuto.Create(() => {
-        return Resources.Load<Texture2D>((EditorGUIUtility.isProSkin ? "Dark/" : "Light/") + "inline-help-ico-inactive");
-      });
-
-      public static LazyAuto<Texture2D> HelpIconExpanded = LazyAuto.Create(() => {
-        return Resources.Load<Texture2D>((EditorGUIUtility.isProSkin ? "Dark/" : "Light/") + "inline-help-ico-active");
-      });
-
+      public const float MarginOuter = ButtonSize;
       public static GUIContent HideInlineContent = new GUIContent("", "Hide");
-      public static LazyAuto<GUIStyle> InstructionStyleBox = LazyAuto.Create(() => new GUIStyle(FusionGUIStyles.HelpInnerGroupStyle) {
-        wordWrap = true,
-        margin = new RectOffset(0, 8, 8, 8),
-        padding = new RectOffset(8, 8, 8, 8),
-        alignment = TextAnchor.UpperLeft,
-        richText = true,
-      });
-
       public static GUIContent ShowInlineContent = new GUIContent("", "");
     }
 
@@ -8160,6 +8394,26 @@ namespace Fusion.Editor {
     internal class PropertyInlineHelpInfo {
       public GUIContent Summary;
       public GUIContent Label;
+    }
+
+    // Draw label with specified XML Help member
+    static GUIContent reusableGC = new GUIContent();
+    public static void DrawLabelForProperty(this BehaviourEditor editor, string membername, string value, Type memberContainerType = null, int? height = null) {
+      if (memberContainerType == null) {
+        memberContainerType = editor.serializedObject.GetType();
+      }
+      var rect = height.HasValue ? EditorGUILayout.GetControlRect(false, height.Value) : EditorGUILayout.GetControlRect();
+      reusableGC.text = value;
+      EditorGUI.LabelField(rect, editor.DrawInlineHelp(rect, memberContainerType, membername), reusableGC);
+    }
+
+    // Draw readonly toggle with specified XML Help member
+    public static bool DrawToggleForProperty(this BehaviourEditor editor, string membername, bool value, Type memberContainerType = null, int? height = null) {
+      if (memberContainerType == null) {
+        memberContainerType = editor.serializedObject.GetType();
+      }
+      var rect = height.HasValue ? EditorGUILayout.GetControlRect(false, height.Value) : EditorGUILayout.GetControlRect();
+      return EditorGUI.Toggle(rect, editor.DrawInlineHelp(rect, memberContainerType, membername), value);
     }
   }
 }
@@ -9134,11 +9388,24 @@ namespace Fusion.Editor {
 
   using System.Collections.Generic;
   using UnityEngine;
+  using UnityEditor;
   using Fusion;
 
   public static class NetworkRunnerUtilities {
 
+    [InitializeOnLoadMethod]
+    static void ListenToPlaymodeChanges() {
+      EditorApplication.playModeStateChanged += mode => {
+        if (mode == PlayModeStateChange.ExitingPlayMode) {
+          foreach (var instance in NetworkRunner.Instances) {
+            instance.NotifyEditorPlayModeExit();
+          }
+        }
+      };
+    }
+
     static List<NetworkRunner> reusableRunnerList = new List<NetworkRunner>();
+
     public static NetworkRunner[] FindActiveRunners() {
       var runners = Object.FindObjectsOfType<NetworkRunner>();
       reusableRunnerList.Clear();
@@ -9358,6 +9625,32 @@ namespace Fusion.Editor {
       } catch (Exception ex) {
         throw new InvalidOperationException(CreateConstructorExceptionMessage(type.Assembly, type.FullName, flags), ex);
       }
+    }
+
+    /// <summary>
+    /// Returns the first found member of the given name. Includes private members.
+    /// </summary>
+    public static MemberInfo GetMemberIncludingBaseTypes(this Type type, string memberName, BindingFlags flags = DefaultBindingFlags, Type stopAtType = null) {
+      var members = type.GetMember(memberName, flags);
+      if (members.Length > 0)
+        return members[0];
+
+      type = type.BaseType;
+
+      // loop as long as we have a parent class to search.
+      while (type != null) {
+
+        // No point recursing into the abstracts.
+        if (type == stopAtType)
+          break;
+
+        members = type.GetMember(memberName, flags);
+        if (members.Length > 0)
+          return members[0];
+
+        type = type.BaseType;
+      }
+      return null;
     }
 
     /// <summary>
@@ -10067,6 +10360,59 @@ namespace Fusion.Editor {
 
     public static bool IsArrayProperty(this SerializedProperty sp) {
       return sp.isArray && sp.propertyType != SerializedPropertyType.String;
+    }
+
+    private static int[] _temp = Array.Empty<int>();
+
+    internal static bool UpdateFixedBuffer(this SerializedProperty sp, Action<int[], int> fill, Action<int[], int> update, bool write,  bool force = false) {
+      int count = sp.fixedBufferSize;
+      Array.Resize(ref _temp, Math.Max(_temp.Length, count));
+
+      // need to get to the first property... `GetFixedBufferElementAtIndex` is slow and allocs
+
+      var element = sp.Copy();
+      element.Next(true); // .Array
+      element.Next(true); // .Array.size
+      element.Next(true); // .Array.data[0]
+
+      unsafe {
+        fixed (int* p = _temp) {
+          Unity.Collections.LowLevel.Unsafe.UnsafeUtility.MemClear(p, count * sizeof(int));
+        }
+
+        fill(_temp, count);
+
+        int i = 0;
+        if (!force) {
+          // find the first difference
+          for (; i < count; ++i, element.Next(true)) {
+            Debug.Assert(element.propertyType == SerializedPropertyType.Integer);
+            if (element.intValue != _temp[i]) {
+              break;
+            }
+          }
+        }
+
+        if (i < count) {
+          // update data
+          if (write) {
+            for (; i < count; ++i, element.Next(true)) {
+              element.intValue = _temp[i];
+            }
+          } else {
+            for (; i < count; ++i, element.Next(true)) {
+              _temp[i] = element.intValue;
+            }
+          }
+
+          // update surrogate
+          update(_temp, count);
+          return true;
+        } else {
+          return false;
+        }
+      }
+      
     }
   }
 }

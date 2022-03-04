@@ -40,7 +40,7 @@
         "TickRate": 60,
         "DefaultPlayers": 8,
         "ReplicationMode": 0,
-        "InterestManagement": false,
+        "ObjectInterest": false,
         "SimulationCulling": false,
         "ServerPacketInterval": 1,
         "ClientPacketInterval": 1
@@ -156,5 +156,6 @@
         "rwby.core",
         "kcc.core"
     ],
-    "UseSerializableDictionary": true
+    "UseSerializableDictionary": true,
+    "NullChecksForNetworkedProperties": true
 }

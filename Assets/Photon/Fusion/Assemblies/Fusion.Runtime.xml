@@ -313,7 +313,7 @@
         </member>
         <member name="P:Fusion.NetworkedAttribute.Group">
             <summary>
-            Property group for this property
+            Interest group for this property
             </summary>
         </member>
         <member name="M:Fusion.NetworkedAttribute.#ctor">
@@ -325,7 +325,7 @@
             <summary>
             Group constructor
             </summary>
-            <param name="group">The property group this property belongs to</param>
+            <param name="group">The interest group this property belongs to</param>
         </member>
         <member name="P:Fusion.NetworkSerializeMethodAttribute.MaxSize">
             <summary>
@@ -830,7 +830,7 @@
             </summary>
             <param name="newArgs">New arguments</param>
         </member>
-        <member name="M:Fusion.CloudServices.StartReversePing(Fusion.Sockets.NetAddress)">
+        <member name="M:Fusion.CloudServices.StartReversePing(Fusion.Sockets.NetAddress,System.Threading.CancellationToken)">
             <summary>
             Reverse ping will send Empty UDP Packets to the RemoteAddr in order to setup the Routing Table
             on the current NAT of the Server, forcing it to allow packages from the remote client to be received
@@ -1294,7 +1294,7 @@
         </member>
         <member name="T:Fusion.NetworkAreaOfInterestBehaviour">
             <summary>
-            Base class for network behaviours that provide a position offset for area of interest.
+            Base class for network behaviours which provide a position offset for area of interest.
             A <see cref="T:Fusion.NetworkObject"/> is required on this GameObject or a parent of this GameObject.
             </summary>
         </member>
@@ -1530,6 +1530,1424 @@
             If this callback reference is valid or not
             </summary>
         </member>
+        <member name="T:Fusion.NetworkMecanimAnimator">
+            <summary>
+            A component for synchronizing the Animator controller state from the State Authority to network proxies.
+            Requires a Unity Animator component, and a <see cref="T:Fusion.NetworkObject"/> component.
+            NOTE: Animator Root Motion is not compatible with re-simulation and prediction.
+            </summary>
+        </member>
+        <member name="F:Fusion.NetworkMecanimAnimator.Animator">
+            <summary>
+            The Animator being synced.
+            </summary>
+        </member>
+        <member name="F:Fusion.NetworkMecanimAnimator.SyncSettings">
+            <summary>
+            Flags controlling which Mecanim data will be synced.
+            </summary>
+        </member>
+        <member name="F:Fusion.NetworkMecanimAnimator.FloatAccuracy">
+            <summary>
+            Accuracy used for parameter float values.
+            </summary>
+        </member>
+        <member name="F:Fusion.NetworkMecanimAnimator.TimeAccuracy">
+            <summary>
+            Accuracy used for animator state normalized time values.
+            </summary>
+        </member>
+        <member name="F:Fusion.NetworkMecanimAnimator.WeightAccuracy">
+            <summary>
+            Accuracy used for layer weight values.
+            </summary>
+        </member>
+        <member name="M:Fusion.NetworkMecanimAnimator.SetTrigger(System.Int32)">
+            <summary>
+            Queues a trigger with this animator. Call this instead of Animator.SetTrigger for the State Authority.
+            Triggers are prone to getting lost by animation syncs, as they may get reset before the value is synced. Setting triggers with this method ensures they get captured.
+            </summary>
+            <param name="triggerHash"></param>
+        </member>
+        <member name="M:Fusion.NetworkMecanimAnimator.SetTrigger(System.String)">
+            <summary>
+            Queues a trigger with this animator. Call this instead of Animator.SetTrigger for the State Authority.
+            Triggers are prone to getting lost by animation syncs, as they may get reset before the value is synced. Setting triggers with this method ensures they get captured.
+            </summary>
+            <param name="trigger"></param>
+        </member>
+        <member name="T:Fusion.NetworkPhysicsSimulation2D">
+            <summary>
+            Fusion component for handling Physics2D.SyncTransforms() and Physics2D.Simulate(). 
+            Only used when <see cref="F:Fusion.NetworkProjectConfig.PhysicsEngines.Physics2D"/> == true.
+            </summary>
+        </member>
+        <member name="T:Fusion.NetworkPhysicsSimulation3D">
+            <summary>
+            Fusion component for handling Physics.SyncTransforms() and Physics.Simulate(). 
+            Only used when <see cref="F:Fusion.NetworkProjectConfig.PhysicsEngines.Physics3D"/> == true.
+            </summary>
+        </member>
+        <member name="T:Fusion.NetworkPositionRotation">
+            <summary>
+            Replicates a Unity Transform's position and rotation states from the <see cref="P:Fusion.NetworkObject.StateAuthority"/> to all other peers.
+            Add this component to a GameObject to sync the position and rotation.
+            A <see cref="T:Fusion.NetworkObject"/> is required on this GameObject or a parent of this GameObject.
+            <remarks>
+            This component does not interpolate visuals. In order to do that, use a <see cref="T:Fusion.NetworkTransform"/>.
+            </remarks>
+            </summary>
+        </member>
+        <member name="P:Fusion.NetworkPositionRotation.Transform">
+            <summary>
+            Cached GameObject.transform reference.
+            </summary>
+        </member>
+        <member name="M:Fusion.NetworkPositionRotation.Awake">
+            <summary>
+            Implements Unity's Awake event function.
+            If overriding this method in an inheritor, the base method should be called.
+            </summary>
+        </member>
+        <member name="M:Fusion.NetworkPositionRotation.Spawned">
+            <summary>
+            Overrides <see cref="M:Fusion.NetworkBehaviour.Spawned"/>.
+            If overriding this method in an inheritor, the base method should be called.
+            </summary>
+        </member>
+        <member name="M:Fusion.NetworkPositionRotation.BeforeUpdate">
+            <summary>
+            Implements <see cref="T:Fusion.IBeforeUpdate"/>.
+            If overriding this method in an inheritor, the base method should be called.
+            </summary>
+        </member>
+        <member name="M:Fusion.NetworkPositionRotation.BeforeAllTicks(System.Boolean,System.Int32)">
+            <summary>
+            Implements <see cref="T:Fusion.IBeforeAllTicks"/>.
+            If overriding this method in an inheritor, the base method should be called.
+            To extend the functionality of copying data from the networked buffer to the engine,
+            override and extend <see cref="M:Fusion.NetworkPositionRotation.CopyFromBufferToEngine"/> instead.
+            </summary>
+        </member>
+        <member name="M:Fusion.NetworkPositionRotation.AfterAllTicks(System.Boolean,System.Int32)">
+            <summary>
+            Implements <see cref="T:Fusion.IAfterAllTicks"/>.
+            If overriding this method in an inheritor, the base method should be called.
+            To extend the functionality of copying data from the engine to the networked buffer,
+            override and extend <see cref="M:Fusion.NetworkPositionRotation.CopyFromEngineToBuffer"/> instead.
+            </summary>
+        </member>
+        <member name="M:Fusion.NetworkPositionRotation.RemotePrefabCreated">
+            <summary>
+            Implements <see cref="T:Fusion.IRemotePrefabCreated"/>.
+            If overriding this method in an inheritor, the base method should be called.
+            </summary>
+        </member>
+        <member name="M:Fusion.NetworkPositionRotation.BeforeCopyPreviousState">
+            <summary>
+            Implements <see cref="T:Fusion.IBeforeCopyPreviousState"/>.
+            If overriding this method in an inheritor, the base method should be called.
+            </summary>
+        </member>
+        <member name="M:Fusion.NetworkPositionRotation.CopyBackingFieldsToState(System.Boolean)">
+            <summary>
+            Implements <see cref="M:Fusion.NetworkBehaviour.CopyBackingFieldsToState(System.Boolean)"/>.
+            If overriding this method in an inheritor, the base method should be called.
+            </summary>
+        </member>
+        <member name="M:Fusion.NetworkPositionRotation.CopyFromBufferToEngine">
+            <summary>
+            Sets the values retrieved from the networked data to the respective engine (Unity) fields.
+            If overriding this method in an inheritor, the base method should be called.
+            </summary>
+        </member>
+        <member name="M:Fusion.NetworkPositionRotation.CopyFromEngineToBuffer">
+            <summary>
+            Sets the values retrieved from the engine (Unity) to the respective networked fields.
+            If overriding this method in an inheritor, the base method should be called.
+            </summary>
+        </member>
+        <member name="M:Fusion.NetworkPositionRotation.GetEnginePosition">
+            <summary>
+            Gets the position value from the engine. By default, the world position is set to be the output.
+            </summary>
+        </member>
+        <member name="M:Fusion.NetworkPositionRotation.GetEngineRotation">
+            <summary>
+            Gets the rotation value from the engine. By default, the world rotation is set to be the output.
+            </summary>
+        </member>
+        <member name="M:Fusion.NetworkPositionRotation.SetEnginePosition(UnityEngine.Vector3)">
+            <summary>
+            Sets a position value to the engine. By default, the value is set to the transform's world position field.
+            </summary>
+        </member>
+        <member name="M:Fusion.NetworkPositionRotation.SetEngineRotation(UnityEngine.Quaternion)">
+            <summary>
+            Sets a rotation value to the engine. By default, the value is set to the transform's world rotation field.
+            </summary>
+        </member>
+        <member name="F:Fusion.NetworkPositionRotation.WORD_COUNT_NPR">
+            <summary>
+            Number of words used by a <see cref="T:Fusion.NetworkPositionRotation"/> instance on its networked data,
+            including all inherited fields.
+            </summary>
+        </member>
+        <member name="P:Fusion.NetworkPositionRotation.BaseWordCount">
+            <summary>
+            Number of words used by this class on the networked data buffer, including all inherited fields,
+            to serve for reference to inheritors.
+            </summary>
+        </member>
+        <member name="P:Fusion.NetworkPositionRotation.PositionWordOffset">
+            <summary>
+            Implements <see cref="T:Fusion.NetworkAreaOfInterestBehaviour"/> by defining the word offset from the base pointer to the field that carries the position data used for Area of Interest management.
+            </summary>
+        </member>
+        <member name="M:Fusion.NetworkPositionRotation.ReadPosition">
+            <summary>
+            Reads from the position field on this object's networked data
+            with the default Runner position read accuracy.
+            </summary>
+        </member>
+        <member name="M:Fusion.NetworkPositionRotation.ReadPosition(System.Int32*)">
+            <summary>
+            Reads from a position field on the networked data pointed by <paramref name="ptr"/>
+            with the default Runner position read accuracy.
+            </summary>
+        </member>
+        <member name="M:Fusion.NetworkPositionRotation.ReadPosition(System.Int32*,Fusion.ReadAccuracy)">
+            <summary>
+            Reads from a position field on the networked data pointed by <paramref name="ptr"/>
+            with the defined <paramref name="readAccuracy"/>.
+            </summary>
+        </member>
+        <member name="M:Fusion.NetworkPositionRotation.ReadRotation">
+            <summary>
+            Reads from the rotation field on this object's networked data
+            with the default Runner position read accuracy.
+            </summary>
+        </member>
+        <member name="M:Fusion.NetworkPositionRotation.ReadRotation(System.Int32*)">
+            <summary>
+            Reads from a rotation field on the networked data pointed by <paramref name="ptr"/>
+            with the default Runner position read accuracy.
+            </summary>
+        </member>
+        <member name="M:Fusion.NetworkPositionRotation.ReadRotation(System.Int32*,Fusion.ReadAccuracy)">
+            <summary>
+            Reads from a rotation field on the networked data pointed by <paramref name="ptr"/>
+            with the defined <paramref name="readAccuracy"/>.
+            </summary>
+        </member>
+        <member name="M:Fusion.NetworkPositionRotation.WritePosition(UnityEngine.Vector3)">
+            <summary>
+            Writes to a position field on this object's networked data
+            with the default Runner position write accuracy.
+            </summary>
+        </member>
+        <member name="M:Fusion.NetworkPositionRotation.WritePosition(UnityEngine.Vector3,System.Int32*)">
+            <summary>
+            Writes to a position field on the networked data pointed by <paramref name="ptr"/>
+            with the default Runner position write accuracy.
+            </summary>
+        </member>
+        <member name="M:Fusion.NetworkPositionRotation.WritePosition(UnityEngine.Vector3,System.Int32*,Fusion.WriteAccuracy)">
+            <summary>
+            Writes to a position field on the networked data pointed by <paramref name="ptr"/>
+            with the defined <paramref name="writeAccuracy"/>.
+            </summary>
+        </member>
+        <member name="M:Fusion.NetworkPositionRotation.WriteRotation(UnityEngine.Quaternion)">
+            <summary>
+            Writes to a rotation field on this object's networked data
+            with the default Runner position write accuracy.
+            </summary>
+        </member>
+        <member name="M:Fusion.NetworkPositionRotation.WriteRotation(UnityEngine.Quaternion,System.Int32*)">
+            <summary>
+            Writes to a rotation field on the networked data pointed by <paramref name="ptr"/>
+            with the default Runner position write accuracy.
+            </summary>
+        </member>
+        <member name="M:Fusion.NetworkPositionRotation.WriteRotation(UnityEngine.Quaternion,System.Int32*,Fusion.WriteAccuracy)">
+            <summary>
+            Writes to a rotation field on the networked data pointed by <paramref name="ptr"/>
+            with the defined <paramref name="writeAccuracy"/>.
+            </summary>
+        </member>
+        <member name="T:Fusion.NetworkRigidbody">
+            <summary>
+            Replicates a Unity Rigidbody state from the <see cref="P:Fusion.NetworkObject.StateAuthority"/> to all other peers.
+            Add this component to a GameObject with a Rigidbody component.
+            A <see cref="T:Fusion.NetworkObject"/> is required on this GameObject or a parent of this GameObject.
+            </summary>
+        </member>
+        <member name="P:Fusion.NetworkRigidbody.Rigidbody">
+            <summary>
+            Cached reference of this object's <see cref="P:Fusion.NetworkRigidbody.Rigidbody"/> component.
+            </summary>
+        </member>
+        <member name="M:Fusion.NetworkRigidbody.SetIsKinematic(System.Boolean)">
+            <summary>
+            Sets the <see cref="P:Fusion.NetworkRigidbody.Rigidbody"/> <see cref="P:UnityEngine.Rigidbody.isKinematic"/> field to <paramref name="value"/>.
+            </summary>
+        </member>
+        <member name="P:Fusion.NetworkRigidbody.DefaultTeleportInterpolationVelocity">
+            <summary>
+            Sets the default teleport interpolation velocity to be the rigidbody velocity.
+            For more details on how this field is used, see <see cref="M:Fusion.NetworkTransform.TeleportToPosition(UnityEngine.Vector3,System.Nullable{UnityEngine.Vector3})"/>.
+            </summary>
+        </member>
+        <member name="P:Fusion.NetworkRigidbody.DefaultTeleportInterpolationAngularVelocity">
+            <summary>
+            Sets the default teleport interpolation angular velocity to be the rigidbody angular velocity.
+            For more details on how this field is used, see <see cref="M:Fusion.NetworkTransform.TeleportToRotation(UnityEngine.Quaternion,System.Nullable{UnityEngine.Vector3})"/>.
+            </summary>
+        </member>
+        <member name="M:Fusion.NetworkRigidbody.Awake">
+            <summary>
+            Implements Unity's Awake event function.
+            If overriding this method in an inheritor, the base method should be called.
+            </summary>
+        </member>
+        <member name="M:Fusion.NetworkRigidbody.Spawned">
+            <summary>
+            Implements <see cref="M:Fusion.NetworkBehaviour.Spawned"/>.
+            If overriding this method in an inheritor, the base method should be called.
+            </summary>
+        </member>
+        <member name="M:Fusion.NetworkRigidbody.CopyFromBufferToEngine">
+            <inheritdoc cref="M:Fusion.NetworkPositionRotation.CopyFromBufferToEngine"/>
+        </member>
+        <member name="M:Fusion.NetworkRigidbody.CopyFromEngineToBuffer">
+            <inheritdoc cref="M:Fusion.NetworkPositionRotation.CopyFromEngineToBuffer"/>
+        </member>
+        <member name="F:Fusion.NetworkRigidbody.WORD_COUNT_NRB">
+            <summary>
+            Number of words used by a <see cref="T:Fusion.NetworkRigidbody"/> instance on its networked data,
+            including all inherited fields.
+            </summary>
+        </member>
+        <member name="P:Fusion.NetworkRigidbody.BaseWordCount">
+            <inheritdoc cref="P:Fusion.NetworkPositionRotation.BaseWordCount"/>
+        </member>
+        <member name="M:Fusion.NetworkRigidbody.ReadRigidbodyPosition">
+            <summary>
+            Reads from the field reserved to store the rigidbody position on this object's
+            networked data using the default Runner position read accuracy.
+            </summary>
+        </member>
+        <member name="M:Fusion.NetworkRigidbody.ReadRigidbodyPosition(System.Int32*)">
+            <summary>
+            Reads from the field reserved to store the rigidbody position on the networked data pointed
+            by <paramref name="ptr"/> using the default Runner position read accuracy.
+            </summary>
+        </member>
+        <member name="M:Fusion.NetworkRigidbody.ReadRigidbodyPosition(System.Int32*,Fusion.ReadAccuracy)">
+            <summary>
+            Reads from the field reserved to store the rigidbody position on the networked data pointed
+            by <paramref name="ptr"/> using the defined <paramref name="readAccuracy"/>.
+            </summary>
+        </member>
+        <member name="M:Fusion.NetworkRigidbody.ReadRigidbodyRotation">
+            <summary>
+            Reads from the field reserved to store the rigidbody rotation on this object's
+            networked data using the default Runner rotation read accuracy.
+            </summary>
+        </member>
+        <member name="M:Fusion.NetworkRigidbody.ReadRigidbodyRotation(System.Int32*)">
+            <summary>
+            Reads from the field reserved to store the rigidbody rotation on the networked data pointed
+            by <paramref name="ptr"/> using the default Runner rotation read accuracy.
+            </summary>
+        </member>
+        <member name="M:Fusion.NetworkRigidbody.ReadRigidbodyRotation(System.Int32*,Fusion.ReadAccuracy)">
+            <summary>
+            Reads from the field reserved to store the rigidbody rotation on the networked data pointed
+            by <paramref name="ptr"/> using the defined <paramref name="readAccuracy"/>.
+            </summary>
+        </member>
+        <member name="M:Fusion.NetworkRigidbody.ReadVelocity">
+            <summary>
+            Reads from the field reserved to store the rigidbody velocity on this object's
+            networked data using the default Runner position read accuracy.
+            </summary>
+        </member>
+        <member name="M:Fusion.NetworkRigidbody.ReadVelocity(System.Int32*)">
+            <summary>
+            Reads from the field reserved to store the rigidbody velocity on the networked data pointed
+            by <paramref name="ptr"/> using the default Runner position read accuracy.
+            </summary>
+        </member>
+        <member name="M:Fusion.NetworkRigidbody.ReadVelocity(System.Int32*,Fusion.ReadAccuracy)">
+            <summary>
+            Reads from the field reserved to store the rigidbody velocity on the networked data pointed
+            by <paramref name="ptr"/> using the defined <paramref name="readAccuracy"/>.
+            </summary>
+        </member>
+        <member name="M:Fusion.NetworkRigidbody.ReadAngularVelocity">
+            <summary>
+            Reads from the field reserved to store the rigidbody angular velocity on this object's
+            networked data using the default Runner position read accuracy.
+            </summary>
+        </member>
+        <member name="M:Fusion.NetworkRigidbody.ReadAngularVelocity(System.Int32*)">
+            <summary>
+            Reads from the field reserved to store the rigidbody angular velocity on the networked data pointed
+            by <paramref name="ptr"/> using the default Runner position read accuracy.
+            </summary>
+        </member>
+        <member name="M:Fusion.NetworkRigidbody.ReadAngularVelocity(System.Int32*,Fusion.ReadAccuracy)">
+            <summary>
+            Reads from the field reserved to store the rigidbody angular velocity on the networked data pointed
+            by <paramref name="ptr"/> using the defined <paramref name="readAccuracy"/>.
+            </summary>
+        </member>
+        <member name="M:Fusion.NetworkRigidbody.ReadNetworkRigidbodyFlags(Fusion.NetworkRigidbodyBase.NetworkRigidbodyFlags@,UnityEngine.RigidbodyConstraints@)">
+            <summary>
+            Reads from a field reserved to store the rigidbody flags and constraints
+            on this object's networked data.
+            </summary>
+        </member>
+        <member name="M:Fusion.NetworkRigidbody.ReadNetworkRigidbodyFlags(System.Int32*,Fusion.NetworkRigidbodyBase.NetworkRigidbodyFlags@,UnityEngine.RigidbodyConstraints@)">
+            <summary>
+            Reads from a field reserved to store the rigidbody flags and constraints
+            on the networked data pointed by <paramref name="ptr"/>.
+            </summary>
+        </member>
+        <member name="M:Fusion.NetworkRigidbody.WriteRigidbodyPosition(UnityEngine.Vector3)">
+            <summary>
+            Writes to the field reserved to store the rigidbody position on this object's
+            networked data using the default Runner position write accuracy.
+            </summary>
+        </member>
+        <member name="M:Fusion.NetworkRigidbody.WriteRigidbodyPosition(UnityEngine.Vector3,System.Int32*)">
+            <summary>
+            Writes to the field reserved to store the rigidbody position on the networked data pointed
+            by <paramref name="ptr"/> using the default Runner position write accuracy.
+            </summary>
+        </member>
+        <member name="M:Fusion.NetworkRigidbody.WriteRigidbodyPosition(UnityEngine.Vector3,System.Int32*,Fusion.WriteAccuracy)">
+            <summary>
+            Writes to the field reserved to store the rigidbody position on the networked data pointed
+            by <paramref name="ptr"/> using the defined <paramref name="writeAccuracy"/>.
+            </summary>
+        </member>
+        <member name="M:Fusion.NetworkRigidbody.WriteRigidbodyRotation(UnityEngine.Quaternion)">
+            <summary>
+            Writes to the field reserved to store the rigidbody rotation on this object's
+            networked data using the default Runner rotation write accuracy.
+            </summary>
+        </member>
+        <member name="M:Fusion.NetworkRigidbody.WriteRigidbodyRotation(UnityEngine.Quaternion,System.Int32*)">
+            <summary>
+            Writes to the field reserved to store the rigidbody rotation on the networked data pointed
+            by <paramref name="ptr"/> using the default Runner rotation write accuracy.
+            </summary>
+        </member>
+        <member name="M:Fusion.NetworkRigidbody.WriteRigidbodyRotation(UnityEngine.Quaternion,System.Int32*,Fusion.WriteAccuracy)">
+            <summary>
+            Writes to the field reserved to store the rigidbody rotation on the networked data pointed
+            by <paramref name="ptr"/> using the defined <paramref name="writeAccuracy"/>.
+            </summary>
+        </member>
+        <member name="M:Fusion.NetworkRigidbody.WriteVelocity(UnityEngine.Vector3)">
+            <summary>
+            Writes to the field reserved to store the rigidbody velocity on this object's
+            networked data using the default Runner position write accuracy.
+            </summary>
+        </member>
+        <member name="M:Fusion.NetworkRigidbody.WriteVelocity(UnityEngine.Vector3,System.Int32*)">
+            <summary>
+            Writes to the field reserved to store the rigidbody velocity on the networked data pointed
+            by <paramref name="ptr"/> using the default Runner position write accuracy.
+            </summary>
+        </member>
+        <member name="M:Fusion.NetworkRigidbody.WriteVelocity(UnityEngine.Vector3,System.Int32*,Fusion.WriteAccuracy)">
+            <summary>
+            Writes to the field reserved to store the rigidbody velocity on the networked data pointed
+            by <paramref name="ptr"/> using the defined <paramref name="writeAccuracy"/>.
+            </summary>
+        </member>
+        <member name="M:Fusion.NetworkRigidbody.WriteAngularVelocity(UnityEngine.Vector3)">
+            <summary>
+            Writes to the field reserved to store the rigidbody angular velocity on this object's
+            networked data using the default Runner position write accuracy.
+            </summary>
+        </member>
+        <member name="M:Fusion.NetworkRigidbody.WriteAngularVelocity(UnityEngine.Vector3,System.Int32*)">
+            <summary>
+            Writes to the field reserved to store the rigidbody angular velocity on the networked data pointed
+            by <paramref name="ptr"/> using the default Runner position write accuracy.
+            </summary>
+        </member>
+        <member name="M:Fusion.NetworkRigidbody.WriteAngularVelocity(UnityEngine.Vector3,System.Int32*,Fusion.WriteAccuracy)">
+            <summary>
+            Writes to the field reserved to store the rigidbody angular velocity on the networked data pointed
+            by <paramref name="ptr"/> using the defined <paramref name="writeAccuracy"/>.
+            </summary>
+        </member>
+        <member name="M:Fusion.NetworkRigidbody.WriteNetworkRigidbodyFlags(Fusion.NetworkRigidbodyBase.NetworkRigidbodyFlags,UnityEngine.RigidbodyConstraints)">
+            <summary>
+            Writes to a field reserved to store the rigidbody flags and constraints on this object's networked data.
+            </summary>
+        </member>
+        <member name="M:Fusion.NetworkRigidbody.WriteNetworkRigidbodyFlags(Fusion.NetworkRigidbodyBase.NetworkRigidbodyFlags,UnityEngine.RigidbodyConstraints,System.Int32*)">
+            <summary>
+            Writes a field reserved to store the rigidbody flags and constraints on the networked data pointed by <paramref name="ptr"/>.
+            </summary>
+        </member>
+        <member name="T:Fusion.NetworkRigidbody2D">
+            <summary>
+            Replicates a Unity Rigidbody state from the <see cref="P:Fusion.NetworkObject.StateAuthority"/> to all other peers.
+            Add this component to a GameObject with a Rigidbody component.
+            A <see cref="T:Fusion.NetworkObject"/> is required on this GameObject or a parent of this GameObject.
+            </summary>
+        </member>
+        <member name="P:Fusion.NetworkRigidbody2D.Rigidbody">
+            <summary>
+            Cached reference of this object's <see cref="T:UnityEngine.Rigidbody2D"/> component.
+            </summary>
+        </member>
+        <member name="M:Fusion.NetworkRigidbody2D.SetIsKinematic(System.Boolean)">
+            <summary>
+            Sets the <see cref="P:Fusion.NetworkRigidbody2D.Rigidbody"/> <see cref="P:UnityEngine.Rigidbody2D.isKinematic"/> field to <paramref name="value"/>.
+            </summary>
+        </member>
+        <member name="P:Fusion.NetworkRigidbody2D.DefaultTeleportInterpolationVelocity">
+            <summary>
+            Sets the default teleport interpolation velocity to be the rigidbody velocity.
+            For more details on how this field is used, see <see cref="M:Fusion.NetworkTransform.TeleportToPosition(UnityEngine.Vector3,System.Nullable{UnityEngine.Vector3})"/>.
+            </summary>
+        </member>
+        <member name="P:Fusion.NetworkRigidbody2D.DefaultTeleportInterpolationAngularVelocity">
+            <summary>
+            Sets the default teleport interpolation angular velocity to be the rigidbody angular velocity, around the Z axis.
+            For more details on how this field is used, see <see cref="M:Fusion.NetworkTransform.TeleportToRotation(UnityEngine.Quaternion,System.Nullable{UnityEngine.Vector3})"/>.
+            </summary>
+        </member>
+        <member name="M:Fusion.NetworkRigidbody2D.Awake">
+            <summary>
+            Implements Unity's Awake event function.
+            If overriding this method in an inheritor, the base method should be called.
+            </summary>
+        </member>
+        <member name="M:Fusion.NetworkRigidbody2D.Spawned">
+            <summary>
+            Implements <see cref="M:Fusion.NetworkBehaviour.Spawned"/>.
+            If overriding this method in an inheritor, the base method should be called.
+            </summary>
+        </member>
+        <member name="M:Fusion.NetworkRigidbody2D.CopyFromBufferToEngine">
+            <inheritdoc cref="M:Fusion.NetworkPositionRotation.CopyFromBufferToEngine"/>
+        </member>
+        <member name="M:Fusion.NetworkRigidbody2D.CopyFromEngineToBuffer">
+            <inheritdoc cref="M:Fusion.NetworkPositionRotation.CopyFromEngineToBuffer"/>
+        </member>
+        <member name="F:Fusion.NetworkRigidbody2D.WORD_COUNT_NRB_2D">
+            <summary>
+            Number of words used by a <see cref="T:Fusion.NetworkRigidbody2D"/> instance on its networked data,
+            including all inherited fields.
+            </summary>
+        </member>
+        <member name="P:Fusion.NetworkRigidbody2D.BaseWordCount">
+            <inheritdoc cref="P:Fusion.NetworkPositionRotation.BaseWordCount"/>
+        </member>
+        <member name="M:Fusion.NetworkRigidbody2D.ReadRigidbodyPosition">
+            <summary>
+            Reads from the field reserved to store the rigidbody position on this object's
+            networked data using the default Runner position read accuracy.
+            </summary>
+        </member>
+        <member name="M:Fusion.NetworkRigidbody2D.ReadRigidbodyPosition(System.Int32*)">
+            <summary>
+            Reads from the field reserved to store the rigidbody position on the networked data pointed
+            by <paramref name="ptr"/> using the default Runner position read accuracy.
+            </summary>
+        </member>
+        <member name="M:Fusion.NetworkRigidbody2D.ReadRigidbodyPosition(System.Int32*,Fusion.ReadAccuracy)">
+            <summary>
+            Reads from the field reserved to store the rigidbody position on the networked data pointed
+            by <paramref name="ptr"/> using the defined <paramref name="readAccuracy"/>.
+            </summary>
+        </member>
+        <member name="M:Fusion.NetworkRigidbody2D.ReadRigidbodyRotation">
+            <summary>
+            Reads from the field reserved to store the rigidbody rotation on this object's
+            networked data using the default Runner rotation read accuracy.
+            </summary>
+        </member>
+        <member name="M:Fusion.NetworkRigidbody2D.ReadRigidbodyRotation(System.Int32*)">
+            <summary>
+            Reads from the field reserved to store the rigidbody rotation on the networked data pointed
+            by <paramref name="ptr"/> using the default Runner rotation read accuracy.
+            </summary>
+        </member>
+        <member name="M:Fusion.NetworkRigidbody2D.ReadRigidbodyRotation(System.Int32*,Fusion.ReadAccuracy)">
+            <summary>
+            Reads from the field reserved to store the rigidbody rotation on the networked data pointed
+            by <paramref name="ptr"/> using the defined <paramref name="readAccuracy"/>.
+            </summary>
+        </member>
+        <member name="M:Fusion.NetworkRigidbody2D.ReadVelocity">
+            <summary>
+            Reads from the field reserved to store the rigidbody velocity on this object's
+            networked data using the default Runner position read accuracy.
+            </summary>
+        </member>
+        <member name="M:Fusion.NetworkRigidbody2D.ReadVelocity(System.Int32*)">
+            <summary>
+            Reads from the field reserved to store the rigidbody velocity on the networked data pointed
+            by <paramref name="ptr"/> using the default Runner position read accuracy.
+            </summary>
+        </member>
+        <member name="M:Fusion.NetworkRigidbody2D.ReadVelocity(System.Int32*,Fusion.ReadAccuracy)">
+            <summary>
+            Reads from the field reserved to store the rigidbody velocity on the networked data pointed
+            by <paramref name="ptr"/> using the defined <paramref name="readAccuracy"/>.
+            </summary>
+        </member>
+        <member name="M:Fusion.NetworkRigidbody2D.ReadAngularVelocity">
+            <summary>
+            Reads from the field reserved to store the rigidbody angular velocity on this object's
+            networked data using the default Runner position read accuracy.
+            </summary>
+        </member>
+        <member name="M:Fusion.NetworkRigidbody2D.ReadAngularVelocity(System.Int32*)">
+            <summary>
+            Reads from the field reserved to store the rigidbody angular velocity on the networked data pointed
+            by <paramref name="ptr"/> using the default Runner position read accuracy.
+            </summary>
+        </member>
+        <member name="M:Fusion.NetworkRigidbody2D.ReadAngularVelocity(System.Int32*,Fusion.ReadAccuracy)">
+            <summary>
+            Reads from the field reserved to store the rigidbody angular velocity on the networked data pointed
+            by <paramref name="ptr"/> using the defined <paramref name="readAccuracy"/>.
+            </summary>
+        </member>
+        <member name="M:Fusion.NetworkRigidbody2D.ReadGravityScale">
+            <summary>
+            Reads from the field reserved to store the rigidbody gravity scale on this object's
+            networked data using the default Runner position read accuracy.
+            </summary>
+        </member>
+        <member name="M:Fusion.NetworkRigidbody2D.ReadGravityScale(System.Int32*)">
+            <summary>
+            Reads from the field reserved to store the rigidbody gravity scale on the networked data pointed
+            by <paramref name="ptr"/> using the default Runner position read accuracy.
+            </summary>
+        </member>
+        <member name="M:Fusion.NetworkRigidbody2D.ReadGravityScale(System.Int32*,Fusion.ReadAccuracy)">
+            <summary>
+            Reads from the field reserved to store the rigidbody gravity scale on the networked data pointed
+            by <paramref name="ptr"/> using the defined <paramref name="readAccuracy"/>.
+            </summary>
+        </member>
+        <member name="M:Fusion.NetworkRigidbody2D.ReadNetworkRigidbodyFlags(Fusion.NetworkRigidbodyBase.NetworkRigidbodyFlags@,UnityEngine.RigidbodyConstraints2D@)">
+            <summary>
+            Reads from a field reserved to store the rigidbody flags and constraints
+            on this object's networked data.
+            </summary>
+        </member>
+        <member name="M:Fusion.NetworkRigidbody2D.ReadNetworkRigidbodyFlags(System.Int32*,Fusion.NetworkRigidbodyBase.NetworkRigidbodyFlags@,UnityEngine.RigidbodyConstraints2D@)">
+            <summary>
+            Reads from a field reserved to store the rigidbody flags and constraints
+            on the networked data pointed by <paramref name="ptr"/>.
+            </summary>
+        </member>
+        <member name="M:Fusion.NetworkRigidbody2D.WriteRigidbodyPosition(UnityEngine.Vector2)">
+            <summary>
+            Writes to the field reserved to store the rigidbody position on this object's
+            networked data using the default Runner position write accuracy.
+            </summary>
+        </member>
+        <member name="M:Fusion.NetworkRigidbody2D.WriteRigidbodyPosition(UnityEngine.Vector2,System.Int32*)">
+            <summary>
+            Writes to the field reserved to store the rigidbody position on the networked data pointed
+            by <paramref name="ptr"/> using the default Runner position write accuracy.
+            </summary>
+        </member>
+        <member name="M:Fusion.NetworkRigidbody2D.WriteRigidbodyPosition(UnityEngine.Vector2,System.Int32*,Fusion.WriteAccuracy)">
+            <summary>
+            Writes to the field reserved to store the rigidbody position on the networked data pointed
+            by <paramref name="ptr"/> using the defined <paramref name="writeAccuracy"/>.
+            </summary>
+        </member>
+        <member name="M:Fusion.NetworkRigidbody2D.WriteRigidbodyRotation(System.Single)">
+            <summary>
+            Writes to the field reserved to store the rigidbody rotation on this object's
+            networked data using the default Runner rotation write accuracy.
+            </summary>
+        </member>
+        <member name="M:Fusion.NetworkRigidbody2D.WriteRigidbodyRotation(System.Single,System.Int32*)">
+            <summary>
+            Writes to the field reserved to store the rigidbody rotation on the networked data pointed
+            by <paramref name="ptr"/> using the default Runner rotation write accuracy.
+            </summary>
+        </member>
+        <member name="M:Fusion.NetworkRigidbody2D.WriteRigidbodyRotation(System.Single,System.Int32*,Fusion.WriteAccuracy)">
+            <summary>
+            Writes to the field reserved to store the rigidbody rotation on the networked data pointed
+            by <paramref name="ptr"/> using the defined <paramref name="writeAccuracy"/>.
+            </summary>
+        </member>
+        <member name="M:Fusion.NetworkRigidbody2D.WriteVelocity(UnityEngine.Vector2)">
+            <summary>
+            Writes to the field reserved to store the rigidbody velocity on this object's
+            networked data using the default Runner position write accuracy.
+            </summary>
+        </member>
+        <member name="M:Fusion.NetworkRigidbody2D.WriteVelocity(UnityEngine.Vector2,System.Int32*)">
+            <summary>
+            Writes to the field reserved to store the rigidbody velocity on the networked data pointed
+            by <paramref name="ptr"/> using the default Runner position write accuracy.
+            </summary>
+        </member>
+        <member name="M:Fusion.NetworkRigidbody2D.WriteVelocity(UnityEngine.Vector2,System.Int32*,Fusion.WriteAccuracy)">
+            <summary>
+            Writes to the field reserved to store the rigidbody velocity on the networked data pointed
+            by <paramref name="ptr"/> using the defined <paramref name="writeAccuracy"/>.
+            </summary>
+        </member>
+        <member name="M:Fusion.NetworkRigidbody2D.WriteAngularVelocity(System.Single)">
+            <summary>
+            Writes to the field reserved to store the rigidbody angular velocity on this object's
+            networked data using the default Runner position write accuracy.
+            </summary>
+        </member>
+        <member name="M:Fusion.NetworkRigidbody2D.WriteAngularVelocity(System.Single,System.Int32*)">
+            <summary>
+            Writes to the field reserved to store the rigidbody angular velocity on the networked data pointed
+            by <paramref name="ptr"/> using the default Runner position write accuracy.
+            </summary>
+        </member>
+        <member name="M:Fusion.NetworkRigidbody2D.WriteAngularVelocity(System.Single,System.Int32*,Fusion.WriteAccuracy)">
+            <summary>
+            Writes to the field reserved to store the rigidbody angular velocity on the networked data pointed
+            by <paramref name="ptr"/> using the defined <paramref name="writeAccuracy"/>.
+            </summary>
+        </member>
+        <member name="M:Fusion.NetworkRigidbody2D.WriteGravityScale(System.Single)">
+            <summary>
+            Writes to the field reserved to store the rigidbody gravity scale on this object's
+            networked data using the default Runner position write accuracy.
+            </summary>
+        </member>
+        <member name="M:Fusion.NetworkRigidbody2D.WriteGravityScale(System.Single,System.Int32*)">
+            <summary>
+            Writes to the field reserved to store the rigidbody gravity scale on the networked data pointed
+            by <paramref name="ptr"/> using the default Runner position write accuracy.
+            </summary>
+        </member>
+        <member name="M:Fusion.NetworkRigidbody2D.WriteGravityScale(System.Single,System.Int32*,Fusion.WriteAccuracy)">
+            <summary>
+            Writes to the field reserved to store the rigidbody gravity scale on the networked data pointed
+            by <paramref name="ptr"/> using the defined <paramref name="writeAccuracy"/>.
+            </summary>
+        </member>
+        <member name="M:Fusion.NetworkRigidbody2D.WriteNetworkRigidbodyFlags(Fusion.NetworkRigidbodyBase.NetworkRigidbodyFlags,UnityEngine.RigidbodyConstraints2D)">
+            <summary>
+            Writes to a field reserved to store the rigidbody flags and constraints on this object's networked data.
+            </summary>
+        </member>
+        <member name="M:Fusion.NetworkRigidbody2D.WriteNetworkRigidbodyFlags(Fusion.NetworkRigidbodyBase.NetworkRigidbodyFlags,UnityEngine.RigidbodyConstraints2D,System.Int32*)">
+            <summary>
+            Writes a field reserved to store the rigidbody flags and constraints on the networked data pointed by <paramref name="ptr"/>.
+            </summary>
+        </member>
+        <member name="T:Fusion.NetworkRigidbodyBase">
+            <summary>
+            Base class for 2D and 3D networked rigid body behaviours:
+            see <see cref="T:Fusion.NetworkRigidbody2D"/> and <see cref="T:Fusion.NetworkRigidbody"/>, respectively.
+            This class handles some of the data and logic shared between the two versions.
+            </summary>
+        </member>
+        <member name="M:Fusion.NetworkRigidbodyBase.SetIsKinematic(System.Boolean)">
+            <summary>
+            Sets a 2D or 3D rigid body kinematic field to <paramref name="value"/>,
+            according to the explicit implementation.
+            </summary>
+        </member>
+        <member name="F:Fusion.NetworkRigidbodyBase._forceSnapshotInterpolated">
+            <summary>
+            If the rigid body state is not predicted, but just interpolated between snapshots.
+            </summary>
+        </member>
+        <member name="F:Fusion.NetworkRigidbodyBase._initialized">
+            <summary>
+            If <see cref="M:Fusion.NetworkRigidbodyBase.Init"/> was called at least once on this instance.
+            </summary>
+        </member>
+        <member name="M:Fusion.NetworkRigidbodyBase.RemotePrefabCreated">
+            <summary>
+            Implements <see cref="T:Fusion.IRemotePrefabCreated"/>.
+            If overriding this method in an inheritor, the base method should be called.
+            </summary>
+        </member>
+        <member name="M:Fusion.NetworkRigidbodyBase.CopyBackingFieldsToState(System.Boolean)">
+            <summary>
+            Implements <see cref="M:Fusion.NetworkBehaviour.CopyBackingFieldsToState(System.Boolean)"/>.
+            If overriding this method in an inheritor, the base method should be called.
+            </summary>
+        </member>
+        <member name="M:Fusion.NetworkRigidbodyBase.BeforeAllTicks(System.Boolean,System.Int32)">
+            <summary>
+            Implements <see cref="T:Fusion.IBeforeAllTicks"/>.
+            If overriding this method in an inheritor, the base method should be called.
+            To extend the functionality of copying data from the networked buffer to the engine,
+            override and extend <see cref="M:Fusion.NetworkPositionRotation.CopyFromBufferToEngine"/> instead.
+            </summary>
+        </member>
+        <member name="M:Fusion.NetworkRigidbodyBase.AfterAllTicks(System.Boolean,System.Int32)">
+            <summary>
+            Implements <see cref="T:Fusion.IAfterAllTicks"/>.
+            If overriding this method in an inheritor, the base method should be called.
+            To extend the functionality of copying data from the engine to the networked buffer,
+            override and extend <see cref="M:Fusion.NetworkPositionRotation.CopyFromEngineToBuffer"/> instead.
+            </summary>
+        </member>
+        <member name="M:Fusion.NetworkRigidbodyBase.BeforeCopyPreviousState">
+            <summary>
+            Implements <see cref="T:Fusion.IBeforeCopyPreviousState"/>.
+            If overriding this method in an inheritor, the base method should be called.
+            </summary>
+        </member>
+        <member name="M:Fusion.NetworkRigidbodyBase.IsInterpolationDataPredicted">
+            <inheritdoc cref="M:Fusion.NetworkRigidbodyBase.IsInterpolationDataPredicted"/>
+        </member>
+        <member name="T:Fusion.NetworkRigidbodyBase.NetworkRigidbodyFlags">
+            <summary>
+            Networked flags representing a 2D or 3D rigid body state and characteristics.
+            </summary>
+        </member>
+        <member name="F:Fusion.NetworkRigidbodyBase.NetworkRigidbodyFlags.IsKinematic">
+            <summary>
+            Networked kinematic state.
+            See also <see cref="P:UnityEngine.Rigidbody.isKinematic"/> or <see cref="P:UnityEngine.Rigidbody2D.isKinematic"/>.
+            </summary>
+        </member>
+        <member name="F:Fusion.NetworkRigidbodyBase.NetworkRigidbodyFlags.UseGravity">
+            <summary>
+            Networked <see cref="P:UnityEngine.Rigidbody.useGravity"/> state. Not used with 2D rigid bodies.
+            </summary>
+        </member>
+        <member name="F:Fusion.NetworkRigidbodyBase.NetworkRigidbodyFlags.IsSleeping">
+            <summary>
+            Networked sleeping state.
+            See also <see cref="M:UnityEngine.Rigidbody.IsSleeping"/> or <see cref="M:UnityEngine.Rigidbody2D.IsSleeping"/>.
+            </summary>
+        </member>
+        <member name="F:Fusion.NetworkRigidbodyBase.WORD_COUNT_NRBB">
+            <summary>
+            Number of words used by a <see cref="T:Fusion.NetworkRigidbodyBase"/> instance on its networked data,
+            including all inherited fields.
+            </summary>
+        </member>
+        <member name="P:Fusion.NetworkRigidbodyBase.BaseWordCount">
+            <inheritdoc cref="P:Fusion.NetworkPositionRotation.BaseWordCount"/>
+        </member>
+        <member name="M:Fusion.NetworkRigidbodyBase.ReadDrag">
+            <summary>
+            Reads from the field reserved to store the rigidbody drag on this object's networked data
+            using the default Runner position read accuracy.
+            </summary>
+        </member>
+        <member name="M:Fusion.NetworkRigidbodyBase.ReadDrag(System.Int32*)">
+            <summary>
+            Reads from the field reserved to store the rigidbody drag on the networked data pointed
+            by <paramref name="ptr"/> using the default Runner position read accuracy.
+            </summary>
+        </member>
+        <member name="M:Fusion.NetworkRigidbodyBase.ReadDrag(System.Int32*,Fusion.ReadAccuracy)">
+            <summary>
+            Reads from the field reserved to store the rigidbody drag on the networked data pointed
+            by <paramref name="ptr"/> using the defined <paramref name="readAccuracy"/>.
+            </summary>
+        </member>
+        <member name="M:Fusion.NetworkRigidbodyBase.ReadAngularDrag">
+            <summary>
+            Reads from the field reserved to store the rigidbody angular drag on this object's networked data
+            using the default Runner position read accuracy.
+            </summary>
+        </member>
+        <member name="M:Fusion.NetworkRigidbodyBase.ReadAngularDrag(System.Int32*)">
+            <summary>
+            Reads from the field reserved to store the rigidbody angular drag on the networked data pointed
+            by <paramref name="ptr"/> using the default Runner position read accuracy.
+            </summary>
+        </member>
+        <member name="M:Fusion.NetworkRigidbodyBase.ReadAngularDrag(System.Int32*,Fusion.ReadAccuracy)">
+            <summary>
+            Reads from the field reserved to store the rigidbody angular drag on the networked data pointed
+            by <paramref name="ptr"/> using the defined <paramref name="readAccuracy"/>.
+            </summary>
+        </member>
+        <member name="M:Fusion.NetworkRigidbodyBase.ReadMass">
+            <summary>
+            Reads from the field reserved to store the rigidbody mass on this object's networked data
+            using the default Runner position read accuracy.
+            </summary>
+        </member>
+        <member name="M:Fusion.NetworkRigidbodyBase.ReadMass(System.Int32*)">
+            <summary>
+            Reads from the field reserved to store the rigidbody mass on the networked data pointed
+            by <paramref name="ptr"/> using the default Runner position read accuracy.
+            </summary>
+        </member>
+        <member name="M:Fusion.NetworkRigidbodyBase.ReadMass(System.Int32*,Fusion.ReadAccuracy)">
+            <summary>
+            Reads from the field reserved to store the rigidbody mass on the networked data pointed
+            by <paramref name="ptr"/> using the defined <paramref name="readAccuracy"/>.
+            </summary>
+        </member>
+        <member name="M:Fusion.NetworkRigidbodyBase.ReadNetworkRigidbodyFlags">
+            <summary>
+            Reads from the field reserved to store the rigidbody flags on this object's networked data.
+            </summary>
+        </member>
+        <member name="M:Fusion.NetworkRigidbodyBase.ReadNetworkRigidbodyFlags(System.Int32*)">
+            <summary>
+            Reads from the field reserved to store the rigidbody flags on the networked data pointed by <paramref name="ptr"/>.
+            </summary>
+        </member>
+        <member name="M:Fusion.NetworkRigidbodyBase.ReadNetworkRigidbodyRawFlags">
+            <summary>
+            Reads from the field reserved to store the rigid body flags on this object's networked data
+            and returns the raw word value that might also carry flags specific to 2D or 3D rigid bodies.
+            See also <see cref="M:Fusion.NetworkRigidbody.ReadNetworkRigidbodyFlags(System.Int32*,Fusion.NetworkRigidbodyBase.NetworkRigidbodyFlags@,UnityEngine.RigidbodyConstraints@)">
+            NetworkRigidbody.ReadNetworkRigidbodyFlags</see> or <see cref="M:Fusion.NetworkRigidbody2D.ReadNetworkRigidbodyFlags(System.Int32*,Fusion.NetworkRigidbodyBase.NetworkRigidbodyFlags@,UnityEngine.RigidbodyConstraints2D@)">
+            NetworkRigidbody2D.ReadNetworkRigidbodyFlags</see>.
+            </summary>
+        </member>
+        <member name="M:Fusion.NetworkRigidbodyBase.ReadNetworkRigidbodyRawFlags(System.Int32*)">
+            <summary>
+            Reads from a field reserved to store the rigid body flags on the networked data pointed by <paramref name="ptr"/>
+            and returns the raw word value that might also carry flags specific to 2D or 3D rigid bodies.
+            See also <see cref="M:Fusion.NetworkRigidbody.ReadNetworkRigidbodyFlags(System.Int32*,Fusion.NetworkRigidbodyBase.NetworkRigidbodyFlags@,UnityEngine.RigidbodyConstraints@)">
+            NetworkRigidbody.ReadNetworkRigidbodyFlags</see> or <see cref="M:Fusion.NetworkRigidbody2D.ReadNetworkRigidbodyFlags(System.Int32*,Fusion.NetworkRigidbodyBase.NetworkRigidbodyFlags@,UnityEngine.RigidbodyConstraints2D@)">
+            NetworkRigidbody2D.ReadNetworkRigidbodyFlags</see>.
+            </summary>
+        </member>
+        <member name="M:Fusion.NetworkRigidbodyBase.ReadDragsAndMass">
+            <summary>
+            Reads the values of a rigidbody drag, angular drag and mass field on this object's networked data
+            using the default Runner position read accuracy.
+            The values are returned as the x, y and z values of a Vector3, respectively.
+            </summary>
+        </member>
+        <member name="M:Fusion.NetworkRigidbodyBase.ReadDragsAndMass(System.Int32*)">
+            <summary>
+            Reads the values of a rigidbody drag, angular drag and mass field on the networked data pointed
+            by <paramref name="ptr"/> using the default Runner position read accuracy.
+            The values are returned as the x, y and z values of a Vector3, respectively.
+            </summary>
+        </member>
+        <member name="M:Fusion.NetworkRigidbodyBase.ReadDragsAndMass(System.Int32*,Fusion.ReadAccuracy)">
+            <summary>
+            Reads the values of a rigidbody drag, angular drag and mass field on the networked data pointed
+            by <paramref name="ptr"/> using the defined <paramref name="readAccuracy"/>.
+            The values are returned as the x, y and z values of a Vector3, respectively.
+            </summary>
+        </member>
+        <member name="M:Fusion.NetworkRigidbodyBase.WriteDrag(System.Single)">
+            <summary>
+            Writes the field reserved to store the rigidbody drag on this object's networked data
+            using the default Runner position write accuracy.
+            </summary>
+        </member>
+        <member name="M:Fusion.NetworkRigidbodyBase.WriteDrag(System.Single,System.Int32*)">
+            <summary>
+            Writes to the field reserved to store the rigidbody drag on the networked data pointed
+            by <paramref name="ptr"/> using the default Runner position write accuracy.
+            </summary>
+        </member>
+        <member name="M:Fusion.NetworkRigidbodyBase.WriteDrag(System.Single,System.Int32*,Fusion.WriteAccuracy)">
+            <summary>
+            Writes to the field reserved to store the rigidbody drag on the networked data pointed
+            by <paramref name="ptr"/> using the defined <paramref name="writeAccuracy"/>.
+            </summary>
+        </member>
+        <member name="M:Fusion.NetworkRigidbodyBase.WriteAngularDrag(System.Single)">
+            <summary>
+            Writes the field reserved to store the rigidbody angular drag on this object's networked data
+            using the default Runner position write accuracy.
+            </summary>
+        </member>
+        <member name="M:Fusion.NetworkRigidbodyBase.WriteAngularDrag(System.Single,System.Int32*)">
+            <summary>
+            Writes to the field reserved to store the rigidbody angular drag on the networked data pointed
+            by <paramref name="ptr"/> using the default Runner position write accuracy.
+            </summary>
+        </member>
+        <member name="M:Fusion.NetworkRigidbodyBase.WriteAngularDrag(System.Single,System.Int32*,Fusion.WriteAccuracy)">
+            <summary>
+            Writes to the field reserved to store the rigidbody angular drag on the networked data pointed
+            by <paramref name="ptr"/> using the defined <paramref name="writeAccuracy"/>.
+            </summary>
+        </member>
+        <member name="M:Fusion.NetworkRigidbodyBase.WriteMass(System.Single)">
+            <summary>
+            Writes the field reserved to store the rigidbody mass on this object's networked data
+            using the default Runner position write accuracy.
+            </summary>
+        </member>
+        <member name="M:Fusion.NetworkRigidbodyBase.WriteMass(System.Single,System.Int32*)">
+            <summary>
+            Writes to the field reserved to store the rigidbody mass on the networked data pointed
+            by <paramref name="ptr"/> using the default Runner position write accuracy.
+            </summary>
+        </member>
+        <member name="M:Fusion.NetworkRigidbodyBase.WriteMass(System.Single,System.Int32*,Fusion.WriteAccuracy)">
+            <summary>
+            Writes to the field reserved to store the rigidbody mass on the networked data pointed
+            by <paramref name="ptr"/> using the defined <paramref name="writeAccuracy"/>.
+            </summary>
+        </member>
+        <member name="M:Fusion.NetworkRigidbodyBase.WriteNetworkRigidbodyFlags(Fusion.NetworkRigidbodyBase.NetworkRigidbodyFlags)">
+            <summary>
+            Writes to the field reserved to store the rigidbody flags on this object's networked data.
+            </summary>
+        </member>
+        <member name="M:Fusion.NetworkRigidbodyBase.WriteNetworkRigidbodyFlags(Fusion.NetworkRigidbodyBase.NetworkRigidbodyFlags,System.Int32*)">
+            <summary>
+            Reads from the field reserved to store the rigidbody flags on the networked data pointed by <paramref name="ptr"/>.
+            </summary>
+        </member>
+        <member name="M:Fusion.NetworkRigidbodyBase.WriteNetworkRigidbodyRawFlags(System.Int32)">
+            <summary>
+            Writes to the field reserved to store the on this object's networked data.
+            See also <see cref="M:Fusion.NetworkRigidbody.ReadNetworkRigidbodyFlags(System.Int32*,Fusion.NetworkRigidbodyBase.NetworkRigidbodyFlags@,UnityEngine.RigidbodyConstraints@)">
+            NetworkRigidbody.ReadNetworkRigidbodyFlags</see> or <see cref="M:Fusion.NetworkRigidbody2D.ReadNetworkRigidbodyFlags(System.Int32*,Fusion.NetworkRigidbodyBase.NetworkRigidbodyFlags@,UnityEngine.RigidbodyConstraints2D@)">
+            NetworkRigidbody2D.ReadNetworkRigidbodyFlags</see>.
+            </summary>
+        </member>
+        <member name="M:Fusion.NetworkRigidbodyBase.WriteNetworkRigidbodyRawFlags(System.Int32,System.Int32*)">
+            <summary>
+            Writes to the field reserved to store the on this object's networked data.
+            See also <see cref="M:Fusion.NetworkRigidbody.ReadNetworkRigidbodyFlags(System.Int32*,Fusion.NetworkRigidbodyBase.NetworkRigidbodyFlags@,UnityEngine.RigidbodyConstraints@)">
+            NetworkRigidbody.ReadNetworkRigidbodyFlags</see> or <see cref="M:Fusion.NetworkRigidbody2D.ReadNetworkRigidbodyFlags(System.Int32*,Fusion.NetworkRigidbodyBase.NetworkRigidbodyFlags@,UnityEngine.RigidbodyConstraints2D@)">
+            NetworkRigidbody2D.ReadNetworkRigidbodyFlags</see>.
+            </summary>
+        </member>
+        <member name="M:Fusion.NetworkRigidbodyBase.WriteDragsAndMass(UnityEngine.Vector3)">
+            <summary>
+            Writes the values of a rigidbody drag, angular drag and mass field on this object's networked data
+            using the default Runner position read accuracy.
+            The values must be provided as the x, y and z values of a Vector3, respectively.
+            </summary>
+        </member>
+        <member name="M:Fusion.NetworkRigidbodyBase.WriteDragsAndMass(UnityEngine.Vector3,System.Int32*)">
+            <summary>
+            Reads the values of a rigidbody drag, angular drag and mass field on the networked data pointed
+            by <paramref name="ptr"/> using the default Runner position read accuracy.
+            The values must be provided as the x, y and z values of a Vector3, respectively.
+            </summary>
+        </member>
+        <member name="M:Fusion.NetworkRigidbodyBase.WriteDragsAndMass(UnityEngine.Vector3,System.Int32*,Fusion.WriteAccuracy)">
+            <summary>
+            Reads the values of a rigidbody drag, angular drag and mass field on the networked data pointed
+            by <paramref name="ptr"/> using the defined <paramref name="writeAccuracy"/>.
+            The values must be provided as the x, y and z values of a Vector3, respectively.
+            </summary>
+        </member>
+        <member name="T:Fusion.NetworkTransform">
+            <summary>
+            Replicates a Unity Transform's position and rotation states from the <see cref="P:Fusion.NetworkObject.StateAuthority"/> to all other peers.
+            Add this component to a GameObject to sync the position and rotation data.
+            A <see cref="T:Fusion.NetworkObject"/> is required on this GameObject or a parent of this GameObject.
+            <remarks>
+            Besides handling smooth interpolation of a target view transform, this behaviour also provides
+            interpolated prediction error correction and special handling logic for teleports with controlled interpolation.
+            </remarks>
+            </summary>
+        </member>
+        <member name="P:Fusion.NetworkTransform.DefaultTeleportInterpolationVelocity">
+            <summary>
+            The interpolation velocity used when calling <see cref="M:Fusion.NetworkTransform.TeleportToPosition(UnityEngine.Vector3,System.Nullable{UnityEngine.Vector3})"/> and not specifying a value.
+            By default, this value is <see cref="P:UnityEngine.Vector3.zero"/>.
+            Some behaviours like <see cref="T:Fusion.NetworkRigidbody"/> and <see cref="T:Fusion.NetworkRigidbody2D"/> override
+            this property to provide better default values, like the latest known velocity of the rigid body. 
+            </summary>
+        </member>
+        <member name="P:Fusion.NetworkTransform.DefaultTeleportInterpolationAngularVelocity">
+            <summary>
+            The interpolation angular velocity used when calling <see cref="M:Fusion.NetworkTransform.TeleportToRotation(UnityEngine.Quaternion,System.Nullable{UnityEngine.Vector3})"/> and not specifying a value.
+            By default, this value is <see cref="P:UnityEngine.Vector3.zero"/>.
+            Some behaviours like <see cref="T:Fusion.NetworkRigidbody"/> and <see cref="T:Fusion.NetworkRigidbody2D"/> override
+            this property to provide better default values, like the latest known angular velocity of the rigid body. 
+            </summary>
+        </member>
+        <member name="M:Fusion.NetworkTransform.TeleportToPosition(UnityEngine.Vector3,System.Nullable{UnityEngine.Vector3})">
+            <summary>
+            Teleports the object to the provided position while making the networked state aware
+            that the object was teleported and the view interpolation needs special handling.
+            The <paramref name="position"/> is immediately set to the transform's position field
+            and additional data is stored in order to interpolate the view object between the ticks.
+            While interpolating the visual representation of the networked object TO a tick where a teleport happened,
+            the object's latest state (tick when the teleport is performed) will not be used, as doing so would cause
+            the interpolation target to visually interpolate along the teleported distance. Instead, the view will be
+            interpolated between the FROM state (tick before the teleport) and an artificial position
+            computed based on this FROM state and an interpolation velocity (see <paramref name="interpolationVel"/>),
+            in order to emulate how the object would behave if the teleport had not been performed.
+            </summary>
+            <param name="position">The position which the object is being teleported to. </param>
+            <param name="interpolationVel">
+            The emulated velocity of the interpolation target while interpolating to a tick where a teleport happened.
+            If null, the <see cref="P:Fusion.NetworkTransform.DefaultTeleportInterpolationVelocity"/> will be used.
+            </param>
+        </member>
+        <member name="M:Fusion.NetworkTransform.TeleportToRotation(UnityEngine.Quaternion,System.Nullable{UnityEngine.Vector3})">
+            <summary>
+            Teleports the object to the provided rotation while making the networked state aware
+            that the object was teleported and the view interpolation needs special handling.
+            The <paramref name="rotation"/> is immediately set to the transform's rotation field
+            and additional data is stored in order to interpolate the view object between the ticks.
+            While interpolating the visual representation of the networked object TO a tick where a teleport happened,
+            the object's latest state (tick when the teleport is performed) will not be used, as doing so would cause
+            the interpolation target to visually interpolate along the teleported rotation. Instead, the view will be
+            interpolated between the FROM state (tick before the teleport) and an artificial rotation
+            computed based on this FROM state and an interpolation angular velocity (see <paramref name="interpolationAngularVel"/>),
+            in order to emulate how the object would behave if the teleport had not been performed.
+            </summary>
+            <param name="rotation">The rotation which the object is being teleported to. </param>
+            <param name="interpolationAngularVel">
+            The emulated angular velocity of the interpolation target while interpolating to a tick where a teleport happened.
+            If null, the <see cref="P:Fusion.NetworkTransform.DefaultTeleportInterpolationAngularVelocity"/> will be used.
+            </param>
+        </member>
+        <member name="M:Fusion.NetworkTransform.TeleportToPositionRotation(UnityEngine.Vector3,UnityEngine.Quaternion,System.Nullable{UnityEngine.Vector3},System.Nullable{UnityEngine.Vector3})">
+            <summary>
+            Teleports the object to the provided position and rotation while making the networked state aware
+            that the object was teleported and the view interpolation needs special handling.
+            The <paramref name="rotation"/> is immediately set to the transform's rotation field
+            and additional data is stored in order to interpolate the view object between the ticks.
+            See <see cref="M:Fusion.NetworkTransform.TeleportToPosition(UnityEngine.Vector3,System.Nullable{UnityEngine.Vector3})"/> and <see cref="M:Fusion.NetworkTransform.TeleportToRotation(UnityEngine.Quaternion,System.Nullable{UnityEngine.Vector3})"/> for more details about why and how
+            the special interpolation handling is performed.
+            </summary>
+            <param name="position">The position which the object is being teleported to. </param>
+            <param name="rotation">The rotation which the object is being teleported to. </param>
+            <param name="interpolationVel">
+            The emulated velocity of the interpolation target while interpolating to a tick where a teleport happened.
+            If null, the <see cref="P:Fusion.NetworkTransform.DefaultTeleportInterpolationVelocity"/> will be used.
+            </param>
+            <param name="interpolationAngularVel">
+            The emulated angular velocity of the interpolation target while interpolating to a tick where a teleport happened.
+            If null, the <see cref="P:Fusion.NetworkTransform.DefaultTeleportInterpolationAngularVelocity"/> will be used.
+            </param>
+        </member>
+        <member name="M:Fusion.NetworkTransform.PredictedSpawnSpawned">
+            <summary>
+            Implements <see cref="M:Fusion.IPredictedSpawnBehaviour.PredictedSpawnSpawned"/>.
+            If overriding this method in an inheritor, the base method should be called.
+            </summary>
+        </member>
+        <member name="M:Fusion.NetworkTransform.PredictedSpawnUpdate">
+            <summary>
+            Implements <see cref="M:Fusion.IPredictedSpawnBehaviour.PredictedSpawnUpdate"/> and, by default, calls
+            <see cref="M:Fusion.NetworkTransform.PredictedSpawnCacheTransformState"/>.
+            Behaviours that change the Transform state of this predict-spawned object should either be ordered
+            before NetworkTransform or call <see cref="M:Fusion.NetworkTransform.PredictedSpawnCacheTransformState"/> after doing so. 
+            If overriding this method in an inheritor, the base method should be called.
+            </summary>
+        </member>
+        <member name="M:Fusion.NetworkTransform.PredictedSpawnRender">
+            <summary>
+            Implements <see cref="M:Fusion.IPredictedSpawnBehaviour.PredictedSpawnSpawned"/>.
+            If overriding this method in an inheritor, the base method should be called.
+            </summary>
+        </member>
+        <member name="M:Fusion.NetworkTransform.PredictedSpawnFailed">
+            <summary>
+            Implements <see cref="M:Fusion.IPredictedSpawnBehaviour.PredictedSpawnFailed"/> and, by default, calls Destroy on this GameObject.
+            </summary>
+        </member>
+        <member name="M:Fusion.NetworkTransform.PredictedSpawnSuccess">
+            <summary>
+            Implements <see cref="M:Fusion.IPredictedSpawnBehaviour.PredictedSpawnSuccess"/> and does nothing by default.
+            </summary>
+        </member>
+        <member name="M:Fusion.NetworkTransform.PredictedSpawnCacheTransformState">
+            <summary>
+            If this object is a predicted spawn, caches the current transform
+            state for interpolated rendering and prediction error correction.
+            </summary>
+        </member>
+        <member name="F:Fusion.NetworkTransform.WORD_COUNT_NT">
+            <summary>
+            Number of words used by a <see cref="T:Fusion.NetworkTransform"/> instance on its networked data,
+            including all inherited fields.
+            </summary>
+        </member>
+        <member name="P:Fusion.NetworkTransform.BaseWordCount">
+            <inheritdoc cref="P:Fusion.NetworkPositionRotation.BaseWordCount"/>
+        </member>
+        <member name="M:Fusion.NetworkTransform.ReadTeleportInterpolationVelocity">
+            <summary>
+            Reads from this object's networked data field holding the interpolation velocity
+            (used on position teleports) using the default Runner position read accuracy.
+            See <see cref="M:Fusion.NetworkTransform.TeleportToPosition(UnityEngine.Vector3,System.Nullable{UnityEngine.Vector3})"/> for more information on how this value is used.
+            </summary>
+        </member>
+        <member name="M:Fusion.NetworkTransform.ReadTeleportInterpolationVelocity(System.Int32*)">
+            <summary>
+            Reads from a field holding the interpolation velocity (used on position teleports)
+            from the networked data pointed by <paramref name="ptr"/> using the default Runner position read accuracy.
+            See <see cref="M:Fusion.NetworkTransform.TeleportToPosition(UnityEngine.Vector3,System.Nullable{UnityEngine.Vector3})"/> for more information on how this value is used.
+            </summary>
+        </member>
+        <member name="M:Fusion.NetworkTransform.ReadTeleportInterpolationVelocity(System.Int32*,Fusion.ReadAccuracy)">
+            <summary>
+            Reads from a field holding the interpolation velocity (used on position teleports)
+            from the networked data pointed by <paramref name="ptr"/> with the defined <paramref name="readAccuracy"/>.
+            See <see cref="M:Fusion.NetworkTransform.TeleportToPosition(UnityEngine.Vector3,System.Nullable{UnityEngine.Vector3})"/> for more information on how this value is used.
+            </summary>
+        </member>
+        <member name="M:Fusion.NetworkTransform.ReadTeleportInterpolationAngularVelocity">
+            <summary>
+            Reads from this object's networked data field holding the interpolation angular velocity
+            (used on position teleports) using the default Runner position read accuracy.
+            See <see cref="M:Fusion.NetworkTransform.TeleportToRotation(UnityEngine.Quaternion,System.Nullable{UnityEngine.Vector3})"/> for more information on how this value is used.
+            </summary>
+        </member>
+        <member name="M:Fusion.NetworkTransform.ReadTeleportInterpolationAngularVelocity(System.Int32*)">
+            <summary>
+            Reads from a field holding the interpolation angular velocity (used on position teleports)
+            from the networked data pointed by <paramref name="ptr"/> using the default Runner position read accuracy.
+            See <see cref="M:Fusion.NetworkTransform.TeleportToRotation(UnityEngine.Quaternion,System.Nullable{UnityEngine.Vector3})"/> for more information on how this value is used.
+            </summary>
+        </member>
+        <member name="M:Fusion.NetworkTransform.ReadTeleportInterpolationAngularVelocity(System.Int32*,Fusion.ReadAccuracy)">
+            <summary>
+            Reads from a field holding the interpolation angular velocity (used on position teleports)
+            on the networked data pointed by <paramref name="ptr"/> with the defined <paramref name="readAccuracy"/>.
+            See <see cref="M:Fusion.NetworkTransform.TeleportToRotation(UnityEngine.Quaternion,System.Nullable{UnityEngine.Vector3})"/> for more information on how this value is used.
+            </summary>
+        </member>
+        <member name="M:Fusion.NetworkTransform.ReadTeleportPositionTick">
+            <summary>
+            Reads from this object's field holding the tick number where <see cref="M:Fusion.NetworkTransform.TeleportToPosition(UnityEngine.Vector3,System.Nullable{UnityEngine.Vector3})"/> was last called.
+            </summary>
+        </member>
+        <member name="M:Fusion.NetworkTransform.ReadTeleportPositionTick(System.Int32*)">
+            <summary>
+            Reads from the networked data pointer by <paramref name="ptr"/>
+            a field holding the tick number where <see cref="M:Fusion.NetworkTransform.TeleportToPosition(UnityEngine.Vector3,System.Nullable{UnityEngine.Vector3})"/> was last called.
+            </summary>
+        </member>
+        <member name="M:Fusion.NetworkTransform.ReadTeleportRotationTick">
+            <summary>
+            Reads from this object's field holding the tick number where <see cref="M:Fusion.NetworkTransform.TeleportToRotation(UnityEngine.Quaternion,System.Nullable{UnityEngine.Vector3})"/> was last called.
+            </summary>
+        </member>
+        <member name="M:Fusion.NetworkTransform.ReadTeleportRotationTick(System.Int32*)">
+            <summary>
+            Reads from the networked data pointer by <paramref name="ptr"/>
+            a field holding the tick number where <see cref="M:Fusion.NetworkTransform.TeleportToRotation(UnityEngine.Quaternion,System.Nullable{UnityEngine.Vector3})"/> was last called.
+            </summary>
+        </member>
+        <member name="M:Fusion.NetworkTransform.WriteTeleportInterpolationVelocity(UnityEngine.Vector3)">
+            <summary>
+            Writes to this object's networked data field holding the interpolation velocity
+            (used on position teleports) using the default Runner position write accuracy.
+            See <see cref="M:Fusion.NetworkTransform.TeleportToPosition(UnityEngine.Vector3,System.Nullable{UnityEngine.Vector3})"/> for more information on how this value is used.
+            </summary>
+        </member>
+        <member name="M:Fusion.NetworkTransform.WriteTeleportInterpolationVelocity(UnityEngine.Vector3,System.Int32*)">
+            <summary>
+            Writes to a field holding the interpolation velocity (used on position teleports)
+            on the networked data pointed by <paramref name="ptr"/> using the default Runner position write accuracy.
+            See <see cref="M:Fusion.NetworkTransform.TeleportToPosition(UnityEngine.Vector3,System.Nullable{UnityEngine.Vector3})"/> for more information on how this value is used.
+            </summary>
+        </member>
+        <member name="M:Fusion.NetworkTransform.WriteTeleportInterpolationVelocity(UnityEngine.Vector3,System.Int32*,Fusion.WriteAccuracy)">
+            <summary>
+            Writes to a field holding the interpolation velocity (used on position teleports)
+            from the networked data pointed by <paramref name="ptr"/> with the defined <paramref name="writeAccuracy"/>.
+            See <see cref="M:Fusion.NetworkTransform.TeleportToPosition(UnityEngine.Vector3,System.Nullable{UnityEngine.Vector3})"/> for more information on how this value is used.
+            </summary>
+        </member>
+        <member name="M:Fusion.NetworkTransform.WriteTeleportInterpolationAngularVelocity(UnityEngine.Vector3)">
+            <summary>
+            Writes to this object's networked data field holding the interpolation angular velocity
+            (used on position teleports) using the default Runner position write accuracy.
+            See <see cref="M:Fusion.NetworkTransform.TeleportToRotation(UnityEngine.Quaternion,System.Nullable{UnityEngine.Vector3})"/> for more information on how this value is used.
+            </summary>
+        </member>
+        <member name="M:Fusion.NetworkTransform.WriteTeleportInterpolationAngularVelocity(UnityEngine.Vector3,System.Int32*)">
+            <summary>
+            Writes to a field holding the interpolation angular velocity (used on position teleports)
+            on the networked data pointed by <paramref name="ptr"/> using the default Runner position write accuracy.
+            See <see cref="M:Fusion.NetworkTransform.TeleportToRotation(UnityEngine.Quaternion,System.Nullable{UnityEngine.Vector3})"/> for more information on how this value is used.
+            </summary>
+        </member>
+        <member name="M:Fusion.NetworkTransform.WriteTeleportInterpolationAngularVelocity(UnityEngine.Vector3,System.Int32*,Fusion.WriteAccuracy)">
+            <summary>
+            Writes to a field holding the interpolation angular velocity (used on position teleports)
+            from the networked data pointed by <paramref name="ptr"/> with the defined <paramref name="writeAccuracy"/>.
+            See <see cref="M:Fusion.NetworkTransform.TeleportToRotation(UnityEngine.Quaternion,System.Nullable{UnityEngine.Vector3})"/> for more information on how this value is used.
+            </summary>
+        </member>
+        <member name="M:Fusion.NetworkTransform.WriteTeleportPositionTick(System.Int32)">
+            <summary>
+            Writes this object's field holding the tick number where <see cref="M:Fusion.NetworkTransform.TeleportToPosition(UnityEngine.Vector3,System.Nullable{UnityEngine.Vector3})"/> was last called.
+            </summary>
+        </member>
+        <member name="M:Fusion.NetworkTransform.WriteTeleportPositionTick(System.Int32,System.Int32*)">
+            <summary>
+            Writes to the networked data pointer by <paramref name="ptr"/>
+            a field holding the tick number where <see cref="M:Fusion.NetworkTransform.TeleportToPosition(UnityEngine.Vector3,System.Nullable{UnityEngine.Vector3})"/> was last called.
+            </summary>
+        </member>
+        <member name="M:Fusion.NetworkTransform.WriteTeleportRotationTick(System.Int32)">
+            <summary>
+            Writes this object's field holding the tick number where <see cref="M:Fusion.NetworkTransform.TeleportToRotation(UnityEngine.Quaternion,System.Nullable{UnityEngine.Vector3})"/> was last called.
+            </summary>
+        </member>
+        <member name="M:Fusion.NetworkTransform.WriteTeleportRotationTick(System.Int32,System.Int32*)">
+            <summary>
+            Writes to the networked data pointer by <paramref name="ptr"/>
+            a field holding the tick number where <see cref="M:Fusion.NetworkTransform.TeleportToRotation(UnityEngine.Quaternion,System.Nullable{UnityEngine.Vector3})"/> was last called.
+            </summary>
+        </member>
+        <member name="T:Fusion.NetworkTransform.InterpolatedTransformParameters">
+            <summary>
+            Struct that provides relevant parameters when interpolating a
+            view representation with position and rotation data between two
+            known states, referred as 'From' and 'To'.
+            </summary>
+        </member>
+        <member name="F:Fusion.NetworkTransform.InterpolatedTransformParameters.InterpolationAlpha">
+            <summary>
+            Normalized factor that represents the exact point between From and To states
+            at which the view should be displayed.
+            </summary>
+        </member>
+        <member name="F:Fusion.NetworkTransform.InterpolatedTransformParameters.UninterpolatedPositionFrom">
+            <summary>
+            Position value at the From state.
+            </summary>
+        </member>
+        <member name="F:Fusion.NetworkTransform.InterpolatedTransformParameters.UninterpolatedPositionTo">
+            <summary>
+            Position value at the To state.
+            </summary>
+        </member>
+        <member name="F:Fusion.NetworkTransform.InterpolatedTransformParameters.InterpolatedPosition">
+            <summary>
+            Position value interpolated between From (<see cref="F:Fusion.NetworkTransform.InterpolatedTransformParameters.UninterpolatedPositionFrom"/>)
+            and To (<see cref="F:Fusion.NetworkTransform.InterpolatedTransformParameters.UninterpolatedPositionTo"/>) with factor <see cref="F:Fusion.NetworkTransform.InterpolatedTransformParameters.InterpolationAlpha"/>.
+            </summary>
+        </member>
+        <member name="F:Fusion.NetworkTransform.InterpolatedTransformParameters.InterpolatedPositionErrorCorrection">
+            <summary>
+            Computed value for smooth correction of prediction error.
+            In order to apply it, add its value to the <see cref="F:Fusion.NetworkTransform.InterpolatedTransformParameters.InterpolatedPosition"/>
+            before setting the result to the view transform.
+            The value will be <see cref="P:UnityEngine.Vector3.zero"/> if there is no prediction error
+            or <see cref="F:Fusion.NetworkTransform.InterpolateErrorCorrection"/> is disabled.
+            </summary>
+        </member>
+        <member name="F:Fusion.NetworkTransform.InterpolatedTransformParameters.UninterpolatedRotationFrom">
+            <summary>
+            Rotation value at the From state.
+            </summary>
+        </member>
+        <member name="F:Fusion.NetworkTransform.InterpolatedTransformParameters.UninterpolatedRotationTo">
+            <summary>
+            Rotation value at the To state.
+            </summary>
+        </member>
+        <member name="F:Fusion.NetworkTransform.InterpolatedTransformParameters.InterpolatedRotation">
+            <summary>
+            Rotation value interpolated between From (<see cref="F:Fusion.NetworkTransform.InterpolatedTransformParameters.UninterpolatedRotationFrom"/>)
+            and To (<see cref="F:Fusion.NetworkTransform.InterpolatedTransformParameters.UninterpolatedRotationTo"/>) with factor <see cref="F:Fusion.NetworkTransform.InterpolatedTransformParameters.InterpolationAlpha"/>.
+            </summary>
+        </member>
+        <member name="F:Fusion.NetworkTransform.InterpolatedTransformParameters.InterpolatedRotationErrorCorrection">
+            <summary>
+            Computed value for smooth correction of prediction error.
+            In order to apply it, multiply its value by the <see cref="F:Fusion.NetworkTransform.InterpolatedTransformParameters.InterpolatedRotation"/>
+            before setting the result to the view transform.
+            The value will be <see cref="P:UnityEngine.Quaternion.identity"/> if there is no prediction error
+            or <see cref="F:Fusion.NetworkTransform.InterpolateErrorCorrection"/> is disabled.
+            </summary>
+        </member>
+        <member name="F:Fusion.NetworkTransform.InterpolationSpace">
+            <summary>
+            If the <see cref="F:Fusion.NetworkTransform.InterpolationTarget">Interpolation Target</see> should be interpolated in world space or in the local space of a networked parent.
+            Interpolating in local space requires more computations, but gives more accurate visuals if/when a parent rotates. 
+            </summary>
+        </member>
+        <member name="F:Fusion.NetworkTransform.InterpolationTarget">
+            <summary>
+            The Transform object used for smooth view interpolation.
+            Should be a non-physics GameObject, typically a child of this GameObject or a separate object without colliders.
+            </summary>
+        </member>
+        <member name="M:Fusion.NetworkTransform.Spawned">
+            <summary>
+            Overrides <see cref="M:Fusion.NetworkBehaviour.Spawned"/>.
+            If overriding this method in an inheritor, the base method should be called.
+            </summary>
+        </member>
+        <member name="M:Fusion.NetworkTransform.BeforeUpdate">
+            <summary>
+            Overrides <see cref="M:Fusion.NetworkPositionRotation.BeforeUpdate"/>.
+            If overriding this method in an inheritor, the base method should be called.
+            </summary>
+        </member>
+        <member name="M:Fusion.NetworkTransform.Render">
+            <summary>
+            Overrides <see cref="M:Fusion.SimulationBehaviour.Render"/>, computing the interpolated position and rotation values
+            according to the <see cref="P:Fusion.NetworkBehaviour.InterpolationDataSource"/>, updating the prediction error correction
+            and calling <see cref="M:Fusion.NetworkTransform.ApplyInterpolatedTransform(Fusion.NetworkTransform.InterpolatedTransformParameters@)"/> to apply the results to the <see cref="F:Fusion.NetworkTransform.InterpolationTarget"/>.
+            </summary>
+        </member>
+        <member name="M:Fusion.NetworkTransform.ApplyInterpolatedTransform(Fusion.NetworkTransform.InterpolatedTransformParameters@)">
+            <summary>
+            Applies the interpolated position and rotation values and prediction error corrections
+            computed on <see cref="M:Fusion.NetworkTransform.Render"/> to the <see cref="F:Fusion.NetworkTransform.InterpolationTarget"/>.
+            </summary>
+        </member>
+        <member name="M:Fusion.NetworkTransform.GetUninterpolatedWorldPositions(Fusion.InterpolationData@,UnityEngine.Vector3@,UnityEngine.Vector3@)">
+            <summary>
+            Retrieves the world position values from the From and To states made
+            available in the interpolation <paramref name="data"/>, setting them
+            to <paramref name="posFrom"/> and <paramref name="posTo"/>, respectively.
+            </summary>
+        </member>
+        <member name="M:Fusion.NetworkTransform.GetUninterpolatedWorldRotations(Fusion.InterpolationData@,UnityEngine.Quaternion@,UnityEngine.Quaternion@)">
+            <summary>
+            Retrieves the world rotation values from the From and To states made
+            available in the interpolation <paramref name="data"/>, setting them
+            to <paramref name="rotFrom"/> and <paramref name="rotTo"/>, respectively.
+            </summary>
+        </member>
+        <member name="M:Fusion.NetworkTransform.ComputeInterpolatedTransform(Fusion.InterpolationData@,Fusion.NetworkTransform.InterpolatedTransformParameters@)">
+            <summary>
+            Computes the interpolated transform parameters based on the interpolation data provided.
+            </summary>
+        </member>
+        <member name="F:Fusion.NetworkTransform.InterpolateErrorCorrection">
+            <summary>
+            If the computed prediction error should be smoothly corrected on
+            the <see cref="F:Fusion.NetworkTransform.InterpolationTarget">InterpolationTarget</see> according to
+            the <see cref="F:Fusion.NetworkTransform.InterpolatedErrorCorrectionSettings">InterpolatedErrorCorrectionSettings</see>.
+            </summary>
+        </member>
+        <member name="F:Fusion.NetworkTransform.InterpolatedErrorCorrectionSettings">
+            <summary>
+            A set of parameters to tune the interpolated correction of prediction
+            error to be applied on the <see cref="F:Fusion.NetworkTransform.InterpolationTarget">InterpolationTarget</see>.
+            </summary>
+        </member>
+        <member name="M:Fusion.NetworkTransform.AfterTick">
+            <summary>
+            Implements <see cref="T:Fusion.IAfterTick"/>.
+            If overriding this method in an inheritor, the base method should be called.
+            </summary>
+        </member>
         <member name="T:Fusion.NetworkCharacterController">
             <summary>
             Provides custom API and state replication for collider-based character controller movement (not related to Unity's CharacterController type).
@@ -1542,7 +2960,7 @@
             and implement bespoke Move/Steering:</para>
             <code>NetworkCharacterController.Jump()</code>
             <para>A <see cref="T:Fusion.NetworkObject"/> is required.
-            Not to be combined with either <see cref="T:Fusion.NetworkTransform"/> nor <see cref="T:Fusion.NetworkRigidbody"/>. These are mutually-exclusive options.</para>
+            Not to be combined with either <see cref="T:Fusion.NetworkTransformObsolete"/> nor <see cref="T:Fusion.NetworkRigidbodyObsolete"/>. These are mutually-exclusive options.</para>
             </summary>
         </member>
         <member name="T:Fusion.NetworkCharacterController.ICallbacks">
@@ -1834,201 +3252,43 @@
             <returns>The <see cref="T:Fusion.NetworkCharacterController.Movement"/> results</returns>
             </summary>
         </member>
-        <member name="T:Fusion.NetworkMecanimAnimator">
-            <summary>
-            A component for synchronizing the Animator controller state from the State Authority to network proxies.
-            Requires a Unity Animator component, and a <see cref="T:Fusion.NetworkObject"/> component.
-            NOTE: Animator Root Motion is not compatible with re-simulation and prediction.
-            </summary>
-        </member>
-        <member name="F:Fusion.NetworkMecanimAnimator.Animator">
-            <summary>
-            The Animator being synced.
-            </summary>
-        </member>
-        <member name="F:Fusion.NetworkMecanimAnimator.SyncSettings">
-            <summary>
-            Flags controlling which Mecanim data will be synced.
-            </summary>
-        </member>
-        <member name="F:Fusion.NetworkMecanimAnimator.FloatAccuracy">
-            <summary>
-            Accuracy used for parameter float values.
-            </summary>
-        </member>
-        <member name="F:Fusion.NetworkMecanimAnimator.TimeAccuracy">
-            <summary>
-            Accuracy used for animator state normalized time values.
-            </summary>
-        </member>
-        <member name="F:Fusion.NetworkMecanimAnimator.WeightAccuracy">
-            <summary>
-            Accuracy used for layer weight values.
-            </summary>
-        </member>
-        <member name="M:Fusion.NetworkMecanimAnimator.SetTrigger(System.Int32)">
-            <summary>
-            Queues a trigger with this animator. Call this instead of Animator.SetTrigger for the State Authority.
-            Triggers are prone to getting lost by animation syncs, as they may get reset before the value is synced. Setting triggers with this method ensures they get captured.
-            </summary>
-            <param name="triggerHash"></param>
-        </member>
-        <member name="M:Fusion.NetworkMecanimAnimator.SetTrigger(System.String)">
-            <summary>
-            Queues a trigger with this animator. Call this instead of Animator.SetTrigger for the State Authority.
-            Triggers are prone to getting lost by animation syncs, as they may get reset before the value is synced. Setting triggers with this method ensures they get captured.
-            </summary>
-            <param name="trigger"></param>
-        </member>
-        <member name="T:Fusion.NetworkPhysicsSimulation2D">
-            <summary>
-            Fusion component for handling Physics2D.SyncTransforms() and Physics2D.Simulate(). 
-            Only used when <see cref="F:Fusion.NetworkProjectConfig.PhysicsEngines.Physics2D"/> == true.
-            </summary>
-        </member>
-        <member name="T:Fusion.NetworkPhysicsSimulation3D">
-            <summary>
-            Fusion component for handling Physics.SyncTransforms() and Physics.Simulate(). 
-            Only used when <see cref="F:Fusion.NetworkProjectConfig.PhysicsEngines.Physics3D"/> == true.
-            </summary>
-        </member>
-        <member name="F:Fusion.NetworkRigidbodyBase.SyncDragAndMass">
+        <member name="F:Fusion.NetworkRigidbodyBaseObsolete.SyncDragAndMass">
             <summary>
             Enables syncing of Drag, AngularDrag and Mass values.
             </summary>
         </member>
-        <member name="T:Fusion.NetworkRigidbody">
+        <member name="T:Fusion.NetworkRigidbodyObsolete">
             <summary>
             Replicates a Unity Rigidbody state from the <see cref="P:Fusion.NetworkObject.StateAuthority"/> to all other peers.
             Add this component to a GameObject with a Rigidbody component.
             A <see cref="T:Fusion.NetworkObject"/> is required on this GameObject or a parent of this GameObject.
             </summary>
         </member>
-        <member name="P:Fusion.NetworkRigidbody.Rigidbody">
+        <member name="P:Fusion.NetworkRigidbodyObsolete.Rigidbody">
             <summary>
-            Reference of the Rigidbody associated with this <see cref="T:Fusion.NetworkRigidbody"/>.
+            Reference of the Rigidbody associated with this <see cref="T:Fusion.NetworkRigidbodyObsolete"/>.
             </summary>
         </member>
-        <member name="M:Fusion.NetworkRigidbody.ReadBufferAndConvertToWorldSpace(System.Int32)">
+        <member name="M:Fusion.NetworkRigidbodyObsolete.ReadBufferAndConvertToWorldSpace(System.Int32)">
             <summary>
             Reads the TRS values from state buffer for this tick, and converts them to world space if using <see cref="F:Fusion.Spaces.Local"/>.
             </summary>
         </member>
-        <member name="T:Fusion.NetworkRigidbody2D">
+        <member name="T:Fusion.NetworkRigidbodyObsolete2D">
             <summary>
             Replicates a Unity Rigidbody state from the <see cref="P:Fusion.NetworkObject.StateAuthority"/> to all other peers.
             Add this component to a GameObject with a Rigidbody component.
             A <see cref="T:Fusion.NetworkObject"/> is required on this GameObject or a parent of this GameObject.
             </summary>
         </member>
-        <member name="P:Fusion.NetworkRigidbody2D.Rigidbody">
+        <member name="P:Fusion.NetworkRigidbodyObsolete2D.Rigidbody">
             <summary>
-            Reference of the Rigidbody associated with this <see cref="T:Fusion.NetworkRigidbody"/>.
+            Reference of the Rigidbody associated with this <see cref="T:Fusion.NetworkRigidbodyObsolete"/>.
             </summary>
         </member>
-        <member name="M:Fusion.NetworkRigidbody2D.ReadBufferAndConvertToWorldSpace(System.Int32)">
+        <member name="M:Fusion.NetworkRigidbodyObsolete2D.ReadBufferAndConvertToWorldSpace(System.Int32)">
             <summary>
             Reads the TRS values from state buffer for this tick, and converts them to world space if using <see cref="F:Fusion.Spaces.Local"/>.
-            </summary>
-        </member>
-        <member name="T:Fusion.NetworkTransform">
-            <summary>
-            Replicates a Unity Transform state from the <see cref="P:Fusion.NetworkObject.StateAuthority"/> to all other peers.
-            Add this component to a GameObject to sync the position and/or rotation.
-            A <see cref="T:Fusion.NetworkObject"/> is required on this GameObject or a parent of this GameObject.
-            </summary>
-        </member>
-        <member name="F:Fusion.NetworkTransform.POSITION_OFFSET">
-            <summary>
-            The Ptr offset location of the position values in allocated memory.
-            </summary>
-        </member>
-        <member name="F:Fusion.NetworkTransform.ROTATION_OFFSET">
-            <summary>
-            The Ptr offset location of the rotation values in allocated memory.
-            </summary>
-        </member>
-        <member name="F:Fusion.NetworkTransform.SCALE_OFFSET">
-            <summary>
-            The Ptr offset location of the local scale values in allocated memory.
-            </summary>
-        </member>
-        <member name="F:Fusion.NetworkTransform.TELE_POS_OFFSET">
-            <summary>
-            The Ptr offset for the secondary teleport position information. This position is used as the lerp TO target leading up to the teleport. 
-            </summary>
-        </member>
-        <member name="F:Fusion.NetworkTransform.TELE_ROT_OFFSET">
-            <summary>
-            The Ptr offset for the secondary teleport rotation information. This rotation is used as the lerp TO target leading up to the teleport. 
-            </summary>
-        </member>
-        <member name="F:Fusion.NetworkTransform.TELE_SCL_OFFSET">
-            <summary>
-            The Ptr offset for the secondary teleport scale information. This scale is used as the lerp TO target leading up to the teleport. 
-            </summary>
-        </member>
-        <member name="F:Fusion.NetworkTransform.TELEPORT_OFFSET">
-            <summary>
-            The Ptr offset of the teleport increment value. Increases by one every tick a teleport occurs.
-            </summary>
-        </member>
-        <member name="F:Fusion.NetworkTransform.BASE_WORD_COUNT">
-            <summary>
-            The total number of words used by <see cref="T:Fusion.NetworkTransform"/>. Derived classes using allocated memory should start their Ptr offsets using this value.
-            </summary>
-        </member>
-        <member name="P:Fusion.NetworkTransform.PositionWordOffset">
-            <summary>
-            Gets the Ptr offset of the Position values in allocated memory.
-            </summary>
-        </member>
-        <member name="F:Fusion.NetworkTransform.SyncScale">
-            <summary>
-            Indicates if Scale should be included in Transform sync and interpolation (when enabled).
-            </summary>
-        </member>
-        <member name="F:Fusion.NetworkTransform.Space">
-            <summary>
-            Select if the synced state uses World or Local position and rotation values.
-            </summary>
-        </member>
-        <member name="P:Fusion.NetworkTransform.TeleportCounter">
-            <summary>
-            The frame of the next Teleport action.
-            </summary>
-        </member>
-        <member name="F:Fusion.NetworkTransform.LastInterpolatedAtTime">
-            <summary>
-            Stores the last UnityEngine.Time.time when interpolation was run for this component. Used to ensure interpolation is only run once per screen refresh.
-            </summary>
-        </member>
-        <member name="M:Fusion.NetworkTransform.WriteReadVector3(UnityEngine.Vector3,Fusion.WriteAccuracy,Fusion.ReadAccuracy)">
-            <summary>
-            Emulates the accuracy loss when writing and reading a Vector3 to/from a buffer, according to the given accuracies.
-            </summary>
-        </member>
-        <member name="M:Fusion.NetworkTransform.WriteReadQuaternion(UnityEngine.Quaternion,Fusion.WriteAccuracy,Fusion.ReadAccuracy)">
-            <summary>
-            Emulates the accuracy loss when writing and reading a Quaternion to/from a buffer, according to the given accuracies.
-            </summary>
-        </member>
-        <member name="F:Fusion.NetworkTransform._queuedTeleport">
-            <summary>
-            Most recent unconsumed Teleport() command.
-            </summary>
-        </member>
-        <!-- Badly formed XML comment ignored for member "M:Fusion.NetworkTransform.Teleport(System.Nullable{UnityEngine.Vector3},System.Nullable{Fusion.Rotation},System.Nullable{UnityEngine.Vector3},System.Boolean,System.Nullable{UnityEngine.Vector3},System.Nullable{UnityEngine.Vector3})" -->
-        <member name="M:Fusion.NetworkTransform.PreTeleport">
-            <summary>
-            Captures the current state as the interpolation lerp TO target leading up to a teleport, and flags the next tick as a teleport.
-            Call this BEFORE making any TRS changes to the synced transform which represent the teleport.
-            For continuously moving rigidbodies, it is preferable to call the explicit Teleport() method.
-            </summary>
-        </member>
-        <member name="M:Fusion.NetworkTransform.ApplyQueuedTeleport">
-            <summary>
-            Applies the latest unconsumed Teleport() call after the Forward simulation is complete, and before the TRS state is captured.
             </summary>
         </member>
         <member name="T:Fusion.NetworkTransformAnchor">
@@ -2046,6 +3306,22 @@
         <member name="F:Fusion.NetworkTransformAnchor.TELE_PAR_OFFSET">
             <summary>
             The Ptr offset for the secondary teleport parent information. This parent is used by the lerp TO target leading up to the teleport. 
+            </summary>
+        </member>
+        <member name="F:Fusion.NetworkTransformAnchor.POSITION_OFFSET">
+            <summary>
+            Technically, an Anchor does NOT hold position data.
+            However, NetworkAreaOfInterestBehaviour used to inherit from this class and this was problematic.
+            Now, instead, it inherits from NetworkAreaOfInterestBehaviour, so we need to have a PositionWordOffset
+            and leave space for a position field, even though it does not use it.
+            It is possible for inheritors of this class (like NetworkTransform) to have a "negative" initial offset
+            and overlap with this position field.
+            This whole thing was necessary to not break backwards compatibility while the transform-related behaviors are refactored.
+            </summary>
+        </member>
+        <member name="P:Fusion.NetworkTransformAnchor.PositionWordOffset">
+            <summary>
+            Gets the Ptr offset of the Position values in allocated memory.
             </summary>
         </member>
         <member name="F:Fusion.NetworkTransformAnchor.ANCHOR_WORD_COUNT">
@@ -2104,6 +3380,118 @@
             <param name="fromParentIsValid">If a parent value has been serialized. Invalid means unknown parent.</param>
             <param name="toParentIsValid">If a parent value has been serialized. Invalid means unknown parent.</param>
             <returns>(From Parent, To Parent)</returns>
+        </member>
+        <member name="T:Fusion.NetworkTransformObsolete">
+            <summary>
+            Replicates a Unity Transform state from the <see cref="P:Fusion.NetworkObject.StateAuthority"/> to all other peers.
+            Add this component to a GameObject to sync the position and/or rotation.
+            A <see cref="T:Fusion.NetworkObject"/> is required on this GameObject or a parent of this GameObject.
+            </summary>
+        </member>
+        <member name="F:Fusion.NetworkTransformObsolete.POSITION_OFFSET">
+            <summary>
+            The Ptr offset location of the position values in allocated memory.
+            </summary>
+        </member>
+        <member name="F:Fusion.NetworkTransformObsolete.ROTATION_OFFSET">
+            <summary>
+            The Ptr offset location of the rotation values in allocated memory.
+            </summary>
+        </member>
+        <member name="F:Fusion.NetworkTransformObsolete.SCALE_OFFSET">
+            <summary>
+            The Ptr offset location of the local scale values in allocated memory.
+            </summary>
+        </member>
+        <member name="F:Fusion.NetworkTransformObsolete.TELE_POS_OFFSET">
+            <summary>
+            The Ptr offset for the secondary teleport position information. This position is used as the lerp TO target leading up to the teleport. 
+            </summary>
+        </member>
+        <member name="F:Fusion.NetworkTransformObsolete.TELE_ROT_OFFSET">
+            <summary>
+            The Ptr offset for the secondary teleport rotation information. This rotation is used as the lerp TO target leading up to the teleport. 
+            </summary>
+        </member>
+        <member name="F:Fusion.NetworkTransformObsolete.TELE_SCL_OFFSET">
+            <summary>
+            The Ptr offset for the secondary teleport scale information. This scale is used as the lerp TO target leading up to the teleport. 
+            </summary>
+        </member>
+        <member name="F:Fusion.NetworkTransformObsolete.TELEPORT_OFFSET">
+            <summary>
+            The Ptr offset of the teleport increment value. Increases by one every tick a teleport occurs.
+            </summary>
+        </member>
+        <member name="F:Fusion.NetworkTransformObsolete.BASE_WORD_COUNT">
+            <summary>
+            The total number of words used by <see cref="T:Fusion.NetworkTransformObsolete"/>. Derived classes using allocated memory should start their Ptr offsets using this value.
+            </summary>
+        </member>
+        <member name="P:Fusion.NetworkTransformObsolete.PositionWordOffset">
+            <summary>
+            Gets the Ptr offset of the Position values in allocated memory.
+            </summary>
+        </member>
+        <member name="F:Fusion.NetworkTransformObsolete.SyncScale">
+            <summary>
+            Indicates if Scale should be included in Transform sync and interpolation (when enabled).
+            </summary>
+        </member>
+        <member name="F:Fusion.NetworkTransformObsolete.Space">
+            <summary>
+            Select if the synced state uses World or Local position and rotation values.
+            </summary>
+        </member>
+        <member name="P:Fusion.NetworkTransformObsolete.TeleportCounter">
+            <summary>
+            The frame of the next Teleport action.
+            </summary>
+        </member>
+        <member name="F:Fusion.NetworkTransformObsolete.LastInterpolatedAtTime">
+            <summary>
+            Stores the last UnityEngine.Time.time when interpolation was run for this component. Used to ensure interpolation is only run once per screen refresh.
+            </summary>
+        </member>
+        <member name="M:Fusion.NetworkTransformObsolete.WriteReadVector3(UnityEngine.Vector3,Fusion.WriteAccuracy,Fusion.ReadAccuracy)">
+            <summary>
+            Emulates the accuracy loss when writing and reading a Vector3 to/from a buffer, according to the given accuracies.
+            </summary>
+        </member>
+        <member name="M:Fusion.NetworkTransformObsolete.WriteReadQuaternion(UnityEngine.Quaternion,Fusion.WriteAccuracy,Fusion.ReadAccuracy)">
+            <summary>
+            Emulates the accuracy loss when writing and reading a Quaternion to/from a buffer, according to the given accuracies.
+            </summary>
+        </member>
+        <member name="F:Fusion.NetworkTransformObsolete._queuedTeleport">
+            <summary>
+            Most recent unconsumed Teleport() command.
+            </summary>
+        </member>
+        <member name="M:Fusion.NetworkTransformObsolete.Teleport(System.Nullable{UnityEngine.Vector3},System.Nullable{Fusion.Rotation},System.Nullable{UnityEngine.Vector3},System.Boolean,System.Nullable{UnityEngine.Vector3},System.Nullable{UnityEngine.Vector3})">
+            <summary>
+            Teleport indicates that objects should not interpolate from the previous state to this new state.
+            </summary>
+            <param name="position">Sets the position or rigidbody.position to this value prior to state sync.</param>
+            <param name="rotation">If not null, Sets the position or rigidbody.rotation to this value prior to state sync. </param>
+            <param name="localScale">If not null, Sets the localScale to this value prior to state sync. 
+            Accepts a Quaternion, Euler (Vector3), or 2d Z value (float)</param>
+            <param name="reset">Resets velocity, angular velocity, and controller states to default if applicable. 
+            Typically set to true if teleport is used for a respawn.</param>
+            <param name="velocity">Sets the velocity after teleport. Ignored if this is not a Rigidbody or CharacterController. Overrides reset.</param>
+            <param name="angularVelocity">Sets the angular velocity after teleport. Ignored if this is not a Rigidbody. Overrides reset.</param>
+        </member>
+        <member name="M:Fusion.NetworkTransformObsolete.PreTeleport">
+            <summary>
+            Captures the current state as the interpolation lerp TO target leading up to a teleport, and flags the next tick as a teleport.
+            Call this BEFORE making any TRS changes to the synced transform which represent the teleport.
+            For continuously moving rigidbodies, it is preferable to call the explicit Teleport() method.
+            </summary>
+        </member>
+        <member name="M:Fusion.NetworkTransformObsolete.ApplyQueuedTeleport">
+            <summary>
+            Applies the latest unconsumed Teleport() call after the Forward simulation is complete, and before the TRS state is captured.
+            </summary>
         </member>
         <member name="T:Fusion.OrderAttribute">
             <summary>
@@ -3088,11 +4476,6 @@
             This allows for components that work both in Unity, as well as the Photon relays.
             </summary>
         </member>
-        <member name="P:Fusion.Behaviour.IsEnabled">
-            <summary>
-            Wrapper for Monobehaviour.isActiveAndEnabled
-            </summary>
-        </member>
         <member name="M:Fusion.Behaviour.AddBehaviour``1">
             <summary>
             Wrapper for Unity's GameObject.AddComponent()
@@ -3363,7 +4746,6 @@
             [Networked, Capacity(4)]<br></br>
             NetworkArray&lt;int&gt; syncedArray { get; } = MakeInitializer(new int[] { 1, 2, 3, 4 });<br></br>
             </code>
-            Internally this struct does not contain the actual array data, and is only a wrapper for memory operations.<br></br>
             Usage for modifying data:
             <code>
             var array = syncedArray;
@@ -3701,6 +5083,60 @@
             If minInclusive is greater than maxInclusive, then the numbers are automatically swapped.
             </summary>
         </member>
+        <member name="T:Fusion.NetworkString`1">
+            <summary>
+            Fixed-size UTF32 string. All operations are alloc-free, except for converting to <see cref="T:System.String"/>.
+            </summary>
+            <typeparam name="Size"></typeparam>
+        </member>
+        <member name="P:Fusion.NetworkString`1.Capacity">
+            <summary>
+            Maximum UTF32 string length.
+            </summary>
+        </member>
+        <member name="P:Fusion.NetworkString`1.Value">
+            <summary>
+            Converts to/from regular UTF16 string. Setter is alloc-free. Use <see cref="!:Get(ref string, bool)"/>
+            to get possibly alloc-free conversion.
+            </summary>
+        </member>
+        <member name="P:Fusion.NetworkString`1.Length">
+            <summary>
+            Number of UTF32 scalars. It is equal or less than <see cref="M:Fusion.NetworkString`1.GetCharCount"/> or the length
+            of <see cref="P:Fusion.NetworkString`1.Value"/>, because those use UTF16 encoding, which needs two characters to encode
+            some values.
+            </summary>
+        </member>
+        <member name="P:Fusion.NetworkString`1.Item(System.Int32)">
+            <summary>
+            Returns UTF32 scalar at <paramref name="index"/> position. To iterate over characters,
+            use <see cref="M:Fusion.NetworkString`1.GetEnumerator"/>.
+            </summary>
+            <param name="index"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Fusion.NetworkString`1.Get(System.String@)">
+            <summary>
+            Checks if <paramref name="cache"/> is equivalent and if not converts to UTF16 and
+            stores the result in <paramref name="cache"/>.
+            </summary>
+            <param name="cache"></param>
+            <param name="ignoreCase"></param>
+            <returns>False if no conversion was performed, true otherwise.</returns>
+        </member>
+        <member name="M:Fusion.NetworkString`1.Set(System.String)">
+            <summary>
+            Converts <paramref name="value"/> to UTF32 string and stores it internally.
+            </summary>
+            <param name="value"></param>
+            <returns>False if <paramref name="value"/> was too long to fit and had to be trimmed.</returns>
+        </member>
+        <member name="M:Fusion.NetworkString`1.GetCharCount">
+            <summary>
+            Calculates the length of the equivalent UTF16 string.
+            </summary>
+            <returns></returns>
+        </member>
         <member name="T:Fusion.PlayerRef">
             <summary>
             Represents a Fusion player.
@@ -3823,14 +5259,41 @@
             The <see cref="T:Fusion.NetworkRunner"/> this entity is associated with.
             </summary>
         </member>
-        <member name="F:Fusion.NetworkObject.DefaultPropertyGroups">
+        <member name="F:Fusion.NetworkObject.ObjectInterest">
             <summary>
-            
+            How Object Interest is determined for this object. 
+            Only applicable to <see cref="F:Fusion.SimulationConfig.StateReplicationModes.EventualConsistency"/> mode, and if <see cref="F:Fusion.SimulationConfig.ObjectInterest"/> is enabled.
+            </summary>
+        </member>
+        <member name="F:Fusion.NetworkObject.DefaultInterestGroups">
+            <summary>
+            All players will start with these Interest Groups explicitly enabled for this object. 
+            Use <see cref="M:Fusion.NetworkRunner.SetInterestGroup(Fusion.NetworkObject,Fusion.PlayerRef,System.String,System.Boolean)"/> on the server 
+            to explicitly add or remove a player's interest in groups for this <see cref="T:Fusion.NetworkObject"/>.
+            </summary>
+        </member>
+        <member name="F:Fusion.NetworkObject.DestroyWhenStateAuthorityLeaves">
+            <summary>
+            If the player with State Authority for this Object leaves the room, this Object will automatically be destroyed on the network.
+            Only applicable to Shared Mode.
+            </summary>
+        </member>
+        <member name="F:Fusion.NetworkObject.AllowStateAuthorityOverride">
+            <summary>
+            When enabled, State Authority over this Object can be taken by a player, without the current State Authority player first releasing authority.
+            If disabled, <see cref="M:Fusion.NetworkObject.RequestStateAuthority"/> will fail if another player currently has State Authority, and has not called <see cref="M:Fusion.NetworkObject.ReleaseStateAuthority"/>.
+            Only applicable to Shared Mode.
+            </summary>
+        </member>
+        <member name="F:Fusion.NetworkObject.AoiPositionSource">
+            <summary>
+            Specifies the <see cref="T:Fusion.NetworkAreaOfInterestBehaviour"/> component to used to determine this players position for Area Of Interest checks.
+            If left null, will use the first found root/child instance of <see cref="T:Fusion.NetworkAreaOfInterestBehaviour"/> on the Object.
             </summary>
         </member>
         <member name="P:Fusion.NetworkObject.LastReceiveTick">
             <summary>
-            Last tick this object received an update (only in Eventual Consistency mode)
+            Last tick this object received an update. Only available for <see cref="F:Fusion.SimulationConfig.StateReplicationModes.EventualConsistency"/>.
             </summary>
         </member>
         <member name="F:Fusion.NetworkObject.Flags">
@@ -3951,12 +5414,40 @@
         </member>
         <member name="M:Fusion.NetworkObject.RemoveInputAuthority">
             <summary>
-            Removes input authority from whichever player has it for this object
+            Removes input authority from whichever player has it for this object. Only valid when called on a Host or Server peer.
+            </summary>
+        </member>
+        <member name="M:Fusion.NetworkObject.SetPlayerAlwaysInterested(Fusion.PlayerRef,System.Boolean)">
+            <summary>
+            Add or remove specific player interest in this NetworkObject.
+            <para>
+            <see cref="F:Fusion.SimulationConfig.ReplicationMode"/> must be set to <see cref="F:Fusion.SimulationConfig.StateReplicationModes.EventualConsistency"/>.
+            </para>
+            </summary>
+            <param name="player"></param>
+            <param name="alwaysInterested"></param>
+        </member>
+        <member name="M:Fusion.NetworkObject.SetInterestGroup(Fusion.PlayerRef,System.String,System.Boolean)">
+            <summary>
+            Add or remove Player's interest in a specific named Interest Group for this <see cref="T:Fusion.NetworkObject"/>.
+            <para>
+            <see cref="F:Fusion.SimulationConfig.ReplicationMode"/> must be set to <see cref="F:Fusion.SimulationConfig.StateReplicationModes.EventualConsistency"/>.
+            </para>
             </summary>
         </member>
         <member name="T:Fusion.NetworkPrefabRef">
             <summary>
             A decoupled <see cref="T:Fusion.NetworkObject"/> prefab reference. Internally stored as a GUID.
+            </summary>
+        </member>
+        <member name="T:Fusion.NetworkObjectHeader">
+            <summary>
+            Network meta information for a <see cref="T:Fusion.NetworkObject"/>.
+            </summary>
+        </member>
+        <member name="F:Fusion.NetworkObjectHeader.NestingRoot">
+            <summary>
+            The id of the root most <see cref="T:Fusion.NetworkObject"/>, if this <see cref="T:Fusion.NetworkObject"/> is nested.
             </summary>
         </member>
         <member name="T:Fusion.NetworkPrefabAsset">
@@ -4010,12 +5501,27 @@
             Calls to this method (from the indicated allowed <see cref="T:Fusion.RpcSources"/>) will generate a network message,
             which will execute the method remotely on the indicated <see cref="T:Fusion.RpcTargets"/>.
             The RPC method can include an empty <see cref="T:Fusion.RpcInfo"/> argument, that will include meta information about the RPC on the receiving peer.
-            <para>Usage Example:</para>
+            <para>Example:</para>
             <code>
-            [Rpc(RpcSources.All, RpcTargets.All, InvokeLocal = false, InvokeResim = false, Channel = RpcChannel.Reliable, TickAligned = true)]<br></br>
-            public static void RPC_Configure(NetworkObject no, string name, Color color, RpcInfo info = default) { }
+            | [Rpc(RpcSources.All, RpcTargets.All, InvokeLocal = false, InvokeResim = false, Channel = RpcChannel.Reliable, TickAligned = true)]<br></br>
+            | public void RPC_Configure(NetworkObject no, string name, Color color, RpcInfo info = default) { }
             </code>
-            
+            To target a specific Player, use the <see cref="T:Fusion.RpcTargetAttribute"/>:
+            <code>
+            | [Rpc]
+            | public void RpcFoo([RpcTarget] PlayerRef targetPlayer) {}
+            </code>
+            Use <see cref="T:Fusion.RpcInvokeInfo"/> as a return value to access meta information about the RPC send attempt, such as failure to send reasons, message size, etc.
+            <para>
+            Non-static RPCs are only valid on a <see cref="T:Fusion.NetworkBehaviour"/>.
+            Static RPCs can be implemented on <see cref="T:Fusion.SimulationBehaviour"/>s, and do not require a <see cref="T:Fusion.NetworkObject"/> instance.
+            Static RPC require the first argument to be NetworkRunner.
+            </para>
+            Static RPC Example:
+            <code>
+            | [Rpc]
+            | public static void RPC_Configure(NetworkRunner runner) { }
+            </code>
             </summary>
         </member>
         <member name="P:Fusion.RpcAttribute.Sources">
@@ -4050,10 +5556,12 @@
             executed.
             </summary>
         </member>
-        <member name="M:Fusion.RpcAttribute.#ctor(Fusion.RpcSources,Fusion.RpcTargets)">
+        <member name="P:Fusion.RpcAttribute.HostMode">
             <summary>
-            
+            Options for when the game is run in <see cref="F:Fusion.SimulationModes.Host"/> mode and RPC is invoked by the host.
             </summary>
+        </member>
+        <member name="M:Fusion.RpcAttribute.#ctor(Fusion.RpcSources,Fusion.RpcTargets)">
             <param name="sources">The legal <see cref="T:Fusion.RpcSources"/> types that can trigger this Rpc</param>
             <param name="targets">The <see cref="T:Fusion.RpcTargets"/> types that will receive and invoke this method</param>
         </member>
@@ -4065,6 +5573,146 @@
         <member name="F:Fusion.RpcChannel.Unreliable">
             <summary>
             Rpc order preserved, delivery not verified, no resend attempts.
+            </summary>
+        </member>
+        <member name="T:Fusion.RpcHostMode">
+            <summary>
+            Options for when the game is run in <see cref="F:Fusion.SimulationModes.Host"/> mode and RPC is invoked by the host.
+            </summary>
+        </member>
+        <member name="F:Fusion.RpcHostMode.SourceIsServer">
+            <summary>
+            If host invokes RPC <see cref="F:Fusion.RpcInfo.Source"/> will be set to <see cref="P:Fusion.PlayerRef.None"/> (default).
+            </summary>
+        </member>
+        <member name="F:Fusion.RpcHostMode.SourceIsHostPlayer">
+            <summary>
+            If host invokes RPC <see cref="F:Fusion.RpcInfo.Source"/> will be set to the host's local player.
+            </summary>
+        </member>
+        <member name="T:Fusion.RpcInvokeInfo">
+            <summary>
+            May be used as an optional <see cref="T:Fusion.RpcAttribute"/> return value. Contains meta data about the RPC send, such as failure to send reasons, culling, message size, etc.
+            <para>Example:</para>
+            <code>
+            | [Rpc]
+            | public RpcInvokeInfo RpcFoo(int value) {
+            |  return default;
+            | }
+            |
+            | public override void FixedUpdateNetwork() {
+            |   var info = RpcFoo();
+            |   Debug.Log(info);
+            | }
+            </code>
+            </summary>
+        </member>
+        <member name="T:Fusion.RpcLocalInvokeResult">
+            <summary>
+            Results for the local RPC Invocation of the RPC method.
+            </summary>
+        </member>
+        <member name="F:Fusion.RpcLocalInvokeResult.Invoked">
+            <summary>
+            RPC has been invoked locally.
+            </summary>
+        </member>
+        <member name="F:Fusion.RpcLocalInvokeResult.NotInvokableLocally">
+            <summary>
+            Not invoked locally because <see cref="P:Fusion.RpcAttribute.InvokeLocal"/> is false.
+            </summary>
+        </member>
+        <member name="F:Fusion.RpcLocalInvokeResult.NotInvokableDuringResim">
+            <summary>
+            Not invoked locally because <see cref="P:Fusion.RpcAttribute.InvokeResim"/> is false and simulation stage is <see cref="F:Fusion.SimulationStages.Resimulate"/>
+            </summary>
+        </member>
+        <member name="F:Fusion.RpcLocalInvokeResult.InsufficientSourceAuthority">
+            <summary>
+            Not invoked because source <see cref="T:Fusion.NetworkObject"/> current authority does not match flags set in <see cref="P:Fusion.RpcAttribute.Sources"/>
+            </summary>
+        </member>
+        <member name="F:Fusion.RpcLocalInvokeResult.InsufficientTargetAuthority">
+            <summary>
+            Not invoked because target player is local and this <see cref="T:Fusion.NetworkObject"/> current authority does not match flags set in <see cref="P:Fusion.RpcAttribute.Targets"/>
+            </summary>
+        </member>
+        <member name="F:Fusion.RpcLocalInvokeResult.TagetPlayerIsNotLocal">
+            <summary>
+            Not invoked because target player is not local.
+            </summary>
+        </member>
+        <member name="T:Fusion.RpcSendCullResult">
+            <summary>
+            Results for the RPC message send operation. Note: Some individual targets may be culled even if the send operation succeeds.
+            Information about culled targets can be found in <see cref="F:Fusion.RpcInvokeInfo.SendResult"/>.
+            </summary>
+        </member>
+        <member name="F:Fusion.RpcSendCullResult.NotCulled">
+            <summary>
+            RPC has been sent. Check <see cref="F:Fusion.RpcInvokeInfo.SendResult"/> for details.
+            </summary>
+        </member>
+        <member name="F:Fusion.RpcSendCullResult.NotInvokableDuringResim">
+            <summary>
+            Send culled because <see cref = "P:Fusion.RpcAttribute.InvokeLocal" /> is false.
+            </summary>
+        </member>
+        <member name="F:Fusion.RpcSendCullResult.InsufficientSourceAuthority">
+            <summary>
+            Send culled because source <see cref="T:Fusion.NetworkObject"/> current authority does not match flags set in <see cref="P:Fusion.RpcAttribute.Sources"/>
+            </summary>
+        </member>
+        <member name="F:Fusion.RpcSendCullResult.NoActiveConnections">
+            <summary>
+            Send culled because there are no active connections.
+            </summary>
+        </member>
+        <member name="F:Fusion.RpcSendCullResult.TargetPlayerUnreachable">
+            <summary>
+            Send culled because target player does not exist.
+            </summary>
+        </member>
+        <member name="F:Fusion.RpcSendCullResult.TargetPlayerIsLocalButRpcIsNotInvokableLocally">
+            <summary>
+            Send culled because target player is local and <see cref="P:Fusion.RpcAttribute.InvokeLocal"/> is false.
+            </summary>
+        </member>
+        <member name="T:Fusion.RpcSendResult">
+            <summary>
+            RPC send operation result information.
+            </summary>
+        </member>
+        <member name="F:Fusion.RpcSendResult.Result">
+            <summary>
+            Result flags for the RPC send operation.
+            </summary>
+        </member>
+        <member name="F:Fusion.RpcSendResult.MessageSize">
+            <summary>
+            The size of the RPC message.
+            </summary>
+        </member>
+        <member name="F:Fusion.RpcSendResult.Receivers">
+            <summary>
+            Collection of the <see cref="T:Fusion.PlayerRef"/> targets which were sent this RPC message.
+            </summary>
+        </member>
+        <member name="F:Fusion.RpcSendResult.CulledReceivers">
+            <summary>
+            Collection of the <see cref="T:Fusion.PlayerRef"/> targets which were failed to be sent this RPC message. 
+            Reason for failure can be found in the <see cref="F:Fusion.RpcSendResult.Result"/> flags.
+            </summary>
+        </member>
+        <member name="T:Fusion.RpcTargetAttribute">
+            <summary>
+            RPC attribute used to indicate a specific target player for an RPC when sending from one player to another. 
+            RPC is sent to the server, and then is forwarded to the specified player.
+            Usage:
+            <code>
+            |  [Rpc]
+            |  public void RpcFoo([RpcTarget] PlayerRef targetPlayer) { }
+            </code>
             </summary>
         </member>
         <member name="T:Fusion.NetworkEvents">
@@ -4182,6 +5830,12 @@
             serializers (e.g. Odin) may support it.
             </summary>
         </member>
+        <member name="F:Fusion.NetworkProjectConfig.NullChecksForNetworkedProperties">
+            <summary>
+            If set, the weaver will add a check to all [Networked] properties on each <see cref="T:Fusion.NetworkBehaviour"/>
+            to verify if owing <see cref="T:Fusion.NetworkObject"/> has been attached to.
+            </summary>
+        </member>
         <member name="M:Fusion.NetworkProjectConfig.Serialize(Fusion.NetworkProjectConfig)">
             <summary>
             Serialize the a NetworkProjectConfig into a JSON
@@ -4232,6 +5886,9 @@
         <member name="T:Fusion.NetworkRunner">
             <summary>
             Represents a Server or Client Simulation.
+            </summary>
+            <summary>
+            All Scene related API and fields
             </summary>
         </member>
         <member name="T:Fusion.NetworkRunner.BuildTypes">
@@ -4284,22 +5941,10 @@
             Stores the Shutdown parameters used when requesting a Shutdown from inside a Runner Callback
             </summary>
         </member>
-        <member name="F:Fusion.NetworkRunner.BurstDeltaCompressor">
-            <summary>
-            
-            </summary>
-        </member>
         <member name="M:Fusion.NetworkRunner.GetInstancesEnumerator">
             <summary>
             Get enumerator for the collection of all <see cref="T:Fusion.NetworkRunner"/>s.
             </summary>
-            <returns></returns>
-        </member>
-        <member name="M:Fusion.NetworkRunner.GetRunnerForGameObject(UnityEngine.GameObject)">
-            <summary>
-            Get the <see cref="T:Fusion.NetworkRunner"/> a GameObject instance belongs to.
-            </summary>
-            <param name="gameObject"></param>
             <returns></returns>
         </member>
         <member name="F:Fusion.NetworkRunner._initializeOperation">
@@ -4440,27 +6085,6 @@
             The only caveat is that the server player (if one exists), always gets the last index no matter how many clients are connected.
             </summary>
         </member>
-        <member name="P:Fusion.NetworkRunner.CurrentScene">
-            <summary>
-            Returns the current loaded network scene.
-            </summary>
-        </member>
-        <member name="P:Fusion.NetworkRunner.SimulationUnityScene">
-            <summary>
-            Returns the Unity scene for this <see cref="T:Fusion.NetworkRunner"/>. With <see cref="F:Fusion.NetworkProjectConfig.PeerModes.Multiple"/>, multiple physics scenes may exist, and this getter should be used in place of SceneManager.GetActiveScene(). 
-            </summary>
-        </member>
-        <member name="P:Fusion.NetworkRunner.MultiplePeerUnityScene">
-            <summary>
-            A scene used when run in <see cref="F:Fusion.NetworkProjectConfig.PeerModes.Multiple"/> mode. 
-            </summary>
-        </member>
-        <member name="M:Fusion.NetworkRunner.TryMultiplePeerAssignTempScene">
-            <summary>
-            
-            </summary>
-            <returns>false if the runner was on the temp scene already, true otherwise.</returns>
-        </member>
         <member name="P:Fusion.NetworkRunner.Config">
             <summary>
             Returns the <see cref="T:Fusion.NetworkProjectConfig"/> reference.
@@ -4517,14 +6141,11 @@
             Sets the paused state in a single player
             </summary>
         </member>
-        <member name="M:Fusion.NetworkRunner.SetPropertyGroup(Fusion.NetworkObject,Fusion.PlayerRef,System.String,System.Boolean)">
+        <member name="M:Fusion.NetworkRunner.SetInterestGroup(Fusion.NetworkObject,Fusion.PlayerRef,System.String,System.Boolean)">
             <summary>
-            Enable or disable a property group for a networked object for a specific player   
+            Add or remove Player's interest in a specific named Interest Group for a specific <see cref="T:Fusion.NetworkObject"/>.  
+            <see cref="F:Fusion.SimulationConfig.ReplicationMode"/> must be set to <see cref="F:Fusion.SimulationConfig.StateReplicationModes.EventualConsistency"/>.
             </summary>
-            <param name="obj"></param>
-            <param name="player"></param>
-            <param name="group"></param>
-            <param name="enabled"></param>
         </member>
         <member name="M:Fusion.NetworkRunner.GetPlayerActorId(Fusion.PlayerRef)">
             <summary>
@@ -4566,7 +6187,7 @@
             </summary>
             <param name="message"></param>
         </member>
-        <member name="M:Fusion.NetworkRunner.SendRpc(Fusion.SimulationMessage*,Fusion.RpcInvokeInfo.RemoteInfo@)">
+        <member name="M:Fusion.NetworkRunner.SendRpc(Fusion.SimulationMessage*,Fusion.RpcSendResult@)">
             <summary>
             Sends RPC message. Not meant to be used directly, ILWeaver calls this.
             </summary>
@@ -4594,12 +6215,6 @@
             <param name="type"></param>
             <returns></returns>
         </member>
-        <member name="M:Fusion.NetworkRunner.SetActiveScene(Fusion.SceneRef)">
-            <summary>
-            
-            </summary>
-            <param name="scene"></param>
-        </member>
         <member name="M:Fusion.NetworkRunner.AddCallbacks(Fusion.INetworkRunnerCallbacks[])">
             <summary>
             Register an <see cref="T:Fusion.INetworkRunnerCallbacks"/> instance for callbacks from this <see cref="T:Fusion.NetworkRunner"/>.
@@ -4612,66 +6227,26 @@
             </summary>
             <param name="callbacks"></param>
         </member>
-        <member name="M:Fusion.NetworkRunner.GetPhysicsScene">
+        <member name="M:Fusion.NetworkRunner.SendReliableDataToPlayer(Fusion.PlayerRef,System.Byte[])">
             <summary>
-            Get the 3D Physics scene being used by this Runner.
+            Send an arbitrary data buffer to a target Player
             </summary>
+            <param name="player">Player that should receive the buffer</param>
+            <param name="data">Buffer to be sent</param>
         </member>
-        <member name="M:Fusion.NetworkRunner.GetPhysicsScene2D">
+        <member name="M:Fusion.NetworkRunner.SendReliableDataToServer(System.Byte[])">
             <summary>
-            Get the 2D Physics scene being used by this Runner.
+            Send an arbitrary data buffer to the Server
             </summary>
-        </member>
-        <member name="M:Fusion.NetworkRunner.InstantiateInRunnerScene(UnityEngine.GameObject,UnityEngine.Vector3,UnityEngine.Quaternion)">
-            <summary>
-            Instantiates an object in the scene of this runner
-            </summary>
-        </member>
-        <member name="M:Fusion.NetworkRunner.InstantiateInRunnerScene(UnityEngine.GameObject)">
-            <summary>
-            Instantiates an object in the scene of this runner
-            </summary>
-        </member>
-        <member name="M:Fusion.NetworkRunner.InstantiateInRunnerScene``1(``0)">
-            <summary>
-            Instantiates an object in the scene of this runner
-            </summary>
-        </member>
-        <member name="M:Fusion.NetworkRunner.InstantiateInRunnerScene``1(``0,UnityEngine.Vector3,UnityEngine.Quaternion)">
-            <summary>
-            Instantiates an object in the scene of this runner
-            </summary>
-        </member>
-        <member name="M:Fusion.NetworkRunner.MoveToRunnerScene``1(``0)">
-            <summary>
-            Moves an object to the scene of this runner
-            </summary>
-            <typeparam name="T"></typeparam>
-            <param name="component">Component of object to move</param>
-        </member>
-        <member name="M:Fusion.NetworkRunner.MoveToRunnerScene(UnityEngine.GameObject)">
-            <summary>
-            Moves an object to the scene of this runner
-            </summary>
-            <param name="go">Object to move</param>
-        </member>
-        <member name="M:Fusion.NetworkRunner.EnsureRunnerSceneIsActive(UnityEngine.SceneManagement.Scene@)">
-            <summary>
-            If running in <see cref="F:Fusion.NetworkProjectConfig.PeerModes.Multiple"/> peer mode and the current active 
-            scene is different than <see cref="P:Fusion.NetworkRunner.MultiplePeerUnityScene"/>, switches active scene to <see cref="P:Fusion.NetworkRunner.MultiplePeerUnityScene"/>,
-            stores the previous active scene in <paramref name="previousActiveScene"/> and returns true.
-            Returns false otherwise.
-            </summary>
-            <param name="previousActiveScene"></param>
-            <returns>True if an actual change occurred.</returns>
+            <param name="data">Buffer to be sent</param>
         </member>
         <member name="M:Fusion.NetworkRunner.SetPlayerAlwaysInterested(Fusion.PlayerRef,Fusion.NetworkObject,System.Boolean)">
             <summary>
             Flags this player as always interested in this object. Means it does not have to be in a players area of interest to be replicated.
             </summary>
             <param name="player">The player</param>
-            <param name="obj">The object</param>
-            <param name="always">If he's always interested, or not.</param>
+            <param name="networkObject">The object</param>
+            <param name="alwaysInterested">If he's always interested, or not.</param>
         </member>
         <member name="M:Fusion.NetworkRunner.AddPlayerAreaOfInterest(Fusion.PlayerRef,UnityEngine.Vector3,System.Single,System.Int32)">
             <summary>
@@ -4746,54 +6321,88 @@
             Returns if the <see cref="T:Fusion.Simulation"/> contains a reference to a <see cref="T:Fusion.NetworkObject"/> in the specified State <see cref="T:Fusion.SimulationSnapshot"/>.
             </summary>
         </member>
+        <member name="M:Fusion.NetworkRunner.Spawn``1(``0,System.Nullable{UnityEngine.Vector3},System.Nullable{UnityEngine.Quaternion},System.Nullable{Fusion.PlayerRef},Fusion.NetworkRunner.OnBeforeSpawned,System.Nullable{Fusion.NetworkObjectPredictionKey})">
+            <summary>
+            Attempts to network instantiate a <see cref="T:Fusion.NetworkObject"/> using a Component type that is part of a <see cref="T:Fusion.NetworkObject"/>
+            </summary>
+            <typeparam name="T">Must be a Type derived from <see cref="T:Fusion.SimulationBehaviour"/></typeparam>
+            <param name="prefab"><see cref="T:Fusion.SimulationBehaviour"/> used to spawn the <see cref="T:Fusion.NetworkObject"/></param>
+            <param name="position">Spawn Position</param>
+            <param name="rotation">Spawn Rotation</param>
+            <param name="inputAuthority">Player Input Authority</param>
+            <param name="onBeforeSpawned"><see cref="T:Fusion.NetworkRunner.OnBeforeSpawned"/> reference</param>
+            <param name="predictionKey"><see cref="T:Fusion.NetworkObjectPredictionKey"/> reference</param>
+            <returns><see cref="T:Fusion.NetworkObject"/> reference, or null if it was not able to spawn the object</returns>
+        </member>
         <member name="M:Fusion.NetworkRunner.Spawn(Fusion.NetworkObject,System.Nullable{UnityEngine.Vector3},System.Nullable{UnityEngine.Quaternion},System.Nullable{Fusion.PlayerRef},Fusion.NetworkRunner.OnBeforeSpawned,System.Nullable{Fusion.NetworkObjectPredictionKey})">
             <summary>
-            Attempts to network instantiate an object using a prefab object
+            Attempts to network instantiate a <see cref="T:Fusion.NetworkObject"/> using a <see cref="T:Fusion.NetworkObject"/> prefab.
+            Note: position and rotation values are only used locally for the instantiation of the object, and are not inherently networked.
+            Use <see cref="T:Fusion.NetworkPositionRotation"/>, or any of its derived classes such as <see cref="T:Fusion.NetworkTransform"/> to replicate the initial transform state.
             </summary>
-            <param name="inputAuthority">The player that will be assigned input authority for this net entity.</param>
-            <returns></returns>
+            <param name="prefab">Prefab used to spawn the <see cref="T:Fusion.NetworkObject"/></param>
+            <param name="position">Spawn Position</param>
+            <param name="rotation">Spawn Rotation</param>
+            <param name="inputAuthority">Player Input Authority</param>
+            <param name="onBeforeSpawned"><see cref="T:Fusion.NetworkRunner.OnBeforeSpawned"/> reference</param>
+            <param name="predictionKey"><see cref="T:Fusion.NetworkObjectPredictionKey"/> reference</param>
+            <returns><see cref="T:Fusion.NetworkObject"/> reference, or null if it was not able to spawn the object</returns>
         </member>
-        <member name="M:Fusion.NetworkRunner.Spawn(Fusion.NetworkPrefabRef,System.Nullable{UnityEngine.Vector3},System.Nullable{UnityEngine.Quaternion},System.Nullable{Fusion.PlayerRef},Fusion.NetworkRunner.OnBeforeSpawned)">
+        <member name="M:Fusion.NetworkRunner.Spawn(Fusion.NetworkPrefabRef,System.Nullable{UnityEngine.Vector3},System.Nullable{UnityEngine.Quaternion},System.Nullable{Fusion.PlayerRef},Fusion.NetworkRunner.OnBeforeSpawned,System.Nullable{Fusion.NetworkObjectPredictionKey})">
             <summary>
-            Attempts to network instantiate an object using a prefab ref
+            Attempts to network instantiate a <see cref="T:Fusion.NetworkObject"/> using a <see cref="T:Fusion.NetworkPrefabRef"/>.
+            Note: position and rotation values are only used locally for the instantiation of the object, and are not inherently networked.
+            Use <see cref="T:Fusion.NetworkPositionRotation"/>, or any of its derived classes such as <see cref="T:Fusion.NetworkTransform"/> to replicate the initial transform state.
             </summary>
-            <param name="prefabRef"></param>
-            <param name="position"></param>
-            <param name="rotation"></param>
-            <param name="inputAuthority"></param>
-            <returns></returns>
+            <param name="prefabRef">Prefab Ref used to spawn the <see cref="T:Fusion.NetworkObject"/></param>
+            <param name="position">Spawn Position</param>
+            <param name="rotation">Spawn Rotation</param>
+            <param name="inputAuthority">Player Input Authority</param>
+            <param name="onBeforeSpawned"><see cref="T:Fusion.NetworkRunner.OnBeforeSpawned"/> reference</param>
+            <param name="predictionKey"><see cref="T:Fusion.NetworkObjectPredictionKey"/> reference</param>
+            <returns><see cref="T:Fusion.NetworkObject"/> reference, or null if it was not able to spawn the object</returns>
         </member>
-        <member name="M:Fusion.NetworkRunner.Spawn(Fusion.NetworkObjectGuid,System.Nullable{UnityEngine.Vector3},System.Nullable{UnityEngine.Quaternion},System.Nullable{Fusion.PlayerRef},Fusion.NetworkRunner.OnBeforeSpawned)">
+        <member name="M:Fusion.NetworkRunner.Spawn(Fusion.NetworkPrefabAsset,System.Nullable{UnityEngine.Vector3},System.Nullable{UnityEngine.Quaternion},System.Nullable{Fusion.PlayerRef},Fusion.NetworkRunner.OnBeforeSpawned,System.Nullable{Fusion.NetworkObjectPredictionKey})">
             <summary>
-            Attempts to network instantiate an object using a prefab guid
+            Attempts to network instantiate a <see cref="T:Fusion.NetworkObject"/> using a <see cref="T:Fusion.NetworkPrefabAsset"/>
+            Note: position and rotation values are only used locally for the instantiation of the object, and are not inherently networked.
+            Use <see cref="T:Fusion.NetworkPositionRotation"/>, or any of its derived classes such as <see cref="T:Fusion.NetworkTransform"/> to replicate the initial transform state.
             </summary>
-            <param name="prefabGuid"></param>
-            <param name="position"></param>
-            <param name="rotation"></param>
-            <param name="inputAuthority"></param>
-            <returns></returns>
+            <param name="prefabAsset">Prefab Asset used to spawn the <see cref="T:Fusion.NetworkObject"/></param>
+            <param name="position">Spawn Position</param>
+            <param name="rotation">Spawn Rotation</param>
+            <param name="inputAuthority">Player Input Authority</param>
+            <param name="onBeforeSpawned"><see cref="T:Fusion.NetworkRunner.OnBeforeSpawned"/> reference</param>
+            <param name="predictionKey"><see cref="T:Fusion.NetworkObjectPredictionKey"/> reference</param>
+            <returns><see cref="T:Fusion.NetworkObject"/> reference, or null if it was not able to spawn the object</returns>
+        </member>
+        <member name="M:Fusion.NetworkRunner.Spawn(Fusion.NetworkObjectGuid,System.Nullable{UnityEngine.Vector3},System.Nullable{UnityEngine.Quaternion},System.Nullable{Fusion.PlayerRef},Fusion.NetworkRunner.OnBeforeSpawned,System.Nullable{Fusion.NetworkObjectPredictionKey})">
+            <summary>
+            Attempts to network instantiate a <see cref="T:Fusion.NetworkObject"/> using a <see cref="T:Fusion.NetworkObjectGuid"/>
+            Note: position and rotation values are only used locally for the instantiation of the object, and are not inherently networked.
+            Use <see cref="T:Fusion.NetworkPositionRotation"/>, or any of its derived classes such as <see cref="T:Fusion.NetworkTransform"/> to replicate the initial transform state.
+            </summary>
+            <param name="prefabGuid">Object Guid used to spawn the <see cref="T:Fusion.NetworkObject"/></param>
+            <param name="position">Spawn Position</param>
+            <param name="rotation">Spawn Rotation</param>
+            <param name="inputAuthority">Player Input Authority</param>
+            <param name="onBeforeSpawned"><see cref="T:Fusion.NetworkRunner.OnBeforeSpawned"/> reference</param>
+            <param name="predictionKey"><see cref="T:Fusion.NetworkObjectPredictionKey"/> reference</param>
+            <returns><see cref="T:Fusion.NetworkObject"/> reference, or null if it was not able to spawn the object</returns>
         </member>
         <member name="M:Fusion.NetworkRunner.Spawn(Fusion.NetworkPrefabId,System.Nullable{UnityEngine.Vector3},System.Nullable{UnityEngine.Quaternion},System.Nullable{Fusion.PlayerRef},Fusion.NetworkRunner.OnBeforeSpawned,System.Nullable{Fusion.NetworkObjectPredictionKey})">
             <summary>
-            Attempts to network instantiate an object using a prefab id
+            Attempts to network instantiate a <see cref="T:Fusion.NetworkObject"/> using a <see cref="T:Fusion.NetworkPrefabId"/>
+            Note: position and rotation values are only used locally for the instantiation of the object, and are not inherently networked.
+            Use <see cref="T:Fusion.NetworkPositionRotation"/>, or any of its derived classes such as <see cref="T:Fusion.NetworkTransform"/> to replicate the initial transform state.
             </summary>
-            <param name="prefabId"></param>
-            <param name="position"></param>
-            <param name="rotation"></param>
-            <param name="inputAuthority"></param>
-            <param name="onBeforeSpawned"></param>
-            <param name="predictionKey"></param>
-            <returns></returns>
-        </member>
-        <member name="M:Fusion.NetworkRunner.Spawn(Fusion.NetworkPrefabAsset,System.Nullable{UnityEngine.Vector3},System.Nullable{UnityEngine.Quaternion},System.Nullable{Fusion.PlayerRef},Fusion.NetworkRunner.OnBeforeSpawned)">
-            <summary>
-            Attempts to network instantiate a prefab.
-            </summary>
-            <param name="prefabAsset"></param>
-            <param name="position"></param>
-            <param name="rotation"></param>
-            <param name="inputAuthority"></param>
-            <returns></returns>
+            <param name="prefabId">Prefab ID used to spawn the <see cref="T:Fusion.NetworkObject"/></param>
+            <param name="position">Spawn Position</param>
+            <param name="rotation">Spawn Rotation</param>
+            <param name="inputAuthority">Player Input Authority</param>
+            <param name="onBeforeSpawned"><see cref="T:Fusion.NetworkRunner.OnBeforeSpawned"/> reference</param>
+            <param name="predictionKey"><see cref="T:Fusion.NetworkObjectPredictionKey"/> reference</param>
+            <returns><see cref="T:Fusion.NetworkObject"/> reference, or null if it was not able to spawn the object</returns>
         </member>
         <member name="M:Fusion.NetworkRunner.Despawn(Fusion.NetworkObject,System.Boolean)">
             <summary>
@@ -4827,6 +6436,20 @@
             </summary>
             <param name="networkObject">The object to attach</param>
             <param name="inputAuthority">If assigned who is the default input authority for this object</param>
+        </member>
+        <member name="M:Fusion.NetworkRunner.SpawnInternal(Fusion.NetworkPrefabId,System.Nullable{UnityEngine.Vector3},System.Nullable{UnityEngine.Quaternion},System.Nullable{Fusion.PlayerRef},System.Object,System.Nullable{Fusion.NetworkObjectPredictionKey})">
+            <summary>
+            Attempts to network instantiate a <see cref="T:Fusion.NetworkObject"/> using a <see cref="T:Fusion.NetworkPrefabId"/>
+            Note: position and rotation values are only used locally for the instantiation of the object, and are not inherently networked.
+            Use <see cref="T:Fusion.NetworkPositionRotation"/>, or any of its derived classes such as <see cref="T:Fusion.NetworkTransform"/> to replicate the initial transform state.
+            </summary>
+            <param name="prefabId">Prefab ID used to spawn the <see cref="T:Fusion.NetworkObject"/></param>
+            <param name="position">Spawn Position</param>
+            <param name="rotation">Spawn Rotation</param>
+            <param name="inputAuthority">Player Input Authority</param>
+            <param name="onBeforeSpawned"><see cref="T:Fusion.NetworkRunner.OnBeforeSpawned"/> reference</param>
+            <param name="predictionKey"><see cref="T:Fusion.NetworkObjectPredictionKey"/> reference</param>
+            <returns><see cref="T:Fusion.NetworkObject"/> reference, or null if it was not able to spawn the object</returns>
         </member>
         <member name="P:Fusion.NetworkRunner.IsCloudReady">
             <summary>
@@ -4944,6 +6567,122 @@
             Signal an update on the list of <see cref="P:Fusion.NetworkRunner.SessionInfo"/>
             </summary>
             <param name="data">Custom Authentication Response</param>
+        </member>
+        <member name="P:Fusion.NetworkRunner.CurrentScene">
+            <summary>
+            Returns the current loaded network scene.
+            </summary>
+        </member>
+        <member name="P:Fusion.NetworkRunner.SimulationUnityScene">
+            <summary>
+            Returns the Unity scene for this <see cref="T:Fusion.NetworkRunner"/>. With <see cref="F:Fusion.NetworkProjectConfig.PeerModes.Multiple"/>, multiple physics scenes may exist, and this getter should be used in place of SceneManager.GetActiveScene(). 
+            </summary>
+        </member>
+        <member name="P:Fusion.NetworkRunner.MultiplePeerUnityScene">
+            <summary>
+            A scene used when run in <see cref="F:Fusion.NetworkProjectConfig.PeerModes.Multiple"/> mode. 
+            </summary>
+        </member>
+        <member name="P:Fusion.NetworkRunner.IsMultiplePeerSceneTemp">
+            <summary>
+            Signal if this Runner is already in a Temp Physics Scene
+            </summary>
+        </member>
+        <member name="M:Fusion.NetworkRunner.SetActiveScene(Fusion.SceneRef)">
+            <summary>
+            Update the current Active Scene
+            </summary>
+            <param name="scene"><see cref="T:Fusion.SceneRef"/> to be activated</param>
+        </member>
+        <member name="M:Fusion.NetworkRunner.InvokeSceneLoadStart">
+            <summary>
+            Invoke <see cref="M:Fusion.INetworkRunnerCallbacks.OnSceneLoadStart(Fusion.NetworkRunner)"/> on all implementations
+            </summary>
+        </member>
+        <member name="M:Fusion.NetworkRunner.InvokeSceneLoadDone">
+            <summary>
+            Invoke <see cref="M:Fusion.INetworkRunnerCallbacks.OnSceneLoadDone(Fusion.NetworkRunner)"/> on all implementations
+            </summary>
+        </member>
+        <member name="M:Fusion.NetworkRunner.GetRunnerForGameObject(UnityEngine.GameObject)">
+            <summary>
+            Get the <see cref="T:Fusion.NetworkRunner"/> a GameObject instance belongs to.
+            </summary>
+            <param name="gameObject">GameObject to check for a <see cref="T:Fusion.NetworkRunner"/></param>
+            <returns><see cref="T:Fusion.NetworkRunner"/> reference, or null if not found</returns>
+        </member>
+        <member name="M:Fusion.NetworkRunner.GetRunnerForScene(UnityEngine.SceneManagement.Scene)">
+            <summary>
+            Get the <see cref="T:Fusion.NetworkRunner"/> from a specific Scene
+            </summary>
+            <param name="scene">Scene to check for a <see cref="T:Fusion.NetworkRunner"/></param>
+            <returns><see cref="T:Fusion.NetworkRunner"/> reference, or null if not found</returns>
+        </member>
+        <member name="M:Fusion.NetworkRunner.TryMultiplePeerAssignTempScene">
+            <summary>
+            Try to create a temp empty scene for PhysicsScene
+            </summary>
+            <returns>false if the runner was on the temp scene already, true otherwise.</returns>
+        </member>
+        <member name="M:Fusion.NetworkRunner.GetPhysicsScene">
+            <summary>
+            Get the 3D Physics scene being used by this Runner.
+            </summary>
+        </member>
+        <member name="M:Fusion.NetworkRunner.GetPhysicsScene2D">
+            <summary>
+            Get the 2D Physics scene being used by this Runner.
+            </summary>
+        </member>
+        <member name="M:Fusion.NetworkRunner.InstantiateInRunnerScene(UnityEngine.GameObject,UnityEngine.Vector3,UnityEngine.Quaternion)">
+            <summary>
+            Instantiates an object in the scene of this runner
+            </summary>
+        </member>
+        <member name="M:Fusion.NetworkRunner.InstantiateInRunnerScene(UnityEngine.GameObject)">
+            <summary>
+            Instantiates an object in the scene of this runner
+            </summary>
+        </member>
+        <member name="M:Fusion.NetworkRunner.InstantiateInRunnerScene``1(``0)">
+            <summary>
+            Instantiates an object in the scene of this runner
+            </summary>
+        </member>
+        <member name="M:Fusion.NetworkRunner.InstantiateInRunnerScene``1(``0,UnityEngine.Vector3,UnityEngine.Quaternion)">
+            <summary>
+            Instantiates an object in the scene of this runner
+            </summary>
+        </member>
+        <member name="M:Fusion.NetworkRunner.MoveToRunnerScene``1(``0)">
+            <summary>
+            Moves an object to the scene of this runner
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="component">Component of object to move</param>
+        </member>
+        <member name="M:Fusion.NetworkRunner.MoveToRunnerScene(UnityEngine.GameObject)">
+            <summary>
+            Moves an object to the scene of this runner
+            </summary>
+            <param name="go">Object to move</param>
+        </member>
+        <member name="M:Fusion.NetworkRunner.EnsureRunnerSceneIsActive(UnityEngine.SceneManagement.Scene@)">
+            <summary>
+            If running in <see cref="F:Fusion.NetworkProjectConfig.PeerModes.Multiple"/> peer mode and the current active 
+            scene is different than <see cref="P:Fusion.NetworkRunner.MultiplePeerUnityScene"/>, switches active scene to <see cref="P:Fusion.NetworkRunner.MultiplePeerUnityScene"/>,
+            stores the previous active scene in <paramref name="previousActiveScene"/> and returns true.
+            Returns false otherwise.
+            </summary>
+            <param name="previousActiveScene"></param>
+            <returns>True if an actual change occurred.</returns>
+        </member>
+        <member name="M:Fusion.NetworkRunner.GetRunnerForScene(System.Int32)">
+            <summary>
+            Retrieve the associated <see cref="T:Fusion.NetworkRunner"/> with an specific Scene
+            </summary>
+            <param name="sceneHandle">Scene handler to check</param>
+            <returns><see cref="T:Fusion.NetworkRunner"/> reference, or null if not found</returns>
         </member>
         <member name="T:Fusion.StartGameArgs">
             <summary>
@@ -5619,6 +7358,14 @@
             Bound Address of the internal socket
             </summary>
         </member>
+        <member name="M:Fusion.Simulation.SetPlayerAlwaysInterested(Fusion.PlayerRef,Fusion.NetworkId,System.Boolean)">
+            <summary>
+            Add or remove specific player interest in a NetworkObject.
+            <para>
+            <see cref="F:Fusion.SimulationConfig.ReplicationMode"/> must be set to <see cref="F:Fusion.SimulationConfig.StateReplicationModes.EventualConsistency"/>.
+            </para>
+            </summary>
+        </member>
         <member name="M:Fusion.Simulation.Update(System.Double)">
             <summary>
             Forwards the Simulation based on the Delta Time
@@ -5671,44 +7418,49 @@
             Returns the requested <see cref="T:Fusion.IStatsBuffer"/> associated with this <see cref="T:Fusion.Simulation"/>.
             </summary>
         </member>
-        <member name="F:Fusion.SendMessageResult.SentToServerForForwarding">
+        <member name="T:Fusion.RpcSendMessageResult">
+            <summary>
+            Result flags for the RPC message send operation.
+            </summary>
+        </member>
+        <member name="F:Fusion.RpcSendMessageResult.SentToServerForForwarding">
             <summary>
             Client sent to the server, server will send to the target client.
             </summary>
         </member>
-        <member name="F:Fusion.SendMessageResult.SentToTargetClient">
+        <member name="F:Fusion.RpcSendMessageResult.SentToTargetClient">
             <summary>
             Server sent to a specific client (a targeted message).
             </summary>
         </member>
-        <member name="F:Fusion.SendMessageResult.SentBroadcast">
+        <member name="F:Fusion.RpcSendMessageResult.SentBroadcast">
             <summary>
-            Server attempted to send to all the clients and at least one succeded.
+            Server attempted to send to all the clients and at least one succeeded.
             </summary>
         </member>
-        <member name="F:Fusion.SendMessageResult.NotSentTargetObjectNotConfirmed">
+        <member name="F:Fusion.RpcSendMessageResult.NotSentTargetObjectNotConfirmed">
             <summary>
             Target object not confirmed on the client.
             </summary>
         </member>
-        <member name="F:Fusion.SendMessageResult.NotSentTargetObjectNotInAOI">
+        <member name="F:Fusion.RpcSendMessageResult.NotSentTargetObjectNotInPlayerInterest">
             <summary>
-            Target object not in client's AoI.
+            Target object not in client's interest. Likely due to being outside of player's AOI region, or needs to be explicitly set as always interested.
             </summary>
         </member>
-        <member name="F:Fusion.SendMessageResult.NotSentTargetClientNotAvailable">
+        <member name="F:Fusion.RpcSendMessageResult.NotSentTargetClientNotAvailable">
             <summary>
             Target client not connected (a targeted message).
             </summary>
         </member>
-        <member name="F:Fusion.SendMessageResult.NotSentBroadcastNoActiveConnections">
+        <member name="F:Fusion.RpcSendMessageResult.NotSentBroadcastNoActiveConnections">
             <summary>
             Server attempted to send to all the clients, but none was connected.
             </summary>
         </member>
-        <member name="F:Fusion.SendMessageResult.NotSentBroadcastTargetObjectNotConfirmedOrNotInAOIForAllClients">
+        <member name="F:Fusion.RpcSendMessageResult.NotSentBroadcastNoConfirmedNorInterestedClients">
             <summary>
-            Server attempted to send to all the clients, but the target object is not confirmed/not in AoI for all the client.
+            Server attempted to send to all the clients, but the target object is not confirmed/not in Object Interest for all target clients.
             </summary>
         </member>
         <member name="T:Fusion.SimulationConfig">
@@ -5778,10 +7530,11 @@
             If, in host mode, we should allow host migration if the current host leaves.
             </summary>
         </member>
-        <member name="F:Fusion.SimulationConfig.InterestManagement">
+        <member name="F:Fusion.SimulationConfig.ObjectInterest">
             <summary>
-            Selects if interest management should be used when running in <see cref="F:Fusion.SimulationConfig.StateReplicationModes.EventualConsistency"/> mode.
-            When enabled, clients will only receive updates for objects within their AOI range or which are set to <see cref="F:Fusion.NetworkObject.AoiModes.Global"/>.
+            Selects if Object Interest should be used when running in <see cref="F:Fusion.SimulationConfig.StateReplicationModes.EventualConsistency"/> mode.
+            When enabled, clients will only receive updates for objects which they have interest in. 
+            How interest is determined for each <see cref="T:Fusion.NetworkObject"/> is based on its <see cref="F:Fusion.NetworkObject.ObjectInterest"/> mode setting.
             </summary>
         </member>
         <member name="F:Fusion.SimulationConfig.SimulationCulling">

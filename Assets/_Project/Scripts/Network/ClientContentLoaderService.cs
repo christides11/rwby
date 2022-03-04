@@ -38,7 +38,7 @@ namespace rwby
             loadRequestCounter++;
             loadRequests.Add(loadRequestNumber, new List<ClientLoadRequestTracker>());
             // Tell clients to load the content.
-            RPC_ClientTryLoad(loadRequestNumber, typeof(T).ToString(), objectReference.ToString());
+            RPC_ClientTryLoad(loadRequestNumber, typeof(T).ToString(), objectReference);
 
             // Wait until all other clients report their results, or until the timeout period.
             float startTime = Time.realtimeSinceStartup;
@@ -63,7 +63,7 @@ namespace rwby
         }
 
         [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
-        public void RPC_ClientTryLoad(int requestNumber, string typeName, string objectReference, RpcInfo info = default)
+        public void RPC_ClientTryLoad(int requestNumber, string typeName, ModObjectReference objectReference)
         {
             Type typeAsType = Type.GetType(typeName);
             if (typeAsType == null)
@@ -72,7 +72,7 @@ namespace rwby
                 RPC_ClientReportLoadResult(requestNumber, false);
                 return;
             }
-            _ = ClientTryLoad(requestNumber, typeAsType, new ModObjectReference(objectReference));
+            _ = ClientTryLoad(requestNumber, typeAsType, objectReference);
         }
 
         
@@ -82,13 +82,18 @@ namespace rwby
             if(loadResult == true)
             {
                 loadResult = await ContentManager.singleton.GetContentDefinition(contentType, objectReference).Load();
+                if(loadResult == false) Debug.LogError($"Error loading {objectReference.ToString()} content.");
+            }
+            else
+            {
+                Debug.LogError($"Error loading {objectReference.ToString()}.");
             }
             // Need to wait a bit before sending an RPC directly back. Gets ignored otherwise.
             await UniTask.WaitForFixedUpdate();
             RPC_ClientReportLoadResult(requestNumber, loadResult);
         }
 
-        [Rpc(RpcSources.All, RpcTargets.StateAuthority)]
+        [Rpc(RpcSources.All, RpcTargets.StateAuthority, HostMode = RpcHostMode.SourceIsHostPlayer)]
         public void RPC_ClientReportLoadResult(int requestNumber, NetworkBool loadResult, RpcInfo info = default)
         {
             if (loadRequests.ContainsKey(requestNumber) == false)
@@ -96,7 +101,12 @@ namespace rwby
                 Debug.Log($"Request number {requestNumber} doesn't exist.");
                 return;
             }
-            loadRequests[requestNumber].Add(new ClientLoadRequestTracker { client = info.Source, result = loadResult ? ClientLoadResultType.SUCCESS : ClientLoadResultType.FAILED });
+            ClientLoadRequestTracker request = new ClientLoadRequestTracker
+            {
+                client = info.Source, result = loadResult ? ClientLoadResultType.SUCCESS : ClientLoadResultType.FAILED
+            };
+            
+            loadRequests[requestNumber].Add(request);
         }
     }
 }

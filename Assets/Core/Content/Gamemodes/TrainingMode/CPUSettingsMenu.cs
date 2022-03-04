@@ -65,7 +65,7 @@ namespace rwby.core.training
             {
                 var list = gamemodeTraining.cpus;
                 var temp = list[tempIndex];
-                temp.characterReference = b.ToString();
+                temp.characterReference = b;
                 list[tempIndex] = temp;
                 ContentSelect.singleton.CloseMenu();
             });

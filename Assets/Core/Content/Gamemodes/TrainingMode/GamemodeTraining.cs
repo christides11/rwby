@@ -12,7 +12,8 @@ namespace rwby.core.training
 {
     public struct CPUReference : INetworkStruct
     {
-        [Networked, Capacity(15)] public string characterReference { get => default; set { } }
+        public ModObjectReference characterReference;
+        //[Networked, Capacity(15)] public string characterReference { get => default; set { } }
         public NetworkId objectId;
     }
 
@@ -43,8 +44,8 @@ namespace rwby.core.training
 
             for(int i = 0; i < cpus.Count; i++)
             {
-                ModObjectReference objectReference = new ModObjectReference(cpus[i].characterReference);
-                if(objectReference.IsEmpty() == false && cpus[i].objectId.IsValid == false)
+                ModObjectReference objectReference = cpus[i].characterReference;
+                if(objectReference.IsValid() && cpus[i].objectId.IsValid == false)
                 {
                     List<PlayerRef> failedLoadPlayers = await LobbyManager.singleton.clientContentLoaderService.TellClientsToLoad<IFighterDefinition>(objectReference);
                     if (failedLoadPlayers == null)
@@ -137,10 +138,15 @@ namespace rwby.core.training
 
             IMapDefinition mapDefinition = ContentManager.singleton.GetContentDefinition<IMapDefinition>(mapReference);
 
-            if (NetworkManager.singleton.FusionLauncher.TryGetSceneRef(out SceneRef scene))
+            LobbyManager.singleton.currentLoadedScenes.Clear();
+            LobbyManager.singleton.currentLoadedScenes.Add(new CustomSceneRef()
             {
-                Runner.SetActiveScene(scene);
-            }
+                source = mapReference.modIdentifier.Item1,
+                modIdentifier = mapReference.modIdentifier.Item2,
+                sceneIndex = mapReference.objectIdentifier
+            });
+
+            Runner.SetActiveScene(1);
 
             SpawnPointHolder[] spawnPointHolders = GameObject.FindObjectsOfType<SpawnPointHolder>();
 

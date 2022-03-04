@@ -14,16 +14,16 @@ namespace rwby
 
         public abstract void Initialize();
 
-        public virtual bool ContentExist(string contentIdentfier)
+        public virtual bool ContentExist(byte contentIdentfier)
         {
             return false;
         }
 
         public abstract UniTask<bool> LoadContentDefinitions();
 
-        public abstract UniTask<bool> LoadContentDefinition(string contentIdentifier);
+        public abstract UniTask<bool> LoadContentDefinition(byte contentIdentifier);
 
-        public virtual IContentDefinition GetContentDefinition(string contentIdentifier)
+        public virtual IContentDefinition GetContentDefinition(byte contentIdentifier)
         {
             return null;
         }
@@ -38,7 +38,7 @@ namespace rwby
 
         }
 
-        public virtual void UnloadContentDefinition(string contentIdentifier)
+        public virtual void UnloadContentDefinition(byte contentIdentifier)
         {
 
         }

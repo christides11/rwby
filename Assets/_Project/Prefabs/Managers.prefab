@@ -2349,6 +2349,7 @@ GameObject:
   - component: {fileID: 7663082700249121291}
   - component: {fileID: 7663082700249121294}
   - component: {fileID: 7663082700249121293}
+  - component: {fileID: 656639540424708603}
   m_Layer: 0
   m_Name: NetworkManager
   m_TagString: Untagged
@@ -2382,7 +2383,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8fd6b13286734bc408f7104196d5d923, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  networkSceneManagerBase: {fileID: 0}
+  networkSceneManagerBase: {fileID: 656639540424708603}
 --- !u!114 &7663082700249121293
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2398,6 +2399,19 @@ MonoBehaviour:
   fusionLauncher: {fileID: 7663082700249121294}
   clientPrefab: {fileID: 149176565956672013, guid: db178e092b035ba428a0260f8afaa2c6, type: 3}
   lobbyManagerPrefab: {fileID: 8637228851506255113, guid: 9b2ea8d77f9d6fa4984abd0f7db0c813, type: 3}
+--- !u!114 &656639540424708603
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7663082700249121290}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a657cd55d6ed8de4abd1e6f2887fcd76, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ShowHierarchyWindowOverlay: 1
 --- !u!1001 &3296048486818149600
 PrefabInstance:
   m_ObjectHideFlags: 0

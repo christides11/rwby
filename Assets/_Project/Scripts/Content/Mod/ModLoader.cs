@@ -30,7 +30,7 @@ namespace rwby
         /// <summary>
         /// A list of all currently enabled mods.
         /// </summary>
-        public Dictionary<string, LoadedModDefinition> loadedMods = new Dictionary<string, LoadedModDefinition>();
+        public Dictionary<ModIdentifierTuple, LoadedModDefinition> loadedMods = new Dictionary<ModIdentifierTuple, LoadedModDefinition>();
         /// <summary>
         /// The path where mods are installed.
         /// </summary>
@@ -134,7 +134,7 @@ namespace rwby
                 definition = handle.Result,
                 handle = handle
             };
-            loadedMods.Add($"{handle.Result.ModIdentifier}", loadedModDefinition);
+            loadedMods.Add(new ModIdentifierTuple(loadedModDefinition.definition.ModSource, loadedModDefinition.definition.ModID), loadedModDefinition);
         }
 
         private async UniTask LoadPreviouslyLoadedMods()
@@ -160,6 +160,8 @@ namespace rwby
         /// </summary>
         private async UniTask CheckForLoadedUModDependencies()
         {
+            //TODO
+            /*
             foreach (ModInfo mi in modList)
             {
                 if (mi.backingType != ModBackingType.UMod) continue;
@@ -168,7 +170,7 @@ namespace rwby
                 {
                     await LoadMod(mi);
                 }
-            }
+            }*/
         }
 
         #region Loading
@@ -210,11 +212,6 @@ namespace rwby
 
         public async UniTask<bool> LoadMod(ModInfo modInfo)
         {
-            if (loadedMods.ContainsKey(modInfo.identifier))
-            {
-                return true;
-            }
-
             switch (modInfo.backingType)
             {
                 case ModBackingType.Addressables:
@@ -237,13 +234,14 @@ namespace rwby
 
                 ModAsyncOperation mao = mod.Assets.LoadAsync("ModDefinition");
                 await mao;
-
+                if (mao.IsSuccessful == false) return false;
+                
                 LoadedUModModDefinition loadedModDefinition = new LoadedUModModDefinition()
                 {
-                    definition = mao.IsSuccessful ? mao.Result as IModDefinition : null,
+                    definition = mao.Result as IModDefinition,
                     host = mod
                 };
-                loadedMods.Add(modInfo.identifier, loadedModDefinition);
+                loadedMods.Add(new ModIdentifierTuple(loadedModDefinition.definition.ModSource, loadedModDefinition.definition.ModID), loadedModDefinition);
                 await CheckForLoadedUModDependencies();
                 return true;
             }
@@ -271,7 +269,7 @@ namespace rwby
                     if (typeof(IModDefinition).IsAssignableFrom(loadResult.Locations[key][0].ResourceType))
                     {
                         imd = await Addressables.LoadAssetAsync<IModDefinition>(loadResult.Locations[key][0]);
-                        Debug.Log($"Test: {imd.ModIdentifier}");
+                        Debug.Log($"Test: {imd.ModSource}:{imd.ModID}");
                         break;
                     }
                 }
@@ -282,7 +280,7 @@ namespace rwby
                     resourceLocatorHandle = handle,
                     resourceLocationMap = loadResult
                 };
-                loadedMods.Add(modInfo.identifier, loadedModDefinition);
+                loadedMods.Add(new ModIdentifierTuple(imd.ModSource, imd.ModID), loadedModDefinition);
                 return true;
             }
             catch (Exception e)
@@ -294,7 +292,7 @@ namespace rwby
         #endregion
 
         #region Unloading
-        public void UnloadMod(string modIdentifier)
+        public void UnloadMod(ModIdentifierTuple modIdentifier)
         {
             if (loadedMods.ContainsKey(modIdentifier)) return;
 
@@ -305,7 +303,7 @@ namespace rwby
 
         public virtual void UnloadAllMods()
         {
-            foreach (string k in loadedMods.Keys)
+            foreach (var k in loadedMods.Keys)
             {
                 loadedMods[k].Unload();
             }
@@ -313,7 +311,7 @@ namespace rwby
         }
         #endregion
 
-        public bool TryGetLoadedMod(string modIdentifier, out LoadedModDefinition loadedMod)
+        public bool TryGetLoadedMod(ModIdentifierTuple modIdentifier, out LoadedModDefinition loadedMod)
         {
             if (!loadedMods.ContainsKey(modIdentifier))
             {
@@ -324,7 +322,7 @@ namespace rwby
             return true;
         }
 
-        public bool IsLoaded(string modIdentifier)
+        public bool IsLoaded(ModIdentifierTuple modIdentifier)
         {
             return loadedMods.ContainsKey(modIdentifier);
         }

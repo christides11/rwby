@@ -39,20 +39,12 @@ namespace rwby
 		private ConnectionStatus _status;
 		private NetworkObject _playerPrefab;
 		private FusionObjectPoolRoot _pool;
-		//public NetworkSceneManager _networkSceneManager;
 		public CustomNetworkSceneManagerBase networkSceneManagerBase;
 
 		private void OnConnectionStatusUpdate(NetworkRunner arg1, FusionLauncher.ConnectionStatus status)
 		{
 			_status = status;
 			OnConnectionStatusChanged?.Invoke(_runner, status);
-		}
-
-		public bool TryGetSceneRef(out SceneRef sceneRef)
-		{
-			// Find the current scene in the list of scenes registered with Fusion and return the ref
-			var scenePath = SceneManager.GetActiveScene().path;
-			return NetworkSceneManager.TryGetSceneRefFromPathInBuildSettings(scenePath, out sceneRef);
 		}
 
 		public async UniTask JoinSessionLobby()
@@ -79,10 +71,12 @@ namespace rwby
 				return result;
             }
 
+			//_runner.SetActiveScene(0);
+			/*
 			if (TryGetSceneRef(out SceneRef scene))
 			{
 				_runner.SetActiveScene(scene);
-			}
+			}*/
 
 			return result;
 		}
@@ -108,10 +102,13 @@ namespace rwby
 				return result;
 			}
 
+			//_runner.SetActiveScene(0);
+			/*
 			if (TryGetSceneRef(out SceneRef scene))
 			{
 				_runner.SetActiveScene(scene);
-			}
+			}*/
+			
 			return result;
 		}
 
@@ -134,7 +131,13 @@ namespace rwby
 			_connectionCallback = OnConnectionStatusUpdate;
 
 			InitSingletions(true);
-			await _runner.StartGame(new StartGameArgs() { GameMode = GameMode.Client, SessionName = sessionName });
+			await _runner.StartGame(new StartGameArgs()
+			{
+				GameMode = GameMode.Client, 
+				SessionName = sessionName, 
+				ObjectPool = _pool,
+				SceneObjectProvider = networkSceneManagerBase
+			});
 			if (_status == ConnectionStatus.Failed)
 			{
 				return;
@@ -152,11 +155,6 @@ namespace rwby
 
 			if (_pool == null)
 				_pool = gameObject.AddComponent<FusionObjectPoolRoot>();
-
-			/*
-			_networkSceneManager = gameObject.GetComponent<NetworkSceneManager>();
-			if (!_networkSceneManager)
-				_networkSceneManager = gameObject.AddComponent<NetworkSceneManager>();*/
 		}
 
 		public void OnInput(NetworkRunner runner, NetworkInput input)

@@ -12,6 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b830ee64f5bfbbf449ae7ec1272931d4, type: 3}
   m_Name: moddefinition
   m_EditorClassIdentifier: 
+  modSource: 1
+  modID: 0
   modIdentifier: core
   description: 
   contentParsers:
@@ -27,13 +29,13 @@ MonoBehaviour:
       type: {class: AddressablesGameModeParser, ns: rwby, asm: rwby.csharp}
       data:
         references:
-        - identifier: train
+        - identifier: 1
           asset:
             m_AssetGUID: 6d98f37477091d440b654f77346f0c24
             m_SubObjectName: 
             m_SubObjectType: 
             m_EditorAssetChanged: 0
-        - identifier: vs
+        - identifier: 2
           asset:
             m_AssetGUID: 10562cacfe0440d45aa72a4cbe4ddcea
             m_SubObjectName: 
@@ -43,7 +45,7 @@ MonoBehaviour:
       type: {class: AddressablesFighterParser, ns: rwby, asm: rwby.csharp}
       data:
         references:
-        - identifier: rr
+        - identifier: 1
           asset:
             m_AssetGUID: f0f374ed69303bf499b21d67a399ece3
             m_SubObjectName: 
@@ -53,7 +55,7 @@ MonoBehaviour:
       type: {class: AddressablesMapParser, ns: rwby, asm: rwby.csharp}
       data:
         references:
-        - identifier: debug
+        - identifier: 1
           asset:
             m_AssetGUID: 79ff4822f361f3540b01a83eb3b33154
             m_SubObjectName: 
@@ -63,13 +65,13 @@ MonoBehaviour:
       type: {class: AddressablesSoundbankParser, ns: rwby, asm: rwby.csharp}
       data:
         references:
-        - identifier: global
+        - identifier: 1
           asset:
             m_AssetGUID: 095716b7fbc40fb4393678c18ce49208
             m_SubObjectName: 
             m_SubObjectType: 
             m_EditorAssetChanged: 0
-        - identifier: rr
+        - identifier: 2
           asset:
             m_AssetGUID: 29d1a35becec4cd46891bf1974f6b9f3
             m_SubObjectName: 
@@ -79,7 +81,7 @@ MonoBehaviour:
       type: {class: AddressablesAnimationbankParser, ns: rwby, asm: rwby.csharp}
       data:
         references:
-        - identifier: rr
+        - identifier: 1
           asset:
             m_AssetGUID: 87992fc2a026b0d459d1d5dbeab9bf54
             m_SubObjectName: 
@@ -89,7 +91,7 @@ MonoBehaviour:
       type: {class: AddressablesEffectbankParser, ns: rwby, asm: rwby.csharp}
       data:
         references:
-        - identifier: global
+        - identifier: 1
           asset:
             m_AssetGUID: d568adedb7d231e409f4d3d76abe9e1c
             m_SubObjectName: 

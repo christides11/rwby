@@ -7,7 +7,7 @@ namespace rwby
     {
         byte ModSource { get;  }
         uint ModID { get; }
-        string ModIdentifier { get; }
+        string ModStringID { get; }
         string Description { get; }
         public Dictionary<Type, IContentParser> ContentParsers { get; }
     }

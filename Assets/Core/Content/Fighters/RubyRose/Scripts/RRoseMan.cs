@@ -9,6 +9,8 @@ public class RRoseMan : FighterManager
 {
     public override async UniTask<bool> OnFighterLoaded()
     {
+        //TODO
+        /*
         bool globalSnbkLoadResult = await ContentManager.singleton.LoadContentDefinition<ISoundbankDefinition>(new ModObjectReference("core", "global"));
         if (globalSnbkLoadResult == false) return false;
 
@@ -23,7 +25,7 @@ public class RRoseMan : FighterManager
         }
 
         bool animationbankLoadResult = await ContentManager.singleton.LoadContentDefinition<IAnimationbankDefinition>(new ModObjectReference("core", "rr"));
-        if (animationbankLoadResult == false) return false;
+        if (animationbankLoadResult == false) return false;*/
 
         return true;
     }
@@ -31,6 +33,7 @@ public class RRoseMan : FighterManager
     public override void Awake()
     {
         base.Awake();
+        /*
         ISoundbankDefinition globalSnbk = ContentManager.singleton.GetContentDefinition<ISoundbankDefinition>(new ModObjectReference("core", "global"));
         if (globalSnbk == null)
         {
@@ -60,7 +63,7 @@ public class RRoseMan : FighterManager
         {
             Debug.LogError("Error loading ruby rose animationbank.");
         }
-        animationbankContainer.AddAnimationbank(rrAnbk.Name, rrAnbk);
+        animationbankContainer.AddAnimationbank(rrAnbk.Name, rrAnbk);*/
     }
 
     public override void Spawned()

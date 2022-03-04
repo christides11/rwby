@@ -22,7 +22,7 @@ namespace rwby
                 c.mapLoadPercent = 0;
             }
 
-            RPC_ClientTryLoad(mapReference.ToString());
+            RPC_ClientTryLoad(mapReference);
 
             float loadResult = 0.0f;
             while(loadResult < 1.0f)
@@ -39,21 +39,21 @@ namespace rwby
         }
 
         [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
-        private void RPC_ClientTryLoad(string mapReferenceString)
+        private void RPC_ClientTryLoad(ModObjectReference mapReference)
         {
-            IMapDefinition mapDefinition = ContentManager.singleton.GetContentDefinition<IMapDefinition>(new ModObjectReference(mapReferenceString));
+            IMapDefinition mapDefinition = ContentManager.singleton.GetContentDefinition<IMapDefinition>(mapReference);
             _ = ClientTryLoad(mapDefinition);
         }
 
         private async UniTask ClientTryLoad(IMapDefinition mapDefinition)
         {
             await mapDefinition.LoadMap(UnityEngine.SceneManagement.LoadSceneMode.Additive);
-            SceneManager.SetActiveScene(SceneManager.GetSceneByName(mapDefinition.SceneName));
+            SceneManager.SetActiveScene(SceneManager.GetSceneByName(mapDefinition.GetSceneNames()[0]));
             await UniTask.Delay(TimeSpan.FromSeconds(0.1f), ignoreTimeScale: true);
             RPC_ReportLoadPercentage(1.0f);
         }
 
-        [Rpc(RpcSources.All, RpcTargets.StateAuthority)]
+        [Rpc(RpcSources.All, RpcTargets.StateAuthority, HostMode = RpcHostMode.SourceIsHostPlayer)]
         private void RPC_ReportLoadPercentage(float percentage, RpcInfo info = default)
         {
             Runner.GetPlayerObject(info.Source).GetBehaviour<ClientManager>().mapLoadPercent = percentage;

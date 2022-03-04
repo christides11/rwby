@@ -66,10 +66,11 @@ namespace rwby
 
         protected virtual void CleanupViewerScene()
         {
+            /*
             previewScene.manag.GetComponentInChildren<ModLoader>().UnloadAllMods();
             ContentManager.singleton.UnloadContentDefinition<IFighterDefinition>(new ModObjectReference(fighterString));
             ContentManager.singleton = null;
-            previewScene.Close();
+            previewScene.Close();*/
         }
 
         protected virtual void SetupFighter()

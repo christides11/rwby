@@ -49,6 +49,8 @@ namespace rwby
         public override void Spawned()
         {
             Settings = new LobbySettings();
+            currentLoadedScenes.Add(new CustomSceneRef(){ source = 0, modIdentifier = 0, sceneIndex = 0});
+            Runner.SetActiveScene(1);
         }
 
         public void CallGamemodeSettingsChanged()
@@ -94,33 +96,52 @@ namespace rwby
             CurrentGameMode = gamemodeObj;
 
             LobbySettings temp = Settings;
-            temp.gamemodeReference = gamemodeReference.ToString();
+            temp.gamemodeReference = gamemodeReference;
             temp.teams = (byte)gamemodeDefinition.maximumTeams;
             Settings = temp;
         }
 
         public async UniTask<bool> TryStartMatch()
         {
-            if (Runner.IsServer == false) return false;
-            if (await VerifyMatchSettings() == false) return false;
+            Debug.Log("Trying to start match.");
+            if (Runner.IsServer == false)
+            {
+                Debug.LogError("START MATCH ERROR: Client trying to start match.");
+                return false;
+            }
 
-            HashSet<string> fightersToLoad = new HashSet<string>();
+            if (await VerifyMatchSettings() == false)
+            {
+                Debug.LogError("START MATCH ERROR: Match settings invalid.");
+                return false;
+            }
+
+            HashSet<ModObjectReference> fightersToLoad = new HashSet<ModObjectReference>();
 
             for(int i = 0; i < ClientManager.clientManagers.Count; i++)
             {
                 for(int k = 0; k < ClientManager.clientManagers[i].ClientPlayers.Count; k++)
                 {
-                    if (ClientManager.clientManagers[i].ClientPlayers[k].characterReference.Length <= 1) return false;
+                    if (!ClientManager.clientManagers[i].ClientPlayers[k].characterReference.IsValid())
+                    {
+                        Debug.LogError($"Player {i}:{k} has an invalid character reference.");
+                        return false;
+                    }
                     fightersToLoad.Add(ClientManager.clientManagers[i].ClientPlayers[k].characterReference);
                 }
             }
 
-            foreach(string fighterStr in fightersToLoad)
+            foreach(var fighterStr in fightersToLoad)
             {
-                List<PlayerRef> failedLoadPlayers = await clientContentLoaderService.TellClientsToLoad<IFighterDefinition>(new ModObjectReference(fighterStr));
-                if (failedLoadPlayers == null || failedLoadPlayers.Count > 0) return false;
+                List<PlayerRef> failedLoadPlayers = await clientContentLoaderService.TellClientsToLoad<IFighterDefinition>(fighterStr);
+                if (failedLoadPlayers == null || failedLoadPlayers.Count > 0)
+                {
+                    Debug.LogError($"START MATCH ERROR: Player failed to load fighter.");
+                    return false;
+                }
             }
-
+            
+            Debug.Log("Starting gamemode.");
             CurrentGameMode.StartGamemode();
             return true;
         }
@@ -129,7 +150,7 @@ namespace rwby
         {
             if (CurrentGameMode == null) return false;
 
-            IGameModeDefinition gamemodeDefinition = ContentManager.singleton.GetContentDefinition<IGameModeDefinition>(new ModObjectReference(Settings.gamemodeReference));
+            IGameModeDefinition gamemodeDefinition = ContentManager.singleton.GetContentDefinition<IGameModeDefinition>(Settings.gamemodeReference);
             if (VerifyTeams(gamemodeDefinition) == false) return false;
             if (await CurrentGameMode.VerifyGameModeSettings() == false) return false;
             return true;

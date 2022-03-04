@@ -11,7 +11,7 @@ namespace rwby
         [System.Serializable]
         public class IdentifierAssetReferenceRelation<T> where T : UnityEngine.Object
         {
-            public string identifier;
+            public byte identifier;
             public AssetReferenceT<T> asset;
         }
 
@@ -24,7 +24,7 @@ namespace rwby
             get { return modID; }
         }
         public string Description { get { return description; } }
-        public string ModIdentifier { get { return modIdentifier; } }
+        public string ModStringID { get { return modIdentifier; } }
         public Dictionary<Type, IContentParser> ContentParsers { get { return contentParserDictionary; } }
 
         [SerializeField] private byte modSource;

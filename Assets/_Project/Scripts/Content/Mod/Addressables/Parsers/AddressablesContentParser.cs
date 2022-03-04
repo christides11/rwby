@@ -13,8 +13,8 @@ namespace rwby
     {
         [SerializeField] private List<IdentifierAssetReferenceRelation<T>> references = new List<IdentifierAssetReferenceRelation<T>>();
 
-        [NonSerialized] private Dictionary<string, AssetReferenceT<T>> content = new Dictionary<string, AssetReferenceT<T>>();
-        [NonSerialized] private Dictionary<string, AsyncOperationHandle<T>> contentHandles = new Dictionary<string, AsyncOperationHandle<T>>();
+        [NonSerialized] private Dictionary<byte, AssetReferenceT<T>> content = new Dictionary<byte, AssetReferenceT<T>>();
+        [NonSerialized] private Dictionary<byte, AsyncOperationHandle<T>> contentHandles = new Dictionary<byte, AsyncOperationHandle<T>>();
 
         public override void Initialize()
         {
@@ -25,7 +25,7 @@ namespace rwby
             }
         }
 
-        public override bool ContentExist(string contentIdentfier)
+        public override bool ContentExist(byte contentIdentfier)
         {
             return content.ContainsKey(contentIdentfier) ? true : false;
         }
@@ -39,7 +39,7 @@ namespace rwby
             }
             try
             {
-                foreach (string contentIdentifier in content.Keys)
+                foreach (var contentIdentifier in content.Keys)
                 {
                     await LoadContentDefinition(contentIdentifier);
                 }
@@ -52,7 +52,7 @@ namespace rwby
             return false;
         }
 
-        public override async UniTask<bool> LoadContentDefinition(string contentIdentifier)
+        public override async UniTask<bool> LoadContentDefinition(byte contentIdentifier)
         {
             // Content doesn't exist.
             if (content.ContainsKey(contentIdentifier) == false)
@@ -99,7 +99,7 @@ namespace rwby
             return contentList;
         }
 
-        public override IContentDefinition GetContentDefinition(string contentIdentifier)
+        public override IContentDefinition GetContentDefinition(byte contentIdentifier)
         {
             // Content does not exist, or was not loaded.
             if (contentHandles.ContainsKey(contentIdentifier) == false)
@@ -118,7 +118,7 @@ namespace rwby
             contentHandles.Clear();
         }
 
-        public override void UnloadContentDefinition(string contentIdentifier)
+        public override void UnloadContentDefinition(byte contentIdentifier)
         {
             if (contentHandles.ContainsKey(contentIdentifier) == false) return;
 

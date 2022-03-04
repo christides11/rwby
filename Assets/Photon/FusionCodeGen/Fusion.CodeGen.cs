@@ -674,7 +674,7 @@ namespace Fusion.CodeGen {
           });
         } else if (typeDefinition.IsValueType && typeDefinition.Is<INetworkStruct>()) {
           // weave this struct
-          WeaveStruct(asm, typeDefinition);
+          WeaveStruct(asm, typeDefinition, type);
 
           // grab type data
           data = _typeData[type.FullName];
@@ -887,7 +887,7 @@ namespace Fusion.CodeGen {
     }
 
     void InjectPtrNullCheck(ILWeaverAssembly asm, ILProcessor il, PropertyDefinition property) {
-      if (NetworkRunner.BuildType == NetworkRunner.BuildTypes.Debug) {
+      if (ILWeaverSettings.NullChecksForNetworkedProperties()) {
         var nop = Instruction.Create(OpCodes.Nop);
 
         il.Append(Instruction.Create(OpCodes.Ldarg_0));
@@ -988,7 +988,7 @@ namespace Fusion.CodeGen {
           addressLoader(setIL, 0);
 
           if (accuracy == 0) {
-            setIL.Append(Instruction.Create(OpCodes.Ldarg_1));
+            setIL.Append(Instruction.Create(valueOpCode));
             setIL.Append(Instruction.Create(OpCodes.Stind_R4));
           } else {
             setIL.Append(Instruction.Create(OpCodes.Ldc_R4, 1f / accuracy));
@@ -1471,6 +1471,7 @@ namespace Fusion.CodeGen {
         attr.TryGetAttributeProperty<bool>(nameof(RpcAttribute.InvokeResim), out var invokeResim);
         attr.TryGetAttributeProperty<RpcChannel>(nameof(RpcAttribute.Channel), out var channel);
         attr.TryGetAttributeProperty<bool>(nameof(RpcAttribute.TickAligned), out var tickAligned, defaultValue: true);
+        attr.TryGetAttributeProperty<RpcHostMode>(nameof(RpcAttribute.HostMode), out var hostMode);
 
         // rpc key
         int instanceRpcKey = -1;
@@ -1565,21 +1566,20 @@ namespace Fusion.CodeGen {
           var ret = returnInstructions.First();
 
           // check if runner's ok
-          if (NetworkRunner.BuildType == NetworkRunner.BuildTypes.Debug) {
-            if (rpc.IsStatic) {
-              il.AppendMacro(ctx.LoadRunner());
-              var checkDone = Nop();
-              il.Append(Brtrue_S(checkDone));
-              il.Append(Ldstr(rpc.Parameters[0].Name));
-              il.Append(Newobj(typeof(ArgumentNullException).GetConstructor(asm, 1)));
-              il.Append(Throw());
-              il.Append(checkDone);
-            } else {
-              il.Append(Ldarg_0());
-              il.Append(Call(asm.NetworkBehaviourUtils.GetMethod(nameof(NetworkBehaviourUtils.ThrowIfBehaviourNotInitialized))));
-            }
+          if (rpc.IsStatic) {
+            il.AppendMacro(ctx.LoadRunner());
+            var checkDone = Nop();
+            il.Append(Brtrue_S(checkDone));
+            il.Append(Ldstr(rpc.Parameters[0].Name));
+            il.Append(Newobj(typeof(ArgumentNullException).GetConstructor(asm, 1)));
+            il.Append(Throw());
+            il.Append(checkDone);
+          } else {
+            il.Append(Ldarg_0());
+            il.Append(Call(asm.NetworkBehaviourUtils.GetMethod(nameof(NetworkBehaviourUtils.ThrowIfBehaviourNotInitialized))));
           }
 
+          il.AppendMacro(ctx.SetRpcInvokeInfoStatus(!invokeLocal, RpcLocalInvokeResult.NotInvokableLocally));
 
           // if we shouldn't invoke during resim
           if (invokeResim == false) {
@@ -1591,7 +1591,8 @@ namespace Fusion.CodeGen {
             il.Append(Ldc_I4((int)SimulationStages.Resimulate));
             il.Append(Bne_Un_S(checkDone));
 
-            il.AppendMacro(ctx.SetRpcInvokeInfoCullReason(RpcInvokeInfo.CullReason.NotInvokableDuringResim));
+            il.AppendMacro(ctx.SetRpcInvokeInfoStatus(invokeLocal, RpcLocalInvokeResult.NotInvokableDuringResim));
+            il.AppendMacro(ctx.SetRpcInvokeInfoStatus(RpcSendCullResult.NotInvokableDuringResim));
             il.Append(Br(ret));
 
             il.Append(checkDone);
@@ -1624,7 +1625,8 @@ namespace Fusion.CodeGen {
               il.Append(Call(asm.NetworkBehaviourUtils.GetMethod(nameof(NetworkBehaviourUtils.NotifyRpcTargetUnreachable))));
               il.Append(Pop()); // pop the GetRpcTargetStatus
 
-              il.AppendMacro(ctx.SetRpcInvokeInfoCullReason(RpcInvokeInfo.CullReason.TargetPlayerUnreachable));
+              il.AppendMacro(ctx.SetRpcInvokeInfoStatus(invokeLocal, RpcLocalInvokeResult.TagetPlayerIsNotLocal));
+              il.AppendMacro(ctx.SetRpcInvokeInfoStatus(RpcSendCullResult.TargetPlayerUnreachable));
               il.Append(Br(ret));
 
               il.Append(done);
@@ -1638,6 +1640,7 @@ namespace Fusion.CodeGen {
                 Log.Assert(targetedInvokeLocal == null);
                 targetedInvokeLocal = Nop();
                 il.Append(Beq(targetedInvokeLocal));
+                il.AppendMacro(ctx.SetRpcInvokeInfoStatus(true, RpcLocalInvokeResult.TagetPlayerIsNotLocal));
               } else {
                 // will never get called
                 var checkDone = Nop();
@@ -1649,7 +1652,7 @@ namespace Fusion.CodeGen {
                   il.Append(Call(asm.NetworkBehaviourUtils.GetMethod(nameof(NetworkBehaviourUtils.NotifyLocalTargetedRpcCulled))));
                 }
 
-                il.AppendMacro(ctx.SetRpcInvokeInfoCullReason(RpcInvokeInfo.CullReason.TargetPlayerIsLocalButRpcIsNotInvokableLocally));
+                il.AppendMacro(ctx.SetRpcInvokeInfoStatus(RpcSendCullResult.TargetPlayerIsLocalButRpcIsNotInvokableLocally));
                 il.Append(Br(ret));
 
                 il.Append(checkDone);
@@ -1673,7 +1676,9 @@ namespace Fusion.CodeGen {
             il.Append(Ldc_I4(sources));
             il.Append(Call(asm.NetworkBehaviourUtils.GetMethod(nameof(NetworkBehaviourUtils.NotifyLocalSimulationNotAllowedToSendRpc))));
 
-            il.AppendMacro(ctx.SetRpcInvokeInfoCullReason(RpcInvokeInfo.CullReason.InsufficientSourceAuthority));
+            il.AppendMacro(ctx.SetRpcInvokeInfoStatus(invokeLocal, RpcLocalInvokeResult.InsufficientSourceAuthority));
+            il.AppendMacro(ctx.SetRpcInvokeInfoStatus(RpcSendCullResult.InsufficientSourceAuthority));
+
             il.Append(Br(ret));
 
             il.Append(checkDone);
@@ -1699,7 +1704,7 @@ namespace Fusion.CodeGen {
             il.AppendMacro(ctx.LoadRunner());
             il.Append(Call(asm.NetworkRunner.GetMethod(nameof(NetworkRunner.HasAnyActiveConnections))));
             il.Append(Brtrue(checkDone));
-            il.AppendMacro(ctx.SetRpcInvokeInfoCullReason(RpcInvokeInfo.CullReason.RemoteCulledNoActiveConnections));
+            il.AppendMacro(ctx.SetRpcInvokeInfoStatus(RpcSendCullResult.NoActiveConnections));
             il.Append(Br(afterSend));
             il.Append(checkDone);
           }
@@ -1845,11 +1850,13 @@ namespace Fusion.CodeGen {
           
           if (ctx.RpcInvokeInfoVariable != null) {
             il.Append(Ldloca(ctx.RpcInvokeInfoVariable));
-            il.Append(Ldflda(asm.RpcInvokeInfo.GetField(nameof(RpcInvokeInfo.Remote))));
+            il.Append(Ldflda(asm.RpcInvokeInfo.GetField(nameof(RpcInvokeInfo.SendResult))));
             il.Append(Call(asm.NetworkRunner.GetMethod(nameof(NetworkRunner.SendRpc), 2)));
           } else {
             il.Append(Call(asm.NetworkRunner.GetMethod(nameof(NetworkRunner.SendRpc), 1)));
           }
+
+          il.AppendMacro(ctx.SetRpcInvokeInfoStatus(RpcSendCullResult.NotCulled));
 
           il.Append(afterSend);
 
@@ -1868,7 +1875,8 @@ namespace Fusion.CodeGen {
               il.Append(And());
               il.Append(Brtrue_S(checkDone));
 
-              il.AppendMacro(ctx.SetRpcInvokeInfoVariable(nameof(RpcInvokeInfo.Local), (int)RpcInvokeInfo.LocalInfo.InsufficientTargetAuthority));
+              il.AppendMacro(ctx.SetRpcInvokeInfoStatus(true, RpcLocalInvokeResult.InsufficientTargetAuthority));
+
               il.Append(Br(ret));
 
               il.Append(checkDone);
@@ -1881,17 +1889,16 @@ namespace Fusion.CodeGen {
                 // need to fill it now
                 il.AppendMacro(ctx.LoadRunner());
                 il.Append(Ldc_I4((int)channel));
+                il.Append(Ldc_I4((int)hostMode));
                 il.Append(Call(asm.RpcInfo.GetMethod(nameof(RpcInfo.FromLocal))));
                 il.Append(Starg_S(param));
               }
             }
 
-            il.AppendMacro(ctx.SetRpcInvokeInfoVariable(nameof(RpcInvokeInfo.Local), (int)RpcInvokeInfo.LocalInfo.Invoked));
+            il.AppendMacro(ctx.SetRpcInvokeInfoStatus(true, RpcLocalInvokeResult.Invoked));
 
             // invoke
             il.Append(Br(inv));
-          } else {
-            il.AppendMacro(ctx.SetRpcInvokeInfoVariable(nameof(RpcInvokeInfo.Local), (int)RpcInvokeInfo.LocalInfo.NotInvokableLocally));
           }
 
           foreach (var instruction in returnInstructions) {
@@ -1973,7 +1980,9 @@ namespace Fusion.CodeGen {
               };
 
             } else if (para.VariableType.IsSame<RpcInfo>()) {
+              il.AppendMacro(ctx.LoadRunner());
               il.Append(Ldarg_1());
+              il.Append(Ldc_I4((int)hostMode));
               il.Append(Call(asm.RpcInfo.GetMethod(nameof(RpcInfo.FromMessage))));
               il.Append(Stloc(para));
 
@@ -2518,7 +2527,7 @@ namespace Fusion.CodeGen {
         foreach (var t in moduleAllTypes) {
           if (t.IsValueType && t.Is<INetworkStruct>()) {
             try {
-              WeaveStruct(asm, t);
+              WeaveStruct(asm, t, null);
             } catch (Exception ex) {
               throw new ILWeaverException($"Failed to weave struct {t}", ex);
             }
@@ -2608,12 +2617,30 @@ namespace Fusion.CodeGen {
       }
     }
 
+    void WeaveStruct(ILWeaverAssembly asm, TypeDefinition type, TypeReference typeRef) {
+      string typeKey;
+      if (type.HasGenericParameters) {
+        Log.Assert(typeRef?.IsGenericInstance == true);
+        typeKey = typeRef.FullName;
+      } else {
+        typeKey = type.FullName;
+      }
 
-    void WeaveStruct(ILWeaverAssembly asm, TypeDefinition type) {
       if (type.TryGetAttribute<NetworkStructWeavedAttribute>(out var attribute)) {
-        if (_typeData.ContainsKey(type.FullName) == false) {
-          _typeData.Add(type.FullName, new TypeMetaData {
-            WordCount = (int)attribute.ConstructorArguments[0].Value,
+
+        if (_typeData.ContainsKey(typeKey) == false) {
+          var wordCount = attribute.GetAttributeArgument<int>(0);
+          if (attribute.TryGetAttributeArgument(1, out bool value, false) && value) {
+            Log.Assert(typeRef?.IsGenericInstance == true);
+            foreach (var gen in ((GenericInstanceType)typeRef).GenericArguments) {
+              if (gen.IsValueType && gen.Is<INetworkStruct>()) {
+                wordCount += GetTypeWordCount(asm, gen);
+              }
+            }
+          }
+
+          _typeData.Add(typeKey, new TypeMetaData {
+            WordCount = wordCount,
             Definition = type,
             Reference = type
           });
@@ -2627,7 +2654,7 @@ namespace Fusion.CodeGen {
         int wordCount = WeaveStructInner(asm, type);
 
         // track type data
-        _typeData.Add(type.FullName, new TypeMetaData {
+        _typeData.Add(typeKey, new TypeMetaData {
           WordCount = wordCount,
           Definition = type,
           Reference = type
@@ -2650,6 +2677,8 @@ namespace Fusion.CodeGen {
         if (!IsWeavableProperty(property, out var propertyInfo)) {
           continue;
         }
+
+        property.ThrowIfStatic();
 
         if (IsTypeBlittable(asm, property.PropertyType)) {
           Log.Warn($"Networked property {property} should be replaced with a regular field. For structs, " +
@@ -2978,6 +3007,8 @@ namespace Fusion.CodeGen {
           if (IsWeavableProperty(property, out var propertyInfo) == false) {
             continue;
           }
+
+          property.ThrowIfStatic();
 
           if (!string.IsNullOrEmpty(propertyInfo.OnChanged)) {
             WeaveChangedHandler(asm, property, propertyInfo.OnChanged);
@@ -3580,6 +3611,9 @@ namespace Fusion.CodeGen {
             return methRef;
           }
         }
+      }
+      if (methRef == null) {
+        throw new InvalidOperationException($"Not found: {name}");
       }
       return methRef;
     }
@@ -4633,6 +4667,18 @@ namespace Fusion.CodeGen {
       return (T)attr.ConstructorArguments[index].Value;
     }
 
+    public static bool TryGetAttributeArgument<T>(this CustomAttribute attr, int index, out T value, T defaultValue = default) {
+      if (index < attr.ConstructorArguments.Count) {
+        if (attr.ConstructorArguments[index].Value is T t) {
+          value = t;
+          return true;
+        }
+      }
+
+      value = defaultValue;
+      return false;
+    }
+
     public static T GetAttributeProperty<T>(this CustomAttribute attr, string name, T defaultValue = default) {
       attr.TryGetAttributeProperty(name, out var result, defaultValue);
       return result;
@@ -4922,6 +4968,14 @@ namespace Fusion.CodeGen {
       return method != null;
     }
 
+
+    public static PropertyDefinition ThrowIfStatic(this PropertyDefinition property) {
+      if (property.GetMethod?.IsStatic == true ||
+          property.SetMethod?.IsStatic == true) {
+        throw new ILWeaverException($"Property is static: {property.FullName}");
+      }
+      return property;
+    }
 
     public static MethodDefinition ThrowIfStatic(this MethodDefinition method) {
       if (method.IsStatic) {
@@ -5589,13 +5643,20 @@ namespace Fusion.CodeGen {
            Ldc_I4(value),
            Stfld(Assembly.RpcInvokeInfo.GetField(name)),
         };
-
-      public ILMacroStruct SetRpcInvokeInfoCullReason(RpcInvokeInfo.CullReason reason) => RpcInvokeInfoVariable == null ? new Instruction[0] :
+      public ILMacroStruct SetRpcInvokeInfoStatus(bool emitIf, RpcLocalInvokeResult reason) => RpcInvokeInfoVariable == null || !emitIf ? new Instruction[0] :
         new[] {
            Ldloca(RpcInvokeInfoVariable),
            Ldc_I4((int)reason),
-           Stfld(Assembly.RpcInvokeInfo.GetField(nameof(RpcInvokeInfo.Cull)))
+           Stfld(Assembly.RpcInvokeInfo.GetField(nameof(RpcInvokeInfo.LocalInvokeResult)))
         };
+
+      public ILMacroStruct SetRpcInvokeInfoStatus(RpcSendCullResult reason) => RpcInvokeInfoVariable == null ? new Instruction[0] :
+        new[] {
+           Ldloca(RpcInvokeInfoVariable),
+           Ldc_I4((int)reason),
+           Stfld(Assembly.RpcInvokeInfo.GetField(nameof(RpcInvokeInfo.SendCullResult)))
+        };
+
     }
   }
 }
@@ -5918,6 +5979,12 @@ namespace Fusion.CodeGen {
       return result.Value;
     }
 
+    internal static bool NullChecksForNetworkedProperties() {
+      bool result = true;
+      NullChecksForNetworkedPropertiesPartial(ref result);
+      return result;
+    }
+
     internal static bool IsAssemblyWeavable(string name) {
       bool result = false;
       IsAssemblyWeavablePartial(name, ref result);
@@ -5939,6 +6006,8 @@ namespace Fusion.CodeGen {
     static partial void IsAssemblyWeavablePartial(string name, ref bool result);
 
     static partial void UseSerializableDictionaryForNetworkDictionaryPropertiesPartial(ref bool result);
+
+    static partial void NullChecksForNetworkedPropertiesPartial(ref bool result);
   }
 }
 #endif
@@ -6020,15 +6089,16 @@ namespace Fusion.CodeGen {
       }
     }
 
+    static partial void NullChecksForNetworkedPropertiesPartial(ref bool result) {
+      result = _nullChecksForNetworkedProperties.Value ?? result;
+    }
+
     static partial void IsAssemblyWeavablePartial(string name, ref bool result) {
       result = _assembliesToWeave.Value.Contains(name);
     }
 
     static partial void UseSerializableDictionaryForNetworkDictionaryPropertiesPartial(ref bool result) {
-      var element = _config.Value.Root.Element(nameof(NetworkProjectConfig.UseSerializableDictionary));
-      if (element != null) {
-        result = (bool)element;
-      }
+      result = _useSerializableDictionary.Value ?? result;
     }
 
     public static bool ValidateConfig(out ConfigStatus errorType, out Exception error) {
@@ -6083,6 +6153,15 @@ namespace Fusion.CodeGen {
     static Lazy<HashSet<string>> _assembliesToWeave = new Lazy<HashSet<string>>(() => {
       return new HashSet<string>(GetElementsOrThrow(_config.Value.Root, nameof(NetworkProjectConfig.AssembliesToWeave)).Select(x => x.Value), StringComparer.OrdinalIgnoreCase);
     });
+
+    static Lazy<bool?> _nullChecksForNetworkedProperties = new Lazy<bool?>(() => {
+      return (bool?)_config.Value.Root.Element(nameof(NetworkProjectConfig.NullChecksForNetworkedProperties));
+    });
+
+    static Lazy<bool?> _useSerializableDictionary = new Lazy<bool?>(() => {
+      return (bool?)_config.Value.Root.Element(nameof(NetworkProjectConfig.UseSerializableDictionary));
+    });
+
 
     public static string GetXPath(this XElement element) {
       var ancestors = element.AncestorsAndSelf()
@@ -6143,6 +6222,10 @@ namespace Fusion.CodeGen {
 
     static partial void UseSerializableDictionaryForNetworkDictionaryPropertiesPartial(ref bool result) {
       result = NetworkProjectConfig.Global.UseSerializableDictionary;
+    }
+
+    static partial void NullChecksForNetworkedPropertiesPartial(ref bool result) {
+      result = NetworkProjectConfig.Global.NullChecksForNetworkedProperties;
     }
   }
 }

@@ -68,10 +68,6 @@ namespace Fusion {
       var guid = AssetDatabase.AssetPathToGUID(assetPath);
       var addressableEntry = Lookup[guid].SingleOrDefault();
       if (addressableEntry != null) {
-        if (addressableEntry.IsSubAsset) {
-          throw new InvalidOperationException("Sub assets not supported");
-        }
-
         var result = ScriptableObject.CreateInstance<NetworkPrefabSourceUnityAddressable>();
         result.Address = new AssetReferenceGameObject(addressableEntry.guid);
         return result;
@@ -97,7 +93,49 @@ namespace Fusion {
       return assetList.Where(x => !string.IsNullOrEmpty(x.guid)).ToLookup(x => x.guid);
     }
 
+#if FUSION_ADDRESSABLES_HAVE_MODIFICATION_EVENTS
+    [InitializeOnLoadMethod]
+    static void Initialize() {
 
+      void RefreshConfig() {
+        var importer = NetworkProjectConfigUtilities.GlobalConfigImporter;
+        if (importer != null) {
+          importer.SaveAndReimport();
+        }
+      }
+
+      AddressableAssetSettings.OnModificationGlobal += (settings, modificationEvent, data) => {
+        switch (modificationEvent) {
+          case AddressableAssetSettings.ModificationEvent.EntryAdded:
+          case AddressableAssetSettings.ModificationEvent.EntryCreated:
+          case AddressableAssetSettings.ModificationEvent.EntryModified:
+          case AddressableAssetSettings.ModificationEvent.EntryMoved:
+
+            IEnumerable<AddressableAssetEntry> entries;
+            if (data is AddressableAssetEntry singleEntry) {
+              entries = Enumerable.Repeat(singleEntry, 1);
+            } else {
+              entries = (IEnumerable<AddressableAssetEntry>)data;
+            }
+
+            List<AddressableAssetEntry> allEntries = new List<AddressableAssetEntry>();
+            foreach (var entry in entries) {
+              entry.GatherAllAssets(allEntries, true, true, true);
+              if (allEntries.Any(x => AssetDatabaseUtils.HasLabel(x.AssetPath, "FusionPrefab"))) {
+                RefreshConfig();
+                break;
+              }
+              allEntries.Clear();
+            }
+            break;
+
+          case AddressableAssetSettings.ModificationEvent.EntryRemoved:
+            RefreshConfig();
+            break;
+        };
+      };
+    }
+#endif
   }
 #endif
 }

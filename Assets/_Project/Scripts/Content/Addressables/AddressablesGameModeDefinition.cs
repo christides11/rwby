@@ -12,7 +12,6 @@ namespace rwby
     [CreateAssetMenu(fileName = "AddressablesGameModeDefinition", menuName = "rwby/Content/Addressables/GameModeDefinition")]
     public class AddressablesGameModeDefinition : IGameModeDefinition
     {
-
         public override string Name { get { return gamemodeName; } }
         public override string Description { get { return description; } }
 

@@ -33,22 +33,35 @@ MonoBehaviour:
       sceneList:
         enabledScenes:
         - fileGUID: 0a31a49620566e346930805759bb059d
+    - typeName: Release
+      bundleIdentifier: com.ChrisTides11.rwby
+      companyName: ChrisTides11
+      productName: rwby
+      buildOptions: 0
+      customDefines: 
+      sceneList:
+        enabledScenes:
+        - fileGUID: 0a31a49620566e346930805759bb059d
   _platformList:
     platforms:
     - {fileID: 12252119849156343}
   _projectConfigurations:
     configSet:
-      _Buckets: 01000000ffffffff02000000
-      _HashCodes: d7a5f34c7de9e336d9949a14
-      _Next: ffffffff00000000ffffffff
-      _Count: 3
-      _Version: 3
+      _Buckets: ffffffffffffffff05000000020000000100000004000000ffffffff
+      _HashCodes: d7a5f34c7de9e336d9949a144bbe5b54510e9f592d6dfd4800000000
+      _Next: ffffffffffffffffffffffff00000000ffffffff0300000000000000
+      _Count: 6
+      _Version: 6
       _FreeList: -1
       _FreeCount: 0
       _Keys:
       - DevBuild/PC/Windows x64
       - DevBuild/PC
       - DevBuild
+      - Release/PC/Windows x64
+      - Release/PC
+      - Release
+      - 
       _Values:
       - enabled: 1
         childKeys: []
@@ -58,6 +71,16 @@ MonoBehaviour:
       - enabled: 1
         childKeys:
         - DevBuild/PC
+      - enabled: 1
+        childKeys: []
+      - enabled: 1
+        childKeys:
+        - Release/PC/Windows x64
+      - enabled: 1
+        childKeys:
+        - Release/PC
+      - enabled: 1
+        childKeys: []
     showViewOptions: 0
     showConfigs: 0
     showBuildInfo: 0

@@ -2,7 +2,9 @@ using Cysharp.Threading.Tasks;
 using Rewired.UI.ControlMapper;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace rwby
 {
@@ -46,28 +48,15 @@ namespace rwby
             }
         }
 
-        public virtual async UniTask<bool> LoadMap(ModObjectReference map)
-        {
-            return false;
-            /*
-            await contentManager.LoadContentDefinitions(ContentType.Map, map.modIdentifier);
-            IMapDefinition mapDefinition = (IMapDefinition)contentManager.GetContentDefinition(ContentType.Map, map);
-
-            if (mapDefinition == null)
+        public virtual string[] GetSceneNames(CustomSceneRef sceneReference){
+            if (sceneReference.source == 0)
             {
-                Debug.Log($"Can not find map {map.ToString()}.");
-                return false;
+                return new string[] { SceneManager.GetSceneByBuildIndex(sceneReference.sceneIndex).name };
             }
 
-            bool result = await contentManager.LoadMap(map);
-            if (!result)
-            {
-                Debug.Log($"Error loading map {map.ToString()}.");
-                return false;
-            }
+            IMapDefinition mapDefinition = contentManager.GetContentDefinition<IMapDefinition>(new ModObjectReference((sceneReference.source, sceneReference.modIdentifier), sceneReference.sceneIndex));
 
-            currentMapSceneName = mapDefinition.SceneName;
-            return true;*/
+            return mapDefinition.GetSceneNames().ToArray();
         }
     }
 }

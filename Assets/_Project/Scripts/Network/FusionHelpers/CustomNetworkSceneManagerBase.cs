@@ -1,13 +1,14 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using Fusion;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
 namespace rwby
 {
-    public abstract class CustomNetworkSceneManagerBase : MonoBehaviour, INetworkSceneObjectProvider
+    public abstract class CustomNetworkSceneManagerBase : Fusion.Behaviour, INetworkSceneObjectProvider
     {
         public NetworkRunner Runner { get; private set; }
         
@@ -37,9 +38,8 @@ namespace rwby
 #endif
         }
 
-        protected virtual void OnLateUpdate()
-        {
-            if (!Runner || !LobbyManager.singleton)
+        protected virtual void LateUpdate() {
+            if (!Runner || LobbyManager.singleton == null)
             {
                 return;
             }
@@ -56,7 +56,6 @@ namespace rwby
             }
             
             // For multi-peer mode?
-            /*
             if (s_currentlyLoading.TryGetTarget(out var target))
             {
                 Assert.Check(target != this);
@@ -70,17 +69,15 @@ namespace rwby
                     LogTrace($"Waiting for {target} to finish loading");
                     return;
                 }
-            }*/
+            }
             
-            
-            /*
-            var prevScene = _currentScene;
-            _currentScene = Runner.CurrentScene;
+            var prevScenes = currentLoadedScenes;
+            currentLoadedScenes = LobbyManager.singleton.currentLoadedScenes.ToList();
             _currentSceneOutdated = false;
-
-            LogTrace($"Scene transition {prevScene}->{_currentScene}");
-            _runningCoroutine = SwitchSceneWrapper(prevScene, _currentScene);
-            StartCoroutine(_runningCoroutine);*/
+            
+            LogTrace($"Scene transition {prevScenes.Count}->{currentLoadedScenes.Count}");
+            _runningCoroutine = UpdateScenesWrapper(prevScenes, currentLoadedScenes);
+            StartCoroutine(_runningCoroutine);
         }
 
         protected delegate void FinishedLoadingDelegate(IEnumerable<NetworkObject> sceneObjects);
@@ -173,11 +170,11 @@ namespace rwby
             {
                 return false;
             }
-            // TODO
+
             /*
-            if (runner.CurrentScene != _currentScene)
+            if (LobbyManager.singleton != null)
             {
-                return false;
+                if(LobbyManager.singleton.currentLoadedScenes.ToList() != currentLoadedScenes) return false;
             }*/
             return true;
         }

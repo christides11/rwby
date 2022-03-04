@@ -85,7 +85,7 @@ namespace rwby.menus
             {
                 GameObject playerItem = GameObject.Instantiate(localPlayerListItem, localPlayerList, false);
                 TextMeshProUGUI[] textMeshes = playerItem.GetComponentsInChildren<TextMeshProUGUI>();
-                textMeshes[0].text = ClientManager.local.ClientPlayers[i].characterReference;
+                textMeshes[0].text = ClientManager.local.ClientPlayers[i].characterReference.ToString();
                 playerItem.GetComponentInChildren<PlayerPointerEventTrigger>().OnPointerClickEvent
                     .AddListener((d) => { OpenCharacterSelection(); });
 
@@ -119,9 +119,9 @@ namespace rwby.menus
 
             teamContainers.Clear();
 
-            var gamemodeRef = new ModObjectReference(LobbyManager.singleton.Settings.gamemodeReference);
+            ModObjectReference gamemodeRef = LobbyManager.singleton.Settings.gamemodeReference;
             IGameModeDefinition ll;
-            if(gamemodeRef.IsEmpty() == false) {
+            if(gamemodeRef.IsValid()) {
                 ll = ContentManager.singleton.GetContentDefinition<IGameModeDefinition>(gamemodeRef);
 
                 for (int i = 0; i < LobbyManager.singleton.Settings.teams; i++)
@@ -179,7 +179,7 @@ namespace rwby.menus
 
             GameObject gamemodeOb = GameObject.Instantiate(gamemodeOptionsContentPrefab, gamemodeOptionsList, false);
             TextMeshProUGUI[] textMeshes = gamemodeOb.GetComponentsInChildren<TextMeshProUGUI>();
-            textMeshes[0].text = LobbyManager.singleton.Settings.gamemodeReference;
+            textMeshes[0].text = LobbyManager.singleton.Settings.gamemodeReference.ToString();
             PlayerPointerEventTrigger ppet = gamemodeOb.GetComponentInChildren<PlayerPointerEventTrigger>();
             ppet.OnPointerClickEvent.AddListener((d) => { _ = OpenGamemodeSelection(); });
             

@@ -128,15 +128,15 @@ namespace rwby
 
 		public void SetPlayerCharacter(int playerIndex, ModObjectReference characterReference)
         {
-			RPC_SetPlayerCharacter(playerIndex, characterReference.ToString());
+			RPC_SetPlayerCharacter(playerIndex, characterReference);
 		}
 
 		[Rpc(RpcSources.InputAuthority | RpcSources.StateAuthority, RpcTargets.StateAuthority)]
-		private void RPC_SetPlayerCharacter(int playerIndex, string characterReferenceString)
+		private void RPC_SetPlayerCharacter(int playerIndex, ModObjectReference characterReference)
         {
 			var tempList = ClientPlayers;
 			ClientPlayerDefinition temp = tempList[playerIndex];
-			temp.characterReference = characterReferenceString;
+			temp.characterReference = characterReference;
 			tempList[playerIndex] = temp;
 		}
 
@@ -156,7 +156,7 @@ namespace rwby
 
 		public NetworkObject SpawnPlayer(PlayerRef owner, int playerIndex, Vector3 spawnPosition)
         {
-			ModObjectReference characterReference = new ModObjectReference(ClientPlayers[playerIndex].characterReference);
+			ModObjectReference characterReference = ClientPlayers[playerIndex].characterReference;
 			IFighterDefinition fighterDefinition = ContentManager.singleton.GetContentDefinition<IFighterDefinition>(characterReference);
 
 			int indexTemp = playerIndex;
