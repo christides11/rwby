@@ -296,11 +296,11 @@ MonoBehaviour:
   m_Script: {fileID: -1552182283, guid: e725a070cec140c4caffb81624c8c787, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  AoiMode: 0
-  DefaultPropertyGroups: []
+  ObjectInterest: 0
+  DefaultInterestGroups: []
   DestroyWhenStateAuthorityLeaves: 0
   AllowStateAuthorityOverride: 0
-  AoiPosition: {fileID: 0}
+  AoiPositionSource: {fileID: 0}
   Flags: 2305
   NetworkGuid:
     RawGuidValue: d8c849d4b476dd84eaed34e3a947439a
@@ -362,8 +362,6 @@ MonoBehaviour:
     _value: 0
   _currentAerialJump: 0
   _currentAerialDash: 0
-  _apexTime: 0
-  _gravity: 0
   _attackEventInput: 
   inputManager: {fileID: 728284172682202706}
   combatManager: {fileID: 7730901374118442406}
@@ -562,8 +560,9 @@ MonoBehaviour:
   manager: {fileID: 3846760401122892541}
   combatManager: {fileID: 7730901374118442406}
   director: {fileID: 2932098468412428962}
-  markedForStateChange: 0
-  nextState: 0
+  _markedForStateChange:
+    _value: 0
+  _nextState: 0
 --- !u!114 &2326289350170218266
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5955,11 +5954,11 @@ MonoBehaviour:
   m_Script: {fileID: -1552182283, guid: e725a070cec140c4caffb81624c8c787, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  AoiMode: 0
-  DefaultPropertyGroups: []
+  ObjectInterest: 0
+  DefaultInterestGroups: []
   DestroyWhenStateAuthorityLeaves: 0
   AllowStateAuthorityOverride: 0
-  AoiPosition: {fileID: 0}
+  AoiPositionSource: {fileID: 0}
   Flags: 3073
   NetworkGuid:
     RawGuidValue: 00000000000000000000000000000000

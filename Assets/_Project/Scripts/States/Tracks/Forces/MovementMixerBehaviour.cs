@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Playables;
 
@@ -39,7 +37,11 @@ namespace rwby
             finalWeights.Normalize();
             
             //assign the result to the bound object
-            cm.FPhysicsManager.forceMovement = finalSetForce * finalWeights.x;
+            if (finalWeights.x > 0)
+            {
+                cm.FPhysicsManager.forceMovement = finalSetForce * finalWeights.x;
+            }
+
             cm.FPhysicsManager.forceMovement += finalAddForce * finalWeights.y;
         }
     }

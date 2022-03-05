@@ -46,8 +46,6 @@ namespace rwby
         [Networked] public NetworkBool StoredRun { get; set; }
         [Networked] public int currentAerialJump { get; set; }
         [Networked] public int currentAerialDash { get; set; }
-        [Networked] public float apexTime { get; set; }
-        [Networked] public float gravity { get; set; }
         [Networked, Capacity(10)] public NetworkArray<bool> attackEventInput { get; }
 
         [Header("References")]
@@ -109,17 +107,13 @@ namespace rwby
 
         public override void FixedUpdateNetwork()
         {
-            if (Runner.Simulation.IsResimulation && Runner.Simulation.IsFirstTick)
-            {
-                stateManager.ResimulationSync();
-            }
-            
             //boxManager.ClearHitboxes();
             visualTransform.gameObject.SetActive(Visible);
 
             HitstopShake();
             HandleLockon();
 
+            
             if (FCombatManager.HitStop == 0)
             {
                 if (FCombatManager.BlockStun > 0)
@@ -141,7 +135,7 @@ namespace rwby
                 }
             }
         }
-
+        
         public Vector3[] shakeDirs;
         [Networked] public sbyte currentShakeDirection { get; set; }
 
@@ -304,7 +298,6 @@ namespace rwby
                 {
                     FCombatManager.SetAttack(attackIdentifier);
                 }
-                //FStateManager.ChangeState((int)FighterCmnStates.ATTACK, resetFrameCounter ? 0 : FStateManager.CurrentStateFrame);
                 return true;
             }
             return false;
@@ -444,26 +437,14 @@ namespace rwby
             Physics.Raycast(transform.position + new Vector3(0, 1, 0),
                 movementLeftForward, out leftForwardRay, wallCheckDistance, wallLayerMask);
 
-            //Debug.DrawRay(transform.position + new Vector3(0, 1, 0),
-            //    movementLeftForward * wallCheckDistance, Color.red);
-
             Physics.Raycast(transform.position + new Vector3(0, 1, 0),
                 translatedLeft.normalized, out leftRay, wallCheckDistance, wallLayerMask);
-
-            //Debug.DrawRay(transform.position + new Vector3(0, 1, 0),
-            //    translatedLeft.normalized * wallCheckDistance, Color.red);
 
             Physics.Raycast(transform.position + new Vector3(0, 1, 0),
                 movementRightForward, out rightForwardRay, wallCheckDistance, wallLayerMask);
 
-            //Debug.DrawRay(transform.position + new Vector3(0, 1, 0),
-            //    movementRightForward * wallCheckDistance, Color.red);
-
             Physics.Raycast(transform.position + new Vector3(0, 1, 0),
                 -translatedLeft.normalized, out rightRay, wallCheckDistance, wallLayerMask);
-
-            //Debug.DrawRay(transform.position + new Vector3(0, 1, 0),
-            //    -translatedLeft.normalized * wallCheckDistance, Color.red);
 
             FixRaycastHit(ref forwardRay);
             FixRaycastHit(ref leftRay);
@@ -531,8 +512,8 @@ namespace rwby
             StoredRun = false;
             currentAerialDash = 0;
             currentAerialJump = 0;
-            apexTime = 0;
-            gravity = 0;
+            //apexTime = 0;
+            //gravity = 0;
             FPhysicsManager.forceGravity = 0;
             combatManager.ResetStringAttacks();
         }

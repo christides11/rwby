@@ -1,9 +1,12 @@
+using UnityEngine;
+
 namespace rwby
 {
     [System.Serializable]
-    public struct IntStateMap
+    public class IntStateMap
     {
-        public int state;
+        [SelectImplementation((typeof(FighterStateReferenceBase)))] [SerializeReference]
+        public FighterStateReferenceBase state = new FighterCmnStateReference();
         public StateTimeline stateTimeline;
     }
 }

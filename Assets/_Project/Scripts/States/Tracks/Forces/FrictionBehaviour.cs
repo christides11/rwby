@@ -13,10 +13,12 @@ namespace rwby
         {
             FighterManager manager = (FighterManager)playerData;
 
+            if (manager.FPhysicsManager.forceMovement.sqrMagnitude == 0) return;
+            
             Vector3 realFriction = manager.FPhysicsManager.forceMovement.normalized * friction.GetValue(manager);
 
-            force.x = manager.FPhysicsManager.GetFrictionValue(manager.FPhysicsManager.forceMovement.x, realFriction.x);
-            force.z = manager.FPhysicsManager.GetFrictionValue(manager.FPhysicsManager.forceMovement.z, realFriction.z);
+            force.x = manager.FPhysicsManager.GetFrictionValue(manager.FPhysicsManager.forceMovement.x, Mathf.Abs(realFriction.x));
+            force.z = manager.FPhysicsManager.GetFrictionValue(manager.FPhysicsManager.forceMovement.z, Mathf.Abs(realFriction.z));
         }
     }
 }

@@ -10,28 +10,15 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: adbdad4b78c74644b845c16ee4643060, type: 3}
-  m_Name: Condition.CanJump
+  m_Name: Condition.MovementRange
   m_EditorClassIdentifier: 
   conditon:
     id: 0
   references:
     version: 1
     00000000:
-      type: {class: StateConditionAND, ns: HnSF, asm: HnSF}
+      type: {class: StateConditionMovementMagnitude, ns: rwby, asm: rwby.csharp}
       data:
         inverse: 0
-        conditions:
-        - id: 1
-        - id: 2
-    00000001:
-      type: {class: StateConditionGrounded, ns: rwby, asm: rwby.csharp}
-      data:
-        inverse: 0
-    00000002:
-      type: {class: StateConditionButton, ns: rwby, asm: rwby.csharp}
-      data:
-        inverse: 0
-        button: 0
-        buttonState: 1
-        offset: 0
-        buffer: 0
+        minMagnitude: 0.1
+        maxMagnitude: 1

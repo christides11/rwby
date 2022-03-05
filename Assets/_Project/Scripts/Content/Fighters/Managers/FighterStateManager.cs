@@ -9,27 +9,32 @@ namespace rwby
     [OrderAfter(typeof(Fusion.HitboxManager), typeof(FighterManager))]
     public class FighterStateManager : NetworkBehaviour, IFighterStateManager
     {
-        [Networked] public int CurrentStateMoveset { get; set; } = 0;
-        [Networked] public int CurrentState { get; set; } = 0;
-        [Networked] public int CurrentStateFrame { get; set; } = 0;
+        [Networked] public int CurrentStateMoveset { get; set; }
+        [Networked] public int CurrentState { get; set; }
+        [Networked] public int CurrentStateFrame { get; set; }
         
         [SerializeField] protected FighterManager manager;
         [SerializeField] protected FighterCombatManager combatManager;
 
         public PlayableDirector director;
-        
-        public bool markedForStateChange = false;
-        public int nextState = 0;
+
+        [Networked] public NetworkBool markedForStateChange { get; set; }
+        [Networked] public int nextState { get; set; }
 
         public void ResimulationSync()
         {
-            var currentState = manager.FCombatManager.GetMoveset().stateMap[CurrentState];
-            if (currentState == director.playableAsset) return;
-            InitState();
+            var currentState = (manager.FCombatManager.GetMoveset(CurrentStateMoveset) as rwby.Moveset).stateMap[CurrentState];
+            if (currentState != director.playableAsset) InitState(currentState);
+            director.time = (float)CurrentStateFrame * Runner.Simulation.DeltaTime;
         }
         
         public void Tick()
         {
+            if (Runner.Simulation.IsResimulation && Runner.Simulation.IsFirstTick)
+            {
+                ResimulationSync();
+            }
+            
             if (markedForStateChange)
             {
                 ChangeState(nextState, 0, true);
@@ -45,7 +50,7 @@ namespace rwby
 
         public void RemoveState(int stateNumber)
         {
-            Debug.Log("Cannot remove states.");
+            Debug.LogError("Cannot remove states.");
 
         }
 
@@ -57,21 +62,19 @@ namespace rwby
         
         public bool ChangeState(int state, int stateFrame = 0, bool callOnInterrupt = true)
         {
-            ChangeState(manager.FCombatManager.CurrentMovesetIdentifier, state, stateFrame, callOnInterrupt);
+            ChangeState(combatManager.CurrentMovesetIdentifier, state, stateFrame, callOnInterrupt);
             return true;
         }
 
         public void ChangeState(int stateMoveset, int state, int stateFrame = 0, bool callOnInterrupt = true)
         {
             markedForStateChange = false;
-            int oldStateMoveset = CurrentStateMoveset;
-            int oldState = CurrentState;
-            if (callOnInterrupt && oldState != 0)
+            if (callOnInterrupt && CurrentState != 0)
             {
-                // TODO: Use old state moveset.
-                SetFrame(manager.FCombatManager.GetMoveset().stateMap[oldState].totalFrames);
+                SetFrame((combatManager.GetMoveset(CurrentStateMoveset) as rwby.Moveset).stateMap[CurrentState].totalFrames);
                 director.Evaluate();
             }
+            
             CurrentStateMoveset = stateMoveset;
             CurrentStateFrame = stateFrame;
             CurrentState = state;
@@ -86,35 +89,33 @@ namespace rwby
 
         public void InitState()
         {
-            if (CurrentState == 0)
-            {
-                director.playableAsset = null;
-                return;
-            }
+            InitState(GetState());
+        }
 
-            director.playableAsset = GetState();
+        public void InitState(HnSF.StateTimeline state)
+        {
+            director.playableAsset = state;
+            if (state == null) return;
             foreach (var pAO in director.playableAsset.outputs)
             {
                 director.SetGenericBinding(pAO.sourceObject, manager);
             }
-            director.Play();
-            //SetFrame(0);
-            //director.Evaluate();
+            director.RebuildGraph();
         }
 
         public StateTimeline GetState()
         {
-            return manager.FCombatManager.GetMoveset().stateMap[CurrentState];
+            return (combatManager.GetMoveset(CurrentStateMoveset) as rwby.Moveset).stateMap[CurrentState];
         }
         
         public HnSF.StateTimeline GetState(int state)
         {
-            return manager.FCombatManager.GetMoveset().stateMap[state];
+            return (combatManager.GetMoveset(CurrentStateMoveset) as rwby.Moveset).stateMap[state];
         }
 
         public string GetCurrentStateName()
         {
-            return manager.FCombatManager.GetMoveset().stateMap[CurrentState].name;
+            return (combatManager.GetMoveset(CurrentStateMoveset) as rwby.Moveset).stateMap[CurrentState].name;
         }
 
         public void IncrementFrame()
@@ -126,7 +127,7 @@ namespace rwby
         public void SetFrame(int frame)
         {
             CurrentStateFrame = frame;
-            director.time = (float)CurrentStateFrame * Runner.Simulation.DeltaTime;
+            director.time = (float)frame * Runner.Simulation.DeltaTime;
         }
     }
 }

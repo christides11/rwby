@@ -1,6 +1,7 @@
 using System;
 using HnSF;
 using HnSF.Fighters;
+using UnityEngine;
 
 namespace rwby
 {
@@ -25,10 +26,10 @@ namespace rwby
             {
                 case ButtonStateType.IsDown:
                     if (result.isDown) return true;
-                    break;
+                        break;
                 case ButtonStateType.FirstPress:
                     if (result.firstPress) return true;
-                    break;
+                        break;
                 case ButtonStateType.Released:
                     if (result.released) return true;
                     break;

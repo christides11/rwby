@@ -141,8 +141,7 @@ namespace rwby
             Vector3 goalVelocity = movement.normalized * (minSpeed + (movement.magnitude * (maxSpeed - minSpeed)));
 
             // Move towards that goal based on our acceleration.
-            //forceMovement = Vector3.MoveTowards(forceMovement, goalVelocity, accel * Runner.DeltaTime);
-            return Vector3.MoveTowards(forceMovement, goalVelocity, accel * Runner.DeltaTime);
+            return Vector3.MoveTowards(forceMovement, goalVelocity, accel * Runner.DeltaTime) - forceMovement;
         }
 
         public virtual void HandleGravity(float maxFallSpeed, float gravity, float gravityScale)

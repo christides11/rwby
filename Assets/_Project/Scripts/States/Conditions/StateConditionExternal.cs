@@ -9,7 +9,8 @@ namespace rwby
         
         public override bool IsTrue(IFighterBase fm)
         {
-            return stateCondition.conditon.IsTrue(fm);
+            bool value = stateCondition.conditon.IsTrue(fm);
+            return inverse ? !value : value;
         }
     }
 }
