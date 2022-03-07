@@ -2,6 +2,25 @@
 
 ## RC Nightly
 
+### Build 430 (Mar 04, 2022)
+
+**Breaking Changes**
+
+- RPC local invokes for host (in Host mode) have `RpcInfo.Source` set to `PlayerRef.None` (used to be: Host's local `PlayerRef`). If you want the old behavior back RPC, use `[Rpc(HostMode = RpcHostMode.SourceIsHostPlayer)]`. Note that in such case clients will also see host's player in `RpcInfo.Source`
+
+**What's New**
+
+- Unity-side logger implementation - FusionUnityLogger
+
+**Changes**
+
+- Deprecated Log.Init(Action<string>, Action<string>, Action<string>, Action<string>)
+
+**Bug Fixes**
+
+- Fixed: AssertExceptions being thrown when quitting application with scene `NetworkObjects` that never have been activated
+- Fixed: AssertExceptions being thrown when exiting play mode with scene `NetworkObjects` that never have been activated
+
 ### Build 429 (Mar 03, 2022)
 
 **What's New**

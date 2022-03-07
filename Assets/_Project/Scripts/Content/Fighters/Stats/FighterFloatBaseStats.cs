@@ -31,11 +31,13 @@ namespace rwby
         AERIAL_acceleration,
         AERIAL_deceleration,
         AERIAL_rotationSpeed,
-        AIRDASH_maxSpeed,
+        AIRDASH_gravity,
         AIRDASH_force,
         AIRDASH_friction,
         WALLRUN_horizontalSpeed,
         WALLRUN_gravity,
         HITSTUN_gravity,
+        DASH_INIT_acceleration,
+        DASH_INIT_maxSpeed
     }
 }

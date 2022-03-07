@@ -44,8 +44,9 @@ namespace rwby
 
         // Stats
         [Networked] public NetworkBool StoredRun { get; set; }
-        [Networked] public int currentAerialJump { get; set; }
-        [Networked] public int currentAerialDash { get; set; }
+        [Networked] public int CurrentJump { get; set; }
+        [Networked] public int CurrentAirDash { get; set; }
+        [Networked] public float CurrentFallMultiplier { get; set; } = 1.0f;
         [Networked, Capacity(10)] public NetworkArray<bool> attackEventInput { get; }
 
         [Header("References")]
@@ -274,60 +275,17 @@ namespace rwby
             
         }
 
-        public virtual bool TryAttack()
-        {
-            int man = FCombatManager.TryAttack();
-            if (man != -1)
-            {
-                FCombatManager.SetAttack(man);
-                FStateManager.ChangeState((int)FighterCmnStates.ATTACK);
-                return true;
-            }
-            return false;
-        }
-
-        public virtual bool TryAttack(int attackIdentifier, int attackMoveset = -1, bool resetFrameCounter = true)
-        {
-            if (attackIdentifier != -1)
-            {
-                if (attackMoveset != -1)
-                {
-                    FCombatManager.SetAttack(attackIdentifier, attackMoveset);
-                }
-                else
-                {
-                    FCombatManager.SetAttack(attackIdentifier);
-                }
-                return true;
-            }
-            return false;
-        }
-
-        public bool TryJump()
-        {
-            if (InputManager.GetJump(out int bOff).firstPress == false)
-            {
-                return false;
-            }
-            if(physicsManager.IsGroundedNetworked == false)
-            {
-                return false;
-            }
-            FStateManager.ChangeState((ushort)FighterCmnStates.JUMPSQUAT);
-            return true;
-        }
-
         public bool TryAirJump()
         {
             if(InputManager.GetJump(out int bOff).firstPress == false)
             {
                 return false;
             }
-            if(currentAerialJump == statManager.GetFighterStats().intStats[FighterIntBaseStats.AIRJUMP_count])
+            if(CurrentJump == statManager.GetFighterStats().intStats[FighterIntBaseStats.AIRJUMP_count])
             {
                 return false;
             }
-            currentAerialJump++;
+            CurrentJump++;
             FStateManager.ChangeState((ushort)FighterCmnStates.AIR_JUMP);
             return true;
         }
@@ -338,11 +296,11 @@ namespace rwby
             {
                 return false;
             }
-            if(currentAerialDash == statManager.GetFighterStats().intStats[FighterIntBaseStats.AIRDASH_count])
+            if(CurrentAirDash == statManager.GetFighterStats().intStats[FighterIntBaseStats.AIRDASH_count])
             {
                 return false;
             }
-            currentAerialDash++;
+            CurrentAirDash++;
             FStateManager.ChangeState((ushort)FighterCmnStates.AIR_DASH);
             return true;
         }
@@ -510,10 +468,8 @@ namespace rwby
         public virtual void ResetVariablesOnGround()
         {
             StoredRun = false;
-            currentAerialDash = 0;
-            currentAerialJump = 0;
-            //apexTime = 0;
-            //gravity = 0;
+            CurrentAirDash = 0;
+            CurrentJump = 0;
             FPhysicsManager.forceGravity = 0;
             combatManager.ResetStringAttacks();
         }
@@ -567,20 +523,20 @@ namespace rwby
             return forward * vertical + right * horizontal;
         }
 
-        public virtual void RotateVisual(Vector3 direction, float speed)
+        public virtual Vector3 GetVisualRotation(Vector3 direction, float speed)
         {
             Vector3 newDirection = Vector3.RotateTowards(transform.forward, direction, speed * Runner.DeltaTime, 0.0f);
-            physicsManager.SetRotation(newDirection);
-        }
-
-        public void SetTargetable(bool value)
-        {
-            TargetableNetworked = value;
+            return newDirection - transform.forward;
         }
 
         public void SetVisualRotation(Vector3 direction)
         {
             physicsManager.SetRotation(direction);
+        }
+        
+        public void SetTargetable(bool value)
+        {
+            TargetableNetworked = value;
         }
 
         public GameObject GetGameObject()

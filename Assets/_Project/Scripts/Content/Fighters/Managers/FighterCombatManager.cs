@@ -6,7 +6,6 @@ using HnSF.Combat;
 using HnSF.Fighters;
 using HnSF.Input;
 using System;
-using rwby.Combat.AttackEvents;
 
 namespace rwby
 {

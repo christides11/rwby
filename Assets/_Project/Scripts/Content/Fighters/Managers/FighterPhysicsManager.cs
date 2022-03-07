@@ -93,7 +93,7 @@ namespace rwby
 
         public virtual float GetFrictionValue(float value, float traction)
         {
-            return Mathf.MoveTowards(value, 0, traction) - value;
+            return Mathf.MoveTowards(value, 0, traction * Runner.DeltaTime) - value;
         }
         
         /// <summary>
@@ -125,10 +125,11 @@ namespace rwby
 
         public virtual Vector3 HandleMovement(float baseAccel, float movementAccel, float deceleration, float minSpeed, float maxSpeed, AnimationCurve accelFromDot)
         {
-            // Get wanted movement vector.
-            Vector3 movement = manager.GetMovementVector();
-
-            // Real Accel
+            return HandleMovement(manager.GetMovementVector(), baseAccel, movementAccel, deceleration, minSpeed, maxSpeed, accelFromDot);
+        }
+        
+        public virtual Vector3 HandleMovement(Vector3 movement, float baseAccel, float movementAccel, float deceleration, float minSpeed, float maxSpeed, AnimationCurve accelFromDot)
+        {
             float realAcceleration = baseAccel + (movement.magnitude * movementAccel);
 
             if (movement.magnitude > 1.0f)
@@ -139,8 +140,7 @@ namespace rwby
             // Calculated our wanted movement force.
             float accel = movement == Vector3.zero ? deceleration : realAcceleration * accelFromDot.Evaluate(Vector3.Dot(movement, forceMovement.normalized));
             Vector3 goalVelocity = movement.normalized * (minSpeed + (movement.magnitude * (maxSpeed - minSpeed)));
-
-            // Move towards that goal based on our acceleration.
+            
             return Vector3.MoveTowards(forceMovement, goalVelocity, accel * Runner.DeltaTime) - forceMovement;
         }
 

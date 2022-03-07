@@ -41,6 +41,9 @@ namespace rwby
             }
             if (CurrentState == 0) return;
             director.Evaluate();
+            var s = GetState();
+            if(s.autoIncrement) IncrementFrame();
+            if(s.autoLoop && CurrentStateFrame == s.totalFrames) SetFrame(s.loopFrame); 
         }
         
         public void AddState(HnSF.StateTimeline state, int stateNumber)

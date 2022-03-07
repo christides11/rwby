@@ -1,0 +1,26 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: adbdad4b78c74644b845c16ee4643060, type: 3}
+  m_Name: Condition.Button.Dash.IsDown
+  m_EditorClassIdentifier: 
+  conditon:
+    id: 0
+  references:
+    version: 1
+    00000000:
+      type: {class: ButtonCondition, ns: rwby.state.conditions, asm: rwby.csharp}
+      data:
+        inverse: 0
+        button: 4
+        buttonState: 0
+        offset: 0
+        buffer: 0

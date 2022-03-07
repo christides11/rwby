@@ -42,9 +42,22 @@ namespace rwby
                 }
             }
 
+            if (Input.GetKeyDown(KeyCode.F3))
+            {
+                QualitySettings.vSyncCount = 0;
+            }
+            if (Input.GetKeyDown(KeyCode.F4))
+            {
+                QualitySettings.vSyncCount = 1;
+            }
+            
             if (Input.GetKeyDown(KeyCode.F5))
             {
-                QualitySettings.vSyncCount = QualitySettings.vSyncCount == 0 ? 1 : 0;
+                Application.targetFrameRate = 0;
+            }
+            if (Input.GetKeyDown(KeyCode.F6))
+            {
+                Application.targetFrameRate = 60;
             }
         }
 

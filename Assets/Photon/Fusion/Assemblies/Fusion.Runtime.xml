@@ -7639,72 +7639,72 @@
         </member>
         <member name="T:Fusion.NetworkSimulationConfiguration">
             <summary>
-            Configuration for network condition simulation
+            Configuration for network conditions simulation (induced latency and loss).
             </summary>
         </member>
         <member name="F:Fusion.NetworkSimulationConfiguration.Enabled">
             <summary>
-            If simulation is enabled
+            If adverse network conditions are being simulated.
             </summary>
         </member>
         <member name="F:Fusion.NetworkSimulationConfiguration.DelayShape">
             <summary>
-            The noise pattern used to oscillate between DelayMin and Delay Max values.
+            The pattern used to oscillate between <see cref="F:Fusion.NetworkSimulationConfiguration.DelayMin"/> and <see cref="F:Fusion.NetworkSimulationConfiguration.DelayMax"/> values.
             </summary>
         </member>
         <member name="F:Fusion.NetworkSimulationConfiguration.DelayMin">
             <summary>
-            The lowest packet delay value returned from the Delay Shape oscillator.
+            The lowest packet delay value returned from the <see cref="F:Fusion.NetworkSimulationConfiguration.DelayShape"/> oscillator.
             </summary>
         </member>
         <member name="F:Fusion.NetworkSimulationConfiguration.DelayMax">
             <summary>
-            The highest packet delay value returned from the Delay Shape oscillator.
+            The highest packet delay value returned from the <see cref="F:Fusion.NetworkSimulationConfiguration.DelayShape"/> oscillator.
             </summary>
         </member>
         <member name="F:Fusion.NetworkSimulationConfiguration.DelayPeriod">
             <summary>
-            The period of the Delay Shape oscillator.
+            The period of the <see cref="F:Fusion.NetworkSimulationConfiguration.DelayShape"/> oscillator (the rate at which delay oscillates between <see cref="F:Fusion.NetworkSimulationConfiguration.DelayMin"/> and <see cref="F:Fusion.NetworkSimulationConfiguration.DelayMax"/>).
             </summary>
         </member>
         <member name="F:Fusion.NetworkSimulationConfiguration.DelayThreshold">
             <summary>
-            The wave oscillates between 0 and 1. Values below this threshold are reduced to zero, resulting in a value equal to min.
+            The <see cref="F:Fusion.NetworkSimulationConfiguration.DelayShape"/> oscillates between 0 and 1. Values below this threshold are reduced to zero, resulting in a value equal to <see cref="F:Fusion.NetworkSimulationConfiguration.DelayMin"/>.
             </summary>
         </member>
         <member name="F:Fusion.NetworkSimulationConfiguration.AdditionalJitter">
             <summary>
-            After the delay value from the Delay Shape oscillator is determined, this many additional seconds of jitter will be added to the packet latency.
+            After the delay value from the <see cref="F:Fusion.NetworkSimulationConfiguration.DelayShape"/> oscillator is determined, random 0 to this value of additional seconds be added to the packet latency.
             </summary>
         </member>
         <member name="F:Fusion.NetworkSimulationConfiguration.LossChanceShape">
             <summary>
-            The noise pattern used to oscillate between Loss Chance Min and Loss Chance Max values.
+            The pattern used to oscillate between <see cref="F:Fusion.NetworkSimulationConfiguration.LossChanceMin"/> and <see cref="F:Fusion.NetworkSimulationConfiguration.LossChanceMax"/> values.
             </summary>
         </member>
         <member name="F:Fusion.NetworkSimulationConfiguration.LossChanceMin">
             <summary>
-            The lowest loss chance value the Loss Chance Shape oscillator will produce. 0 = 0% chance of being lost. 1 = 100% chance of being lost.
+            The lowest loss chance value the <see cref="F:Fusion.NetworkSimulationConfiguration.LossChanceShape"/> oscillator will produce. 0 = 0% chance of being lost. 1 = 100% chance of being lost.
             </summary>
         </member>
         <member name="F:Fusion.NetworkSimulationConfiguration.LossChanceMax">
             <summary>
-            The highest loss chance value the Loss Chance Shape oscillator will produce. 0 = 0% chance of being lost. 1 = 100% chance of being lost.
+            The highest loss chance value the <see cref="F:Fusion.NetworkSimulationConfiguration.LossChanceShape"/> oscillator will produce. 0 = 0% chance of being lost. 1 = 100% chance of being lost.
             </summary>
         </member>
         <member name="F:Fusion.NetworkSimulationConfiguration.LossChanceThreshold">
             <summary>
-            The wave oscillates between 0 and 1. Values below this threshold are reduced to zero, resulting in a value equal to min.
+            The <see cref="F:Fusion.NetworkSimulationConfiguration.LossChanceShape"/> wave oscillates between 0 and 1. Values below this threshold are reduced to zero, resulting in a value equal to <see cref="F:Fusion.NetworkSimulationConfiguration.LossChanceMin"/>.
             </summary>
         </member>
         <member name="F:Fusion.NetworkSimulationConfiguration.LossChancePeriod">
             <summary>
-            The period of the Loss Chance Shape oscillator.
+            The period of the <see cref="F:Fusion.NetworkSimulationConfiguration.LossChanceShape"/> oscillator (the rate at which delay oscillates between <see cref="F:Fusion.NetworkSimulationConfiguration.LossChanceMin"/> and <see cref="F:Fusion.NetworkSimulationConfiguration.LossChanceMax"/>).
             </summary>
         </member>
         <member name="F:Fusion.NetworkSimulationConfiguration.AdditionalLoss">
             <summary>
-            After the Oscillation pattern between Min and Max is calculated, this additional loss chance is added.
+            After the <see cref="F:Fusion.NetworkSimulationConfiguration.LossChanceShape"/> oscillation loss calculated, an additional 0 to this (normalized) percentage of loss chance is added.
             </summary>
         </member>
         <member name="T:Fusion.SimulationGlobalState">
