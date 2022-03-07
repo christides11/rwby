@@ -3,7 +3,6 @@ using HnSF.Fighters;
 
 namespace rwby.state.conditions
 {
-    [UnityEngine.Scripting.APIUpdating.MovedFrom("rwby")]
     public class JumpCountCondition : StateConditionBase
     {
         public int minExpectedValue;

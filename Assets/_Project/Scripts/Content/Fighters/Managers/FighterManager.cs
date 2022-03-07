@@ -467,11 +467,11 @@ namespace rwby
 
         public virtual void ResetVariablesOnGround()
         {
-            StoredRun = false;
+            //StoredRun = false;
             CurrentAirDash = 0;
             CurrentJump = 0;
             FPhysicsManager.forceGravity = 0;
-            combatManager.ResetStringAttacks();
+            //combatManager.ResetStringAttacks();
         }
 
 

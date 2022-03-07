@@ -14,7 +14,7 @@ namespace rwby.state.conditions
         public override bool IsTrue(IFighterBase fm)
         {
             FighterManager manager = fm as FighterManager;
-            bool result = !(manager.CurrentJump < minExpectedValue.GetValue(manager) || manager.CurrentJump > maxExpectedValue.GetValue(manager));
+            bool result = !(manager.CurrentAirDash < minExpectedValue.GetValue(manager) || manager.CurrentAirDash >= maxExpectedValue.GetValue(manager));
             return inverse ? !result : result;
         }
     }

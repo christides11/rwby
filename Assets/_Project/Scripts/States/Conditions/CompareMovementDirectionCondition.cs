@@ -4,7 +4,6 @@ using UnityEngine;
 
 namespace rwby.state.conditions
 {
-    [UnityEngine.Scripting.APIUpdating.MovedFrom("rwby")]
     public class CompareMovementDirectionCondition : StateConditionBase
     {
         public float validMin;

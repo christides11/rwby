@@ -48,9 +48,22 @@ namespace rwby
             director.Evaluate();
             var s = GetState();
             if(s.autoIncrement) IncrementFrame();
-            if(s.autoLoop && CurrentStateFrame == s.totalFrames) SetFrame(s.loopFrame); 
+            if(s.autoLoop && CurrentStateFrame == s.totalFrames) SetFrame(s.loopFrame);
+            HandleStateGroup(s);
         }
-        
+
+        private void HandleStateGroup(StateTimeline stateTimeline)
+        {
+            switch (stateTimeline.stateGroup)
+            {
+                case StateGroupType.AERIAL:
+                    break;
+                case StateGroupType.GROUND:
+                    manager.ResetVariablesOnGround();
+                    break;
+            }
+        }
+
         public void AddState(HnSF.StateTimeline state, int stateNumber)
         {
             Debug.LogError("Cannot add states.");

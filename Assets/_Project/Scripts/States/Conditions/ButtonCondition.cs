@@ -5,7 +5,6 @@ using UnityEngine;
 
 namespace rwby.state.conditions
 {
-    [UnityEngine.Scripting.APIUpdating.MovedFrom("rwby")]
     public class ButtonCondition : StateConditionBase
     {
         public enum ButtonStateType
