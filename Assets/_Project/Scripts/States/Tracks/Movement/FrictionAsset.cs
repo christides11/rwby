@@ -10,7 +10,7 @@ namespace rwby
 
         protected virtual void Awake()
         {
-            template = new FrictionBehaviour();
+            template ??= new FrictionBehaviour();
             template.forceSetType = ForceSetType.ADD;
         }
 

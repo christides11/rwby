@@ -10,7 +10,7 @@ namespace rwby
 
         public virtual void Awake()
         {
-            template = new ApplyGravityBehaviour();
+            template ??= new ApplyGravityBehaviour();
             template.forceSetType = ForceSetType.ADD;
         }
 

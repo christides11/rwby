@@ -13,7 +13,7 @@ namespace rwby
 
         public virtual void Awake()
         {
-            template = new ApplyJumpForceBehaviour();
+            template ??= new ApplyJumpForceBehaviour();
             template.forceSetType = ForceSetType.SET;
         }
 

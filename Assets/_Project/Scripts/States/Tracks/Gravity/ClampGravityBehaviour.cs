@@ -8,9 +8,10 @@ namespace rwby
     public class ClampGravityBehaviour : FighterStateBehaviour
     {
         [SelectImplementation((typeof(FighterStatReferenceBase<float>)))] [SerializeField, SerializeReference]
-        public FighterStatReferenceFloatBase minValue = new FighterStatReferenceFloatBase();
+        public FighterStatReferenceFloatBase minValue = new FighterBaseStatReferenceFloat();
+
         [SelectImplementation((typeof(FighterStatReferenceBase<float>)))] [SerializeField, SerializeReference]
-        public FighterStatReferenceFloatBase maxValue = new FighterStatReferenceFloatBase();
+        public FighterStatReferenceFloatBase maxValue = new FighterBaseStatReferenceFloat();
 
         public override void ProcessFrame(Playable playable, FrameData info, object playerData)
         {

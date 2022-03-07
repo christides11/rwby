@@ -22,7 +22,16 @@ MonoBehaviour:
         inverse: 0
         conditions:
         - id: 1
+        - id: 2
     00000001:
+      type: {class: AirDashCountCondition, ns: rwby.state.conditions, asm: rwby.csharp}
+      data:
+        inverse: 0
+        minExpectedValue:
+          id: 3
+        maxExpectedValue:
+          id: 4
+    00000002:
       type: {class: ButtonCondition, ns: rwby.state.conditions, asm: rwby.csharp}
       data:
         inverse: 0
@@ -30,3 +39,17 @@ MonoBehaviour:
         buttonState: 1
         offset: 0
         buffer: 3
+    00000003:
+      type: {class: FighterBaseStatReferenceInt, ns: rwby, asm: rwby.csharp}
+      data:
+        inverse: 0
+        statReference: 0
+        value: 0
+        variable: 0
+    00000004:
+      type: {class: FighterBaseStatReferenceInt, ns: rwby, asm: rwby.csharp}
+      data:
+        inverse: 0
+        statReference: 1
+        value: 0
+        variable: 4

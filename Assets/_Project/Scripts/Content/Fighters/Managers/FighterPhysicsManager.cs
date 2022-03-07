@@ -19,6 +19,7 @@ namespace rwby
 
         protected Vector3 rotationDir;
 
+        
         public void Tick()
         {
             kCC.SetMovement(forceMovement, forceGravity);

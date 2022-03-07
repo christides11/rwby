@@ -8,19 +8,24 @@ namespace rwby
     [OrderBefore(typeof(FighterCombatManager))]
     [OrderAfter(typeof(Fusion.HitboxManager), typeof(FighterManager))]
     public class FighterStateManager : NetworkBehaviour, IFighterStateManager
-    {
-        [Networked] public int CurrentStateMoveset { get; set; }
-        [Networked] public int CurrentState { get; set; }
-        [Networked] public int CurrentStateFrame { get; set; }
+    {   
+        public delegate void EmptyDelegate(FighterStateManager stateManager);
+        public event EmptyDelegate OnStateChanged;
         
-        [SerializeField] protected FighterManager manager;
-        [SerializeField] protected FighterCombatManager combatManager;
-
-        public PlayableDirector director;
-
+        [Networked(OnChanged = nameof(OnChangedState))] public int CurrentStateMoveset { get; set; }
+        [Networked(OnChanged = nameof(OnChangedState))] public int CurrentState { get; set; }
+        [Networked] public int CurrentStateFrame { get; set; }
         [Networked] public NetworkBool markedForStateChange { get; set; }
         [Networked] public int nextState { get; set; }
 
+        [SerializeField] protected FighterManager manager;
+        [SerializeField] protected FighterCombatManager combatManager;
+        public PlayableDirector director;
+
+        public static void OnChangedState(Changed<FighterStateManager> changed){
+            changed.Behaviour.OnStateChanged?.Invoke(changed.Behaviour);
+        }
+        
         public void ResimulationSync()
         {
             var currentState = (manager.FCombatManager.GetMoveset(CurrentStateMoveset) as rwby.Moveset).stateMap[CurrentState];

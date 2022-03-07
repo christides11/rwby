@@ -1,4 +1,3 @@
-using System;
 using HnSF;
 using UnityEngine;
 using UnityEngine.Playables;
@@ -6,13 +5,13 @@ using UnityEngine.Playables;
 namespace rwby
 {
     [System.Serializable]
-    public class ClampGravityAsset : FighterStateAsset
+    public class ModifyAirDashCountAsset : FighterStateAsset
     {
-        public ClampGravityBehaviour template;
+        public ModifyAirDashCountBehaviour template;
 
         public override Playable CreatePlayable(PlayableGraph graph, GameObject owner)
         {
-            var playable = ScriptPlayable<ClampGravityBehaviour>.Create(graph, template);
+            var playable = ScriptPlayable<ModifyAirDashCountBehaviour>.Create(graph, template);
             return playable;
         }
     }

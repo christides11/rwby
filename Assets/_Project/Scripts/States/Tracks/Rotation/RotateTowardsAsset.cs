@@ -11,7 +11,7 @@ namespace rwby
 
         private void Awake()
         {
-            template = new RotateTowardsBehaviour();
+            template ??= new RotateTowardsBehaviour();
             template.rotationSetType = ForceSetType.ADD;
         }
 

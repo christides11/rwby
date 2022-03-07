@@ -11,7 +11,7 @@ namespace rwby
 
         protected virtual void Awake()
         {
-            template = new ApplyMovementBehaviour();
+            template ??= new ApplyMovementBehaviour();
             template.forceSetType = ForceSetType.ADD;
         }
 

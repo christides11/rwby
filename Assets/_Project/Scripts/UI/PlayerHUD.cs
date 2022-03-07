@@ -23,7 +23,7 @@ namespace rwby
             if (fm == null)
             {
                 fm = client.Runner.TryGetNetworkedBehaviourFromNetworkedObjectRef<FighterManager>(client.ClientPlayers[playerIndex].characterNetID);
-                return;
+                fm.FStateManager.OnStateChanged += UpdateStateText;
             }
         }
 
@@ -33,10 +33,14 @@ namespace rwby
             rttMovingAverage.ComputeAverage((int)(client.Runner.GetPlayerRtt(client.Runner.LocalPlayer) * 1000));
             rttText.text = $"{rttMovingAverage.Average.ToString("F0")} +/- {rttMovingAverage.StandardDeviation().ToString("F0")}";
             if (fm == null) return;
-            stateText.text = fm.FStateManager.GetCurrentStateName();
             stateFrameText.text = fm.FStateManager.CurrentStateFrame.ToString();
             speedText.text = fm.FPhysicsManager.forceMovement.magnitude.ToString("F1");
             gravityText.text = fm.FPhysicsManager.forceGravity.ToString("F1");
+        }
+
+        private void UpdateStateText(FighterStateManager fsm)
+        {
+            stateText.text = fsm.GetCurrentStateName();
         }
     }
 }
