@@ -2,6 +2,7 @@ using Cysharp.Threading.Tasks;
 using System;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
+using UnityEngine.ResourceManagement.AsyncOperations;
 
 namespace rwby
 {
@@ -20,22 +21,19 @@ namespace rwby
         [SerializeField] private bool selectable = true;
         [SerializeField] private int health;
 
-        [NonSerialized] private Moveset[] movesets = null;
-        [NonSerialized] private GameObject fighter = null;
+        [NonSerialized] private AsyncOperationHandle<Moveset>[] movesetHandles;
+        [NonSerialized] private AsyncOperationHandle<GameObject> fighterHandle;
 
         public override async UniTask<bool> Load()
         {
-            if (fighter != null)
-            {
-                return true;
-            }
+            if (fighterHandle.IsValid() && fighterHandle.Status == AsyncOperationStatus.Succeeded) return true;
 
             // Load fighter.
             try
             {
-                OperationResult<GameObject> fighterLoadResult = await AddressablesManager.LoadAssetAsync(fighterReference);
-                fighter = fighterLoadResult.Value;
-                bool fighterRequirementsResult = await fighter.GetComponent<FighterManager>().OnFighterLoaded();
+                fighterHandle = Addressables.LoadAssetAsync<GameObject>(fighterReference);
+                await fighterHandle;
+                bool fighterRequirementsResult = await fighterHandle.Result.GetComponent<FighterManager>().OnFighterLoaded();
                 if (fighterRequirementsResult == false)
                 {
                     Debug.LogError($"Error loading fighter {Name}");
@@ -44,7 +42,7 @@ namespace rwby
             }
             catch (Exception e)
             {
-                Debug.LogError(e.Message);
+                Debug.LogError($"Error loading fighter {Name}: {e.Message}");
                 return false;
             }
 
@@ -52,11 +50,12 @@ namespace rwby
             // Load movesets.
             try
             {
-                movesets = new Moveset[movesetReferences.Length];
+                movesetHandles = new AsyncOperationHandle<Moveset>[movesetReferences.Length];
                 for (int i = 0; i < movesetReferences.Length; i++)
                 {
-                    var movesetLoadResult = await AddressablesManager.LoadAssetAsync(movesetReferences[i]);
-                    movesets[i] = movesetLoadResult;
+                    var handle = Addressables.LoadAssetAsync<Moveset>(movesetReferences[i]);
+                    movesetHandles[i] = handle;
+                    await movesetHandles[i];
                 }
             }
             catch (Exception e)
@@ -70,7 +69,7 @@ namespace rwby
 
         public override GameObject GetFighter()
         {
-            return fighter;
+            return fighterHandle.Result;
         }
 
         public override string GetFighterGUID()
@@ -81,18 +80,21 @@ namespace rwby
         
         public override Moveset[] GetMovesets()
         {
-            return movesets;
+            Moveset[] m = new Moveset[movesetHandles.Length];
+            for (int i = 0; i < movesetHandles.Length; i++)
+            {
+                m[i] = movesetHandles[i].Result;
+            }
+            return m;
         }
 
         public override bool Unload()
         {
-            fighter = null;
-            movesets = null;
-            for (int i = 0; i < movesetReferences.Length; i++)
+            foreach (var t in movesetHandles)
             {
-                AddressablesManager.ReleaseAsset(movesetReferences[i]);
+                if(t.Status == AsyncOperationStatus.Succeeded) Addressables.Release(t);
             }
-            AddressablesManager.ReleaseAsset(fighterReference);
+            if(fighterHandle.Status == AsyncOperationStatus.Succeeded) Addressables.Release(fighterReference);
             return true;
         }
     }

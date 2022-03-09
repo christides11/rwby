@@ -1,18 +1,15 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Playables;
+using UnityEngine.Timeline;
 
-public class AnimationTrack : MonoBehaviour
+namespace rwby
 {
-    // Start is called before the first frame update
-    void Start()
+    [TrackClipType(typeof(AnimationAsset))]
+    public class AnimationTrack : FighterTrack
     {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
+        public override Playable CreateTrackMixer(PlayableGraph graph, GameObject go, int inputCount)
+        {
+            return ScriptPlayable<AnimationMixerBehaviour>.Create(graph, inputCount);
+        }
     }
 }

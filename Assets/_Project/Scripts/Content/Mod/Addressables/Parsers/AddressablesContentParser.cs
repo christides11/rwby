@@ -30,26 +30,29 @@ namespace rwby
             return content.ContainsKey(contentIdentfier) ? true : false;
         }
 
-        public override async UniTask<bool> LoadContentDefinitions()
+        public override async UniTask<List<byte>> LoadContentDefinitions()
         {
+            List<byte> results = new List<byte>();
             // All of the content is already loaded.
             if (contentHandles.Count == references.Count)
             {
-                return true;
+                return results;
             }
             try
             {
                 foreach (var contentIdentifier in content.Keys)
                 {
-                    await LoadContentDefinition(contentIdentifier);
+                    bool r = await LoadContentDefinition(contentIdentifier);
+                    if(r) results.Add(contentIdentifier);
                 }
-                return true;
+                return results;
             }
             catch (Exception e)
             {
                 Debug.Log(e.Message);
             }
-            return false;
+
+            return results;
         }
 
         public override async UniTask<bool> LoadContentDefinition(byte contentIdentifier)
@@ -113,7 +116,7 @@ namespace rwby
         {
             foreach (var v in contentHandles)
             {
-                Addressables.Release(content[v.Key]);
+                UnloadContentDefinition(v.Key);
             }
             contentHandles.Clear();
         }
@@ -122,7 +125,7 @@ namespace rwby
         {
             if (contentHandles.ContainsKey(contentIdentifier) == false) return;
 
-            Addressables.Release(content[contentIdentifier]);
+            if(contentHandles[contentIdentifier].Status == AsyncOperationStatus.Succeeded) Addressables.Release(contentHandles[contentIdentifier]);
             contentHandles.Remove(contentIdentifier);
         }
     }

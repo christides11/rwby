@@ -1,18 +1,16 @@
-using System.Collections;
-using System.Collections.Generic;
+using HnSF;
 using UnityEngine;
+using UnityEngine.Playables;
 
-public class AnimationAsset : MonoBehaviour
+namespace rwby
 {
-    // Start is called before the first frame update
-    void Start()
+    [System.Serializable]
+    public class AnimationAsset : FighterStateAsset
     {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
+        public override Playable CreatePlayable(PlayableGraph graph, GameObject owner)
+        {
+            var playable = ScriptPlayable<AnimationBehaviour>.Create(graph);
+            return playable;
+        }
     }
 }

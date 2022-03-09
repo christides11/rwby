@@ -9,11 +9,29 @@ namespace rwby
     {
         public static ContentManager singleton;
 
+        public Dictionary<Type, HashSet<ModObjectReference>> currentlyLoadedContent =
+            new Dictionary<Type, HashSet<ModObjectReference>>();
+        
         [SerializeField] private ModLoader modLoader;
 
         public void Initialize()
         {
             singleton = this;
+        }
+
+        private void Update()
+        {
+            if (Input.GetKeyDown(KeyCode.F10))
+            {
+                foreach (var v in currentlyLoadedContent)
+                {
+                    Debug.Log($"{v.Key.ToString()} : {v.Value.Count}");
+                    foreach (var b in v.Value)
+                    {
+                        Debug.Log(b.ToString());
+                    }
+                }
+            }
         }
 
         public bool ContentExist<T>(ModObjectReference objectReference) where T : IContentDefinition
@@ -38,7 +56,9 @@ namespace rwby
             if (!modLoader.TryGetLoadedMod(modIdentifier, out LoadedModDefinition mod)) return false;
             if (mod.definition == null) return true;
             if (!mod.definition.ContentParsers.TryGetValue(typeof(T), out IContentParser parser)) return false;
-            return await parser.LoadContentDefinitions();
+            var result = await parser.LoadContentDefinitions();
+            foreach (var r in result) TrackItem(typeof(T), new ModObjectReference(modIdentifier, r));
+            return true;
         }
 
         public async UniTask<bool> LoadContentDefinition<T>(ModObjectReference objectReference) where T : IContentDefinition
@@ -51,7 +71,9 @@ namespace rwby
             if (!modLoader.TryGetLoadedMod(objectReference.modIdentifier, out LoadedModDefinition mod)) return false;
             if (mod.definition == null) return false;
             if (!mod.definition.ContentParsers.TryGetValue(t, out IContentParser parser)) return false;
-            return await parser.LoadContentDefinition(objectReference.objectIdentifier);
+            bool result = await parser.LoadContentDefinition(objectReference.objectIdentifier);
+            if(result) TrackItem(t, objectReference);
+            return result;
         }
         #endregion
 
@@ -131,29 +153,42 @@ namespace rwby
         #endregion
 
         #region Unloading
-        public void UnloadContentDefinitions<T>() where T : IContentDefinition
+        public void UnloadAllContent<T>() where T : IContentDefinition
         {
-            foreach (var m in modLoader.loadedMods.Keys)
+            foreach (var a in currentlyLoadedContent)
             {
-                UnloadContentDefinitions<T>(m);
+                foreach (var b in a.Value)
+                {
+                    UnloadContentDefinition(a.Key, b);
+                }
             }
-        }
-
-        public void UnloadContentDefinitions<T>(ModIdentifierTuple modIdentifier) where T : IContentDefinition
-        {
-            if (!modLoader.TryGetLoadedMod(modIdentifier, out LoadedModDefinition mod)) return;
-            if (mod.definition == null) return;
-            if (!mod.definition.ContentParsers.TryGetValue(typeof(T), out IContentParser parser)) return;
-            parser.UnloadContentDefinitions();
         }
 
         public void UnloadContentDefinition<T>(ModObjectReference reference) where T : IContentDefinition
         {
+            UnloadContentDefinition(typeof(T), reference);
+        }
+
+        public void UnloadContentDefinition(Type t, ModObjectReference reference)
+        {
             if (!modLoader.TryGetLoadedMod(reference.modIdentifier, out LoadedModDefinition mod)) return;
-            if (mod.definition == null) return;
-            if (!mod.definition.ContentParsers.TryGetValue(typeof(T), out IContentParser parser)) return;
+            //if (mod.definition == null) return;
+            if (!mod.definition.ContentParsers.TryGetValue(t, out IContentParser parser)) return;
             parser.UnloadContentDefinition(reference.objectIdentifier);
+            UntrackItem(t, reference);
         }
         #endregion
+
+        private void TrackItem(Type t, ModObjectReference objectReference)
+        {
+            if(currentlyLoadedContent.ContainsKey(t) == false) currentlyLoadedContent.Add(t, new HashSet<ModObjectReference>());
+            currentlyLoadedContent[t].Add(objectReference);
+        }
+
+        private void UntrackItem(Type t, ModObjectReference objectReference)
+        {
+            if (currentlyLoadedContent.ContainsKey(t) == false) return;
+            currentlyLoadedContent[t].Remove(objectReference);
+        }
     }
 }

@@ -36,7 +36,7 @@ namespace rwby.menus
             ClientManager.OnPlayersChanged += storedAction;
             LobbyManager.OnLobbySettingsChanged += UpdateLobbyInfo;
             LobbyManager.OnGamemodeSettingsChanged += UpdateLobbyInfo;
-            startMatchButton.GetComponentInChildren<PlayerPointerEventTrigger>().OnPointerClickEvent.AddListener((a) => { StartMatch(); } );
+            startMatchButton.GetComponentInChildren<PlayerPointerEventTrigger>().OnPointerClickEvent.AddListener(async (a) => { await StartMatch(); } );
             UpdatePlayerInfo();
             UpdateLobbyInfo();
 
@@ -52,13 +52,13 @@ namespace rwby.menus
             gameObject.SetActive(false);
         }
 
-        private void StartMatch()
+        private async UniTask StartMatch()
         {
             ClientManager.OnPlayersChanged -= storedAction;
             LobbyManager.OnLobbySettingsChanged -= UpdateLobbyInfo;
             LobbyManager.OnGamemodeSettingsChanged -= UpdateLobbyInfo;
-
-            _ = LobbyManager.singleton.TryStartMatch();
+            
+            await LobbyManager.singleton.TryStartMatch();
         }
 
         private void UpdatePlayerInfo()

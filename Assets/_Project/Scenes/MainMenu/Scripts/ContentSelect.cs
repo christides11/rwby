@@ -14,6 +14,11 @@ namespace rwby
     {
         public static ContentSelect singleton;
 
+        public delegate void EmptyAction(ContentSelect contentSelector);
+        public event EmptyAction OnOpened;
+        public event EmptyAction OnClosed;
+
+        
         [SerializeField] GameObject contentBrowserLarge;
         [SerializeField] GameObject contentBrowserLarge_Content;
         [SerializeField] GameObject canvas;
@@ -50,6 +55,7 @@ namespace rwby
 
             canvas.SetActive(true);
             contentBrowserLarge.SetActive(true);
+            OnOpened?.Invoke(this);
         }
 
         public void CloseMenu()
@@ -61,6 +67,7 @@ namespace rwby
 
             canvas.SetActive(false);
             contentBrowserLarge.SetActive(false);
+            OnClosed?.Invoke(this);
         }
     }
 }

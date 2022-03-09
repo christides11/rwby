@@ -71,13 +71,6 @@ namespace rwby
 				return result;
             }
 
-			//_runner.SetActiveScene(0);
-			/*
-			if (TryGetSceneRef(out SceneRef scene))
-			{
-				_runner.SetActiveScene(scene);
-			}*/
-
 			return result;
 		}
 
@@ -102,27 +95,12 @@ namespace rwby
 				return result;
 			}
 
-			//_runner.SetActiveScene(0);
-			/*
-			if (TryGetSceneRef(out SceneRef scene))
-			{
-				_runner.SetActiveScene(scene);
-			}*/
-			
 			return result;
 		}
 
 		public async UniTask JoinSession(SessionInfo session, NetworkObject playerPrefab)
 		{
-			_playerPrefab = playerPrefab;
-			_connectionCallback = OnConnectionStatusUpdate;
-
-			InitSingletions(true);
-			//await _runner.StartGame(session);
-			if (_status == ConnectionStatus.Failed)
-			{
-				return;
-			}
+			await JoinSession(session.Name, playerPrefab);
 		}
 
 		public async UniTask JoinSession(string sessionName, NetworkObject playerPrefab)
@@ -192,13 +170,16 @@ namespace rwby
 
 		public void OnPlayerJoined(NetworkRunner runner, PlayerRef player)
 		{
-			Debug.Log($"Player {player.PlayerId} joined the session.");
 			_players[player] = runner.Spawn(_playerPrefab, Vector3.zero, Quaternion.identity, player);
 			runner.SetPlayerObject(player, _players[player]);
 			if (runner.Mode == SimulationModes.Host && runner.LocalPlayer.IsValid && runner.LocalPlayer == player)
 			{
 				Debug.Log($"Hosting successful.");
 				OnStartHosting?.Invoke();
+			}
+			else
+			{
+				Debug.Log($"Player {player.PlayerId} joined the session.");
 			}
 			HostOnPlayerJoin?.Invoke(runner, player);
 		}
@@ -218,9 +199,7 @@ namespace rwby
 		public void OnUserSimulationMessage(NetworkRunner runner, SimulationMessagePtr message)
 		{
 		}
-
-		//public void OnObjectWordsChanged(NetworkRunner runner, NetworkObject obj, HashSet<int> changedWords, NetworkObjectMemoryPtr oldMemory) { }
-
+		
 		public void OnShutdown(NetworkRunner runner)
 		{
 			Debug.Log("Shutdown");

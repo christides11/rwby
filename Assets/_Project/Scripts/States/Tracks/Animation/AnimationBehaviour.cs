@@ -1,18 +1,30 @@
-using System.Collections;
-using System.Collections.Generic;
+using HnSF.Sample.TDAction;
 using UnityEngine;
+using UnityEngine.Playables;
 
-public class AnimationBehaviour : MonoBehaviour
+namespace rwby
 {
-    // Start is called before the first frame update
-    void Start()
+    [System.Serializable]
+    public class AnimationBehaviour : FighterStateBehaviour
     {
+        [System.Serializable]
+        public struct AnimationEntry
+        {
+            public float weight;
+            public float normalizedTime;
+            public ModObjectReference animationbankReference;
+            public int animation;
+        }
         
-    }
+        public int layer;
+        public AnimationMixerType animationMixerType;
+        public Vector2 mixerPosition;
+        public AnimationEntry[] animations = new AnimationEntry[1];
 
-    // Update is called once per frame
-    void Update()
-    {
-        
+        public override void ProcessFrame(Playable playable, FrameData info, object playerData)
+        {
+            base.ProcessFrame(playable, info, playerData);
+            
+        }
     }
 }

@@ -19,7 +19,7 @@ namespace rwby
             return false;
         }
 
-        public abstract UniTask<bool> LoadContentDefinitions();
+        public abstract UniTask<List<byte>> LoadContentDefinitions();
 
         public abstract UniTask<bool> LoadContentDefinition(byte contentIdentifier);
 

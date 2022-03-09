@@ -16,11 +16,15 @@ namespace rwby
             float extraWeight = 0;
             
             int inputCount = playable.GetInputCount();
+            float inputWeight;
+            ScriptPlayable<GravityBehaviour> inputPlayable;
+            GravityBehaviour input;
+            
             for (int i = 0; i < inputCount; i++)
             {
-                float inputWeight = playable.GetInputWeight(i) + extraWeight;
-                ScriptPlayable<GravityBehaviour> inputPlayable = (ScriptPlayable<GravityBehaviour>)playable.GetInput(i);
-                GravityBehaviour input = inputPlayable.GetBehaviour();
+                inputWeight = playable.GetInputWeight(i) + extraWeight;
+                inputPlayable = (ScriptPlayable<GravityBehaviour>)playable.GetInput(i);
+                input = inputPlayable.GetBehaviour();
 
                 switch (input.forceSetType)
                 {

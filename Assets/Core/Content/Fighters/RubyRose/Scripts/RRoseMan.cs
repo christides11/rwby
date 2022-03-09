@@ -22,10 +22,10 @@ public class RRoseMan : FighterManager
         if (globalEffectbankLoadResult == false)
         {
             return false;
-        }
-
-        bool animationbankLoadResult = await ContentManager.singleton.LoadContentDefinition<IAnimationbankDefinition>(new ModObjectReference("core", "rr"));
-        if (animationbankLoadResult == false) return false;*/
+        }*/
+        
+        bool animationbankLoadResult = await ContentManager.singleton.LoadContentDefinition<IAnimationbankDefinition>(new ModObjectReference((1, 1), 1));
+        if (animationbankLoadResult == false) return false;
 
         return true;
     }

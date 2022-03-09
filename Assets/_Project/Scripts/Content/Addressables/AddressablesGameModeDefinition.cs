@@ -1,8 +1,5 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
-using System.Threading.Tasks;
 using Cysharp.Threading.Tasks;
 using System;
 using UnityEngine.ResourceManagement.AsyncOperations;
@@ -50,7 +47,7 @@ namespace rwby
 
         public override bool Unload()
         {
-            Addressables.Release(gamemodeHandle);
+            if(gamemodeHandle.Status == AsyncOperationStatus.Succeeded) Addressables.Release(gamemodeHandle);
             return true;
         }
     }

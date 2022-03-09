@@ -5,6 +5,7 @@ namespace rwby
     public struct LobbySettings : INetworkStruct
     {
         public byte teams;
-        [Networked] public ModObjectReference gamemodeReference { get; set; } // { get => default; set { } }
+        public ModObjectReference gamemodeReference;
+        //[Networked] public ModObjectReference gamemodeReference { get; set; } // { get => default; set { } }
     }
 }

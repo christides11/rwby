@@ -11,6 +11,7 @@ namespace rwby
     public class LobbyManager : NetworkBehaviour
     {
         public delegate void EmptyAction();
+
         public static event EmptyAction OnLobbyPlayersUpdated;
         public static event EmptyAction OnLobbySettingsChanged;
         public static event EmptyAction OnCurrentGamemodeChanged;
@@ -23,12 +24,18 @@ namespace rwby
 
         [Networked] public int maxPlayersPerClient { get; set; } = 4;
 
-        [Networked(OnChanged = nameof(OnSettingsChanged))] public LobbySettings Settings { get; set; }
-        [Networked(OnChanged = nameof(OnCurrentGameModeChanged))] public GameModeBase CurrentGameMode { get; set; }
+        [Networked(OnChanged = nameof(OnSettingsChanged))]
+        public LobbySettings Settings { get; set; }
+
+        [Networked(OnChanged = nameof(OnCurrentGameModeChanged))]
+        public GameModeBase CurrentGameMode { get; set; }
 
         [Networked] private NetworkRNG MainRNGGenerator { get; set; }
 
         [Networked, Capacity(4)] public NetworkLinkedList<CustomSceneRef> currentLoadedScenes { get; }
+
+        public GameManager gameManager;
+        public ContentManager contentManager;
 
         private static void OnSettingsChanged(Changed<LobbyManager> changed)
         {
@@ -44,12 +51,14 @@ namespace rwby
         {
             DontDestroyOnLoad(gameObject);
             singleton = this;
+            gameManager = GameManager.singleton;
+            contentManager = gameManager.contentManager;
         }
 
         public override void Spawned()
         {
             Settings = new LobbySettings();
-            currentLoadedScenes.Add(new CustomSceneRef(){ source = 0, modIdentifier = 0, sceneIndex = 0});
+            currentLoadedScenes.Add(new CustomSceneRef() { source = 0, modIdentifier = 0, sceneIndex = 0 });
             Runner.SetActiveScene(1);
         }
 
@@ -62,7 +71,8 @@ namespace rwby
         {
             if (Object.HasStateAuthority == false) return;
 
-            List<PlayerRef> failedLoadPlayers = await clientContentLoaderService.TellClientsToLoad<IGameModeDefinition>(gamemodeReference);
+            List<PlayerRef> failedLoadPlayers =
+                await clientContentLoaderService.TellClientsToLoad<IGameModeDefinition>(gamemodeReference);
             if (failedLoadPlayers == null)
             {
                 Debug.LogError("Set Gamemode Local Failure");
@@ -74,12 +84,12 @@ namespace rwby
                 Debug.Log($"{v.PlayerId} failed to load {gamemodeReference.ToString()}.");
             }
 
-            if(CurrentGameMode != null)
+            if (CurrentGameMode != null)
             {
                 Runner.Despawn(CurrentGameMode.GetComponent<NetworkObject>());
             }
 
-            for(int i = 0; i < ClientManager.clientManagers.Count; i++)
+            for (int i = 0; i < ClientManager.clientManagers.Count; i++)
             {
                 var tempList = ClientManager.clientManagers[i].ClientPlayers;
                 for (int k = 0; k < tempList.Count; k++)
@@ -90,9 +100,11 @@ namespace rwby
                 }
             }
 
-            IGameModeDefinition gamemodeDefinition = ContentManager.singleton.GetContentDefinition<IGameModeDefinition>(gamemodeReference);
+            IGameModeDefinition gamemodeDefinition =
+                ContentManager.singleton.GetContentDefinition<IGameModeDefinition>(gamemodeReference);
             GameObject gamemodePrefab = gamemodeDefinition.GetGamemode();
-            GameModeBase gamemodeObj = Runner.Spawn(gamemodePrefab.GetComponent<GameModeBase>(), Vector3.zero, Quaternion.identity);
+            GameModeBase gamemodeObj = Runner.Spawn(gamemodePrefab.GetComponent<GameModeBase>(), Vector3.zero,
+                Quaternion.identity);
             CurrentGameMode = gamemodeObj;
 
             LobbySettings temp = Settings;
@@ -104,6 +116,7 @@ namespace rwby
         public async UniTask<bool> TryStartMatch()
         {
             Debug.Log("Trying to start match.");
+            CleanupStrayReferences();
             if (Runner.IsServer == false)
             {
                 Debug.LogError("START MATCH ERROR: Client trying to start match.");
@@ -118,29 +131,31 @@ namespace rwby
 
             HashSet<ModObjectReference> fightersToLoad = new HashSet<ModObjectReference>();
 
-            for(int i = 0; i < ClientManager.clientManagers.Count; i++)
+            for (int i = 0; i < ClientManager.clientManagers.Count; i++)
             {
-                for(int k = 0; k < ClientManager.clientManagers[i].ClientPlayers.Count; k++)
+                for (int k = 0; k < ClientManager.clientManagers[i].ClientPlayers.Count; k++)
                 {
                     if (!ClientManager.clientManagers[i].ClientPlayers[k].characterReference.IsValid())
                     {
                         Debug.LogError($"Player {i}:{k} has an invalid character reference.");
                         return false;
                     }
+
                     fightersToLoad.Add(ClientManager.clientManagers[i].ClientPlayers[k].characterReference);
                 }
             }
 
-            foreach(var fighterStr in fightersToLoad)
+            foreach (var fighterStr in fightersToLoad)
             {
-                List<PlayerRef> failedLoadPlayers = await clientContentLoaderService.TellClientsToLoad<IFighterDefinition>(fighterStr);
+                List<PlayerRef> failedLoadPlayers =
+                    await clientContentLoaderService.TellClientsToLoad<IFighterDefinition>(fighterStr);
                 if (failedLoadPlayers == null || failedLoadPlayers.Count > 0)
                 {
                     Debug.LogError($"START MATCH ERROR: Player failed to load fighter.");
                     return false;
                 }
             }
-            
+
             Debug.Log("Starting gamemode.");
             CurrentGameMode.StartGamemode();
             return true;
@@ -150,7 +165,8 @@ namespace rwby
         {
             if (CurrentGameMode == null) return false;
 
-            IGameModeDefinition gamemodeDefinition = ContentManager.singleton.GetContentDefinition<IGameModeDefinition>(Settings.gamemodeReference);
+            IGameModeDefinition gamemodeDefinition =
+                ContentManager.singleton.GetContentDefinition<IGameModeDefinition>(Settings.gamemodeReference);
             if (VerifyTeams(gamemodeDefinition) == false) return false;
             if (await CurrentGameMode.VerifyGameModeSettings() == false) return false;
             return true;
@@ -162,9 +178,9 @@ namespace rwby
 
             int[] teamCount = new int[Settings.teams];
 
-            for(int i = 0; i < ClientManager.clientManagers.Count; i++)
+            for (int i = 0; i < ClientManager.clientManagers.Count; i++)
             {
-                for(int k = 0; k < ClientManager.clientManagers[i].ClientPlayers.Count; k++)
+                for (int k = 0; k < ClientManager.clientManagers[i].ClientPlayers.Count; k++)
                 {
                     byte playerTeam = ClientManager.clientManagers[i].ClientPlayers[k].team;
                     if (playerTeam == 0) return false;
@@ -172,13 +188,51 @@ namespace rwby
                 }
             }
 
-            for(int w = 0; w < teamCount.Length; w++)
+            for (int w = 0; w < teamCount.Length; w++)
             {
-                if (teamCount[w] > gamemodeDefiniton.teams[w].maximumPlayers 
+                if (teamCount[w] > gamemodeDefiniton.teams[w].maximumPlayers
                     || teamCount[w] < gamemodeDefiniton.teams[w].minimumPlayers) return false;
             }
 
             return true;
+        }
+
+        public void CleanupStrayReferences()
+        {
+            bool unload = true;
+            List<(Type, ModObjectReference)> contentToUnload = new List<(Type, ModObjectReference)>();
+            foreach (var v in contentManager.currentlyLoadedContent)
+            {
+                foreach (var b in v.Value)
+                {
+                    unload = true;
+                    
+                    if (typeof(IFighterDefinition).IsAssignableFrom(v.Key))
+                    {
+                        foreach (var cm in ClientManager.clientManagers)
+                        {
+                            foreach (var clientPlayer in cm.ClientPlayers)
+                            {
+                                if (clientPlayer.characterReference == b) unload = false;
+                            }
+                        }
+                    }
+                    
+                    if (CurrentGameMode != null)
+                    {
+                        if (typeof(IGameModeDefinition).IsAssignableFrom(v.Key)) 
+                            if (Settings.gamemodeReference == b) 
+                                unload = false;
+                        
+                        if (CurrentGameMode.VerifyReference(b)) unload = false;
+                    }
+                    
+                    if(unload) contentToUnload.Add((v.Key, b));
+                }
+            }
+            
+            foreach(var contentReference in contentToUnload) 
+                contentManager.UnloadContentDefinition(contentReference.Item1, contentReference.Item2);
         }
 
         public int GetIntRangeInclusive(int min, int max)

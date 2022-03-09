@@ -13,7 +13,6 @@ namespace rwby.core.training
     public struct CPUReference : INetworkStruct
     {
         public ModObjectReference characterReference;
-        //[Networked, Capacity(15)] public string characterReference { get => default; set { } }
         public NetworkId objectId;
     }
 
@@ -126,6 +125,12 @@ namespace rwby.core.training
             if (failedLoadPlayers.Count != 0) return false;
 
             return true;
+        }
+
+        public override bool VerifyReference(ModObjectReference reference)
+        {
+            if (reference == mapReference) return true;
+            return false;
         }
 
         List<List<GameObject>> spawnPoints = new List<List<GameObject>>();

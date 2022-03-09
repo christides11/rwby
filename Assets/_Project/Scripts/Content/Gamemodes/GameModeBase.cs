@@ -65,6 +65,11 @@ namespace rwby
             return true;
         }
 
+        public virtual bool VerifyReference(ModObjectReference reference)
+        {
+            return false;
+        }
+
         public virtual void StartGamemode()
         {
 

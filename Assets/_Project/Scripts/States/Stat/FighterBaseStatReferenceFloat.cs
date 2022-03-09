@@ -14,14 +14,11 @@ namespace rwby
             {
                 case StatReferenceType.VALUE:
                     return inverse ? -value : value;
-                    break;
                 case StatReferenceType.VARIABLE:
                     return inverse ? -fm.StatManager.GetFighterStats().floatStats[variable] : fm.StatManager.GetFighterStats().floatStats[variable];
-                    break;
                 default:
                     throw new ArgumentOutOfRangeException();
             }
-            return 0;
         }
     }
 }

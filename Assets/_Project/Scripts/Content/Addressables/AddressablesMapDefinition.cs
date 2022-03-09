@@ -1,13 +1,10 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
-using System.Threading.Tasks;
 using Cysharp.Threading.Tasks;
 using UnityEngine.ResourceManagement.AsyncOperations;
 using UnityEngine.ResourceManagement.ResourceProviders;
-using UnityEngine.SceneManagement;
 
 namespace rwby
 {
@@ -46,7 +43,7 @@ namespace rwby
             List<string> sList = new List<string>();
             for (int i = 0; i < sceneHandles.Length; i++)
             {
-                if (sceneHandles[i].IsValid() == false || sceneHandles[i].Status != AsyncOperationStatus.Succeeded) continue;
+                if (sceneHandles[i].Status != AsyncOperationStatus.Succeeded) continue;
                 sList.Add(sceneHandles[i].Result.Scene.name);
                 Debug.Log($"Returning {sceneHandles[i].Result.Scene.name}");
             }
@@ -57,15 +54,16 @@ namespace rwby
         {
             for (int i = 0; i < sceneHandles.Length; i++)
             {
-                Addressables.UnloadSceneAsync(sceneHandles[i]);
-                sceneHandles[i] = default;
+                if (sceneHandles[i].Status == AsyncOperationStatus.Succeeded) Addressables.UnloadSceneAsync(sceneHandles[i]);
             }
         }
 
         public override bool Unload()
         {
-            //TODO
-            _ = UnloadMap();
+            foreach (var handle in sceneHandles)
+            {
+                if(handle.Status == AsyncOperationStatus.Succeeded) Addressables.Release(handle);
+            }
             return true;
         }
     }

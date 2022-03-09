@@ -2213,7 +2213,6 @@ GameObject:
   m_Component:
   - component: {fileID: 7663082699953192566}
   - component: {fileID: 7663082699953192565}
-  - component: {fileID: 3674305856053482604}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -2250,23 +2249,9 @@ MonoBehaviour:
   modLoader: {fileID: 4380024885267416392}
   contentManager: {fileID: 1944286682528977741}
   cMapper: {fileID: 5134940442468124677}
-  frameLimiter: {fileID: 3674305856053482604}
   settings: {fileID: 11400000, guid: fa9f7c1fd91f42e4087fa739f9dd3614, type: 2}
   localUsername: 
   currentMapSceneName: 
---- !u!114 &3674305856053482604
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7663082699953192564}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 330f9b87188293c468de15c475d0bb80, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  FPSLimit: 0
 --- !u!1 &7663082700113663894
 GameObject:
   m_ObjectHideFlags: 0
@@ -2670,6 +2655,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 03b9a6db219d12e4f8ec2934e0c7e721, type: 3}
+--- !u!4 &5134940442478104719 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 452158, guid: 03b9a6db219d12e4f8ec2934e0c7e721, type: 3}
+  m_PrefabInstance: {fileID: 5134940442478458545}
+  m_PrefabAsset: {fileID: 0}
 --- !u!114 &5134940442468124677 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 11452084, guid: 03b9a6db219d12e4f8ec2934e0c7e721, type: 3}
@@ -2681,8 +2671,3 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: edac79059a45d244a8050315593a7e9e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!4 &5134940442478104719 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 452158, guid: 03b9a6db219d12e4f8ec2934e0c7e721, type: 3}
-  m_PrefabInstance: {fileID: 5134940442478458545}
-  m_PrefabAsset: {fileID: 0}

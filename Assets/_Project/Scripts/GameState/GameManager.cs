@@ -13,7 +13,7 @@ namespace rwby
         public static GameManager singleton;
 
         [SerializeField] private ModLoader modLoader;
-        [SerializeField] private ContentManager contentManager;
+        public ContentManager contentManager;
         [SerializeField] private ControlMapper cMapper;
 
         public Settings settings;

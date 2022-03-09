@@ -166,7 +166,7 @@ namespace rwby
             {
                 if (mi.backingType != ModBackingType.UMod) continue;
 
-                if (ModHost.IsModInUse(mi.path) && !loadedMods.ContainsKey(mi.identifier))
+                if (ModHost.IsModInUse(mi.path) && !loadedMods.ContainsKey(new ModIdentifierTuple(mi.)))
                 {
                     await LoadMod(mi);
                 }
