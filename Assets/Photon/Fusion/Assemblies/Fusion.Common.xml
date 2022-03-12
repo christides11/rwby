@@ -36,6 +36,20 @@
             </summary>
             <typeparam name="T">Type used by the internal Queue</typeparam>
         </member>
+        <member name="M:Fusion.CompressionUtils.Compress(System.Byte[])">
+            <summary>
+            Compress the byte array uisng GZip
+            </summary>
+            <param name="data">Original byte array</param>
+            <returns>Compressed byte array</returns>
+        </member>
+        <member name="M:Fusion.CompressionUtils.Decompress(System.Byte[])">
+            <summary>
+            Decompress the byte array using GZip
+            </summary>
+            <param name="data">Compressed byte array</param>
+            <returns>Decompressed byte array</returns>
+        </member>
         <member name="P:Fusion.Protocol.ICommunicator.CommunicatorID">
             <summary>
             Represents the current ID of the communicator.

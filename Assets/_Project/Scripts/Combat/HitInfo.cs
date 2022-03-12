@@ -7,6 +7,9 @@ namespace rwby
     [System.Serializable]
     public class HitInfo : HnSF.Combat.HitInfo
     {
+        public bool attachToEntity = true;
+        public string attachTo;
+        
         public int holdVelocityTime;
         public Vector3 opponentForceAir;
         public float opponentFriction;

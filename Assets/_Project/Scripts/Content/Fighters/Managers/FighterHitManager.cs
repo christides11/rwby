@@ -34,7 +34,7 @@ namespace rwby
             {
                 if(hitObjects[i].collisionType == IDGroupCollisionType.Hurtbox
                     && hitObjects[i].hitIHurtableNetID == h.ownerNetworkObject.Id
-                    && hitObjects[i].hitByIDGroup == atackerHitbox.hitboxGroup.ID)
+                    && hitObjects[i].hitByIDGroup == atackerHitbox.definition.HitboxInfo[atackerHitbox.definitionIndex].ID)
                 {
                     return false;
                 }
@@ -49,7 +49,7 @@ namespace rwby
             {
                 if (hitObjects[i].collisionType == IDGroupCollisionType.Hitbox
                     && hitObjects[i].hitIHurtableNetID == h.ownerNetworkObject.Id
-                    && hitObjects[i].hitByIDGroup == attackerHitbox.hitboxGroup.ID)
+                    && hitObjects[i].hitByIDGroup == attackerHitbox.definition.HitboxInfo[attackerHitbox.definitionIndex].ID)
                 {
                     return false;
                 }
@@ -62,7 +62,7 @@ namespace rwby
             hitObjects.Add(new IDGroupCollisionInfo()
             {
                 collisionType = IDGroupCollisionType.Hurtbox,
-                hitByIDGroup = hitbox.hitboxGroup.ID,
+                hitByIDGroup = hitbox.definition.HitboxInfo[hitbox.definitionIndex].ID,
                 hitIHurtableNetID = enemyHurtbox.ownerNetworkObject.Id
             });
 
@@ -109,7 +109,7 @@ namespace rwby
             hitObjects.Add(new IDGroupCollisionInfo()
             {
                 collisionType = IDGroupCollisionType.Hitbox,
-                hitByIDGroup = hitbox.hitboxGroup.ID,
+                hitByIDGroup = hitbox.definition.HitboxInfo[hitbox.definitionIndex].ID,
                 hitIHurtableNetID = enemyHitbox.ownerNetworkObject.Id
             });
 
@@ -119,31 +119,29 @@ namespace rwby
         public virtual HurtInfo BuildHurtInfo(CustomHitbox hitbox, Hurtbox hurtbox)
         {
             Vector3 hitPoint = hurtbox.transform.position;
-            HitboxGroup hitboxGroup = hitbox.hitboxGroup;
+            HitInfo hitInfo = hitbox.definition.HitboxInfo[hitbox.definitionIndex];
             HurtInfo hurtInfo;
 
-            switch (hitboxGroup.hitboxHitInfo.forceRelation)
+            switch (hitInfo.forceRelation)
             {
                 case HitboxForceRelation.ATTACKER:
-                    hurtInfo = new HurtInfo((HitInfo)hitboxGroup.hitboxHitInfo, hurtbox.hurtboxGroup as HurtboxGroup,
+                    hurtInfo = new HurtInfo(hitInfo, hurtbox.hurtboxGroup as HurtboxGroup,
                         transform.position, manager.transform.forward, manager.transform.right,
                         manager.FPhysicsManager.GetOverallForce(), hitPoint);
                     break;
                 case HitboxForceRelation.HITBOX:
                     // TODO: Attack origin point.
-                    Vector3 position = hitboxGroup.attachToEntity ? manager.transform.position + (hitboxGroup.boxes[hitbox.hitboxIndex] as HnSF.Combat.BoxDefinition).offset
-                         : Vector3.zero + (hitboxGroup.boxes[hitbox.hitboxIndex] as HnSF.Combat.BoxDefinition).offset;
-                    hurtInfo = new HurtInfo((HitInfo)hitboxGroup.hitboxHitInfo, hurtbox.hurtboxGroup,
-                         position, manager.transform.forward, manager.transform.right,
+                    hurtInfo = new HurtInfo(hitInfo, hurtbox.hurtboxGroup,
+                         hitbox.Position, manager.transform.forward, manager.transform.right,
                          manager.FPhysicsManager.GetOverallForce(), hitPoint);
                     break;
                 case HitboxForceRelation.WORLD:
-                    hurtInfo = new HurtInfo((HitInfo)hitboxGroup.hitboxHitInfo, hurtbox.hurtboxGroup,
+                    hurtInfo = new HurtInfo(hitInfo, hurtbox.hurtboxGroup,
                         transform.position, Vector3.forward, Vector3.right,
                         (manager.FPhysicsManager as FighterPhysicsManager).GetOverallForce(), hitPoint);
                     break;
                 default:
-                    hurtInfo = new HurtInfo((HitInfo)hitboxGroup.hitboxHitInfo, hurtbox.hurtboxGroup,
+                    hurtInfo = new HurtInfo(hitInfo, hurtbox.hurtboxGroup,
                         transform.position, manager.transform.forward, manager.transform.right,
                         manager.FPhysicsManager.GetOverallForce(), hitPoint);
                     break;

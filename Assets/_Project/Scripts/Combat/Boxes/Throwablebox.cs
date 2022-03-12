@@ -6,7 +6,7 @@ using Fusion;
 
 namespace rwby
 {
-    public class Throwablebox : Custombox
+    public class Throwablebox : CustomHitbox
     {
 
     }

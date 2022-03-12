@@ -2,6 +2,79 @@
 
 ## RC Nightly
 
+### Build 435 (Mar 11, 2022)
+
+**What's New**
+
+- Get(), Set(), and IndexOf() methods added to NetworkLinkedList<T>
+
+**Bug Fixes**
+
+- Fixed: Shared non-master clients not attaching to a deactivated scene objects
+- Fixed: `NetworkRunner.EnsureRunnerSceneIsActive` not changing active scene in multiple peer mode
+- Fixed: Some issues relating to handing over state authority in shared mode
+
+### Build 434 (Mar 10, 2022)
+
+**What's New**
+
+- Host Migration Support
+
+**Changes**
+
+- Enable connect attempt to Symmetric NATs
+
+### Build 433 (Mar 09, 2022)
+
+**Bug Fixes**
+
+- Fixed: Realtime Region Ping method
+- Fixed: Issue in the first interpolated rendering of a predict-spawned object with `NetworkTransform`
+
+### Build 432 (Mar 08, 2022)
+
+**What's New**
+
+- Added NetworkBehaviour.CopyStateFrom
+- Added NetworkObject.CopyStateFrom
+
+**Bug Fixes**
+
+- Fixed: Issue with out of bounds write on very large objects in EC mode
+
+### Build 431 (Mar 07, 2022)
+
+**What's New**
+
+- NanoSockets for AppleSilicon M1
+- Base Switch NanoSockets project
+- PS4 NanoSockets
+- Link to PS4 static libs
+- Basic PS4 NanoSockets project
+- `Fusion.TextWriterLogger`
+
+**Changes**
+
+- Move Xbox NanoSockets
+- Switch NanoSockets Project
+- NanoSockets source for Switch Build
+- Setup NanoSockets for Switch
+- Ignore NanoSockets Switch Builds
+- Rename PS4 NanoSockets output file
+- PS4 NanoSockets Cleanup
+- PS4 NanoSockets build StaticLibrary
+- PS4 Macros cleanup
+- `Fusion.ConsoleLogger` made public
+
+**Removed**
+
+- PS4 NanoSocket Unused static lib refs
+
+**Bug Fixes**
+
+- Fixed: Path of SwitchMacros.h
+- Fixed: Insertion and ordering of non-networkobject attached simulation behaviours
+
 ### Build 430 (Mar 04, 2022)
 
 **Breaking Changes**

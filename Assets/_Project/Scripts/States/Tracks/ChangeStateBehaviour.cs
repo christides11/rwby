@@ -1,4 +1,4 @@
-using HnSF.Sample.TDAction;
+using HnSF;
 using UnityEngine;
 using UnityEngine.Playables;
 
@@ -7,6 +7,8 @@ namespace rwby
     [System.Serializable]
     public class ChangeStateBehaviour : FighterStateBehaviour
     {
+        public bool checkStateCondition = false;
+        
         [SelectImplementation((typeof(FighterStateReferenceBase)))] [SerializeReference]
         public FighterStateReferenceBase state = new FighterCmnStateReference();
         

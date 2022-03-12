@@ -20,6 +20,9 @@ PluginImporter:
         Exclude Editor: 1
         Exclude Linux64: 1
         Exclude OSXUniversal: 1
+        Exclude PS4: 0
+        Exclude PS5: 0
+        Exclude Switch: 0
         Exclude Win: 1
         Exclude Win64: 1
         Exclude iOS: 0
@@ -42,6 +45,21 @@ PluginImporter:
         CPU: AnyCPU
         DefaultValueInitialized: true
         OS: AnyOS
+  - first:
+      Nintendo Switch: Switch
+    second:
+      enabled: 1
+      settings: {}
+  - first:
+      PS4: PS4
+    second:
+      enabled: 1
+      settings: {}
+  - first:
+      PS5: PS5
+    second:
+      enabled: 1
+      settings: {}
   - first:
       Standalone: Linux64
     second:

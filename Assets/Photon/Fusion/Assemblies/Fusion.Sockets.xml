@@ -800,6 +800,11 @@
             When there is already a Server running on the current Room
             </summary>
         </member>
+        <member name="F:Fusion.Protocol.HostMigration.PeerMode">
+            <summary>
+            Local Peer Mode
+            </summary>
+        </member>
         <member name="T:Fusion.Protocol.JoinMessageType">
             <summary>
             <see cref="T:Fusion.Protocol.Join"/> message Type
@@ -855,6 +860,11 @@
             Request for Reflexive Information
             </summary>
         </member>
+        <member name="F:Fusion.Protocol.JoinRequests.DisableNATPunch">
+            <summary>
+            Request to Disable NAT Punch
+            </summary>
+        </member>
         <member name="T:Fusion.Protocol.Join">
             <summary>
             Join Message
@@ -885,7 +895,198 @@
         </member>
         <member name="T:Fusion.Protocol.SyncType">
             <summary>
+            Network Config Msg Type
+            </summary>
+        </member>
+        <member name="F:Fusion.Protocol.SyncType.Request">
+            <summary>
+            Request Network Config
+            </summary>
+        </member>
+        <member name="F:Fusion.Protocol.SyncType.Response">
+            <summary>
+            Response to a Request
+            </summary>
+        </member>
+        <member name="F:Fusion.Protocol.SyncType.Override">
+            <summary>
+            Override Signal for the Network Config
+            </summary>
+        </member>
+        <member name="T:Fusion.Protocol.NetworkConfigSync">
+            <summary>
+            NetworkConfig Protocol Msgs
+            It is used to serialize the Fusion NetworkConfig and send to Photon Cloud Plugin
+            </summary>
+        </member>
+        <member name="F:Fusion.Protocol.NetworkConfigSync.Type">
+            <summary>
+            Network Config Type
+            </summary>
+        </member>
+        <member name="F:Fusion.Protocol.NetworkConfigSync.NetworkConfig">
+            <summary>
+            JSON Serialized NetworkConfig
+            </summary>
+        </member>
+        <member name="T:Fusion.Protocol.ReflexiveInfo">
+            <summary>
+            Reflexive Info Msgs
             
+            Used to transport information about the Reflexive Addresses of a Peer
+            </summary>
+        </member>
+        <member name="F:Fusion.Protocol.ReflexiveInfo.ActorNr">
+            <summary>
+            Actor ID to which this info is related
+            </summary>
+        </member>
+        <member name="F:Fusion.Protocol.ReflexiveInfo.PublicAddr">
+            <summary>
+            Peer Public Address
+            </summary>
+        </member>
+        <member name="F:Fusion.Protocol.ReflexiveInfo.PrivateAddr">
+            <summary>
+            Peer Private Address
+            </summary>
+        </member>
+        <member name="F:Fusion.Protocol.ReflexiveInfo.NatType">
+            <summary>
+            Peer NAT Type
+            </summary>
+        </member>
+        <member name="P:Fusion.Protocol.ReflexiveInfo.IsValid">
+            <summary>
+            Signal if this Reflexive Info is Valid or not
+            </summary>
+        </member>
+        <member name="T:Fusion.Protocol.SnapshotType">
+            <summary>
+            Snapshot Message Type
+            </summary>
+        </member>
+        <member name="F:Fusion.Protocol.SnapshotType.Invalid">
+            <summary>
+            Invalid/Empty Type
+            </summary>
+        </member>
+        <member name="F:Fusion.Protocol.SnapshotType.Data">
+            <summary>
+            Base Snapshot
+            </summary>
+        </member>
+        <member name="F:Fusion.Protocol.SnapshotType.Confirmation">
+            <summary>
+            Confirmation sent by the Plugin
+            </summary>
+        </member>
+        <member name="T:Fusion.Protocol.Snapshot">
+            <summary>
+            State Snapshot Protocol Msgs
+            
+            Used to sync the current Server Game State with the Photon Cloud Plugin 
+            in order to perform an eventual Host Migration
+            </summary>
+        </member>
+        <member name="P:Fusion.Protocol.Snapshot.Tick">
+            <summary>
+            Tick to which this Snapshot represents
+            </summary>
+        </member>
+        <member name="P:Fusion.Protocol.Snapshot.NetworkID">
+            <summary>
+            Last NetworkID from the Server
+            </summary>
+        </member>
+        <member name="P:Fusion.Protocol.Snapshot.SnapshotType">
+            <summary>
+            Snapshot Type
+            </summary>
+        </member>
+        <member name="P:Fusion.Protocol.Snapshot.TotalSize">
+            <summary>
+            Snapshot Total number of bytes stored or expected to be stored on the Snapshot
+            </summary>
+        </member>
+        <member name="P:Fusion.Protocol.Snapshot.IsValid">
+            <summary>
+            Check if the Snapshot has a valid Data based on the expected CRC
+            </summary>
+            <returns>True if the Snapshot has a valid data</returns>
+        </member>
+        <member name="P:Fusion.Protocol.Snapshot.Data">
+            <summary>
+            Get Snapshot internal Data Buffer
+            </summary>
+            <returns>Internal Data Buffer</returns>
+        </member>
+        <member name="P:Fusion.Protocol.Snapshot.CRC">
+            <summary>
+            CRC Hash based on the content of the internal data or the expected CRC after all fragments are computed
+            </summary>
+        </member>
+        <member name="P:Fusion.Protocol.Snapshot.SnapshotBuffer">
+            <summary>
+            Actual Snapshot data
+            </summary>
+        </member>
+        <member name="P:Fusion.Protocol.Snapshot.SnapshotSize">
+            <summary>
+            Snapshot Total Size
+            </summary>
+        </member>
+        <member name="M:Fusion.Protocol.Snapshot.ComputeCRC(System.Byte[])">
+            <summary>
+            Computes the CRC64 of the current Buffer Data stored on the Snapshot
+            </summary>
+        </member>
+        <member name="M:Fusion.Protocol.Snapshot.Merge(Fusion.Protocol.Snapshot)">
+            <summary>
+            Merge the received Snapshot data on this own data
+            </summary>
+            <param name="snapshot">Snapshot to be merged</param>
+        </member>
+        <member name="M:Fusion.Protocol.Snapshot.Clone">
+            <summary>
+            Create a clone with this Snapshot and reset reference
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:Fusion.Protocol.StartRequests">
+            <summary>
+            Start Message Requests
+            </summary>
+        </member>
+        <member name="F:Fusion.Protocol.StartRequests.None">
+            <summary>
+            No Requests
+            </summary>
+        </member>
+        <member name="F:Fusion.Protocol.StartRequests.ConnectToShared">
+            <summary>
+            Peer should connect to Shared Server
+            </summary>
+        </member>
+        <member name="F:Fusion.Protocol.StartRequests.WaitForReflexiveInfo">
+            <summary>
+            Peer should wait for the Server Reflexive Info
+            </summary>
+        </member>
+        <member name="T:Fusion.Protocol.Start">
+            <summary>
+            Start Protocol Msgs
+            Used to signal that Fusion Simulation should start
+            </summary>
+        </member>
+        <member name="F:Fusion.Protocol.Start.RemoteServerID">
+            <summary>
+            Actor ID of the Remote Server
+            </summary>
+        </member>
+        <member name="F:Fusion.Protocol.Start.StartRequests">
+            <summary>
+            Start Requests
             </summary>
         </member>
         <member name="T:Fusion.Protocol.PluginGameMode">
@@ -946,6 +1147,22 @@
             Protocol Messages Serializer
             </summary>
         </member>
+        <member name="M:Fusion.Protocol.ProtocolSerializer.PackNext(Fusion.Protocol.Message,Fusion.Protocol.BitStream)">
+            <summary>
+            Serialize a Protocol Message into a BitStream
+            </summary>
+            <param name="msg">Protocol Message to be serialized</param>
+            <param name="stream">BitStream containing the Protocol Message</param>
+            <returns>True if the Protocol Message was serialized</returns>
+        </member>
+        <member name="M:Fusion.Protocol.ProtocolSerializer.ReadNext(Fusion.Protocol.BitStream,Fusion.Protocol.Message@)">
+            <summary>
+            Deserialize a Protocol Message from a BitStream
+            </summary>
+            <param name="stream">Stream containing a Protocol Message</param>
+            <param name="msg">Deserialized Protocol Message</param>
+            <returns>True if a Protocol Message was deserialized</returns>
+        </member>
         <member name="F:Fusion.Protocol.ProtocolMessageVersion.Invalid">
             <summary>
             Invalid Version
@@ -969,6 +1186,11 @@
         <member name="F:Fusion.Protocol.ProtocolMessageVersion.V1_2_1">
             <summary>
             Added NAT Type to Reflexive Info
+            </summary>
+        </member>
+        <member name="F:Fusion.Protocol.ProtocolMessageVersion.V1_2_2">
+            <summary>
+            Added Host Migration Support
             </summary>
         </member>
         <member name="F:Fusion.Protocol.ProtocolMessageVersion.LATEST">

@@ -6,7 +6,7 @@ using Fusion;
 
 namespace rwby
 {
-    public class Hurtbox : Custombox
+    public class Hurtbox : CustomHitbox
     {
         public IHurtable hurtable;
     }

@@ -61,7 +61,6 @@ namespace rwby
         [SerializeField] protected CapsuleCollider capsuleCollider;
         [SerializeField] protected SoundbankContainer soundbankContainer;
         [SerializeField] protected EffectbankContainer effectbankContainer;
-        public AnimationbankContainer animationbankContainer;
         public FighterAnimator fighterAnimator;
         [SerializeField] protected Transform targetOrigin;
         public ParticleSystemEffect guardEffect;
@@ -84,8 +83,8 @@ namespace rwby
         {
             lobbyManager = LobbyManager.singleton;
             networkManager = NetworkManager.singleton;
-            combatManager.movesets = fighterDefinition.GetMovesets();
-            foreach (var moveset in combatManager.movesets)
+            stateManager.movesets = fighterDefinition.GetMovesets();
+            foreach (var moveset in stateManager.movesets)
             {
                 (moveset as Moveset).Initialize();
             }
@@ -97,9 +96,9 @@ namespace rwby
             TargetableNetworked = true;
             Visible = true;
             combatManager.Cleanup();
-            combatManager.SetMoveset(0);
+            stateManager.SetMoveset(0);
             statManager.InitStats();
-            statManager.SetupStats((combatManager.movesets[0] as Moveset).fighterStats);
+            statManager.SetupStats((stateManager.movesets[0] as Moveset).fighterStats);
         }
 
         public float hitstopShakeDistance = 0.5f;
@@ -108,7 +107,7 @@ namespace rwby
 
         public override void FixedUpdateNetwork()
         {
-            //boxManager.ClearHitboxes();
+            boxManager.ResetAllBoxes();
             visualTransform.gameObject.SetActive(Visible);
 
             HitstopShake();
@@ -270,41 +269,6 @@ namespace rwby
             return transform.position + Vector3.up;
         }
 
-        protected virtual void SetupStates()
-        {
-            
-        }
-
-        public bool TryAirJump()
-        {
-            if(InputManager.GetJump(out int bOff).firstPress == false)
-            {
-                return false;
-            }
-            if(CurrentJump == statManager.GetFighterStats().intStats[FighterIntBaseStats.AIRJUMP_count])
-            {
-                return false;
-            }
-            CurrentJump++;
-            FStateManager.ChangeState((ushort)FighterCmnStates.AIR_JUMP);
-            return true;
-        }
-
-        public bool TryAirDash()
-        {
-            if(InputManager.GetDash(out int bOff).firstPress == false)
-            {
-                return false;
-            }
-            if(CurrentAirDash == statManager.GetFighterStats().intStats[FighterIntBaseStats.AIRDASH_count])
-            {
-                return false;
-            }
-            CurrentAirDash++;
-            FStateManager.ChangeState((ushort)FighterCmnStates.AIR_DASH);
-            return true;
-        }
-
         public bool TryBlock()
         {
             if(InputManager.GetBlock(out int bOff).isDown == false)
@@ -320,17 +284,6 @@ namespace rwby
                 FStateManager.ChangeState((ushort)FighterCmnStates.BLOCK_AIR);
             }
             return true;
-        }
-
-        public bool TryLandCancel()
-        {
-            FPhysicsManager.CheckIfGrounded();
-            if (FPhysicsManager.IsGroundedNetworked)
-            {
-                FStateManager.ChangeState((ushort)FighterCmnStates.IDLE);
-                return true;
-            }
-            return false;
         }
 
         [Header("Walls")]
@@ -471,7 +424,7 @@ namespace rwby
             CurrentAirDash = 0;
             CurrentJump = 0;
             FPhysicsManager.forceGravity = 0;
-            //combatManager.ResetStringAttacks();
+            combatManager.ResetString();
         }
 
 

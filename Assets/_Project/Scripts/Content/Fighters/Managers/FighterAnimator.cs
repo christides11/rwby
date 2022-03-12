@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using Fusion;
 using Animancer;
@@ -22,7 +23,7 @@ namespace rwby
         public ModObjectReference bank;
         public int animation;
         public float weight;
-        public float normalizedTime;
+        public float currentTime;
 
         public override bool Equals(object obj)
         {
@@ -48,7 +49,7 @@ namespace rwby
     public struct FighterAnimationRoot : INetworkStruct
     {
         public float weight;
-        [Networked, Capacity(10)] public NetworkLinkedList<FighterAnimationNode> anims => default;
+        [Networked, Capacity(10)] public NetworkLinkedList<FighterAnimationNode> layer0 => default;
     }
 
     [OrderAfter(typeof(FighterStateManager))]
@@ -58,48 +59,102 @@ namespace rwby
             new Dictionary<ModObjectReference, IAnimationbankDefinition>();
         [SerializeField] private AnimancerComponent animancer;
         
-        [Networked] private FighterAnimationRoot currentAnimation { get; set; }
-        [Networked] public bool tickAccurate { get; set; } = false;
+        [Networked] private FighterAnimationRoot currentAnimationSet { get; set; }
+        //[Networked] public bool tickAccurate { get; set; } = false;
 
         private ManualMixerState animationMixer = new ManualMixerState();
-        
+
         private void Awake()
         {
             animationMixer.Speed = 0;
             animationMixer.Key = this;
+            animancer.Layers[0].Speed = 0.0f;
+            animancer.Layers[0].Play(animationMixer, 0.0f);
+        }
+        
+        public void SyncFromState(ForceSetType syncMode, int layer, AnimationEntry[] wantedAnimations)
+        {
+            if (syncMode == ForceSetType.SET) ClearAnimationSet(layer);
+            for (int i = 0; i < wantedAnimations.Length; i++)
+            {
+                var temp = currentAnimationSet;
+                temp.layer0.Add(new FighterAnimationNode()
+                {
+                    bank = wantedAnimations[i].animationbankReference,
+                    animation = wantedAnimations[i].animation,
+                    weight = wantedAnimations[i].startWeight,
+                    currentTime = wantedAnimations[i].time
+                });
+                currentAnimationSet = temp;
+            }
+            
+            SyncAnimancer();
+        }
+
+        public void SetAnimationWeight(int layer, int index, float weight)
+        {
+            var fighterAnimationNode = currentAnimationSet.layer0[index];
+            fighterAnimationNode.weight = weight;
+            currentAnimationSet.layer0.Set(index, fighterAnimationNode);
+            
+            animancer.Layers[layer].GetChild(index).Weight = weight;
+        }
+
+        public void SetAnimationTime(int layer, int index, float time)
+        {
+            var fighterAnimationNode = currentAnimationSet.layer0[index];
+            fighterAnimationNode.currentTime = time;
+            currentAnimationSet.layer0.Set(index, fighterAnimationNode);
+
+            animancer.Layers[layer].GetChild(index).Time = time;
+        }
+
+        public override void FixedUpdateNetwork()
+        {
+            
         }
 
         AnimationClip[] clips = new AnimationClip[10];
-        public void SyncFromState(FighterAnimationRoot wantedAnimations, int layer)
+        private bool firstTime = true;
+        private void SyncAnimancer()
         {
-            currentAnimation = wantedAnimations;
+            if (currentAnimationSet.layer0.Count == 0)
+            {
+                return;
+            }
+            
             for (int i = 0; i < 10; i++)
             {
-                if (i < currentAnimation.anims.Count)
+                if (i < currentAnimationSet.layer0.Count)
                 {
-                    if (!bankMap.ContainsKey(currentAnimation.anims[i].bank)) GrabBank(currentAnimation.anims[i].bank);
-                    clips[i] = (bankMap[currentAnimation.anims[i].bank]).Animations[currentAnimation.anims[i].animation]
-                        .clip;
+                    clips[i] = (bankMap[currentAnimationSet.layer0[i].bank]).Animations[currentAnimationSet.layer0[i].animation].clip;
                 }
                 else
                 {
                     clips[i] = null;
+                    break;
                 }
             }
             
             animationMixer.Initialize(clips);
-            animationMixer.GetChild(0).Weight = 1.0f;
-            for (int a = 0; a < currentAnimation.anims.Count; a++)
+            for (int i = 0; i < currentAnimationSet.layer0.Count; i++)
             {
-                AnimancerState b = animationMixer.GetChild(a);
-                b.Weight = currentAnimation.anims[a].weight;
-                b.NormalizedTime = currentAnimation.anims[a].normalizedTime;
+                var tempChild = animationMixer.GetChild(i);
+                tempChild.Weight = currentAnimationSet.layer0[i].weight;
+                tempChild.Time = currentAnimationSet.layer0[i].currentTime;
             }
-            animancer.Play(animationMixer);
         }
 
-        private void GrabBank(ModObjectReference bank)
+        public void ClearAnimationSet(int layer)
         {
+            var temp = currentAnimationSet;
+            temp.layer0.Clear();
+            currentAnimationSet = temp;
+        }
+
+        public void RegisterBank(ModObjectReference bank)
+        {
+            if (bankMap.ContainsKey(bank)) return;
             bankMap.Add(bank, ContentManager.singleton.GetContentDefinition<IAnimationbankDefinition>(bank));
         }
     }

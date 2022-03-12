@@ -27,6 +27,8 @@ namespace rwby
 
         protected override float DrawGeneralGroup(ref Rect position, SerializedProperty property, float yPosition)
         {
+            EditorGUI.PropertyField(new Rect(position.x, yPosition, position.width, lineHeight), property.FindPropertyRelative("ID"));
+            yPosition += lineSpacing;
             yPosition = base.DrawGeneralGroup(ref position, property, yPosition);
             EditorGUI.PropertyField(new Rect(position.x, yPosition, position.width, lineHeight), property.FindPropertyRelative("hitSoundbankName"));
             yPosition += lineSpacing;

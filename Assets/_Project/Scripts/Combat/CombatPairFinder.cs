@@ -104,7 +104,8 @@ namespace rwby
                             var tuple = (broadphaseObjects[i].GetBehaviour<NetworkObject>(), h.ownerNetworkObject);
                             if (hitboxCombatPairs.ContainsKey(tuple))
                             {
-                                if (hitboxCombatPairs[tuple].attackerHitbox.hitboxGroup.ID > boxCollection.Hitboxes[a].hitboxGroup.ID)
+                                if (hitboxCombatPairs[tuple].attackerHitbox.definition.HitboxInfo[hitboxCombatPairs[tuple].attackerHitbox.definitionIndex].ID 
+                                    > boxCollection.Hitboxes[a].definition.HitboxInfo[boxCollection.Hitboxes[a].definitionIndex].ID)
                                 {
                                     hitboxCombatPairs[tuple] = new HitboxCombatPair()
                                     {
@@ -152,7 +153,8 @@ namespace rwby
                             if (hitboxCombatPairs.ContainsKey(tuple))
                             {
                                 if(hitboxCombatPairs[tuple].result == HitboxCombatResult.HitHitbox
-                                    && hitboxCombatPairs[tuple].attackeeHitbox.hitboxGroup.ID > h.hitboxGroup.ID)
+                                    && hitboxCombatPairs[tuple].attackeeHitbox.definition.HitboxInfo[hitboxCombatPairs[tuple].attackeeHitbox.definitionIndex].ID 
+                                    > h.definition.HitboxInfo[h.definitionIndex].ID)
                                 {
                                     HitboxCombatPair temp = hitboxCombatPairs[tuple];
                                     temp.attackeeHitbox = h;

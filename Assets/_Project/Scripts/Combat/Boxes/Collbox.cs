@@ -6,7 +6,7 @@ using Fusion;
 
 namespace rwby
 {
-    public class Collbox : Custombox
+    public class Collbox : CustomHitbox
     {
 
     }

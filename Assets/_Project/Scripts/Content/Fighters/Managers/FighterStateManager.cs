@@ -1,4 +1,5 @@
 using Fusion;
+using HnSF.Combat;
 using HnSF.Fighters;
 using UnityEngine;
 using UnityEngine.Playables;
@@ -16,19 +17,20 @@ namespace rwby
         [Networked(OnChanged = nameof(OnChangedState))] public int CurrentState { get; set; }
         [Networked] public int CurrentStateFrame { get; set; }
         [Networked] public NetworkBool markedForStateChange { get; set; }
+        [Networked] public int nextStateMoveset { get; set; }
         [Networked] public int nextState { get; set; }
 
         [SerializeField] protected FighterManager manager;
         [SerializeField] protected FighterCombatManager combatManager;
         public PlayableDirector director;
-
+        public rwby.Moveset[] movesets;
         public static void OnChangedState(Changed<FighterStateManager> changed){
             changed.Behaviour.OnStateChanged?.Invoke(changed.Behaviour);
         }
         
         public void ResimulationSync()
         {
-            var currentState = (manager.FCombatManager.GetMoveset(CurrentStateMoveset) as rwby.Moveset).stateMap[CurrentState];
+            var currentState = (manager.StateManager.GetMoveset(CurrentStateMoveset) as rwby.Moveset).stateMap[CurrentState];
             if (currentState != director.playableAsset) InitState(currentState);
             director.time = (float)CurrentStateFrame * Runner.Simulation.DeltaTime;
         }
@@ -63,16 +65,10 @@ namespace rwby
                     break;
             }
         }
-
-        public void AddState(HnSF.StateTimeline state, int stateNumber)
+        
+        public virtual FighterStats GetCurrentStats()
         {
-            Debug.LogError("Cannot add states.");
-        }
-
-        public void RemoveState(int stateNumber)
-        {
-            Debug.LogError("Cannot remove states.");
-
+            return (movesets[CurrentStateMoveset] as Moveset).fighterStats;
         }
 
         public void MarkForStateChange(int state)
@@ -80,10 +76,15 @@ namespace rwby
             markedForStateChange = true;
             nextState = state;
         }
-        
+
+        public MovesetDefinition GetMoveset(int index)
+        {
+            return movesets[index];
+        }
+
         public bool ChangeState(int state, int stateFrame = 0, bool callOnInterrupt = true)
         {
-            ChangeState(combatManager.CurrentMovesetIdentifier, state, stateFrame, callOnInterrupt);
+            ChangeState(CurrentStateMoveset, state, stateFrame, callOnInterrupt);
             return true;
         }
 
@@ -92,7 +93,7 @@ namespace rwby
             markedForStateChange = false;
             if (callOnInterrupt && CurrentState != 0)
             {
-                SetFrame((combatManager.GetMoveset(CurrentStateMoveset) as rwby.Moveset).stateMap[CurrentState].totalFrames);
+                SetFrame((GetMoveset(CurrentStateMoveset) as rwby.Moveset).stateMap[CurrentState].totalFrames);
                 director.Evaluate();
             }
             
@@ -126,17 +127,27 @@ namespace rwby
 
         public StateTimeline GetState()
         {
-            return (combatManager.GetMoveset(CurrentStateMoveset) as rwby.Moveset).stateMap[CurrentState];
+            return (GetMoveset(CurrentStateMoveset) as rwby.Moveset).stateMap[CurrentState] as rwby.StateTimeline;
         }
         
         public HnSF.StateTimeline GetState(int state)
         {
-            return (combatManager.GetMoveset(CurrentStateMoveset) as rwby.Moveset).stateMap[state];
+            return (GetMoveset(CurrentStateMoveset) as rwby.Moveset).stateMap[state];
+        }
+
+        public HnSF.StateTimeline GetState(int moveset, int state)
+        {
+            return movesets[moveset].stateMap[state];
+        }
+
+        public void SetMoveset(int movesetIndex)
+        {
+            CurrentStateMoveset = movesetIndex;
         }
 
         public string GetCurrentStateName()
         {
-            return (combatManager.GetMoveset(CurrentStateMoveset) as rwby.Moveset).stateMap[CurrentState].name;
+            return (GetMoveset(CurrentStateMoveset) as rwby.Moveset).stateMap[CurrentState].name;
         }
 
         public void IncrementFrame()
@@ -144,6 +155,8 @@ namespace rwby
             CurrentStateFrame++;
             director.time = (float)CurrentStateFrame * Runner.Simulation.DeltaTime;
         }
+
+        public int MovesetCount { get; }
 
         public void SetFrame(int frame)
         {

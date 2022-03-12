@@ -596,6 +596,11 @@
             ID of this Communicator. This reflects the Actor Number of the Peer inside the Room
             </summary>
         </member>
+        <member name="P:Fusion.CloudCommunicator.WasExtracted">
+            <summary>
+            Flag to signal if this Communicator was extracted and will be reused
+            </summary>
+        </member>
         <member name="T:Fusion.CloudServices">
             <summary>
             Responsible to deal with LoadBalancingClient Events
@@ -655,11 +660,18 @@
             Exposes the current NAT Type from the local Peer
             </summary>
         </member>
-        <member name="M:Fusion.CloudServices.#ctor(Fusion.NetworkRunner)">
+        <member name="M:Fusion.CloudServices.#ctor(Fusion.NetworkRunner,Fusion.CloudCommunicator)">
             <summary>
             Builds a new CloudService reference
             </summary>
             <param name="runner">Reference to the current active Runner</param>
+            <param name="communicator">Opitional external Communicator</param>
+        </member>
+        <member name="M:Fusion.CloudServices.ExtractCommunicator">
+            <summary>
+            Extract the internal Communicator for later re-use
+            </summary>
+            <returns>Current <see cref="T:Fusion.CloudCommunicator"/> used by this instance with all resetted settings</returns>
         </member>
         <member name="M:Fusion.CloudServices.Update">
             <summary>
@@ -739,7 +751,7 @@
             Disposes the current <see cref="T:Fusion.CloudServices"/>
             </summary>
         </member>
-        <member name="M:Fusion.CloudServices.UpdateSessionInfo">
+        <member name="M:Fusion.CloudServices.Service_UpdateSessionInfo">
             <summary>
             Update the <see cref="T:Fusion.SessionInfo"/> data based on the current LBC Information after the peer enters a Room
             </summary>
@@ -771,6 +783,11 @@
             Send a <see cref="T:Fusion.Protocol.ReflexiveInfo"/> Protocol Message to the Fusion Plugin
             </summary>
             <param name="stunResult">Reference to StunResult used to build the Protocol Message</param>
+        </member>
+        <member name="M:Fusion.CloudServices.SendStateSnapshot">
+            <summary>
+            Build and send the latest Server Snapshot to the Fusion Plugin
+            </summary>
         </member>
         <member name="M:Fusion.CloudServices.HandleJoinMessage(System.Int32,Fusion.Protocol.Join)">
             <summary>
@@ -807,7 +824,7 @@
             <param name="sender">Sender Actor Number</param>
             <param name="reflexiveInfo">ReflexiveInfo Protocol Message</param>
         </member>
-        <member name="M:Fusion.CloudServices.CheckScheduledRequests">
+        <member name="M:Fusion.CloudServices.Service_CheckScheduledRequests">
             <summary>
             Check for scheduled requests
             </summary>
@@ -836,6 +853,7 @@
             on the current NAT of the Server, forcing it to allow packages from the remote client to be received
             </summary>
             <param name="remoteAddr">Remove EndPoint to ping</param>
+            <param name="cancellationToken">CancellationToken</param>
         </member>
         <member name="M:Fusion.CloudServices.SendPing(Fusion.Sockets.NetAddress)">
             <summary>
@@ -843,6 +861,11 @@
             </summary>
             <param name="netAddress">EndPoint to send the ping</param>
             <returns>True if the Ping was sent, false otherwise</returns>
+        </member>
+        <member name="M:Fusion.CloudServices.Service_SendHostMigrationSnapshots">
+            <summary>
+            Try to send Server Snapshot to Plugin 
+            </summary>
         </member>
         <member name="M:Fusion.CloudServices.CheckSubnet(Fusion.Sockets.NetAddress)">
             <summary>
@@ -918,6 +941,11 @@
         <member name="F:Fusion.CloudServicesMetadata.ScheduledRequests">
             <summary>
             Stores requests sent by the plugin
+            </summary>
+        </member>
+        <member name="F:Fusion.CloudServicesMetadata.LastDisconnectMsg">
+            <summary>
+            Last Disconnect Msg Received from the Plugin
             </summary>
         </member>
         <member name="T:Fusion.ScheduledRequests">
@@ -1373,15 +1401,11 @@
             This is for advanced use cases only, and cannot be used if <see cref="T:Fusion.NetworkedAttribute"/> is used in the derived class.  
             </summary>
         </member>
-        <member name="M:Fusion.NetworkBehaviour.CopyBackingFieldsToState(System.Boolean)">
+        <member name="M:Fusion.NetworkBehaviour.CopyStateFrom(Fusion.NetworkBehaviour)">
             <summary>
-            
+            Copies entire state of passed in source <see cref="T:Fusion.NetworkBehaviour"/>
             </summary>
-        </member>
-        <member name="M:Fusion.NetworkBehaviour.CopyStateToBackingFields">
-            <summary>
-            
-            </summary>
+            <param name="source">Source <see cref="T:Fusion.NetworkBehaviour"/> to copy data from</param>
         </member>
         <member name="P:Fusion.NetworkBehaviour.InvokeOnChangedForInitialNonZeroValues">
             <summary>
@@ -1473,6 +1497,32 @@
             and if valid contains the inputs supplied by that <see cref="T:Fusion.PlayerRef"/> for the current simulation tick.</para>
             </summary>
         </member>
+        <member name="T:Fusion.NetworkBehaviour.RawInterpolator">
+            <summary>
+            RawInterpolator provides a set of methods to get the "from" and "to" ticks of the associated [Networked] property,
+            as well as the current interpolation value for the two.
+            All methods return raw memory pointers and expects the caller to be able to convert the data to the proper types.
+            <seealso cref="T:Fusion.NetworkBehaviour.Interpolator`1"/>
+            </summary>
+        </member>
+        <member name="T:Fusion.NetworkBehaviour.Interpolator`1">
+            <summary>
+            Interpolator provides a set of methods to get the "from" and "to" ticks of the associated [Networked] property,
+            as well as the current interpolation value for the two, but it also provides a Value property as a shortcut to
+            get the actual interpolated value for those parameters.
+            <seealso cref="T:Fusion.NetworkBehaviour.RawInterpolator"/>
+            </summary>
+        </member>
+        <member name="P:Fusion.NetworkBehaviour.Interpolator`1.Value">
+            <summary>
+            Get the current interpolation value for this Interpolator. This method will silently ignore missing interpolation data and just return the default value for `T`
+            </summary>
+        </member>
+        <member name="P:Fusion.NetworkBehaviour.Interpolator`1.TryValue">
+            <summary>
+            Get the current interpolation value for this Interpolator. Similar to the `Value` property, but will return null if interpolation data is not available.
+            </summary>
+        </member>
         <member name="M:Fusion.NetworkBehaviour.Interpolator`1.TryGetValues(`0@,`0@,System.Single@,System.Nullable{System.Boolean})">
             <summary>
             Try and get 'To' and 'From' states, and the Alpha (t) values needed for interpolation.
@@ -1495,6 +1545,24 @@
             If no value is forced, interpolation data will be retrieved according to the <see cref="P:Fusion.NetworkBehaviour.InterpolationDataSource"/>.
             </param>
             <returns>A tuple containing the values. Null if interpolation data is not available.</returns>
+        </member>
+        <member name="M:Fusion.NetworkBehaviour.GetInterpolator(System.String)">
+            <summary>
+            Get a raw interpolator for a networked property.
+            The returned `RawInterpolator` provides a way to calculate the "between-ticks" value of the named [Networked] property.
+            </summary>
+            <param name="propertyName">Name of the [Networked] property</param>
+            <returns>`RawInterpolator` for the networked property</returns>
+        </member>
+        <member name="M:Fusion.NetworkBehaviour.GetInterpolator``1(System.String)">
+            <summary>
+            Get an interpolator for a networked property.
+            The returned `Interpolator` provides a way to calculate the "between-ticks" value of the named [Networked] property with the specified type `T`.
+            The value is a linear interpolation between the "from" and the "to" ticks and is available via the `Value` property on the `Interpolator`.
+            </summary>
+            <param name="propertyName">Name of the [Networked] property</param>
+            <typeparam name="T">Type of the [Networked] property</typeparam>
+            <returns>`Interpolator` for the networked property</returns>
         </member>
         <member name="M:Fusion.NetworkBehaviour.MakeInitializer``1(``0[])">
             <summary>
@@ -4736,22 +4804,22 @@
         <member name="T:Fusion.NetworkArray`1">
             <summary>
             Fusion type for networking arrays. Capacity is fixed, and needs to be set the maximum possible number of entries.<br></br><br></br>
-            Typical Usage:
+            <para>Typical Usage:
             <code>
             [Networked, Capacity(4)]<br></br>
             NetworkArray&lt;float&gt; syncedArray => default;
-            </code>
-            Optional usage (for NetworkBehaviours ONLY - this is not legal in INetworkStructs):
+            </code></para>
+            <para>Optional usage (for NetworkBehaviours ONLY - this is not legal in INetworkStructs):
             <code>
             [Networked, Capacity(4)]<br></br>
             NetworkArray&lt;int&gt; syncedArray { get; } = MakeInitializer(new int[] { 1, 2, 3, 4 });<br></br>
-            </code>
-            Usage for modifying data:
+            </code></para>
+            <para>Usage for modifying data:
             <code>
             var array = syncedArray;
             array.Set(123);
             array[0] = 456;
-            </code>
+            </code></para>
             </summary>
             <typeparam name="T">T can be a primitive, or an INetworkStruct.</typeparam>
         </member>
@@ -4782,7 +4850,7 @@
         </member>
         <member name="M:Fusion.NetworkArray`1.ToArray">
             <summary>
-            Allocates a new array and copies values from the dictionary to that array. For a non-alloc alternative use <see cref="M:Fusion.NetworkArray`1.CopyTo(System.Collections.Generic.List{`0})"/>.
+            Allocates a new array and copies values from this array. For a non-alloc alternative use <see cref="M:Fusion.NetworkArray`1.CopyTo(System.Collections.Generic.List{`0})"/>.
             </summary>
         </member>
         <member name="M:Fusion.NetworkArray`1.CopyTo(System.Collections.Generic.List{`0})">
@@ -4820,18 +4888,18 @@
         <member name="T:Fusion.NetworkDictionary`2">
             <summary>
             Fusion type for networking Dictionaries. Capacity is fixed, and needs to be set the maximum possible number of entries.<br></br><br></br>
-            Typical Usage:
+            <para>Typical Usage:
             <code>
             [Networked, Capacity(10)]<br></br>
             NetworkDictionary&lt;int, float&gt; syncedDict => default;<br></br>
-            </code>
-            Usage for modifying data:
+            </code></para>
+            <para>Usage for modifying data:
             <code>
             var dict = syncedDict;
             dict.Add(5, 123);
             dict[5] = 456;
             dict.Remove(5);
-            </code>
+            </code></para>
             </summary>
             <typeparam name="K">Key can be a primitive, or an INetworkStruct.</typeparam>
             <typeparam name="V">Value can be a primitive, or an INetworkStruct.</typeparam>
@@ -4910,23 +4978,22 @@
             <summary>
             Fusion type for networking LinkedLists. Capacity is fixed, and needs to be set the maximum possible number of entries.<br></br><br></br>
             Typical Usage:
-            <code>
+            <para><code>
             [Networked, Capacity(10)]<br></br>
             NetworkLinkedList&lt;int&gt; syncedLinkedList => default;
-            </code>
-            Optional usage (for NetworkBehaviours ONLY - this is not legal in INetworkStructs):
+            </code></para>
+            <para>Optional usage (for NetworkBehaviours ONLY - this is not legal in INetworkStructs):
             <code>
             [Networked, Capacity(4)]<br></br>
             NetworkLinkedList&lt;int&gt; syncedLinkedList { get; } = MakeInitializer(new int[] { 1, 2, 3, 4 });<br></br>
-            </code>
-            Internally this struct does not contain the actual list data, and is only a wrapper for memory operations.<br></br>
-            Usage for modifying data:
+            </code></para>
+            <para>Usage for modifying data:
             <code>
             var list = syncedLinkedList;
             list.Add(123);
             list[0] = 456;
             list.Remove(0);
-            </code>
+            </code></para>
             </summary>
             <typeparam name="T">T can be a primitive, or an INetworkStruct.</typeparam>
         </member>
@@ -4960,6 +5027,27 @@
             Returns true if the value already exists in the list.
             </summary>
         </member>
+        <member name="M:Fusion.NetworkLinkedList`1.Set(System.Int32,`0)">
+            <summary>
+            Sets the value at supplied index.
+            </summary>
+        </member>
+        <member name="M:Fusion.NetworkLinkedList`1.Get(System.Int32)">
+            <summary>
+            Returns the value at supplied index.
+            </summary>
+        </member>
+        <member name="M:Fusion.NetworkLinkedList`1.IndexOf(`0)">
+            <summary>
+            Returns the index with this value. Returns -1 if not found.
+            </summary>
+        </member>
+        <member name="M:Fusion.NetworkLinkedList`1.IndexOf(`0,System.Collections.Generic.IEqualityComparer{`0})">
+            <summary>
+            Returns the index with this value. Returns -1 if not found.
+            </summary>
+            <param name="equalityComparer">Specify custom IEqualityComparer to be used for compare.</param>
+        </member>
         <member name="M:Fusion.NetworkLinkedList`1.Remove(`0)">
             <summary>
             Removes the first found element with indicated value.
@@ -4969,12 +5057,6 @@
             <summary>
             Removes the first found element with indicated value.
             </summary>
-        </member>
-        <member name="M:Fusion.NetworkLinkedList`1.AddLast(`0)">
-            <summary>
-            Adds a value to the end of the list.
-            </summary>
-            <param name="value"></param>
         </member>
         <member name="M:Fusion.NetworkLinkedList`1.Add(`0)">
             <summary>
@@ -5254,6 +5336,11 @@
             The unique identifier for this network entity. 
             </summary>
         </member>
+        <member name="F:Fusion.NetworkObject.IsResume">
+            <summary>
+            Signal that this <see cref="T:Fusion.NetworkObject"/> comes from a Resume Spawn
+            </summary>
+        </member>
         <member name="F:Fusion.NetworkObject.Runner">
             <summary>
             The <see cref="T:Fusion.NetworkRunner"/> this entity is associated with.
@@ -5426,6 +5513,12 @@
             </summary>
             <param name="player"></param>
             <param name="alwaysInterested"></param>
+        </member>
+        <member name="M:Fusion.NetworkObject.CopyStateFrom(Fusion.NetworkObject)">
+            <summary>
+            Copies the entire State from another <see cref="T:Fusion.NetworkObject"/>
+            </summary>
+            <param name="networkObject">NetworkObject to copy the State from</param>
         </member>
         <member name="M:Fusion.NetworkObject.SetInterestGroup(Fusion.PlayerRef,System.String,System.Boolean)">
             <summary>
@@ -5783,6 +5876,76 @@
             The server simulates and sends states to all clients. Clients simulate remote states forward into the local time frame (prediction).
             </summary>
         </member>
+        <member name="T:Fusion.NetworkProjectConfig.SceneLoadSpawnModes">
+            <summary>
+            Spawn Modes while Scene is being loaded
+            </summary>
+        </member>
+        <member name="F:Fusion.NetworkProjectConfig.SceneLoadSpawnModes.NotAllowed">
+            <summary>
+            Block all Spawns
+            </summary>
+        </member>
+        <member name="F:Fusion.NetworkProjectConfig.SceneLoadSpawnModes.Allowed">
+            <summary>
+            Allow all Spawns
+            </summary>
+        </member>
+        <member name="F:Fusion.NetworkProjectConfig.SceneLoadSpawnModes.Queued">
+            <summary>
+            Queue spawn for when Scene is fully loaded
+            </summary>
+        </member>
+        <member name="T:Fusion.NetworkProjectConfig.DeltaCompressors">
+            <summary>
+            Delta Compression Implementations
+            </summary>
+        </member>
+        <member name="F:Fusion.NetworkProjectConfig.DeltaCompressors.Default">
+            <summary>
+            Default Implementation
+            </summary>
+        </member>
+        <member name="F:Fusion.NetworkProjectConfig.DeltaCompressors.Burst">
+            <summary>
+            Burst Implementation
+            </summary>
+        </member>
+        <member name="F:Fusion.NetworkProjectConfig.DeltaCompressors.Debug">
+            <summary>
+            Debug Implementation
+            </summary>
+        </member>
+        <member name="F:Fusion.NetworkProjectConfig.DefaultResourceName">
+            <summary>
+            Default file name for the <see cref="T:Fusion.NetworkProjectConfig"/> asset
+            </summary>
+        </member>
+        <member name="P:Fusion.NetworkProjectConfig.Global">
+            <summary>
+            Reference for the default <see cref="T:Fusion.NetworkProjectConfig"/>
+            </summary>
+        </member>
+        <member name="F:Fusion.NetworkProjectConfig.CurrentTypeId">
+            <summary>
+            Current <see cref="T:Fusion.NetworkProjectConfig"/> Type ID
+            </summary>
+        </member>
+        <member name="F:Fusion.NetworkProjectConfig.CurrentVersion">
+            <summary>
+            Current <see cref="T:Fusion.NetworkProjectConfig"/> version
+            </summary>
+        </member>
+        <member name="F:Fusion.NetworkProjectConfig.Version">
+            <summary>
+            Current <see cref="T:Fusion.NetworkProjectConfig"/> version
+            </summary>
+        </member>
+        <member name="F:Fusion.NetworkProjectConfig.TypeId">
+            <summary>
+            Current <see cref="T:Fusion.NetworkProjectConfig"/> Type ID
+            </summary>
+        </member>
         <member name="F:Fusion.NetworkProjectConfig.PeerMode">
             <summary>
             Setting for whether multiple peers can run per Unity instance (typically to allow easy testing of multiple peers inside of the editor).
@@ -5808,9 +5971,70 @@
             Advanced lag compensation buffer settings.
             </summary>
         </member>
+        <member name="F:Fusion.NetworkProjectConfig.SceneLoadSpawnMode">
+            <summary>
+            Current <see cref="F:Fusion.NetworkProjectConfig.SceneLoadSpawnMode"/>
+            </summary>
+        </member>
+        <member name="F:Fusion.NetworkProjectConfig.DeltaCompressor">
+            <summary>
+            Current <see cref="F:Fusion.NetworkProjectConfig.DeltaCompressor"/> type
+            </summary>
+        </member>
+        <member name="F:Fusion.NetworkProjectConfig.InvokeRenderInBatchMode">
+            <summary>
+            Signal if the <see cref="M:Fusion.SimulationBehaviour.Render"/> callbacks should be invoked in Batch Mode
+            </summary>
+        </member>
+        <member name="F:Fusion.NetworkProjectConfig.MaxNetworkedObjectCount">
+            <summary>
+            Max number of allowed <see cref="T:Fusion.NetworkObject"/>
+            </summary>
+        </member>
+        <member name="F:Fusion.NetworkProjectConfig.NetworkIdIsObjectName">
+            <summary>
+            Signal if the <see cref="T:Fusion.NetworkId"/> of the <see cref="T:Fusion.NetworkObject"/> should be included on the name of the <see cref="T:UnityEngine.GameObject"/>
+            </summary>
+        </member>
+        <member name="F:Fusion.NetworkProjectConfig.EnableHostMigration">
+            <summary>
+            Enable the Support for Host Migration
+            </summary>
+        </member>
+        <member name="F:Fusion.NetworkProjectConfig.HostMigrationSnapshotInterval">
+            <summary>
+            Delay in seconds between each time the Host sends a Snapshot
+            of the current Simulation State to be used in the Host Migration
+            </summary>
+        </member>
+        <member name="F:Fusion.NetworkProjectConfig.PrefabTable">
+            <summary>
+            Reference for the current <see cref="T:Fusion.NetworkPrefabTable"/>
+            </summary>
+        </member>
+        <member name="F:Fusion.NetworkProjectConfig.Simulation">
+            <summary>
+            Simulation Settings
+            </summary>
+        </member>
+        <member name="F:Fusion.NetworkProjectConfig.Interpolation">
+            <summary>
+            Interpolation Settings
+            </summary>
+        </member>
+        <member name="F:Fusion.NetworkProjectConfig.Network">
+            <summary>
+            Network Settings
+            </summary>
+        </member>
         <member name="F:Fusion.NetworkProjectConfig.NetworkConditions">
             <summary>
             Settings for simulating network conditions of latency and loss.
+            </summary>
+        </member>
+        <member name="F:Fusion.NetworkProjectConfig.Heap">
+            <summary>
+            Heap Settings
             </summary>
         </member>
         <member name="F:Fusion.NetworkProjectConfig.AccuracyDefaults">
@@ -5836,6 +6060,16 @@
             to verify if owing <see cref="T:Fusion.NetworkObject"/> has been attached to.
             </summary>
         </member>
+        <member name="M:Fusion.NetworkProjectConfig.Copy">
+            <summary>
+            Make a copy of the <see cref="T:Fusion.NetworkProjectConfig"/>
+            </summary>
+        </member>
+        <member name="M:Fusion.NetworkProjectConfig.ToString">
+            <summary>
+            ToString
+            </summary>
+        </member>
         <member name="M:Fusion.NetworkProjectConfig.Serialize(Fusion.NetworkProjectConfig)">
             <summary>
             Serialize the a NetworkProjectConfig into a JSON
@@ -5850,9 +6084,19 @@
             <param name="data">JSON with a serialized NetworkProjectConfig</param>
             <returns>NetworkProjectConfig reference deserialized</returns>
         </member>
+        <member name="M:Fusion.NetworkProjectConfig.SerializeMinimal(Fusion.NetworkProjectConfig)">
+            <summary>
+            Remove un-unecessary data from serialized version of <see cref="T:Fusion.NetworkProjectConfig"/>
+            </summary>
+        </member>
         <member name="P:Fusion.NetworkProjectConfig.FusionVersionInfo">
             <summary>
             Get the version information for the Fusion.Runntime.dll.
+            </summary>
+        </member>
+        <member name="M:Fusion.NetworkProjectConfig.ConvertPhysicsMode(Fusion.NetworkProjectConfig.PhysicsEngines)">
+            <summary>
+            Convert between <see cref="T:Fusion.NetworkProjectConfig.PhysicsEngines"/> to <see cref="T:UnityEngine.SceneManagement.LocalPhysicsMode"/>
             </summary>
         </member>
         <member name="T:Fusion.NetworkProjectConfigAsset">
@@ -5886,6 +6130,9 @@
         <member name="T:Fusion.NetworkRunner">
             <summary>
             Represents a Server or Client Simulation.
+            </summary>
+            <summary>
+            Host Migration related code in order to get a copy of the Simulation State
             </summary>
             <summary>
             All Scene related API and fields
@@ -6066,11 +6313,6 @@
         <member name="P:Fusion.NetworkRunner.IsResimulation">
             <summary>
             If we are currently executing a client side prediction re-simulation.
-            </summary>
-        </member>
-        <member name="P:Fusion.NetworkRunner.IsResume">
-            <summary>
-            if this instance is a resume (host migration)
             </summary>
         </member>
         <member name="P:Fusion.NetworkRunner.State">
@@ -6316,6 +6558,11 @@
             Returns if the <see cref="T:Fusion.Simulation"/> contains a reference to a <see cref="T:Fusion.NetworkObject"/> in the current State <see cref="T:Fusion.SimulationSnapshot"/>.
             </summary>
         </member>
+        <member name="M:Fusion.NetworkRunner.Exists(Fusion.NetworkId)">
+            <summary>
+            Returns if the <see cref="T:Fusion.Simulation"/> contains a <see cref="T:Fusion.NetworkObject"/> with given <paramref name="id"/> in the current State <see cref="T:Fusion.SimulationSnapshot"/>.
+            </summary>
+        </member>
         <member name="M:Fusion.NetworkRunner.ExistsIn(Fusion.NetworkObject,Fusion.SimulationSnapshot)">
             <summary>
             Returns if the <see cref="T:Fusion.Simulation"/> contains a reference to a <see cref="T:Fusion.NetworkObject"/> in the specified State <see cref="T:Fusion.SimulationSnapshot"/>.
@@ -6451,6 +6698,74 @@
             <param name="predictionKey"><see cref="T:Fusion.NetworkObjectPredictionKey"/> reference</param>
             <returns><see cref="T:Fusion.NetworkObject"/> reference, or null if it was not able to spawn the object</returns>
         </member>
+        <member name="P:Fusion.NetworkRunner.IsHostMigrationEnabled">
+            <summary>
+            Signal if Fusion was initilized with Host Migration system enabled
+            </summary>
+        </member>
+        <member name="P:Fusion.NetworkRunner.IsResume">
+            <summary>
+            if this instance is a resume (host migration)
+            </summary>
+        </member>
+        <member name="M:Fusion.NetworkRunner.GetResumeSnapshotNetworkObjects">
+            <summary>
+            Iterate over the old NetworkObjects from the Resume Snapshot
+            </summary>
+            <returns>Iterable list of <see cref="T:Fusion.NetworkObject"/></returns>
+        </member>
+        <member name="M:Fusion.NetworkRunner.GetResumeNetworkId">
+            <summary>
+            Get the next NetworkID used while resuming the simulation
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Fusion.NetworkRunner.GetNetworkObjectFromResumeSnapshot(Fusion.NetworkObjectHeaderPtr)">
+            <summary>
+            Gets a temporary representation of a <see cref="T:Fusion.NetworkObject"/> from the old Server Snapshot
+            </summary>
+        </member>
+        <member name="M:Fusion.NetworkRunner.SetupHostMigration(Fusion.Protocol.HostMigration)">
+            <summary>
+            Setup Host Migration information
+            </summary>
+            <param name="hostMigration"></param>
+        </member>
+        <member name="M:Fusion.NetworkRunner.StartHostMigration(Fusion.Protocol.Snapshot)">
+            <summary>
+            Start the Host Migration process
+            </summary>
+            <param name="snapshot">Base Snapshot to be used when restarting the Host</param>
+        </member>
+        <member name="M:Fusion.NetworkRunner.Service_HostSnapshot">
+            <summary>
+            Recurring Service method that will check if the Job responsible for computing 
+            the Server Snapshot has finished the process and will push the result for later use
+            </summary>
+        </member>
+        <member name="M:Fusion.NetworkRunner.GetServerSnapshot">
+            <summary>
+            Start the Snapshot build using an async process
+            This will return a Task that can be awaited witht the result of the operation
+            </summary>
+            <returns>Await Task that will complete with the Snapshot computation</returns>
+        </member>
+        <member name="M:Fusion.NetworkRunner.BuildCompressHostSnapshotJob">
+            <summary>
+            Creates a Job to build the Server Simulation Snapshot
+            </summary>
+            <returns>Ready to use <see cref="T:Fusion.NetworkRunner.HostSnapshotCompressionJob"/></returns>
+        </member>
+        <member name="M:Fusion.NetworkRunner.InvokeHostMigration(Fusion.HostMigrationToken)">
+            <summary>
+            Signal the Host Migration process has started
+            </summary>
+        </member>
+        <member name="T:Fusion.NetworkRunner.HostSnapshotCompressionJob">
+            <summary>
+            Unity Job responsible for computing a Server Snapshot
+            </summary>
+        </member>
         <member name="P:Fusion.NetworkRunner.IsCloudReady">
             <summary>
             Signal if the Local Peer is connected to Photon Cloud and is able to Create/Join Room but also receive Lobby Updates
@@ -6519,12 +6834,13 @@
             <param name="args">Custom arguments used to setup the Fusion Simulation</param>
             <returns>Task that can be awaited to chain actions</returns>
         </member>
-        <member name="M:Fusion.NetworkRunner.ConnectToCloud(Fusion.Photon.Realtime.AuthenticationValues,Fusion.Photon.Realtime.AppSettings)">
+        <member name="M:Fusion.NetworkRunner.ConnectToCloud(Fusion.Photon.Realtime.AuthenticationValues,Fusion.Photon.Realtime.AppSettings,Fusion.CloudCommunicator)">
             <summary>
             Connect the local peer to Photon Cloud using an async process.
             </summary>
             <param name="authentication">Authentication Values used to authenticate this peer</param>
             <param name="customAppSettings">Custom Photon Application Settings</param>
+            <param name="externalCommunicator">External Communicator that will be reused on restart</param>
             <returns>Async Task of the connect to Photon Cloud process. Can be used to wait for the process to be finished.</returns>
         </member>
         <member name="M:Fusion.NetworkRunner.DisconnectFromCloud">
@@ -6556,13 +6872,13 @@
             <param name="e">Exception used as base for the Shutdown procedure</param>
             <returns>Awaitable Task of the Shutdown procedure</returns>
         </member>
-        <member name="M:Fusion.NetworkRunner.UpdateSessionList(System.Collections.Generic.List{Fusion.SessionInfo})">
+        <member name="M:Fusion.NetworkRunner.InvokeSessionListUpdated(System.Collections.Generic.List{Fusion.SessionInfo})">
             <summary>
             Signal an update on the list of <see cref="P:Fusion.NetworkRunner.SessionInfo"/>
             </summary>
             <param name="sessionList">New Session Info</param>
         </member>
-        <member name="M:Fusion.NetworkRunner.CustomAuthenticationResponse(System.Collections.Generic.Dictionary{System.String,System.Object})">
+        <member name="M:Fusion.NetworkRunner.InvokeCustomAuthenticationResponse(System.Collections.Generic.Dictionary{System.String,System.Object})">
             <summary>
             Signal an update on the list of <see cref="P:Fusion.NetworkRunner.SessionInfo"/>
             </summary>
@@ -6684,6 +7000,17 @@
             <param name="sceneHandle">Scene handler to check</param>
             <returns><see cref="T:Fusion.NetworkRunner"/> reference, or null if not found</returns>
         </member>
+        <member name="T:Fusion.HostMigrationToken">
+            <summary>
+            Transitory Holder with all necessary information to restart the Fusion Runner
+            after the Host Migration has completed
+            </summary>
+        </member>
+        <member name="P:Fusion.HostMigrationToken.GameMode">
+            <summary>
+            New GameMode the local peer will assume after the Host Migration
+            </summary>
+        </member>
         <member name="T:Fusion.StartGameArgs">
             <summary>
             Fusion Start Arguments, used to configure the 
@@ -6780,6 +7107,16 @@
         <member name="F:Fusion.StartGameArgs.DisableClientSessionCreation">
             <summary>
             Disables the Session creation when starting a Client with an specific Session Name
+            </summary>
+        </member>
+        <member name="F:Fusion.StartGameArgs.HostMigrationToken">
+            <summary>
+            Host Migration Token used when restarting the Fusion Simulation
+            </summary>
+        </member>
+        <member name="F:Fusion.StartGameArgs.HostMigrationResume">
+            <summary>
+            Callback invoked when the new Host is migrating from the old Host state
             </summary>
         </member>
         <member name="T:Fusion.GameMode">
@@ -7086,6 +7423,11 @@
             Raised when any of the StartGame arguments does not meet the requirements
             </summary>
         </member>
+        <member name="F:Fusion.ShutdownReason.HostMigration">
+            <summary>
+            Signal this Runner is shutting down because of a Host Migration is about to happen
+            </summary>
+        </member>
         <member name="T:Fusion.INetworkRunnerCallbacks">
             <summary>
             Interface for <see cref="T:Fusion.NetworkRunner"/> callbacks.
@@ -7168,6 +7510,13 @@
             </summary>
             <param name="runner">The runner this object exists on</param>
             <param name="data">Custom Authentication Reply Values</param>
+        </member>
+        <member name="M:Fusion.INetworkRunnerCallbacks.OnHostMigration(Fusion.NetworkRunner,Fusion.HostMigrationToken)">
+            <summary>
+            Callback is invoked when the Host Migration process has started
+            </summary>
+            <param name="runner">The runner this object exists on</param>
+            <param name="hostMigrationToken">Migration Token that stores all necessary information to restart the Fusion Runner</param>
         </member>
         <member name="T:Fusion.AccuracyDefaults">
             <summary>
@@ -7593,6 +7942,36 @@
             
             </summary>
         </member>
+        <member name="T:Fusion.HeapConfiguration">
+            <summary>
+            Memory Heap Settings
+            </summary>
+        </member>
+        <member name="F:Fusion.HeapConfiguration.PageShift">
+            <summary>
+            Default size of each Heap Page
+            </summary>
+        </member>
+        <member name="F:Fusion.HeapConfiguration.PageCount">
+            <summary>
+            Default number of Heap Pages
+            </summary>
+        </member>
+        <member name="F:Fusion.HeapConfiguration.GlobalsSize">
+            <summary>
+            Heap Global Size
+            </summary>
+        </member>
+        <member name="M:Fusion.HeapConfiguration.Init(System.Int32)">
+            <summary>
+            Initializes and creates a new <see cref="T:Fusion.HeapConfiguration"/> based on the Global Size
+            </summary>
+        </member>
+        <member name="M:Fusion.HeapConfiguration.ToString">
+            <summary>
+            ToString
+            </summary>
+        </member>
         <member name="F:Fusion.InterpolationConfiguration.DeltaAdjustment">
              <summary>
              How much the delta time is modulated up/down to adjust interpolation time
@@ -7634,7 +8013,86 @@
         </member>
         <member name="T:Fusion.NetworkConfiguration">
             <summary>
-            Main network configuration class
+            Main network configuration class.
+            </summary>
+        </member>
+        <member name="T:Fusion.NetworkConfiguration.ReliableDataTransfers">
+            <summary>
+            Flag for allowed Reliable Data transfer modes.
+            </summary>
+        </member>
+        <member name="F:Fusion.NetworkConfiguration.ReliableDataTransfers.ClientToServer">
+            <summary>
+            Allow Client to Server.
+            </summary>
+        </member>
+        <member name="F:Fusion.NetworkConfiguration.ReliableDataTransfers.ClientToClientWithServerProxy">
+            <summary>
+            Allow Client to Client using Server as Proxy.
+            </summary>
+        </member>
+        <member name="F:Fusion.NetworkConfiguration.SocketSendBufferSize">
+            <summary>
+            Size in Kilobytes of the underlying socket send buffer.
+            </summary>
+        </member>
+        <member name="F:Fusion.NetworkConfiguration.SocketRecvBufferSize">
+            <summary>
+            Size in Kilobytes of the underlying socket receive buffer.
+            </summary>
+        </member>
+        <member name="F:Fusion.NetworkConfiguration.ConnectAttempts">
+            <summary>
+            Max number of connection attempts that a Client will run when trying to connect to a remote Server.
+            </summary>
+        </member>
+        <member name="F:Fusion.NetworkConfiguration.ConnectInterval">
+            <summary>
+            Interval in seconds between each connection attempt from a Client.
+            </summary>
+        </member>
+        <member name="F:Fusion.NetworkConfiguration.ConnectionDefaultRtt">
+            <summary>
+            Default assumed RTT in seconds for new connections (before actual RTT has been determined). The real RTT is calculated over time once the connection is established.
+            </summary>
+        </member>
+        <member name="F:Fusion.NetworkConfiguration.ConnectionTimeout">
+            <summary>
+            Max allowed time in seconds that the local peer can run without receiving any update from a remote peer.
+            If a client does not receive any update from the server within this period, it will disconnect itself.
+            If a server does not receive any update from a remote client within this period, it will disconnect that particular client.
+            </summary>
+        </member>
+        <member name="F:Fusion.NetworkConfiguration.ConnectionPingInterval">
+            <summary>
+            Interval in seconds between PING messages sent to a remote connection, in order to keep that connection alive.
+            </summary>
+            <remarks>Currently unused.</remarks>
+        </member>
+        <member name="F:Fusion.NetworkConfiguration.ConnectionShutdownTime">
+            <summary>
+            Default delay between connection changes status to Shutdown (disconnected/invalid), and it actually being released (freeing all references to that particular connection).
+            </summary>
+        </member>
+        <member name="F:Fusion.NetworkConfiguration.MtuDefault">
+            <summary>
+            Max number of bytes that can be used by Fusion to fill up a UDP package.
+            </summary>
+        </member>
+        <member name="F:Fusion.NetworkConfiguration.ReliableDataTransferModes">
+            <summary>
+            Current <see cref="F:Fusion.NetworkConfiguration.ReliableDataTransferModes"/> mode.
+            </summary>
+        </member>
+        <member name="M:Fusion.NetworkConfiguration.Init">
+            <summary>
+            Initializes and creates a copy of this <see cref="T:Fusion.NetworkProjectConfig"/>.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Fusion.NetworkConfiguration.ToNetConfig(Fusion.Sockets.NetAddress)">
+            <summary>
+            Convert this <see cref="T:Fusion.NetworkProjectConfig"/> into a <see cref="T:Fusion.Sockets.NetConfig"/> using the <see cref="T:Fusion.Sockets.NetAddress"/> as reference.
             </summary>
         </member>
         <member name="T:Fusion.NetworkSimulationConfiguration">

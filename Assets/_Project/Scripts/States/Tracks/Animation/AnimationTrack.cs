@@ -9,7 +9,15 @@ namespace rwby
     {
         public override Playable CreateTrackMixer(PlayableGraph graph, GameObject go, int inputCount)
         {
-            return ScriptPlayable<AnimationMixerBehaviour>.Create(graph, inputCount);
+            var clips = GetClips();
+            foreach(var clip in clips)
+            {
+                var loopClip = clip.asset as AnimationAsset;
+                loopClip.clipPassthrough = clip;
+            }
+
+            return base.CreateTrackMixer(graph, go, inputCount);
+            //return ScriptPlayable<AnimationMixerBehaviour>.Create(graph, inputCount);
         }
     }
 }

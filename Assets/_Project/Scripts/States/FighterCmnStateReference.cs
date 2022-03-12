@@ -1,6 +1,6 @@
 namespace rwby
 {
-    public class FighterCmnStateReference : FighterStateReferenceBase
+    public class FighterCmnStateReference : HnSF.FighterStateReferenceBase
     {
         public FighterCmnStates state = FighterCmnStates.IDLE;
         

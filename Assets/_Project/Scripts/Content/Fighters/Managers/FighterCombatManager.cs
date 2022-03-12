@@ -18,26 +18,6 @@ namespace rwby
         [Networked] public NetworkBool Charging { get; set; }
         [Networked] public int CurrentChargeLevel { get; set; }
         [Networked] public int CurrentChargeLevelCharge { get; set; }
-        [Networked] public int CurrentMovesetIdentifier { get; set; }
-        /// <summary>
-        /// The identifier of the moveset that the current attack belongs to. Not the same as our current moveset.
-        /// </summary>
-        [Networked] public int CurrentAttackMovesetIdentifier { get; set; }
-        [Networked] public int CurrentAttackNodeIdentifier { get; set; }
-        public MovesetDefinition CurrentMoveset { get { return GetMoveset(CurrentMovesetIdentifier); } }
-        /// <summary>
-        /// The moveset that the current attack belongs to. Not the same as our current moveset.
-        /// </summary>
-        public MovesetDefinition CurrentAttackMoveset { get { return GetMoveset(CurrentAttackMovesetIdentifier); } }
-        public HnSF.Combat.MovesetAttackNode CurrentAttackNode
-        {
-            get
-            {
-                if (CurrentAttackNodeIdentifier < 0) { return null; }
-                return (MovesetAttackNode)GetMoveset(CurrentAttackMovesetIdentifier).GetAttackNode(CurrentAttackNodeIdentifier);
-            }
-        }
-
         public FighterHitManager HitboxManager { get { return hitboxManager; } }
 
         [SerializeField] protected HealthManager healthManager;
@@ -49,8 +29,6 @@ namespace rwby
 
         [Networked] public int Team { get; set; }
 
-        public MovesetDefinition[] movesets;
-
         [Networked] public int hitstunGravityHangTime { get; set; }
         [Networked] public float hitstunGravityHangTimer { get; set; }
         [Networked] public float hitstunHoldVelocityTime { get; set; }
@@ -59,68 +37,27 @@ namespace rwby
 
         [Networked] public int hitstopCounter { get; set; }
 
-        [Networked, Capacity(20)] public NetworkLinkedList<MovesetAttackStringIdentifier> attacksUsedInString { get; }
+        [Networked, Capacity(10)] public NetworkLinkedList<MovesetStateIdentifier> movesUsedInString => default;
 
-        public bool StringAttackValid(byte moveset, byte attack, byte maxTimes)
+        public virtual void ResetString()
         {
-            bool found = false;
-            for(int i = 0; i < attacksUsedInString.Count; i++)
-            {
-                if(attacksUsedInString[i].moveset == moveset
-                    && attacksUsedInString[i].attack == attack)
-                {
-                    found = true;
-                    if (attacksUsedInString[i].timesUsed < maxTimes) return true;
-                }
-            }
-            if (!found) return true;
-            return false;
+            movesUsedInString.Clear();
         }
 
-        public void ReportStringAttack()
+        public virtual bool MovePossible(MovesetStateIdentifier movesetState, int maxUsesInString = 1)
         {
-            ReportStringAttack((byte)CurrentAttackMovesetIdentifier, (byte)CurrentAttackNodeIdentifier);
-        }
-
-        public void ReportStringAttack(byte moveset, byte attack)
-        {
-            var tempList = attacksUsedInString;
-            
-            for (int i = 0; i < attacksUsedInString.Count; i++)
+            int counter = 0;
+            for (int i = 0; i < movesUsedInString.Count; i++)
             {
-                if(attacksUsedInString[i].moveset == moveset
-                    && attacksUsedInString[i].attack == attack)
-                {
-                    var tempItem = tempList[i];
-                    tempItem.timesUsed++;
-                    tempList[i] = tempItem;
-                    return;
-                }
+                if (movesUsedInString[i].movesetIdentifier == movesetState.movesetIdentifier
+                    && movesUsedInString[i].stateIdentifier == movesetState.stateIdentifier) counter++;
+                if (counter == maxUsesInString) return false;
             }
 
-            tempList.Add(new MovesetAttackStringIdentifier()
-            {
-                moveset = moveset,
-                attack = attack,
-                timesUsed = 1
-            });
+            if (counter >= maxUsesInString) return false;
+            return true;
         }
-
-        public void ResetStringAttacks()
-        {
-            attacksUsedInString.Clear();
-        }
-
-        public virtual void CLateUpdate()
-        {
-
-        }
-
-        public virtual FighterStats GetCurrentStats()
-        {
-            return (movesets[CurrentMovesetIdentifier] as Moveset).fighterStats;
-        }
-
+        
         public virtual void SetHitStop(int value)
         {
             hitstopCounter = 0;
@@ -145,187 +82,9 @@ namespace rwby
 
         public void Cleanup()
         {
-            if (CurrentAttackNode == null)
-            {
-                return;
-            }
             CurrentChargeLevel = 0;
             CurrentChargeLevelCharge = 0;
-            CurrentAttackMovesetIdentifier = -1;
-            CurrentAttackNodeIdentifier = -1;
             hitboxManager.Reset();
-        }
-
-        public int TryAttack()
-        {
-            if (CurrentMoveset == null)
-            {
-                return -1;
-            }
-            // We are currently not doing an attack, so check the starting nodes instead.
-            if (CurrentAttackNode == null)
-            {
-                return CheckStartingNodes();
-            }
-            // We are doing an attack, check it's cancel windows.
-            return CheckCurrentAttackCancelWindows();
-        }
-
-        protected virtual int CheckStartingNodes()
-        {
-            rwby.Moveset moveset = (Moveset)CurrentMoveset;
-            switch (physicsManager.IsGrounded)
-            {
-                case true:
-                    int groundAbility = CheckAbilityNodes(ref moveset.groundAbilityNodes);
-                    if (groundAbility != -1)
-                    {
-                        return groundAbility;
-                    }
-                    if (moveset.groundIdleCancelListID != -1)
-                    {
-                        int cancel = TryCancelList(moveset.groundIdleCancelListID);
-                        if (cancel != -1)
-                        {
-                            return cancel;
-                        }
-                    }
-                    int groundNormal = CheckAttackNodes(ref moveset.groundAttackStartNodes);
-                    if (groundNormal != -1)
-                    {
-                        return groundNormal;
-                    }
-                    break;
-                case false:
-                    int airAbility = CheckAbilityNodes(ref moveset.airAbilityNodes);
-                    if (airAbility != -1)
-                    {
-                        return airAbility;
-                    }
-                    if (moveset.airIdleCancelListID != -1)
-                    {
-                        int cancel = TryCancelList(moveset.airIdleCancelListID);
-                        if (cancel != -1)
-                        {
-                            return cancel;
-                        }
-                    }
-                    int airNormal = CheckAttackNodes(ref moveset.airAttackStartNodes);
-                    if (airNormal != -1)
-                    {
-                        return airNormal;
-                    }
-                    break;
-            }
-            return -1;
-        }
-
-        /// <summary>
-        /// Checks the cancel windows of the current attack to see if we should transition to the next attack.
-        /// </summary>
-        /// <returns>The identifier of the attack if the transition conditions are met. Otherwise -1.</returns>
-        protected virtual int CheckCurrentAttackCancelWindows()
-        {
-            // Our current moveset is not the same as our current attack's, ignore it's cancel windows.
-            if (CurrentMoveset != CurrentAttackMoveset)
-            {
-                return -1;
-            }
-            for (int i = 0; i < CurrentAttackNode.nextNode.Count; i++)
-            {
-                if (stateManager.CurrentStateFrame >= CurrentAttackNode.nextNode[i].cancelWindow.x &&
-                    stateManager.CurrentStateFrame <= CurrentAttackNode.nextNode[i].cancelWindow.y)
-                {
-                    MovesetAttackNode currentNode = (MovesetAttackNode)CurrentAttackNode;
-                    MovesetAttackNode man = (MovesetAttackNode)CheckAttackNode((MovesetAttackNode)GetMoveset(CurrentAttackMovesetIdentifier).GetAttackNode(currentNode.nextNode[i].nodeIdentifier));
-                    if (man != null)
-                    {
-                        return currentNode.nextNode[i].nodeIdentifier;
-                    }
-                }
-            }
-            return -1;
-        }
-
-        protected virtual int CheckAttackNodes<T>(ref List<T> nodes) where T : HnSF.Combat.MovesetAttackNode
-        {
-            for (int i = 0; i < nodes.Count; i++)
-            {
-                HnSF.Combat.MovesetAttackNode man = CheckAttackNode(nodes[i]);
-                if (man != null)
-                {
-                    return nodes[i].Identifier;
-                }
-            }
-            return -1;
-        }
-
-
-        protected virtual HnSF.Combat.MovesetAttackNode CheckAttackNode(HnSF.Combat.MovesetAttackNode node)
-        {
-            if (node.attackDefinition == null)
-            {
-                return null;
-            }
-
-            if (CheckAttackNodeConditions(node) == false)
-            {
-                return null;
-            }
-
-            if (CheckForInputSequence(node.inputSequence))
-            {
-                return node;
-            }
-            return null;
-        }
-
-        [SerializeField] protected List<PlayerInputType> abilityButtons = new List<PlayerInputType>();
-        protected virtual int CheckAbilityNodes<T>(ref List<T> nodes) where T : HnSF.Combat.MovesetAttackNode
-        {
-            for (int i = 0; i < nodes.Count; i++)
-            {
-                HnSF.Combat.MovesetAttackNode man = CheckAbilityNode(abilityButtons[i], nodes[i]);
-                if (man != null)
-                {
-                    return nodes[i].Identifier;
-                }
-            }
-            return -1;
-        }
-
-        protected virtual HnSF.Combat.MovesetAttackNode CheckAbilityNode(PlayerInputType inputT, HnSF.Combat.MovesetAttackNode node)
-        {
-            if (node.attackDefinition == null)
-            {
-                return null;
-            }
-
-            if (CheckAttackNodeConditions(node) == false)
-            {
-                return null;
-            }
-
-            node.inputSequence.executeInputs[0].buttonID = (int)inputT;
-
-            /*if (manager.InputManager.GetButton(inputT, out int bOff, 0, 5).firstPress == false)
-            {
-                return null;
-            }*/
-
-            if (CheckForInputSequence(node.inputSequence, 0, true))
-            {
-                //node.inputSequence.executeInputs[0].buttonID = (int)inputT;
-                return node;
-            }
-            return null;
-        }
-
-        protected virtual bool CheckAttackNodeConditions(HnSF.Combat.MovesetAttackNode node)
-        {
-            if (node.Identifier == CurrentAttackNodeIdentifier) return false;
-            if (StringAttackValid((byte)CurrentMovesetIdentifier, (byte)node.Identifier, (node as MovesetAttackNode).maxRepeatsInString) == false) return false;
-            return true;
         }
 
         /// <summary>
@@ -436,53 +195,9 @@ namespace rwby
             return true;
         }
 
-        /// <summary>
-        /// Resets anything having to do with the current attack and sets a new one. This method assumes that the attack node is in the current moveset.
-        /// </summary>
-        /// <param name="attackNodeIdentifier">The identifier of the attack node.</param>
-        public virtual void SetAttack(int attackNodeIdentifier)
-        {
-            Cleanup();
-            CurrentAttackMovesetIdentifier = CurrentMovesetIdentifier;
-            CurrentAttackNodeIdentifier = attackNodeIdentifier;
-        }
-
-        /// <summary>
-        /// Resets anything having to do with the current attack and sets a new one. 
-        /// </summary>
-        /// <param name="attackNodeIdentifier"></param>
-        /// <param name="attackMovesetIdentifier"></param>
-        public virtual void SetAttack(int attackNodeIdentifier, int attackMovesetIdentifier)
-        {
-            Cleanup();
-            CurrentAttackMovesetIdentifier = attackMovesetIdentifier;
-            CurrentAttackNodeIdentifier = attackNodeIdentifier;
-        }
-
-        public int GetMovesetCount()
-        {
-            return movesets.Length;
-        }
-
         public int GetTeam()
         {
             return Team;
-        }
-
-        public void SetMoveset(int movesetIdentifier)
-        {
-            CurrentMovesetIdentifier = movesetIdentifier;
-        }
-
-        public rwby.Moveset GetMoveset()
-        {
-            return (rwby.Moveset)movesets[CurrentMovesetIdentifier];
-        }
-        
-        public MovesetDefinition GetMoveset(int identifier)
-        {
-
-            return movesets[identifier];
         }
 
         public virtual void SetChargeLevel(int value)
@@ -498,26 +213,6 @@ namespace rwby
         public virtual void IncrementChargeLevelCharge(int maxCharge)
         {
             CurrentChargeLevelCharge++;
-        }
-
-        /// <summary>
-        /// Check a cancel list in the current moveset to see if an attack can be canceled into.
-        /// </summary>
-        /// <param name="cancelListID"></param>
-        /// <returns>The identifier of the attack node if found. Otherwise -1.</returns>
-        public virtual int TryCancelList(int cancelListID)
-        {
-            CancelList cl = CurrentMoveset.GetCancelList(cancelListID);
-            if (cl == null)
-            {
-                return -1;
-            }
-            int attack = CheckAttackNodes(ref cl.nodes);
-            if (attack != -1)
-            {
-                return attack;
-            }
-            return -1;
         }
 
         public LockonDirType stickDirectionCheck;

@@ -231,6 +231,8 @@ namespace rwby
 
 		}
 
+		public void OnHostMigration(NetworkRunner runner, HostMigrationToken hostMigrationToken) { }
+
 		public void OnReliableDataReceived(NetworkRunner runner, PlayerRef player, ArraySegment<byte> data)
 		{
 

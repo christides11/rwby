@@ -33,7 +33,7 @@ namespace rwby
             rttMovingAverage.ComputeAverage((int)(client.Runner.GetPlayerRtt(client.Runner.LocalPlayer) * 1000));
             rttText.text = $"{rttMovingAverage.Average.ToString("F0")} +/- {rttMovingAverage.StandardDeviation().ToString("F0")}";
             if (fm == null) return;
-            stateFrameText.text = fm.FStateManager.CurrentStateFrame.ToString();
+            //stateFrameText.text = fm.FStateManager.CurrentStateFrame.ToString();
             speedText.text = fm.FPhysicsManager.forceMovement.magnitude.ToString("F1");
             gravityText.text = fm.FPhysicsManager.forceGravity.ToString("F1");
         }
