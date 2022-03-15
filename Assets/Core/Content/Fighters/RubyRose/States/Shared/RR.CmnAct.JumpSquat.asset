@@ -15,6 +15,7 @@ MonoBehaviour:
   template:
     conditon:
       id: 0
+    checkStateCondition: 0
     state:
       id: 1
   references:
@@ -130,7 +131,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 6b0ba584036b3f7409df88ee29fb8270, type: 3}
-  m_Name: RR-States-JumpSquat
+  m_Name: RR.CmnAct.JumpSquat
   m_EditorClassIdentifier: 
   m_Version: 0
   m_Tracks:
@@ -142,7 +143,20 @@ MonoBehaviour:
   m_DurationMode: 1
   m_MarkerTrack: {fileID: 0}
   totalFrames: 5
+  conditon:
+    id: 0
   stateGroup: 1
   autoIncrement: 1
   autoLoop: 0
   loopFrame: 1
+  hitboxInfo: []
+  throwboxInfo: []
+  hurtboxInfo: []
+  parentTimeline: {fileID: 0}
+  references:
+    version: 1
+    00000000:
+      type: {class: StateConditionBoolean, ns: HnSF, asm: HnSF}
+      data:
+        inverse: 0
+        value: 1

@@ -368,25 +368,29 @@ namespace rwby
             {
                 if (hitInfo.causesTrip)
                 {
-                    manager.FStateManager.ChangeState((int)FighterCmnStates.TRIP);
+                    Debug.Log("Trip.");
+                    //manager.FStateManager.ChangeState((int)FighterCmnStates.TRIP);
                 }
                 else
                 {
-                    manager.FStateManager.ChangeState((int)FighterCmnStates.FLINCH_GROUND);
+                    Debug.Log("Flinch (Ground).");
+                    //manager.FStateManager.ChangeState((int)FighterCmnStates.FLINCH_GROUND);
                 }
             }
             else
             {
                 if (hitInfo.forcesRestand)
                 {
-                    manager.FStateManager.ChangeState((int)FighterCmnStates.FLINCH_AIR);
+                    Debug.Log("Flinch (Air).");
+                    //manager.FStateManager.ChangeState((int)FighterCmnStates.FLINCH_AIR);
                 }
                 else
                 {
-                    manager.FStateManager.ChangeState((int)FighterCmnStates.TUMBLE);
+                    Debug.Log("Tumble.");
+                    //manager.FStateManager.ChangeState((int)FighterCmnStates.TUMBLE);
                 }
             }
-            manager.FCombatManager.Cleanup();
+            //manager.FCombatManager.Cleanup();
             return hitReaction;
         }
     }

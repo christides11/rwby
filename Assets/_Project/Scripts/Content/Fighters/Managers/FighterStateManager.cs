@@ -19,10 +19,16 @@ namespace rwby
         [Networked] public NetworkBool markedForStateChange { get; set; }
         [Networked] public int nextStateMoveset { get; set; }
         [Networked] public int nextState { get; set; }
+        
+        public int MovesetCount
+        {
+            get { return movesets.Length; }
+        }
 
         [SerializeField] protected FighterManager manager;
         [SerializeField] protected FighterCombatManager combatManager;
         public PlayableDirector director;
+        public PlayableDirector childDirector;
         public rwby.Moveset[] movesets;
         public static void OnChangedState(Changed<FighterStateManager> changed){
             changed.Behaviour.OnStateChanged?.Invoke(changed.Behaviour);
@@ -47,8 +53,9 @@ namespace rwby
                 ChangeState(nextState, 0, true);
             }
             if (CurrentState == 0) return;
+            rwby.StateTimeline s = GetState();
             director.Evaluate();
-            var s = GetState();
+            if(s.useParent) childDirector.Evaluate();
             if(s.autoIncrement) IncrementFrame();
             if(s.autoLoop && CurrentStateFrame == s.totalFrames) SetFrame(s.loopFrame);
             HandleStateGroup(s);
@@ -93,7 +100,9 @@ namespace rwby
             markedForStateChange = false;
             if (callOnInterrupt && CurrentState != 0)
             {
-                SetFrame((GetMoveset(CurrentStateMoveset) as rwby.Moveset).stateMap[CurrentState].totalFrames);
+                rwby.StateTimeline currentState = GetState();
+                SetFrame(currentState.totalFrames);
+                if(currentState.useParent) SetChildFrame(currentState.parentTimeline.totalFrames);
                 director.Evaluate();
             }
             
@@ -105,6 +114,7 @@ namespace rwby
                 InitState();
                 SetFrame(0);
                 director.Evaluate();
+                childDirector.Evaluate();
                 SetFrame(1);
             }
         }
@@ -116,13 +126,21 @@ namespace rwby
 
         public void InitState(HnSF.StateTimeline state)
         {
+            var rwbyState = state as rwby.StateTimeline;
             director.playableAsset = state;
-            if (state == null) return;
             foreach (var pAO in director.playableAsset.outputs)
             {
                 director.SetGenericBinding(pAO.sourceObject, manager);
             }
             director.RebuildGraph();
+
+            if (!rwbyState.useParent) return;
+            childDirector.playableAsset = rwbyState.parentTimeline;
+            foreach (var pAO in childDirector.playableAsset.outputs)
+            {
+                childDirector.SetGenericBinding(pAO.sourceObject, manager);
+            }
+            childDirector.RebuildGraph();
         }
 
         public StateTimeline GetState()
@@ -153,15 +171,24 @@ namespace rwby
         public void IncrementFrame()
         {
             CurrentStateFrame++;
-            director.time = (float)CurrentStateFrame * Runner.Simulation.DeltaTime;
+            director.time = (float)CurrentStateFrame * Runner.DeltaTime;
+            rwby.StateTimeline st = GetState();
+            if (!st.useParent) return;
+            childDirector.time = (float)Mathf.Clamp(CurrentStateFrame, 0, st.parentTimeline.totalFrames-1) * Runner.DeltaTime;
         }
-
-        public int MovesetCount { get; }
 
         public void SetFrame(int frame)
         {
             CurrentStateFrame = frame;
-            director.time = (float)frame * Runner.Simulation.DeltaTime;
+            director.time = (float)frame * Runner.DeltaTime;
+            rwby.StateTimeline st = GetState();
+            if (!st.useParent) return;
+            childDirector.time = (float)Mathf.Clamp(frame, 0, st.parentTimeline.totalFrames-1) * Runner.DeltaTime;
+        }
+
+        public void SetChildFrame(int frame)
+        {
+            childDirector.time = (float)frame * Runner.DeltaTime;
         }
     }
 }

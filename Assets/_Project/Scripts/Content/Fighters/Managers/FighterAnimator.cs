@@ -8,50 +8,6 @@ using Animancer;
 
 namespace rwby
 {
-    [System.Serializable]
-    public enum AnimationMixerType
-    {
-        NONE,
-        MANUAL,
-        LINEAR,
-        CARTESIAN,
-        DIRECTIONAL
-    }
-    
-    public struct FighterAnimationNode : INetworkStruct, IEquatable<FighterAnimationNode>
-    {
-        public ModObjectReference bank;
-        public int animation;
-        public float weight;
-        public float currentTime;
-
-        public override bool Equals(object obj)
-        {
-            return obj is FighterAnimationNode && this == (FighterAnimationNode)obj;
-        }
-
-        public bool Equals(FighterAnimationNode other)
-        {
-            return bank == other.bank && animation == other.animation;
-        }
-        
-        public static bool operator ==(FighterAnimationNode a, FighterAnimationNode b)
-        {
-            return a.bank == b.bank && a.animation == b.animation;
-        }
-
-        public static bool operator !=(FighterAnimationNode a, FighterAnimationNode b)
-        {
-            return !(a == b);
-        }
-    }
-    
-    public struct FighterAnimationRoot : INetworkStruct
-    {
-        public float weight;
-        [Networked, Capacity(10)] public NetworkLinkedList<FighterAnimationNode> layer0 => default;
-    }
-
     [OrderAfter(typeof(FighterStateManager))]
     public class FighterAnimator : NetworkBehaviour
     {
@@ -60,7 +16,11 @@ namespace rwby
         [SerializeField] private AnimancerComponent animancer;
         
         [Networked] private FighterAnimationRoot currentAnimationSet { get; set; }
+        // For interpolation.
+        [Networked] private FighterAnimationRoot previousAnimationSet { get; set; }
         //[Networked] public bool tickAccurate { get; set; } = false;
+
+        private FighterAnimationRoot currentAnimancerRepresentation;
 
         private ManualMixerState animationMixer = new ManualMixerState();
 
@@ -109,15 +69,23 @@ namespace rwby
             animancer.Layers[layer].GetChild(index).Time = time;
         }
 
+        public override void Render()
+        {
+            base.Render();
+        }
+
         public override void FixedUpdateNetwork()
         {
-            
+            if (Runner.IsResimulation && Runner.IsFirstTick && currentAnimancerRepresentation != currentAnimationSet)
+            {
+                SyncAnimancer();
+            }
         }
 
         AnimationClip[] clips = new AnimationClip[10];
-        private bool firstTime = true;
         private void SyncAnimancer()
         {
+            currentAnimancerRepresentation = currentAnimationSet;
             if (currentAnimationSet.layer0.Count == 0)
             {
                 return;

@@ -1,4 +1,5 @@
 using HnSF;
+using NaughtyAttributes;
 using UnityEngine;
 
 namespace rwby
@@ -30,5 +31,10 @@ namespace rwby
         [SerializeField] private HitInfo[] hitboxInfo;
         [SerializeField] private ThrowInfo[] throwboxInfo;
         [SerializeField] private HurtboxInfo[] hurtboxInfo;
+        
+        public bool useParent = false;
+        [AllowNesting]
+        [EnableIf("useParent")]
+        public StateTimeline parentTimeline;
     }
 }

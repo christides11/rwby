@@ -97,7 +97,6 @@ namespace rwby
             Visible = true;
             combatManager.Cleanup();
             stateManager.SetMoveset(0);
-            statManager.InitStats();
             statManager.SetupStats((stateManager.movesets[0] as Moveset).fighterStats);
         }
 
