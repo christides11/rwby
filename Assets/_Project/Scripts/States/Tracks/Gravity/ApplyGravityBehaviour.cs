@@ -26,7 +26,7 @@ namespace rwby
         public override void ProcessFrame(Playable playable, FrameData info, object playerData)
         {
             FighterManager manager = (FighterManager)playerData;
-
+            if (!conditon.IsTrue(manager)) return;
             switch (useValue)
             {
                 case true:

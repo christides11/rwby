@@ -16,7 +16,7 @@ namespace rwby
         {
             FighterManager cm = playerData as FighterManager;
             if ((cm.StateManager as FighterStateManager).markedForStateChange) return;
-            if (conditon.IsTrue(cm) == false) return;
+            if (!conditon.IsTrue(cm)) return;
             (cm.StateManager as FighterStateManager).MarkForStateChange(state.GetState());
         }
     }

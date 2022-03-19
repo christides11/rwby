@@ -1,5 +1,12 @@
 #if !FUSION_DEV
 
+#region Assets/Photon/FusionCodeGen/AssemblyInfo.cs
+
+﻿[assembly: Fusion.NetworkAssemblyIgnore]
+
+#endregion
+
+
 #region Assets/Photon/FusionCodeGen/ILWeaver.Cache.cs
 
 #if FUSION_WEAVER && FUSION_HAS_MONO_CECIL
@@ -14,7 +21,7 @@ namespace Fusion.CodeGen {
   using Mono.Cecil.Rocks;
   using static Fusion.CodeGen.ILWeaverOpCodes;
 
-  internal partial class ILWeaver {
+  partial class ILWeaver {
 
     private Dictionary<int, FixedBufferInfo> _fixedBuffers = new Dictionary<int, FixedBufferInfo>();
     private Dictionary<string, ElementReaderWriterInfo> _readerWriters = new Dictionary<string, ElementReaderWriterInfo>();
@@ -355,7 +362,7 @@ namespace Fusion.CodeGen {
   using MethodAttributes = Mono.Cecil.MethodAttributes;
   using ParameterAttributes = Mono.Cecil.ParameterAttributes;
 
-  unsafe partial class ILWeaver {
+  public unsafe partial class ILWeaver {
 
 
     void AddUnmanagedType<T>() where T : unmanaged {
@@ -577,7 +584,7 @@ namespace Fusion.CodeGen {
 
     internal readonly ILWeaverLog Log;
 
-    internal ILWeaver(ILWeaverLog log) {
+    public ILWeaver(ILWeaverLog log) {
       Log = log;
       SetDefaultTypeData();
     }
@@ -652,9 +659,10 @@ namespace Fusion.CodeGen {
 
     int GetTypeWordCount(ILWeaverAssembly asm, TypeReference type) {
       if (type.IsPointer || type.IsByReference) {
-        type = type.GetElementType();
+        type = type.GetElementTypeEx();
       }
 
+      // TODO: what is this?
       if (type.IsNetworkArray(out var elementType)) {
         type = elementType;
       } else if (type.IsNetworkList(out elementType)) {
@@ -1271,8 +1279,7 @@ namespace Fusion.CodeGen {
       if (setter == null) {
         // if it doesn't exist we allow either array or pointer
         if (property.PropertyType.IsByReference == false && property.PropertyType.IsPointer == false && property.PropertyType.IsNetworkArray() == false && property.PropertyType.IsNetworkDictionary() == false && property.PropertyType.IsNetworkList() == false) {
-          meta = default;
-          return false;
+          throw new ILWeaverException($"Simple properties need a setter.");
         }
       }
 
@@ -2512,7 +2519,7 @@ namespace Fusion.CodeGen {
       return definitions.SelectMany(AllTypeDefs);
     }
 
-    internal bool Weave(ILWeaverAssembly asm) {
+    public bool Weave(ILWeaverAssembly asm) {
       // if we don't have the weaved assembly attribute, we need to do weaving and insert the attribute
       if (asm.CecilAssembly.HasAttribute<NetworkAssemblyWeavedAttribute>() != false) {
         return false;
@@ -2617,7 +2624,9 @@ namespace Fusion.CodeGen {
       }
     }
 
-    void WeaveStruct(ILWeaverAssembly asm, TypeDefinition type, TypeReference typeRef) {
+    public void WeaveStruct(ILWeaverAssembly asm, TypeDefinition type, TypeReference typeRef) {
+      ILWeaverException.DebugThrowIf(!type.Is<INetworkStruct>(), $"Not a {nameof(INetworkStruct)}");
+
       string typeKey;
       if (type.HasGenericParameters) {
         Log.Assert(typeRef?.IsGenericInstance == true);
@@ -2688,6 +2697,11 @@ namespace Fusion.CodeGen {
         int fieldIndex = type.Fields.Count;
 
         if (propertyInfo.BackingField != null) {
+          if (!propertyInfo.BackingField.FieldType.IsValueType) {
+            Log.Warn($"Networked property {property} has a backing field that is not a value type. To keep unmanaged status," +
+              $" the accessor should follow \"{{ get => default; set {{}} }}\" pattern");
+          }
+
           fieldIndex = type.Fields.IndexOf(propertyInfo.BackingField);
           if (fieldIndex >= 0) {
             type.Fields.RemoveAt(fieldIndex);
@@ -2897,10 +2911,12 @@ namespace Fusion.CodeGen {
       }
     }
 
-    void WeaveBehaviour(ILWeaverAssembly asm, TypeDefinition type) {
+    public void WeaveBehaviour(ILWeaverAssembly asm, TypeDefinition type) {
       if (type.HasGenericParameters) {
         return;
       }
+
+      ILWeaverException.DebugThrowIf(!type.IsSubclassOf<NetworkBehaviour>(), $"Not a {nameof(NetworkBehaviour)}");
 
       if (type.TryGetAttribute<NetworkBehaviourWeavedAttribute>(out var weavedAttribute)) {
         int weavedSize = weavedAttribute.GetAttributeArgument<int>(0);
@@ -3522,7 +3538,7 @@ namespace Fusion.CodeGen {
 
   using Mono.Cecil;
 
-  class ILWeaverImportedType {
+  public class ILWeaverImportedType {
     public Type                 ClrType;
     public ILWeaverAssembly     Assembly;
     public List<TypeDefinition> BaseDefinitions;
@@ -3631,7 +3647,7 @@ namespace Fusion.CodeGen {
     }
   }
 
-  class ILWeaverAssembly {
+  public class ILWeaverAssembly {
     public bool         Modified;
     public List<String> Errors = new List<string>();
 
@@ -4326,12 +4342,21 @@ namespace Fusion.CodeGen {
 
 namespace Fusion.CodeGen {
   using System;
+  using System.Diagnostics;
 
-  class ILWeaverException : Exception {
+  public class ILWeaverException : Exception {
     public ILWeaverException(string error) : base(error) {
     }
 
     public ILWeaverException(string error, Exception innerException) : base(error, innerException) {
+    }
+
+
+    [Conditional("UNITY_EDITOR")]
+    public static void DebugThrowIf(bool condition, string message) {
+      if (condition) {
+        throw new ILWeaverException(message);
+      }
     }
   }
 }
@@ -4349,12 +4374,13 @@ namespace Fusion.CodeGen {
   using System.Linq;
   using System.Runtime.CompilerServices;
   using System.Text;
+  using System.Text.RegularExpressions;
   using System.Threading.Tasks;
   using Mono.Cecil;
   using Mono.Cecil.Cil;
   using Mono.Cecil.Rocks;
 
-  static class ILWeaverExtensions {
+  public static class ILWeaverExtensions {
 
     public static bool IsIntegral(this TypeReference type) {
       switch (type.MetadataType) {
@@ -4421,6 +4447,16 @@ namespace Fusion.CodeGen {
 
     public static bool IsVoid(this TypeReference type) {
       return type.MetadataType == MetadataType.Void;
+    }
+
+    public static TypeReference GetElementTypeEx(this TypeReference type) {
+      if (type.IsPointer) {
+        return ((Mono.Cecil.PointerType)type).ElementType;
+      } else if (type.IsByReference) {
+        return ((Mono.Cecil.ByReferenceType)type).ElementType;
+      } else {
+        return type.GetElementType();
+      }
     }
 
     public static bool IsSubclassOf<T>(this TypeReference type) {
@@ -5120,7 +5156,7 @@ namespace Fusion.CodeGen {
   using Mono.Cecil;
   using UnityEngine;
 
-  partial class ILWeaverLog {
+  public partial class ILWeaverLog {
 
     public void AssertMessage(bool condition, string message, [CallerFilePath] string filePath = null, [CallerLineNumber] int lineNumber = default) {
       if (!condition) {

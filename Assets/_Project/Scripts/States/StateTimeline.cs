@@ -23,7 +23,7 @@ namespace rwby
         [SelectImplementation(typeof(StateConditionBase))] [SerializeField, SerializeReference]
         public StateConditionBase conditon = new StateConditionBoolean();
         
-        public StateGroupType stateGroup;
+        [SerializeField] [EnumFlags] public StateGroupType stateGroup;
         public bool autoIncrement;
         public bool autoLoop;
         public int loopFrame = 1;

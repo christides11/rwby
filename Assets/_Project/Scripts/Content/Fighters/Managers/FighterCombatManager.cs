@@ -14,7 +14,7 @@ namespace rwby
         [Networked] public BlockStateType BlockState { get; set; }
         [Networked] public int HitStun { get; set; }
         [Networked] public int HitStop { get; set; }
-        [Networked] public ushort BlockStun { get; set; }
+        [Networked] public int BlockStun { get; set; }
         [Networked] public NetworkBool Charging { get; set; }
         [Networked] public int CurrentChargeLevel { get; set; }
         [Networked] public int CurrentChargeLevelCharge { get; set; }
@@ -269,82 +269,40 @@ namespace rwby
             HitInfo hitInfo = hurtInfo.hitInfo as HitInfo;
             HitReaction hitReaction = new HitReaction();
             hitReaction.reaction = HitReactionType.AVOIDED;
+            var currentState = stateManager.GetState();
 
-            /*
-            int indexOfHurtboxGroup = hurtboxManager.GetHurtboxDefinition().hurtboxGroups.IndexOf(hurtInfo.hurtboxGroupHit);
-            hurtboxHitCount.Set(indexOfHurtboxGroup, hurtboxHitCount[indexOfHurtboxGroup] + 1);*/
+            if (!hitInfo.hitStateGroups.HasFlag(currentState.stateGroup)) return hitReaction;
 
-            // Check if the box can hit this entity.
-            if (hitInfo.groundOnly && !physicsManager.IsGrounded
-                || hitInfo.airOnly && physicsManager.IsGrounded)
-            {
-                return hitReaction;
-            }
-
+            bool groundedState = currentState.stateGroup == StateGroupType.GROUND;
             if(BlockState != BlockStateType.NONE)
             {
                 if(Vector3.Angle(transform.forward, hurtInfo.forward) > 90)
                 {
                     hitReaction.reaction = HitReactionType.BLOCKED;
-                    SetHitStop(hitInfo.blockHitstopDefender);
-                    BlockStun = hitInfo.blockstun;
+                    SetHitStop(hitInfo.hitstop);
+                    BlockStun = groundedState ? hitInfo.groundBlockstun : hitInfo.aerialBlockstun;
 
-                    Vector3 baseBlockForce = manager.FPhysicsManager.IsGrounded ? hitInfo.blockForce : hitInfo.blockForceAir;
-                    Vector3 blockForces = (baseBlockForce.x * hurtInfo.right) + (baseBlockForce.z * hurtInfo.forward);
-                    physicsManager.forceGravity = baseBlockForce.y;
-                    physicsManager.forceMovement = blockForces;
+                    ApplyHitForces(hitInfo.forceType, groundedState ? hitInfo.groundBlockForce : hitInfo.aerialBlockForce, hurtInfo);
                     return hitReaction;
                 }
             }
-
+            
             manager.FPhysicsManager.SetRotation((hurtInfo.forward * -1).normalized);
             // Got hit, apply stun, damage, and forces.
             hitReaction.reaction = HitReactionType.HIT;
             SetHitStop(hitInfo.hitstop);
-            SetHitStun(hitInfo.hitstun);
-
-            Vector3 baseForce = manager.FPhysicsManager.IsGrounded ? hitInfo.opponentForce : hitInfo.opponentForceAir;
+            SetHitStun(groundedState ? hitInfo.groundHitstun : hitInfo.aerialHitstun);
+            
+            // TODO: counterhit handling.
+            Vector3 baseForce = groundedState ? hitInfo.groundHitForce : hitInfo.aerialHitForce;
             hitstunGravityHangTime = hitInfo.hangTime;
             hitstunHoldVelocityTime = hitInfo.holdVelocityTime;
             hitstunFriction = hitInfo.opponentFriction;
-            
-            if (hitstunFriction <= -1)
-            {
-                //TODO
-                //hitstunFriction = manager.StatManager.GroundFriction;
-            }
-            hitstunGravity = hitInfo.opponentGravity;
-            if (hitstunGravity <= -1)
-            {
-                //TODO
-                //hitstunGravity = manager.StatManager.hitstunGravity;
-            }
+            ApplyHitForces(hitInfo.forceType, groundedState ? hitInfo.groundHitForce : hitInfo.aerialHitForce, hurtInfo);
 
-            // Convert forces the attacker-based forward direction.
-            switch (hitInfo.forceType)
+            if (hitInfo.autolink)
             {
-                case HitboxForceType.SET:
-                    Vector3 forces = (baseForce.x * hurtInfo.right) + (baseForce.z * hurtInfo.forward);
-                    physicsManager.forceGravity = baseForce.y;
-                    physicsManager.forceMovement = forces;
-                    break;
-                case HitboxForceType.PULL:
-                    Vector3 pullDir = Vector3.ClampMagnitude((hurtInfo.center - (transform.position + Vector3.up)) * hitInfo.opponentForceMultiplier, hitInfo.opponentMaxMagnitude);
-                    if (pullDir.magnitude < hitInfo.opponentMinMagnitude)
-                    {
-                        pullDir = (hurtInfo.center - (transform.position + Vector3.up) ).normalized * hitInfo.opponentMinMagnitude;
-                    }
-                    if (hitInfo.forceIncludeYForce)
-                    {
-                        physicsManager.forceGravity = pullDir.y;
-                    }
-                    pullDir.y = 0;
-                    physicsManager.forceMovement = pullDir;
-                    break;
-            }
-
-            if (hitInfo.autoLink)
-            {
+                /*
                 //autoLinkForcePercentage = hitInfo.autoLinkPercentage;
                 Vector3 calcForce = hurtInfo.attackerVelocity * hitInfo.autoLinkPercentage;
                 physicsManager.forceGravity += calcForce.y;
@@ -356,42 +314,68 @@ namespace rwby
                 physicsManager.forceMovement = temp;
                 physicsManager.forceGravity = (physicsManager.forceGravity * (1.0f - autoLinkForcePercentage)) + (hurtInfo.attackerVelocity.y * autoLinkForcePercentage);*/
             }
+            
             if (physicsManager.forceGravity > 0)
             {
                 physicsManager.SetGrounded(false);
             }
-
-            HardKnockdown = hitInfo.hardKnockdown;
-            GroundBounce = hitInfo.groundBounces;
-
-            if (physicsManager.IsGrounded == true)
+            
+            /*
+            if (hitstunFriction <= -1)
             {
-                if (hitInfo.causesTrip)
-                {
-                    Debug.Log("Trip.");
-                    //manager.FStateManager.ChangeState((int)FighterCmnStates.TRIP);
-                }
-                else
-                {
-                    Debug.Log("Flinch (Ground).");
-                    //manager.FStateManager.ChangeState((int)FighterCmnStates.FLINCH_GROUND);
-                }
+                //TODO
+                //hitstunFriction = manager.StatManager.GroundFriction;
             }
-            else
+            hitstunGravity = hitInfo.opponentGravity;
+            if (hitstunGravity <= -1)
             {
-                if (hitInfo.forcesRestand)
-                {
-                    Debug.Log("Flinch (Air).");
-                    //manager.FStateManager.ChangeState((int)FighterCmnStates.FLINCH_AIR);
-                }
-                else
-                {
-                    Debug.Log("Tumble.");
-                    //manager.FStateManager.ChangeState((int)FighterCmnStates.TUMBLE);
-                }
+                //TODO
+                //hitstunGravity = manager.StatManager.hitstunGravity;
             }
-            //manager.FCombatManager.Cleanup();
+            */
+
+            /*
+            int indexOfHurtboxGroup = hurtboxManager.GetHurtboxDefinition().hurtboxGroups.IndexOf(hurtInfo.hurtboxGroupHit);
+            hurtboxHitCount.Set(indexOfHurtboxGroup, hurtboxHitCount[indexOfHurtboxGroup] + 1);*/
+
+            switch (currentState.stateGroup)
+            {
+                case StateGroupType.GROUND:
+                    stateManager.ChangeState((int)hitInfo.groundHitState);
+                    break;
+                case StateGroupType.AERIAL:
+                    stateManager.ChangeState((int)hitInfo.aerialHitState);
+                    break;
+            }
+            manager.FCombatManager.Cleanup();
             return hitReaction;
+        }
+
+        protected void ApplyHitForces(HitboxForceType forceType, Vector3 baseForce, HurtInfo hurtInfo)
+        {
+            switch (forceType)
+            {
+                case HitboxForceType.SET:
+                    Vector3 forces = (baseForce.x * hurtInfo.right) + (baseForce.z * hurtInfo.forward);
+                    physicsManager.forceGravity = baseForce.y;
+                    physicsManager.forceMovement = forces;
+                    break;
+                case HitboxForceType.PULL:
+                    /*Vector3 pullDir = Vector3.ClampMagnitude((hurtInfo.center - (transform.position + Vector3.up)) * hitInfo.opponentForceMultiplier, hitInfo.opponentMaxMagnitude);
+                    if (pullDir.magnitude < hitInfo.opponentMinMagnitude)
+                    {
+                        pullDir = (hurtInfo.center - (transform.position + Vector3.up) ).normalized * hitInfo.opponentMinMagnitude;
+                    }
+                    if (hitInfo.forceIncludeYForce)
+                    {
+                        physicsManager.forceGravity = pullDir.y;
+                    }
+                    pullDir.y = 0;
+                    physicsManager.forceMovement = pullDir;*/
+                    break;
+                case HitboxForceType.PUSH:
+                    break;
+            }
         }
     }
 }

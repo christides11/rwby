@@ -69,11 +69,12 @@ namespace rwby
             HitReaction reaction = (HitReaction)enemyHurtbox.hurtable.Hurt(hurtInfo);
 
             HitInfo hi = hurtInfo.hitInfo as HitInfo;
-
+            
             switch (reaction.reaction)
             {
                 case HitReactionType.HIT:
                     combatManager.SetHitStop(hi.attackerHitstop);
+                    /*
                     if (string.IsNullOrEmpty(hi.effectbankName) == false)
                     {
                         BaseEffect be = manager.EffectbankContainer.CreateEffect(enemyHurtbox.transform.position,
@@ -83,21 +84,24 @@ namespace rwby
                     if (string.IsNullOrEmpty(hi.hitSoundbankName) == false)
                     {
                         manager.SoundbankContainer.PlaySound(hi.hitSoundbankName, hi.hitSoundName);
-                    }
+                    }*/
+                    // TODO
+                    /*
                     if (Runner.IsResimulation == false && Object.HasInputAuthority == true)
                     {
                         PlayerCamera.instance.ShakeCamera(hi.shakeValue, hi.hitstop * Runner.DeltaTime);
-                    }
+                    }*/
                     break;
                 case HitReactionType.BLOCKED:
-                    combatManager.SetHitStop(hi.blockHitstopAttacker);
-                    BaseEffect bb = manager.EffectbankContainer.CreateEffect(enemyHurtbox.transform.position,
+                    combatManager.SetHitStop(hi.attackerHitstop);
+                    /*BaseEffect bb = manager.EffectbankContainer.CreateEffect(enemyHurtbox.transform.position,
                             transform.rotation * Quaternion.Euler(0, 180, 0), "global", "shieldhit1");
                     bb.PlayEffect(true, false);
+                   
                     if (string.IsNullOrEmpty(hi.blockSoundbankName) == false)
                     {
                         manager.SoundbankContainer.PlaySound(hi.blockSoundbankName, hi.blockSoundName);
-                    }
+                    }*/
                     break;
                 case HitReactionType.AVOIDED:
                     break;
@@ -121,7 +125,7 @@ namespace rwby
             Vector3 hitPoint = hurtbox.transform.position;
             HitInfo hitInfo = hitbox.definition.HitboxInfo[hitbox.definitionIndex];
             HurtInfo hurtInfo;
-
+            
             switch (hitInfo.forceRelation)
             {
                 case HitboxForceRelation.ATTACKER:
@@ -130,6 +134,7 @@ namespace rwby
                         manager.FPhysicsManager.GetOverallForce(), hitPoint);
                     break;
                 case HitboxForceRelation.HITBOX:
+                    
                     // TODO: Attack origin point.
                     hurtInfo = new HurtInfo(hitInfo, hurtbox.hurtboxGroup,
                          hitbox.Position, manager.transform.forward, manager.transform.right,

@@ -1,29 +1,15 @@
-using System.Collections;
-using System.Collections.Generic;
+using HnSF.Combat;
 using UnityEngine;
 
 namespace rwby
 {
     [System.Serializable]
-    public class HitInfo : HnSF.Combat.HitInfo
+    public class HitInfo : HnSF.Combat.HitInfoBase
     {
-        public bool attachToEntity = true;
-        public string attachTo;
-        
         public int holdVelocityTime;
-        public Vector3 opponentForceAir;
         public float opponentFriction;
         public float opponentGravity;
-        public AudioClip hitSound;
         public int hangTime;
-
-        public HitBlockType blockType;
-        public ushort blockstun;
-        public Vector3 blockForce;
-        public Vector3 blockForceAir;
-
-        public ushort blockHitstopAttacker;
-        public ushort blockHitstopDefender;
 
         public string hitSoundbankName;
         public string hitSoundName;
@@ -39,11 +25,39 @@ namespace rwby
         public string blockSoundbankName;
         public string blockSoundName;
 
-        // ?
-        public bool forcesRestand;
-        public bool hardKnockdown;
-        public bool causesTrip;
-
+        // GENERAL
+        public FighterCmnStates groundHitState;
+        public FighterCmnStates groundCounterHitState;
+        public FighterCmnStates aerialHitState;
+        public FighterCmnStates aerialCounterHitState;
+        public int groundBounces;
+        public int wallBounces;
+        public float groundBounceForcePercentage = 1.0f;
+        public float wallBounceForcePercentage = 1.0f;
+        public bool hitKills;
+        public StateGroupType hitStateGroups;
+        
+        // FORCES
+        public HitboxForceType forceType = HitboxForceType.SET;
+        public HitboxForceRelation forceRelation = HitboxForceRelation.ATTACKER;
+        public Vector3 groundHitForce;
+        public Vector3 groundCounterHitForce;
+        public Vector3 groundBlockForce;
+        public Vector3 aerialHitForce;
+        public Vector3 aerialCounterHitForce;
+        public Vector3 aerialBlockForce;
+        public bool autolink;
+        public float autolinkPercentage = 1.0f;
+        
+        // STUN
+        public int attackerHitstop;
+        public int hitstop;
+        public int counterHitAddedHitstop;
+        public int groundHitstun;
+        public int aerialHitstun;
+        public int groundBlockstun;
+        public int aerialBlockstun;
+        
         public HitInfo() : base()
         {
 

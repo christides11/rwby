@@ -1,9 +1,12 @@
+using System;
+
 namespace rwby
 {
+    [System.Serializable]
+    [Flags]
     public enum StateGroupType
     {
-        NONE,
-        GROUND,
-        AERIAL
+        GROUND = 1,
+        AERIAL = 2
     }
 }

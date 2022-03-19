@@ -71,22 +71,6 @@ namespace rwby
             IsGroundedNetworked = value;
         }
 
-        public virtual Vector3 ApplyMovementFriction(float friction = -1)
-        {
-            //TODO
-            if (friction == -1)
-            {
-                friction = 0;
-                //friction = manager.StatManager.GroundFriction;
-            }
-            //Vector3 realFriction = forceMovement.normalized * friction;
-            //Vector3 temp = forceMovement;
-            //temp.x = ApplyFriction(forceMovement.x, Mathf.Abs(realFriction.x) * Runner.DeltaTime);
-            //temp.z = ApplyFriction(forceMovement.z, Mathf.Abs(realFriction.z) * Runner.DeltaTime);
-            //forceMovement = temp;
-            return Vector3.zero;
-        }
-
         public virtual void ApplyGravityFriction(float friction)
         {
             forceGravity = ApplyFriction(forceGravity, friction * Runner.DeltaTime);

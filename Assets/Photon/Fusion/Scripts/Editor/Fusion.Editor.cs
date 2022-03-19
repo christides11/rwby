@@ -2869,8 +2869,8 @@ namespace Fusion.Editor {
 
     protected override void OnGUIInternal(Rect position, SerializedProperty property, GUIContent label) {
 
-      var length = property.FindPropertyRelativeOrThrow(nameof(NetworkString<_1>._length));
-      var data = property.FindPropertyRelativeOrThrow($"{nameof(NetworkString<_1>._data)}.Data");
+      var length = property.FindPropertyRelativeOrThrow(nameof(NetworkString<_2>._length));
+      var data = property.FindPropertyRelativeOrThrow($"{nameof(NetworkString<_2>._data)}.Data");
 
       data.UpdateFixedBuffer(_read, _write, false);
 

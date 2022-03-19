@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!114 &-7675199523672650426
+--- !u!114 &-3785835910478252228
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
@@ -9,8 +9,8 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7198380dd4878784589bfc4171d4ee44, type: 3}
-  m_Name: Transition.JumpEnd.Early
+  m_Script: {fileID: 11500000, guid: d7a5cd065ca24c74d8e82b0e7304ffca, type: 3}
+  m_Name: Box Track
   m_EditorClassIdentifier: 
   m_Version: 3
   m_AnimClip: {fileID: 0}
@@ -24,14 +24,14 @@ MonoBehaviour:
   - m_Version: 1
     m_Start: 0.016666666666666666
     m_ClipIn: 0
-    m_Asset: {fileID: 5418919923911922946}
-    m_Duration: 0.13333333333333333
+    m_Asset: {fileID: -1582649358503641416}
+    m_Duration: 0.06666666666666667
     m_TimeScale: 1
-    m_ParentTrack: {fileID: -7675199523672650426}
+    m_ParentTrack: {fileID: -3785835910478252228}
     m_EaseInDuration: 0
     m_EaseOutDuration: 0
-    m_BlendInDuration: -1
-    m_BlendOutDuration: -1
+    m_BlendInDuration: 0
+    m_BlendOutDuration: 0
     m_MixInCurve:
       serializedVersion: 2
       m_Curve:
@@ -89,10 +89,10 @@ MonoBehaviour:
     m_PreExtrapolationMode: 0
     m_PostExtrapolationTime: 0
     m_PreExtrapolationTime: 0
-    m_DisplayName: ChangeStateAsset
+    m_DisplayName: BoxAsset
   m_Markers:
     m_Objects: []
---- !u!114 &-7172019655311094267
+--- !u!114 &-1582649358503641416
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
@@ -101,17 +101,19 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c1a443ea37fcd2f46be62b5377029e1e, type: 3}
-  m_Name: RotateTowardsAsset
+  m_Script: {fileID: 11500000, guid: 7ac193a21486cbb41a2e38c0b362345a, type: 3}
+  m_Name: BoxAsset
   m_EditorClassIdentifier: 
   template:
     conditon:
       id: 0
-    rotationSetType: 1
-    euler: {x: 0, y: 0, z: 0}
-    rotateTowards: 0
-    rotationSpeed:
-      id: 1
+    boxType: 0
+    attachedTo: 0
+    shape: 0
+    offset: {x: 0, y: 0, z: 0}
+    boxExtents: {x: 0, y: 0, z: 0}
+    radius: 0
+    definitionIndex: 0
   references:
     version: 1
     00000000:
@@ -119,308 +121,6 @@ MonoBehaviour:
       data:
         inverse: 0
         value: 1
-    00000001:
-      type: {class: FighterBaseStatReferenceFloat, ns: rwby, asm: rwby.csharp}
-      data:
-        inverse: 0
-        statReference: 1
-        value: 0
-        variable: 28
---- !u!114 &-5691153362750191221
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8b5d830cce3dc7640bc3cdd3c93d4e42, type: 3}
-  m_Name: ChangeStateAsset
-  m_EditorClassIdentifier: 
-  template:
-    conditon:
-      id: 0
-    checkStateCondition: 0
-    state:
-      id: 1
-  references:
-    version: 1
-    00000000:
-      type: {class: ExternalCondition, ns: rwby.state.conditions, asm: rwby.csharp}
-      data:
-        inverse: 0
-        stateCondition: {fileID: 11400000, guid: b48fa961c15d772429a6272d5d2c2a9b, type: 2}
-    00000001:
-      type: {class: FighterCmnStateReference, ns: rwby, asm: rwby.csharp}
-      data:
-        state: 9
---- !u!114 &-5350526600741673230
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8b5d830cce3dc7640bc3cdd3c93d4e42, type: 3}
-  m_Name: ChangeStateAsset
-  m_EditorClassIdentifier: 
-  template:
-    conditon:
-      id: 0
-    checkStateCondition: 0
-    state:
-      id: 1
-  references:
-    version: 1
-    00000000:
-      type: {class: ExternalCondition, ns: rwby.state.conditions, asm: rwby.csharp}
-      data:
-        inverse: 0
-        stateCondition: {fileID: 11400000, guid: b001bb338f59ef647a214ea63f412441, type: 2}
-    00000001:
-      type: {class: FighterCmnStateReference, ns: rwby, asm: rwby.csharp}
-      data:
-        state: 26
---- !u!114 &-4792378474771735694
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ab5c6ad0418a86a47b2aa353a0ef9714, type: 3}
-  m_Name: ApplyGravityAsset
-  m_EditorClassIdentifier: 
-  template:
-    conditon:
-      id: 0
-    forceSetType: 1
-    force: 0
-    useValue: 0
-    value:
-      id: 1
-    maxJumpTime:
-      id: 2
-    jumpHeight:
-      id: 3
-    fallMultiplier:
-      id: 4
-  references:
-    version: 1
-    00000000:
-      type: {class: StateConditionBoolean, ns: HnSF, asm: HnSF}
-      data:
-        inverse: 0
-        value: 1
-    00000001:
-      type: {class: FighterBaseStatReferenceFloat, ns: rwby, asm: rwby.csharp}
-      data:
-        inverse: 0
-        statReference: 0
-        value: 0
-        variable: 0
-    00000002:
-      type: {class: FighterBaseStatReferenceFloat, ns: rwby, asm: rwby.csharp}
-      data:
-        inverse: 0
-        statReference: 1
-        value: 0
-        variable: 12
-    00000003:
-      type: {class: FighterBaseStatReferenceFloat, ns: rwby, asm: rwby.csharp}
-      data:
-        inverse: 0
-        statReference: 1
-        value: 0
-        variable: 13
-    00000004:
-      type: {class: FighterBaseStatReferenceFloat, ns: rwby, asm: rwby.csharp}
-      data:
-        inverse: 0
-        statReference: 0
-        value: 1
-        variable: 0
---- !u!114 &-2441739737120100466
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e942700fc70c8c74dac0862966ef2632, type: 3}
-  m_Name: Movement Track
-  m_EditorClassIdentifier: 
-  m_Version: 3
-  m_AnimClip: {fileID: 0}
-  m_Locked: 0
-  m_Muted: 0
-  m_CustomPlayableFullTypename: 
-  m_Curves: {fileID: 0}
-  m_Parent: {fileID: 11400000}
-  m_Children: []
-  m_Clips:
-  - m_Version: 1
-    m_Start: 0.016666666666666666
-    m_ClipIn: 0
-    m_Asset: {fileID: -2382209225643648969}
-    m_Duration: 0.13333333333333333
-    m_TimeScale: 1
-    m_ParentTrack: {fileID: -2441739737120100466}
-    m_EaseInDuration: 0
-    m_EaseOutDuration: 0
-    m_BlendInDuration: -1
-    m_BlendOutDuration: -1
-    m_MixInCurve:
-      serializedVersion: 2
-      m_Curve:
-      - serializedVersion: 3
-        time: 0
-        value: 0
-        inSlope: 0
-        outSlope: 0
-        tangentMode: 0
-        weightedMode: 0
-        inWeight: 0
-        outWeight: 0
-      - serializedVersion: 3
-        time: 1
-        value: 1
-        inSlope: 0
-        outSlope: 0
-        tangentMode: 0
-        weightedMode: 0
-        inWeight: 0
-        outWeight: 0
-      m_PreInfinity: 2
-      m_PostInfinity: 2
-      m_RotationOrder: 4
-    m_MixOutCurve:
-      serializedVersion: 2
-      m_Curve:
-      - serializedVersion: 3
-        time: 0
-        value: 1
-        inSlope: 0
-        outSlope: 0
-        tangentMode: 0
-        weightedMode: 0
-        inWeight: 0
-        outWeight: 0
-      - serializedVersion: 3
-        time: 1
-        value: 0
-        inSlope: 0
-        outSlope: 0
-        tangentMode: 0
-        weightedMode: 0
-        inWeight: 0
-        outWeight: 0
-      m_PreInfinity: 2
-      m_PostInfinity: 2
-      m_RotationOrder: 4
-    m_BlendInCurveMode: 0
-    m_BlendOutCurveMode: 0
-    m_ExposedParameterNames: []
-    m_AnimationCurves: {fileID: 0}
-    m_Recordable: 0
-    m_PostExtrapolationMode: 0
-    m_PreExtrapolationMode: 0
-    m_PostExtrapolationTime: 0
-    m_PreExtrapolationTime: 0
-    m_DisplayName: ApplyMovementAsset
-  m_Markers:
-    m_Objects: []
---- !u!114 &-2382209225643648969
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 757cc1b001bec5c4abfbc41725eec5d7, type: 3}
-  m_Name: ApplyMovementAsset
-  m_EditorClassIdentifier: 
-  template:
-    conditon:
-      id: 0
-    forceSetType: 1
-    force: {x: 0, y: 0, z: 0}
-    inputSource: 0
-    baseAcceleration:
-      id: 1
-    AdditiveAcceleration:
-      id: 2
-    deceleration:
-      id: 3
-    minSpeed:
-      id: 4
-    maxSpeed:
-      id: 5
-    accelFromDotProduct:
-      id: 6
-  references:
-    version: 1
-    00000000:
-      type: {class: StateConditionBoolean, ns: HnSF, asm: HnSF}
-      data:
-        inverse: 0
-        value: 1
-    00000001:
-      type: {class: FighterBaseStatReferenceFloat, ns: rwby, asm: rwby.csharp}
-      data:
-        inverse: 0
-        statReference: 1
-        value: 0
-        variable: 25
-    00000002:
-      type: {class: FighterBaseStatReferenceFloat, ns: rwby, asm: rwby.csharp}
-      data:
-        inverse: 0
-        statReference: 1
-        value: 0
-        variable: 26
-    00000003:
-      type: {class: FighterBaseStatReferenceFloat, ns: rwby, asm: rwby.csharp}
-      data:
-        inverse: 0
-        statReference: 1
-        value: 0
-        variable: 27
-    00000004:
-      type: {class: FighterBaseStatReferenceFloat, ns: rwby, asm: rwby.csharp}
-      data:
-        inverse: 0
-        statReference: 0
-        value: 0
-        variable: 0
-    00000005:
-      type: {class: FighterBaseStatReferenceFloat, ns: rwby, asm: rwby.csharp}
-      data:
-        inverse: 0
-        statReference: 1
-        value: 0
-        variable: 24
-    00000006:
-      type: {class: FighterBaseStatReferenceAnimationCurve, ns: rwby, asm: rwby.csharp}
-      data:
-        inverse: 0
-        statReference: 1
-        value:
-          serializedVersion: 2
-          m_Curve: []
-          m_PreInfinity: 2
-          m_PostInfinity: 2
-          m_RotationOrder: 4
-        variable: 2
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -435,20 +135,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Version: 0
   m_Tracks:
-  - {fileID: 1632144806036196338}
-  - {fileID: -2441739737120100466}
-  - {fileID: 188523974124840671}
-  - {fileID: 2118935188717024536}
-  - {fileID: -7675199523672650426}
-  - {fileID: 6725232182808769306}
-  - {fileID: 2295510510243418824}
-  m_FixedDuration: 0.16666666666666666
+  - {fileID: 1354260305577145129}
+  - {fileID: -3785835910478252228}
+  m_FixedDuration: 0.1
   m_EditorSettings:
     m_Framerate: 60
     m_ScenePreview: 1
   m_DurationMode: 1
   m_MarkerTrack: {fileID: 6993047874776719302}
-  totalFrames: 9
+  totalFrames: 5
   conditon:
     id: 0
   stateGroup: 2
@@ -457,8 +152,11 @@ MonoBehaviour:
   loopFrame: 2
   hitboxInfo: []
   throwboxInfo: []
-  hurtboxInfo: []
-  parentTimeline: {fileID: 0}
+  hurtboxInfo:
+  - hitInvincible: 0
+    projectileInvincible: 0
+  useParent: 1
+  parentTimeline: {fileID: 11400000, guid: 427fe1361c3dde74ba4e8782fb5df594, type: 2}
   references:
     version: 1
     00000000:
@@ -466,7 +164,7 @@ MonoBehaviour:
       data:
         inverse: 0
         value: 1
---- !u!114 &188523974124840671
+--- !u!114 &1354260305577145129
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
@@ -475,8 +173,8 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2c1637ae44a98b14aa6db24c807321af, type: 3}
-  m_Name: Gravity
+  m_Script: {fileID: 11500000, guid: 29f347c9006146f4f816f3fdd4d0c3f5, type: 3}
+  m_Name: Animation Track
   m_EditorClassIdentifier: 
   m_Version: 3
   m_AnimClip: {fileID: 0}
@@ -490,14 +188,14 @@ MonoBehaviour:
   - m_Version: 1
     m_Start: 0
     m_ClipIn: 0
-    m_Asset: {fileID: 4270675753693021889}
+    m_Asset: {fileID: 3929442272812455060}
     m_Duration: 0.016666666666666666
     m_TimeScale: 1
-    m_ParentTrack: {fileID: 188523974124840671}
+    m_ParentTrack: {fileID: 1354260305577145129}
     m_EaseInDuration: 0
     m_EaseOutDuration: 0
-    m_BlendInDuration: -1
-    m_BlendOutDuration: -1
+    m_BlendInDuration: 0
+    m_BlendOutDuration: 0
     m_MixInCurve:
       serializedVersion: 2
       m_Curve:
@@ -555,79 +253,10 @@ MonoBehaviour:
     m_PreExtrapolationMode: 0
     m_PostExtrapolationTime: 0
     m_PreExtrapolationTime: 0
-    m_DisplayName: ApplyJumpForceAsset
-  - m_Version: 1
-    m_Start: 0.03333333333333333
-    m_ClipIn: 0
-    m_Asset: {fileID: -4792378474771735694}
-    m_Duration: 0.11666666666666667
-    m_TimeScale: 1
-    m_ParentTrack: {fileID: 188523974124840671}
-    m_EaseInDuration: 0
-    m_EaseOutDuration: 0
-    m_BlendInDuration: -1
-    m_BlendOutDuration: -1
-    m_MixInCurve:
-      serializedVersion: 2
-      m_Curve:
-      - serializedVersion: 3
-        time: 0
-        value: 0
-        inSlope: 0
-        outSlope: 0
-        tangentMode: 0
-        weightedMode: 0
-        inWeight: 0
-        outWeight: 0
-      - serializedVersion: 3
-        time: 1
-        value: 1
-        inSlope: 0
-        outSlope: 0
-        tangentMode: 0
-        weightedMode: 0
-        inWeight: 0
-        outWeight: 0
-      m_PreInfinity: 2
-      m_PostInfinity: 2
-      m_RotationOrder: 4
-    m_MixOutCurve:
-      serializedVersion: 2
-      m_Curve:
-      - serializedVersion: 3
-        time: 0
-        value: 1
-        inSlope: 0
-        outSlope: 0
-        tangentMode: 0
-        weightedMode: 0
-        inWeight: 0
-        outWeight: 0
-      - serializedVersion: 3
-        time: 1
-        value: 0
-        inSlope: 0
-        outSlope: 0
-        tangentMode: 0
-        weightedMode: 0
-        inWeight: 0
-        outWeight: 0
-      m_PreInfinity: 2
-      m_PostInfinity: 2
-      m_RotationOrder: 4
-    m_BlendInCurveMode: 0
-    m_BlendOutCurveMode: 0
-    m_ExposedParameterNames: []
-    m_AnimationCurves: {fileID: 0}
-    m_Recordable: 0
-    m_PostExtrapolationMode: 0
-    m_PreExtrapolationMode: 0
-    m_PostExtrapolationTime: 0
-    m_PreExtrapolationTime: 0
-    m_DisplayName: ApplyGravityAsset
+    m_DisplayName: AnimationAsset
   m_Markers:
     m_Objects: []
---- !u!114 &1632144806036196338
+--- !u!114 &3929442272812455060
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
@@ -636,296 +265,23 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5543e9dd45a40d745923d2d1758aeb62, type: 3}
-  m_Name: Rotation Track
-  m_EditorClassIdentifier: 
-  m_Version: 3
-  m_AnimClip: {fileID: 0}
-  m_Locked: 0
-  m_Muted: 0
-  m_CustomPlayableFullTypename: 
-  m_Curves: {fileID: 0}
-  m_Parent: {fileID: 11400000}
-  m_Children: []
-  m_Clips:
-  - m_Version: 1
-    m_Start: 0.016666666666666666
-    m_ClipIn: 0
-    m_Asset: {fileID: -7172019655311094267}
-    m_Duration: 0.13333333333333333
-    m_TimeScale: 1
-    m_ParentTrack: {fileID: 1632144806036196338}
-    m_EaseInDuration: 0
-    m_EaseOutDuration: 0
-    m_BlendInDuration: -1
-    m_BlendOutDuration: -1
-    m_MixInCurve:
-      serializedVersion: 2
-      m_Curve:
-      - serializedVersion: 3
-        time: 0
-        value: 0
-        inSlope: 0
-        outSlope: 0
-        tangentMode: 0
-        weightedMode: 0
-        inWeight: 0
-        outWeight: 0
-      - serializedVersion: 3
-        time: 1
-        value: 1
-        inSlope: 0
-        outSlope: 0
-        tangentMode: 0
-        weightedMode: 0
-        inWeight: 0
-        outWeight: 0
-      m_PreInfinity: 2
-      m_PostInfinity: 2
-      m_RotationOrder: 4
-    m_MixOutCurve:
-      serializedVersion: 2
-      m_Curve:
-      - serializedVersion: 3
-        time: 0
-        value: 1
-        inSlope: 0
-        outSlope: 0
-        tangentMode: 0
-        weightedMode: 0
-        inWeight: 0
-        outWeight: 0
-      - serializedVersion: 3
-        time: 1
-        value: 0
-        inSlope: 0
-        outSlope: 0
-        tangentMode: 0
-        weightedMode: 0
-        inWeight: 0
-        outWeight: 0
-      m_PreInfinity: 2
-      m_PostInfinity: 2
-      m_RotationOrder: 4
-    m_BlendInCurveMode: 0
-    m_BlendOutCurveMode: 0
-    m_ExposedParameterNames: []
-    m_AnimationCurves: {fileID: 0}
-    m_Recordable: 0
-    m_PostExtrapolationMode: 0
-    m_PreExtrapolationMode: 0
-    m_PostExtrapolationTime: 0
-    m_PreExtrapolationTime: 0
-    m_DisplayName: RotateTowardsAsset
-  m_Markers:
-    m_Objects: []
---- !u!114 &2118935188717024536
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7198380dd4878784589bfc4171d4ee44, type: 3}
-  m_Name: Clamp Gravity
-  m_EditorClassIdentifier: 
-  m_Version: 3
-  m_AnimClip: {fileID: 0}
-  m_Locked: 0
-  m_Muted: 0
-  m_CustomPlayableFullTypename: 
-  m_Curves: {fileID: 0}
-  m_Parent: {fileID: 11400000}
-  m_Children: []
-  m_Clips:
-  - m_Version: 1
-    m_Start: 0.016666666666666666
-    m_ClipIn: 0
-    m_Asset: {fileID: 6816519320683849385}
-    m_Duration: 0.13333333333333333
-    m_TimeScale: 1
-    m_ParentTrack: {fileID: 2118935188717024536}
-    m_EaseInDuration: 0
-    m_EaseOutDuration: 0
-    m_BlendInDuration: -1
-    m_BlendOutDuration: -1
-    m_MixInCurve:
-      serializedVersion: 2
-      m_Curve:
-      - serializedVersion: 3
-        time: 0
-        value: 0
-        inSlope: 0
-        outSlope: 0
-        tangentMode: 0
-        weightedMode: 0
-        inWeight: 0
-        outWeight: 0
-      - serializedVersion: 3
-        time: 1
-        value: 1
-        inSlope: 0
-        outSlope: 0
-        tangentMode: 0
-        weightedMode: 0
-        inWeight: 0
-        outWeight: 0
-      m_PreInfinity: 2
-      m_PostInfinity: 2
-      m_RotationOrder: 4
-    m_MixOutCurve:
-      serializedVersion: 2
-      m_Curve:
-      - serializedVersion: 3
-        time: 0
-        value: 1
-        inSlope: 0
-        outSlope: 0
-        tangentMode: 0
-        weightedMode: 0
-        inWeight: 0
-        outWeight: 0
-      - serializedVersion: 3
-        time: 1
-        value: 0
-        inSlope: 0
-        outSlope: 0
-        tangentMode: 0
-        weightedMode: 0
-        inWeight: 0
-        outWeight: 0
-      m_PreInfinity: 2
-      m_PostInfinity: 2
-      m_RotationOrder: 4
-    m_BlendInCurveMode: 0
-    m_BlendOutCurveMode: 0
-    m_ExposedParameterNames: []
-    m_AnimationCurves: {fileID: 0}
-    m_Recordable: 0
-    m_PostExtrapolationMode: 0
-    m_PreExtrapolationMode: 0
-    m_PostExtrapolationTime: 0
-    m_PreExtrapolationTime: 0
-    m_DisplayName: ClampGravityAsset
-  m_Markers:
-    m_Objects: []
---- !u!114 &2295510510243418824
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7198380dd4878784589bfc4171d4ee44, type: 3}
-  m_Name: Transition.AirDash
-  m_EditorClassIdentifier: 
-  m_Version: 3
-  m_AnimClip: {fileID: 0}
-  m_Locked: 0
-  m_Muted: 0
-  m_CustomPlayableFullTypename: 
-  m_Curves: {fileID: 0}
-  m_Parent: {fileID: 11400000}
-  m_Children: []
-  m_Clips:
-  - m_Version: 1
-    m_Start: 0.016666666666666666
-    m_ClipIn: 0
-    m_Asset: {fileID: -5691153362750191221}
-    m_Duration: 0.13333333333333333
-    m_TimeScale: 1
-    m_ParentTrack: {fileID: 2295510510243418824}
-    m_EaseInDuration: 0
-    m_EaseOutDuration: 0
-    m_BlendInDuration: -1
-    m_BlendOutDuration: -1
-    m_MixInCurve:
-      serializedVersion: 2
-      m_Curve:
-      - serializedVersion: 3
-        time: 0
-        value: 0
-        inSlope: 0
-        outSlope: 0
-        tangentMode: 0
-        weightedMode: 0
-        inWeight: 0
-        outWeight: 0
-      - serializedVersion: 3
-        time: 1
-        value: 1
-        inSlope: 0
-        outSlope: 0
-        tangentMode: 0
-        weightedMode: 0
-        inWeight: 0
-        outWeight: 0
-      m_PreInfinity: 2
-      m_PostInfinity: 2
-      m_RotationOrder: 4
-    m_MixOutCurve:
-      serializedVersion: 2
-      m_Curve:
-      - serializedVersion: 3
-        time: 0
-        value: 1
-        inSlope: 0
-        outSlope: 0
-        tangentMode: 0
-        weightedMode: 0
-        inWeight: 0
-        outWeight: 0
-      - serializedVersion: 3
-        time: 1
-        value: 0
-        inSlope: 0
-        outSlope: 0
-        tangentMode: 0
-        weightedMode: 0
-        inWeight: 0
-        outWeight: 0
-      m_PreInfinity: 2
-      m_PostInfinity: 2
-      m_RotationOrder: 4
-    m_BlendInCurveMode: 0
-    m_BlendOutCurveMode: 0
-    m_ExposedParameterNames: []
-    m_AnimationCurves: {fileID: 0}
-    m_Recordable: 0
-    m_PostExtrapolationMode: 0
-    m_PreExtrapolationMode: 0
-    m_PostExtrapolationTime: 0
-    m_PreExtrapolationTime: 0
-    m_DisplayName: ChangeStateAsset
-  m_Markers:
-    m_Objects: []
---- !u!114 &4270675753693021889
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fb72ddacde1ad9448866bc8d05860532, type: 3}
-  m_Name: ApplyJumpForceAsset
+  m_Script: {fileID: 11500000, guid: e08e897f60deb364f9dab895ad7ed66d, type: 3}
+  m_Name: AnimationAsset
   m_EditorClassIdentifier: 
   template:
     conditon:
       id: 0
-    forceSetType: 0
-    force: 0
-    useValue: 0
-    value: 0
-    maxJumpTime:
-      id: 1
-    jumpHeight:
-      id: 2
+    animationSetType: 0
+    layer: 0
+    animations:
+    - animationbankReference:
+        modIdentifier:
+          Item1: 1
+          Item2: 1
+        objectIdentifier: 1
+      animation: 4
+      startWeight: 1
+      time: 0
   references:
     version: 1
     00000000:
@@ -933,184 +289,6 @@ MonoBehaviour:
       data:
         inverse: 0
         value: 1
-    00000001:
-      type: {class: FighterBaseStatReferenceFloat, ns: rwby, asm: rwby.csharp}
-      data:
-        inverse: 0
-        statReference: 1
-        value: 0
-        variable: 12
-    00000002:
-      type: {class: FighterBaseStatReferenceFloat, ns: rwby, asm: rwby.csharp}
-      data:
-        inverse: 0
-        statReference: 1
-        value: 0
-        variable: 13
---- !u!114 &5418919923911922946
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8b5d830cce3dc7640bc3cdd3c93d4e42, type: 3}
-  m_Name: ChangeStateAsset
-  m_EditorClassIdentifier: 
-  template:
-    conditon:
-      id: 0
-    checkStateCondition: 0
-    state:
-      id: 1
-  references:
-    version: 1
-    00000000:
-      type: {class: ButtonCondition, ns: rwby.state.conditions, asm: rwby.csharp}
-      data:
-        inverse: 1
-        button: 0
-        buttonState: 0
-        offset: 0
-        buffer: 0
-    00000001:
-      type: {class: FighterCmnStateReference, ns: rwby, asm: rwby.csharp}
-      data:
-        state: 26
---- !u!114 &6725232182808769306
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7198380dd4878784589bfc4171d4ee44, type: 3}
-  m_Name: Transition.JumpEnd
-  m_EditorClassIdentifier: 
-  m_Version: 3
-  m_AnimClip: {fileID: 0}
-  m_Locked: 0
-  m_Muted: 0
-  m_CustomPlayableFullTypename: 
-  m_Curves: {fileID: 0}
-  m_Parent: {fileID: 11400000}
-  m_Children: []
-  m_Clips:
-  - m_Version: 1
-    m_Start: 0.016666666666666666
-    m_ClipIn: 0
-    m_Asset: {fileID: -5350526600741673230}
-    m_Duration: 0.13333333333333333
-    m_TimeScale: 1
-    m_ParentTrack: {fileID: 6725232182808769306}
-    m_EaseInDuration: 0
-    m_EaseOutDuration: 0
-    m_BlendInDuration: -1
-    m_BlendOutDuration: -1
-    m_MixInCurve:
-      serializedVersion: 2
-      m_Curve:
-      - serializedVersion: 3
-        time: 0
-        value: 0
-        inSlope: 0
-        outSlope: 0
-        tangentMode: 0
-        weightedMode: 0
-        inWeight: 0
-        outWeight: 0
-      - serializedVersion: 3
-        time: 1
-        value: 1
-        inSlope: 0
-        outSlope: 0
-        tangentMode: 0
-        weightedMode: 0
-        inWeight: 0
-        outWeight: 0
-      m_PreInfinity: 2
-      m_PostInfinity: 2
-      m_RotationOrder: 4
-    m_MixOutCurve:
-      serializedVersion: 2
-      m_Curve:
-      - serializedVersion: 3
-        time: 0
-        value: 1
-        inSlope: 0
-        outSlope: 0
-        tangentMode: 0
-        weightedMode: 0
-        inWeight: 0
-        outWeight: 0
-      - serializedVersion: 3
-        time: 1
-        value: 0
-        inSlope: 0
-        outSlope: 0
-        tangentMode: 0
-        weightedMode: 0
-        inWeight: 0
-        outWeight: 0
-      m_PreInfinity: 2
-      m_PostInfinity: 2
-      m_RotationOrder: 4
-    m_BlendInCurveMode: 0
-    m_BlendOutCurveMode: 0
-    m_ExposedParameterNames: []
-    m_AnimationCurves: {fileID: 0}
-    m_Recordable: 0
-    m_PostExtrapolationMode: 0
-    m_PreExtrapolationMode: 0
-    m_PostExtrapolationTime: 0
-    m_PreExtrapolationTime: 0
-    m_DisplayName: ChangeStateAsset
-  m_Markers:
-    m_Objects: []
---- !u!114 &6816519320683849385
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 67c2dc7eb9d1bd74a942f24a440d7bd1, type: 3}
-  m_Name: ClampGravityAsset
-  m_EditorClassIdentifier: 
-  template:
-    conditon:
-      id: 0
-    minValue:
-      id: 1
-    maxValue:
-      id: 2
-  references:
-    version: 1
-    00000000:
-      type: {class: StateConditionBoolean, ns: HnSF, asm: HnSF}
-      data:
-        inverse: 0
-        value: 1
-    00000001:
-      type: {class: FighterBaseStatReferenceFloat, ns: rwby, asm: rwby.csharp}
-      data:
-        inverse: 1
-        statReference: 1
-        value: 0
-        variable: 23
-    00000002:
-      type: {class: FighterBaseStatReferenceFloat, ns: rwby, asm: rwby.csharp}
-      data:
-        inverse: 0
-        statReference: 0
-        value: 100
-        variable: 0
 --- !u!114 &6993047874776719302
 MonoBehaviour:
   m_ObjectHideFlags: 1

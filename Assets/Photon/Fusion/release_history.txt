@@ -2,6 +2,38 @@
 
 ## RC Nightly
 
+### Build 437 (Mar 15, 2022)
+
+**What's New**
+
+- `[Fusion.NetworkAssemblyIgnore]` assembly level attribute; if added to an assembly, Fusion will not scan it for networked types
+
+**Changes**
+
+- A warning is emit if a `INetworkStruct` uses `string` property with backing field
+
+**Bug Fixes**
+
+- Fixed: `NetworkRunner.IsShutdown` being false when exiting play mode / handling `OnApplicationQuit`.  
+Test: More tests. Added `CreateSimplePrefab` and `CreateRunner`
+- Fixed: NRB now normalizes the networked quaternion before setting it to the `Rigidbody.rotation` field, avoiding issues with values considered as not having unit length
+- Fixed: Codegen: `NetworkString<>` raising an assertion if used in ref and pointer properties
+- Fixed: Issue with FixedUpdateNetwork being called while InSimulation was false
+
+### Build 436 (Mar 14, 2022)
+
+**Breaking Changes**
+
+- `NetworkString` lengths are now narrowed down to: 2, 4, 8, 16, 32, 64, 128, 256, 512
+
+**Changes**
+
+- SimulationCount in FusionStats has been broken into two stats now, ForwardSimCount and ResimCount. This altered the enum, so some existing FusionStats implementations may need to be updated
+
+**Bug Fixes**
+
+- Fixed: `NetworkObject` and `NetworkRunner` throwing `NullReferenceExceptions` when some of their properties are accessed with no simulation is running
+
 ### Build 435 (Mar 11, 2022)
 
 **What's New**

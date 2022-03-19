@@ -69,6 +69,15 @@ namespace rwby
             animancer.Layers[layer].GetChild(index).Time = time;
         }
 
+        public void AddAnimationTime(int layer, int index, float time)
+        {
+            var fighterAnimationNode = currentAnimationSet.layer0[index];
+            fighterAnimationNode.currentTime += time;
+            currentAnimationSet.layer0.Set(index, fighterAnimationNode);
+
+            animancer.Layers[layer].GetChild(index).Time += time;
+        }
+
         public override void Render()
         {
             base.Render();

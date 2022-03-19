@@ -74,6 +74,8 @@ namespace rwby
 
         [NonSerialized] public LobbyManager lobbyManager;
 
+        [Header("Debug")] public bool FRAMEBYFRAME = false;
+
         public virtual async UniTask<bool> OnFighterLoaded()
         {
             return true;
@@ -106,6 +108,7 @@ namespace rwby
 
         public override void FixedUpdateNetwork()
         {
+            if (FRAMEBYFRAME && !(Input.GetKeyDown(KeyCode.X) || Input.GetKey(KeyCode.C))) return;
             boxManager.ResetAllBoxes();
             visualTransform.gameObject.SetActive(Visible);
 
