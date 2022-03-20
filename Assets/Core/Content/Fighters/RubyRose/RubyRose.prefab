@@ -489,7 +489,7 @@ MonoBehaviour:
   _WallBounceForcePercentage: 0
   _GroundBounces: 0
   _GroundBounceForcePercentage: 0
-  stickDirectionCheck: 2
+  stickDirectionCheck: 1
   _hurtboxHitCount: 
 --- !u!114 &8508573390081789594
 MonoBehaviour:
@@ -510,6 +510,12 @@ MonoBehaviour:
   _forceGravity: 0
   manager: {fileID: 3846760401122892541}
   kCC: {fileID: 1765053112054983048}
+  _ecbOffset: 1
+  _ecbRadius: 1
+  _ecbHeight: 2
+  localECBOffset: 1
+  localECBRadius: 1
+  localECBHeight: 2
   collisionBoxLayerMask:
     serializedVersion: 2
     m_Bits: 0
@@ -526,6 +532,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _interpolationDataSource: 0
+  manager: {fileID: 0}
   combatManager: {fileID: 7730901374118442406}
   hRoot: {fileID: 8828466035712802024}
   settings: {fileID: 11400000, guid: fa9f7c1fd91f42e4087fa739f9dd3614, type: 2}

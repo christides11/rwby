@@ -66,7 +66,7 @@ MonoBehaviour:
     stateTimeline: {fileID: 11400000, guid: 5465a2b65d321494a93e6d9fb2f81d34, type: 2}
   - state:
       id: 17
-    stateTimeline: {fileID: 11400000, guid: 5465a2b65d321494a93e6d9fb2f81d34, type: 2}
+    stateTimeline: {fileID: 11400000, guid: cbed6b25a317cf14d9d4dbdbe8e00e91, type: 2}
   - state:
       id: 18
     stateTimeline: {fileID: 11400000, guid: 5465a2b65d321494a93e6d9fb2f81d34, type: 2}
@@ -82,6 +82,12 @@ MonoBehaviour:
   - state:
       id: 22
     stateTimeline: {fileID: 11400000, guid: 5465a2b65d321494a93e6d9fb2f81d34, type: 2}
+  - state:
+      id: 23
+    stateTimeline: {fileID: 11400000, guid: bf5436c8f1c215d4c8f359a72bbfcecc, type: 2}
+  - state:
+      id: 24
+    stateTimeline: {fileID: 11400000, guid: 378594cf8c0e23a4e83c35bc3775e3d9, type: 2}
   fighterStats: {fileID: 11400000, guid: 9db018607e1c48c498ee3d8a7c4cefc3, type: 2}
   references:
     version: 1
@@ -177,3 +183,11 @@ MonoBehaviour:
       type: {class: FighterCmnStateReference, ns: rwby, asm: rwby.csharp}
       data:
         state: 37
+    00000017:
+      type: {class: RubyRoseStateReference, ns: rwby.core, asm: rwby.core}
+      data:
+        state: 53
+    00000018:
+      type: {class: RubyRoseStateReference, ns: rwby.core, asm: rwby.core}
+      data:
+        state: 54

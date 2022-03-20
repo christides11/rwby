@@ -68,7 +68,7 @@ namespace rwby
                 case StateGroupType.AERIAL:
                     break;
                 case StateGroupType.GROUND:
-                    manager.ResetVariablesOnGround();
+                    //manager.ResetVariablesOnGround();
                     break;
             }
         }
@@ -98,11 +98,13 @@ namespace rwby
         public void ChangeState(int stateMoveset, int state, int stateFrame = 0, bool callOnInterrupt = true)
         {
             markedForStateChange = false;
-            if (callOnInterrupt && CurrentState != 0)
+            int previousStateInt = CurrentState;
+            rwby.StateTimeline previousState = null;
+            if (callOnInterrupt && previousStateInt != 0)
             {
-                rwby.StateTimeline currentState = GetState();
-                SetFrame(currentState.totalFrames);
-                if(currentState.useParent) SetChildFrame(currentState.parentTimeline.totalFrames);
+                previousState = GetState();
+                SetFrame(previousState.totalFrames);
+                if(previousState.useParent) SetChildFrame(previousState.parentTimeline.totalFrames);
                 director.Evaluate();
             }
             
@@ -117,13 +119,26 @@ namespace rwby
                 childDirector.Evaluate();
                 SetFrame(1);
             }
-            StateChanged();
+
+            if (previousStateInt != 0)
+            {
+                StateChanged(previousState, GetState());
+            }
         }
 
-        public void StateChanged()
+        public void StateChanged(rwby.StateTimeline previousState, rwby.StateTimeline currentState)
         {
             combatManager.HitboxManager.Reset();
             manager.FPhysicsManager.SnapECB();
+            if (previousState.stateGroup == currentState.stateGroup) return;
+            if (previousState.stateGroup == StateGroupType.AERIAL)
+            {
+                manager.ResetVariablesOnGround();
+            }
+            else
+            {
+                
+            }
         }
 
         public void InitState()
