@@ -6,10 +6,11 @@ using HnSF.Combat;
 using HnSF.Fighters;
 using HnSF.Input;
 using System;
+using HnSF;
 
 namespace rwby
 {
-    public class FighterCombatManager : NetworkBehaviour, IHurtable, IFighterCombatManager
+    public class FighterCombatManager : NetworkBehaviour, IHurtable, IFighterCombatManager, ITeamable
     {
         [Networked] public BlockStateType BlockState { get; set; }
         [Networked] public int HitStun { get; set; }
@@ -28,16 +29,14 @@ namespace rwby
         [SerializeField] protected FighterStateManager stateManager;
 
         [Networked] public int Team { get; set; }
-
-        [Networked] public int hitstunGravityHangTime { get; set; }
-        [Networked] public float hitstunGravityHangTimer { get; set; }
-        [Networked] public float hitstunHoldVelocityTime { get; set; }
-        [Networked] public float hitstunFriction { get; set; }
-        [Networked] public float hitstunGravity { get; set; }
+        [Networked, Capacity(10)] public NetworkLinkedList<MovesetStateIdentifier> movesUsedInString => default;
 
         [Networked] public int hitstopCounter { get; set; }
-
-        [Networked, Capacity(10)] public NetworkLinkedList<MovesetStateIdentifier> movesUsedInString => default;
+        [Networked] public NetworkBool CounterhitState { get; set; }
+        [Networked] public int WallBounces { get; set; }
+        [Networked] public float WallBounceForcePercentage { get; set; }
+        [Networked] public int GroundBounces { get; set; }
+        [Networked] public float GroundBounceForcePercentage { get; set; }
 
         public virtual void ResetString()
         {
@@ -256,12 +255,8 @@ namespace rwby
         {
             throw new System.NotImplementedException();
         }
-
-        public float autoLinkForcePercentage = 0;
-        [Networked, Capacity(10)] public NetworkArray<int> hurtboxHitCount { get; }
         
-        [Networked] public NetworkBool HardKnockdown { get; set; }
-        [Networked] public NetworkBool GroundBounce { get; set; }
+        [Networked, Capacity(10)] public NetworkArray<int> hurtboxHitCount { get; }
 
         public HitReactionBase Hurt(HurtInfoBase hurtInfoBase)
         {
@@ -281,70 +276,48 @@ namespace rwby
                     hitReaction.reaction = HitReactionType.BLOCKED;
                     SetHitStop(hitInfo.hitstop);
                     BlockStun = groundedState ? hitInfo.groundBlockstun : hitInfo.aerialBlockstun;
-
-                    ApplyHitForces(hitInfo.forceType, groundedState ? hitInfo.groundBlockForce : hitInfo.aerialBlockForce, hurtInfo);
+                    
+                    ApplyHitForces(hitInfo.hitForceType, groundedState ? hitInfo.groundBlockForce : hitInfo.aerialBlockForce, hurtInfo);
                     return hitReaction;
                 }
             }
             
+            //int indexOfHurtboxGroup = currentState.HurtboxInfo[hurtInfo.hurtboxHit];
+            //hurtboxHitCount.Set(hurtInfo.hurtboxHit, hurtboxHitCount[hurtInfo.hurtboxHit] + 1);
+            
             manager.FPhysicsManager.SetRotation((hurtInfo.forward * -1).normalized);
             // Got hit, apply stun, damage, and forces.
             hitReaction.reaction = HitReactionType.HIT;
-            SetHitStop(hitInfo.hitstop);
-            SetHitStun(groundedState ? hitInfo.groundHitstun : hitInfo.aerialHitstun);
-            
-            // TODO: counterhit handling.
-            Vector3 baseForce = groundedState ? hitInfo.groundHitForce : hitInfo.aerialHitForce;
-            hitstunGravityHangTime = hitInfo.hangTime;
-            hitstunHoldVelocityTime = hitInfo.holdVelocityTime;
-            hitstunFriction = hitInfo.opponentFriction;
-            ApplyHitForces(hitInfo.forceType, groundedState ? hitInfo.groundHitForce : hitInfo.aerialHitForce, hurtInfo);
+            SetHitStop(hitInfo.hitstop + (CounterhitState ? hitInfo.counterHitAddedHitstop : 0));
+            SetHitStun(CounterhitState ? (groundedState ? hitInfo.groundCounterHitstun : hitInfo.aerialCounterHitstun) : (groundedState ? hitInfo.groundHitstun : hitInfo.aerialHitstun));
+            Vector3 baseForce = CounterhitState ? (groundedState ? hitInfo.groundCounterHitForce : hitInfo.aerialCounterHitForce) : (groundedState ? hitInfo.groundHitForce : hitInfo.aerialHitForce);
+            ApplyHitForces(hitInfo.hitForceType, baseForce, hurtInfo);
+
+            WallBounces = hitInfo.wallBounces;
+            WallBounceForcePercentage = hitInfo.wallBounceForcePercentage;
+            GroundBounces = hitInfo.groundBounces;
+            GroundBounceForcePercentage = hitInfo.groundBounceForcePercentage;
 
             if (hitInfo.autolink)
             {
-                /*
-                //autoLinkForcePercentage = hitInfo.autoLinkPercentage;
-                Vector3 calcForce = hurtInfo.attackerVelocity * hitInfo.autoLinkPercentage;
+                Vector3 calcForce = hurtInfo.attackerVelocity * hitInfo.autolinkPercentage;
                 physicsManager.forceGravity += calcForce.y;
                 calcForce.y = 0;
                 physicsManager.forceMovement += calcForce;
-                /*Vector3 temp = physicsManager.forceMovement;
-                temp = (temp * (1.0f - autoLinkForcePercentage)) + (hurtInfo.attackerVelocity * autoLinkForcePercentage);
-                temp.y = 0;
-                physicsManager.forceMovement = temp;
-                physicsManager.forceGravity = (physicsManager.forceGravity * (1.0f - autoLinkForcePercentage)) + (hurtInfo.attackerVelocity.y * autoLinkForcePercentage);*/
             }
             
             if (physicsManager.forceGravity > 0)
             {
                 physicsManager.SetGrounded(false);
             }
-            
-            /*
-            if (hitstunFriction <= -1)
-            {
-                //TODO
-                //hitstunFriction = manager.StatManager.GroundFriction;
-            }
-            hitstunGravity = hitInfo.opponentGravity;
-            if (hitstunGravity <= -1)
-            {
-                //TODO
-                //hitstunGravity = manager.StatManager.hitstunGravity;
-            }
-            */
-
-            /*
-            int indexOfHurtboxGroup = hurtboxManager.GetHurtboxDefinition().hurtboxGroups.IndexOf(hurtInfo.hurtboxGroupHit);
-            hurtboxHitCount.Set(indexOfHurtboxGroup, hurtboxHitCount[indexOfHurtboxGroup] + 1);*/
 
             switch (currentState.stateGroup)
             {
                 case StateGroupType.GROUND:
-                    stateManager.ChangeState((int)hitInfo.groundHitState);
+                    stateManager.ChangeState(CounterhitState ? (int)hitInfo.groundCounterHitState : (int)hitInfo.groundHitState);
                     break;
                 case StateGroupType.AERIAL:
-                    stateManager.ChangeState((int)hitInfo.aerialHitState);
+                    stateManager.ChangeState(CounterhitState ? (int)hitInfo.aerialCounterHitState : (int)hitInfo.aerialHitState);
                     break;
             }
             manager.FCombatManager.Cleanup();

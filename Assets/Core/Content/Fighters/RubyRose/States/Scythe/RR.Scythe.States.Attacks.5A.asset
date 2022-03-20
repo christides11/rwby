@@ -150,6 +150,98 @@ MonoBehaviour:
       data:
         inverse: 0
         value: 1
+--- !u!114 &-7857940207345645794
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7198380dd4878784589bfc4171d4ee44, type: 3}
+  m_Name: Transition.Attack
+  m_EditorClassIdentifier: 
+  m_Version: 3
+  m_AnimClip: {fileID: 0}
+  m_Locked: 0
+  m_Muted: 0
+  m_CustomPlayableFullTypename: 
+  m_Curves: {fileID: 0}
+  m_Parent: {fileID: 11400000}
+  m_Children: []
+  m_Clips:
+  - m_Version: 1
+    m_Start: 0.016666666666666666
+    m_ClipIn: 0
+    m_Asset: {fileID: -5059832730015822120}
+    m_Duration: 0.4666666666666667
+    m_TimeScale: 1
+    m_ParentTrack: {fileID: -7857940207345645794}
+    m_EaseInDuration: 0
+    m_EaseOutDuration: 0
+    m_BlendInDuration: 0
+    m_BlendOutDuration: 0
+    m_MixInCurve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 1
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    m_MixOutCurve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 1
+        value: 0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    m_BlendInCurveMode: 0
+    m_BlendOutCurveMode: 0
+    m_ExposedParameterNames: []
+    m_AnimationCurves: {fileID: 0}
+    m_Recordable: 0
+    m_PostExtrapolationMode: 0
+    m_PreExtrapolationMode: 0
+    m_PostExtrapolationTime: 0
+    m_PreExtrapolationTime: 0
+    m_DisplayName: ChangeStateListAsset
+  m_Markers:
+    m_Objects: []
 --- !u!114 &-7338947355050836338
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -252,6 +344,29 @@ MonoBehaviour:
     boxExtents: {x: 0.25, y: 0.8, z: 0.25}
     radius: 0
     definitionIndex: 0
+  references:
+    version: 1
+    00000000:
+      type: {class: StateConditionBoolean, ns: HnSF, asm: HnSF}
+      data:
+        inverse: 0
+        value: 1
+--- !u!114 &-5059832730015822120
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 00ac1bc9dc03d0b4c8ea7f034d5b67b6, type: 3}
+  m_Name: ChangeStateListAsset
+  m_EditorClassIdentifier: 
+  template:
+    conditon:
+      id: 0
+    referenceList: {fileID: 11400000, guid: 3c57357a5e84554498e9a5403be22fd7, type: 2}
   references:
     version: 1
     00000000:
@@ -499,6 +614,7 @@ MonoBehaviour:
   - {fileID: 531449439648919330}
   - {fileID: -8614305696140676619}
   - {fileID: 2007742646974908601}
+  - {fileID: -7857940207345645794}
   - {fileID: -3559726473286664763}
   - {fileID: 1572716845202077906}
   m_FixedDuration: 0.5
@@ -516,10 +632,6 @@ MonoBehaviour:
   loopFrame: 1
   hitboxInfo:
   - ID: 0
-    holdVelocityTime: 0
-    opponentFriction: 0
-    opponentGravity: 0
-    hangTime: 0
     hitSoundbankName: 
     hitSoundName: 
     shakeValue: 0
@@ -533,25 +645,35 @@ MonoBehaviour:
     aerialCounterHitState: 32
     groundBounces: 0
     wallBounces: 0
+    counterHitGroundBounces: 0
+    counterHitWallBounces: 0
     groundBounceForcePercentage: 1
     wallBounceForcePercentage: 1
     hitKills: 0
-    hitStateGroups: 0
-    forceType: 0
-    forceRelation: 0
-    groundHitForce: {x: 0, y: 0, z: 0}
+    hitStateGroups: -1
+    hitForceType: 0
+    hitForceRelation: 0
+    autolink: 0
+    autolinkPercentage: 1
+    groundHitForce: {x: 0, y: 0, z: 5}
     groundCounterHitForce: {x: 0, y: 0, z: 0}
     groundBlockForce: {x: 0, y: 0, z: 0}
+    groundHitGravity: -1
+    groundCounterHitGravity: -1
     aerialHitForce: {x: 0, y: 0, z: 0}
     aerialCounterHitForce: {x: 0, y: 0, z: 0}
     aerialBlockForce: {x: 0, y: 0, z: 0}
-    attackerHitstop: 0
-    hitstop: 0
-    counterHitAddedHitstop: 0
-    groundHitstun: 0
-    aerialHitstun: 0
-    groundBlockstun: 0
-    aerialBlockstun: 0
+    aerialHitGravity: -1
+    aerialCounterHitGravity: -1
+    attackerHitstop: 8
+    hitstop: 8
+    counterHitAddedHitstop: 8
+    groundHitstun: 30
+    groundCounterHitstun: 0
+    aerialHitstun: 30
+    aerialCounterHitstun: 0
+    groundBlockstun: 30
+    aerialBlockstun: 30
   throwboxInfo: []
   hurtboxInfo:
   - hitInvincible: 0

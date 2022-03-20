@@ -126,28 +126,27 @@ namespace rwby
             HitInfo hitInfo = hitbox.definition.HitboxInfo[hitbox.definitionIndex];
             HurtInfo hurtInfo;
             
-            switch (hitInfo.forceRelation)
+            // TODO: Attack origin point.
+            switch (hitInfo.hitForceRelation)
             {
                 case HitboxForceRelation.ATTACKER:
-                    hurtInfo = new HurtInfo(hitInfo, hurtbox.hurtboxGroup as HurtboxGroup,
-                        transform.position, manager.transform.forward, manager.transform.right,
+                    hurtInfo = new HurtInfo(hitInfo, hurtbox.definitionIndex,
+                        manager.myTransform.position, manager.myTransform.forward, manager.myTransform.right,
                         manager.FPhysicsManager.GetOverallForce(), hitPoint);
                     break;
                 case HitboxForceRelation.HITBOX:
-                    
-                    // TODO: Attack origin point.
-                    hurtInfo = new HurtInfo(hitInfo, hurtbox.hurtboxGroup,
-                         hitbox.Position, manager.transform.forward, manager.transform.right,
+                    hurtInfo = new HurtInfo(hitInfo, hurtbox.definitionIndex,
+                         hitbox.Position, manager.myTransform.forward, manager.myTransform.right,
                          manager.FPhysicsManager.GetOverallForce(), hitPoint);
                     break;
                 case HitboxForceRelation.WORLD:
-                    hurtInfo = new HurtInfo(hitInfo, hurtbox.hurtboxGroup,
-                        transform.position, Vector3.forward, Vector3.right,
+                    hurtInfo = new HurtInfo(hitInfo, hurtbox.definitionIndex,
+                        manager.myTransform.position, Vector3.forward, Vector3.right,
                         (manager.FPhysicsManager as FighterPhysicsManager).GetOverallForce(), hitPoint);
                     break;
                 default:
-                    hurtInfo = new HurtInfo(hitInfo, hurtbox.hurtboxGroup,
-                        transform.position, manager.transform.forward, manager.transform.right,
+                    hurtInfo = new HurtInfo(hitInfo, hurtbox.definitionIndex,
+                        manager.myTransform.position, manager.myTransform.forward, manager.myTransform.right,
                         manager.FPhysicsManager.GetOverallForce(), hitPoint);
                     break;
             }

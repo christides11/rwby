@@ -6,7 +6,8 @@ namespace rwby
     [Flags]
     public enum StateGroupType
     {
-        GROUND = 1,
-        AERIAL = 2
+        NONE = 0,
+        GROUND = 1 << 0,
+        AERIAL = 1 << 1
     }
 }

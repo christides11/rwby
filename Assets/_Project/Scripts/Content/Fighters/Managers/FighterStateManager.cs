@@ -117,6 +117,13 @@ namespace rwby
                 childDirector.Evaluate();
                 SetFrame(1);
             }
+            StateChanged();
+        }
+
+        public void StateChanged()
+        {
+            combatManager.HitboxManager.Reset();
+            manager.FPhysicsManager.SnapECB();
         }
 
         public void InitState()

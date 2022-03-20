@@ -52,6 +52,7 @@ namespace rwby
         protected override void DrawGeneralGroup(ref Rect position, SerializedProperty property)
         {
             EditorGUI.PropertyField(new Rect(position.x, GetLineY(), position.width, lineHeight), property.FindPropertyRelative("ID"));
+            EditorGUI.PropertyField(new Rect(position.x, GetLineY(), position.width, lineHeight), property.FindPropertyRelative("hitStateGroups"));
             EditorGUI.PropertyField(new Rect(position.x, GetLineY(), position.width, lineHeight), property.FindPropertyRelative("groundHitState"));
             EditorGUI.PropertyField(new Rect(position.x, GetLineY(), position.width, lineHeight), property.FindPropertyRelative("groundCounterHitState"));
             EditorGUI.PropertyField(new Rect(position.x, GetLineY(), position.width, lineHeight), property.FindPropertyRelative("aerialHitState"));
@@ -64,29 +65,57 @@ namespace rwby
                 EditorGUI.PropertyField(new Rect(position.x, GetLineY(), position.width, lineHeight), property.FindPropertyRelative("wallBounceForcePercentage"));
             EditorGUI.PropertyField(new Rect(position.x, GetLineY(), position.width, lineHeight), property.FindPropertyRelative("hitKills"));
         }
-        
+
+        private bool forcesGroundFoldoutGroup;
+        private bool forcesAerialFoldoutGroup;
+        private bool forcesGroundCounterHitFoldoutGroup;
+        private bool forcesAerialCounterHitFoldoutGroup;
         protected virtual void DrawForcesGroup(Rect position, SerializedProperty property)
         {
-            EditorGUI.PropertyField(new Rect(position.x, GetLineY(), position.width, lineHeight), property.FindPropertyRelative("forceType"));
-            switch ((HitboxForceType)property.FindPropertyRelative("forceType").enumValueIndex)
+            EditorGUI.PropertyField(new Rect(position.x, GetLineY(), position.width, lineHeight), property.FindPropertyRelative("hitForceType"));
+            EditorGUI.PropertyField(new Rect(position.x, GetLineY(), position.width, lineHeight), property.FindPropertyRelative("hitForceRelation"));
+            forcesGroundFoldoutGroup = EditorGUI.Foldout(new Rect(position.x, GetLineY(), position.width, lineHeight),
+                forcesGroundFoldoutGroup, new GUIContent("Ground"));
+            if (forcesGroundFoldoutGroup)
+            {
+                DrawForcesGroundStateGroup(position, property, "hitForceType", "groundHitForce", "groundHitGravity");
+            }
+            forcesGroundCounterHitFoldoutGroup = EditorGUI.Foldout(new Rect(position.x, GetLineY(), position.width, lineHeight),
+                forcesGroundCounterHitFoldoutGroup, new GUIContent("Ground (CounterHit)"));
+            if (forcesGroundCounterHitFoldoutGroup)
+            {
+                DrawForcesGroundStateGroup(position, property, "hitForceType", "groundCounterHitForce", "groundCounterHitGravity");
+            }
+            forcesAerialFoldoutGroup = EditorGUI.Foldout(new Rect(position.x, GetLineY(), position.width, lineHeight),
+                forcesAerialFoldoutGroup, new GUIContent("Aerial"));
+            if (forcesAerialFoldoutGroup)
+            {
+                DrawForcesGroundStateGroup(position, property, "hitForceType", "aerialHitForce", "aerialHitGravity");
+            }
+            forcesAerialCounterHitFoldoutGroup = EditorGUI.Foldout(new Rect(position.x, GetLineY(), position.width, lineHeight),
+                forcesAerialCounterHitFoldoutGroup, new GUIContent("Aerial (CounterHit)"));
+            if (forcesAerialCounterHitFoldoutGroup)
+            {
+                DrawForcesGroundStateGroup(position, property, "hitForceType", "aerialCounterHitForce", "aerialCounterHitGravity");
+            }
+        }
+
+        protected virtual void DrawForcesGroundStateGroup(Rect position, SerializedProperty property, string forceType,  string hitForce,
+            string hitGravity)
+        {
+            switch ((HitboxForceType)property.FindPropertyRelative(forceType).enumValueIndex)
             {
                 case HitboxForceType.SET:
-                    EditorGUI.PropertyField(new Rect(position.x, GetLineY(), position.width, lineHeight), property.FindPropertyRelative("forceRelation"));
-                    EditorGUI.PropertyField(new Rect(position.x, GetLineY(), position.width, lineHeight), property.FindPropertyRelative("groundHitForce"));
-                    EditorGUI.PropertyField(new Rect(position.x, GetLineY(), position.width, lineHeight), property.FindPropertyRelative("groundCounterHitForce"));
-                    EditorGUI.PropertyField(new Rect(position.x, GetLineY(), position.width, lineHeight), property.FindPropertyRelative("groundBlockForce"));
-                    EditorGUI.PropertyField(new Rect(position.x, GetLineY(), position.width, lineHeight), property.FindPropertyRelative("aerialHitForce"));
-                    EditorGUI.PropertyField(new Rect(position.x, GetLineY(), position.width, lineHeight), property.FindPropertyRelative("aerialCounterHitForce"));
-                    EditorGUI.PropertyField(new Rect(position.x, GetLineY(), position.width, lineHeight), property.FindPropertyRelative("aerialBlockForce"));
+                    EditorGUI.PropertyField(new Rect(position.x, GetLineY(), position.width, lineHeight),
+                        property.FindPropertyRelative(hitForce));
+                    EditorGUI.PropertyField(new Rect(position.x, GetLineY(), position.width, lineHeight),
+                        property.FindPropertyRelative(hitGravity));
                     break;
                 case HitboxForceType.PULL:
                     break;
                 case HitboxForceType.PUSH:
                     break;
             }
-            /*
-            EditorGUI.PropertyField(new Rect(position.x, yPos, position.width, lineHeight), property.FindPropertyRelative("opponentFriction"));
-            EditorGUI.PropertyField(new Rect(position.x, yPos, position.width, lineHeight), property.FindPropertyRelative("opponentGravity"));*/
         }
 
         protected virtual void DrawStunGroup(Rect position, SerializedProperty property)

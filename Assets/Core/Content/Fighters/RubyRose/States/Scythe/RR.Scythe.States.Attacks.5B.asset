@@ -535,48 +535,6 @@ MonoBehaviour:
   loopFrame: 1
   hitboxInfo:
   - ID: 0
-    hitType: 0
-    hitKills: 0
-    continuousHit: 0
-    spaceBetweenHits: 0
-    opponentResetXForce: 0
-    opponentResetYForce: 0
-    autoLink: 0
-    autoLinkPercentage: 0
-    forceType: 0
-    forceRelation: 0
-    attackerHitstop: 10
-    hitstop: 10
-    hitstun: 30
-    airOnly: 0
-    groundOnly: 0
-    causesTumble: 0
-    knockdown: 0
-    groundBounces: 0
-    groundBounceForce: 0
-    wallBounces: 0
-    wallBounceForce: 0
-    damageOnHit: 5
-    opponentForce: {x: 0, y: 0, z: 10}
-    forceIncludeYForce: 0
-    opponentForceMultiplier: 0
-    opponentMaxMagnitude: 0
-    opponentMinMagnitude: 0
-    pushPullCenterOffset: {x: 0, y: 0, z: 0}
-    attachToEntity: 0
-    attachTo: 
-    holdVelocityTime: 0
-    opponentForceAir: {x: 0, y: 0, z: 0}
-    opponentFriction: 0
-    opponentGravity: 0
-    hitSound: {fileID: 0}
-    hangTime: 0
-    blockType: 0
-    blockstun: 20
-    blockForce: {x: 0, y: 0, z: 0}
-    blockForceAir: {x: 0, y: 0, z: 0}
-    blockHitstopAttacker: 5
-    blockHitstopDefender: 5
     hitSoundbankName: 
     hitSoundName: 
     shakeValue: 0
@@ -584,9 +542,41 @@ MonoBehaviour:
     effectName: 
     blockSoundbankName: 
     blockSoundName: 
-    forcesRestand: 0
-    hardKnockdown: 0
-    causesTrip: 0
+    groundHitState: 30
+    groundCounterHitState: 30
+    aerialHitState: 0
+    aerialCounterHitState: 0
+    groundBounces: 0
+    wallBounces: 0
+    counterHitGroundBounces: 0
+    counterHitWallBounces: 0
+    groundBounceForcePercentage: 1
+    wallBounceForcePercentage: 1
+    hitKills: 0
+    hitStateGroups: -1
+    hitForceType: 0
+    hitForceRelation: 0
+    autolink: 0
+    autolinkPercentage: 1
+    groundHitForce: {x: 0, y: 0, z: 10}
+    groundCounterHitForce: {x: 0, y: 0, z: 0}
+    groundBlockForce: {x: 0, y: 0, z: 0}
+    groundHitGravity: -1
+    groundCounterHitGravity: -1
+    aerialHitForce: {x: 0, y: 0, z: 0}
+    aerialCounterHitForce: {x: 0, y: 0, z: 0}
+    aerialBlockForce: {x: 0, y: 0, z: 0}
+    aerialHitGravity: -1
+    aerialCounterHitGravity: -1
+    attackerHitstop: 5
+    hitstop: 5
+    counterHitAddedHitstop: 0
+    groundHitstun: 30
+    groundCounterHitstun: 0
+    aerialHitstun: 30
+    aerialCounterHitstun: 0
+    groundBlockstun: 30
+    aerialBlockstun: 30
   throwboxInfo: []
   hurtboxInfo:
   - hitInvincible: 0

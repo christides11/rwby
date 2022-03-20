@@ -65,6 +65,7 @@ namespace rwby
         [SerializeField] protected Transform targetOrigin;
         public ParticleSystemEffect guardEffect;
         public Transform visualTransform;
+        public Transform myTransform;
 
         [Header("Lock On")]
         public LayerMask lockonLayerMask;
@@ -108,11 +109,20 @@ namespace rwby
 
         public override void FixedUpdateNetwork()
         {
-            if (FRAMEBYFRAME && !(Input.GetKeyDown(KeyCode.X) || Input.GetKey(KeyCode.C))) return;
+            if (Runner.Simulation.IsResimulation && Runner.Simulation.IsFirstTick)
+            {
+                FPhysicsManager.ResimulationResync();
+            }
+
+            if (FRAMEBYFRAME && !(Input.GetKeyDown(KeyCode.X) || Input.GetKey(KeyCode.C)))
+            {
+                FPhysicsManager.Freeze();
+                return;
+            }
             boxManager.ResetAllBoxes();
             visualTransform.gameObject.SetActive(Visible);
 
-            HitstopShake();
+            //HitstopShake();
             HandleLockon();
 
             
@@ -134,6 +144,7 @@ namespace rwby
                 {
                     FCombatManager.HitStop = 0;
                     currentShakeDirection = 0;
+                    FCombatManager.hitstopCounter = 0;
                 }
             }
         }
@@ -163,7 +174,7 @@ namespace rwby
                 }
             }
         }
-
+        
         private void HandleLockon()
         {
             if(HardTargeting == false)

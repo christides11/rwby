@@ -425,6 +425,7 @@ MonoBehaviour:
   targetOrigin: {fileID: 4535680941175032872}
   guardEffect: {fileID: 678739726598552823}
   visualTransform: {fileID: 7954403120791412188}
+  myTransform: {fileID: 4702031847467705068}
   lockonLayerMask:
     serializedVersion: 2
     m_Bits: 64
@@ -433,6 +434,7 @@ MonoBehaviour:
     m_Bits: 8
   lockonMaxDistance: 20
   lockonFudging: 0.1
+  FRAMEBYFRAME: 0
   hitstopShakeDistance: 0.5
   hitstopDir: 1
   hitstopShakeFrames: 1
@@ -480,19 +482,15 @@ MonoBehaviour:
   physicsManager: {fileID: 8508573390081789594}
   stateManager: {fileID: 1457010570893242128}
   _Team: 0
-  _hitstunGravityHangTime: 0
-  _hitstunGravityHangTimer: 0
-  _hitstunHoldVelocityTime: 0
-  _hitstunFriction: 0
-  _hitstunGravity: 0
   _hitstopCounter: 0
+  _CounterhitState:
+    _value: 0
+  _WallBounces: 0
+  _WallBounceForcePercentage: 0
+  _GroundBounces: 0
+  _GroundBounceForcePercentage: 0
   stickDirectionCheck: 2
-  autoLinkForcePercentage: 0.85
   _hurtboxHitCount: 
-  _HardKnockdown:
-    _value: 0
-  _GroundBounce:
-    _value: 0
 --- !u!114 &8508573390081789594
 MonoBehaviour:
   m_ObjectHideFlags: 0

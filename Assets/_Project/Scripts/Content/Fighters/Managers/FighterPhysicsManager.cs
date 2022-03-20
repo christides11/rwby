@@ -19,6 +19,18 @@ namespace rwby
 
         protected Vector3 rotationDir;
 
+        public void ResimulationResync()
+        {
+            if (!Mathf.Approximately(ecbOffset, localECBOffset) 
+                || !Mathf.Approximately(ecbRadius, localECBRadius) 
+                || !Mathf.Approximately(ecbHeight, localECBHeight))
+            {
+                kCC.Motor.SetCapsuleDimensions(ecbRadius, ecbHeight, ecbOffset);
+                localECBOffset = this.ecbOffset;
+                localECBRadius = this.ecbRadius;
+                localECBHeight = this.ecbHeight;
+            }
+        }
         
         public void Tick()
         {
@@ -32,6 +44,31 @@ namespace rwby
                 kCC.SetRotation(rotationDir);
             }
             rotationDir = Vector3.zero;
+        }
+
+        [Networked] public float ecbOffset { get; set; } = 1;
+        [Networked] public float ecbRadius { get; set; } = 1;
+        [Networked] public float ecbHeight { get; set; } = 2;
+
+        public float localECBOffset = 1;
+        public float localECBRadius = 1;
+        public float localECBHeight = 2;
+
+        public void SetECB(float ecbCenter, float ecbRadius, float ecbHeight)
+        {
+            this.ecbOffset = ecbCenter;
+            this.ecbRadius = ecbRadius;
+            this.ecbHeight = ecbHeight;
+            kCC.Motor.SetCapsuleDimensions(ecbRadius, ecbHeight, ecbCenter);
+            localECBOffset = this.ecbOffset;
+            localECBRadius = this.ecbRadius;
+            localECBHeight = this.ecbHeight;
+        }
+
+        public void SnapECB()
+        {
+            Vector3 newECBPosition = transform.position + new Vector3(0, ecbOffset - (ecbHeight/2.0f), 0);
+            kCC.Motor.SetPosition(newECBPosition);
         }
 
         public void SetPosition(Vector3 position, bool bypassInterpolation = true)

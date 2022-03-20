@@ -15,6 +15,7 @@ namespace rwby
         public Hurtbox[] Hurtboxes { get { return hurtboxes; } }
         public Collbox[] Collboxes { get { return collisionboxes; } }
 
+        public FighterManager manager;
         [SerializeField] protected FighterCombatManager combatManager;
         public HitboxRoot hRoot;
         public Settings settings;
@@ -70,7 +71,7 @@ namespace rwby
             if (combatBoxBounds.size == -Vector3.one) return;
             CombatPairFinder.singleton.RegisterObject(Object);
         }
-        
+
         public void ResetAllBoxes()
         {
             foreach (Hurtbox hb in hurtboxes)
