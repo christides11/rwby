@@ -63,11 +63,11 @@ namespace rwby
 
         private void HandleStateGroup(StateTimeline stateTimeline)
         {
-            switch (stateTimeline.stateGroup)
+            switch (stateTimeline.stateGroundedGroup)
             {
-                case StateGroupType.AERIAL:
+                case StateGroundedGroupType.AERIAL:
                     break;
-                case StateGroupType.GROUND:
+                case StateGroundedGroupType.GROUND:
                     //manager.ResetVariablesOnGround();
                     break;
             }
@@ -130,14 +130,27 @@ namespace rwby
         {
             combatManager.HitboxManager.Reset();
             manager.FPhysicsManager.SnapECB();
-            if (previousState.stateGroup == currentState.stateGroup) return;
-            if (previousState.stateGroup == StateGroupType.AERIAL)
+            if (previousState.stateGroundedGroup != currentState.stateGroundedGroup)
             {
-                manager.ResetVariablesOnGround();
+                if (previousState.stateGroundedGroup == StateGroundedGroupType.AERIAL)
+                {
+                    manager.ResetVariablesOnGround();
+                }
+                else
+                {
+
+                }
             }
-            else
+
+            if (currentState.stateType == StateType.MOVEMENT)
             {
-                
+                if(previousState.stateType != currentState.stateType) combatManager.ResetString();
+            }else if (currentState.stateType == StateType.ATTACK)
+            {
+                if (currentState.maxUsesInString != -1)
+                {
+                    combatManager.AddMoveToString();
+                }
             }
         }
 

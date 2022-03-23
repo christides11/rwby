@@ -13,8 +13,8 @@ namespace rwby
         RUN_BRAKE = 7,
         AIR_JUMP = 8,
         AIR_DASH = 9,
-        //ATTACK = 10,
-        //FLINCH_GROUND = 11,
+        STAGGER = 10,
+        CRUMPLE = 11,
         //FLINCH_AIR = 12,
         //TUMBLE = 13,
         GROUND_BOUNCE = 14,
@@ -24,11 +24,11 @@ namespace rwby
         WALL_RUN_V = 18,
         WALL_RUN_H = 19,
         WALL_JUMP = 20,
-        //TRIP = 21,
+        GROUND_TECH_ROLL = 21,
         GROUND_LAY_FACE_UP = 22,
         TECH_AIR = 23,
-        TECH_GROUND = 24,
-        GROUND_GETUP = 25,
+        GROUND_TECH_NEUTRAL = 24,
+        GROUND_TECH_RISE = 25,
         JUMP_END = 26,
         RUN_INIT = 27,
         LANDING = 28,
@@ -41,7 +41,6 @@ namespace rwby
         HIT_AERIAL_FACE_DOWN = 35, // Ends with character facing downwards. Commonly used for tripping moves.
         HIT_AERIAL_LAUNCH = 36, // Ends with character facing downwards. Commonly used for DPs.
         HIT_AERIAL_SOMERSAULT = 37, // Character spins. 
-        STAGGER = 38,
-        CRUMPLE = 39
+
     }
 }

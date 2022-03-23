@@ -29,7 +29,7 @@ namespace rwby
         [SerializeField] protected FighterStateManager stateManager;
 
         [Networked] public int Team { get; set; }
-        [Networked, Capacity(10)] public NetworkLinkedList<MovesetStateIdentifier> movesUsedInString => default;
+        [Networked, Capacity(20)] public NetworkLinkedList<MovesetStateIdentifier> movesUsedInString => default;
 
         [Networked] public int hitstopCounter { get; set; }
         [Networked] public NetworkBool CounterhitState { get; set; }
@@ -41,6 +41,16 @@ namespace rwby
         public virtual void ResetString()
         {
             movesUsedInString.Clear();
+        }
+
+        public virtual void AddMoveToString()
+        {
+            movesUsedInString.Add(new MovesetStateIdentifier(){ movesetIdentifier = stateManager.CurrentStateMoveset, stateIdentifier = stateManager.CurrentState });
+        }
+
+        public virtual void AddMoveToString(int currentStateMovement, int currentState)
+        {
+            movesUsedInString.Add(new MovesetStateIdentifier(){ movesetIdentifier = currentStateMovement, stateIdentifier = currentState});
         }
 
         public virtual bool MovePossible(MovesetStateIdentifier movesetState, int maxUsesInString = 1)
@@ -266,9 +276,9 @@ namespace rwby
             hitReaction.reaction = HitReactionType.AVOIDED;
             var currentState = stateManager.GetState();
 
-            if (!hitInfo.hitStateGroups.HasFlag(currentState.stateGroup)) return hitReaction;
+            if (!hitInfo.hitStateGroundedGroups.HasFlag(currentState.stateGroundedGroup)) return hitReaction;
 
-            bool groundedState = currentState.stateGroup == StateGroupType.GROUND;
+            bool groundedState = currentState.stateGroundedGroup == StateGroundedGroupType.GROUND;
             if(BlockState != BlockStateType.NONE)
             {
                 if(Vector3.Angle(transform.forward, hurtInfo.forward) > 90)
@@ -311,12 +321,12 @@ namespace rwby
                 physicsManager.SetGrounded(false);
             }
 
-            switch (currentState.stateGroup)
+            switch (currentState.stateGroundedGroup)
             {
-                case StateGroupType.GROUND:
+                case StateGroundedGroupType.GROUND:
                     stateManager.ChangeState(CounterhitState ? (int)hitInfo.groundCounterHitState : (int)hitInfo.groundHitState);
                     break;
-                case StateGroupType.AERIAL:
+                case StateGroundedGroupType.AERIAL:
                     stateManager.ChangeState(CounterhitState ? (int)hitInfo.aerialCounterHitState : (int)hitInfo.aerialHitState);
                     break;
             }

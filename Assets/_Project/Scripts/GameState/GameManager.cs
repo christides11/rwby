@@ -3,6 +3,8 @@ using Rewired.UI.ControlMapper;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using HnSF.Input;
+using Rewired;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -42,22 +44,37 @@ namespace rwby
                 }
             }
 
-            if (Input.GetKeyDown(KeyCode.F3))
+            if (Input.GetKeyDown(KeyCode.F2))
             {
                 QualitySettings.vSyncCount = 0;
             }
-            if (Input.GetKeyDown(KeyCode.F4))
+            if (Input.GetKeyDown(KeyCode.F3))
             {
                 QualitySettings.vSyncCount = 1;
             }
-            
+
+            if (Input.GetKeyDown(KeyCode.F4))
+            {
+                var player = ReInput.players.GetPlayer(0);
+                
+                // Disable all Rule Sets
+                foreach(var ruleSet in player.controllers.maps.layoutManager.ruleSets) {
+                    ruleSet.enabled = false;
+                }
+                player.controllers.maps.layoutManager.ruleSets.Find(item => item.tag == "default").enabled = true;
+                player.controllers.maps.layoutManager.Apply();
+            }
             if (Input.GetKeyDown(KeyCode.F5))
             {
-                Application.targetFrameRate = 0;
-            }
-            if (Input.GetKeyDown(KeyCode.F6))
-            {
-                Application.targetFrameRate = 60;
+                var player = ReInput.players.GetPlayer(0);
+                
+                // Disable all Rule Sets
+                foreach(var ruleSet in player.controllers.maps.layoutManager.ruleSets) {
+                    ruleSet.enabled = false;
+                }
+
+                player.controllers.maps.layoutManager.ruleSets.Find(item => item.tag == "keyboard").enabled = true;
+                player.controllers.maps.layoutManager.Apply();
             }
         }
 

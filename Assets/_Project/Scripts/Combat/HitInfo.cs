@@ -1,6 +1,7 @@
 using HnSF.Combat;
 using NaughtyAttributes;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace rwby
 {
@@ -39,7 +40,7 @@ namespace rwby
         public float groundBounceForcePercentage = 1.0f;
         public float wallBounceForcePercentage = 1.0f;
         public bool hitKills;
-        [EnumFlags] public StateGroupType hitStateGroups = StateGroupType.AERIAL | StateGroupType.GROUND;
+        [FormerlySerializedAs("hitStateGroups")] [EnumFlags] public StateGroundedGroupType hitStateGroundedGroups = StateGroundedGroupType.AERIAL | StateGroundedGroupType.GROUND;
         
         // FORCES
         public HitboxForceType hitForceType = HitboxForceType.SET;

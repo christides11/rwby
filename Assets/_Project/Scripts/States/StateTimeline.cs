@@ -23,7 +23,8 @@ namespace rwby
         [SelectImplementation(typeof(StateConditionBase))] [SerializeField, SerializeReference]
         public StateConditionBase conditon = new StateConditionBoolean();
         
-        [SerializeField] [EnumFlags] public StateGroupType stateGroup;
+        [SerializeField] public StateGroundedGroupType stateGroundedGroup;
+        [SerializeField] public StateType stateType;
         public bool autoIncrement;
         public bool autoLoop;
         public int loopFrame = 1;
@@ -36,5 +37,11 @@ namespace rwby
         [AllowNesting]
         [EnableIf("useParent")]
         public StateTimeline parentTimeline;
+        
+        // Attack state
+        [EnableIf("IsAttackStateType")]
+        public int maxUsesInString = -1;
+
+        private bool IsAttackStateType => stateType == StateType.ATTACK;
     }
 }

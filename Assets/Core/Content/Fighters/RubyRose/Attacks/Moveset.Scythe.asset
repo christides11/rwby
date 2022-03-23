@@ -72,7 +72,7 @@ MonoBehaviour:
     stateTimeline: {fileID: 11400000, guid: 5465a2b65d321494a93e6d9fb2f81d34, type: 2}
   - state:
       id: 19
-    stateTimeline: {fileID: 11400000, guid: 5465a2b65d321494a93e6d9fb2f81d34, type: 2}
+    stateTimeline: {fileID: 11400000, guid: 128977e494886c241805c356a66b8972, type: 2}
   - state:
       id: 20
     stateTimeline: {fileID: 11400000, guid: 5465a2b65d321494a93e6d9fb2f81d34, type: 2}
@@ -88,6 +88,9 @@ MonoBehaviour:
   - state:
       id: 24
     stateTimeline: {fileID: 11400000, guid: 378594cf8c0e23a4e83c35bc3775e3d9, type: 2}
+  - state:
+      id: 25
+    stateTimeline: {fileID: 11400000, guid: 2404a745aeeae044285500217e5f3caa, type: 2}
   fighterStats: {fileID: 11400000, guid: 9db018607e1c48c498ee3d8a7c4cefc3, type: 2}
   references:
     version: 1
@@ -191,3 +194,7 @@ MonoBehaviour:
       type: {class: RubyRoseStateReference, ns: rwby.core, asm: rwby.core}
       data:
         state: 54
+    00000019:
+      type: {class: FighterCmnStateReference, ns: rwby, asm: rwby.csharp}
+      data:
+        state: 22
