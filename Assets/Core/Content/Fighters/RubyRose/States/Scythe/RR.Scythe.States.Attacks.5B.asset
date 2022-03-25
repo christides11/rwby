@@ -462,10 +462,12 @@ MonoBehaviour:
   references:
     version: 1
     00000000:
-      type: {class: StateConditionBoolean, ns: HnSF, asm: HnSF}
+      type: {class: HitCountCondition, ns: rwby.state.conditions, asm: rwby.csharp}
       data:
         inverse: 0
-        value: 1
+        definitionIndex: 0
+        minHits: 1
+        maxHits: 100
 --- !u!114 &-3650393745537609187
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -652,17 +654,10 @@ MonoBehaviour:
   loopFrame: 1
   hitboxInfo:
   - ID: 0
-    hitSoundbankName: 
-    hitSoundName: 
-    shakeValue: 0
-    effectbankName: 
-    effectName: 
-    blockSoundbankName: 
-    blockSoundName: 
     groundHitState: 30
     groundCounterHitState: 30
-    aerialHitState: 0
-    aerialCounterHitState: 0
+    aerialHitState: 34
+    aerialCounterHitState: 34
     groundBounces: 0
     wallBounces: 0
     counterHitGroundBounces: 0
@@ -680,7 +675,7 @@ MonoBehaviour:
     groundBlockForce: {x: 0, y: 0, z: 0}
     groundHitGravity: -1
     groundCounterHitGravity: -1
-    aerialHitForce: {x: 0, y: 0, z: 0}
+    aerialHitForce: {x: 0, y: 1, z: 1}
     aerialCounterHitForce: {x: 0, y: 0, z: 0}
     aerialBlockForce: {x: 0, y: 0, z: 0}
     aerialHitGravity: -1
@@ -1305,7 +1300,7 @@ MonoBehaviour:
       data:
         inverse: 0
         sequence:
-          executeWindow: 0
+          executeWindow: 1
           executeInputs:
           - inputType: 0
             buttonID: 3

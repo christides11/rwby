@@ -17,6 +17,8 @@ namespace rwby
         [SerializeField] private ModLoader modLoader;
         public ContentManager contentManager;
         [SerializeField] private ControlMapper cMapper;
+        public LocalPlayerManager localPlayerManager;
+        public ControllerAssignmentMenu controllerAssignmentMenu;
 
         public Settings settings;
         public string localUsername;
@@ -28,6 +30,7 @@ namespace rwby
             singleton = this;
             await modLoader.Initialize();
             contentManager.Initialize();
+            localPlayerManager.Initialize();
         }
 
         private void Update()
@@ -61,7 +64,8 @@ namespace rwby
                 foreach(var ruleSet in player.controllers.maps.layoutManager.ruleSets) {
                     ruleSet.enabled = false;
                 }
-                player.controllers.maps.layoutManager.ruleSets.Find(item => item.tag == "default").enabled = true;
+                player.controllers.maps.layoutManager.ruleSets.Find(item => item.tag == "k&m_default").enabled = true;
+                player.controllers.maps.layoutManager.ruleSets.Find(item => item.tag == "js_default").enabled = true;
                 player.controllers.maps.layoutManager.Apply();
             }
             if (Input.GetKeyDown(KeyCode.F5))
@@ -73,7 +77,8 @@ namespace rwby
                     ruleSet.enabled = false;
                 }
 
-                player.controllers.maps.layoutManager.ruleSets.Find(item => item.tag == "keyboard").enabled = true;
+                player.controllers.maps.layoutManager.ruleSets.Find(item => item.tag == "k&m_keyboard").enabled = true;
+                player.controllers.maps.layoutManager.ruleSets.Find(item => item.tag == "js_default").enabled = true;
                 player.controllers.maps.layoutManager.Apply();
             }
         }

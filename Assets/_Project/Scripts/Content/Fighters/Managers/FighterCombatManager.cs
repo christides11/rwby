@@ -292,7 +292,6 @@ namespace rwby
                 }
             }
             
-            //int indexOfHurtboxGroup = currentState.HurtboxInfo[hurtInfo.hurtboxHit];
             //hurtboxHitCount.Set(hurtInfo.hurtboxHit, hurtboxHitCount[hurtInfo.hurtboxHit] + 1);
             
             manager.FPhysicsManager.SetRotation((hurtInfo.forward * -1).normalized);

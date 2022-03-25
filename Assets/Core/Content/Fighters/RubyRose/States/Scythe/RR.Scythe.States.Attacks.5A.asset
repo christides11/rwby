@@ -92,6 +92,98 @@ MonoBehaviour:
     m_DisplayName: BoxAsset
   m_Markers:
     m_Objects: []
+--- !u!114 &-8238962638705833962
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7198380dd4878784589bfc4171d4ee44, type: 3}
+  m_Name: Transition.JumpSquat
+  m_EditorClassIdentifier: 
+  m_Version: 3
+  m_AnimClip: {fileID: 0}
+  m_Locked: 0
+  m_Muted: 0
+  m_CustomPlayableFullTypename: 
+  m_Curves: {fileID: 0}
+  m_Parent: {fileID: 11400000}
+  m_Children: []
+  m_Clips:
+  - m_Version: 1
+    m_Start: 0.13333333333333333
+    m_ClipIn: 0
+    m_Asset: {fileID: 3324123422597900889}
+    m_Duration: 0.35000000000000003
+    m_TimeScale: 1
+    m_ParentTrack: {fileID: -8238962638705833962}
+    m_EaseInDuration: 0
+    m_EaseOutDuration: 0
+    m_BlendInDuration: 0
+    m_BlendOutDuration: 0
+    m_MixInCurve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 1
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    m_MixOutCurve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 1
+        value: 0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    m_BlendInCurveMode: 0
+    m_BlendOutCurveMode: 0
+    m_ExposedParameterNames: []
+    m_AnimationCurves: {fileID: 0}
+    m_Recordable: 0
+    m_PostExtrapolationMode: 0
+    m_PreExtrapolationMode: 0
+    m_PostExtrapolationTime: 0
+    m_PreExtrapolationTime: 0
+    m_DisplayName: ChangeStateAsset
+  m_Markers:
+    m_Objects: []
 --- !u!114 &-8109744409089960768
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -172,10 +264,10 @@ MonoBehaviour:
   m_Children: []
   m_Clips:
   - m_Version: 1
-    m_Start: 0.2
+    m_Start: 0.13333333333333333
     m_ClipIn: 0
     m_Asset: {fileID: -5059832730015822120}
-    m_Duration: 0.2833333333333333
+    m_Duration: 0.35000000000000003
     m_TimeScale: 1
     m_ParentTrack: {fileID: -7857940207345645794}
     m_EaseInDuration: 0
@@ -370,10 +462,12 @@ MonoBehaviour:
   references:
     version: 1
     00000000:
-      type: {class: StateConditionBoolean, ns: HnSF, asm: HnSF}
+      type: {class: HitCountCondition, ns: rwby.state.conditions, asm: rwby.csharp}
       data:
         inverse: 0
-        value: 1
+        definitionIndex: 0
+        minHits: 1
+        maxHits: 100
 --- !u!114 &-3650393745537609187
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -614,6 +708,7 @@ MonoBehaviour:
   - {fileID: 531449439648919330}
   - {fileID: -8614305696140676619}
   - {fileID: 2007742646974908601}
+  - {fileID: -8238962638705833962}
   - {fileID: -7857940207345645794}
   - {fileID: -3559726473286664763}
   - {fileID: 1572716845202077906}
@@ -633,17 +728,10 @@ MonoBehaviour:
   loopFrame: 1
   hitboxInfo:
   - ID: 0
-    hitSoundbankName: 
-    hitSoundName: 
-    shakeValue: 0
-    effectbankName: 
-    effectName: 
-    blockSoundbankName: 
-    blockSoundName: 
     groundHitState: 30
     groundCounterHitState: 30
-    aerialHitState: 32
-    aerialCounterHitState: 32
+    aerialHitState: 34
+    aerialCounterHitState: 34
     groundBounces: 0
     wallBounces: 0
     counterHitGroundBounces: 0
@@ -656,12 +744,12 @@ MonoBehaviour:
     hitForceRelation: 0
     autolink: 0
     autolinkPercentage: 1
-    groundHitForce: {x: 0, y: 0, z: 5}
+    groundHitForce: {x: 0, y: 0, z: 7}
     groundCounterHitForce: {x: 0, y: 0, z: 0}
     groundBlockForce: {x: 0, y: 0, z: 0}
     groundHitGravity: -1
     groundCounterHitGravity: -1
-    aerialHitForce: {x: 0, y: 0, z: 0}
+    aerialHitForce: {x: 0, y: 2, z: 2}
     aerialCounterHitForce: {x: 0, y: 0, z: 0}
     aerialBlockForce: {x: 0, y: 0, z: 0}
     aerialHitGravity: -1
@@ -1287,6 +1375,49 @@ MonoBehaviour:
     m_DisplayName: BoxAsset
   m_Markers:
     m_Objects: []
+--- !u!114 &3324123422597900889
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8b5d830cce3dc7640bc3cdd3c93d4e42, type: 3}
+  m_Name: ChangeStateAsset(Clone)(Clone)
+  m_EditorClassIdentifier: 
+  template:
+    conditon:
+      id: 0
+    checkStateCondition: 0
+    state:
+      id: 1
+  references:
+    version: 1
+    00000000:
+      type: {class: StateConditionAND, ns: HnSF, asm: HnSF}
+      data:
+        inverse: 0
+        conditions:
+        - id: 2
+        - id: 3
+    00000001:
+      type: {class: FighterCmnStateReference, ns: rwby, asm: rwby.csharp}
+      data:
+        state: 6
+    00000002:
+      type: {class: HitCountCondition, ns: rwby.state.conditions, asm: rwby.csharp}
+      data:
+        inverse: 0
+        definitionIndex: 0
+        minHits: 1
+        maxHits: 100
+    00000003:
+      type: {class: ExternalCondition, ns: rwby.state.conditions, asm: rwby.csharp}
+      data:
+        inverse: 0
+        stateCondition: {fileID: 11400000, guid: a70850c3777f65b4388260958ee5bc2b, type: 2}
 --- !u!114 &8705009051714213207
 MonoBehaviour:
   m_ObjectHideFlags: 1

@@ -25,6 +25,11 @@ namespace rwby
         public virtual void Reset()
         {
             hitObjects.Clear();
+            for (int i = 0; i < hitboxGroupHitCounts.Length; i++)
+            {
+                hitboxGroupHitCounts.Set(i, 0);
+                hitboxGroupBlockedCounts.Set(i, 0);
+            }
         }
 
         public virtual bool IsHitHurtboxValid(CustomHitbox atackerHitbox, Hurtbox h)
@@ -57,6 +62,9 @@ namespace rwby
             return true;
         }
 
+        
+        [Networked, Capacity(10)] public NetworkArray<int> hitboxGroupHitCounts { get; }
+        [Networked, Capacity(10)] public NetworkArray<int> hitboxGroupBlockedCounts { get; }
         public virtual void DoHit(CustomHitbox hitbox, Hurtbox enemyHurtbox, HurtInfo hurtInfo)
         {
             hitObjects.Add(new IDGroupCollisionInfo()
@@ -73,6 +81,7 @@ namespace rwby
             switch (reaction.reaction)
             {
                 case HitReactionType.HIT:
+                    hitboxGroupHitCounts.Set(hitbox.definitionIndex, hitboxGroupHitCounts[hitbox.definitionIndex] + 1);
                     combatManager.SetHitStop(hi.attackerHitstop);
                     /*
                     if (string.IsNullOrEmpty(hi.effectbankName) == false)
@@ -93,6 +102,7 @@ namespace rwby
                     }*/
                     break;
                 case HitReactionType.BLOCKED:
+                    hitboxGroupBlockedCounts.Set(hitbox.definitionIndex, hitboxGroupBlockedCounts[hitbox.definitionIndex] + 1);
                     combatManager.SetHitStop(hi.attackerHitstop);
                     /*BaseEffect bb = manager.EffectbankContainer.CreateEffect(enemyHurtbox.transform.position,
                             transform.rotation * Quaternion.Euler(0, 180, 0), "global", "shieldhit1");

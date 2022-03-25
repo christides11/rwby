@@ -8,26 +8,6 @@ namespace rwby
     [System.Serializable]
     public class HitInfo : HnSF.Combat.HitInfoBase
     {
-        /*
-        public int holdVelocityTime;
-        public float opponentFriction;
-        public float opponentGravity;
-        public int hangTime;*/
-
-        public string hitSoundbankName;
-        public string hitSoundName;
-
-        // Shake
-        public float shakeValue;
-
-        // Effect
-        public string effectbankName;
-        public string effectName;
-
-        //
-        public string blockSoundbankName;
-        public string blockSoundName;
-
         // GENERAL
         public FighterCmnStates groundHitState;
         public FighterCmnStates groundCounterHitState;
