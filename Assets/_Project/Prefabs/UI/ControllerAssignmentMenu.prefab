@@ -1425,7 +1425,7 @@ GameObject:
   - component: {fileID: 2027381790}
   - component: {fileID: 2027381789}
   m_Layer: 5
-  m_Name: Unassigned Controller Grid
+  m_Name: System Controller Grid
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1909,10 +1909,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   localPlayerManager: {fileID: 0}
   globalControllerGrid: {fileID: 2027381789}
-  p1ControllerGrid: {fileID: 8620333098131139364}
-  p2ControllerGrid: {fileID: 723569376}
-  p3ControllerGrid: {fileID: 1286939253}
-  p4ControllerGrid: {fileID: 982410379}
+  playerControllerGrids:
+  - {fileID: 8620333098131139364}
+  - {fileID: 723569376}
+  - {fileID: 1286939253}
+  - {fileID: 982410379}
   controllerPrefab: {fileID: 465601340488897654, guid: cd67d0edfeb603c4c81cebab315e4187, type: 3}
 --- !u!1 &7880829636977850948
 GameObject:

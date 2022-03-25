@@ -7,6 +7,6 @@ namespace rwby
     {
         public PlayerControllerType controllerType;
         public Rewired.Player rewiredPlayer;
-        public GameObject camera;
+        public Camera camera;
     }
 }

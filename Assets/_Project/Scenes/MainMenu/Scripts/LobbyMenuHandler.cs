@@ -9,8 +9,10 @@ using System;
 
 namespace rwby.menus
 {
-    public class LobbyMenu : MonoBehaviour
+    public class LobbyMenuHandler : MonoBehaviour
     {
+        public List<LobbyMenuInstance> menuInstances = new List<LobbyMenuInstance>();
+        
         [SerializeField] private TextMeshProUGUI lobbyName;
         [SerializeField] private Transform lobbyPlayerList;
         [SerializeField] private Transform localPlayerList;
@@ -41,6 +43,30 @@ namespace rwby.menus
             UpdateLobbyInfo();
 
             gameObject.SetActive(true);
+            
+            GameManager.singleton.controllerAssignmentMenu.OpenMenu();
+            GameManager.singleton.controllerAssignmentMenu.OnControllersAssigned += OnControllersAssigned;
+        }
+
+        private void OnControllersAssigned(ControllerAssignmentMenu menu)
+        {
+            GameManager.singleton.controllerAssignmentMenu.CloseMenu();
+            WhenPlayerCountChanged(GameManager.singleton.localPlayerManager, GameManager.singleton.localPlayerManager.localPlayers.Count);
+        }
+        
+        [SerializeField] private Camera lobbyPlayerCameraPrefab;
+        private void WhenPlayerCountChanged(LocalPlayerManager localplayermanager, int currentplaycount)
+        {
+            for (int i = 0; i < currentplaycount; i++)
+            {
+                if (localplayermanager.localPlayers[i].camera != null) return;
+                var temp = localplayermanager.localPlayers[i];
+                temp.camera = Instantiate(lobbyPlayerCameraPrefab, Vector3.zero, Quaternion.identity);
+                localplayermanager.localPlayers[i] = temp;
+            }
+            
+            localplayermanager.ApplyCameraLayout();
+            localplayermanager.systemPlayer.camera.enabled = false;
         }
 
         public void Close()

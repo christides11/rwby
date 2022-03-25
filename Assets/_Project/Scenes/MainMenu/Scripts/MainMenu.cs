@@ -1,10 +1,10 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using Fusion;
 using Cysharp.Threading.Tasks;
+using Rewired;
+using Rewired.Integration.UnityUI;
+using UnityEngine.EventSystems;
 
 namespace rwby.menus
 {
@@ -13,37 +13,43 @@ namespace rwby.menus
         [SerializeField] private HostLobbyMenu hostLobbyMenu;
         [SerializeField] private FindLobbyMenu findLobbyMenu;
 
+        public LobbyMenuHandler lobbyMenuHandler;
+        public GameObject defaultSelectedUIItem;
+
+        public GameObject joinLobbyInputMenu;
         [SerializeField] private TMP_InputField lobbyNameText;
-        [SerializeField] private TMP_InputField usernameField;
-
-        public LobbyMenu lobbyMenu;
-
+        
+        private Rewired.Player systemPlayer;
+        private EventSystem eventSystem;
         public void Start()
         {
-            usernameField.onValueChanged.AddListener(OnUsernameChanged);
-            usernameField.text = $"User {UnityEngine.Random.Range(0, 1000)}";
+            systemPlayer = ReInput.players.GetSystemPlayer();
         }
-
+        
         private void OnEnable()
         {
             if(LobbyManager.singleton)
             {
-                lobbyMenu.Open();
+                lobbyMenuHandler.Open();
+                return;
             }
+            eventSystem = EventSystem.current;
+            eventSystem.SetSelectedGameObject(defaultSelectedUIItem);
         }
 
         private void Update()
         {
             if (LobbyManager.singleton)
             {
-                lobbyMenu.Open();
+                lobbyMenuHandler.Open();
                 gameObject.SetActive(false);
             }
-        }
 
-        private void OnUsernameChanged(string arg0)
-        {
-            GameManager.singleton.localUsername = arg0;
+            if (eventSystem.currentSelectedGameObject == null
+                && systemPlayer.GetAxis2D(rwby.Action.UIMovement_X, rwby.Action.UIMovement_Y).sqrMagnitude > 0)
+            {
+                eventSystem.SetSelectedGameObject(joinLobbyInputMenu.activeSelf ? lobbyNameText.gameObject : defaultSelectedUIItem);
+            }
         }
 
         public void ButtonHostLobby()
@@ -70,7 +76,7 @@ namespace rwby.menus
             {
                 await UniTask.WaitForFixedUpdate();
             }
-            lobbyMenu.Open();
+            lobbyMenuHandler.Open();
         }
 
         public void ButtonFindLobby()
@@ -81,7 +87,14 @@ namespace rwby.menus
 
         public void ButtonJoinLobby()
         {
+            joinLobbyInputMenu.SetActive(true);
+            eventSystem.SetSelectedGameObject(lobbyNameText.gameObject);
+        }
+
+        public void TryJoinLobby()
+        {
             NetworkManager.singleton.JoinHost(lobbyNameText.text);
+            joinLobbyInputMenu.SetActive(false);
         }
     }
 }

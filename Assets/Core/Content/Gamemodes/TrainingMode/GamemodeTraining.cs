@@ -91,7 +91,7 @@ namespace rwby.core.training
             settingsMenu.Open();
         }
 
-        public override void AddGamemodeSettings(LobbyMenu lobbyManager)
+        public override void AddGamemodeSettings(LobbyMenuHandler lobbyManager)
         {
             GameObject gamemodeOb = GameObject.Instantiate(lobbyManager.gamemodeOptionsContentPrefab, lobbyManager.gamemodeOptionsList, false);
             TextMeshProUGUI[] textMeshes = gamemodeOb.GetComponentsInChildren<TextMeshProUGUI>();

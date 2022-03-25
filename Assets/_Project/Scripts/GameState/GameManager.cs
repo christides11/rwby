@@ -31,6 +31,7 @@ namespace rwby
             await modLoader.Initialize();
             contentManager.Initialize();
             localPlayerManager.Initialize();
+            localUsername = "User " + Random.Range(0, 1000);
         }
 
         private void Update()

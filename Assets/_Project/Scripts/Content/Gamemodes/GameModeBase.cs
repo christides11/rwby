@@ -55,7 +55,7 @@ namespace rwby
             }
         }
 
-        public virtual void AddGamemodeSettings(menus.LobbyMenu lobbyManager)
+        public virtual void AddGamemodeSettings(menus.LobbyMenuHandler lobbyManager)
         {
 
         }

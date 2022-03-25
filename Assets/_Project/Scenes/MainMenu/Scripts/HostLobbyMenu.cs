@@ -10,7 +10,7 @@ namespace rwby.menus
     {
         [SerializeField] private MainMenu mainMenu;
         [SerializeField] private LoadingMenu loadingMenu;
-        [SerializeField] private LobbyMenu LobbyMenu;
+        [SerializeField] private LobbyMenuHandler lobbyMenuHandler;
 
         public TMP_InputField lobbyNameTextMesh;
         public TMP_Dropdown playerCountDropdown;
@@ -47,7 +47,7 @@ namespace rwby.menus
             NetworkManager.singleton.FusionLauncher.OnStartHosting -= OnHostingSuccess;
             loadingMenu.CloseMenu();
             ExitMenu();
-            LobbyMenu.Open();
+            lobbyMenuHandler.Open();
             //LobbyManager.singleton.maxPlayersPerClient = maxPlayersPerClientDropdown.value + 1;
         }
 

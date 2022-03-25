@@ -19,7 +19,7 @@ namespace rwby.menus
 
         [Header("Menus")]
         [SerializeField] private MainMenu mainMenu;
-        [SerializeField] private LobbyMenu lobbyMenu;
+        [SerializeField] private LobbyMenuHandler lobbyMenuHandler;
 
         private CancellationTokenSource refreshLobbiesCancelToken = new CancellationTokenSource();
         private SessionInfo currentlyViewingLobby = null;
@@ -103,7 +103,7 @@ namespace rwby.menus
 
             if (status == FusionLauncher.ConnectionStatus.Disconnected || status == FusionLauncher.ConnectionStatus.Failed) return;
 
-            lobbyMenu.Open();
+            lobbyMenuHandler.Open();
             CloseMenu();
         }
     }

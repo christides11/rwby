@@ -5,7 +5,6 @@ namespace rwby
 {
     public class ControllerAssignmentElement : MonoBehaviour
     {
-        public ControllerType controllerType;
-        public int controllerID;
+        public Joystick joystick;
     }
 }
