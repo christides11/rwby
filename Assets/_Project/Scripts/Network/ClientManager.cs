@@ -371,7 +371,6 @@ namespace rwby
 		public void OnConnectRequest(NetworkRunner runner, NetworkRunnerCallbackArgs.ConnectRequest request, byte[] token) { }
 		public void OnConnectFailed(NetworkRunner runner, NetAddress remoteAddress, NetConnectFailedReason reason) { }
 		public void OnUserSimulationMessage(NetworkRunner runner, SimulationMessagePtr message) { }
-		//public void OnObjectWordsChanged(NetworkRunner runner, NetworkObject networkedObject, HashSet<int> changedWords, NetworkObjectMemoryPtr oldMemory) { }
 		public void OnSessionListUpdated(NetworkRunner runner, List<SessionInfo> sessionList) { }
 		public void OnSceneLoadDone(NetworkRunner runner) { }
         public void OnSceneLoadStart(NetworkRunner runner) { }

@@ -93,10 +93,12 @@ namespace rwby.core.training
 
         public override void AddGamemodeSettings(LobbyMenuHandler lobbyManager)
         {
+            //TODO
+            /*
             GameObject gamemodeOb = GameObject.Instantiate(lobbyManager.gamemodeOptionsContentPrefab, lobbyManager.gamemodeOptionsList, false);
             TextMeshProUGUI[] textMeshes = gamemodeOb.GetComponentsInChildren<TextMeshProUGUI>();
             textMeshes[0].text = mapReference.ToString();
-            gamemodeOb.GetComponentInChildren<PlayerPointerEventTrigger>().OnPointerClickEvent.AddListener((d) => { _ = OpenMapSelection(); });
+            gamemodeOb.GetComponentInChildren<PlayerPointerEventTrigger>().OnPointerClickEvent.AddListener((d) => { _ = OpenMapSelection(); });*/
         }
 
         private async UniTask OpenMapSelection()
