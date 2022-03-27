@@ -19,10 +19,10 @@ namespace rwby
 
 		// Client players.
 		[Networked(OnChanged = nameof(OnClientPlayersChanged)), Capacity(4)] public NetworkLinkedList<ClientPlayerDefinition> ClientPlayers { get; }
-		public Rewired.Player[] rewiredPlayers = new Rewired.Player[4];
 		public PlayerCamera[] playerCameras = new PlayerCamera[4];
 
 		protected NetworkManager networkManager;
+		private GameManager gameManager;
 
 		// Input
 		[Networked] public NetworkClientInputData latestConfirmedInput { get; set; }
@@ -33,6 +33,13 @@ namespace rwby
 		// ?
 		[Networked] public float mapLoadPercent { get; set; }
 
+		protected virtual void Awake()
+		{
+			gameManager = GameManager.singleton;
+			networkManager = NetworkManager.singleton;
+			DontDestroyOnLoad(gameObject);
+		}
+		
 		private static void OnClientPlayersChanged(Changed<ClientManager> changed)
 		{
 			changed.Behaviour.CheckClientPlayers();
@@ -62,12 +69,6 @@ namespace rwby
 			}
         }
 
-		protected virtual void Awake()
-		{
-			networkManager = NetworkManager.singleton;
-			DontDestroyOnLoad(gameObject);
-		}
-
 		public override void Spawned()
 		{
 			clientManagers.Add(this);
@@ -75,19 +76,16 @@ namespace rwby
 			{
 				Runner.AddCallbacks(this);
 				local = this;
-				GameModeBase.OnGamemodeStateChanged += OnGamemodeStateChanged;
+				GameManager.singleton.localPlayerManager.OnPlayerCountChanged += WhenPlayerCountChanged;
 			}
 		}
 
-        private void OnGamemodeStateChanged(GameModeBase gamemode)
-        {
-			if(gamemode.GamemodeState != GameModeState.NONE)
-            {
-				PlayerPointerHandler.singleton.HideMice();
-            }
-        }
+		private void WhenPlayerCountChanged(LocalPlayerManager localplayermanager, int previousplayercount, int currentplaycount)
+		{
+			RPC_SetPlayerCount(currentplaycount);
+		}
 
-        public override void Despawned(NetworkRunner runner, bool hasState)
+		public override void Despawned(NetworkRunner runner, bool hasState)
 		{
 			clientManagers.Remove(this);
 		}
@@ -101,34 +99,59 @@ namespace rwby
             }
 		}
 
-		public int GetPlayerIndex(Rewired.Player localPlayer)
+		public void CLIENT_SetPlayerCharacterCount(int playerIndex, int characterCount)
 		{
-			return Array.IndexOf(rewiredPlayers, localPlayer);
+			RPC_SetPlayerCharacterCount(playerIndex, characterCount);
 		}
-
-		public void AddPlayer(Rewired.Player localPlayer)
+		
+		public void CLIENT_SetPlayerCharacter(int playerIndex, ModObjectReference characterReference)
         {
-			if (rewiredPlayers.Contains(localPlayer)) return;
-			rewiredPlayers[ClientPlayers.Count] = localPlayer;
-			RPC_AddPlayer(localPlayer.id);
+			RPC_SetPlayerCharacter(playerIndex, characterReference);
+		}
+		
+		public void CLIENT_SetPlayerTeam(int playerIndex, byte team)
+		{
+			RPC_SetPlayerTeam(playerIndex, team);
 		}
 
 		[Rpc(RpcSources.InputAuthority | RpcSources.StateAuthority, RpcTargets.StateAuthority)]
-		private void RPC_AddPlayer(int localPlayer)
-        {
-			var list = ClientPlayers;
-			list.Add(new ClientPlayerDefinition());
-		}
-
-		public void SetPlayerCharacter(Rewired.Player localPlayer, ModObjectReference characterReference)
+		private void RPC_SetPlayerCount(int playerCount)
 		{
-			if (!rewiredPlayers.Contains(localPlayer)) return;
-			SetPlayerCharacter(Array.IndexOf(rewiredPlayers, localPlayer), characterReference);
-		}
+			if (playerCount < 0 || playerCount > LobbyManager.singleton.Settings.maxPlayersPerClient || playerCount == ClientPlayers.Count) return;
 
-		public void SetPlayerCharacter(int playerIndex, ModObjectReference characterReference)
-        {
-			RPC_SetPlayerCharacter(playerIndex, characterReference);
+			var list = ClientPlayers;
+			if (list.Count < playerCount)
+			{
+				while (list.Count < playerCount)
+				{
+					list.Add(new ClientPlayerDefinition());
+				}
+			}
+			else
+			{
+				while (list.Count > playerCount)
+				{
+					list.Remove(list.Get(list.Count-1));
+				}
+			}
+		}
+		
+		[Rpc(RpcSources.InputAuthority | RpcSources.StateAuthority, RpcTargets.StateAuthority)]
+		private void RPC_SetPlayerCharacterCount(int playerIndex, int characterCount)
+		{
+			LobbyManager lobbyManager = LobbyManager.singleton;
+			if (characterCount < 0 || characterCount >
+			    lobbyManager.GetTeamDefinition(ClientPlayers[playerIndex].team).maxCharactersPerPlayer) return;
+
+			var list = ClientPlayers[playerIndex].characterReferences;
+			if (list.Count < characterCount)
+			{
+				while(list.Count < characterCount) list.Add(new ModObjectReference());
+			}
+			else
+			{
+				while (list.Count > characterCount) list.Remove(list.Get(list.Count-1));
+			}
 		}
 
 		[Rpc(RpcSources.InputAuthority | RpcSources.StateAuthority, RpcTargets.StateAuthority)]
@@ -139,11 +162,6 @@ namespace rwby
 			temp.characterReference = characterReference;
 			tempList[playerIndex] = temp;
 		}
-
-		public void SetPlayerTeam(int playerIndex, byte team)
-        {
-			RPC_SetPlayerTeam(playerIndex, team);
-        }
 
 		[Rpc(RpcSources.InputAuthority | RpcSources.StateAuthority, RpcTargets.StateAuthority)]
 		private void RPC_SetPlayerTeam(int playerIndex, byte team)
@@ -195,6 +213,7 @@ namespace rwby
 		bool[] buttonExtra4 = new bool[4];
 		public void BeforeUpdate()
 		{
+			/*
 			if (Object.HasInputAuthority == false) return;
 
 			for (int j = 0; j < ClientPlayers.Count; j++)
@@ -234,11 +253,12 @@ namespace rwby
 				if (rewiredPlayers[j].GetButton(Action.Extra2)) buttonExtra2[j] = true;
 				if (rewiredPlayers[j].GetButton(Action.Extra3)) buttonExtra3[j] = true;
 				if (rewiredPlayers[j].GetButton(Action.Extra4)) buttonExtra4[j] = true;
-			}
+			}*/
 		}
 
 		public void AfterUpdate()
 		{
+			/*
 			ClearInput(ref buttonJump);
 			ClearInput(ref buttonA);
 			ClearInput(ref buttonB);
@@ -253,7 +273,7 @@ namespace rwby
 			ClearInput(ref buttonExtra1);
 			ClearInput(ref buttonExtra2);
 			ClearInput(ref buttonExtra3);
-			ClearInput(ref buttonExtra4);
+			ClearInput(ref buttonExtra4);*/
 		}
 
 		private void ClearInput(ref bool[] inputList)

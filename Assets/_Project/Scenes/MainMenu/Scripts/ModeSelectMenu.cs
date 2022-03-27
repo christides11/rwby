@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using TMPro;
 using Fusion;
@@ -8,7 +9,7 @@ using UnityEngine.EventSystems;
 
 namespace rwby.menus
 {
-    public class MainMenu : MonoBehaviour
+    public class ModeSelectMenu : MonoBehaviour
     {
         [SerializeField] private HostLobbyMenu hostLobbyMenu;
         [SerializeField] private FindLobbyMenu findLobbyMenu;
@@ -21,20 +22,31 @@ namespace rwby.menus
         
         private Rewired.Player systemPlayer;
         private EventSystem eventSystem;
-        public void Start()
-        {
-            systemPlayer = ReInput.players.GetSystemPlayer();
-        }
+        private LocalPlayerManager localPlayerManager;
+
+        [Header("Menus")] public OnlineMenu onlineMenu;
         
-        private void OnEnable()
+        private void Start()
+        {
+            localPlayerManager = GameManager.singleton.localPlayerManager;
+            Open();
+        }
+
+        public void Open()
         {
             if(LobbyManager.singleton)
             {
                 lobbyMenuHandler.Open();
                 return;
             }
+            systemPlayer = ReInput.players.GetSystemPlayer();
             eventSystem = EventSystem.current;
-            eventSystem.SetSelectedGameObject(defaultSelectedUIItem);
+            gameObject.SetActive(true);
+        }
+
+        public void Close()
+        {
+            gameObject.SetActive(false);
         }
 
         private void Update()
@@ -45,13 +57,42 @@ namespace rwby.menus
                 gameObject.SetActive(false);
             }
 
+            
             if (eventSystem.currentSelectedGameObject == null
+                && localPlayerManager.systemPlayer.controllerType == PlayerControllerType.GAMEPAD
                 && systemPlayer.GetAxis2D(rwby.Action.UIMovement_X, rwby.Action.UIMovement_Y).sqrMagnitude > 0)
             {
                 eventSystem.SetSelectedGameObject(joinLobbyInputMenu.activeSelf ? lobbyNameText.gameObject : defaultSelectedUIItem);
             }
         }
 
+        public void BUTTON_Online()
+        {
+            onlineMenu.Open();
+            Close();
+        }
+
+        public void BUTTON_Local()
+        {
+            Close();
+        }
+
+        public void BUTTON_Modding()
+        {
+            Close();
+        }
+        
+        public void BUTTON_Options()
+        {
+            Close();
+        }
+
+        public void BUTTON_Exit()
+        {
+            Application.Quit();
+        }
+        
+        /*
         public void ButtonHostLobby()
         {
             hostLobbyMenu.OpenMenu();
@@ -95,6 +136,6 @@ namespace rwby.menus
         {
             NetworkManager.singleton.JoinHost(lobbyNameText.text);
             joinLobbyInputMenu.SetActive(false);
-        }
+        }*/
     }
 }

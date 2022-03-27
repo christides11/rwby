@@ -15,6 +15,8 @@ namespace rwby
 
         public static GameModeBase singleton;
 
+        public IGameModeDefinition definition;
+        
         [Networked(OnChanged = nameof(GamemodeStateChanged))] public GameModeState GamemodeState { get; set; }
 
         public static void GamemodeStateChanged(Changed<GameModeBase> changed)

@@ -18,7 +18,7 @@ namespace rwby.menus
         [SerializeField] private GameObject lobbyContentItem;
 
         [Header("Menus")]
-        [SerializeField] private MainMenu mainMenu;
+        [SerializeField] private ModeSelectMenu modeSelectMenu;
         [SerializeField] private LobbyMenuHandler lobbyMenuHandler;
 
         private CancellationTokenSource refreshLobbiesCancelToken = new CancellationTokenSource();
@@ -47,7 +47,7 @@ namespace rwby.menus
         {
             if (Input.GetKeyDown(KeyCode.Escape))
             {
-                mainMenu.gameObject.SetActive(true);
+                modeSelectMenu.gameObject.SetActive(true);
                 CloseMenu();
             }
         }

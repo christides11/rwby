@@ -17,7 +17,8 @@ namespace rwby
 
         public void Initialize()
         {
-            systemPlayer = new LocalPlayerData() { rewiredPlayer = ReInput.players.GetSystemPlayer(), controllerType = PlayerControllerType.MOUSE_AND_KEYBOARD, camera = Camera.main };
+            systemPlayer = new LocalPlayerData() { rewiredPlayer = ReInput.players.GetSystemPlayer(), controllerType = PlayerControllerType.NONE, camera = Camera.main };
+            systemPlayer.rewiredPlayer.controllers.AddLastActiveControllerChangedDelegate(WhenSystemPlayerActiveControllerChanged);
             CollectJoysticks();
             AddPlayer();
         }
@@ -118,6 +119,22 @@ namespace rwby
                     ? PlayerControllerType.MOUSE_AND_KEYBOARD
                     : PlayerControllerType.GAMEPAD;
             localPlayers[player.id] = temp;
+        }
+        
+        private void WhenSystemPlayerActiveControllerChanged(Player player, Controller controller)
+        {
+            if (controller == null)
+            {
+                systemPlayer.controllerType = PlayerControllerType.NONE;
+                return;
+            }
+
+            var temp = systemPlayer;
+            temp.controllerType =
+                (controller.type == ControllerType.Keyboard || controller.type == ControllerType.Mouse)
+                    ? PlayerControllerType.MOUSE_AND_KEYBOARD
+                    : PlayerControllerType.GAMEPAD;
+            systemPlayer = temp;
         }
     }
 }

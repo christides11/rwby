@@ -12,9 +12,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9bbf0bbe28e92c24f986f355c96289b1, type: 3}
   m_Name: core.gamemode.training.definition
   m_EditorClassIdentifier: 
+  nameIdentifier: 
   minimumTeams: 0
   maximumTeams: 0
-  teams: []
+  teams:
+  - color: {r: 1, g: 1, b: 1, a: 0}
+    minimumPlayers: 1
+    maximumPlayers: 100
+    maxCharactersPerPlayer: 1
   gamemodeName: Training
   description: 
   gamemodeReference:

@@ -5,7 +5,9 @@ using Rewired.Integration.UnityUI;
 using rwby.menus;
 using UnityEngine;
 using TMPro;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
+using UnityEngine.UI.Extensions;
 
 namespace rwby
 {
@@ -23,7 +25,8 @@ namespace rwby
         [SerializeField] public Transform gamemodeOptionsList;
         [SerializeField] public GameObject gamemodeOptionsContentPrefab;
         
-        [SerializeField] private Button startMatchButton;
+        public Button startMatchButton;
+        public DropDownList teamSelectDropdown;
         
         [Header("Player List")]
         public GameObject lobbyPlayerTeamItem;
@@ -39,24 +42,30 @@ namespace rwby
         
         public void Cleanup()
         {
-            
+            startMatchButton.GetComponent<EventTrigger>().RemoveAllListeners();
         }
-        
+
         public void FillGamemodeOptions(LobbyMenuHandler handler)
         {
             foreach(Transform child in gamemodeOptionsList)
             {
                 Destroy(child.gameObject);
             }
+            teamSelectDropdown.ResetItems();
 
             GameObject gamemodeOb = GameObject.Instantiate(gamemodeOptionsContentPrefab, gamemodeOptionsList, false);
             TextMeshProUGUI[] textMeshes = gamemodeOb.GetComponentsInChildren<TextMeshProUGUI>();
             textMeshes[0].text = LobbyManager.singleton.Settings.gamemodeReference.ToString();
-            PlayerPointerEventTrigger ppet = gamemodeOb.GetComponentInChildren<PlayerPointerEventTrigger>();
-            //ppet.OnPointerClickEvent.AddListener((d) => { _ = OpenGamemodeSelection(); });
+            gamemodeOb.GetComponent<EventTrigger>().AddOnSubmitListeners(async (a) => { await OpenGamemodeSelection(); });
             
             if (LobbyManager.singleton.CurrentGameMode == null) return;
             LobbyManager.singleton.CurrentGameMode.AddGamemodeSettings(handler);
+
+            var gamemode = LobbyManager.singleton.CurrentGameMode;
+            for (int i = 0; i < LobbyManager.singleton.Settings.teams; i++)
+            {
+                teamSelectDropdown.AddItem(new DropDownListItem(){ Caption = gamemode.definition.teams[i].teamName, ID = $"{i}" });
+            }
         }
         
         Dictionary<byte, Transform> teamContainers = new Dictionary<byte, Transform>();
@@ -120,31 +129,23 @@ namespace rwby
                 GameObject playerItem = GameObject.Instantiate(playerCharacterListItem, playerCharacterList.transform, false);
                 TextMeshProUGUI[] textMeshes = playerItem.GetComponentsInChildren<TextMeshProUGUI>();
                 textMeshes[0].text = ClientManager.local.ClientPlayers[i].characterReference.ToString();
-                playerItem.GetComponentInChildren<PlayerPointerEventTrigger>().OnPointerClickEvent.AddListener((d) => { OpenCharacterSelection(); });
-
-                if (ClientManager.local.ClientPlayers[i].team == 0)
-                {
-                    playerItem.GetComponentsInChildren<TextMeshProUGUI>()[1].text = "No Team";
-                }
-                else
-                {
-                    playerItem.GetComponentsInChildren<TextMeshProUGUI>()[1].text = $"Team {ClientManager.local.ClientPlayers[i].team}";
-                }
-
-                playerItem.GetComponentsInChildren<PlayerPointerEventTrigger>()[1].OnPointerClickEvent.AddListener((a) => { ChangePlayerTeam(a); });
+                playerItem.GetComponent<EventTrigger>().AddOnSubmitListeners((d) => { OpenCharacterSelection(); });
             }
 
             if (ClientManager.local.ClientPlayers.Count == 4) return;
 
             GameObject playerAddItem = GameObject.Instantiate(playerCharacterAddItem, playerCharacterList.transform, false);
-            PlayerPointerEventTrigger ppet = playerAddItem.GetComponentInChildren<PlayerPointerEventTrigger>();
-            ppet.OnPointerClickEvent.AddListener((d) => { ClientManager.local.AddPlayer(ReInput.players.GetPlayer(d.playerId)); });
+            playerAddItem.GetComponent<EventTrigger>().AddOnSubmitListeners((d) => { AddPlayerCharacter(); });
+        }
+
+        private void AddPlayerCharacter()
+        {
+            //ClientManager.local.CLIENT_SetPlayerCharacterCount(playerID, ClientManager.local.ClientPlayers[playerID].characterReferences.Count + 1);
         }
 
         private void ChangePlayerTeam(PlayerPointerEventData a)
         {
-            int localPlayer = ClientManager.local.GetPlayerIndex(ReInput.players.GetPlayer(a.playerId));
-            byte currentTeam = ClientManager.local.ClientPlayers[localPlayer].team;
+            byte currentTeam = ClientManager.local.ClientPlayers[playerID].team;
 
             currentTeam++;
             if(currentTeam > LobbyManager.singleton.Settings.teams)
@@ -152,7 +153,7 @@ namespace rwby
                 currentTeam = 0;
             }
 
-            ClientManager.local.SetPlayerTeam(localPlayer, currentTeam);
+            ClientManager.local.CLIENT_SetPlayerTeam(playerID, currentTeam);
         }
         
         private void OpenCharacterSelection()
@@ -162,18 +163,18 @@ namespace rwby
 
         private void OnCharacterSelection(PlayerPointerEventData a, ModObjectReference b)
         {
-            ContentSelect.singleton.CloseMenu();
-            ClientManager.local.SetPlayerCharacter(ReInput.players.GetPlayer(a.playerId), b);
+            //ContentSelect.singleton.CloseMenu();
+            ClientManager.local.CLIENT_SetPlayerCharacter(playerID, b);
         }
 
         private async UniTask OpenGamemodeSelection()
         {
-            await ContentSelect.singleton.OpenMenu<IGameModeDefinition>((a, b) => { OnGamemodeSelection(b); });
+            //await ContentSelect.singleton.OpenMenu<IGameModeDefinition>((a, b) => { OnGamemodeSelection(b); });
         }
 
         private async void OnGamemodeSelection(ModObjectReference gamemodeReference)
         {
-            ContentSelect.singleton.CloseMenu();
+            //ContentSelect.singleton.CloseMenu();
             await LobbyManager.singleton.TrySetGamemode(gamemodeReference);
         }
     }

@@ -88,7 +88,7 @@ GameObject:
   - component: {fileID: 419082564}
   - component: {fileID: 419082563}
   m_Layer: 0
-  m_Name: Canvas
+  m_Name: PrefabCanvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -222,6 +222,7 @@ MonoBehaviour:
   contentBrowserLarge: {fileID: 262840179}
   contentBrowserLarge_Content: {fileID: 4455894208418231755, guid: 9cc41daeb1123634198bd97b8e7d8e25, type: 3}
   canvas: {fileID: 419082561}
+  prefabCanvas: {fileID: 419082561}
 --- !u!1 &1942085334220340589
 GameObject:
   m_ObjectHideFlags: 0
@@ -2456,6 +2457,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxLocalPlayers: 4
+  systemPlayer:
+    controllerType: 0
+    camera: {fileID: 0}
   localPlayers: []
   playerCameraLayouts:
   - cameraLayouts:

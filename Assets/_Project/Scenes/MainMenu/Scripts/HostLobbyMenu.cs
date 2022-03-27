@@ -8,7 +8,7 @@ namespace rwby.menus
 {
     public class HostLobbyMenu : MonoBehaviour
     {
-        [SerializeField] private MainMenu mainMenu;
+        [SerializeField] private ModeSelectMenu modeSelectMenu;
         [SerializeField] private LoadingMenu loadingMenu;
         [SerializeField] private LobbyMenuHandler lobbyMenuHandler;
 
@@ -29,7 +29,7 @@ namespace rwby.menus
         public void Button_Back()
         {
             ExitMenu();
-            mainMenu.gameObject.SetActive(true);
+            modeSelectMenu.gameObject.SetActive(true);
         }
 
         public void Button_HostLobby()

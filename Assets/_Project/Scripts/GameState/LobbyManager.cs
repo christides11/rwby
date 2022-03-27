@@ -22,16 +22,11 @@ namespace rwby
         public ClientContentLoaderService clientContentLoaderService;
         public ClientMapLoaderService clientMapLoaderService;
 
-        [Networked] public int maxPlayersPerClient { get; set; } = 4;
-
         [Networked(OnChanged = nameof(OnSettingsChanged))]
         public LobbySettings Settings { get; set; }
 
         [Networked(OnChanged = nameof(OnCurrentGameModeChanged))]
         public GameModeBase CurrentGameMode { get; set; }
-
-        [Networked] private NetworkRNG MainRNGGenerator { get; set; }
-
         [Networked, Capacity(4)] public NetworkLinkedList<CustomSceneRef> currentLoadedScenes { get; }
 
         public GameManager gameManager;
@@ -57,7 +52,7 @@ namespace rwby
 
         public override void Spawned()
         {
-            Settings = new LobbySettings();
+            Settings = new LobbySettings(){ maxPlayersPerClient = 4, teams = 1 };
             currentLoadedScenes.Add(new CustomSceneRef() { source = 0, modIdentifier = 0, sceneIndex = 0 });
             Runner.SetActiveScene(1);
         }
@@ -174,8 +169,6 @@ namespace rwby
 
         private bool VerifyTeams(IGameModeDefinition gamemodeDefiniton)
         {
-            if (Settings.teams == 0) return true;
-
             int[] teamCount = new int[Settings.teams];
 
             for (int i = 0; i < ClientManager.clientManagers.Count; i++)
@@ -195,6 +188,13 @@ namespace rwby
             }
 
             return true;
+        }
+
+        public TeamDefinition GetTeamDefinition(int team)
+        {
+            if (CurrentGameMode == null) return new TeamDefinition();
+            if (team < 0 || team >= Settings.teams) return new TeamDefinition();
+            return CurrentGameMode.definition.teams[team];
         }
 
         public void CleanupStrayReferences()
@@ -233,14 +233,6 @@ namespace rwby
             
             foreach(var contentReference in contentToUnload) 
                 contentManager.UnloadContentDefinition(contentReference.Item1, contentReference.Item2);
-        }
-
-        public int GetIntRangeInclusive(int min, int max)
-        {
-            NetworkRNG tempRNG = MainRNGGenerator;
-            int value = tempRNG.RangeInclusive(min, max);
-            MainRNGGenerator = tempRNG;
-            return value;
         }
     }
 }

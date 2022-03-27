@@ -22,6 +22,8 @@ namespace rwby
         [SerializeField] GameObject contentBrowserLarge;
         [SerializeField] GameObject contentBrowserLarge_Content;
         [SerializeField] GameObject canvas;
+        
+        public GameObject prefabCanvas;
 
         public void Awake()
         {

@@ -1278,11 +1278,11 @@ MonoBehaviour:
   m_Script: {fileID: -1552182283, guid: e725a070cec140c4caffb81624c8c787, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  AoiMode: 0
-  DefaultPropertyGroups: []
+  ObjectInterest: 0
+  DefaultInterestGroups: []
   DestroyWhenStateAuthorityLeaves: 0
   AllowStateAuthorityOverride: 0
-  AoiPosition: {fileID: 0}
+  AoiPositionSource: {fileID: 0}
   Flags: 2305
   NetworkGuid:
     RawGuidValue: a1c7258cbad69f8468a6d27aeb82ca76
@@ -1305,15 +1305,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _interpolationDataSource: 0
+  definition: {fileID: 11400000, guid: 6d98f37477091d440b654f77346f0c24, type: 2}
   _GamemodeState: 0
-  botReference:
-    modIdentifier: core
-    objectIdentifier: rubyrose
-  botInputManager: {fileID: 0}
   mapReference:
-    modIdentifier: 
-    objectIdentifier: 
+    modIdentifier:
+      Item1: 0
+      Item2: 0
+    objectIdentifier: 0
   settingsMenu: {fileID: 6921723952494433063}
+  flickerA: 0
 --- !u!114 &8481148300307289351
 MonoBehaviour:
   m_ObjectHideFlags: 0
