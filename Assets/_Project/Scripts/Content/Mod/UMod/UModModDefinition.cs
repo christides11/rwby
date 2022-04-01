@@ -18,7 +18,9 @@ namespace rwby
         public string Description { get { return description; } }
         public string ModStringID { get { return modIdentifier; } }
         public Dictionary<Type, IContentParser> ContentParsers { get { return contentParserDictionary; } }
-
+        [field: SerializeField] public ModCompatibilityLevel CompatibilityLevel { get; } = ModCompatibilityLevel.EveryoneMustHaveModIfSelected;
+        [field: SerializeField] public ModVersionStrictness VersionStrictness { get; } = ModVersionStrictness.NeedSameVersion;
+        
         [SerializeField] private byte modSource;
         [SerializeField] private uint modID;
         [SerializeField] private string modIdentifier;

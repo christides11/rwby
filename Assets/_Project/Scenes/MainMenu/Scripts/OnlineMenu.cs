@@ -10,21 +10,9 @@ namespace rwby.menus
 {
     public class OnlineMenu : MonoBehaviour
     {
+        [Header("Menus")] 
         public ModeSelectMenu modeSelectMenu;
-
-        [Header("Buttons")] 
-        public Button buttonFindLobby;
-        public Button buttonHostLobby;
-        public Button buttonQuickJoin;
-        public Button buttonBack;
-
-        private void Start()
-        {
-            buttonFindLobby.GetComponent<EventTrigger>().AddOnSubmitListeners((a) => { BUTTON_FindLobby(); });
-            buttonHostLobby.GetComponent<EventTrigger>().AddOnSubmitListeners((a) => { BUTTON_HostLobby(); });
-            buttonQuickJoin.GetComponent<EventTrigger>().AddOnSubmitListeners((a) => { BUTTON_QuickJoin(); });
-            buttonBack.GetComponent<EventTrigger>().AddOnSubmitListeners((a) => { BUTTON_Back(); });
-        }
+        public FindLobbyMenu findLobbyMenu;
 
         public void Open()
         {
@@ -33,26 +21,26 @@ namespace rwby.menus
 
         public void Close()
         {
-            modeSelectMenu.Open();
             gameObject.SetActive(false);
         }
 
-        void BUTTON_FindLobby()
+        public void BUTTON_FindLobby()
         {
-            
+            //findLobbyMenu.OpenMenu();
+            Close();
         }
 
-        void BUTTON_HostLobby()
+        public void BUTTON_HostLobby()
         {
-            
+            Close();
         }
 
-        void BUTTON_QuickJoin()
+        public void BUTTON_QuickJoin()
         {
-            
+            Close();
         }
         
-        void BUTTON_Back()
+        public void BUTTON_Back()
         {
             modeSelectMenu.Open();
             Close();

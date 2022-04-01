@@ -11,20 +11,18 @@ namespace rwby.menus
 {
     public class ModeSelectMenu : MonoBehaviour
     {
-        [SerializeField] private HostLobbyMenu hostLobbyMenu;
-        [SerializeField] private FindLobbyMenu findLobbyMenu;
-
         public LobbyMenuHandler lobbyMenuHandler;
         public GameObject defaultSelectedUIItem;
 
-        public GameObject joinLobbyInputMenu;
-        [SerializeField] private TMP_InputField lobbyNameText;
-        
         private Rewired.Player systemPlayer;
         private EventSystem eventSystem;
         private LocalPlayerManager localPlayerManager;
 
-        [Header("Menus")] public OnlineMenu onlineMenu;
+        [Header("Menus")] 
+        public LocalMenu localMenu;
+        public OnlineMenu onlineMenu;
+        //[SerializeField] private HostLobbyMenu hostLobbyMenu;
+        //[SerializeField] private FindLobbyMenu findLobbyMenu;
         
         private void Start()
         {
@@ -46,6 +44,7 @@ namespace rwby.menus
 
         public void Close()
         {
+            EventSystem.current.SetSelectedGameObject(null);
             gameObject.SetActive(false);
         }
 
@@ -62,7 +61,7 @@ namespace rwby.menus
                 && localPlayerManager.systemPlayer.controllerType == PlayerControllerType.GAMEPAD
                 && systemPlayer.GetAxis2D(rwby.Action.UIMovement_X, rwby.Action.UIMovement_Y).sqrMagnitude > 0)
             {
-                eventSystem.SetSelectedGameObject(joinLobbyInputMenu.activeSelf ? lobbyNameText.gameObject : defaultSelectedUIItem);
+                eventSystem.SetSelectedGameObject(defaultSelectedUIItem);
             }
         }
 
@@ -74,6 +73,7 @@ namespace rwby.menus
 
         public void BUTTON_Local()
         {
+            localMenu.Open();
             Close();
         }
 

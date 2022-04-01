@@ -53,7 +53,7 @@ namespace rwby
 			if (!_runner)
 				_runner = gameObject.AddComponent<NetworkRunner>();
 			_runner.AddCallbacks(this);
-
+			
 			await _runner.JoinSessionLobby(SessionLobby.ClientServer);
 		}
 
@@ -62,8 +62,21 @@ namespace rwby
 			_playerPrefab = playerPrefab;
 			_connectionCallback = OnConnectionStatusUpdate;
 			InitSingletions(false);
+			
+			var customProps = new Dictionary<string, SessionProperty>();
+			customProps["name"] = roomName;
+			customProps["map"] = "";
+			customProps["gamemode"] = "";
 
-			StartGameResult result = await _runner.StartGame(new StartGameArgs() { GameMode = GameMode.Server, SessionName = roomName, ObjectPool = _pool, SceneObjectProvider = networkSceneManagerBase, PlayerCount = playerCount });
+			StartGameResult result = await _runner.StartGame(new StartGameArgs()
+			{
+				GameMode = GameMode.Server, 
+				SessionProperties = customProps,
+				SessionName = roomName, 
+				ObjectPool = _pool, 
+				SceneObjectProvider = networkSceneManagerBase, 
+				PlayerCount = playerCount
+			});
 			if(result.Ok == false)
             {
 				Debug.LogError(result.ShutdownReason);
@@ -80,10 +93,16 @@ namespace rwby
 			_connectionCallback = OnConnectionStatusUpdate;
 			InitSingletions(true);
 
+			var customProps = new Dictionary<string, SessionProperty>();
+			customProps["name"] = roomName;
+			customProps["map"] = "";
+			customProps["gamemode"] = "";
+			customProps["modhash"] = "";
+			
 			StartGameResult result = await _runner.StartGame(new StartGameArgs()
 			{
 				GameMode = local ? GameMode.Single : GameMode.Host,
-				SessionName = roomName,
+				SessionProperties = customProps,
 				ObjectPool = _pool,
 				SceneObjectProvider = networkSceneManagerBase,
 				PlayerCount = playerCount
@@ -92,9 +111,7 @@ namespace rwby
 			{
 				Debug.LogError(result.ShutdownReason);
 				OnHostingFailed?.Invoke();
-				return result;
 			}
-
 			return result;
 		}
 
@@ -114,7 +131,8 @@ namespace rwby
 				GameMode = GameMode.Client, 
 				SessionName = sessionName, 
 				ObjectPool = _pool,
-				SceneObjectProvider = networkSceneManagerBase
+				SceneObjectProvider = networkSceneManagerBase,
+				DisableClientSessionCreation = true
 			});
 			if (_status == ConnectionStatus.Failed)
 			{
@@ -135,16 +153,8 @@ namespace rwby
 				_pool = gameObject.AddComponent<FusionObjectPoolRoot>();
 		}
 
-		public void OnInput(NetworkRunner runner, NetworkInput input)
-		{
-
-		}
-
-		public void OnInputMissing(NetworkRunner runner, PlayerRef player, NetworkInput input)
-		{
-
-		}
-
+		public void OnInput(NetworkRunner runner, NetworkInput input){}
+		public void OnInputMissing(NetworkRunner runner, PlayerRef player, NetworkInput input){}
 		public void OnConnectRequest(NetworkRunner runner, NetworkRunnerCallbackArgs.ConnectRequest request, byte[] token)
 		{
 			Debug.Log("Client requested connection.");
@@ -196,9 +206,7 @@ namespace rwby
 			HostOnPlayerLeave?.Invoke(runner, player);
 		}
 
-		public void OnUserSimulationMessage(NetworkRunner runner, SimulationMessagePtr message)
-		{
-		}
+		public void OnUserSimulationMessage(NetworkRunner runner, SimulationMessagePtr message) {}
 		
 		public void OnShutdown(NetworkRunner runner)
 		{
@@ -216,26 +224,14 @@ namespace rwby
 			OnSessionsUpdated?.Invoke(runner, sessionList);
 		}
 
-		public void OnSceneLoadDone(NetworkRunner runner)
-		{
+		public void OnSceneLoadDone(NetworkRunner runner){}
 
-		}
+		public void OnSceneLoadStart(NetworkRunner runner){}
 
-		public void OnSceneLoadStart(NetworkRunner runner)
-		{
-
-		}
-
-		public void OnCustomAuthenticationResponse(NetworkRunner runner, Dictionary<string, object> data)
-		{
-
-		}
+		public void OnCustomAuthenticationResponse(NetworkRunner runner, Dictionary<string, object> data){}
 
 		public void OnHostMigration(NetworkRunner runner, HostMigrationToken hostMigrationToken) { }
 
-		public void OnReliableDataReceived(NetworkRunner runner, PlayerRef player, ArraySegment<byte> data)
-		{
-
-		}
+		public void OnReliableDataReceived(NetworkRunner runner, PlayerRef player, ArraySegment<byte> data){}
 	}
 }

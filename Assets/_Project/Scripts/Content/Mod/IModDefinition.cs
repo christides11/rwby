@@ -10,5 +10,7 @@ namespace rwby
         string ModStringID { get; }
         string Description { get; }
         public Dictionary<Type, IContentParser> ContentParsers { get; }
+        public ModCompatibilityLevel CompatibilityLevel { get; }
+        public ModVersionStrictness VersionStrictness { get; }
     }
 }

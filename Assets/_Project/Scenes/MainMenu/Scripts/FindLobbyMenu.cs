@@ -12,18 +12,17 @@ namespace rwby.menus
 {
     public class FindLobbyMenu : MonoBehaviour
     {
-        [SerializeField] private TextMeshProUGUI lobbyNameTextMesh;
-        [SerializeField] private LoadingMenu loadingMenu;
+        //[SerializeField] private LoadingMenu loadingMenu;
         [SerializeField] private Transform LobbyContentHolder;
-        [SerializeField] private GameObject lobbyContentItem;
+        [SerializeField] private FindLobbyMenuContent lobbyContentItem;
 
-        [Header("Menus")]
-        [SerializeField] private ModeSelectMenu modeSelectMenu;
+        [Header("Menus")] 
+        [SerializeField] private OnlineMenu onlineMenu;
         [SerializeField] private LobbyMenuHandler lobbyMenuHandler;
 
         private CancellationTokenSource refreshLobbiesCancelToken = new CancellationTokenSource();
         private SessionInfo currentlyViewingLobby = null;
-
+        
         public void OpenMenu()
         {
             NetworkManager.singleton.FusionLauncher.OnSessionsUpdated += OnSessionsUpdated;
@@ -47,7 +46,7 @@ namespace rwby.menus
         {
             if (Input.GetKeyDown(KeyCode.Escape))
             {
-                modeSelectMenu.gameObject.SetActive(true);
+                onlineMenu.Open();
                 CloseMenu();
             }
         }
@@ -64,17 +63,18 @@ namespace rwby.menus
             for(int i = 0; i < sessionList.Count; i++)
             {
                 SessionInfo session = sessionList[i];
-                GameObject lci = GameObject.Instantiate(lobbyContentItem, LobbyContentHolder, false);
-                lci.GetComponentInChildren<TextMeshProUGUI>().text = session.Name;
-
-                lci.GetComponent<EventTrigger>().AddOnSubmitListeners((data) => { SetViewingLobby(session); });
+                FindLobbyMenuContent lci = GameObject.Instantiate(lobbyContentItem, LobbyContentHolder, false);
+                lci.serverName.text = session.Name;
+                lci.players.text = $"{session.PlayerCount}/{session.MaxPlayers}";
+                lci.ping.text = "0";
+                lci.selectable.onSubmit.AddListener(() => { SetViewingLobby(session); });
+                //lci.GetComponentInChildren<TextMeshProUGUI>().text = session.Name;
             }
         }
 
         private void SetViewingLobby(SessionInfo session)
         {
             currentlyViewingLobby = session;
-            lobbyNameTextMesh.text = session.Name;
         }
 
         protected void ClearLobbyScrollView()
@@ -89,7 +89,7 @@ namespace rwby.menus
         {
             if (currentlyViewingLobby == null) return;
 
-            loadingMenu.OpenMenu("Attempting to connect...");
+            //loadingMenu.OpenMenu("Attempting to connect...");
 
             NetworkManager.singleton.FusionLauncher.OnConnectionStatusChanged += CheckConnectionStatus;
             NetworkManager.singleton.JoinHost(currentlyViewingLobby);
@@ -98,7 +98,7 @@ namespace rwby.menus
         private void CheckConnectionStatus(NetworkRunner runner, FusionLauncher.ConnectionStatus status)
         {
             if (status == FusionLauncher.ConnectionStatus.Connecting) return;
-            loadingMenu.CloseMenu();
+            //loadingMenu.CloseMenu();
             NetworkManager.singleton.FusionLauncher.OnConnectionStatusChanged -= CheckConnectionStatus;
 
             if (status == FusionLauncher.ConnectionStatus.Disconnected || status == FusionLauncher.ConnectionStatus.Failed) return;
