@@ -9,19 +9,25 @@ namespace rwby.menus
 {
     public class LoadingMenu : MonoBehaviour
     {
-        [SerializeField] private TextMeshProUGUI loadingTextMesh;
+        public Dictionary<int, GameObject> loadingMenus = new Dictionary<int, GameObject>();
 
+        public GameObject instancePrefab;
 
-        public void OpenMenu(string loadingText)
+        public bool OpenMenu(int player, string loadingText)
         {
-            loadingTextMesh.text = loadingText;
-            gameObject.SetActive(true);
+            if (loadingMenus.ContainsKey(player)) return false;
+            loadingMenus.Add(player, GameObject.Instantiate(instancePrefab, transform, false));
+            loadingMenus[player].GetComponentInChildren<TextMeshProUGUI>().text = loadingText;
+            loadingMenus[player].SetActive(true);
+            return true;
         }
 
-        public void CloseMenu()
+        public bool CloseMenu(int player)
         {
-            gameObject.SetActive(false);
-            loadingTextMesh.text = "";
+            if (loadingMenus.ContainsKey(player) == false) return false;
+            Destroy(loadingMenus[player]);
+            loadingMenus.Remove(player);
+            return true;
         }
     }
 }

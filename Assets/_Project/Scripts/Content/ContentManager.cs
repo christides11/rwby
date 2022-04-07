@@ -155,6 +155,7 @@ namespace rwby
         #region Unloading
         public void UnloadAllContent<T>() where T : IContentDefinition
         {
+            // TODO untrackitem modifies currentlyloadedcontent, need to do this differently.
             foreach (var a in currentlyLoadedContent)
             {
                 foreach (var b in a.Value)

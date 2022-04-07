@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using HnSF.Input;
 using Rewired;
+using rwby.menus;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -19,6 +20,7 @@ namespace rwby
         [SerializeField] private ControlMapper cMapper;
         public LocalPlayerManager localPlayerManager;
         public ControllerAssignmentMenu controllerAssignmentMenu;
+        public LoadingMenu loadingMenu;
 
         public Settings settings;
         public string localUsername;

@@ -80,6 +80,11 @@ namespace rwby
             }
         }
 
+        public int GetPlayerCount()
+        {
+            return localPlayers.Count;
+        }
+
         public void CollectJoysticks()
         {
             foreach (var controller in ReInput.controllers.GetControllers(ControllerType.Joystick))
@@ -104,6 +109,27 @@ namespace rwby
         public void GiveController(int playerID, ControllerType type, int id)
         {
             localPlayers[playerID].rewiredPlayer.controllers.AddController(type, id, true);
+        }
+
+        public void CollectMouseKeyboard()
+        {
+            foreach (var p in localPlayers)
+            {
+                p.rewiredPlayer.controllers.hasKeyboard = false;
+                p.rewiredPlayer.controllers.hasMouse = false;
+            }
+
+            systemPlayer.rewiredPlayer.controllers.hasKeyboard = true;
+            systemPlayer.rewiredPlayer.controllers.hasMouse = true;
+        }
+
+        public void GiveMouseKeyboard(int playerID)
+        {
+            CollectMouseKeyboard();
+            systemPlayer.rewiredPlayer.controllers.hasKeyboard = false;
+            systemPlayer.rewiredPlayer.controllers.hasMouse = false;
+            localPlayers[playerID].rewiredPlayer.controllers.hasKeyboard = true;
+            localPlayers[playerID].rewiredPlayer.controllers.hasMouse = true;
         }
         
         private void OnPlayerActiveControllerChanged(Player player, Controller controller)

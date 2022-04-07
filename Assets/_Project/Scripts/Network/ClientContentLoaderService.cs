@@ -62,7 +62,7 @@ namespace rwby
             return failedToLoadClients;
         }
 
-        [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
+        [Rpc(RpcSources.StateAuthority, RpcTargets.All, HostMode = RpcHostMode.SourceIsHostPlayer)]
         public void RPC_ClientTryLoad(int requestNumber, string typeName, ModObjectReference objectReference)
         {
             Type typeAsType = Type.GetType(typeName);

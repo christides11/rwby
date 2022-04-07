@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using Cysharp.Threading.Tasks;
@@ -11,14 +12,17 @@ namespace rwby.menus
         public LobbyMenuInstance instancePrefab;
         public Transform instanceParent;
 
-        private ClientManager.ClientAction storedAction;
-        
+        private void OnEnable()
+        {
+            instancePrefab.gameObject.SetActive(false);
+        }
+
         public void Open()
         {
-            storedAction = (a) => { UpdatePlayerInfo(); };
-            ClientManager.OnPlayersChanged += storedAction;
+            ClientManager.OnPlayersChanged += WhenClientPlayerChanged;
             LobbyManager.OnLobbySettingsChanged += UpdateLobbyInfo;
             LobbyManager.OnGamemodeSettingsChanged += UpdateLobbyInfo;
+            
             
             gameObject.SetActive(true);
             
@@ -36,7 +40,7 @@ namespace rwby.menus
             }
             menuInstances.Clear();
             
-            ClientManager.OnPlayersChanged -= storedAction;
+            ClientManager.OnPlayersChanged -= WhenClientPlayerChanged;
             LobbyManager.OnLobbySettingsChanged -= UpdateLobbyInfo;
             LobbyManager.OnGamemodeSettingsChanged -= UpdateLobbyInfo;
             gameObject.SetActive(false);
@@ -44,19 +48,22 @@ namespace rwby.menus
         
         private async UniTask StartMatch()
         {
-            ClientManager.OnPlayersChanged -= storedAction;
+            ClientManager.OnPlayersChanged -= WhenClientPlayerChanged;
             LobbyManager.OnLobbySettingsChanged -= UpdateLobbyInfo;
             LobbyManager.OnGamemodeSettingsChanged -= UpdateLobbyInfo;
             await LobbyManager.singleton.TryStartMatch();
+        }
+
+        public async void ExitLobby()
+        {
+            
         }
 
         LobbyMenuInstance InitializeMenuInstance(int playerID)
         {
             LobbyMenuInstance instance = GameObject.Instantiate(instancePrefab, instanceParent, false);
             instance.canvas.worldCamera = GameManager.singleton.localPlayerManager.localPlayers[playerID].camera;
-            instance.lobbyName.text = NetworkManager.singleton.FusionLauncher.NetworkRunner.SessionInfo.Name;
             instance.playerID = playerID;
-            instance.startMatchButton.GetComponent<EventTrigger>().AddOnSubmitListeners(async (a) => { await StartMatch(); } );
             instance.Initialize(this);
             instance.gameObject.SetActive(true);
             return instance;
@@ -65,12 +72,26 @@ namespace rwby.menus
         private void OnControllersAssigned(ControllerAssignmentMenu menu)
         {
             GameManager.singleton.controllerAssignmentMenu.CloseMenu();
-            WhenPlayerCountChanged(GameManager.singleton.localPlayerManager, GameManager.singleton.localPlayerManager.localPlayers.Count);
+            WhenLocalPlayerCountChanged(GameManager.singleton.localPlayerManager, GameManager.singleton.localPlayerManager.localPlayers.Count);
         }
         
         [SerializeField] private Camera lobbyPlayerCameraPrefab;
-        private void WhenPlayerCountChanged(LocalPlayerManager localplayermanager, int currentplaycount)
+        private void WhenLocalPlayerCountChanged(LocalPlayerManager localplayermanager, int currentplaycount)
         {
+            ClientManager.local.CLIENT_SetPlayerCount(currentplaycount);
+        }
+
+        private void WhenClientPlayerChanged(ClientManager manager)
+        {
+            LocalPlayerManager localplayermanager = GameManager.singleton.localPlayerManager;
+            int currentplaycount = localplayermanager.localPlayers.Count;
+
+            if (manager.ClientPlayers.Count != currentplaycount)
+            {
+                localplayermanager.SetPlayerCount(manager.ClientPlayers.Count);
+                currentplaycount = manager.ClientPlayers.Count;
+            }
+            
             while (menuInstances.Count > currentplaycount)
             {
                 int i = menuInstances.Count;
@@ -94,15 +115,15 @@ namespace rwby.menus
             localplayermanager.ApplyCameraLayout();
             localplayermanager.systemPlayer.camera.enabled = false;
             
-            UpdatePlayerInfo();
             UpdateLobbyInfo();
+            UpdatePlayerInfo();
         }
         
         private void UpdateLobbyInfo()
         {
             for (int i = 0; i < menuInstances.Count; i++)
             {
-                menuInstances[i].FillGamemodeOptions(this);
+                //menuInstances[i].FillGamemodeOptions(this);
             }
         }
 
@@ -110,8 +131,9 @@ namespace rwby.menus
         {
             for (int i = 0; i < menuInstances.Count; i++)
             {
-                menuInstances[i].FillLobbyPlayerList();
-                menuInstances[i].FillPlayerCharacterList();
+                menuInstances[i].ResetCharacterList();
+                //menuInstances[i].FillLobbyPlayerList();
+                //menuInstances[i].FillPlayerCharacterList();
             }
         }
     }

@@ -2,6 +2,7 @@ using Fusion;
 
 namespace rwby
 {
+    [System.Serializable]
     public struct CustomSceneRef : INetworkStruct
     {
         // 0 = internal

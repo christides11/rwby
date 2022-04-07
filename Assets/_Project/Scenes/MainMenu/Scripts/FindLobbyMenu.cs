@@ -12,7 +12,6 @@ namespace rwby.menus
 {
     public class FindLobbyMenu : MonoBehaviour
     {
-        //[SerializeField] private LoadingMenu loadingMenu;
         [SerializeField] private Transform LobbyContentHolder;
         [SerializeField] private FindLobbyMenuContent lobbyContentItem;
 
@@ -20,8 +19,13 @@ namespace rwby.menus
         [SerializeField] private OnlineMenu onlineMenu;
         [SerializeField] private LobbyMenuHandler lobbyMenuHandler;
 
+        [Header("UI")] 
+        public GameObject defaultSelectable;
+        public TextMeshProUGUI pageText;
+
         private CancellationTokenSource refreshLobbiesCancelToken = new CancellationTokenSource();
-        private SessionInfo currentlyViewingLobby = null;
+
+        private int page = 0;
         
         public void OpenMenu()
         {
@@ -65,16 +69,10 @@ namespace rwby.menus
                 SessionInfo session = sessionList[i];
                 FindLobbyMenuContent lci = GameObject.Instantiate(lobbyContentItem, LobbyContentHolder, false);
                 lci.serverName.text = session.Name;
-                lci.players.text = $"{session.PlayerCount}/{session.MaxPlayers}";
+                lci.players.text = "0/0";//$"{session.PlayerCount}/{session.MaxPlayers}";
                 lci.ping.text = "0";
-                lci.selectable.onSubmit.AddListener(() => { SetViewingLobby(session); });
-                //lci.GetComponentInChildren<TextMeshProUGUI>().text = session.Name;
+                lci.selectable.onSubmit.AddListener(() => { Button_JoinLobby(session); });
             }
-        }
-
-        private void SetViewingLobby(SessionInfo session)
-        {
-            currentlyViewingLobby = session;
         }
 
         protected void ClearLobbyScrollView()
@@ -84,15 +82,13 @@ namespace rwby.menus
                 Destroy(child.gameObject);
             }
         }
-
-        public void Button_JoinLobby()
+        
+        public void Button_JoinLobby(SessionInfo session)
         {
-            if (currentlyViewingLobby == null) return;
-
             //loadingMenu.OpenMenu("Attempting to connect...");
 
             NetworkManager.singleton.FusionLauncher.OnConnectionStatusChanged += CheckConnectionStatus;
-            NetworkManager.singleton.JoinHost(currentlyViewingLobby);
+            NetworkManager.singleton.JoinHost(session);
         }
 
         private void CheckConnectionStatus(NetworkRunner runner, FusionLauncher.ConnectionStatus status)

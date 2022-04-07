@@ -1690,7 +1690,7 @@ namespace Fusion.Editor {
             EditorGUI.LabelField(position, label);
           } else {
             var wrapper = _pool.Acquire(fieldInfo, attribute, property, SurrogateType);
-
+            
             {
               bool surrogateOutdated = false;
               var targetObjects = property.serializedObject.targetObjects;
@@ -1962,10 +1962,20 @@ namespace Fusion.Editor {
       public PropertyEntry Acquire(FieldInfo field, PropertyAttribute attribute, SerializedProperty property, Type type) {
         WasUsed = true;
 
+        bool hadNulls = false;
+
         var key = (type, property.propertyPath, property.serializedObject.targetObjects.Length);
         if (_used.TryGetValue(key, out var entry)) {
-          entry.TTL = MaxTTL;
-          return entry;
+          var countValid = entry.Wrappers.Count(x => x);
+          if (countValid != entry.Wrappers.Length) {
+            // something destroyed wrappers
+            Debug.Assert(countValid == 0);
+            _used.Remove(key);
+            hadNulls = true;
+          } else {
+            entry.TTL = MaxTTL;
+            return entry;
+          }
         }
 
         // acquire new entry
@@ -1976,6 +1986,13 @@ namespace Fusion.Editor {
         }
 
         for (int i = 0; i < wrappers.Length; ++i) {
+
+          // pop destroyed ones
+          while (pool.Count > 0 && !pool.Peek()) {
+            pool.Pop();
+            hadNulls = true;
+          }
+
           if (pool.Count > 0) {
             wrappers[i] = pool.Pop();
           } else {
@@ -2001,6 +2018,10 @@ namespace Fusion.Editor {
         };
 
         _used.Add(key, entry);
+
+        if (hadNulls) {
+          GUIUtility.ExitGUI();
+        }
 
         return entry;
       }
@@ -5090,7 +5111,7 @@ namespace Fusion.Editor {
 
     private static GUIStyle[] _fusionHeaderStyles;
 
-    internal static GUIStyle GetFusionHeaderBackStyle(int colorIndex) {
+    public static GUIStyle GetFusionHeaderBackStyle(int colorIndex) {
 
       if (_fusionHeaderStyles == null || _fusionHeaderStyles[0] == null) {
         string[] colorNames = Enum.GetNames(typeof(EditorHeaderBackColor));
@@ -5308,17 +5329,26 @@ namespace Fusion.Editor {
 
     static void DrawDocumentationSection() {
       DrawButtonAction(Icon.Documentation, "Fusion Introduction", "The Fusion Introduction web page.", callback: OpenURL(UrlFusionIntro));
+      DrawButtonAction(Icon.Documentation, "SDK and Release Notes", "Link to the latest Fusion version SDK.", callback: OpenURL(UrlFusionSDK));
       DrawButtonAction(Icon.Documentation, "API Reference", "The API library reference documentation.", callback: OpenURL(UrlFusionDocApi));
     }
 
     static void DrawSamplesSection() {
 
+      GUILayout.Label("Tutorials", headerLabelStyle);
+
+      DrawButtonAction(Icon.Samples, "Fusion 100 Tutorial", "Fusion Fundamentals", callback: OpenURL(UrlFusion100));
+      DrawButtonAction(Icon.Samples, "Fusion Application Loop", "Matchmaking, Room Creation, Scene Loading, and Shutdown", callback: OpenURL(UrlFusionLoop));
+
       GUILayout.Label("Samples", headerLabelStyle);
-      DrawButtonAction(Resources.Load<Texture2D>("FusionHubSampleIcons/tanknarok-logo"), "Fusion Tanknarok Demo", callback: OpenURL(UrlTanks));
+      //DrawButtonAction(Resources.Load<Texture2D>("FusionHubSampleIcons/tanknarok-logo"), "Fusion Tanknarok", callback: OpenURL(UrlTanks));
+      DrawButtonAction(Icon.Samples, "Tanknarok", "Vehicle Control, and Predicted Projectile Spawns", callback: OpenURL(UrlTanks));
+      DrawButtonAction(Icon.Samples, "Fusion Karts", "Advanced Player Rigidbody Prediction", callback: OpenURL(UrlKarts));
+      DrawButtonAction(Icon.Samples, "DragonHunters VR", "VR Movement, and Object Manipulation", callback: OpenURL(UrlDragonHuntersVR));
       GUILayout.Space(15);
 
-      DrawButtonAction(Icon.Samples, "Hello Fusion Demo", callback: OpenURL(UrlHelloFusion));
-      DrawButtonAction(Icon.Samples, "Hello Fusion VR Demo", callback: OpenURL(UrlHelloFusionVr));
+      //DrawButtonAction(Icon.Samples, "Hello Fusion Demo", callback: OpenURL(UrlHelloFusion));
+      //DrawButtonAction(Icon.Samples, "Hello Fusion VR Demo", callback: OpenURL(UrlHelloFusionVr));
     }
 
     static void DrawRealtimeReleaseSection() {
@@ -5413,7 +5443,7 @@ namespace Fusion.Editor {
     static void DrawFooter() {
       GUILayout.BeginHorizontal(FusionHubSkin.window);
       {
-        GUILayout.Label("\u00A9 2021, Exit Games GmbH. All rights reserved.");
+        GUILayout.Label("\u00A9 2022, Exit Games GmbH. All rights reserved.");
       }
       GUILayout.EndHorizontal();
     }
@@ -5441,7 +5471,7 @@ namespace Fusion.Editor {
       // Draw text separately (not part of button guiconent) to have control over the space between the icon and the text.
       var rect = EditorGUILayout.GetControlRect(false, height, width.HasValue ? GUILayout.Width(width.Value) : GUILayout.ExpandWidth(true));
       bool clicked = GUI.Button(rect, icon, renderStyle);
-      GUI.Label(new Rect(rect) { xMin = rect.xMin + icon.width + 20 }, description == null ? "<b>" + header +"</b>" : string.Format("<b>{0}</b>\n{1}", header, description));
+      GUI.Label(new Rect(rect) { xMin = rect.xMin + icon.width + 20 }, description == null ? "<b>" + header +"</b>" : string.Format("<b>{0}</b>\n{1}", header, "<color=#aaaaaa>" + description + "</color>"));
       if (clicked && callback != null) {
         callback.Invoke();
       }
@@ -5513,7 +5543,6 @@ namespace Fusion.Editor {
       FusionIcon,
     }
 
-
     static Section[] Sections = new Section[] {
         new Section("Welcome", "Welcome to Photon Fusion", DrawWelcomeSection, Icon.Setup),
         new Section("Fusion Setup", "Setup Photon Fusion", DrawSetupSection, Icon.PhotonCloud),
@@ -5526,12 +5555,18 @@ namespace Fusion.Editor {
 
     internal const string UrlFusionDocsOnline = "https://doc.photonengine.com/fusion/";
     internal const string UrlFusionIntro = "https://doc.photonengine.com/fusion/current/getting-started/fusion-intro";
+    internal const string UrlFusionSDK = "https://doc.photonengine.com/fusion/current/getting-started/sdk-download";
     internal const string UrlCloudDashboard = "https://id.photonengine.com/account/signin?email=";
     internal const string UrlDiscordGeneral = "https://discord.gg/qP6XVe3XWK";
     internal const string UrlDashboard = "https://dashboard.photonengine.com/";
+    internal const string UrlFusion100 = "https://doc.photonengine.com/fusion/current/fusion-100/overview";
+    internal const string UrlFusionLoop = "https://doc.photonengine.com/fusion/current/samples/fusion-application-loop";
     internal const string UrlHelloFusion = "https://doc.photonengine.com/fusion/current/hello-fusion/hello-fusion";
     internal const string UrlHelloFusionVr = "https://doc.photonengine.com/fusion/current/hello-fusion/hello-fusion-vr";
     internal const string UrlTanks = "https://doc.photonengine.com/fusion/current/samples/fusion-tanknarok";
+    internal const string UrlKarts = "https://doc.photonengine.com/fusion/current/samples/fusion-karts";
+    internal const string UrlDragonHuntersVR = "https://doc.photonengine.com/fusion/current/samples/fusion-dragonhunters-vr";
+    
     internal const string UrlFusionDocApi = "https://doc-api.photonengine.com/en/fusion/current/annotated.html";
 
     internal const string WINDOW_TITLE = "Photon Fusion Hub";
@@ -5639,7 +5674,7 @@ To acquire an App Id:
         
       };
       headerLabelStyle = new GUIStyle(textLabelStyle) {
-        fontSize = 16,
+        fontSize = 15,
       };
 
       releaseNotesStyle = new GUIStyle(textLabelStyle) {
@@ -8866,16 +8901,25 @@ namespace Fusion.Editor {
 #region Assets/Photon/Fusion/Scripts/Editor/Utilities/FusionEditorLog.cs
 
 namespace Fusion.Editor {
-  using System;
   using UnityEngine;
   using ConditionalAttribute = System.Diagnostics.ConditionalAttribute;
 
   public static class FusionEditorLog {
 
-    const string LogPrefix =    "[<color=#add8e6>Fusion/Editor</color>]";
-    const string ImportPrefix = "[<color=#add8e6>Fusion/Import</color>]";
-    const string ConfigPrefix = "[<color=#add8e6>Fusion/Config</color>]";
-    const string InspectorPrefix = "[<color=#add8e6>Fusion/Inspector</color>]";
+    static string LogPrefix;
+    static string ImportPrefix;
+    static string ConfigPrefix;
+    static string InspectorPrefix;
+
+    static FusionEditorLog() {
+      // Color duplicated from FusionUnityLogger - should use a direct reference when ASMDEFs exist
+      var c = UnityEditor.EditorGUIUtility.isProSkin ? new Color32(115, 172, 229, 255) : new Color32(20, 64, 120, 255);
+      var cs = string.Format("#{0:X6}", (c.r << 16) | (c.g << 8) | c.b);
+      LogPrefix       = $"[<color={cs}>Fusion/Editor</color>]";
+      ImportPrefix    = $"[<color={cs}>Fusion/Import</color>]";
+      ConfigPrefix    = $"[<color={cs}>Fusion/Config</color>]";
+      InspectorPrefix = $"[<color={cs}>Fusion/Inspector</color>]";
+    }
 
     [Conditional("FUSION_EDITOR_TRACE")]
     public static void Trace(string msg) {
@@ -9302,7 +9346,7 @@ namespace Fusion.Editor {
       if (candidates.Length == 0) {
         if (createIfMissing) {
 
-          var defaultPath = EnsureConfigFolderExists() + "/" + NetworkProjectConfig.DefaultResourceName + NetworkProjectConfigImporter.Extension;
+          var defaultPath = Path.Combine(EnsureConfigFolderExists() , NetworkProjectConfig.DefaultResourceName + NetworkProjectConfigImporter.Extension);
 
           if (AssetDatabase.IsAssetImportWorkerProcess()) {
             FusionEditorLog.WarnConfig($"Creating a new config at {defaultPath}, but an import is already taking place. " +
@@ -9397,8 +9441,9 @@ namespace Fusion.Editor {
     static void ListenToPlaymodeChanges() {
       EditorApplication.playModeStateChanged += mode => {
         if (mode == PlayModeStateChange.ExitingPlayMode) {
-          foreach (var instance in NetworkRunner.Instances) {
-            instance.NotifyEditorPlayModeExit();
+          var it = NetworkRunner.GetInstancesEnumerator();
+          while (it.MoveNext()) {
+            it.Current.NotifyEditorPlayModeExit();
           }
         }
       };

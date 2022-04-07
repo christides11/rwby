@@ -323,6 +323,7 @@ GameObject:
   - component: {fileID: 3109707020591300456}
   - component: {fileID: 3109707020591300459}
   - component: {fileID: 3109707020591300452}
+  - component: {fileID: 1010678796240851393}
   m_Layer: 0
   m_Name: LobbySelect.Content
   m_TagString: Untagged
@@ -437,6 +438,24 @@ MonoBehaviour:
   deselectedScale: {x: 1, y: 0, z: 1}
   selectedScale: {x: 1, y: 1, z: 1}
   scaleTime: 0.15
+--- !u!114 &1010678796240851393
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3109707020591300454}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a3a3f95707f74af478c6e442d5c7e807, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  selectable: {fileID: 3109707020591300452}
+  serverName: {fileID: 3109707021462496162}
+  players: {fileID: 3109707021444327907}
+  gamemode: {fileID: 3109707020070445829}
+  map: {fileID: 3109707021170661054}
+  ping: {fileID: 3109707020018230894}
 --- !u!1 &3109707020831450609
 GameObject:
   m_ObjectHideFlags: 0

@@ -9,6 +9,9 @@ namespace rwby
     {
         public delegate void EmptyAction();
         public delegate void GamemodeStateAction(GameModeBase gamemode);
+
+        public event EmptyAction OnLocalGamemodeSettingsChanged;
+        public event EmptyAction OnGamemodeSettingsChanged;
         public static event EmptyAction OnSetupSuccess;
         public static event EmptyAction OnSetupFailure;
         public static event GamemodeStateAction OnGamemodeStateChanged;
@@ -56,8 +59,25 @@ namespace rwby
 
             }
         }
+        
+        public virtual void WhenGamemodeSettingsChanged(bool local = false)
+        {
+            if (local)
+            {
+                OnLocalGamemodeSettingsChanged?.Invoke();
+            }
+            else
+            {
+                OnGamemodeSettingsChanged?.Invoke();
+            }
+        }
 
-        public virtual void AddGamemodeSettings(menus.LobbyMenuHandler lobbyManager)
+        public virtual void SetGamemodeSettings(GameModeBase gamemode)
+        {
+            
+        }
+        
+        public virtual void AddGamemodeSettings(int player, LobbySettingsMenu settingsMenu, bool local = false)
         {
 
         }

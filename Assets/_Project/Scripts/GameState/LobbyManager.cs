@@ -12,6 +12,7 @@ namespace rwby
     {
         public delegate void EmptyAction();
 
+        public static event EmptyAction OnLobbyManagerSpawned;
         public static event EmptyAction OnLobbyPlayersUpdated;
         public static event EmptyAction OnLobbySettingsChanged;
         public static event EmptyAction OnCurrentGamemodeChanged;
@@ -25,8 +26,7 @@ namespace rwby
         [Networked(OnChanged = nameof(OnSettingsChanged))]
         public LobbySettings Settings { get; set; }
 
-        [Networked(OnChanged = nameof(OnCurrentGameModeChanged))]
-        public GameModeBase CurrentGameMode { get; set; }
+        [Networked(OnChanged = nameof(OnCurrentGameModeChanged))] public GameModeBase CurrentGameMode { get; set; }
         [Networked, Capacity(4)] public NetworkLinkedList<CustomSceneRef> currentLoadedScenes { get; }
 
         public GameManager gameManager;
@@ -55,6 +55,7 @@ namespace rwby
             Settings = new LobbySettings(){ maxPlayersPerClient = 4, teams = 1 };
             currentLoadedScenes.Add(new CustomSceneRef() { source = 0, modIdentifier = 0, sceneIndex = 0 });
             Runner.SetActiveScene(1);
+            OnLobbyManagerSpawned?.Invoke();
         }
 
         public void CallGamemodeSettingsChanged()
@@ -62,16 +63,16 @@ namespace rwby
             OnGamemodeSettingsChanged?.Invoke();
         }
 
-        public async UniTask TrySetGamemode(ModObjectReference gamemodeReference)
+        public async UniTask<bool> TrySetGamemode(ModObjectReference gamemodeReference)
         {
-            if (Object.HasStateAuthority == false) return;
+            if (Object.HasStateAuthority == false) return false;
 
             List<PlayerRef> failedLoadPlayers =
                 await clientContentLoaderService.TellClientsToLoad<IGameModeDefinition>(gamemodeReference);
             if (failedLoadPlayers == null)
             {
                 Debug.LogError("Set Gamemode Local Failure");
-                return;
+                return false;
             }
 
             foreach (var v in failedLoadPlayers)
@@ -98,14 +99,13 @@ namespace rwby
             IGameModeDefinition gamemodeDefinition =
                 ContentManager.singleton.GetContentDefinition<IGameModeDefinition>(gamemodeReference);
             GameObject gamemodePrefab = gamemodeDefinition.GetGamemode();
-            GameModeBase gamemodeObj = Runner.Spawn(gamemodePrefab.GetComponent<GameModeBase>(), Vector3.zero,
-                Quaternion.identity);
-            CurrentGameMode = gamemodeObj;
+            CurrentGameMode = Runner.Spawn(gamemodePrefab.GetComponent<GameModeBase>(), Vector3.zero, Quaternion.identity);
 
             LobbySettings temp = Settings;
             temp.gamemodeReference = gamemodeReference;
             temp.teams = (byte)gamemodeDefinition.maximumTeams;
             Settings = temp;
+            return true;
         }
 
         public async UniTask<bool> TryStartMatch()

@@ -26,6 +26,7 @@ namespace rwby
         {
             systemPlayer = ReInput.players.GetSystemPlayer();
             localPlayerManager.CollectJoysticks();
+            localPlayerManager.CollectMouseKeyboard();
             Cleanup();
             ResetGrids();
             gameObject.SetActive(true);
@@ -45,7 +46,15 @@ namespace rwby
                 if (g.ContentLayout.transform.childCount == 0) continue;
                 validPlayers.Add(g);
             }
-            if (validPlayers.Count < 1) return false;
+            
+            localPlayerManager.GiveMouseKeyboard(0);
+            
+            if (validPlayers.Count < 1)
+            {
+                OnControllersAssigned?.Invoke(this);
+                return true;
+            }
+            
             localPlayerManager.SetPlayerCount(validPlayers.Count);
 
             for (int i = 0; i < validPlayers.Count; i++)

@@ -25,6 +25,9 @@ namespace rwby.core.training
 
         [Networked(OnChanged = nameof(CpuListUpdated)), Capacity(4)] public NetworkLinkedList<CPUReference> cpus { get; }
 
+        [Networked] public TrainingGamemodeSettings gamemodeSettings { get; set; }
+        public TrainingGamemodeSettings localGamemodeSettings;
+
         private static void CpuListUpdated(Changed<GamemodeTraining> changed)
         {
             changed.Behaviour.OnCPUListUpdated?.Invoke();
@@ -91,27 +94,52 @@ namespace rwby.core.training
             settingsMenu.Open();
         }
 
-        public override void AddGamemodeSettings(LobbyMenuHandler lobbyManager)
+        #region Lobby
+
+        public override void SetGamemodeSettings(GameModeBase gamemode)
         {
-            //TODO
-            /*
-            GameObject gamemodeOb = GameObject.Instantiate(lobbyManager.gamemodeOptionsContentPrefab, lobbyManager.gamemodeOptionsList, false);
-            TextMeshProUGUI[] textMeshes = gamemodeOb.GetComponentsInChildren<TextMeshProUGUI>();
-            textMeshes[0].text = mapReference.ToString();
-            gamemodeOb.GetComponentInChildren<PlayerPointerEventTrigger>().OnPointerClickEvent.AddListener((d) => { _ = OpenMapSelection(); });*/
+            GamemodeTraining train = gamemode as GamemodeTraining;
+            gamemodeSettings = train.localGamemodeSettings;
         }
 
-        private async UniTask OpenMapSelection()
+        public override void AddGamemodeSettings(int player, LobbySettingsMenu settingsMenu, bool local = false)
         {
-            await ContentSelect.singleton.OpenMenu<IMapDefinition>((a, b) => { 
-                ContentSelect.singleton.CloseMenu(); 
-                mapReference = b; 
-                LobbyManager.singleton.CallGamemodeSettingsChanged(); 
+            TrainingGamemodeSettings gs = local ? localGamemodeSettings : gamemodeSettings;
+            IMapDefinition mapDefinition = ContentManager.singleton.GetContentDefinition<IMapDefinition>(gs.map);
+            string mapName = mapDefinition != null ? mapDefinition.Name : "None";
+            settingsMenu.AddOption("Map", mapName).onSubmit.AddListener(async () => { await OpenMapSelection(player, local); });
+        }
+
+        private async UniTask OpenMapSelection(int player, bool local = false)
+        {
+            await ContentSelect.singleton.OpenMenu<IMapDefinition>(player,(a, b) =>
+            {
+                ContentSelect.singleton.CloseMenu(player);
+                if (local)
+                {
+                    localGamemodeSettings.map = b;
+                    WhenGamemodeSettingsChanged(true);
+                }
+                else
+                {
+                    var temp = gamemodeSettings;
+                    temp.map = b;
+                    gamemodeSettings = temp;
+                    WhenGamemodeSettingsChanged();
+                }
             });
+        }
+        #endregion
+
+        public void ApplyExternalSettings(GameModeBase gmb)
+        {
+            GamemodeTraining gm = gmb as GamemodeTraining;
+            gamemodeSettings = gm.localGamemodeSettings;
         }
 
         public override async UniTask<bool> VerifyGameModeSettings()
         {
+            if (NetworkManager.singleton.FusionLauncher.NetworkRunner.IsRunning == false) return true;
             List<PlayerRef> failedLoadPlayers = await LobbyManager.singleton.clientContentLoaderService.TellClientsToLoad<IMapDefinition>(mapReference);
             if (failedLoadPlayers == null)
             {
@@ -191,6 +219,7 @@ namespace rwby.core.training
             return spawnPoints[clientPlayer.team][spawnPointsCurr[clientPlayer.team] % spawnPoints[clientPlayer.team].Count].transform.position;
         }
 
+        /*
         public override void FixedUpdateNetwork()
         {
             for(int i = 0; i < cpus.Count; i++)
@@ -210,6 +239,6 @@ namespace rwby.core.training
             npi.buttons.Set(PlayerInputType.A, flickerA && Runner.Simulation.Tick%5 == 0 ? true : false);
 
             return npi;
-        }
+        }*/
     }
 }

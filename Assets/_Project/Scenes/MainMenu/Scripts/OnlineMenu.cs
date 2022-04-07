@@ -1,10 +1,4 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using rwby.menus;
 using UnityEngine;
-using UnityEngine.EventSystems;
-using UnityEngine.UI;
 
 namespace rwby.menus
 {
@@ -13,6 +7,7 @@ namespace rwby.menus
         [Header("Menus")] 
         public ModeSelectMenu modeSelectMenu;
         public FindLobbyMenu findLobbyMenu;
+        public HostLobbyMenu hostLobbyMenu;
 
         public void Open()
         {
@@ -26,12 +21,13 @@ namespace rwby.menus
 
         public void BUTTON_FindLobby()
         {
-            //findLobbyMenu.OpenMenu();
+            findLobbyMenu.OpenMenu();
             Close();
         }
 
         public void BUTTON_HostLobby()
         {
+            hostLobbyMenu.OpenMenu();
             Close();
         }
 

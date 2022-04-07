@@ -1,6 +1,95 @@
+# 1.1.0
+
+## RC Nightly
+
+### Build 449 (Apr 05, 2022)
+
+**Bug Fixes**
+
+- Fixed: Issue with shared mode input erroneously becoming full, causing skipped input ticks
+
+### Build 448 (Mar 31, 2022)
+
+**Bug Fixes**
+
+- Fixed: An issue in the Lag-Compensation `BoxOverlap` query resolution when the box was rotated
+
+### Build 447 (Mar 30, 2022)
+
+**Bug Fixes**
+
+- Fixed: String RPC parameters causing `ArgumentException` being thrown on Android
+
+### Build 446 (Mar 28, 2022)
+
+**What's New**
+
+- `NetworkProjectConfig.GlobalAssetLoading` and `NetworkProjectConfig.GlobalAssetUnloading` static events - a way to load the config from a custom source and unload it, if necessary
+- `NetworkProjectConfig.UnloadGlobal()`
+
+**Changes**
+
+- Tutorials and Samples in Fusion Hub updated
+- `NetworkProjectConfigAsset` is now a public type
+
+### Build 445 (Mar 25, 2022)
+
+**Changes**
+
+- FusionStats SimulationCount renamed to ForwardSimCount (to make it distinct from ResimCount)
+
+**Bug Fixes**
+
+- Fixed: Fusion Editor debug logs using correct colors
+- Fixed: Native memory leaks on the Simulation
+- Fixed: `NetworkRunnerExtensions.SetActiveScene` setting invalid scene as active when given a scene path and scene names are not unique
+
+### Build 443 (Mar 23, 2022)
+
+**Breaking Changes**
+
+- `bool` can't be used in pointer/ref properties
+
+**What's New**
+
+- `NetworkRunner.Instances` - a read only list of all the active runners
+- Arrays of `NetworkString` support for RPC  
+Test: Basic RPC codegen tests. Turns out bools are a bit problematic
+
+### Build 442 (Mar 22, 2022)
+
+**Bug Fixes**
+
+- Fixed: Inspector: errors logged in the console when inspecting some `INetworkStructs` types and exiting play mode
+
+### Build 440 (Mar 17, 2022)
+
+**Improvements**
+
+- `Hitbox` and `HitboxRoot` `DrawGizmos` methods are now virtual and use a color configurable in the Inspector
+
+# 1.0.0
+
+## F
+
+### Build 439 (Mar 17, 2022)
+
+- Official release
+
 # 0.13.0
 
 ## RC Nightly
+
+### Build 438 (Mar 16, 2022)
+
+**Improvements**
+
+- `NetworkTransform` Teleport API now has the option to interpolate forward (based on From state) or backwards (default, based on To state)
+
+**Changes**
+
+- Transform behaviours (NT/NRB/NCCP) now have a virtual implementation of the Unity `OnEnable` callback
+- `NetworkObject.Runner` gets set for predicted spawns
 
 ### Build 437 (Mar 15, 2022)
 

@@ -30,6 +30,8 @@ namespace rwby.core.training
 
         private void SetupCPUs()
         {
+            //TODO
+            /*
             foreach(Transform child in cpusParent)
             {
                 Destroy(child.gameObject);
@@ -45,7 +47,7 @@ namespace rwby.core.training
             }
 
             GameObject cpuAddObject = GameObject.Instantiate(cpuAddItem, cpusParent, false);
-            cpuAddObject.GetComponentInChildren<PlayerPointerEventTrigger>().OnPointerClickEvent.AddListener(AddCPU);
+            cpuAddObject.GetComponentInChildren<PlayerPointerEventTrigger>().OnPointerClickEvent.AddListener(AddCPU);*/
         }
 
         private void AddCPU(PlayerPointerEventData pointerEventData)
@@ -60,6 +62,7 @@ namespace rwby.core.training
 
         private void SetCPUReference(int index)
         {
+            /*
             int tempIndex = index;
             _ = ContentSelect.singleton.OpenMenu<IFighterDefinition>((a, b) =>
             {
@@ -68,7 +71,7 @@ namespace rwby.core.training
                 temp.characterReference = b;
                 list[tempIndex] = temp;
                 ContentSelect.singleton.CloseMenu();
-            });
+            });*/
         }
     }
 }

@@ -1677,6 +1677,12 @@
             If overriding this method in an inheritor, the base method should be called.
             </summary>
         </member>
+        <member name="M:Fusion.NetworkPositionRotation.OnEnable">
+            <summary>
+            Implements Unity's OnEnable event function.
+            If overriding this method in an inheritor, the base method should be called.
+            </summary>
+        </member>
         <member name="M:Fusion.NetworkPositionRotation.Spawned">
             <summary>
             Overrides <see cref="M:Fusion.NetworkBehaviour.Spawned"/>.
@@ -1864,13 +1870,13 @@
         <member name="P:Fusion.NetworkRigidbody.DefaultTeleportInterpolationVelocity">
             <summary>
             Sets the default teleport interpolation velocity to be the rigidbody velocity.
-            For more details on how this field is used, see <see cref="M:Fusion.NetworkTransform.TeleportToPosition(UnityEngine.Vector3,System.Nullable{UnityEngine.Vector3})"/>.
+            For more details on how this field is used, see <see cref="M:Fusion.NetworkTransform.TeleportToPosition(UnityEngine.Vector3,System.Nullable{UnityEngine.Vector3},System.Boolean)"/>.
             </summary>
         </member>
         <member name="P:Fusion.NetworkRigidbody.DefaultTeleportInterpolationAngularVelocity">
             <summary>
             Sets the default teleport interpolation angular velocity to be the rigidbody angular velocity.
-            For more details on how this field is used, see <see cref="M:Fusion.NetworkTransform.TeleportToRotation(UnityEngine.Quaternion,System.Nullable{UnityEngine.Vector3})"/>.
+            For more details on how this field is used, see <see cref="M:Fusion.NetworkTransform.TeleportToRotation(UnityEngine.Quaternion,System.Nullable{UnityEngine.Vector3},System.Boolean)"/>.
             </summary>
         </member>
         <member name="M:Fusion.NetworkRigidbody.Awake">
@@ -2086,13 +2092,13 @@
         <member name="P:Fusion.NetworkRigidbody2D.DefaultTeleportInterpolationVelocity">
             <summary>
             Sets the default teleport interpolation velocity to be the rigidbody velocity.
-            For more details on how this field is used, see <see cref="M:Fusion.NetworkTransform.TeleportToPosition(UnityEngine.Vector3,System.Nullable{UnityEngine.Vector3})"/>.
+            For more details on how this field is used, see <see cref="M:Fusion.NetworkTransform.TeleportToPosition(UnityEngine.Vector3,System.Nullable{UnityEngine.Vector3},System.Boolean)"/>.
             </summary>
         </member>
         <member name="P:Fusion.NetworkRigidbody2D.DefaultTeleportInterpolationAngularVelocity">
             <summary>
             Sets the default teleport interpolation angular velocity to be the rigidbody angular velocity, around the Z axis.
-            For more details on how this field is used, see <see cref="M:Fusion.NetworkTransform.TeleportToRotation(UnityEngine.Quaternion,System.Nullable{UnityEngine.Vector3})"/>.
+            For more details on how this field is used, see <see cref="M:Fusion.NetworkTransform.TeleportToRotation(UnityEngine.Quaternion,System.Nullable{UnityEngine.Vector3},System.Boolean)"/>.
             </summary>
         </member>
         <member name="M:Fusion.NetworkRigidbody2D.Awake">
@@ -2632,7 +2638,7 @@
         </member>
         <member name="P:Fusion.NetworkTransform.DefaultTeleportInterpolationVelocity">
             <summary>
-            The interpolation velocity used when calling <see cref="M:Fusion.NetworkTransform.TeleportToPosition(UnityEngine.Vector3,System.Nullable{UnityEngine.Vector3})"/> and not specifying a value.
+            The interpolation velocity used when calling <see cref="M:Fusion.NetworkTransform.TeleportToPosition(UnityEngine.Vector3,System.Nullable{UnityEngine.Vector3},System.Boolean)"/> and not specifying a value.
             By default, this value is <see cref="P:UnityEngine.Vector3.zero"/>.
             Some behaviours like <see cref="T:Fusion.NetworkRigidbody"/> and <see cref="T:Fusion.NetworkRigidbody2D"/> override
             this property to provide better default values, like the latest known velocity of the rigid body. 
@@ -2640,13 +2646,13 @@
         </member>
         <member name="P:Fusion.NetworkTransform.DefaultTeleportInterpolationAngularVelocity">
             <summary>
-            The interpolation angular velocity used when calling <see cref="M:Fusion.NetworkTransform.TeleportToRotation(UnityEngine.Quaternion,System.Nullable{UnityEngine.Vector3})"/> and not specifying a value.
+            The interpolation angular velocity used when calling <see cref="M:Fusion.NetworkTransform.TeleportToRotation(UnityEngine.Quaternion,System.Nullable{UnityEngine.Vector3},System.Boolean)"/> and not specifying a value.
             By default, this value is <see cref="P:UnityEngine.Vector3.zero"/>.
             Some behaviours like <see cref="T:Fusion.NetworkRigidbody"/> and <see cref="T:Fusion.NetworkRigidbody2D"/> override
             this property to provide better default values, like the latest known angular velocity of the rigid body. 
             </summary>
         </member>
-        <member name="M:Fusion.NetworkTransform.TeleportToPosition(UnityEngine.Vector3,System.Nullable{UnityEngine.Vector3})">
+        <member name="M:Fusion.NetworkTransform.TeleportToPosition(UnityEngine.Vector3,System.Nullable{UnityEngine.Vector3},System.Boolean)">
             <summary>
             Teleports the object to the provided position while making the networked state aware
             that the object was teleported and the view interpolation needs special handling.
@@ -2664,8 +2670,12 @@
             The emulated velocity of the interpolation target while interpolating to a tick where a teleport happened.
             If null, the <see cref="P:Fusion.NetworkTransform.DefaultTeleportInterpolationVelocity"/> will be used.
             </param>
+            <param name="interpolateBackwards">
+            If the artificial position for teleport interpolation should be computed backwards (artificial From, based on the
+            To state - the interpolation velocity) or forward (artificial To, based on the From state + interpolation velocity).
+            </param>
         </member>
-        <member name="M:Fusion.NetworkTransform.TeleportToRotation(UnityEngine.Quaternion,System.Nullable{UnityEngine.Vector3})">
+        <member name="M:Fusion.NetworkTransform.TeleportToRotation(UnityEngine.Quaternion,System.Nullable{UnityEngine.Vector3},System.Boolean)">
             <summary>
             Teleports the object to the provided rotation while making the networked state aware
             that the object was teleported and the view interpolation needs special handling.
@@ -2683,14 +2693,18 @@
             The emulated angular velocity of the interpolation target while interpolating to a tick where a teleport happened.
             If null, the <see cref="P:Fusion.NetworkTransform.DefaultTeleportInterpolationAngularVelocity"/> will be used.
             </param>
+            <param name="interpolateBackwards">
+            If the artificial position for teleport interpolation should be computed backwards (artificial From, based on the
+            To state - the interpolation velocity) or forward (artificial To, based on the From state + interpolation velocity).
+            </param>
         </member>
-        <member name="M:Fusion.NetworkTransform.TeleportToPositionRotation(UnityEngine.Vector3,UnityEngine.Quaternion,System.Nullable{UnityEngine.Vector3},System.Nullable{UnityEngine.Vector3})">
+        <member name="M:Fusion.NetworkTransform.TeleportToPositionRotation(UnityEngine.Vector3,UnityEngine.Quaternion,System.Nullable{UnityEngine.Vector3},System.Nullable{UnityEngine.Vector3},System.Boolean)">
             <summary>
             Teleports the object to the provided position and rotation while making the networked state aware
             that the object was teleported and the view interpolation needs special handling.
             The <paramref name="rotation"/> is immediately set to the transform's rotation field
             and additional data is stored in order to interpolate the view object between the ticks.
-            See <see cref="M:Fusion.NetworkTransform.TeleportToPosition(UnityEngine.Vector3,System.Nullable{UnityEngine.Vector3})"/> and <see cref="M:Fusion.NetworkTransform.TeleportToRotation(UnityEngine.Quaternion,System.Nullable{UnityEngine.Vector3})"/> for more details about why and how
+            See <see cref="M:Fusion.NetworkTransform.TeleportToPosition(UnityEngine.Vector3,System.Nullable{UnityEngine.Vector3},System.Boolean)"/> and <see cref="M:Fusion.NetworkTransform.TeleportToRotation(UnityEngine.Quaternion,System.Nullable{UnityEngine.Vector3},System.Boolean)"/> for more details about why and how
             the special interpolation handling is performed.
             </summary>
             <param name="position">The position which the object is being teleported to. </param>
@@ -2702,6 +2716,10 @@
             <param name="interpolationAngularVel">
             The emulated angular velocity of the interpolation target while interpolating to a tick where a teleport happened.
             If null, the <see cref="P:Fusion.NetworkTransform.DefaultTeleportInterpolationAngularVelocity"/> will be used.
+            </param>
+            <param name="interpolateBackwards">
+            If the artificial position for teleport interpolation should be computed backwards (artificial From, based on the
+            To state - the interpolation velocity) or forward (artificial To, based on the From state + interpolation velocity).
             </param>
         </member>
         <member name="M:Fusion.NetworkTransform.PredictedSpawnSpawned">
@@ -2754,128 +2772,184 @@
             <summary>
             Reads from this object's networked data field holding the interpolation velocity
             (used on position teleports) using the default Runner position read accuracy.
-            See <see cref="M:Fusion.NetworkTransform.TeleportToPosition(UnityEngine.Vector3,System.Nullable{UnityEngine.Vector3})"/> for more information on how this value is used.
+            See <see cref="M:Fusion.NetworkTransform.TeleportToPosition(UnityEngine.Vector3,System.Nullable{UnityEngine.Vector3},System.Boolean)"/> for more information on how this value is used.
             </summary>
         </member>
         <member name="M:Fusion.NetworkTransform.ReadTeleportInterpolationVelocity(System.Int32*)">
             <summary>
             Reads from a field holding the interpolation velocity (used on position teleports)
             from the networked data pointed by <paramref name="ptr"/> using the default Runner position read accuracy.
-            See <see cref="M:Fusion.NetworkTransform.TeleportToPosition(UnityEngine.Vector3,System.Nullable{UnityEngine.Vector3})"/> for more information on how this value is used.
+            See <see cref="M:Fusion.NetworkTransform.TeleportToPosition(UnityEngine.Vector3,System.Nullable{UnityEngine.Vector3},System.Boolean)"/> for more information on how this value is used.
             </summary>
         </member>
         <member name="M:Fusion.NetworkTransform.ReadTeleportInterpolationVelocity(System.Int32*,Fusion.ReadAccuracy)">
             <summary>
             Reads from a field holding the interpolation velocity (used on position teleports)
             from the networked data pointed by <paramref name="ptr"/> with the defined <paramref name="readAccuracy"/>.
-            See <see cref="M:Fusion.NetworkTransform.TeleportToPosition(UnityEngine.Vector3,System.Nullable{UnityEngine.Vector3})"/> for more information on how this value is used.
+            See <see cref="M:Fusion.NetworkTransform.TeleportToPosition(UnityEngine.Vector3,System.Nullable{UnityEngine.Vector3},System.Boolean)"/> for more information on how this value is used.
             </summary>
         </member>
         <member name="M:Fusion.NetworkTransform.ReadTeleportInterpolationAngularVelocity">
             <summary>
             Reads from this object's networked data field holding the interpolation angular velocity
             (used on position teleports) using the default Runner position read accuracy.
-            See <see cref="M:Fusion.NetworkTransform.TeleportToRotation(UnityEngine.Quaternion,System.Nullable{UnityEngine.Vector3})"/> for more information on how this value is used.
+            See <see cref="M:Fusion.NetworkTransform.TeleportToRotation(UnityEngine.Quaternion,System.Nullable{UnityEngine.Vector3},System.Boolean)"/> for more information on how this value is used.
             </summary>
         </member>
         <member name="M:Fusion.NetworkTransform.ReadTeleportInterpolationAngularVelocity(System.Int32*)">
             <summary>
             Reads from a field holding the interpolation angular velocity (used on position teleports)
             from the networked data pointed by <paramref name="ptr"/> using the default Runner position read accuracy.
-            See <see cref="M:Fusion.NetworkTransform.TeleportToRotation(UnityEngine.Quaternion,System.Nullable{UnityEngine.Vector3})"/> for more information on how this value is used.
+            See <see cref="M:Fusion.NetworkTransform.TeleportToRotation(UnityEngine.Quaternion,System.Nullable{UnityEngine.Vector3},System.Boolean)"/> for more information on how this value is used.
             </summary>
         </member>
         <member name="M:Fusion.NetworkTransform.ReadTeleportInterpolationAngularVelocity(System.Int32*,Fusion.ReadAccuracy)">
             <summary>
             Reads from a field holding the interpolation angular velocity (used on position teleports)
             on the networked data pointed by <paramref name="ptr"/> with the defined <paramref name="readAccuracy"/>.
-            See <see cref="M:Fusion.NetworkTransform.TeleportToRotation(UnityEngine.Quaternion,System.Nullable{UnityEngine.Vector3})"/> for more information on how this value is used.
+            See <see cref="M:Fusion.NetworkTransform.TeleportToRotation(UnityEngine.Quaternion,System.Nullable{UnityEngine.Vector3},System.Boolean)"/> for more information on how this value is used.
             </summary>
         </member>
         <member name="M:Fusion.NetworkTransform.ReadTeleportPositionTick">
             <summary>
-            Reads from this object's field holding the tick number where <see cref="M:Fusion.NetworkTransform.TeleportToPosition(UnityEngine.Vector3,System.Nullable{UnityEngine.Vector3})"/> was last called.
+            Reads from this object's field holding the tick number where <see cref="M:Fusion.NetworkTransform.TeleportToPosition(UnityEngine.Vector3,System.Nullable{UnityEngine.Vector3},System.Boolean)"/> was last called.
             </summary>
         </member>
         <member name="M:Fusion.NetworkTransform.ReadTeleportPositionTick(System.Int32*)">
             <summary>
             Reads from the networked data pointer by <paramref name="ptr"/>
-            a field holding the tick number where <see cref="M:Fusion.NetworkTransform.TeleportToPosition(UnityEngine.Vector3,System.Nullable{UnityEngine.Vector3})"/> was last called.
+            a field holding the tick number where <see cref="M:Fusion.NetworkTransform.TeleportToPosition(UnityEngine.Vector3,System.Nullable{UnityEngine.Vector3},System.Boolean)"/> was last called.
             </summary>
         </member>
         <member name="M:Fusion.NetworkTransform.ReadTeleportRotationTick">
             <summary>
-            Reads from this object's field holding the tick number where <see cref="M:Fusion.NetworkTransform.TeleportToRotation(UnityEngine.Quaternion,System.Nullable{UnityEngine.Vector3})"/> was last called.
+            Reads from this object's field holding the tick number where <see cref="M:Fusion.NetworkTransform.TeleportToRotation(UnityEngine.Quaternion,System.Nullable{UnityEngine.Vector3},System.Boolean)"/> was last called.
             </summary>
         </member>
         <member name="M:Fusion.NetworkTransform.ReadTeleportRotationTick(System.Int32*)">
             <summary>
             Reads from the networked data pointer by <paramref name="ptr"/>
-            a field holding the tick number where <see cref="M:Fusion.NetworkTransform.TeleportToRotation(UnityEngine.Quaternion,System.Nullable{UnityEngine.Vector3})"/> was last called.
+            a field holding the tick number where <see cref="M:Fusion.NetworkTransform.TeleportToRotation(UnityEngine.Quaternion,System.Nullable{UnityEngine.Vector3},System.Boolean)"/> was last called.
+            </summary>
+        </member>
+        <member name="M:Fusion.NetworkTransform.ReadTeleportPositionInterpolateBackwards">
+            <summary>
+            Reads from this object's field holding information about the last <see cref="M:Fusion.NetworkTransform.TeleportToPosition(UnityEngine.Vector3,System.Nullable{UnityEngine.Vector3},System.Boolean)"/> call
+            and if should be interpolated forward (emulated To based on From state + interpolation) or backwards
+            (Emulated From based on To state - interpolation).
+            </summary>
+        </member>
+        <member name="M:Fusion.NetworkTransform.ReadTeleportPositionInterpolateBackwards(System.Int32*)">
+            <summary>
+            Reads from the networked data pointer by <paramref name="ptr"/> a field holding information about the last
+            <see cref="M:Fusion.NetworkTransform.TeleportToPosition(UnityEngine.Vector3,System.Nullable{UnityEngine.Vector3},System.Boolean)"/> call and if should be interpolated forward (emulated To based on From state + interpolation)
+            or backwards (Emulated From based on To state - interpolation).
+            </summary>
+        </member>
+        <member name="M:Fusion.NetworkTransform.ReadTeleportRotationInterpolateBackwards">
+            <summary>
+            Reads from this object's field holding information about the last <see cref="M:Fusion.NetworkTransform.TeleportToRotation(UnityEngine.Quaternion,System.Nullable{UnityEngine.Vector3},System.Boolean)"/> call
+            and if should be interpolated forward (emulated To based on From state + interpolation) or backwards
+            (Emulated From based on To state - interpolation).
+            </summary>
+        </member>
+        <member name="M:Fusion.NetworkTransform.ReadTeleportRotationInterpolateBackwards(System.Int32*)">
+            <summary>
+            Reads from the networked data pointer by <paramref name="ptr"/> a field holding information about the last
+            <see cref="M:Fusion.NetworkTransform.TeleportToRotation(UnityEngine.Quaternion,System.Nullable{UnityEngine.Vector3},System.Boolean)"/> call and if should be interpolated forward (emulated To based on From state + interpolation)
+            or backwards (Emulated From based on To state - interpolation).
             </summary>
         </member>
         <member name="M:Fusion.NetworkTransform.WriteTeleportInterpolationVelocity(UnityEngine.Vector3)">
             <summary>
             Writes to this object's networked data field holding the interpolation velocity
             (used on position teleports) using the default Runner position write accuracy.
-            See <see cref="M:Fusion.NetworkTransform.TeleportToPosition(UnityEngine.Vector3,System.Nullable{UnityEngine.Vector3})"/> for more information on how this value is used.
+            See <see cref="M:Fusion.NetworkTransform.TeleportToPosition(UnityEngine.Vector3,System.Nullable{UnityEngine.Vector3},System.Boolean)"/> for more information on how this value is used.
             </summary>
         </member>
         <member name="M:Fusion.NetworkTransform.WriteTeleportInterpolationVelocity(UnityEngine.Vector3,System.Int32*)">
             <summary>
             Writes to a field holding the interpolation velocity (used on position teleports)
             on the networked data pointed by <paramref name="ptr"/> using the default Runner position write accuracy.
-            See <see cref="M:Fusion.NetworkTransform.TeleportToPosition(UnityEngine.Vector3,System.Nullable{UnityEngine.Vector3})"/> for more information on how this value is used.
+            See <see cref="M:Fusion.NetworkTransform.TeleportToPosition(UnityEngine.Vector3,System.Nullable{UnityEngine.Vector3},System.Boolean)"/> for more information on how this value is used.
             </summary>
         </member>
         <member name="M:Fusion.NetworkTransform.WriteTeleportInterpolationVelocity(UnityEngine.Vector3,System.Int32*,Fusion.WriteAccuracy)">
             <summary>
             Writes to a field holding the interpolation velocity (used on position teleports)
             from the networked data pointed by <paramref name="ptr"/> with the defined <paramref name="writeAccuracy"/>.
-            See <see cref="M:Fusion.NetworkTransform.TeleportToPosition(UnityEngine.Vector3,System.Nullable{UnityEngine.Vector3})"/> for more information on how this value is used.
+            See <see cref="M:Fusion.NetworkTransform.TeleportToPosition(UnityEngine.Vector3,System.Nullable{UnityEngine.Vector3},System.Boolean)"/> for more information on how this value is used.
             </summary>
         </member>
         <member name="M:Fusion.NetworkTransform.WriteTeleportInterpolationAngularVelocity(UnityEngine.Vector3)">
             <summary>
             Writes to this object's networked data field holding the interpolation angular velocity
             (used on position teleports) using the default Runner position write accuracy.
-            See <see cref="M:Fusion.NetworkTransform.TeleportToRotation(UnityEngine.Quaternion,System.Nullable{UnityEngine.Vector3})"/> for more information on how this value is used.
+            See <see cref="M:Fusion.NetworkTransform.TeleportToRotation(UnityEngine.Quaternion,System.Nullable{UnityEngine.Vector3},System.Boolean)"/> for more information on how this value is used.
             </summary>
         </member>
         <member name="M:Fusion.NetworkTransform.WriteTeleportInterpolationAngularVelocity(UnityEngine.Vector3,System.Int32*)">
             <summary>
             Writes to a field holding the interpolation angular velocity (used on position teleports)
             on the networked data pointed by <paramref name="ptr"/> using the default Runner position write accuracy.
-            See <see cref="M:Fusion.NetworkTransform.TeleportToRotation(UnityEngine.Quaternion,System.Nullable{UnityEngine.Vector3})"/> for more information on how this value is used.
+            See <see cref="M:Fusion.NetworkTransform.TeleportToRotation(UnityEngine.Quaternion,System.Nullable{UnityEngine.Vector3},System.Boolean)"/> for more information on how this value is used.
             </summary>
         </member>
         <member name="M:Fusion.NetworkTransform.WriteTeleportInterpolationAngularVelocity(UnityEngine.Vector3,System.Int32*,Fusion.WriteAccuracy)">
             <summary>
             Writes to a field holding the interpolation angular velocity (used on position teleports)
             from the networked data pointed by <paramref name="ptr"/> with the defined <paramref name="writeAccuracy"/>.
-            See <see cref="M:Fusion.NetworkTransform.TeleportToRotation(UnityEngine.Quaternion,System.Nullable{UnityEngine.Vector3})"/> for more information on how this value is used.
+            See <see cref="M:Fusion.NetworkTransform.TeleportToRotation(UnityEngine.Quaternion,System.Nullable{UnityEngine.Vector3},System.Boolean)"/> for more information on how this value is used.
             </summary>
         </member>
         <member name="M:Fusion.NetworkTransform.WriteTeleportPositionTick(System.Int32)">
             <summary>
-            Writes this object's field holding the tick number where <see cref="M:Fusion.NetworkTransform.TeleportToPosition(UnityEngine.Vector3,System.Nullable{UnityEngine.Vector3})"/> was last called.
+            Writes this object's field holding the tick number where <see cref="M:Fusion.NetworkTransform.TeleportToPosition(UnityEngine.Vector3,System.Nullable{UnityEngine.Vector3},System.Boolean)"/> was last called.
             </summary>
         </member>
         <member name="M:Fusion.NetworkTransform.WriteTeleportPositionTick(System.Int32,System.Int32*)">
             <summary>
             Writes to the networked data pointer by <paramref name="ptr"/>
-            a field holding the tick number where <see cref="M:Fusion.NetworkTransform.TeleportToPosition(UnityEngine.Vector3,System.Nullable{UnityEngine.Vector3})"/> was last called.
+            a field holding the tick number where <see cref="M:Fusion.NetworkTransform.TeleportToPosition(UnityEngine.Vector3,System.Nullable{UnityEngine.Vector3},System.Boolean)"/> was last called.
             </summary>
         </member>
         <member name="M:Fusion.NetworkTransform.WriteTeleportRotationTick(System.Int32)">
             <summary>
-            Writes this object's field holding the tick number where <see cref="M:Fusion.NetworkTransform.TeleportToRotation(UnityEngine.Quaternion,System.Nullable{UnityEngine.Vector3})"/> was last called.
+            Writes this object's field holding the tick number where <see cref="M:Fusion.NetworkTransform.TeleportToRotation(UnityEngine.Quaternion,System.Nullable{UnityEngine.Vector3},System.Boolean)"/> was last called.
             </summary>
         </member>
         <member name="M:Fusion.NetworkTransform.WriteTeleportRotationTick(System.Int32,System.Int32*)">
             <summary>
             Writes to the networked data pointer by <paramref name="ptr"/>
-            a field holding the tick number where <see cref="M:Fusion.NetworkTransform.TeleportToRotation(UnityEngine.Quaternion,System.Nullable{UnityEngine.Vector3})"/> was last called.
+            a field holding the tick number where <see cref="M:Fusion.NetworkTransform.TeleportToRotation(UnityEngine.Quaternion,System.Nullable{UnityEngine.Vector3},System.Boolean)"/> was last called.
+            </summary>
+        </member>
+        <member name="M:Fusion.NetworkTransform.WriteTeleportPositionInterpolateBackwards(System.Boolean)">
+            <summary>
+            Writes to this object's field holding information about the last <see cref="M:Fusion.NetworkTransform.TeleportToPosition(UnityEngine.Vector3,System.Nullable{UnityEngine.Vector3},System.Boolean)"/> call
+            and if should be interpolated forward (emulated To based on From state + interpolation) or backwards
+            (Emulated From based on To state - interpolation).
+            </summary>
+        </member>
+        <member name="M:Fusion.NetworkTransform.WriteTeleportPositionInterpolateBackwards(System.Int32*,System.Boolean)">
+            <summary>
+            Writes the networked data pointer by <paramref name="ptr"/>, on a field holding information about the last
+            <see cref="M:Fusion.NetworkTransform.TeleportToPosition(UnityEngine.Vector3,System.Nullable{UnityEngine.Vector3},System.Boolean)"/> call and if should be interpolated forward (emulated To based on From state + interpolation)
+            or backwards (Emulated From based on To state - interpolation).
+            </summary>
+        </member>
+        <member name="M:Fusion.NetworkTransform.WriteTeleportRotationInterpolateBackwards(System.Boolean)">
+            <summary>
+            Writes to this object's field holding information about the last <see cref="M:Fusion.NetworkTransform.TeleportToRotation(UnityEngine.Quaternion,System.Nullable{UnityEngine.Vector3},System.Boolean)"/> call
+            and if should be interpolated forward (emulated To based on From state + interpolation) or backwards
+            (Emulated From based on To state - interpolation).
+            </summary>
+        </member>
+        <member name="M:Fusion.NetworkTransform.WriteTeleportRotationInterpolateBackwards(System.Int32*,System.Boolean)">
+            <summary>
+            Writes to this object's field holding information about the last <see cref="M:Fusion.NetworkTransform.TeleportToRotation(UnityEngine.Quaternion,System.Nullable{UnityEngine.Vector3},System.Boolean)"/> call
+            and if should be interpolated forward (emulated To based on From state + interpolation) or backwards
+            (Emulated From based on To state - interpolation).
             </summary>
         </member>
         <member name="T:Fusion.NetworkTransform.InterpolatedTransformParameters">
@@ -2943,7 +3017,7 @@
         </member>
         <member name="F:Fusion.NetworkTransform.InterpolationSpace">
             <summary>
-            If the <see cref="F:Fusion.NetworkTransform.InterpolationTarget">Interpolation Target</see> should be interpolated in world space or in the local space of a networked parent.
+            If the <see cref="F:Fusion.NetworkTransform.InterpolationTarget"/> should be interpolated in world space or in the local space of a networked parent.
             Interpolating in local space requires more computations, but gives more accurate visuals if/when a parent rotates. 
             </summary>
         </member>
@@ -4017,6 +4091,11 @@
             World-space position (includes Offset) of this <see cref="T:Fusion.Hitbox"/>.
             </summary>
         </member>
+        <member name="F:Fusion.Hitbox.GizmosColor">
+            <summary>
+            Color used when drawing gizmos for this hitbox.
+            </summary>
+        </member>
         <member name="M:Fusion.Hitbox.OnDrawGizmos">
             <summary>
             Draws this hitbox gizmo on Unity editor.
@@ -4376,6 +4455,11 @@
             which are then used in the final <b><i>narrowphase</i></b> query.</para>
             </summary>
         </member>
+        <member name="F:Fusion.HitboxRoot.GizmosColor">
+            <summary>
+            Color used when drawing gizmos for this hitbox.
+            </summary>
+        </member>
         <member name="F:Fusion.HitboxRoot.Hitboxes">
             <summary>
             All Hitbox instances in hierarchy. Auto-filled at Spawned.
@@ -4596,7 +4680,7 @@
             <summary>
             Sets the <see cref="P:Fusion.Changed`1.Behaviour"/> to represent the changed state after the triggering change occurred.
             This is the already default state of the behaviour when an OnChanged callback occurs, 
-            and only needs to be called to undo a previous <see cref="M:Fusion.Changed`1.LoadNew"/> call in your callback handler.
+            and only needs to be called to revert from a previous <see cref="M:Fusion.Changed`1.LoadOld"/> call in your changed callback handler.
             </summary>
         </member>
         <member name="T:Fusion.EditorHeaderIcon">
@@ -4803,7 +4887,8 @@
         </member>
         <member name="T:Fusion.NetworkArray`1">
             <summary>
-            Fusion type for networking arrays. Capacity is fixed, and needs to be set the maximum possible number of entries.<br></br><br></br>
+            Fusion type for networking arrays. 
+            Maximum capacity is fixed, and is set with the <see cref="T:Fusion.CapacityAttribute"/>.<br></br><br></br>
             <para>Typical Usage:
             <code>
             [Networked, Capacity(4)]<br></br>
@@ -4816,7 +4901,6 @@
             </code></para>
             <para>Usage for modifying data:
             <code>
-            var array = syncedArray;
             array.Set(123);
             array[0] = 456;
             </code></para>
@@ -4887,7 +4971,8 @@
         </member>
         <member name="T:Fusion.NetworkDictionary`2">
             <summary>
-            Fusion type for networking Dictionaries. Capacity is fixed, and needs to be set the maximum possible number of entries.<br></br><br></br>
+            Fusion type for networking Dictionaries. 
+            Maximum capacity is fixed, and is set with the <see cref="T:Fusion.CapacityAttribute"/>.<br></br><br></br>
             <para>Typical Usage:
             <code>
             [Networked, Capacity(10)]<br></br>
@@ -4976,7 +5061,8 @@
         </member>
         <member name="T:Fusion.NetworkLinkedList`1">
             <summary>
-            Fusion type for networking LinkedLists. Capacity is fixed, and needs to be set the maximum possible number of entries.<br></br><br></br>
+            Fusion type for networking LinkedLists. 
+            Maximum capacity is fixed, and is set with the <see cref="T:Fusion.CapacityAttribute"/>.<br></br><br></br>
             Typical Usage:
             <para><code>
             [Networked, Capacity(10)]<br></br>
@@ -5921,9 +6007,37 @@
             Default file name for the <see cref="T:Fusion.NetworkProjectConfig"/> asset
             </summary>
         </member>
+        <member name="T:Fusion.NetworkProjectConfig.AssetLoadingDelegate">
+            <summary>
+            <see cref="E:Fusion.NetworkProjectConfig.GlobalAssetLoading"/>
+            </summary>
+        </member>
+        <member name="T:Fusion.NetworkProjectConfig.AssetUndloadingDelegate">
+            <summary>
+            <see cref="E:Fusion.NetworkProjectConfig.GlobalAssetUnloading"/>
+            </summary>
+        </member>
+        <member name="E:Fusion.NetworkProjectConfig.GlobalAssetLoading">
+            <summary>
+            Invoked when a config is a about to be loaded from a default location (a Resource <see cref="F:Fusion.NetworkProjectConfig.DefaultResourceName"/>).
+            If the event returns a non-null value, it will accepted as the config source and no attempt
+            to load the default asset will be made.
+            </summary>
+        </member>
+        <member name="E:Fusion.NetworkProjectConfig.GlobalAssetUnloading">
+            <summary>
+            Invoked when a config is about to be unloaded (due to <see cref="M:Fusion.NetworkProjectConfig.UnloadGlobal"/>).
+            </summary>
+        </member>
         <member name="P:Fusion.NetworkProjectConfig.Global">
             <summary>
             Reference for the default <see cref="T:Fusion.NetworkProjectConfig"/>
+            </summary>
+        </member>
+        <member name="M:Fusion.NetworkProjectConfig.UnloadGlobal">
+            <summary>
+            Unloads <see cref="P:Fusion.NetworkProjectConfig.Global"/>, if already loaded. If loading <see cref="P:Fusion.NetworkProjectConfig.Global"/> has faulted, resets the state
+            and next call to the <see cref="P:Fusion.NetworkProjectConfig.Global"/> accessor will attempt to load the config again.
             </summary>
         </member>
         <member name="F:Fusion.NetworkProjectConfig.CurrentTypeId">
@@ -6190,9 +6304,20 @@
         </member>
         <member name="M:Fusion.NetworkRunner.GetInstancesEnumerator">
             <summary>
-            Get enumerator for the collection of all <see cref="T:Fusion.NetworkRunner"/>s.
+            Get enumerator for the collection of all <see cref="T:Fusion.NetworkRunner"/>s. Allows
+            to enumerate alloc-free.
             </summary>
             <returns></returns>
+        </member>
+        <member name="P:Fusion.NetworkRunner.Instances">
+            <summary>
+            A list of all <see cref="T:Fusion.NetworkRunner"/>s.
+            </summary>
+        </member>
+        <member name="P:Fusion.NetworkRunner.IsSimulationUpdating">
+            <summary>
+            Is the runner updating the simulation.
+            </summary>
         </member>
         <member name="F:Fusion.NetworkRunner._initializeOperation">
             <summary>

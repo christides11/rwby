@@ -41,6 +41,8 @@ namespace rwby
 		private FusionObjectPoolRoot _pool;
 		public CustomNetworkSceneManagerBase networkSceneManagerBase;
 
+		private GameMode _gamemode;
+
 		private void OnConnectionStatusUpdate(NetworkRunner arg1, FusionLauncher.ConnectionStatus status)
 		{
 			_status = status;
@@ -68,6 +70,7 @@ namespace rwby
 			customProps["map"] = "";
 			customProps["gamemode"] = "";
 
+			_gamemode = GameMode.Server;
 			StartGameResult result = await _runner.StartGame(new StartGameArgs()
 			{
 				GameMode = GameMode.Server, 
@@ -83,7 +86,6 @@ namespace rwby
 				OnHostingFailed?.Invoke();
 				return result;
             }
-
 			return result;
 		}
 
@@ -99,6 +101,7 @@ namespace rwby
 			customProps["gamemode"] = "";
 			customProps["modhash"] = "";
 			
+			_gamemode = GameMode.Host;
 			StartGameResult result = await _runner.StartGame(new StartGameArgs()
 			{
 				GameMode = local ? GameMode.Single : GameMode.Host,
@@ -126,6 +129,7 @@ namespace rwby
 			_connectionCallback = OnConnectionStatusUpdate;
 
 			InitSingletions(true);
+			_gamemode = GameMode.Client;
 			await _runner.StartGame(new StartGameArgs()
 			{
 				GameMode = GameMode.Client, 
@@ -182,13 +186,12 @@ namespace rwby
 		{
 			_players[player] = runner.Spawn(_playerPrefab, Vector3.zero, Quaternion.identity, player);
 			runner.SetPlayerObject(player, _players[player]);
-			if (runner.Mode == SimulationModes.Host && runner.LocalPlayer.IsValid && runner.LocalPlayer == player)
+			if (runner.IsServer)
 			{
-				Debug.Log($"Hosting successful.");
-				OnStartHosting?.Invoke();
-			}
-			else
-			{
+				if (_gamemode == GameMode.Host)
+				{
+					OnStartHosting?.Invoke();
+				}
 				Debug.Log($"Player {player.PlayerId} joined the session.");
 			}
 			HostOnPlayerJoin?.Invoke(runner, player);

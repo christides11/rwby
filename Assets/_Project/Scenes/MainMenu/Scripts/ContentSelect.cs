@@ -7,6 +7,7 @@ using Cysharp.Threading.Tasks;
 using UnityEngine.EventSystems;
 using rwby;
 using Rewired.Integration.UnityUI;
+using rwby.ui;
 
 namespace rwby
 {
@@ -14,62 +15,50 @@ namespace rwby
     {
         public static ContentSelect singleton;
 
-        public delegate void EmptyAction(ContentSelect contentSelector);
-        public event EmptyAction OnOpened;
-        public event EmptyAction OnClosed;
+        public Dictionary<int, ContentSelectInstance> ContentSelectInstances =
+            new Dictionary<int, ContentSelectInstance>();
 
-        
-        [SerializeField] GameObject contentBrowserLarge;
-        [SerializeField] GameObject contentBrowserLarge_Content;
-        [SerializeField] GameObject canvas;
-        
-        public GameObject prefabCanvas;
+        public delegate void InstanceAction(ContentSelect contentSelector, int id);
+        public event InstanceAction OnOpenInstance;
+        public event InstanceAction OnCloseInstance;
 
+        public ContentSelectInstance instancePrefab;
+        public GameObject contentItem;
+        
         public void Awake()
         {
             singleton = this;
         }
 
-        public async UniTask OpenMenu<T>(UnityEngine.Events.UnityAction<PlayerPointerEventData, ModObjectReference> selectAction) where T : IContentDefinition
+        public async UniTask OpenMenu<T>(int player, UnityEngine.Events.UnityAction<int, ModObjectReference> selectAction) where T : IContentDefinition
         {
-            foreach (Transform child in contentBrowserLarge.transform)
-            {
-                Destroy(child.gameObject);
-            }
-
+            if (ContentSelectInstances.ContainsKey(player)) return;
+            
             await ContentManager.singleton.LoadContentDefinitions<T>();
             List<ModObjectReference> conts = ContentManager.singleton.GetContentDefinitionReferences<T>();
+            if (conts.Count == 0) return;
 
-            if (conts.Count == 0)
-            {
-                CloseMenu();
-                return;
-            }
-
+            ContentSelectInstance instance = GameObject.Instantiate(instancePrefab, transform, false);
+            ContentSelectInstances.Add(player, instance);
+            
             foreach (ModObjectReference con in conts)
             {
-                GameObject contentItem = GameObject.Instantiate(contentBrowserLarge_Content, contentBrowserLarge.transform, false);
-                PlayerPointerEventTrigger eventTrigger = contentItem.GetComponentInChildren<PlayerPointerEventTrigger>();
+                GameObject contentItem = GameObject.Instantiate(this.contentItem, instance.contentTransform, false);
                 ModObjectReference objectReference = con;
-                eventTrigger.OnPointerClickEvent.AddListener((data) => { selectAction.Invoke(data, objectReference); });
+                contentItem.GetComponent<Selectable>().onSubmit.AddListener(() => { selectAction.Invoke(player, objectReference); });
                 contentItem.GetComponentInChildren<TextMeshProUGUI>().text = con.ToString();
             }
-
-            canvas.SetActive(true);
-            contentBrowserLarge.SetActive(true);
-            OnOpened?.Invoke(this);
+            
+            instance.gameObject.SetActive(true);
+            OnOpenInstance?.Invoke(this, player);
         }
 
-        public void CloseMenu()
+        public void CloseMenu(int player)
         {
-            foreach (Transform child in contentBrowserLarge.transform)
-            {
-                Destroy(child.gameObject);
-            }
-
-            canvas.SetActive(false);
-            contentBrowserLarge.SetActive(false);
-            OnClosed?.Invoke(this);
+            if (!ContentSelectInstances.ContainsKey(player)) return;
+            GameObject.Destroy(ContentSelectInstances[player].gameObject);
+            ContentSelectInstances.Remove(player);
+            OnCloseInstance?.Invoke(this, player);
         }
     }
 }

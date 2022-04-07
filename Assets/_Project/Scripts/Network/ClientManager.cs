@@ -29,8 +29,7 @@ namespace rwby
 		[Networked, Capacity(10)] public NetworkArray<NetworkClientInputData> inputBuffer { get; }
 		[Networked] public int inputBufferPosition { get; set; }
 		public int setInputDelay = 3;
-
-		// ?
+		
 		[Networked] public float mapLoadPercent { get; set; }
 
 		protected virtual void Awake()
@@ -99,6 +98,11 @@ namespace rwby
             }
 		}
 
+		public void CLIENT_SetPlayerCount(int playerCount)
+		{
+			RPC_SetPlayerCount(playerCount);
+		}
+		
 		public void CLIENT_SetPlayerCharacterCount(int playerIndex, int characterCount)
 		{
 			RPC_SetPlayerCharacterCount(playerIndex, characterCount);
@@ -114,7 +118,7 @@ namespace rwby
 			RPC_SetPlayerTeam(playerIndex, team);
 		}
 
-		[Rpc(RpcSources.InputAuthority | RpcSources.StateAuthority, RpcTargets.StateAuthority)]
+		[Rpc(RpcSources.InputAuthority | RpcSources.StateAuthority, RpcTargets.StateAuthority, HostMode = RpcHostMode.SourceIsHostPlayer)]
 		private void RPC_SetPlayerCount(int playerCount)
 		{
 			if (playerCount < 0 || playerCount > LobbyManager.singleton.Settings.maxPlayersPerClient || playerCount == ClientPlayers.Count) return;
@@ -136,10 +140,11 @@ namespace rwby
 			}
 		}
 		
-		[Rpc(RpcSources.InputAuthority | RpcSources.StateAuthority, RpcTargets.StateAuthority)]
+		[Rpc(RpcSources.InputAuthority | RpcSources.StateAuthority, RpcTargets.StateAuthority, HostMode = RpcHostMode.SourceIsHostPlayer)]
 		private void RPC_SetPlayerCharacterCount(int playerIndex, int characterCount)
 		{
 			LobbyManager lobbyManager = LobbyManager.singleton;
+			Debug.Log(lobbyManager.GetTeamDefinition(ClientPlayers[playerIndex].team).maxCharactersPerPlayer);
 			if (characterCount < 0 || characterCount >
 			    lobbyManager.GetTeamDefinition(ClientPlayers[playerIndex].team).maxCharactersPerPlayer) return;
 
@@ -154,7 +159,7 @@ namespace rwby
 			}
 		}
 
-		[Rpc(RpcSources.InputAuthority | RpcSources.StateAuthority, RpcTargets.StateAuthority)]
+		[Rpc(RpcSources.InputAuthority | RpcSources.StateAuthority, RpcTargets.StateAuthority, HostMode = RpcHostMode.SourceIsHostPlayer)]
 		private void RPC_SetPlayerCharacter(int playerIndex, ModObjectReference characterReference)
         {
 			var tempList = ClientPlayers;
@@ -163,7 +168,7 @@ namespace rwby
 			tempList[playerIndex] = temp;
 		}
 
-		[Rpc(RpcSources.InputAuthority | RpcSources.StateAuthority, RpcTargets.StateAuthority)]
+		[Rpc(RpcSources.InputAuthority | RpcSources.StateAuthority, RpcTargets.StateAuthority, HostMode = RpcHostMode.SourceIsHostPlayer)]
 		private void RPC_SetPlayerTeam(int playerIndex, byte team)
         {
 			var tempList = ClientPlayers;
