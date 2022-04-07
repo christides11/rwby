@@ -132,8 +132,6 @@ namespace rwby.menus
             for (int i = 0; i < menuInstances.Count; i++)
             {
                 menuInstances[i].ResetCharacterList();
-                //menuInstances[i].FillLobbyPlayerList();
-                //menuInstances[i].FillPlayerCharacterList();
             }
         }
     }

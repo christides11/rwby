@@ -56,9 +56,6 @@ namespace rwby
             }
             
             ResetCharacterList();
-            //GameObject cAdd = GameObject.Instantiate(characterContentPrefab, characterContentTransform, false);
-            //cAdd.GetComponentInChildren<TextMeshProUGUI>().text = "+";
-            //cAdd.GetComponent<Selectable>().onSubmit.AddListener(() => { OpenCharacterSelect(0); });
         }
 
         public void ResetCharacterList()
@@ -71,13 +68,17 @@ namespace rwby
             ClientManager cm = ClientManager.local;
             for (int i = 0; i < cm.ClientPlayers[playerID].characterReferences.Count; i++)
             {
+                int selectIndex = i;
                 GameObject chara = GameObject.Instantiate(characterContentPrefab, characterContentTransform, false);
                 chara.GetComponentInChildren<TextMeshProUGUI>().text = "?";
+                chara.GetComponent<Selectable>().onSubmit.AddListener(() => {OpenCharacterSelect(selectIndex);});
             }
-                         
+
+            if (cm.ClientPlayers[playerID].characterReferences.Count == LobbyManager.singleton.settings
+                    .GetTeamDefinition(cm.ClientPlayers[playerID].team).maxCharactersPerPlayer) return;
             GameObject cAdd = GameObject.Instantiate(characterContentPrefab, characterContentTransform, false);
             cAdd.GetComponentInChildren<TextMeshProUGUI>().text = "+";
-            cAdd.GetComponent<Selectable>().onSubmit.AddListener(() => { TryAddCharacter(); });
+            cAdd.GetComponent<Selectable>().onSubmit.AddListener(TryAddCharacter);
         }
 
         void TryAddCharacter()

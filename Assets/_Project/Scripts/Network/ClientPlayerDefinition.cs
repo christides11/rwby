@@ -6,9 +6,7 @@ namespace rwby
     public struct ClientPlayerDefinition : INetworkStruct
     {
         public byte team;
-
         [Networked, Capacity(4)] public NetworkLinkedList<ModObjectReference> characterReferences => default;
-        public ModObjectReference characterReference;
         public NetworkId characterNetID;
     }
 }

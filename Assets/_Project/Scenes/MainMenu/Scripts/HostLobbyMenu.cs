@@ -20,6 +20,7 @@ namespace rwby.menus
         // Options.
         private int playerCount = 8;
         private int maxPlayersPerClient = 4;
+        private byte teamCount = 0;
         private ModObjectReference selectedGamemodeReference;
         private IGameModeDefinition selectedGamemodeDefinition;
         private GameModeBase selectedGamemode;
@@ -52,6 +53,9 @@ namespace rwby.menus
             playersPerCountButtons[1].onSubmit.AddListener(() => { maxPlayersPerClient++; });
             lobbySettings.AddOption("GameMode",  selectedGamemodeDefinition ? selectedGamemodeDefinition.Name : "None").onSubmit.AddListener(Button_GameMode);
             if(selectedGamemode) selectedGamemode.AddGamemodeSettings(0, lobbySettings, true);
+            var teamButtons = lobbySettings.AddOption("Teams", teamCount);
+            teamButtons[0].onSubmit.AddListener(() => { ChangeTeamCount(-1); });
+            teamButtons[1].onSubmit.AddListener(() => { ChangeTeamCount(1); });
             lobbySettings.AddOption("Host").onSubmit.AddListener(TryHostLobby);
         }
 
@@ -65,6 +69,14 @@ namespace rwby.menus
         {
             if (playerCount == 1) return;
             playerCount--;
+            Refresh();
+        }
+
+        private void ChangeTeamCount(int change)
+        {
+            int minTeams = selectedGamemodeDefinition != null ? selectedGamemodeDefinition.minimumTeams : 0;
+            int maxTeams = selectedGamemodeDefinition != null ? selectedGamemodeDefinition.maximumTeams : 0;
+            teamCount = (byte)Mathf.Clamp(teamCount + change, minTeams, maxTeams);
             Refresh();
         }
 
@@ -119,16 +131,17 @@ namespace rwby.menus
             LobbyManager.OnLobbyManagerSpawned -= OnHostingSuccess;
             GameManager.singleton.loadingMenu.CloseMenu(0);
             lobbyMenuHandler.Open();
-            bool setGamemodeResult = await LobbyManager.singleton.TrySetGamemode(selectedGamemodeReference);
+            bool setGamemodeResult = await LobbyManager.singleton.settings.TrySetGamemode(selectedGamemodeReference);
             // TODO Better handling.
             if (setGamemodeResult == false)
             {
                 Debug.LogError("Set Gamemode Failed.");
                 return;
             }
+            LobbyManager.singleton.settings.SetTeamCount(teamCount);
+            LobbyManager.singleton.settings.SetMaxPlayersPerClient(maxPlayersPerClient);
             LobbyManager.singleton.CurrentGameMode.SetGamemodeSettings(selectedGamemode);
             ExitMenu();
-            //LobbyManager.singleton.maxPlayersPerClient = maxPlayersPerClientDropdown.value + 1;
         }
 
         private void OnHostingFailed()

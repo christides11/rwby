@@ -9,6 +9,7 @@ namespace rwby
 
         public int minimumTeams;
         public int maximumTeams;
+        public TeamDefinition defaultTeam;
         public TeamDefinition[] teams;
 
         public abstract GameObject GetGamemode();

@@ -108,9 +108,9 @@ namespace rwby
 			RPC_SetPlayerCharacterCount(playerIndex, characterCount);
 		}
 		
-		public void CLIENT_SetPlayerCharacter(int playerIndex, ModObjectReference characterReference)
+		public void CLIENT_SetPlayerCharacter(int playerIndex, int characterIndex, ModObjectReference characterReference)
         {
-			RPC_SetPlayerCharacter(playerIndex, characterReference);
+			RPC_SetPlayerCharacter(playerIndex, characterIndex, characterReference);
 		}
 		
 		public void CLIENT_SetPlayerTeam(int playerIndex, byte team)
@@ -144,11 +144,12 @@ namespace rwby
 		private void RPC_SetPlayerCharacterCount(int playerIndex, int characterCount)
 		{
 			LobbyManager lobbyManager = LobbyManager.singleton;
-			Debug.Log(lobbyManager.GetTeamDefinition(ClientPlayers[playerIndex].team).maxCharactersPerPlayer);
 			if (characterCount < 0 || characterCount >
-			    lobbyManager.GetTeamDefinition(ClientPlayers[playerIndex].team).maxCharactersPerPlayer) return;
+			    lobbyManager.settings.GetTeamDefinition(ClientPlayers[playerIndex].team).maxCharactersPerPlayer) return;
 
-			var list = ClientPlayers[playerIndex].characterReferences;
+			var tempList = ClientPlayers;
+			ClientPlayerDefinition temp = tempList[playerIndex];
+			var list = temp.characterReferences;
 			if (list.Count < characterCount)
 			{
 				while(list.Count < characterCount) list.Add(new ModObjectReference());
@@ -157,16 +158,17 @@ namespace rwby
 			{
 				while (list.Count > characterCount) list.Remove(list.Get(list.Count-1));
 			}
+			tempList.Set(playerIndex, temp);
 		}
 
 		[Rpc(RpcSources.InputAuthority | RpcSources.StateAuthority, RpcTargets.StateAuthority, HostMode = RpcHostMode.SourceIsHostPlayer)]
-		private void RPC_SetPlayerCharacter(int playerIndex, ModObjectReference characterReference)
+		private void RPC_SetPlayerCharacter(int playerIndex, int characterIndex, ModObjectReference characterReference)
         {
 			var tempList = ClientPlayers;
 			ClientPlayerDefinition temp = tempList[playerIndex];
-			temp.characterReference = characterReference;
-			tempList[playerIndex] = temp;
-		}
+			temp.characterReferences.Set(characterIndex, characterReference);
+			tempList.Set(playerIndex, temp);
+        }
 
 		[Rpc(RpcSources.InputAuthority | RpcSources.StateAuthority, RpcTargets.StateAuthority, HostMode = RpcHostMode.SourceIsHostPlayer)]
 		private void RPC_SetPlayerTeam(int playerIndex, byte team)
@@ -174,11 +176,13 @@ namespace rwby
 			var tempList = ClientPlayers;
 			ClientPlayerDefinition temp = tempList[playerIndex];
 			temp.team = team;
-			tempList[playerIndex] = temp;
+			tempList.Set(playerIndex, temp);
 		}
 
 		public NetworkObject SpawnPlayer(PlayerRef owner, int playerIndex, Vector3 spawnPosition)
-        {
+		{
+			return null;
+			/*
 			ModObjectReference characterReference = ClientPlayers[playerIndex].characterReference;
 			IFighterDefinition fighterDefinition = ContentManager.singleton.GetContentDefinition<IFighterDefinition>(characterReference);
 
@@ -186,7 +190,7 @@ namespace rwby
 			ClientManager tempCM = this;
 			NetworkObject no = Runner.Spawn(fighterDefinition.GetFighter().GetComponent<NetworkObject>(), spawnPosition, Quaternion.identity, owner, 
 				(a, b) =>
-                {
+		        {
 					b.gameObject.name = $"{b.Id}.{playerIndex} : {fighterDefinition.Name}";
 					b.GetBehaviour<FighterCombatManager>().Team = tempCM.ClientPlayers[indexTemp].team;
 					var list = ClientPlayers;
@@ -194,8 +198,8 @@ namespace rwby
 					temp.characterNetID = b.Id;
 					list[indexTemp] = temp;
 				});
-			return no;
-        }
+			return no;*/
+		}
 
         Vector2[] buttonMovement = new Vector2[8];
 		Vector2[] buttonCamera = new Vector2[8];

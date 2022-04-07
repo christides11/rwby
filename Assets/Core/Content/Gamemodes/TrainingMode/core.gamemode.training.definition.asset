@@ -14,12 +14,27 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   nameIdentifier: 
   minimumTeams: 0
-  maximumTeams: 0
-  teams:
-  - color: {r: 1, g: 1, b: 1, a: 0}
-    minimumPlayers: 1
+  maximumTeams: 2
+  defaultTeam:
+    teamName: FFA
+    color: {r: 0.083333254, g: 1, b: 0, a: 1}
+    minimumPlayers: 0
     maximumPlayers: 100
-    maxCharactersPerPlayer: 1
+    maxCharactersPerPlayer: 4
+    friendlyFire: 1
+  teams:
+  - teamName: Red
+    color: {r: 1, g: 0, b: 0, a: 1}
+    minimumPlayers: 0
+    maximumPlayers: 100
+    maxCharactersPerPlayer: 4
+    friendlyFire: 0
+  - teamName: Blue
+    color: {r: 0, g: 0.8567834, b: 1, a: 1}
+    minimumPlayers: 0
+    maximumPlayers: 100
+    maxCharactersPerPlayer: 4
+    friendlyFire: 0
   gamemodeName: Training
   description: 
   gamemodeReference:

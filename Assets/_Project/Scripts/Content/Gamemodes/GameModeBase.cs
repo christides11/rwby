@@ -79,7 +79,7 @@ namespace rwby
         
         public virtual void AddGamemodeSettings(int player, LobbySettingsMenu settingsMenu, bool local = false)
         {
-
+            
         }
 
         public virtual async UniTask<bool> VerifyGameModeSettings()

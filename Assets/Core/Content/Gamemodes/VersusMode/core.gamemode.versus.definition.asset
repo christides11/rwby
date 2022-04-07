@@ -12,21 +12,34 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9bbf0bbe28e92c24f986f355c96289b1, type: 3}
   m_Name: core.gamemode.versus.definition
   m_EditorClassIdentifier: 
+  nameIdentifier: 
   minimumTeams: 0
   maximumTeams: 4
   teams:
-  - color: {r: 1, g: 0, b: 0, a: 1}
+  - teamName: 
+    color: {r: 1, g: 0, b: 0, a: 1}
     minimumPlayers: 0
     maximumPlayers: 4
-  - color: {r: 0, g: 0.04511404, b: 1, a: 1}
+    maxCharactersPerPlayer: 1
+    friendlyFire: 0
+  - teamName: 
+    color: {r: 0, g: 0.04511404, b: 1, a: 1}
     minimumPlayers: 0
     maximumPlayers: 4
-  - color: {r: 0.03901875, g: 1, b: 0, a: 1}
+    maxCharactersPerPlayer: 1
+    friendlyFire: 0
+  - teamName: 
+    color: {r: 0.03901875, g: 1, b: 0, a: 1}
     minimumPlayers: 0
     maximumPlayers: 4
-  - color: {r: 1, g: 0.9271912, b: 0, a: 1}
+    maxCharactersPerPlayer: 1
+    friendlyFire: 0
+  - teamName: 
+    color: {r: 1, g: 0.9271912, b: 0, a: 1}
     minimumPlayers: 0
     maximumPlayers: 4
+    maxCharactersPerPlayer: 1
+    friendlyFire: 0
   gamemodeName: Versus
   description: 
   gamemodeReference:
