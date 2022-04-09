@@ -5,7 +5,7 @@ using UnityEngine;
 using TMPro;
 using Fusion;
 
-namespace rwby.menus
+namespace rwby.ui.mainmenu
 {
     public class LoadingMenu : MonoBehaviour
     {

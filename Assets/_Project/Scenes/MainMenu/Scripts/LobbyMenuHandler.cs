@@ -4,9 +4,9 @@ using UnityEngine;
 using Cysharp.Threading.Tasks;
 using UnityEngine.EventSystems;
 
-namespace rwby.menus
+namespace rwby.ui.mainmenu
 {
-    public class LobbyMenuHandler : MonoBehaviour
+    public class LobbyMenuHandler : MainMenuMenu
     {
         public List<LobbyMenuInstance> menuInstances = new List<LobbyMenuInstance>();
         public LobbyMenuInstance instancePrefab;
@@ -17,20 +17,20 @@ namespace rwby.menus
             instancePrefab.gameObject.SetActive(false);
         }
 
-        public void Open()
+        public override void Open(MenuDirection direction, IMenuHandler menuHandler)
         {
+            base.Open(direction, menuHandler);
             ClientManager.OnPlayersChanged += WhenClientPlayerChanged;
             LobbyManager.OnLobbySettingsChanged += UpdateLobbyInfo;
             LobbyManager.OnGamemodeSettingsChanged += UpdateLobbyInfo;
-            
-            
+
             gameObject.SetActive(true);
             
             GameManager.singleton.controllerAssignmentMenu.OnControllersAssigned += OnControllersAssigned;
             GameManager.singleton.controllerAssignmentMenu.OpenMenu();
         }
 
-        public void Close()
+        public override bool TryClose(MenuDirection direction, bool forceClose = false)
         {
             GameManager.singleton.controllerAssignmentMenu.OnControllersAssigned -= OnControllersAssigned;
             for (int i = 0; i < menuInstances.Count; i++)
@@ -44,8 +44,9 @@ namespace rwby.menus
             LobbyManager.OnLobbySettingsChanged -= UpdateLobbyInfo;
             LobbyManager.OnGamemodeSettingsChanged -= UpdateLobbyInfo;
             gameObject.SetActive(false);
+            return true;
         }
-        
+
         private async UniTask StartMatch()
         {
             ClientManager.OnPlayersChanged -= WhenClientPlayerChanged;
@@ -56,7 +57,8 @@ namespace rwby.menus
 
         public async void ExitLobby()
         {
-            
+            NetworkManager.singleton.LeaveSession();
+            currentHandler.Back();
         }
 
         LobbyMenuInstance InitializeMenuInstance(int playerID)

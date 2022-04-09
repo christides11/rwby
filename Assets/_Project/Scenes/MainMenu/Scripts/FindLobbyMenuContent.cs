@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
-namespace rwby.menus
+namespace rwby.ui.mainmenu
 {
     public class FindLobbyMenuContent : MonoBehaviour
     {

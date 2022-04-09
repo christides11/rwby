@@ -1,25 +1,17 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using UnityEngine.EventSystems;
-using UnityEngine.UI;
-
-namespace rwby.menus
+namespace rwby.ui.mainmenu
 {
-    public class LocalMenu : MonoBehaviour
+    public class LocalMenu : MainMenuMenu
     {
-        [Header("Menus")] 
-        public ModeSelectMenu modeSelectMenu;
-        public void Open()
+        public override void Open(MenuDirection direction, IMenuHandler menuHandler)
         {
+            base.Open(direction, menuHandler);
             gameObject.SetActive(true);
         }
 
-        public void Close()
+        public override bool TryClose(MenuDirection direction, bool forceClose = false)
         {
-            EventSystem.current.SetSelectedGameObject(null);
             gameObject.SetActive(false);
+            return true;
         }
 
         public void BUTTON_PlayerMatch()
@@ -39,8 +31,7 @@ namespace rwby.menus
 
         public void BUTTON_Back()
         {
-            modeSelectMenu.Open();
-            Close();
+            currentHandler.Back();
         }
     }
 }

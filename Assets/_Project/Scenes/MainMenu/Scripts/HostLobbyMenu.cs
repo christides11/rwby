@@ -5,9 +5,9 @@ using Fusion;
 using System;
 using Cysharp.Threading.Tasks;
 
-namespace rwby.menus
+namespace rwby.ui.mainmenu
 {
-    public class HostLobbyMenu : MonoBehaviour
+    public class HostLobbyMenu : MainMenuMenu
     {
         [SerializeField] private OnlineMenu onlineMenu;
         [SerializeField] private LobbyMenuHandler lobbyMenuHandler;
@@ -24,21 +24,24 @@ namespace rwby.menus
         private ModObjectReference selectedGamemodeReference;
         private IGameModeDefinition selectedGamemodeDefinition;
         private GameModeBase selectedGamemode;
-        
-        public void OpenMenu()
+
+        public override void Open(MenuDirection direction, IMenuHandler menuHandler)
         {
-            gameObject.SetActive(true);
+            base.Open(direction, menuHandler);
             lobbySettings.Open();
             Refresh();
+            gameObject.SetActive(true);
+            if (direction == MenuDirection.BACKWARDS) currentHandler.Back();
         }
 
-        public void ExitMenu()
+        public override bool TryClose(MenuDirection direction, bool forceClose = false)
         {
-            Destroy(selectedGamemode.gameObject);
+            if(selectedGamemode) Destroy(selectedGamemode.gameObject);
             selectedGamemodeReference = default;
             selectedGamemodeDefinition = null;
             lobbySettings.Close();
             gameObject.SetActive(false);
+            return true;
         }
 
         public void Refresh()
@@ -82,9 +85,10 @@ namespace rwby.menus
 
         public void Button_Back()
         {
-            ExitMenu();
-            onlineMenu.Open();
-            ContentManager.singleton.UnloadAllContent<IGameModeDefinition>();
+            currentHandler.Back();
+            //ExitMenu();
+            //onlineMenu.Open();
+            //ContentManager.singleton.UnloadAllContent<IGameModeDefinition>();
         }
 
         public void Button_GameMode()
@@ -130,7 +134,6 @@ namespace rwby.menus
         {
             LobbyManager.OnLobbyManagerSpawned -= OnHostingSuccess;
             GameManager.singleton.loadingMenu.CloseMenu(0);
-            lobbyMenuHandler.Open();
             bool setGamemodeResult = await LobbyManager.singleton.settings.TrySetGamemode(selectedGamemodeReference);
             // TODO Better handling.
             if (setGamemodeResult == false)
@@ -141,7 +144,7 @@ namespace rwby.menus
             LobbyManager.singleton.settings.SetTeamCount(teamCount);
             LobbyManager.singleton.settings.SetMaxPlayersPerClient(maxPlayersPerClient);
             LobbyManager.singleton.CurrentGameMode.SetGamemodeSettings(selectedGamemode);
-            ExitMenu();
+            currentHandler.Forward((int)MainMenuType.LOBBY);
         }
 
         private void OnHostingFailed()

@@ -1,45 +1,39 @@
 using UnityEngine;
 
-namespace rwby.menus
+namespace rwby.ui.mainmenu
 {
-    public class OnlineMenu : MonoBehaviour
+    public class OnlineMenu : MainMenuMenu
     {
-        [Header("Menus")] 
-        public ModeSelectMenu modeSelectMenu;
-        public FindLobbyMenu findLobbyMenu;
-        public HostLobbyMenu hostLobbyMenu;
-
-        public void Open()
+        public override void Open(MenuDirection direction, IMenuHandler menuHandler)
         {
+            base.Open(direction, menuHandler);
             gameObject.SetActive(true);
         }
 
-        public void Close()
+        public override bool TryClose(MenuDirection direction, bool forceClose = false)
         {
             gameObject.SetActive(false);
+            return true;
         }
 
         public void BUTTON_FindLobby()
         {
-            findLobbyMenu.OpenMenu();
-            Close();
+            currentHandler.Forward((int)MainMenuType.FIND_LOBBY);
         }
 
         public void BUTTON_HostLobby()
         {
-            hostLobbyMenu.OpenMenu();
-            Close();
+            currentHandler.Forward((int)MainMenuType.HOST_LOBBY);
         }
 
         public void BUTTON_QuickJoin()
         {
-            Close();
+            
         }
         
         public void BUTTON_Back()
         {
-            modeSelectMenu.Open();
-            Close();
+            currentHandler.Back();
         }
     }
 }

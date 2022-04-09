@@ -1,4 +1,4 @@
-using rwby.menus;
+using rwby.ui.mainmenu;
 using UnityEngine;
 using TMPro;
 using UnityEngine.EventSystems;

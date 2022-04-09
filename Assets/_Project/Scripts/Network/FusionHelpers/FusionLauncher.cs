@@ -144,6 +144,11 @@ namespace rwby
 			}
 		}
 
+		public void LeaveSession()
+		{
+			if (_runner != null) _runner.Shutdown();
+		}
+
 		protected void InitSingletions(bool provideInput)
 		{
 			_runner = gameObject.GetComponent<NetworkRunner>();

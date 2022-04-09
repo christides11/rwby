@@ -8,9 +8,9 @@ using Cysharp.Threading.Tasks;
 using System.Threading;
 using UnityEngine.EventSystems;
 
-namespace rwby.menus
+namespace rwby.ui.mainmenu
 {
-    public class FindLobbyMenu : MonoBehaviour
+    public class FindLobbyMenu : MainMenuMenu
     {
         [SerializeField] private Transform LobbyContentHolder;
         [SerializeField] private FindLobbyMenuContent lobbyContentItem;
@@ -26,19 +26,21 @@ namespace rwby.menus
         private CancellationTokenSource refreshLobbiesCancelToken = new CancellationTokenSource();
 
         private int page = 0;
-        
-        public void OpenMenu()
+
+        public override void Open(MenuDirection direction, IMenuHandler menuHandler)
         {
+            base.Open(direction, menuHandler);
             NetworkManager.singleton.FusionLauncher.OnSessionsUpdated += OnSessionsUpdated;
             _ = NetworkManager.singleton.FusionLauncher.JoinSessionLobby();
             gameObject.SetActive(true);
         }
 
-        public void CloseMenu()
+        public override bool TryClose(MenuDirection direction, bool forceClose = false)
         {
             NetworkManager.singleton.FusionLauncher.OnSessionsUpdated -= OnSessionsUpdated;
             ClearLobbyScrollView();
             gameObject.SetActive(false);
+            return true;
         }
 
         private void OnDisable()
@@ -50,8 +52,7 @@ namespace rwby.menus
         {
             if (Input.GetKeyDown(KeyCode.Escape))
             {
-                onlineMenu.Open();
-                CloseMenu();
+                currentHandler.Back();
             }
         }
 
@@ -89,18 +90,18 @@ namespace rwby.menus
 
             NetworkManager.singleton.FusionLauncher.OnConnectionStatusChanged += CheckConnectionStatus;
             NetworkManager.singleton.JoinHost(session);
+            GameManager.singleton.loadingMenu.OpenMenu(0, "Joining Lobby...");
         }
 
         private void CheckConnectionStatus(NetworkRunner runner, FusionLauncher.ConnectionStatus status)
         {
             if (status == FusionLauncher.ConnectionStatus.Connecting) return;
-            //loadingMenu.CloseMenu();
+            GameManager.singleton.loadingMenu.CloseMenu(0);
             NetworkManager.singleton.FusionLauncher.OnConnectionStatusChanged -= CheckConnectionStatus;
 
             if (status == FusionLauncher.ConnectionStatus.Disconnected || status == FusionLauncher.ConnectionStatus.Failed) return;
 
-            lobbyMenuHandler.Open();
-            CloseMenu();
+            currentHandler.Forward((int)MainMenuType.LOBBY);
         }
     }
 }

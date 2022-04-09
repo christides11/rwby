@@ -55,6 +55,11 @@ namespace rwby
             _ = fusionLauncher.JoinSession(sessionInfo, clientPrefab);
         }
 
+        public void LeaveSession()
+        {
+            fusionLauncher.LeaveSession();
+        }
+
         private void SpawnMatchManager()
         {
             fusionLauncher.NetworkRunner.Spawn(lobbyManagerPrefab, Vector3.zero, Quaternion.identity);

@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using HnSF.Input;
 using Rewired;
-using rwby.menus;
+using rwby.ui.mainmenu;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 

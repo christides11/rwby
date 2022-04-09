@@ -1,15 +1,10 @@
-using System;
 using UnityEngine;
-using TMPro;
-using Fusion;
-using Cysharp.Threading.Tasks;
 using Rewired;
-using Rewired.Integration.UnityUI;
 using UnityEngine.EventSystems;
 
-namespace rwby.menus
+namespace rwby.ui.mainmenu
 {
-    public class ModeSelectMenu : MonoBehaviour
+    public class ModeSelectMenu : MainMenuMenu
     {
         public LobbyMenuHandler lobbyMenuHandler;
         public GameObject defaultSelectedUIItem;
@@ -18,45 +13,28 @@ namespace rwby.menus
         private EventSystem eventSystem;
         private LocalPlayerManager localPlayerManager;
 
-        [Header("Menus")] 
-        public LocalMenu localMenu;
-        public OnlineMenu onlineMenu;
-        //[SerializeField] private HostLobbyMenu hostLobbyMenu;
-        //[SerializeField] private FindLobbyMenu findLobbyMenu;
-        
         private void Start()
         {
             localPlayerManager = GameManager.singleton.localPlayerManager;
-            Open();
         }
 
-        public void Open()
+        public override void Open(MenuDirection direction, IMenuHandler menuHandler)
         {
-            if(LobbyManager.singleton)
-            {
-                lobbyMenuHandler.Open();
-                return;
-            }
+            base.Open(direction, menuHandler);
             systemPlayer = ReInput.players.GetSystemPlayer();
             eventSystem = EventSystem.current;
             gameObject.SetActive(true);
         }
 
-        public void Close()
+        public override bool TryClose(MenuDirection direction, bool forceClose = false)
         {
             EventSystem.current.SetSelectedGameObject(null);
             gameObject.SetActive(false);
+            return true;
         }
 
         private void Update()
         {
-            if (LobbyManager.singleton)
-            {
-                lobbyMenuHandler.Open();
-                gameObject.SetActive(false);
-            }
-
-            
             if (eventSystem.currentSelectedGameObject == null
                 && localPlayerManager.systemPlayer.controllerType == PlayerControllerType.GAMEPAD
                 && systemPlayer.GetAxis2D(rwby.Action.UIMovement_X, rwby.Action.UIMovement_Y).sqrMagnitude > 0)
@@ -67,75 +45,27 @@ namespace rwby.menus
 
         public void BUTTON_Online()
         {
-            onlineMenu.Open();
-            Close();
+            currentHandler.Forward((int)MainMenuType.ONLINE);
         }
 
         public void BUTTON_Local()
         {
-            localMenu.Open();
-            Close();
+            currentHandler.Forward((int)MainMenuType.LOCAL);
         }
 
         public void BUTTON_Modding()
         {
-            Close();
+            
         }
         
         public void BUTTON_Options()
         {
-            Close();
+            currentHandler.Forward((int)MainMenuType.OPTIONS);
         }
 
         public void BUTTON_Exit()
         {
             Application.Quit();
         }
-        
-        /*
-        public void ButtonHostLobby()
-        {
-            hostLobbyMenu.OpenMenu();
-            gameObject.SetActive(false);
-        }
-
-        public void ButtonSingleplayer()
-        {
-            _ = TryStartSingleplayer();
-        }
-
-        private async UniTaskVoid TryStartSingleplayer()
-        {
-            StartGameResult result = await NetworkManager.singleton.StartSinglePlayerHost();
-            if(result.Ok == false)
-            {
-                return;
-            }
-            gameObject.SetActive(false);
-
-            while(LobbyManager.singleton == null)
-            {
-                await UniTask.WaitForFixedUpdate();
-            }
-            lobbyMenuHandler.Open();
-        }
-
-        public void ButtonFindLobby()
-        {
-            findLobbyMenu.OpenMenu();
-            gameObject.SetActive(false);
-        }
-
-        public void ButtonJoinLobby()
-        {
-            joinLobbyInputMenu.SetActive(true);
-            eventSystem.SetSelectedGameObject(lobbyNameText.gameObject);
-        }
-
-        public void TryJoinLobby()
-        {
-            NetworkManager.singleton.JoinHost(lobbyNameText.text);
-            joinLobbyInputMenu.SetActive(false);
-        }*/
     }
 }

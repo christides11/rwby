@@ -1,7 +1,7 @@
 using Cysharp.Threading.Tasks;
 using Fusion;
 using Rewired.Integration.UnityUI;
-using rwby.menus;
+using rwby.ui.mainmenu;
 using System;
 using System.Collections;
 using System.Collections.Generic;

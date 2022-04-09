@@ -32,5 +32,10 @@ namespace rwby
         {
             return !(a == b);
         }
+
+        public override int GetHashCode()
+        {
+            return (bank, animation, weight, currentTime).GetHashCode();
+        }
     }
 }

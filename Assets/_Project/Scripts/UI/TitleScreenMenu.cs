@@ -1,19 +1,49 @@
 using Rewired;
 using UnityEngine;
 
-namespace rwby.menus
+namespace rwby.ui.mainmenu
 {
-    public class TitleScreenMenu : MonoBehaviour
+    public class TitleScreenMenu : MainMenuMenu
     {
         public ModeSelectMenu modeSelectMenu;
 
-        private void Update()
+        [ActionIdProperty(typeof(Action))]
+        public int[] validActions;
+        
+        public override void Open(MenuDirection direction, IMenuHandler menuHandler)
         {
-            if (ReInput.players.SystemPlayer.GetAnyButtonDown())
+            base.Open(direction, menuHandler);
+            gameObject.SetActive(true);
+        }
+
+        public override bool TryClose(MenuDirection direction, bool forceClose = false)
+        {
+            gameObject.SetActive(false);
+            return true;
+        }
+
+        private void FixedUpdate()
+        {
+            for (int i = 0; i < validActions.Length; i++)
             {
-                modeSelectMenu.Open();
-                gameObject.SetActive(false);
+                if (ReInput.players.SystemPlayer.GetButton(validActions[i]))
+                {
+                    NextMenu();
+                    return;
+                }
             }
+
+            if (Input.anyKey)
+            {
+                NextMenu();
+                return;
+            }
+        }
+
+        private void NextMenu()
+        {
+            currentHandler.Forward((int)MainMenuType.MODE_SELECT);
+            gameObject.SetActive(false);
         }
     }
 }
