@@ -139,11 +139,7 @@ namespace rwby
 
         private async UniTask LoadPreviouslyLoadedMods()
         {
-            List<string> savedLoadedMods = SaveLoadJsonService.Load<List<string>>(modsLoadedFileName);
-            if (savedLoadedMods == null)
-            {
-                savedLoadedMods = new List<string>();
-            }
+            if(!SaveLoadJsonService.TryLoad(modsLoadedFileName, out List<string> savedLoadedMods)) savedLoadedMods = new List<string>();
 
             List<string> failedToLoadMods = await LoadMods(savedLoadedMods);
             foreach (string um in failedToLoadMods)

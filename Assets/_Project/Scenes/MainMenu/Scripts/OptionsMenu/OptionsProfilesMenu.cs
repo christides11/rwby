@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Events;
 
 namespace rwby.ui.mainmenu
 {
@@ -9,6 +10,7 @@ namespace rwby.ui.mainmenu
     {
         [SerializeField] private Transform optionsTransform;
         [SerializeField] private GameObject optionPrefab;
+        [SerializeField] private CanvasGroup canvasGroup;
 
         public override void Open(MenuDirection direction, IMenuHandler menuHandler)
         {
@@ -24,10 +26,21 @@ namespace rwby.ui.mainmenu
 
         private void FillProfiles()
         {
-            GameObject defaultProfile = GameObject.Instantiate(optionPrefab, optionsTransform, false);
-            defaultProfile.GetComponentInChildren<TextMeshProUGUI>().text = "DEFAULT";
-            defaultProfile.SetActive(true);
+            var profiles = GameManager.singleton.profilesManager.Profiles;
+            for(int i = 0; i < profiles.Count; i++)
+            {
+                int index = i;
+                ProfileDefinition profile = profiles[i];
+                GameObject profileButton = GameObject.Instantiate(optionPrefab, optionsTransform, false);
+                profileButton.GetComponent<Selectable>().onSubmit.AddListener(() => { BUTTON_Profile(index); });
+                profileButton.GetComponentInChildren<TextMeshProUGUI>().text = profile.profileName;
+                profileButton.SetActive(true);
+            }
             
+            GameObject addProfileButton = GameObject.Instantiate(optionPrefab, optionsTransform, false);
+            addProfileButton.GetComponent<Selectable>().onSubmit.AddListener(() => { BUTTON_AddProfile(); });
+            addProfileButton.GetComponentInChildren<TextMeshProUGUI>().text = "+";
+            addProfileButton.SetActive(true);
             
             GameObject backButton = GameObject.Instantiate(optionPrefab, optionsTransform, false);
             backButton.GetComponent<Selectable>().onSubmit.AddListener(() => { BUTTON_Back(); });
@@ -41,9 +54,27 @@ namespace rwby.ui.mainmenu
             return true;
         }
 
+        private UnityAction screenCloseAction;
         public void BUTTON_Profile(int index)
         {
-            
+            screenCloseAction = () => { AssignProfile(index); };
+            canvasGroup.interactable = false;
+            GameManager.singleton.profilesManager.ApplyProfileToPlayer(0, index);
+            GameManager.singleton.cMapper.onScreenClosed += screenCloseAction;
+            GameManager.singleton.cMapper.Open();
+        }
+
+        private void AssignProfile(int profileIndex)
+        {
+            GameManager.singleton.cMapper.onScreenClosed -= screenCloseAction;
+            GameManager.singleton.profilesManager.ApplyControlsToProfile(0, profileIndex);
+            GameManager.singleton.profilesManager.SaveProfiles();
+            canvasGroup.interactable = true;
+        }
+
+        public void BUTTON_AddProfile()
+        {
+            //GameManager.singleton.profilesManager.AddProfile("");
         }
 
         public void BUTTON_Back()

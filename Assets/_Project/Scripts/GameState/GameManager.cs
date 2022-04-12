@@ -1,9 +1,5 @@
 using Cysharp.Threading.Tasks;
 using Rewired.UI.ControlMapper;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using HnSF.Input;
 using Rewired;
 using rwby.ui.mainmenu;
 using UnityEngine;
@@ -17,15 +13,13 @@ namespace rwby
 
         [SerializeField] private ModLoader modLoader;
         public ContentManager contentManager;
-        [SerializeField] private ControlMapper cMapper;
+        public ControlMapper cMapper;
         public LocalPlayerManager localPlayerManager;
         public ControllerAssignmentMenu controllerAssignmentMenu;
         public LoadingMenu loadingMenu;
+        public ProfilesManager profilesManager;
 
         public Settings settings;
-        public string localUsername;
-
-        public string currentMapSceneName;
 
         public async UniTask Initialize()
         {
@@ -33,7 +27,7 @@ namespace rwby
             await modLoader.Initialize();
             contentManager.Initialize();
             localPlayerManager.Initialize();
-            localUsername = "User " + Random.Range(0, 1000);
+            profilesManager.Initialize();
         }
 
         private void Update()

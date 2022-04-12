@@ -16833,6 +16833,7 @@ GameObject:
   - component: {fileID: 824401371}
   - component: {fileID: 824401370}
   - component: {fileID: 824401373}
+  - component: {fileID: 824401374}
   m_Layer: 0
   m_Name: Profiles
   m_TagString: Untagged
@@ -16938,6 +16939,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   optionsTransform: {fileID: 1155716827}
   optionPrefab: {fileID: 2145105885}
+  canvasGroup: {fileID: 824401374}
+--- !u!225 &824401374
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 824401368}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1 &827085146
 GameObject:
   m_ObjectHideFlags: 0
@@ -27551,7 +27565,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &1419783153
 Transform:
   m_ObjectHideFlags: 0

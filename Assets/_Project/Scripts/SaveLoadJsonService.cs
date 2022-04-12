@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using Newtonsoft.Json;
 using UnityEngine;
 
 namespace rwby
@@ -18,7 +19,6 @@ namespace rwby
             }
             catch (Exception e)
             {
-                Debug.Log($"Exception thrown while saving {fileName}. {e.Message}");
                 return false;
             }
             return true;
@@ -26,17 +26,16 @@ namespace rwby
 
         public static bool Save<T>(string fileName, T obj, bool prettyPrint = false)
         {
-            string jsonObject = JsonUtility.ToJson(obj, prettyPrint);
+            string jsonObject = JsonConvert.SerializeObject(obj, prettyPrint ? Formatting.Indented : Formatting.None);
             try
             {
-                using (StreamWriter streamWriter = File.CreateText(Path.Combine(Directory.GetCurrentDirectory(), fileName)))
+                using (StreamWriter streamWriter = File.CreateText(Path.Combine(Application.persistentDataPath, fileName)))
                 {
                     streamWriter.Write(jsonObject);
                 }
             }
             catch (Exception e)
             {
-                Console.WriteLine($"Exception thrown while saving {fileName}. {e.Message}");
                 return false;
             }
             return true;
@@ -47,22 +46,42 @@ namespace rwby
             try
             {
                 string p = Path.Combine(Application.persistentDataPath, path);
-                if (File.Exists(p))
+                if (!File.Exists(p)) return default(T);
+                string jsonString = String.Empty;
+                using (StreamReader streamReader = File.OpenText(p))
                 {
-                    string jsonString = null;
-                    using (StreamReader streamReader = File.OpenText(p))
-                    {
-                        jsonString = streamReader.ReadToEnd();
-                    }
-                    return JsonUtility.FromJson<T>(jsonString);
+                    jsonString = streamReader.ReadToEnd();
                 }
 
+                return JsonConvert.DeserializeObject<T>(jsonString);
             }
             catch (Exception e)
             {
-                Debug.Log($"Exception thrown while loading {path}. {e.Message}");
+                return default(T);
             }
-            return default(T);
+        }
+        
+        public static bool TryLoad<T>(string path, out T result)
+        {
+            try
+            {
+                string p = Path.Combine(Application.persistentDataPath, path);
+                if (!File.Exists(p)) throw new Exception($"File {p} does not exist.");
+                string jsonString = String.Empty;
+                using (StreamReader streamReader = File.OpenText(p))
+                {
+                    jsonString = streamReader.ReadToEnd();
+                }
+
+                if (jsonString == String.Empty) throw new Exception("File is empty.");
+                result = JsonConvert.DeserializeObject<T>(jsonString);
+                return true;
+            }
+            catch (Exception e)
+            {
+                result = default(T);
+                return false;
+            }
         }
     }
 }

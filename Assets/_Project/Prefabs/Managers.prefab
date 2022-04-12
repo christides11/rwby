@@ -1356,8 +1356,8 @@ MonoBehaviour:
       _assignKeyboardOnStart: 1
       _excludeFromControllerAutoAssignment: 1
       _controllerMapLayoutManagerSettings:
-        _enabled: 1
-        _loadFromUserDataStore: 1
+        _enabled: 0
+        _loadFromUserDataStore: 0
         _ruleSets:
         - _enabled: 1
           _id: 1
@@ -1366,7 +1366,7 @@ MonoBehaviour:
         - _enabled: 0
           _id: 2
       _controllerMapEnablerSettings:
-        _enabled: 1
+        _enabled: 0
         _ruleSets: []
     - _id: 1
       _name: Player 1
@@ -2906,7 +2906,7 @@ MonoBehaviour:
     keyboardLayoutIdCounter: 3
     mouseLayoutIdCounter: 3
     customControllerLayoutIdCounter: 1
-    joystickMapIdCounter: 2
+    joystickMapIdCounter: 3
     keyboardMapIdCounter: 7
     mouseMapIdCounter: 5
     customControllerMapIdCounter: 0
@@ -2925,6 +2925,7 @@ GameObject:
   - component: {fileID: 7663082699953192566}
   - component: {fileID: 7663082699953192565}
   - component: {fileID: 8649765285665865173}
+  - component: {fileID: 6696554396105690595}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -2964,9 +2965,8 @@ MonoBehaviour:
   localPlayerManager: {fileID: 8649765285665865173}
   controllerAssignmentMenu: {fileID: 7021948142374615181}
   loadingMenu: {fileID: 5270607472877389111}
+  profilesManager: {fileID: 6696554396105690595}
   settings: {fileID: 11400000, guid: fa9f7c1fd91f42e4087fa739f9dd3614, type: 2}
-  localUsername: 
-  currentMapSceneName: 
 --- !u!114 &8649765285665865173
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3039,6 +3039,19 @@ MonoBehaviour:
       y: 0
       width: 0.5
       height: 0
+--- !u!114 &6696554396105690595
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7663082699953192564}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 26bfa0474d6966f4ca6893b9632f0ca2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  profiles: []
 --- !u!1 &7663082700113663894
 GameObject:
   m_ObjectHideFlags: 0
@@ -3197,6 +3210,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ShowHierarchyWindowOverlay: 1
+  currentLoadedScenes: []
 --- !u!1 &8509196641117350081
 GameObject:
   m_ObjectHideFlags: 0
@@ -3413,9 +3427,33 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 7663082699315219240}
     m_Modifications:
+    - target: {fileID: 315699097, guid: 8ed37cb4868594d4892f5fc7b8c15526, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: -150
+      objectReference: {fileID: 0}
+    - target: {fileID: 336863781, guid: 8ed37cb4868594d4892f5fc7b8c15526, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: -150
+      objectReference: {fileID: 0}
+    - target: {fileID: 426345927, guid: 8ed37cb4868594d4892f5fc7b8c15526, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: -150
+      objectReference: {fileID: 0}
+    - target: {fileID: 1752771988, guid: 8ed37cb4868594d4892f5fc7b8c15526, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: -150
+      objectReference: {fileID: 0}
+    - target: {fileID: 2031112733488714223, guid: 8ed37cb4868594d4892f5fc7b8c15526, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: -150
+      objectReference: {fileID: 0}
     - target: {fileID: 5299230750696118096, guid: 8ed37cb4868594d4892f5fc7b8c15526, type: 3}
       propertyPath: m_Name
       value: ControllerAssignmentMenu
+      objectReference: {fileID: 0}
+    - target: {fileID: 5299230750696118096, guid: 8ed37cb4868594d4892f5fc7b8c15526, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5685012657623506220, guid: 8ed37cb4868594d4892f5fc7b8c15526, type: 3}
       propertyPath: m_Pivot.x
@@ -3507,11 +3545,6 @@ PrefabInstance:
       objectReference: {fileID: 8649765285665865173}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 8ed37cb4868594d4892f5fc7b8c15526, type: 3}
---- !u!224 &8227728702081305899 stripped
-RectTransform:
-  m_CorrespondingSourceObject: {fileID: 5685012657623506220, guid: 8ed37cb4868594d4892f5fc7b8c15526, type: 3}
-  m_PrefabInstance: {fileID: 4380871373948981255}
-  m_PrefabAsset: {fileID: 0}
 --- !u!114 &7021948142374615181 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 6753433430305532042, guid: 8ed37cb4868594d4892f5fc7b8c15526, type: 3}
@@ -3523,6 +3556,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 47a88f632dd1d1a40a3cd57ea5918837, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!224 &8227728702081305899 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 5685012657623506220, guid: 8ed37cb4868594d4892f5fc7b8c15526, type: 3}
+  m_PrefabInstance: {fileID: 4380871373948981255}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &5134940442478458545
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3579,6 +3617,10 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 11452084, guid: 03b9a6db219d12e4f8ec2934e0c7e721, type: 3}
+      propertyPath: _showPlayers
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 11452084, guid: 03b9a6db219d12e4f8ec2934e0c7e721, type: 3}
       propertyPath: _rewiredInputManager
       value: 
       objectReference: {fileID: 7663082699387055486}
@@ -3591,6 +3633,10 @@ PrefabInstance:
       value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 11452084, guid: 03b9a6db219d12e4f8ec2934e0c7e721, type: 3}
+      propertyPath: _maxControllersPerPlayer
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 11452084, guid: 03b9a6db219d12e4f8ec2934e0c7e721, type: 3}
       propertyPath: _keyboardMapDefaultLayout
       value: 0
       objectReference: {fileID: 0}
@@ -3600,7 +3646,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 11452084, guid: 03b9a6db219d12e4f8ec2934e0c7e721, type: 3}
       propertyPath: _showInputBehaviorSettings
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 11452084, guid: 03b9a6db219d12e4f8ec2934e0c7e721, type: 3}
       propertyPath: _allowElementAssignmentSwap
