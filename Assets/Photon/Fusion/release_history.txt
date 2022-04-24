@@ -2,6 +2,28 @@
 
 ## RC Nightly
 
+### Build 452 (Apr 11, 2022)
+
+**Changes**
+
+- Object.AllowStateAuthorityOverride default value is now true. For most use cases, devs will want this enabled
+
+**Bug Fixes**
+
+- Fixed: Shutting down `NetworkRunner` in multiple peer mode resulting in temp scene not being unloaded
+
+### Build 451 (Apr 09, 2022)
+
+**What's New**
+
+- NetworkMecanAnimator SetTrigger() methods given an additional optional passThroughOnInputAuthority option
+
+### Build 450 (Apr 08, 2022)
+
+**What's New**
+
+- NetworkRunner.GetPlayerConnectionToken
+
 ### Build 449 (Apr 05, 2022)
 
 **Bug Fixes**

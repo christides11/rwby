@@ -1630,19 +1630,27 @@
             Accuracy used for layer weight values.
             </summary>
         </member>
-        <member name="M:Fusion.NetworkMecanimAnimator.SetTrigger(System.Int32)">
+        <member name="M:Fusion.NetworkMecanimAnimator.SetTrigger(System.Int32,System.Boolean)">
             <summary>
-            Queues a trigger with this animator. Call this instead of Animator.SetTrigger for the State Authority.
-            Triggers are prone to getting lost by animation syncs, as they may get reset before the value is synced. Setting triggers with this method ensures they get captured.
+            Queues a SetTrigger() call for the associated Animator on the State Authority. Call this instead of Animator.SetTrigger() for the State Authority to ensure that triggers are captured.
+            On State Authority, this call will defer the SetTrigger() pass-through to the Animator until FixedUpdateNetwork() is called, 
+            where all queued triggers will be executed (this is to ensure tick agreement between server and clients).
             </summary>
             <param name="triggerHash"></param>
+            <param name="passThroughOnInputAuthority">Will call Animator.SetTrigger() immediately on the InputAuthority. If false, SetTrigger() will not be called on the Input Authority at all
+            and Animator.SetTrigger() should be called explicitly as needed.
+            </param>
         </member>
-        <member name="M:Fusion.NetworkMecanimAnimator.SetTrigger(System.String)">
+        <member name="M:Fusion.NetworkMecanimAnimator.SetTrigger(System.String,System.Boolean)">
             <summary>
-            Queues a trigger with this animator. Call this instead of Animator.SetTrigger for the State Authority.
-            Triggers are prone to getting lost by animation syncs, as they may get reset before the value is synced. Setting triggers with this method ensures they get captured.
+            Queues a SetTrigger() call for the associated Animator on the State Authority. Call this instead of Animator.SetTrigger() for the State Authority to ensure that triggers are captured.
+            On State Authority, this call will defer the SetTrigger() pass-through to the Animator until FixedUpdateNetwork() is called, 
+            where all queued triggers will be executed (this is to ensure tick agreement between server and clients).
             </summary>
             <param name="trigger"></param>
+            <param name="passThroughOnInputAuthority">Will call Animator.SetTrigger() immediately on the InputAuthority. If false, SetTrigger() will not be called on the Input Authority at all
+            and Animator.SetTrigger() should be called explicitly as needed.
+            </param>
         </member>
         <member name="T:Fusion.NetworkPhysicsSimulation2D">
             <summary>
@@ -6580,6 +6588,14 @@
             <param name="player"></param>
             <returns></returns>
         </member>
+        <member name="M:Fusion.NetworkRunner.GetPlayerConnectionToken(Fusion.PlayerRef)">
+            <summary>
+            Returns a copy of the Connection Token used by a Player when connecting to this Server.
+            Only available on Server. It will return null if running on a Client or the Connection token is missing
+            </summary>
+            <param name="player">PlayerRef to check for a Connection Token</param>
+            <returns>Copy of the Connection Token</returns>
+        </member>
         <member name="M:Fusion.NetworkRunner.GetAllBehaviours(System.Type)">
             <summary>
             Returns array of all <see cref="T:Fusion.SimulationBehaviour"/> registered with this <see cref="T:Fusion.NetworkRunner"/>.
@@ -7844,6 +7860,13 @@
             <see cref="F:Fusion.SimulationConfig.ReplicationMode"/> must be set to <see cref="F:Fusion.SimulationConfig.StateReplicationModes.EventualConsistency"/>.
             </para>
             </summary>
+        </member>
+        <member name="M:Fusion.Simulation.PlayerConnectionToken(Fusion.PlayerRef)">
+            <summary>
+            Return a copy if a Player's Connection Token
+            </summary>
+            <param name="player">Player to check for the Connection Token</param>
+            <returns>Connection Token Copy</returns>
         </member>
         <member name="M:Fusion.Simulation.Update(System.Double)">
             <summary>
