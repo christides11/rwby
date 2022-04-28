@@ -686,12 +686,13 @@
             <param name="customAppSettings">Custom Photon App Settings</param>
             <returns>Async Task of the connect to Photon Cloud process. Can be used to wait for the process to be finished</returns>
         </member>
-        <member name="M:Fusion.CloudServices.JoinSessionLobby(Fusion.SessionLobby,System.String)">
+        <member name="M:Fusion.CloudServices.JoinSessionLobby(Fusion.SessionLobby,System.String,Fusion.Photon.Realtime.LobbyType)">
             <summary>
             Join the Peer to a specific Lobby, either a prebuild or a custom one
             </summary>
             <param name="sessionLobby">Lobby Type to Join</param>
-            <param name="lobbyID">Lobby ID</param>
+            <param name="lobbyID">Custom Lobby ID</param>
+            <param name="lobbyType">Custom Lobby Type</param>
             <returns>True if the operation could be completed. <see cref="M:Fusion.Photon.Realtime.LoadBalancingClient.OpJoinLobby(Fusion.Photon.Realtime.TypedLobby)"/></returns>
         </member>
         <member name="M:Fusion.CloudServices.EnterRoom(Fusion.StartGameArgs)">
@@ -1308,6 +1309,14 @@
             <param name="tag">The string name of the tag. Can be an <see cref="T:Fusion.AccuracyDefaults"/> constant, or your own defined default.</param>
             <param name="value">The value that will be used if the AccuracyDefaults toggle is deselected in the inspector.</param>
         </member>
+        <member name="M:Fusion.Accuracy.#ctor(System.String)">
+            <summary>
+            Accuracy constructor for named <see cref="T:Fusion.AccuracyDefaults"/> usage. Pass the named default to this constructor.
+            The <see cref="P:Fusion.Accuracy.Value"/>, <see cref="P:Fusion.Accuracy.Inverse"/> properties and the <see cref="M:Fusion.Accuracy.GetReadAccuracy(Fusion.NetworkProjectConfig)"/> and <see cref="M:Fusion.Accuracy.GetWriteAccuracy(Fusion.NetworkProjectConfig)"/> methods 
+            will lookup their return values using the <see cref="T:Fusion.AccuracyDefaults"/> in the supplied <see cref="P:Fusion.NetworkRunner.Config"/>.
+            </summary>
+            <param name="tag"></param>
+        </member>
         <member name="M:Fusion.Accuracy.op_Implicit(System.Single)~Fusion.Accuracy">
             <summary>
             Implicit operator to convert floats into accuracy.
@@ -1875,6 +1884,11 @@
             Sets the <see cref="P:Fusion.NetworkRigidbody.Rigidbody"/> <see cref="P:UnityEngine.Rigidbody.isKinematic"/> field to <paramref name="value"/>.
             </summary>
         </member>
+        <member name="M:Fusion.NetworkRigidbody.SetCollisionDetectionMode(UnityEngine.CollisionDetectionMode)">
+            <summary>
+            Sets the <see cref="P:Fusion.NetworkRigidbody.Rigidbody"/> collision detection <paramref name="mode"/>.
+            </summary>
+        </member>
         <member name="P:Fusion.NetworkRigidbody.DefaultTeleportInterpolationVelocity">
             <summary>
             Sets the default teleport interpolation velocity to be the rigidbody velocity.
@@ -2095,6 +2109,12 @@
         <member name="M:Fusion.NetworkRigidbody2D.SetIsKinematic(System.Boolean)">
             <summary>
             Sets the <see cref="P:Fusion.NetworkRigidbody2D.Rigidbody"/> <see cref="P:UnityEngine.Rigidbody2D.isKinematic"/> field to <paramref name="value"/>.
+            </summary>
+        </member>
+        <member name="M:Fusion.NetworkRigidbody2D.SetCollisionDetectionMode(UnityEngine.CollisionDetectionMode)">
+            <summary>
+            Sets the <see cref="P:UnityEngine.Rigidbody2D.collisionDetectionMode"/> to <see cref="F:UnityEngine.CollisionDetectionMode2D.Discrete"/> if <paramref name="mode"/>
+            is <see cref="F:UnityEngine.CollisionDetectionMode.Discrete"/>, and to <see cref="F:UnityEngine.CollisionDetectionMode2D.Continuous"/> otherwise.
             </summary>
         </member>
         <member name="P:Fusion.NetworkRigidbody2D.DefaultTeleportInterpolationVelocity">
@@ -2349,6 +2369,11 @@
             <summary>
             Sets a 2D or 3D rigid body kinematic field to <paramref name="value"/>,
             according to the explicit implementation.
+            </summary>
+        </member>
+        <member name="M:Fusion.NetworkRigidbodyBase.SetCollisionDetectionMode(UnityEngine.CollisionDetectionMode)">
+            <summary>
+            Sets a 2D or 3D rigid body collision detection <paramref name="mode"/>.
             </summary>
         </member>
         <member name="F:Fusion.NetworkRigidbodyBase._forceSnapshotInterpolated">
@@ -2753,7 +2778,7 @@
         </member>
         <member name="M:Fusion.NetworkTransform.PredictedSpawnFailed">
             <summary>
-            Implements <see cref="M:Fusion.IPredictedSpawnBehaviour.PredictedSpawnFailed"/> and, by default, calls Destroy on this GameObject.
+            Implements <see cref="M:Fusion.IPredictedSpawnBehaviour.PredictedSpawnFailed"/> and does nothing by default.
             </summary>
         </member>
         <member name="M:Fusion.NetworkTransform.PredictedSpawnSuccess">
@@ -4035,7 +4060,7 @@
             </summary>
             <param name="toUpdate"></param>
         </member>
-        <member name="M:Fusion.BVH.#ctor(Fusion.Mapper,System.Collections.Generic.List{Fusion.HitboxRoot},System.Single)">
+        <member name="M:Fusion.BVH.#ctor(Fusion.Mapper,System.Int32,System.Collections.Generic.List{Fusion.HitboxRoot},System.Single)">
             <summary>
             initializes a BVH with a given nodeAdaptor, and object list.
             </summary>
@@ -4142,6 +4167,11 @@
         <member name="F:Fusion.LagCompensationSettings.HitboxBufferSize">
             <summary>
             Hitbox snapshot history size in ticks.
+            </summary>
+        </member>
+        <member name="F:Fusion.LagCompensationSettings.HitboxCapacity">
+            <summary>
+            Hitbox capacity per snapshot.
             </summary>
         </member>
         <member name="F:Fusion.LagCompensationSettings.ExpansionFactor">
@@ -5714,26 +5744,31 @@
         <member name="P:Fusion.RpcAttribute.Sources">
             <summary>
             The legal <see cref="T:Fusion.RpcSources"/> types that can trigger this Rpc. Cast to int.
+            Default value is (int)<see cref="F:Fusion.RpcSources.All"/>.
             </summary>
         </member>
         <member name="P:Fusion.RpcAttribute.Targets">
             <summary>
             The <see cref="T:Fusion.RpcTargets"/> types that will receive and invoke this method. Cast to int.
+            Default value is (int)<see cref="F:Fusion.RpcTargets.All"/>.
             </summary>
         </member>
         <member name="P:Fusion.RpcAttribute.InvokeLocal">
             <summary>
             Indicates if the method should be called locally (on the RPC caller). This happens immediately.
+            Default value is true.
             </summary>
         </member>
         <member name="P:Fusion.RpcAttribute.InvokeResim">
             <summary>
             Indicates if this RPC will execute during resims, or only once on the first execution of the associated tick.
+            Default value is false.
             </summary>
         </member>
         <member name="P:Fusion.RpcAttribute.Channel">
             <summary>
-            Specifies which RpcChannel to use.
+            Specifies which RpcChannel to use. 
+            Default value is <see cref="F:Fusion.RpcChannel.Reliable"/>
             </summary>
         </member>
         <member name="P:Fusion.RpcAttribute.TickAligned">
@@ -5741,6 +5776,7 @@
             Indicates if this RPC's execution will be postponed until the local simulation catches up with the sender's Tick number.
             Even if set to false, the order of Rpcs is always preserved. Rpcs are deferred until all preceding Rpcs have
             executed.
+            Default value is true.
             </summary>
         </member>
         <member name="P:Fusion.RpcAttribute.HostMode">
@@ -5748,9 +5784,17 @@
             Options for when the game is run in <see cref="F:Fusion.SimulationModes.Host"/> mode and RPC is invoked by the host.
             </summary>
         </member>
+        <member name="M:Fusion.RpcAttribute.#ctor">
+            <summary>
+            Constructor for RpcAttributes.
+            </summary>
+        </member>
         <member name="M:Fusion.RpcAttribute.#ctor(Fusion.RpcSources,Fusion.RpcTargets)">
-            <param name="sources">The legal <see cref="T:Fusion.RpcSources"/> types that can trigger this Rpc</param>
-            <param name="targets">The <see cref="T:Fusion.RpcTargets"/> types that will receive and invoke this method</param>
+            <summary>
+            Constructor for RpcAttributes.
+            </summary>
+            <param name="sources">The legal <see cref="T:Fusion.RpcSources"/> types that can trigger this Rpc. Default is <see cref="F:Fusion.RpcSources.All"/></param>
+            <param name="targets">The <see cref="T:Fusion.RpcTargets"/> types that will receive and invoke this method. Default is <see cref="F:Fusion.RpcTargets.All"/></param>
         </member>
         <member name="F:Fusion.RpcChannel.Reliable">
             <summary>
@@ -8010,6 +8054,11 @@
         <member name="F:Fusion.SimulationConfig.TickRate">
             <summary>
             The update rate of the simulation in Hz (ticks per second).
+            </summary>
+        </member>
+        <member name="F:Fusion.SimulationConfig.MaxPrediction">
+            <summary>
+            The max amount of predicted ticks on a client in server or host mode, if this is overstepped on client a hard reset will be done on client to bring it down to correct prediction .
             </summary>
         </member>
         <member name="F:Fusion.SimulationConfig.DefaultPlayers">

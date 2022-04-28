@@ -906,7 +906,7 @@ namespace Fusion.Editor {
       float labelWidth = EditorGUIUtility.labelWidth;
       const int CHECK_WIDTH = 18;
 
-      GUI.Label(r, label);
+      EditorGUI.LabelField(r, label);
 
       Rect toggleRect = new Rect(r) { xMin = r.xMin + labelWidth + 2, width = 16 };
       const string globalsTooltip = "Toggles between custom accuracy value, and using a defined Global Accuracy (found in " + nameof(NetworkProjectConfig) + ").";
@@ -972,10 +972,12 @@ namespace Fusion.Editor {
       EditorGUI.EndProperty();
     }
 
-
     public static int DrawDroplist(Rect r, int hash, UnityEngine.Object target) {
 
       const float VAL_WIDTH = 50;
+      const float COLLAPSE_WIDTH = 120;
+
+      bool isNarrow = r.width < COLLAPSE_WIDTH;
 
       if (hash == 0) {
         hash = AccuracyDefaults.ZeroHashRemap;
@@ -985,10 +987,9 @@ namespace Fusion.Editor {
 
       var hold = EditorGUI.indentLevel;
       EditorGUI.indentLevel = 0;
-      var selected = EditorGUI.Popup(new Rect(r) { xMax = r.xMax - VAL_WIDTH }, success ? tag.popupindex : -1, AccuracyDefaultsDrawer.TagNames);
+      var selected = EditorGUI.Popup(new Rect(r) { xMax = isNarrow ? r.xMax : r.xMax - VAL_WIDTH }, success ? tag.popupindex : -1, AccuracyDefaultsDrawer.TagNames);
       EditorGUI.indentLevel = hold;
 
-      GUIStyle valStyle = new GUIStyle("MiniLabel") { alignment = TextAnchor.MiddleLeft, fontStyle = FontStyle.Italic };
 
       var accuracy = GetAccuracyFromHash(hash, target);
 
@@ -996,9 +997,14 @@ namespace Fusion.Editor {
       // Round the value to fit the label
       val = (val > 1) ? (float)System.Math.Round(val, 3) : (float)System.Math.Round(val, 4);
 
-      if (GUI.Button(new Rect(r) { xMin = r.xMax - VAL_WIDTH }, val.ToString(), valStyle)) {
-        NetworkProjectConfigUtilities.PingGlobalConfigAsset();
+      if (isNarrow == false) {
+        GUIStyle valStyle = new GUIStyle("MiniLabel") { alignment = TextAnchor.MiddleLeft, fontStyle = FontStyle.Italic };
+
+        if (GUI.Button(new Rect(r) { xMin = r.xMax - VAL_WIDTH }, val.ToString(), valStyle)) {
+          NetworkProjectConfigUtilities.PingGlobalConfigAsset();
+        }
       }
+
 
       if (selected == -1) {
         GUI.Label(new Rect(r) { width = 16 }, FusionGUIStyles.ErrorIcon);
@@ -5841,14 +5847,19 @@ namespace Fusion.Editor {
   class FusionInstaller {
     const string DEFINE = "FUSION_WEAVER";
     const string PACKAGE_TO_SEARCH = "nuget.mono-cecil";
-    const string PACKAGE_TO_INSTALL = "com.unity.nuget.mono-cecil";
+    const string PACKAGE_TO_INSTALL = "com.unity.nuget.mono-cecil@1.10.2";
     const string PACKAGES_DIR = "Packages";
     const string MANIFEST_FILE = "manifest.json";
 
     static FusionInstaller() {
+
+#if UNITY_SERVER
+      var defines = PlayerSettings.GetScriptingDefineSymbols(UnityEditor.Build.NamedBuildTarget.Server);
+#else
       var group = BuildPipeline.GetBuildTargetGroup(EditorUserBuildSettings.activeBuildTarget);
-      
       var defines = PlayerSettings.GetScriptingDefineSymbolsForGroup(group);
+#endif
+
       if (defines.IndexOf(DEFINE, StringComparison.Ordinal) >= 0) {
         return;
       }
@@ -5857,12 +5868,15 @@ namespace Fusion.Editor {
 
       if (File.ReadAllText(manifest).IndexOf(PACKAGE_TO_SEARCH, StringComparison.Ordinal) >= 0) {
         Debug.Log($"Setting '{DEFINE}' Define");
+#if UNITY_SERVER
+        PlayerSettings.SetScriptingDefineSymbols(UnityEditor.Build.NamedBuildTarget.Server, defines + ";" + DEFINE);
+#else
         PlayerSettings.SetScriptingDefineSymbolsForGroup(group, defines + ";" + DEFINE);
+#endif
       } else {
         Debug.Log($"Installing '{PACKAGE_TO_INSTALL}' package");
         Client.Add(PACKAGE_TO_INSTALL);
       }
-
     }
   }
 }

@@ -2,6 +2,67 @@
 
 ## RC Nightly
 
+### Build 462 (Apr 26, 2022)
+
+**Bug Fixes**
+
+- Fixed: Issue with prediction sometimes going to high, especially on Android
+
+### Build 461 (Apr 25, 2022)
+
+**Bug Fixes**
+
+- Fixed: Corrected issue with large number of SimulationBehaviour/NetworkBehaviours exceeding the re-sorting safety limit when applying SortBefore and SortAfter attributes. Was quietly producing an invalid execution order on error
+
+### Build 460 (Apr 22, 2022)
+
+**Bug Fixes**
+
+- Fixed: Join Session right after Join a Lobby
+- Fixed: NanoSockets Import Settings for GDK
+- Fixed: FUSION_WEAVER on Dedicated Server TargetBuild
+- Fixed: NDS to AutoStart with AutoHostOrClient
+
+### Build 459 (Apr 21, 2022)
+
+**Bug Fixes**
+
+- Fixed: AccuracyDrawer gui handling when nested corrected
+- Fixed: Accuracy types as fields can be initialized using named AccuracyDefaults
+
+### Build 458 (Apr 20, 2022)
+
+**What's New**
+
+- Lag-compensantion hitbox buffer capacity can now be configured in the Lag-compensation settings
+
+**Changes**
+
+- Default lag-compensation hitbox snapshot history is now 12 ticks instead of 60
+
+**Bug Fixes**
+
+- Fixed: "UnloadAsset may only be used on individual assets and can not be used on GameObject's / Components / AssetBundles or GameManagers" error message when exiting play mode
+
+### Build 457 (Apr 19, 2022)
+
+**Changes**
+
+- `NetworkTransform.IPredictedSpawnBehaviour.PredictedSpawnFailed` no longer destroys the GameObject by default
+
+**Bug Fixes**
+
+- Fixed: Ignore zero Delta Time
+- Fixed: Warnings when forcing a client NRB to be kinematic and its collision mode was set to Continuous or Continuous Dynamic.  
+This only affects clients in Server-only physics mode or clients without state authority in Shared Mode
+- Fixed: `NullReferenceException` when trying to spawn a `NetworkObject` with an inactive child that has a `NetworkTransform` component
+
+### Build 454 (Apr 13, 2022)
+
+**Bug Fixes**
+
+- Fixed: Mono-cecil package not installing with "Access Denied" error. `FusionInstaller` defaults to `com.unity.nuget.mono-cecil@1.10.2` now
+
 ### Build 452 (Apr 11, 2022)
 
 **Changes**

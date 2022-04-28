@@ -277,7 +277,17 @@
             <exception cref="T:Fusion.Photon.Realtime.Async.OperationException">Is thrown when the operation completed unsuccessfully</exception>
             <exception cref="T:Fusion.Photon.Realtime.Async.OperationTimeoutException">Is thrown when the operation timed out</exception>
         </member>
-        <member name="M:Fusion.Photon.Realtime.Async.LoadBalancingClientAsyncExtensions.CreateConnectionHandler(Fusion.Photon.Realtime.LoadBalancingClient,System.Boolean,System.Boolean)">
+        <member name="M:Fusion.Photon.Realtime.Async.LoadBalancingClientAsyncExtensions.JoinLobbyAsync(Fusion.Photon.Realtime.LoadBalancingClient,Fusion.Photon.Realtime.TypedLobby,System.Boolean,System.Boolean)">
+            <summary>
+            Join a Lobby
+            </summary>
+            <param name="client">Client object</param>
+            <param name="lobby">Lobby to join</param>
+            <param name="throwOnError">Set ErrorCode as result when operation fails with ErrorCode</param>
+            <param name="createServiceTask">Runs client.Service() during the operation</param>
+            <returns>When inside a Lobby</returns>
+        </member>
+        <member name="M:Fusion.Photon.Realtime.Async.LoadBalancingClientAsyncExtensions.CreateOpHandler(Fusion.Photon.Realtime.LoadBalancingClient,System.Boolean,System.Boolean)">
             <summary>
             Create a <see cref="T:Fusion.Photon.Realtime.Async.OperationHandler"/> instance, sets up the Photon callbacks, schedules removing them, create a connection service task.
             The handler will monitor the Photon callbacks and complete, fault accordingly. 

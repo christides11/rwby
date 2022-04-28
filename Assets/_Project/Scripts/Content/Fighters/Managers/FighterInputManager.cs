@@ -191,6 +191,7 @@ namespace rwby
             }
         }
 
+		// TODO: fix startoffset handling.
         protected virtual InputButtonData GetButton(ref InputButtonData[] buttonArray, out int buttonOffset, int startOffset = 0, int bufferFrames = 0)
         {
             buttonOffset = startOffset;
