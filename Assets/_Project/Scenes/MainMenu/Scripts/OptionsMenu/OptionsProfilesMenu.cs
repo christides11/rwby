@@ -57,7 +57,7 @@ namespace rwby.ui.mainmenu
         private UnityAction screenCloseAction;
         public void BUTTON_Profile(int index)
         {
-            screenCloseAction = () => { AssignProfile(index); };
+            screenCloseAction = () => { AssignProfile(index); GameManager.singleton.cMapper.Close(false); };
             canvasGroup.interactable = false;
             GameManager.singleton.profilesManager.ApplyProfileToPlayer(0, index);
             GameManager.singleton.cMapper.onScreenClosed += screenCloseAction;

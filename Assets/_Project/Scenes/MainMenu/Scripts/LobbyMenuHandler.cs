@@ -6,6 +6,7 @@ using UnityEngine.EventSystems;
 
 namespace rwby.ui.mainmenu
 {
+    // TODO: Link to given session manager.
     public class LobbyMenuHandler : MainMenuMenu
     {
         public List<LobbyMenuInstance> menuInstances = new List<LobbyMenuInstance>();
@@ -21,8 +22,9 @@ namespace rwby.ui.mainmenu
         {
             base.Open(direction, menuHandler);
             ClientManager.OnPlayersChanged += WhenClientPlayerChanged;
-            LobbyManager.OnLobbySettingsChanged += UpdateLobbyInfo;
-            LobbyManager.OnGamemodeSettingsChanged += UpdateLobbyInfo;
+            /*
+            SessionManagerClassic.OnLobbySettingsChanged += UpdateLobbyInfo;
+            SessionManagerClassic.OnGamemodeSettingsChanged += UpdateLobbyInfo;*/
 
             gameObject.SetActive(true);
             
@@ -41,23 +43,24 @@ namespace rwby.ui.mainmenu
             menuInstances.Clear();
             
             ClientManager.OnPlayersChanged -= WhenClientPlayerChanged;
-            LobbyManager.OnLobbySettingsChanged -= UpdateLobbyInfo;
-            LobbyManager.OnGamemodeSettingsChanged -= UpdateLobbyInfo;
+            /*SessionManagerClassic.OnLobbySettingsChanged -= UpdateLobbyInfo;
+            SessionManagerClassic.OnGamemodeSettingsChanged -= UpdateLobbyInfo;*/
             gameObject.SetActive(false);
             return true;
         }
 
         private async UniTask StartMatch()
         {
+            /*
             ClientManager.OnPlayersChanged -= WhenClientPlayerChanged;
-            LobbyManager.OnLobbySettingsChanged -= UpdateLobbyInfo;
-            LobbyManager.OnGamemodeSettingsChanged -= UpdateLobbyInfo;
-            await LobbyManager.singleton.TryStartMatch();
+            SessionManagerClassic.OnLobbySettingsChanged -= UpdateLobbyInfo;
+            SessionManagerClassic.OnGamemodeSettingsChanged -= UpdateLobbyInfo;
+            await SessionManagerClassic.singleton.TryStartMatch();*/
         }
 
         public async void ExitLobby()
         {
-            NetworkManager.singleton.LeaveSession();
+            //NetworkManager.singleton.LeaveSession();
             currentHandler.Back();
         }
 
@@ -80,7 +83,7 @@ namespace rwby.ui.mainmenu
         [SerializeField] private Camera lobbyPlayerCameraPrefab;
         private void WhenLocalPlayerCountChanged(LocalPlayerManager localplayermanager, int currentplaycount)
         {
-            ClientManager.local.CLIENT_SetPlayerCount(currentplaycount);
+            //ClientManager.local.CLIENT_SetPlayerCount(currentplaycount);
         }
 
         private void WhenClientPlayerChanged(ClientManager manager)

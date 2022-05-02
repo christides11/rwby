@@ -1,28 +1,24 @@
 // #define FUSION_NETWORK_SCENE_MANAGER_TRACE
-using Fusion;
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
-using UnityEngine.Events;
 using UnityEngine.SceneManagement;
 
-namespace rwby
+namespace Fusion
 {
-    public abstract class NetworkSceneManagerBase : MonoBehaviour, INetworkSceneObjectProvider
+    public abstract class NetworkSceneManagerBase : Fusion.Behaviour, INetworkSceneObjectProvider
     {
-
+        public NetworkRunner Runner { get; private set; }
+        
         private static WeakReference<NetworkSceneManagerBase> s_currentlyLoading = new WeakReference<NetworkSceneManagerBase>(null);
 
-        public bool ShowHierarchyWindowOverlay = true;
-
         private IEnumerator _runningCoroutine;
-        private bool _currentSceneOutdated = false;
+        public bool ShowHierarchyWindowOverlay = true;
         private Dictionary<Guid, NetworkObject> _sceneObjects = new Dictionary<Guid, NetworkObject>();
+        private bool _currentSceneOutdated = false;
+        
         private SceneRef _currentScene;
-
-        public NetworkRunner Runner { get; private set; }
 
         protected virtual void OnEnable()
         {
@@ -43,12 +39,9 @@ namespace rwby
 
         protected virtual void LateUpdate()
         {
-            if (!Runner)
-            {
-                return;
-            }
+            if (!Runner) return;
 
-            // store the flag in case scene changes during the load; this supports scene toggling as well
+                // store the flag in case scene changes during the load; this supports scene toggling as well
             if (Runner.CurrentScene != _currentScene)
             {
                 _currentSceneOutdated = true;
@@ -65,7 +58,7 @@ namespace rwby
                 Assert.Check(target != this);
                 if (!target)
                 {
-                    LogWarn("");
+                    // orphaned loader?
                     s_currentlyLoading.SetTarget(null);
                 }
                 else
@@ -84,21 +77,6 @@ namespace rwby
             StartCoroutine(_runningCoroutine);
         }
 
-        internal static bool TryGetSceneRefFromPathInBuildSettings(string scenePath, out SceneRef sceneRef)
-        {
-            var result = SceneUtility.GetBuildIndexByScenePath(scenePath);
-            if (result >= 0)
-            {
-                sceneRef = result;
-                return true;
-            }
-            else
-            {
-                sceneRef = default;
-                return false;
-            }
-        }
-
         public static bool IsScenePathOrNameEqual(Scene scene, string nameOrPath)
         {
             return scene.path == nameOrPath || scene.name == nameOrPath;
@@ -114,6 +92,7 @@ namespace rwby
                     return true;
                 }
             }
+
             path = string.Empty;
             return false;
         }
@@ -132,7 +111,6 @@ namespace rwby
 
         public List<NetworkObject> FindNetworkObjects(Scene scene, bool disable = true, bool addVisibilityNodes = false)
         {
-
             var networkObjects = new List<NetworkObject>();
             var gameObjects = scene.GetRootGameObjects();
             var result = new List<NetworkObject>();
@@ -141,14 +119,17 @@ namespace rwby
             foreach (var go in gameObjects)
             {
                 networkObjects.Clear();
-                go.GetComponentsInChildren(networkObjects);
+                go.GetComponentsInChildren(true, networkObjects);
 
                 foreach (var sceneObject in networkObjects)
                 {
-                    if (sceneObject.Flags.IsSceneObject() && sceneObject.gameObject.activeInHierarchy)
+                    if (sceneObject.Flags.IsSceneObject())
                     {
-                        Assert.Check(sceneObject.NetworkGuid.IsValid);
-                        result.Add(sceneObject);
+                        if (sceneObject.gameObject.activeInHierarchy || sceneObject.Flags.IsActivatedByUser())
+                        {
+                            Assert.Check(sceneObject.NetworkGuid.IsValid);
+                            result.Add(sceneObject);
+                        }
                     }
                 }
 
@@ -161,18 +142,15 @@ namespace rwby
 
             if (disable)
             {
+                // disable objects; each will be activated if there's a matching state object
                 foreach (var sceneObject in result)
                 {
-                    if (sceneObject.gameObject.activeInHierarchy)
-                    {
-                        sceneObject.gameObject.SetActive(false);
-                    }
+                    sceneObject.gameObject.SetActive(false);
                 }
             }
 
             return result;
         }
-
 
         #region INetworkSceneObjectProvider
 
@@ -193,18 +171,22 @@ namespace rwby
             {
                 return false;
             }
+
             if (_currentSceneOutdated)
             {
                 return false;
             }
+
             if (runner.CurrentScene != _currentScene)
             {
                 return false;
             }
+
             return true;
         }
 
-        bool INetworkSceneObjectProvider.TryResolveSceneObject(NetworkRunner runner, Guid sceneObjectGuid, out NetworkObject instance)
+        bool INetworkSceneObjectProvider.TryResolveSceneObject(NetworkRunner runner, Guid sceneObjectGuid,
+            out NetworkObject instance)
         {
             Assert.Check(Runner == runner);
             return _sceneObjects.TryGetValue(sceneObjectGuid, out instance);
@@ -221,12 +203,31 @@ namespace rwby
         protected virtual void Shutdown(NetworkRunner runner)
         {
             Assert.Check(Runner == runner);
-            Runner = null;
+
+            try
+            {
+                // ongoing loading, dispose
+                if (_runningCoroutine != null)
+                {
+                    LogWarn($"There is an ongoing scene load ({_currentScene}), stopping and disposing coroutine.");
+                    StopCoroutine(_runningCoroutine);
+                    (_runningCoroutine as IDisposable)?.Dispose();
+                }
+            }
+            finally
+            {
+                Runner = null;
+                _runningCoroutine = null;
+                _currentScene = SceneRef.None;
+                _currentSceneOutdated = false;
+                _sceneObjects.Clear();
+            }
         }
 
         protected delegate void FinishedLoadingDelegate(IEnumerable<NetworkObject> sceneObjects);
 
-        protected abstract IEnumerator SwitchScene(SceneRef prevScene, SceneRef newScene, FinishedLoadingDelegate finished);
+        protected abstract IEnumerator SwitchScene(SceneRef prevScene, SceneRef newScene,
+            FinishedLoadingDelegate finished);
 
         [System.Diagnostics.Conditional("FUSION_NETWORK_SCENE_MANAGER_TRACE")]
         protected void LogTrace(string msg)
@@ -244,13 +245,13 @@ namespace rwby
             Log.Warn($"[NetworkSceneManager] {(this != null ? this.name : "<destroyed>")}: {msg}");
         }
 
-
         private IEnumerator SwitchSceneWrapper(SceneRef prevScene, SceneRef newScene)
         {
             bool finishCalled = false;
             Dictionary<Guid, NetworkObject> sceneObjects = new Dictionary<Guid, NetworkObject>();
             Exception error = null;
-            FinishedLoadingDelegate callback = (objects) => {
+            FinishedLoadingDelegate callback = (objects) =>
+            {
                 finishCalled = true;
                 foreach (var obj in objects)
                 {
@@ -288,7 +289,7 @@ namespace rwby
                 Assert.Check(s_currentlyLoading.TryGetTarget(out var target) && target == this);
                 s_currentlyLoading.SetTarget(null);
 
-                LogTrace($"Corutine finished for {newScene}");
+                LogTrace($"Coroutine finished for {newScene}");
                 _runningCoroutine = null;
             }
 
@@ -309,11 +310,13 @@ namespace rwby
         }
 
 #if UNITY_EDITOR
-        private static Lazy<GUIStyle> s_hierarchyOverlayLabelStyle = new Lazy<GUIStyle>(() => {
-            var result = new GUIStyle(UnityEditor.EditorStyles.miniBoldLabel);
-            result.alignment = TextAnchor.MiddleRight;
-            result.padding.right += 20;
-            result.padding.bottom += 2;
+        private static Lazy<GUIStyle> s_hierarchyOverlayLabelStyle = new Lazy<GUIStyle>(() =>
+        {
+            var result = new GUIStyle(UnityEditor.EditorStyles.miniButton);
+            result.alignment = TextAnchor.MiddleCenter;
+            result.fontSize = 9;
+            result.padding = new RectOffset(4, 4, 0, 0);
+            result.fixedHeight = 13f;
             return result;
         });
 
@@ -329,13 +332,23 @@ namespace rwby
                 return;
             }
 
-            if (Runner.MultiplePeerUnityScene.GetHashCode() != instanceId)
+            if (Runner.MultiplePeerUnityScene.GetHashCode() == instanceId)
             {
-                return;
-            }
+                var rect = new Rect(position)
+                {
+                    xMin = position.xMax - 56, xMax = position.xMax - 2, yMin = position.yMin + 1,
+                };
 
-            UnityEditor.EditorGUI.LabelField(position, Runner.name, s_hierarchyOverlayLabelStyle.Value);
+                if (GUI.Button(rect,
+                        $"{Runner.Mode} {(Runner.LocalPlayer.IsValid ? "P" + Runner.LocalPlayer.PlayerId.ToString() : "")}",
+                        s_hierarchyOverlayLabelStyle.Value))
+                {
+                    UnityEditor.EditorGUIUtility.PingObject(Runner);
+                    UnityEditor.Selection.activeGameObject = Runner.gameObject;
+                }
+            }
         }
+
 #endif
     }
 }

@@ -7,6 +7,7 @@ using Cysharp.Threading.Tasks;
 
 namespace rwby.ui.mainmenu
 {
+    // TODO: Link to given session manager.
     public class HostLobbyMenu : MainMenuMenu
     {
         [SerializeField] private OnlineMenu onlineMenu;
@@ -59,7 +60,7 @@ namespace rwby.ui.mainmenu
             var teamButtons = lobbySettings.AddOption("Teams", teamCount);
             teamButtons[0].onSubmit.AddListener(() => { ChangeTeamCount(-1); });
             teamButtons[1].onSubmit.AddListener(() => { ChangeTeamCount(1); });
-            lobbySettings.AddOption("Host").onSubmit.AddListener(TryHostLobby);
+            lobbySettings.AddOption("Host").onSubmit.AddListener(async () => await TryHostLobby());
         }
 
         private void IncrementPlayerCount()
@@ -122,34 +123,43 @@ namespace rwby.ui.mainmenu
             Refresh();
         }
 
-        public void TryHostLobby()
+        public async UniTask TryHostLobby()
         {
             GameManager.singleton.loadingMenu.OpenMenu(0, "Attempting host...");
-            NetworkManager.singleton.FusionLauncher.OnHostingFailed += OnHostingFailed;
-            LobbyManager.OnLobbyManagerSpawned += OnHostingSuccess;
-            NetworkManager.singleton.StartHost(lobbyNameTextMesh.text, playerCount, false);
+            int sessionManagerID = GameManager.singleton.networkManager.CreateSessionHandler();
+            StartGameResult result = await GameManager.singleton.networkManager.sessions[sessionManagerID].HostSession(lobbyNameTextMesh.text, playerCount, false);
+            GameManager.singleton.loadingMenu.CloseMenu(0);
+            if (result.Ok == false)
+            {
+                Debug.Log($"Failed to host gamemode session: {result.ShutdownReason}");
+                GameManager.singleton.networkManager.DestroySessionHandler(sessionManagerID);
+                return;
+            }
+            currentHandler.Forward((int)MainMenuType.LOBBY);
         }
 
         private async void OnHostingSuccess()
         {
-            LobbyManager.OnLobbyManagerSpawned -= OnHostingSuccess;
+            /*
+            SessionManagerClassic.OnLobbyManagerSpawned -= OnHostingSuccess;
             GameManager.singleton.loadingMenu.CloseMenu(0);
-            bool setGamemodeResult = await LobbyManager.singleton.settings.TrySetGamemode(selectedGamemodeReference);
+            bool setGamemodeResult = await SessionManagerClassic.singleton.settings.TrySetGamemode(selectedGamemodeReference);
             // TODO Better handling.
             if (setGamemodeResult == false)
             {
                 Debug.LogError("Set Gamemode Failed.");
                 return;
             }
-            LobbyManager.singleton.settings.SetTeamCount(teamCount);
-            LobbyManager.singleton.settings.SetMaxPlayersPerClient(maxPlayersPerClient);
-            LobbyManager.singleton.CurrentGameMode.SetGamemodeSettings(selectedGamemode);
+            
+            SessionManagerClassic.singleton.settings.SetTeamCount(teamCount);
+            SessionManagerClassic.singleton.settings.SetMaxPlayersPerClient(maxPlayersPerClient);
+            SessionManagerClassic.singleton.CurrentGameMode.SetGamemodeSettings(selectedGamemode);*/
             currentHandler.Forward((int)MainMenuType.LOBBY);
         }
 
         private void OnHostingFailed()
         {
-            NetworkManager.singleton.FusionLauncher.OnHostingFailed -= OnHostingFailed;
+            //NetworkManager.singleton.FusionLauncher.OnHostingFailed -= OnHostingFailed;
             GameManager.singleton.loadingMenu.CloseMenu(0);
             Debug.Log("Hosting failed.");
         }

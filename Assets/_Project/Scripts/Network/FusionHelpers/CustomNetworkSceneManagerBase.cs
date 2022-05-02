@@ -5,13 +5,16 @@ using System.Linq;
 using Fusion;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.Serialization;
 
 namespace rwby
 {
+    // TODO: Better way 
     public abstract class CustomNetworkSceneManagerBase : Fusion.Behaviour, INetworkSceneObjectProvider
     {
-        public NetworkRunner Runner { get; private set; }
-        
+        public NetworkRunner Runner { get; private set; } = null;
+        public FusionLauncher SessionHandler { get; private set; } = null;
+
         private static WeakReference<CustomNetworkSceneManagerBase> s_currentlyLoading = new WeakReference<CustomNetworkSceneManagerBase>(null);
         
         private IEnumerator _runningCoroutine;
@@ -19,7 +22,9 @@ namespace rwby
         private Dictionary<Guid, NetworkObject> _sceneObjects = new Dictionary<Guid, NetworkObject>();
         private bool _currentSceneOutdated = false;
 
-        public List<CustomSceneRef> currentLoadedScenes = new List<CustomSceneRef>();
+        [FormerlySerializedAs("currentLoadedScenes")] 
+        public List<CustomSceneRef> localLoadedScenes = new List<CustomSceneRef>();
+        public int _currentSceneChangeValue = 0;
 
         protected virtual void OnEnable()
         {
@@ -37,31 +42,66 @@ namespace rwby
             UnityEditor.EditorApplication.hierarchyWindowItemOnGUI -= HierarchyWindowOverlay;
 #endif
         }
+        
+        void INetworkSceneObjectProvider.Initialize(NetworkRunner runner)
+        {
+            Initialize(runner);
+        }
 
-        protected virtual void LateUpdate() {
-            if (!Runner || LobbyManager.singleton == null)
+        void INetworkSceneObjectProvider.Shutdown(NetworkRunner runner)
+        {
+            Shutdown(runner);
+        }
+        
+        protected virtual void Initialize(NetworkRunner runner)
+        {
+            Assert.Check(!Runner);
+            SessionHandler = GameManager.singleton.networkManager.GetSessionByRunner(runner);
+            Runner = runner;
+        }
+
+        protected virtual void Shutdown(NetworkRunner runner)
+        {
+            Assert.Check(Runner == runner);
+            Runner = null;
+            SessionHandler = null;
+            
+            try
             {
-                return;
+                // ongoing loading, dispose
+                if (_runningCoroutine != null)
+                {
+                    LogWarn($"There is an ongoing scene load, stopping and disposing coroutine.");
+                    StopCoroutine(_runningCoroutine);
+                    (_runningCoroutine as IDisposable)?.Dispose();
+                }
             }
+            finally
+            {
+                Runner = null;
+                _runningCoroutine = null;
+                localLoadedScenes.Clear();
+                _currentSceneOutdated = false;
+                _sceneObjects.Clear();
+            }
+        }
+
+        protected virtual void LateUpdate()
+        {
+            // Not initialized yet.
+            if (!Runner || !SessionHandler.sessionManager) return;
             
             // store the flag in case scene changes during the load; this supports scene toggling as well
-            if (IsSceneListUpdated() == false)
-            {
-                _currentSceneOutdated = true;
-            }
-            if (!_currentSceneOutdated || _runningCoroutine != null)
-            {
-                // busy or up to date
-                return;
-            }
-            
-            // For multi-peer mode?
+            if (IsSceneListUpToDate() == false) _currentSceneOutdated = true;
+
+            if (!_currentSceneOutdated || _runningCoroutine != null) return;
+
             if (s_currentlyLoading.TryGetTarget(out var target))
             {
                 Assert.Check(target != this);
                 if (!target)
                 {
-                    LogWarn("");
+                    // orphaned loader?
                     s_currentlyLoading.SetTarget(null);
                 }
                 else
@@ -71,12 +111,13 @@ namespace rwby
                 }
             }
             
-            var prevScenes = currentLoadedScenes;
-            currentLoadedScenes = LobbyManager.singleton.currentLoadedScenes.ToList();
+            var prevScenes = localLoadedScenes;
+            localLoadedScenes = SessionHandler.sessionManager.currentLoadedScenes.ToList();
+            _currentSceneChangeValue = Runner.CurrentScene;
             _currentSceneOutdated = false;
             
-            LogTrace($"Scene transition {prevScenes.Count}->{currentLoadedScenes.Count}");
-            _runningCoroutine = UpdateScenesWrapper(prevScenes, currentLoadedScenes);
+            LogTrace($"Scene transition {prevScenes.Count}->{localLoadedScenes.Count}");
+            _runningCoroutine = UpdateScenesWrapper(prevScenes, localLoadedScenes);
             StartCoroutine(_runningCoroutine);
         }
 
@@ -147,15 +188,12 @@ namespace rwby
             }
         }
 
-        private bool IsSceneListUpdated()
+        private bool IsSceneListUpToDate()
         {
-            // if (Runner.CurrentScene != _currentScene) return false;
-            LobbyManager lm = LobbyManager.singleton;
-            if (currentLoadedScenes.Count != lm.currentLoadedScenes.Count) return false;
-            for (int i = 0; i < currentLoadedScenes.Count; i++)
-            {
-                if (lm.currentLoadedScenes.Contains(currentLoadedScenes[i]) == false) return false;
-            }
+            // Scene list changed by count.
+            if (SessionHandler.sessionManager.currentLoadedScenes.Count != localLoadedScenes.Count) return false;
+            // Scene list changed, count didn't.
+            if (Runner.CurrentScene != _currentSceneChangeValue) return false;
             return true;
         }
 
@@ -185,28 +223,6 @@ namespace rwby
             return _sceneObjects.TryGetValue(sceneObjectGuid, out instance);
         }
 
-        void INetworkSceneObjectProvider.Initialize(NetworkRunner runner)
-        {
-            Initialize(runner);
-        }
-
-        void INetworkSceneObjectProvider.Shutdown(NetworkRunner runner)
-        {
-            Shutdown(runner);
-        }
-        
-        protected virtual void Initialize(NetworkRunner runner)
-        {
-            Assert.Check(!Runner);
-            Runner = runner;
-        }
-
-        protected virtual void Shutdown(NetworkRunner runner)
-        {
-            Assert.Check(Runner == runner);
-            Runner = null;
-        }
-        
         public List<NetworkObject> FindNetworkObjects(Scene scene, bool disable = true, bool addVisibilityNodes = false)
         {
             var networkObjects = new List<NetworkObject>();

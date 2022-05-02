@@ -1,6 +1,4 @@
-using Cysharp.Threading.Tasks;
 using Fusion;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -10,59 +8,49 @@ namespace rwby
     {
         public static NetworkManager singleton;
 
-        public FusionLauncher FusionLauncher { get { return fusionLauncher; } }
-
-        [SerializeField] private FusionLauncher fusionLauncher;
-        [SerializeField] private NetworkObject clientPrefab;
-        [SerializeField] private NetworkObject lobbyManagerPrefab;
+        public NetworkObject clientPrefab;
+        
+        public int SessionIDCounter { get; protected set; } = 0;
+        public Dictionary<int, FusionLauncher> sessions = new Dictionary<int, FusionLauncher>();
 
         public void Awake()
         {
             singleton = this;
         }
 
-        private void Start()
+        public int CreateSessionHandler()
         {
-            fusionLauncher.OnStartHosting += SpawnMatchManager;
+            SessionIDCounter++;
+            FusionLauncher newHandler = gameObject.AddComponent<FusionLauncher>();
+            newHandler.clientPrefab = clientPrefab;
+            newHandler.sessionID = SessionIDCounter;
+            sessions.Add(SessionIDCounter, newHandler);
+            return SessionIDCounter;
         }
 
-        public async UniTask<StartGameResult> StartSinglePlayerHost()
+        public void DestroySessionHandler(int id)
         {
-            return await fusionLauncher.HostSession("localSession", 8, false, clientPrefab, true);
+            sessions[id].LeaveSession();
+            Destroy(sessions[id]);
+            sessions.Remove(id);
         }
 
-        public void StartHost(string lobbyName, int playerCount, bool privateLobby)
+        public int GetSessionIDByRunner(NetworkRunner runner)
         {
-            if (string.IsNullOrEmpty(lobbyName))
-                lobbyName = $"{Random.Range(0, 10000)}";
-            _ = fusionLauncher.HostSession(lobbyName, playerCount, false, clientPrefab);
+            foreach (var sessionsKey in sessions.Keys)
+            {
+                if (sessions[sessionsKey]._runner == runner) return sessionsKey;
+            }
+            return -1;
         }
 
-        public void StartDedicatedServer(string lobbyName, int playerCount)
+        public FusionLauncher GetSessionByRunner(NetworkRunner runner)
         {
-            if (string.IsNullOrEmpty(lobbyName))
-                lobbyName = $"{Random.Range(0, 10000)}";
-            _ = fusionLauncher.DedicateHostSession(lobbyName, playerCount, false, clientPrefab);
-        }
-
-        public void JoinHost(string roomName)
-        {
-            _ = fusionLauncher.JoinSession(roomName, clientPrefab);
-        }
-
-        public void JoinHost(SessionInfo sessionInfo)
-        {
-            _ = fusionLauncher.JoinSession(sessionInfo, clientPrefab);
-        }
-
-        public void LeaveSession()
-        {
-            fusionLauncher.LeaveSession();
-        }
-
-        private void SpawnMatchManager()
-        {
-            fusionLauncher.NetworkRunner.Spawn(lobbyManagerPrefab, Vector3.zero, Quaternion.identity);
+            foreach (var sessionsKey in sessions.Keys)
+            {
+                if (sessions[sessionsKey]._runner == runner) return sessions[sessionsKey];
+            }
+            return null;
         }
     }
 }

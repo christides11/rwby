@@ -1,12 +1,13 @@
 {
     "Version": 1,
     "TypeId": "NetworkProjectConfig",
-    "PeerMode": 0,
+    "PeerMode": 1,
     "PhysicsEngine": 0,
     "ServerPhysicsMode": 1,
     "UseLagCompensation": true,
     "LagCompensation": {
         "HitboxBufferSize": 60,
+        "HitboxCapacity": 512,
         "ExpansionFactor": 0.20000000298023225,
         "Optimize": false,
         "DebugBroadphase": false,
@@ -40,6 +41,7 @@
     "Simulation": {
         "InputDataWordCount": 0,
         "TickRate": 60,
+        "MaxPrediction": 60,
         "DefaultPlayers": 8,
         "ReplicationMode": 0,
         "ObjectInterest": false,

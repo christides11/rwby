@@ -3,7 +3,7 @@ using Fusion;
 namespace rwby
 {
     [System.Serializable]
-    public struct LobbySettings : INetworkStruct
+    public struct SessionGamemodeSettings : INetworkStruct
     {
         public byte teams;
         public int maxPlayersPerClient;

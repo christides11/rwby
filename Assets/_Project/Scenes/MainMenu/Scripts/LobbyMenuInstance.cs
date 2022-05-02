@@ -8,6 +8,7 @@ using Selectable = rwby.ui.Selectable;
 
 namespace rwby
 {
+    // TODO: Link to given session manager.
     public class LobbyMenuInstance : MonoBehaviour
     {
         [System.Serializable]
@@ -40,14 +41,14 @@ namespace rwby
         public void Initialize(LobbyMenuHandler menuHandler)
         {
             this.lobbyMenuHandler = menuHandler;
-            if (NetworkManager.singleton.FusionLauncher.NetworkRunner.IsServer)
+            /*if (NetworkManager.singleton.FusionLauncher.NetworkRunner.IsServer)
             {
                 readyButton.GetComponentInChildren<TextMeshProUGUI>().text = "Start Match";
             }
             else
             {
                 readyButton.GetComponentInChildren<TextMeshProUGUI>().text = "Ready";
-            }
+            }*/
             exitButton.onSubmit.AddListener(() => { menuHandler.ExitLobby(); });
 
             for (int i = 0; i < cssConnections.Length; i++)
@@ -60,6 +61,8 @@ namespace rwby
 
         public void ResetCharacterList()
         {
+            // TODO: Make this menu specific to a given SessionManagerGamemode.
+            /*
             foreach(Transform child in characterContentTransform)
             {
                 Destroy(child.gameObject);
@@ -74,17 +77,17 @@ namespace rwby
                 chara.GetComponent<Selectable>().onSubmit.AddListener(() => {OpenCharacterSelect(selectIndex);});
             }
 
-            if (cm.ClientPlayers[playerID].characterReferences.Count == LobbyManager.singleton.settings
+            if (cm.ClientPlayers[playerID].characterReferences.Count == SessionManagerClassic.singleton.settings
                     .GetTeamDefinition(cm.ClientPlayers[playerID].team).maxCharactersPerPlayer) return;
             GameObject cAdd = GameObject.Instantiate(characterContentPrefab, characterContentTransform, false);
             cAdd.GetComponentInChildren<TextMeshProUGUI>().text = "+";
-            cAdd.GetComponent<Selectable>().onSubmit.AddListener(TryAddCharacter);
+            cAdd.GetComponent<Selectable>().onSubmit.AddListener(TryAddCharacter);*/
         }
 
         void TryAddCharacter()
         {
-            ClientManager cm = ClientManager.local;
-            cm.CLIENT_SetPlayerCharacterCount(playerID, cm.ClientPlayers[playerID].characterReferences.Count+1);
+            //ClientManager cm = ClientManager.local;
+            //cm.CLIENT_SetPlayerCharacterCount(playerID, cm.ClientPlayers[playerID].characterReferences.Count+1);
         }
         
         public int currentSelectingCharacter = 0;

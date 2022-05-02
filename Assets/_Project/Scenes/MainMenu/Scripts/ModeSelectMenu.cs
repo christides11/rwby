@@ -13,7 +13,7 @@ namespace rwby.ui.mainmenu
         private EventSystem eventSystem;
         private LocalPlayerManager localPlayerManager;
 
-        private void Start()
+        private void Awake()
         {
             localPlayerManager = GameManager.singleton.localPlayerManager;
         }
@@ -35,9 +35,7 @@ namespace rwby.ui.mainmenu
 
         private void Update()
         {
-            if (eventSystem.currentSelectedGameObject == null
-                && localPlayerManager.systemPlayer.controllerType == PlayerControllerType.GAMEPAD
-                && systemPlayer.GetAxis2D(rwby.Action.UIMovement_X, rwby.Action.UIMovement_Y).sqrMagnitude > 0)
+            if (UIHelpers.SelectDefaultSelectable(eventSystem, localPlayerManager.systemPlayer))
             {
                 eventSystem.SetSelectedGameObject(defaultSelectedUIItem);
             }

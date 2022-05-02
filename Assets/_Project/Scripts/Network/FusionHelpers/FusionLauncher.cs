@@ -5,6 +5,7 @@ using Fusion;
 using Fusion.Sockets;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.Serialization;
 
 namespace rwby
 {
@@ -31,17 +32,21 @@ namespace rwby
 
 		public ConnectionStatus Status { get { return _status; } }
 		public Dictionary<PlayerRef, NetworkObject> Players { get { return _players; } }
-		public NetworkRunner NetworkRunner { get { return _runner; } }
+		public NetworkRunner _runner { get; private set; } = null;
 
-		private NetworkRunner _runner;
 		private Action<NetworkRunner, ConnectionStatus> _connectionCallback;
 		private Dictionary<PlayerRef, NetworkObject> _players = new Dictionary<PlayerRef, NetworkObject>();
 		private ConnectionStatus _status;
-		private NetworkObject _playerPrefab;
 		private FusionObjectPoolRoot _pool;
 		public CustomNetworkSceneManagerBase networkSceneManagerBase;
 
 		private GameMode _gamemode;
+		
+		[FormerlySerializedAs("_playerPrefab")] public NetworkObject clientPrefab;
+
+		public int sessionID;
+		
+		public SessionManagerBase sessionManager;
 
 		private void OnConnectionStatusUpdate(NetworkRunner arg1, FusionLauncher.ConnectionStatus status)
 		{
@@ -51,7 +56,6 @@ namespace rwby
 
 		public async UniTask JoinSessionLobby()
 		{
-			_runner = gameObject.GetComponent<NetworkRunner>();
 			if (!_runner)
 				_runner = gameObject.AddComponent<NetworkRunner>();
 			_runner.AddCallbacks(this);
@@ -61,7 +65,7 @@ namespace rwby
 
 		public async UniTask<StartGameResult> DedicateHostSession(string roomName, int playerCount, bool privateLobby, NetworkObject playerPrefab)
 		{
-			_playerPrefab = playerPrefab;
+			clientPrefab = playerPrefab;
 			_connectionCallback = OnConnectionStatusUpdate;
 			InitSingletions(false);
 			
@@ -89,9 +93,8 @@ namespace rwby
 			return result;
 		}
 
-		public async UniTask<StartGameResult> HostSession(string roomName, int playerCount, bool privateLobby, NetworkObject playerPrefab, bool local = false)
+		public async UniTask<StartGameResult> HostSession(string roomName, int playerCount, bool privateLobby, bool local = false)
 		{
-			_playerPrefab = playerPrefab;
 			_connectionCallback = OnConnectionStatusUpdate;
 			InitSingletions(true);
 
@@ -123,9 +126,9 @@ namespace rwby
 			await JoinSession(session.Name, playerPrefab);
 		}
 
-		public async UniTask JoinSession(string sessionName, NetworkObject playerPrefab)
+		public async UniTask JoinSession(string sessionID, NetworkObject playerPrefab)
 		{
-			_playerPrefab = playerPrefab;
+			clientPrefab = playerPrefab;
 			_connectionCallback = OnConnectionStatusUpdate;
 
 			InitSingletions(true);
@@ -133,7 +136,7 @@ namespace rwby
 			await _runner.StartGame(new StartGameArgs()
 			{
 				GameMode = GameMode.Client, 
-				SessionName = sessionName, 
+				SessionName = sessionID, 
 				ObjectPool = _pool,
 				SceneObjectProvider = networkSceneManagerBase,
 				DisableClientSessionCreation = true
@@ -151,15 +154,15 @@ namespace rwby
 
 		protected void InitSingletions(bool provideInput)
 		{
-			_runner = gameObject.GetComponent<NetworkRunner>();
 			if (!_runner)
 				_runner = gameObject.AddComponent<NetworkRunner>();
 			_runner.name = name;
 			_runner.ProvideInput = provideInput;
-			//_runner.AddCallbacks(this);
 
-			if (_pool == null)
+			if (!_pool)
 				_pool = gameObject.AddComponent<FusionObjectPoolRoot>();
+			if (!networkSceneManagerBase)
+				networkSceneManagerBase = gameObject.AddComponent<CustomNetworkSceneManager>();
 		}
 
 		public void OnInput(NetworkRunner runner, NetworkInput input){}
@@ -189,8 +192,8 @@ namespace rwby
 
 		public void OnPlayerJoined(NetworkRunner runner, PlayerRef player)
 		{
-			_players[player] = runner.Spawn(_playerPrefab, Vector3.zero, Quaternion.identity, player);
-			runner.SetPlayerObject(player, _players[player]);
+			//_players[player] = runner.Spawn(clientPrefab, Vector3.zero, Quaternion.identity, player);
+			//runner.SetPlayerObject(player, _players[player]);
 			if (runner.IsServer)
 			{
 				if (_gamemode == GameMode.Host)

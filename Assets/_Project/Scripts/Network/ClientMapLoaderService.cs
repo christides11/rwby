@@ -8,15 +8,18 @@ using UnityEngine.SceneManagement;
 
 namespace rwby
 {
+    // TODO: Link to given session manager.
     public class ClientMapLoaderService : NetworkBehaviour
     {
+        public FusionLauncher sessionHandler;
         public bool loadInProgress = false;
 
         public async UniTask TellClientsToLoad(ModObjectReference mapReference)
         {
+            /*
+            return;
             if (loadInProgress) return;
             loadInProgress = true;
-
             foreach(ClientManager c in ClientManager.clientManagers)
             {
                 c.mapLoadPercent = 0;
@@ -35,9 +38,10 @@ namespace rwby
                 await UniTask.Delay(TimeSpan.FromSeconds(0.2f), ignoreTimeScale: true);
             }
 
-            loadInProgress = false;
-        }
+            loadInProgress = false;*/
+        } 
 
+        /*
         [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
         private void RPC_ClientTryLoad(ModObjectReference mapReference)
         {
@@ -57,6 +61,6 @@ namespace rwby
         private void RPC_ReportLoadPercentage(float percentage, RpcInfo info = default)
         {
             Runner.GetPlayerObject(info.Source).GetBehaviour<ClientManager>().mapLoadPercent = percentage;
-        }
+        }*/
     }
 }

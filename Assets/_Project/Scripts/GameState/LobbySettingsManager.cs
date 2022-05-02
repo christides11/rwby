@@ -3,36 +3,38 @@ using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using Fusion;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace rwby
 {
+    // TODO: Link to given session manager.
     [System.Serializable]
     public class LobbySettingsManager
     {
-        public LobbyManager lobbyManager;
+        [FormerlySerializedAs("lobbyManager")] public SessionManagerClassic sessionManagerClassic;
 
-        public LobbySettingsManager(LobbyManager lobbyManager)
+        public LobbySettingsManager(SessionManagerClassic sessionManagerClassic)
         {
-            this.lobbyManager = lobbyManager;
+            this.sessionManagerClassic = sessionManagerClassic;
         }
         
         public async UniTask<bool> VerifyMatchSettings()
         {
-            if (lobbyManager.CurrentGameMode == null) return false;
+            if (sessionManagerClassic.CurrentGameMode == null) return false;
 
             IGameModeDefinition gamemodeDefinition =
-                ContentManager.singleton.GetContentDefinition<IGameModeDefinition>(lobbyManager.Settings.gamemodeReference);
+                ContentManager.singleton.GetContentDefinition<IGameModeDefinition>(sessionManagerClassic.GamemodeSettings.gamemodeReference);
             if (VerifyTeams(gamemodeDefinition) == false) return false;
-            if (await lobbyManager.CurrentGameMode.VerifyGameModeSettings() == false) return false;
+            if (await sessionManagerClassic.CurrentGameMode.VerifyGameModeSettings() == false) return false;
             return true;
         }
         
         public async UniTask<bool> TrySetGamemode(ModObjectReference gamemodeReference)
         {
-            if (lobbyManager.Object.HasStateAuthority == false) return false;
+            if (sessionManagerClassic.Object.HasStateAuthority == false) return false;
 
             List<PlayerRef> failedLoadPlayers =
-                await lobbyManager.clientContentLoaderService.TellClientsToLoad<IGameModeDefinition>(gamemodeReference);
+                await sessionManagerClassic.clientContentLoaderService.TellClientsToLoad<IGameModeDefinition>(gamemodeReference);
             if (failedLoadPlayers == null)
             {
                 Debug.LogError("Set Gamemode Local Failure");
@@ -44,11 +46,12 @@ namespace rwby
                 Debug.Log($"{v.PlayerId} failed to load {gamemodeReference.ToString()}.");
             }
 
-            if (lobbyManager.CurrentGameMode != null)
+            if (sessionManagerClassic.CurrentGameMode != null)
             {
-                lobbyManager.Runner.Despawn(lobbyManager.CurrentGameMode.GetComponent<NetworkObject>());
+                sessionManagerClassic.Runner.Despawn(sessionManagerClassic.CurrentGameMode.GetComponent<NetworkObject>());
             }
 
+            /*
             for (int i = 0; i < ClientManager.clientManagers.Count; i++)
             {
                 var tempList = ClientManager.clientManagers[i].ClientPlayers;
@@ -58,40 +61,41 @@ namespace rwby
                     clientPlayerDef.team = 0;
                     tempList[k] = clientPlayerDef;
                 }
-            }
+            }*/
 
             IGameModeDefinition gamemodeDefinition =
                 ContentManager.singleton.GetContentDefinition<IGameModeDefinition>(gamemodeReference);
             GameObject gamemodePrefab = gamemodeDefinition.GetGamemode();
-            lobbyManager.CurrentGameMode = lobbyManager.Runner.Spawn(gamemodePrefab.GetComponent<GameModeBase>(), Vector3.zero, Quaternion.identity);
+            sessionManagerClassic.CurrentGameMode = sessionManagerClassic.Runner.Spawn(gamemodePrefab.GetComponent<GameModeBase>(), Vector3.zero, Quaternion.identity);
 
-            LobbySettings temp = lobbyManager.Settings;
+            SessionGamemodeSettings temp = sessionManagerClassic.GamemodeSettings;
             temp.gamemodeReference = gamemodeReference;
             temp.teams = (byte)gamemodeDefinition.maximumTeams;
-            lobbyManager.Settings = temp;
+            sessionManagerClassic.GamemodeSettings = temp;
             return true;
         }
 
         public void SetMaxPlayersPerClient(int count)
         {
-            var temp = lobbyManager.Settings;
+            var temp = sessionManagerClassic.GamemodeSettings;
             temp.maxPlayersPerClient = count;
-            lobbyManager.Settings = temp;
+            sessionManagerClassic.GamemodeSettings = temp;
         }
         
         #region TEAMS
 
         public void SetTeamCount(byte count)
         {
-            var temp = lobbyManager.Settings;
+            var temp = sessionManagerClassic.GamemodeSettings;
             temp.teams = count;
-            lobbyManager.Settings = temp;
+            sessionManagerClassic.GamemodeSettings = temp;
         }
         
         private bool VerifyTeams(IGameModeDefinition gamemodeDefiniton)
         {
-            int[] teamCount = new int[lobbyManager.Settings.teams];
+            int[] teamCount = new int[sessionManagerClassic.GamemodeSettings.teams];
 
+            /*
             for (int i = 0; i < ClientManager.clientManagers.Count; i++)
             {
                 for (int k = 0; k < ClientManager.clientManagers[i].ClientPlayers.Count; k++)
@@ -100,7 +104,7 @@ namespace rwby
                     if (playerTeam == 0) return false;
                     teamCount[playerTeam - 1]++;
                 }
-            }
+            }*/
 
             for (int w = 0; w < teamCount.Length; w++)
             {
@@ -113,15 +117,15 @@ namespace rwby
         
         public TeamDefinition GetTeamDefinition(int team)
         {
-            if (lobbyManager.CurrentGameMode == null) return new TeamDefinition();
-            if (team < 0 || team > lobbyManager.Settings.teams) return new TeamDefinition();
+            if (sessionManagerClassic.CurrentGameMode == null) return new TeamDefinition();
+            if (team < 0 || team > sessionManagerClassic.GamemodeSettings.teams) return new TeamDefinition();
             if (team == 0)
             {
-                return lobbyManager.CurrentGameMode.definition.defaultTeam;
+                return sessionManagerClassic.CurrentGameMode.definition.defaultTeam;
             }
             else
             {
-                return lobbyManager.CurrentGameMode.definition.teams[team-1];
+                return sessionManagerClassic.CurrentGameMode.definition.teams[team-1];
             }
         }
         #endregion

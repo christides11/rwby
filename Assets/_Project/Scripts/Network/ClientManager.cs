@@ -8,14 +8,15 @@ using Rewired;
 
 namespace rwby
 {
+	// TODO: Assign the client the given session it's in.
 	[OrderBefore(typeof(FighterInputManager), typeof(FighterManager))]
 	public class ClientManager : NetworkBehaviour, INetworkRunnerCallbacks, IBeforeUpdate, IAfterUpdate
 	{
 		public delegate void ClientAction(ClientManager clientManager);
 		public static event ClientAction OnPlayersChanged;
 
-		public static ClientManager local;
-		public static List<ClientManager> clientManagers = new List<ClientManager>();
+		//public static ClientManager local;
+		//public static List<ClientManager> clientManagers = new List<ClientManager>();
 
 		// Client players.
 		[Networked(OnChanged = nameof(OnClientPlayersChanged)), Capacity(4)] public NetworkLinkedList<ClientPlayerDefinition> ClientPlayers { get; }
@@ -70,11 +71,9 @@ namespace rwby
 
 		public override void Spawned()
 		{
-			clientManagers.Add(this);
 			if (Object.HasInputAuthority)
 			{
 				Runner.AddCallbacks(this);
-				local = this;
 				GameManager.singleton.localPlayerManager.OnPlayerCountChanged += WhenPlayerCountChanged;
 			}
 		}
@@ -86,7 +85,6 @@ namespace rwby
 
 		public override void Despawned(NetworkRunner runner, bool hasState)
 		{
-			clientManagers.Remove(this);
 		}
 
 		public override void Render()
@@ -121,7 +119,8 @@ namespace rwby
 		[Rpc(RpcSources.InputAuthority | RpcSources.StateAuthority, RpcTargets.StateAuthority, HostMode = RpcHostMode.SourceIsHostPlayer)]
 		private void RPC_SetPlayerCount(int playerCount)
 		{
-			if (playerCount < 0 || playerCount > LobbyManager.singleton.Settings.maxPlayersPerClient || playerCount == ClientPlayers.Count) return;
+			/*
+			if (playerCount < 0 || playerCount > SessionManagerClassic.singleton.Settings.maxPlayersPerClient || playerCount == ClientPlayers.Count) return;
 
 			var list = ClientPlayers;
 			if (list.Count < playerCount)
@@ -137,15 +136,16 @@ namespace rwby
 				{
 					list.Remove(list.Get(list.Count-1));
 				}
-			}
+			}*/
 		}
 		
 		[Rpc(RpcSources.InputAuthority | RpcSources.StateAuthority, RpcTargets.StateAuthority, HostMode = RpcHostMode.SourceIsHostPlayer)]
 		private void RPC_SetPlayerCharacterCount(int playerIndex, int characterCount)
 		{
-			LobbyManager lobbyManager = LobbyManager.singleton;
+			/*
+			SessionManagerClassic sessionManagerClassic = SessionManagerClassic.singleton;
 			if (characterCount < 0 || characterCount >
-			    lobbyManager.settings.GetTeamDefinition(ClientPlayers[playerIndex].team).maxCharactersPerPlayer) return;
+			    sessionManagerClassic.settings.GetTeamDefinition(ClientPlayers[playerIndex].team).maxCharactersPerPlayer) return;
 
 			var tempList = ClientPlayers;
 			ClientPlayerDefinition temp = tempList[playerIndex];
@@ -158,7 +158,7 @@ namespace rwby
 			{
 				while (list.Count > characterCount) list.Remove(list.Get(list.Count-1));
 			}
-			tempList.Set(playerIndex, temp);
+			tempList.Set(playerIndex, temp);*/
 		}
 
 		[Rpc(RpcSources.InputAuthority | RpcSources.StateAuthority, RpcTargets.StateAuthority, HostMode = RpcHostMode.SourceIsHostPlayer)]

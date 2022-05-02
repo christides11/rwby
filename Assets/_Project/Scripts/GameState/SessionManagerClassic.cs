@@ -1,66 +1,35 @@
 using Cysharp.Threading.Tasks;
 using Fusion;
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using UnityEngine;
 
 namespace rwby
 {
-    public class LobbyManager : NetworkBehaviour
+    public class SessionManagerClassic : SessionManagerGamemode
     {
-        public delegate void EmptyAction();
-        public static event EmptyAction OnLobbyManagerSpawned;
-        public static event EmptyAction OnLobbyPlayersUpdated;
-        public static event EmptyAction OnLobbySettingsChanged;
-        public static event EmptyAction OnCurrentGamemodeChanged;
-        public static event EmptyAction OnGamemodeSettingsChanged;
+        //public static event EmptyAction OnLobbyManagerSpawned;
+        //public static event EmptyAction OnLobbyPlayersUpdated;
 
-        public static LobbyManager singleton;
         public LobbySettingsManager settings;
-        
-        [Networked(OnChanged = nameof(OnSettingsChanged))] public LobbySettings Settings { get; set; }
-        [Networked(OnChanged = nameof(OnCurrentGameModeChanged))] public GameModeBase CurrentGameMode { get; set; }
-        [Networked, Capacity(4)] public NetworkLinkedList<CustomSceneRef> currentLoadedScenes { get; }
 
-        public ClientContentLoaderService clientContentLoaderService;
-        public ClientMapLoaderService clientMapLoaderService;
-        public GameManager gameManager;
-        public ContentManager contentManager;
-
-        private static void OnSettingsChanged(Changed<LobbyManager> changed)
+        protected override void Awake()
         {
-            OnLobbySettingsChanged?.Invoke();
-        }
-
-        private static void OnCurrentGameModeChanged(Changed<LobbyManager> changed)
-        {
-            OnCurrentGamemodeChanged?.Invoke();
-        }
-
-        private void Awake()
-        {
-            DontDestroyOnLoad(gameObject);
-            singleton = this;
-            gameManager = GameManager.singleton;
-            contentManager = gameManager.contentManager;
+            base.Awake();
             settings = new LobbySettingsManager(this);
         }
 
         public override void Spawned()
         {
-            Settings = new LobbySettings(){ maxPlayersPerClient = 4, teams = 1 };
-            currentLoadedScenes.Add(new CustomSceneRef() { source = 0, modIdentifier = 0, sceneIndex = 0 });
-            Runner.SetActiveScene(1);
-            OnLobbyManagerSpawned?.Invoke();
+            base.Spawned();
+            //currentLoadedScenes.Add(new CustomSceneRef() { source = 0, modIdentifier = 0, sceneIndex = 0 });
+            //Runner.SetActiveScene(1);
+            //OnLobbyManagerSpawned?.Invoke();
         }
+        
+        
 
-        public void CallGamemodeSettingsChanged()
-        {
-            OnGamemodeSettingsChanged?.Invoke();
-        }
-
+        /*
         public async UniTask<bool> TryStartMatch()
         {
             Debug.Log("Trying to start match.");
@@ -141,7 +110,7 @@ namespace rwby
                     if (CurrentGameMode != null)
                     {
                         if (typeof(IGameModeDefinition).IsAssignableFrom(v.Key)) 
-                            if (Settings.gamemodeReference == b) 
+                            if (GamemodeSettings.gamemodeReference == b) 
                                 unload = false;
                         
                         if (CurrentGameMode.VerifyReference(b)) unload = false;
@@ -153,6 +122,6 @@ namespace rwby
             
             foreach(var contentReference in contentToUnload) 
                 contentManager.UnloadContentDefinition(contentReference.Item1, contentReference.Item2);
-        }
+        }*/
     }
 }

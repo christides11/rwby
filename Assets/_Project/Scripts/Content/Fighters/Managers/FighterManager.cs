@@ -73,7 +73,7 @@ namespace rwby
         public float lockonMaxDistance = 20;
         public float lockonFudging = 0.1f;
 
-        [NonSerialized] public LobbyManager lobbyManager;
+        //[NonSerialized] public SessionManagerClassic SessionManagerClassic;
 
         [Header("Debug")] public bool FRAMEBYFRAME = false;
 
@@ -84,7 +84,7 @@ namespace rwby
 
         public virtual void Awake()
         {
-            lobbyManager = LobbyManager.singleton;
+            //SessionManagerClassic = SessionManagerClassic.singleton;
             networkManager = NetworkManager.singleton;
             stateManager.movesets = fighterDefinition.GetMovesets();
             foreach (var moveset in stateManager.movesets)

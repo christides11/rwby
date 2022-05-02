@@ -16,6 +16,7 @@ namespace rwby.core.training
         public NetworkId objectId;
     }
 
+    // TODO: Make work with SessionManager.
     public class GamemodeTraining : GameModeBase
     {
         public event EmptyAction OnCPUListUpdated;
@@ -42,6 +43,7 @@ namespace rwby.core.training
 
         private async UniTask CheckCPUList()
         {
+            /*
             if (Object.HasStateAuthority == false) return;
 
             for(int i = 0; i < cpus.Count; i++)
@@ -49,7 +51,7 @@ namespace rwby.core.training
                 ModObjectReference objectReference = cpus[i].characterReference;
                 if(objectReference.IsValid() && cpus[i].objectId.IsValid == false)
                 {
-                    List<PlayerRef> failedLoadPlayers = await LobbyManager.singleton.clientContentLoaderService.TellClientsToLoad<IFighterDefinition>(objectReference);
+                    List<PlayerRef> failedLoadPlayers = await SessionManagerClassic.singleton.clientContentLoaderService.TellClientsToLoad<IFighterDefinition>(objectReference);
                     if (failedLoadPlayers == null)
                     {
                         Debug.LogError($"Load CPU {objectReference} failure.");
@@ -70,7 +72,7 @@ namespace rwby.core.training
                             list[indexTemp] = temp;
                         });
                 }
-            }
+            }*/
         }
 
         public override void Spawned()
@@ -139,8 +141,10 @@ namespace rwby.core.training
 
         public override async UniTask<bool> VerifyGameModeSettings()
         {
+            return false;
+            /*
             if (NetworkManager.singleton.FusionLauncher.NetworkRunner.IsRunning == false) return true;
-            List<PlayerRef> failedLoadPlayers = await LobbyManager.singleton.clientContentLoaderService.TellClientsToLoad<IMapDefinition>(mapReference);
+            List<PlayerRef> failedLoadPlayers = await SessionManagerClassic.singleton.clientContentLoaderService.TellClientsToLoad<IMapDefinition>(mapReference);
             if (failedLoadPlayers == null)
             {
                 Debug.LogError("Load Map Local Failure");
@@ -154,7 +158,7 @@ namespace rwby.core.training
 
             if (failedLoadPlayers.Count != 0) return false;
 
-            return true;
+            return true;*/
         }
 
         public override bool VerifyReference(ModObjectReference reference)
@@ -167,14 +171,15 @@ namespace rwby.core.training
         List<int> spawnPointsCurr = new List<int>();
         public override async void StartGamemode()
         {
+            /*
             GamemodeState = GameModeState.INITIALIZING;
 
-            await LobbyManager.singleton.clientMapLoaderService.TellClientsToLoad(mapReference);
+            await SessionManagerClassic.singleton.clientMapLoaderService.TellClientsToLoad(mapReference);
 
             IMapDefinition mapDefinition = ContentManager.singleton.GetContentDefinition<IMapDefinition>(mapReference);
 
-            LobbyManager.singleton.currentLoadedScenes.Clear();
-            LobbyManager.singleton.currentLoadedScenes.Add(new CustomSceneRef()
+            SessionManagerClassic.singleton.currentLoadedScenes.Clear();
+            SessionManagerClassic.singleton.currentLoadedScenes.Add(new CustomSceneRef()
             {
                 source = mapReference.modIdentifier.Item1,
                 modIdentifier = mapReference.modIdentifier.Item2,
@@ -211,7 +216,7 @@ namespace rwby.core.training
                     NetworkObject no = cm.SpawnPlayer(playerRef, x, GetSpawnPosition(cm, clientPlayer));
                     spawnPointsCurr[clientPlayer.team]++;
                 }
-            }
+            }*/
         }
 
         private Vector3 GetSpawnPosition(ClientManager cm, ClientPlayerDefinition clientPlayer)

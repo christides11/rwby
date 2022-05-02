@@ -26,7 +26,7 @@ namespace rwby
         {
             this.modIdentifier.Item1 = sceneRef.source;
             this.modIdentifier.Item2 = sceneRef.modIdentifier;
-            objectIdentifier = sceneRef.sceneIndex;
+            objectIdentifier = sceneRef.mapIdentifier;
         }
 
         public bool IsValid()

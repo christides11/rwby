@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -17,6 +18,14 @@ namespace rwby.ui.mainmenu
         
         [SerializeField] private OptionsGeneralMenu generalMenu;
         [SerializeField] private OptionsProfilesMenu profiles;
+        [SerializeField] private GameObject defaultSelectedUIItem;
+        
+        private LocalPlayerManager localPlayerManager;
+        
+        private void Start()
+        {
+            localPlayerManager = GameManager.singleton.localPlayerManager;
+        }
 
         public override void Open(MenuDirection direction, IMenuHandler menuHandler)
         {
@@ -67,6 +76,14 @@ namespace rwby.ui.mainmenu
         {
             if (history.Count == 0) return null;
             return menus[history[history.Count-1]];
+        }
+
+        private void Update()
+        {
+            if (UIHelpers.SelectDefaultSelectable(EventSystem.current, localPlayerManager.systemPlayer))
+            {
+                EventSystem.current.SetSelectedGameObject(defaultSelectedUIItem);
+            }
         }
     }
 }

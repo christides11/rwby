@@ -1,4 +1,5 @@
 using Fusion;
+using UnityEngine.Serialization;
 
 namespace rwby
 {
@@ -8,6 +9,12 @@ namespace rwby
         // 0 = internal
         public byte source;
         public uint modIdentifier;
-        public byte sceneIndex;
+        public byte mapIdentifier;
+        public sbyte sceneIdentifier;
+
+        public override string ToString()
+        {
+            return $"{source}:{modIdentifier}:{mapIdentifier} scene {sceneIdentifier}";
+        }
     }
 }

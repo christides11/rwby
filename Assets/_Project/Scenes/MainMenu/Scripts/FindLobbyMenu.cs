@@ -10,6 +10,7 @@ using UnityEngine.EventSystems;
 
 namespace rwby.ui.mainmenu
 {
+    // TODO: Link to given session manager.
     public class FindLobbyMenu : MainMenuMenu
     {
         [SerializeField] private Transform LobbyContentHolder;
@@ -30,14 +31,14 @@ namespace rwby.ui.mainmenu
         public override void Open(MenuDirection direction, IMenuHandler menuHandler)
         {
             base.Open(direction, menuHandler);
-            NetworkManager.singleton.FusionLauncher.OnSessionsUpdated += OnSessionsUpdated;
-            _ = NetworkManager.singleton.FusionLauncher.JoinSessionLobby();
+            //NetworkManager.singleton.FusionLauncher.OnSessionsUpdated += OnSessionsUpdated;
+            //_ = NetworkManager.singleton.FusionLauncher.JoinSessionLobby();
             gameObject.SetActive(true);
         }
 
         public override bool TryClose(MenuDirection direction, bool forceClose = false)
         {
-            NetworkManager.singleton.FusionLauncher.OnSessionsUpdated -= OnSessionsUpdated;
+            //NetworkManager.singleton.FusionLauncher.OnSessionsUpdated -= OnSessionsUpdated;
             ClearLobbyScrollView();
             gameObject.SetActive(false);
             return true;
@@ -45,7 +46,7 @@ namespace rwby.ui.mainmenu
 
         private void OnDisable()
         {
-            NetworkManager.singleton.FusionLauncher.OnSessionsUpdated -= OnSessionsUpdated;
+            //NetworkManager.singleton.FusionLauncher.OnSessionsUpdated -= OnSessionsUpdated;
         }
 
         private void Update()
@@ -88,16 +89,17 @@ namespace rwby.ui.mainmenu
         {
             //loadingMenu.OpenMenu("Attempting to connect...");
 
+            /*
             NetworkManager.singleton.FusionLauncher.OnConnectionStatusChanged += CheckConnectionStatus;
             NetworkManager.singleton.JoinHost(session);
-            GameManager.singleton.loadingMenu.OpenMenu(0, "Joining Lobby...");
+            GameManager.singleton.loadingMenu.OpenMenu(0, "Joining Lobby...");*/
         }
 
         private void CheckConnectionStatus(NetworkRunner runner, FusionLauncher.ConnectionStatus status)
         {
             if (status == FusionLauncher.ConnectionStatus.Connecting) return;
             GameManager.singleton.loadingMenu.CloseMenu(0);
-            NetworkManager.singleton.FusionLauncher.OnConnectionStatusChanged -= CheckConnectionStatus;
+            //NetworkManager.singleton.FusionLauncher.OnConnectionStatusChanged -= CheckConnectionStatus;
 
             if (status == FusionLauncher.ConnectionStatus.Disconnected || status == FusionLauncher.ConnectionStatus.Failed) return;
 

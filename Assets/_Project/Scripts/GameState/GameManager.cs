@@ -1,3 +1,4 @@
+using System;
 using Cysharp.Threading.Tasks;
 using Rewired.UI.ControlMapper;
 using Rewired;
@@ -18,6 +19,7 @@ namespace rwby
         public ControllerAssignmentMenu controllerAssignmentMenu;
         public LoadingMenu loadingMenu;
         public ProfilesManager profilesManager;
+        public NetworkManager networkManager;
 
         public Settings settings;
 
@@ -32,18 +34,6 @@ namespace rwby
 
         private void Update()
         {
-            if (Input.GetKeyDown(KeyCode.F1))
-            {
-                if (cMapper.isOpen)
-                {
-                    cMapper.Close(false);
-                }
-                else
-                {
-                    cMapper.Open();
-                }
-            }
-
             if (Input.GetKeyDown(KeyCode.F2))
             {
                 QualitySettings.vSyncCount = 0;
@@ -53,6 +43,7 @@ namespace rwby
                 QualitySettings.vSyncCount = 1;
             }
 
+            /*
             if (Input.GetKeyDown(KeyCode.F4))
             {
                 var player = ReInput.players.GetPlayer(0);
@@ -77,18 +68,38 @@ namespace rwby
                 player.controllers.maps.layoutManager.ruleSets.Find(item => item.tag == "k&m_keyboard").enabled = true;
                 player.controllers.maps.layoutManager.ruleSets.Find(item => item.tag == "js_default").enabled = true;
                 player.controllers.maps.layoutManager.Apply();
-            }
+            }*/
+        }
+
+        public virtual async UniTask<Scene> LoadScene(CustomSceneRef sceneReference, LoadSceneParameters parameters)
+        {
+            IMapDefinition mapDefinition = contentManager.GetContentDefinition<IMapDefinition>(new ModObjectReference((sceneReference.source, sceneReference.modIdentifier), sceneReference.mapIdentifier));
+
+            var result = await mapDefinition.LoadScene(sceneReference.sceneIdentifier, parameters);
+            return result;
         }
 
         public virtual string[] GetSceneNames(CustomSceneRef sceneReference){
             if (sceneReference.source == 0)
             {
-                return new string[] { SceneManager.GetSceneByBuildIndex(sceneReference.sceneIndex).name };
+                return new string[] { SceneManager.GetSceneByBuildIndex(sceneReference.mapIdentifier).name };
             }
 
-            IMapDefinition mapDefinition = contentManager.GetContentDefinition<IMapDefinition>(new ModObjectReference((sceneReference.source, sceneReference.modIdentifier), sceneReference.sceneIndex));
+            IMapDefinition mapDefinition = contentManager.GetContentDefinition<IMapDefinition>(new ModObjectReference((sceneReference.source, sceneReference.modIdentifier), sceneReference.mapIdentifier));
 
             return mapDefinition.GetSceneNames().ToArray();
+        }
+
+        public virtual string GetSceneName(CustomSceneRef sceneReference)
+        {
+            if (sceneReference.source == 0)
+            {
+                return SceneManager.GetSceneByBuildIndex(sceneReference.sceneIdentifier).name;
+            }
+            
+            IMapDefinition mapDefinition = contentManager.GetContentDefinition<IMapDefinition>(new ModObjectReference((sceneReference.source, sceneReference.modIdentifier), sceneReference.mapIdentifier));
+
+            return mapDefinition.GetSceneNames()[sceneReference.sceneIdentifier];
         }
     }
 }
