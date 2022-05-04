@@ -4,8 +4,10 @@ using UnityEngine.UI;
 
 namespace rwby
 {
+    // TODO
     public class PlayerHUD : BaseHUD
     {
+        /*
         private FighterManager fm;
         [SerializeField] protected Image healthFill;
         [SerializeField] protected Image healthRedFill;
@@ -41,6 +43,6 @@ namespace rwby
         private void UpdateStateText(FighterStateManager fsm)
         {
             stateText.text = fsm.GetCurrentStateName();
-        }
+        }*/
     }
 }

@@ -21,6 +21,8 @@ namespace rwby
         public IGameModeDefinition definition;
         
         [Networked(OnChanged = nameof(GamemodeStateChanged))] public GameModeState GamemodeState { get; set; }
+        
+        [Networked] public SessionManagerGamemode sessionManager { get; set; }
 
         public static void GamemodeStateChanged(Changed<GameModeBase> changed)
         {

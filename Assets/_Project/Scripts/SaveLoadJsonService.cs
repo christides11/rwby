@@ -17,7 +17,7 @@ namespace rwby
                     streamWriter.Write(jsonObject);
                 }
             }
-            catch (Exception e)
+            catch
             {
                 return false;
             }
@@ -34,7 +34,7 @@ namespace rwby
                     streamWriter.Write(jsonObject);
                 }
             }
-            catch (Exception e)
+            catch
             {
                 return false;
             }
@@ -55,7 +55,7 @@ namespace rwby
 
                 return JsonConvert.DeserializeObject<T>(jsonString);
             }
-            catch (Exception e)
+            catch
             {
                 return default(T);
             }
@@ -77,7 +77,7 @@ namespace rwby
                 result = JsonConvert.DeserializeObject<T>(jsonString);
                 return true;
             }
-            catch (Exception e)
+            catch
             {
                 result = default(T);
                 return false;

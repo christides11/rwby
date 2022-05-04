@@ -6,12 +6,13 @@ using UnityEngine.EventSystems;
 
 namespace rwby.ui.mainmenu
 {
-    // TODO: Link to given session manager.
     public class LobbyMenuHandler : MainMenuMenu
     {
         public List<LobbyMenuInstance> menuInstances = new List<LobbyMenuInstance>();
         public LobbyMenuInstance instancePrefab;
         public Transform instanceParent;
+
+        public SessionManagerGamemode sessionManagerGamemode;
 
         private void OnEnable()
         {
@@ -21,10 +22,9 @@ namespace rwby.ui.mainmenu
         public override void Open(MenuDirection direction, IMenuHandler menuHandler)
         {
             base.Open(direction, menuHandler);
-            ClientManager.OnPlayersChanged += WhenClientPlayerChanged;
-            /*
-            SessionManagerClassic.OnLobbySettingsChanged += UpdateLobbyInfo;
-            SessionManagerClassic.OnGamemodeSettingsChanged += UpdateLobbyInfo;*/
+            ClientManager.OnPlayerCountChanged += WhenClientPlayerCountChanged;
+            sessionManagerGamemode.OnLobbySettingsChanged += UpdateLobbyInfo;
+            sessionManagerGamemode.OnGamemodeSettingsChanged += UpdateLobbyInfo;
 
             gameObject.SetActive(true);
             
@@ -42,20 +42,23 @@ namespace rwby.ui.mainmenu
             }
             menuInstances.Clear();
             
-            ClientManager.OnPlayersChanged -= WhenClientPlayerChanged;
-            /*SessionManagerClassic.OnLobbySettingsChanged -= UpdateLobbyInfo;
-            SessionManagerClassic.OnGamemodeSettingsChanged -= UpdateLobbyInfo;*/
+            ClientManager.OnPlayerCountChanged -= WhenClientPlayerCountChanged;
+            if (sessionManagerGamemode)
+            {
+                sessionManagerGamemode.OnLobbySettingsChanged -= UpdateLobbyInfo;
+                sessionManagerGamemode.OnGamemodeSettingsChanged -= UpdateLobbyInfo;
+            }
             gameObject.SetActive(false);
             return true;
         }
 
-        private async UniTask StartMatch()
+        public async UniTask StartMatch()
         {
-            /*
-            ClientManager.OnPlayersChanged -= WhenClientPlayerChanged;
-            SessionManagerClassic.OnLobbySettingsChanged -= UpdateLobbyInfo;
-            SessionManagerClassic.OnGamemodeSettingsChanged -= UpdateLobbyInfo;
-            await SessionManagerClassic.singleton.TryStartMatch();*/
+            ClientManager.OnPlayerCountChanged -= WhenClientPlayerCountChanged;
+            sessionManagerGamemode.OnLobbySettingsChanged -= UpdateLobbyInfo;
+            sessionManagerGamemode.OnGamemodeSettingsChanged -= UpdateLobbyInfo;
+            bool startResult = await sessionManagerGamemode.TryStartMatch();
+            Debug.Log(startResult);
         }
 
         public async void ExitLobby()
@@ -83,18 +86,22 @@ namespace rwby.ui.mainmenu
         [SerializeField] private Camera lobbyPlayerCameraPrefab;
         private void WhenLocalPlayerCountChanged(LocalPlayerManager localplayermanager, int currentplaycount)
         {
-            //ClientManager.local.CLIENT_SetPlayerCount(currentplaycount);
+            var playerRef = sessionManagerGamemode.Runner.LocalPlayer;
+            ClientManager localClient = sessionManagerGamemode.Runner.GetPlayerObject(playerRef).GetBehaviour<ClientManager>();
+            localClient.CLIENT_SetPlayerCount((uint)currentplaycount);
         }
 
-        private void WhenClientPlayerChanged(ClientManager manager)
+        private void WhenClientPlayerCountChanged(ClientManager manager)
         {
+            if (manager.Runner != sessionManagerGamemode.Runner) return;
+            
             LocalPlayerManager localplayermanager = GameManager.singleton.localPlayerManager;
             int currentplaycount = localplayermanager.localPlayers.Count;
 
-            if (manager.ClientPlayers.Count != currentplaycount)
+            if (manager.ClientPlayerAmount != currentplaycount)
             {
-                localplayermanager.SetPlayerCount(manager.ClientPlayers.Count);
-                currentplaycount = manager.ClientPlayers.Count;
+                localplayermanager.SetPlayerCount((int)manager.ClientPlayerAmount);
+                currentplaycount = (int)manager.ClientPlayerAmount;
             }
             
             while (menuInstances.Count > currentplaycount)
@@ -120,11 +127,11 @@ namespace rwby.ui.mainmenu
             localplayermanager.ApplyCameraLayout();
             localplayermanager.systemPlayer.camera.enabled = false;
             
-            UpdateLobbyInfo();
+            UpdateLobbyInfo(sessionManagerGamemode);
             UpdatePlayerInfo();
         }
         
-        private void UpdateLobbyInfo()
+        private void UpdateLobbyInfo(SessionManagerGamemode sessionManager)
         {
             for (int i = 0; i < menuInstances.Count; i++)
             {

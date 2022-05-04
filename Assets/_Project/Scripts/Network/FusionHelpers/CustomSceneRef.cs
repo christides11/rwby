@@ -12,6 +12,14 @@ namespace rwby
         public byte mapIdentifier;
         public sbyte sceneIdentifier;
 
+        public CustomSceneRef(byte source, uint modID, byte mapID, sbyte sceneID)
+        {
+            this.source = source;
+            modIdentifier = modID;
+            mapIdentifier = mapID;
+            sceneIdentifier = sceneID;
+        }
+        
         public override string ToString()
         {
             return $"{source}:{modIdentifier}:{mapIdentifier} scene {sceneIdentifier}";

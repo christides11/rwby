@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Cysharp.Threading.Tasks;
 using Fusion;
 using Fusion.Sockets;
@@ -47,6 +48,21 @@ namespace rwby
 		public int sessionID;
 		
 		public SessionManagerBase sessionManager;
+
+		public List<CustomSceneRef> defaultSceneList = new List<CustomSceneRef>()
+		{
+			new CustomSceneRef(){source = 0, mapIdentifier = 0, modIdentifier = 0, sceneIdentifier = 1}
+		};
+		
+		public List<CustomSceneRef> GetCurrentScenes()
+		{
+			if (!sessionManager)
+			{
+				return defaultSceneList;
+			}
+
+			return sessionManager.currentLoadedScenes.ToList();
+		}
 
 		private void OnConnectionStatusUpdate(NetworkRunner arg1, FusionLauncher.ConnectionStatus status)
 		{
@@ -192,8 +208,8 @@ namespace rwby
 
 		public void OnPlayerJoined(NetworkRunner runner, PlayerRef player)
 		{
-			//_players[player] = runner.Spawn(clientPrefab, Vector3.zero, Quaternion.identity, player);
-			//runner.SetPlayerObject(player, _players[player]);
+			_players[player] = runner.Spawn(clientPrefab, Vector3.zero, Quaternion.identity, player);
+			runner.SetPlayerObject(player, _players[player]);
 			if (runner.IsServer)
 			{
 				if (_gamemode == GameMode.Host)

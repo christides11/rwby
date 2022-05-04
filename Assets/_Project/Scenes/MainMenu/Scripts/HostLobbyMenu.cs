@@ -7,7 +7,7 @@ using Cysharp.Threading.Tasks;
 
 namespace rwby.ui.mainmenu
 {
-    // TODO: Link to given session manager.
+    // TODO: Unload temporary gamemode when going backwards.
     public class HostLobbyMenu : MainMenuMenu
     {
         [SerializeField] private OnlineMenu onlineMenu;
@@ -87,9 +87,6 @@ namespace rwby.ui.mainmenu
         public void Button_Back()
         {
             currentHandler.Back();
-            //ExitMenu();
-            //onlineMenu.Open();
-            //ContentManager.singleton.UnloadAllContent<IGameModeDefinition>();
         }
 
         public void Button_GameMode()
@@ -126,42 +123,25 @@ namespace rwby.ui.mainmenu
         public async UniTask TryHostLobby()
         {
             GameManager.singleton.loadingMenu.OpenMenu(0, "Attempting host...");
-            int sessionManagerID = GameManager.singleton.networkManager.CreateSessionHandler();
-            StartGameResult result = await GameManager.singleton.networkManager.sessions[sessionManagerID].HostSession(lobbyNameTextMesh.text, playerCount, false);
+            int sessionHandlerID = await GameManager.singleton.HostGamemodeSession(lobbyNameTextMesh.text, playerCount, false);
             GameManager.singleton.loadingMenu.CloseMenu(0);
-            if (result.Ok == false)
-            {
-                Debug.Log($"Failed to host gamemode session: {result.ShutdownReason}");
-                GameManager.singleton.networkManager.DestroySessionHandler(sessionManagerID);
-                return;
-            }
-            currentHandler.Forward((int)MainMenuType.LOBBY);
-        }
+            if (sessionHandlerID == -1) return;
 
-        private async void OnHostingSuccess()
-        {
-            /*
-            SessionManagerClassic.OnLobbyManagerSpawned -= OnHostingSuccess;
-            GameManager.singleton.loadingMenu.CloseMenu(0);
-            bool setGamemodeResult = await SessionManagerClassic.singleton.settings.TrySetGamemode(selectedGamemodeReference);
-            // TODO Better handling.
-            if (setGamemodeResult == false)
-            {
-                Debug.LogError("Set Gamemode Failed.");
-                return;
-            }
+            FusionLauncher fl = GameManager.singleton.networkManager.GetSessionHandler(sessionHandlerID);
+
+            await UniTask.WaitUntil(() => fl.sessionManager != null);
             
-            SessionManagerClassic.singleton.settings.SetTeamCount(teamCount);
-            SessionManagerClassic.singleton.settings.SetMaxPlayersPerClient(maxPlayersPerClient);
-            SessionManagerClassic.singleton.CurrentGameMode.SetGamemodeSettings(selectedGamemode);*/
-            currentHandler.Forward((int)MainMenuType.LOBBY);
-        }
+            SessionManagerGamemode smc = (SessionManagerGamemode)fl.sessionManager;
+            
+            bool setGamemodeResult = await smc.TrySetGamemode(selectedGamemodeReference);
 
-        private void OnHostingFailed()
-        {
-            //NetworkManager.singleton.FusionLauncher.OnHostingFailed -= OnHostingFailed;
-            GameManager.singleton.loadingMenu.CloseMenu(0);
-            Debug.Log("Hosting failed.");
+            smc.SetTeamCount(teamCount);
+            smc.SetMaxPlayersPerClient(maxPlayersPerClient);
+            smc.CurrentGameMode.SetGamemodeSettings(selectedGamemode);
+
+            lobbyMenuHandler.sessionManagerGamemode = smc;
+            
+            currentHandler.Forward((int)MainMenuType.LOBBY);
         }
     }
 }

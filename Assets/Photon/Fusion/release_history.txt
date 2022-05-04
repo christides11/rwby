@@ -2,6 +2,18 @@
 
 ## RC Nightly
 
+### Build 464 (Apr 30, 2022)
+
+**Bug Fixes**
+
+- Fixed: Hitbox Colliders are now recycled in the Lag-compensation structure after network objects are destroyed
+
+### Build 463 (Apr 29, 2022)
+
+**Bug Fixes**
+
+- Fixed: FusionStats no longer creates an EventSystem or StandaloneInputModule in scene if the new Unity Input System is present. (Considered present if the UnityEngine.InputSystem namespace is present in any assemblies)
+
 ### Build 462 (Apr 26, 2022)
 
 **Bug Fixes**

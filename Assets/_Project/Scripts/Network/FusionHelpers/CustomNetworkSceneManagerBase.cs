@@ -56,7 +56,7 @@ namespace rwby
         protected virtual void Initialize(NetworkRunner runner)
         {
             Assert.Check(!Runner);
-            SessionHandler = GameManager.singleton.networkManager.GetSessionByRunner(runner);
+            SessionHandler = GameManager.singleton.networkManager.GetSessionHandlerByRunner(runner);
             Runner = runner;
         }
 
@@ -89,7 +89,7 @@ namespace rwby
         protected virtual void LateUpdate()
         {
             // Not initialized yet.
-            if (!Runner || !SessionHandler.sessionManager) return;
+            if (!Runner || !SessionHandler) return;
             
             // store the flag in case scene changes during the load; this supports scene toggling as well
             if (IsSceneListUpToDate() == false) _currentSceneOutdated = true;
@@ -112,7 +112,7 @@ namespace rwby
             }
             
             var prevScenes = localLoadedScenes;
-            localLoadedScenes = SessionHandler.sessionManager.currentLoadedScenes.ToList();
+            localLoadedScenes = SessionHandler.GetCurrentScenes();
             _currentSceneChangeValue = Runner.CurrentScene;
             _currentSceneOutdated = false;
             
@@ -190,13 +190,14 @@ namespace rwby
 
         private bool IsSceneListUpToDate()
         {
-            // Scene list changed by count.
-            if (SessionHandler.sessionManager.currentLoadedScenes.Count != localLoadedScenes.Count) return false;
             // Scene list changed, count didn't.
             if (Runner.CurrentScene != _currentSceneChangeValue) return false;
+            // Scene list changed by count.
+            if (SessionHandler.GetCurrentScenes().Count != localLoadedScenes.Count) return false;
             return true;
         }
 
+        // TODO: ?
         public bool IsReady(NetworkRunner runner)
         {
             Assert.Check(Runner == runner);

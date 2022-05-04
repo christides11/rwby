@@ -116,11 +116,12 @@ namespace rwby
             var tempScene = Runner.MultiplePeerUnityScene;
 
             // LOAD //
+            Scene firstLoadedScene = default;
             for (int i = 0; i < newScenes.Count; i++)
             {
-                Scene loadedScene = default;
-                await LoadSceneAsync(newScenes[i], loadSceneParameters, scene => loadedScene = scene);
-                
+                Scene loadedScene = await LoadSceneAsync(newScenes[i], loadSceneParameters);//,scene => loadedScene = scene);
+                if (i == 0) firstLoadedScene = loadedScene;
+
                 if (!loadedScene.IsValid())
                 {
                     throw new InvalidOperationException($"Failed to load scene {newScenes[i].ToString()}: async op failed");
@@ -141,6 +142,9 @@ namespace rwby
                     }
                 }
             }
+
+            // TODO: Check if multiple scenes are working fine.
+            Runner.MultiplePeerUnityScene = firstLoadedScene;
             
             LogTrace($"Loaded scenes with parameters: {JsonUtility.ToJson(loadSceneParameters)}");
             
@@ -153,11 +157,9 @@ namespace rwby
             finished(sceneObjects);
         }
         
-        protected virtual async UniTask<Scene> LoadSceneAsync(CustomSceneRef sceneRef, LoadSceneParameters parameters,
-            Action<Scene> loaded)
+        protected virtual async UniTask<Scene> LoadSceneAsync(CustomSceneRef sceneRef, LoadSceneParameters parameters)
         {
             var scene = await GameManager.singleton.LoadScene(sceneRef, parameters);
-            loaded(scene);
             return scene;
         }
 

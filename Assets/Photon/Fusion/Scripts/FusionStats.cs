@@ -881,19 +881,49 @@ public class FusionStats : Fusion.Behaviour {
     }
     _canvasRT = null;
   }
-  
+
+  static bool? _newInputSystemFound;
+  public static bool NewInputSystemFound {
+    
+    get {
+      if (_newInputSystemFound == null) {
+
+        foreach (var asm in AppDomain.CurrentDomain.GetAssemblies()) {
+          var asmtypes = asm.GetTypes();
+          foreach (var type in asmtypes) {
+            if (type.Namespace == "UnityEngine.InputSystem") {
+              _newInputSystemFound = true;
+              return true;
+            }
+          }
+        }
+        _newInputSystemFound = false;
+        return false;
+      }
+      return _newInputSystemFound.Value;
+    }
+  }
 
   void Initialize() {
 
     // Only add an event system if no active event systems exist.
-    if (Application.isPlaying && FindObjectOfType<EventSystem>() == null) {
-      var eventSystemGO = new GameObject("Event System");
-      eventSystemGO.AddComponent<EventSystem>();
-      eventSystemGO.AddComponent<StandaloneInputModule>();
-      if (Application.isPlaying) {
-        DontDestroyOnLoad(eventSystemGO);
+    if (Application.isPlaying) {
+
+      if (NewInputSystemFound) {
+        // New Input System
+      }
+      else {
+        if (FindObjectOfType<EventSystem>() == null) {
+          var eventSystemGO = new GameObject("Event System");
+          eventSystemGO.AddComponent<EventSystem>();
+          eventSystemGO.AddComponent<StandaloneInputModule>();
+          if (Application.isPlaying) {
+            DontDestroyOnLoad(eventSystemGO);
+          }
+        }
       }
     }
+
 
     if (_canvasRT == false) {
       GenerateGraphs();

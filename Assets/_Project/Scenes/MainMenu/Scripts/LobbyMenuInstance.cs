@@ -1,3 +1,4 @@
+using Fusion;
 using rwby.ui.mainmenu;
 using UnityEngine;
 using TMPro;
@@ -8,7 +9,6 @@ using Selectable = rwby.ui.Selectable;
 
 namespace rwby
 {
-    // TODO: Link to given session manager.
     public class LobbyMenuInstance : MonoBehaviour
     {
         [System.Serializable]
@@ -41,15 +41,12 @@ namespace rwby
         public void Initialize(LobbyMenuHandler menuHandler)
         {
             this.lobbyMenuHandler = menuHandler;
-            /*if (NetworkManager.singleton.FusionLauncher.NetworkRunner.IsServer)
+            readyButton.GetComponentInChildren<TextMeshProUGUI>().text = lobbyMenuHandler.sessionManagerGamemode.Runner.IsServer ? "Start Match" : "Ready";
+            if (lobbyMenuHandler.sessionManagerGamemode.Runner.IsServer)
             {
-                readyButton.GetComponentInChildren<TextMeshProUGUI>().text = "Start Match";
+                readyButton.GetComponent<Selectable>().onSubmit.AddListener(() => _ = lobbyMenuHandler.StartMatch());
             }
-            else
-            {
-                readyButton.GetComponentInChildren<TextMeshProUGUI>().text = "Ready";
-            }*/
-            exitButton.onSubmit.AddListener(() => { menuHandler.ExitLobby(); });
+            exitButton.onSubmit.AddListener(menuHandler.ExitLobby);
 
             for (int i = 0; i < cssConnections.Length; i++)
             {
@@ -61,14 +58,15 @@ namespace rwby
 
         public void ResetCharacterList()
         {
-            // TODO: Make this menu specific to a given SessionManagerGamemode.
+            // TODO
             /*
             foreach(Transform child in characterContentTransform)
             {
                 Destroy(child.gameObject);
             }
-            
-            ClientManager cm = ClientManager.local;
+
+            PlayerRef localPlayerRef = lobbyMenuHandler.sessionManagerGamemode.Runner.LocalPlayer;
+            ClientManager cm = lobbyMenuHandler.sessionManagerGamemode.Runner.GetPlayerObject(localPlayerRef).GetComponent<ClientManager>();
             for (int i = 0; i < cm.ClientPlayers[playerID].characterReferences.Count; i++)
             {
                 int selectIndex = i;
@@ -77,7 +75,7 @@ namespace rwby
                 chara.GetComponent<Selectable>().onSubmit.AddListener(() => {OpenCharacterSelect(selectIndex);});
             }
 
-            if (cm.ClientPlayers[playerID].characterReferences.Count == SessionManagerClassic.singleton.settings
+            if (cm.ClientPlayers[playerID].characterReferences.Count == lobbyMenuHandler.sessionManagerGamemode.settings
                     .GetTeamDefinition(cm.ClientPlayers[playerID].team).maxCharactersPerPlayer) return;
             GameObject cAdd = GameObject.Instantiate(characterContentPrefab, characterContentTransform, false);
             cAdd.GetComponentInChildren<TextMeshProUGUI>().text = "+";
@@ -86,7 +84,9 @@ namespace rwby
 
         void TryAddCharacter()
         {
-            //ClientManager cm = ClientManager.local;
+            PlayerRef localPlayerRef = lobbyMenuHandler.sessionManagerGamemode.Runner.LocalPlayer;
+            ClientManager cm = lobbyMenuHandler.sessionManagerGamemode.Runner.GetPlayerObject(localPlayerRef).GetComponent<ClientManager>();
+            // TODO
             //cm.CLIENT_SetPlayerCharacterCount(playerID, cm.ClientPlayers[playerID].characterReferences.Count+1);
         }
         

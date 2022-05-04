@@ -5667,6 +5667,42 @@
             The id of the root most <see cref="T:Fusion.NetworkObject"/>, if this <see cref="T:Fusion.NetworkObject"/> is nested.
             </summary>
         </member>
+        <member name="T:Fusion.INetworkObjectPool">
+            <summary>
+            Interface which defines the handlers for <see cref="T:Fusion.NetworkRunner"/> Spawn() and Despawn() actions. 
+            Passing an instance of this interface to <see cref="M:Fusion.NetworkRunner.StartGame(Fusion.StartGameArgs)"/> 
+            as the <see cref="F:Fusion.StartGameArgs.ObjectPool"/> argument value will assign that instance 
+            as the handler for runner Spawn() and Despawn() actions.
+            By default (if <see cref="F:Fusion.StartGameArgs.ObjectPool"/> == null) actions will use Instantiate(), and Despawn() actions will use Destroy().
+            </summary>
+        </member>
+        <member name="M:Fusion.INetworkObjectPool.AcquireInstance(Fusion.NetworkRunner,Fusion.NetworkPrefabInfo)">
+            <summary>
+            The pooling implementation used for Spawn() actions.
+            </summary>
+            <param name="runner">The <see cref="T:Fusion.NetworkRunner"/> which Spawn() is being called from.</param>
+            <param name="info">Meta data about the prefab being spawned. Typical usage:
+            <code>
+            | NetworkObject AcquireInstance(NetworkRunner runner, NetworkPrefabInfo info)
+            | {
+            |   if(runner.Config.PrefabTable.TryGetPrefab(info.Prefab, out NetworkObject prefab)){
+            |     // Instantiate or Get Prefab prefab from your custom pool.
+            |   }
+            | }
+            </code>
+            </param>
+            <returns></returns>
+        </member>
+        <member name="M:Fusion.INetworkObjectPool.ReleaseInstance(Fusion.NetworkRunner,Fusion.NetworkObject,System.Boolean)">
+            <summary>
+            The pooling handler implementation for Despawn() actions.
+            </summary>
+            <param name="runner">The <see cref="T:Fusion.NetworkRunner"/> which Despawn() is being called from.</param>
+            <param name="instance">The  <see cref="T:Fusion.NetworkObject"/> being released. Disable or Destroy this object as needed.</param>
+            <param name="isSceneObject">Indicates if this <see cref="T:UnityEngine.GameObject"/> was created by a Spawn action, 
+            or if it originated as an object in a loaded scene. Scene objects may need special handling, 
+            such as being returned to the scene disabled, rather than being returned to the general pool.</param>
+        </member>
         <member name="T:Fusion.NetworkPrefabAsset">
             <summary>
             Represents a base class for "prefab assets" - assets that point to a prefab and provide a way to load them.
@@ -5683,19 +5719,36 @@
             the type of this asset will change to <see cref="T:Fusion.NetworkPrefabAsset"/>.
             </summary>
         </member>
+        <member name="T:Fusion.NetworkPrefabId">
+            <summary>
+            ID for a <see cref="T:Fusion.NetworkObject"/> Prefab which has been cataloged in a <see cref="F:Fusion.NetworkProjectConfig.PrefabTable"/>.
+            </summary>
+        </member>
+        <member name="T:Fusion.NetworkPrefabInfo">
+            <summary>
+            Meta data for a <see cref="T:Fusion.NetworkObject"/> prefab which has been cataloged in a <see cref="F:Fusion.NetworkProjectConfig.PrefabTable"/>.
+            </summary>
+        </member>
+        <member name="F:Fusion.NetworkPrefabInfo.Prefab">
+            <summary>
+            Prefab ID.
+            Use <see cref="M:Fusion.NetworkPrefabTable.TryAdd(Fusion.NetworkObjectGuid,Fusion.INetworkPrefabSource,Fusion.NetworkPrefabId@)"/> 
+            to look up the actual prefab reference in the <see cref="F:Fusion.NetworkProjectConfig.PrefabTable"/>.
+            </summary>
+        </member>
         <member name="F:Fusion.NetworkPrefabInfo.Header">
             <summary>
-            Header data for this object
+            Header data for the <see cref="T:Fusion.NetworkObject"/> prefab.
             </summary>
         </member>
         <member name="P:Fusion.NetworkPrefabInfo.HasHeader">
             <summary>
-            If we have a header or not
+            If the Header is not null.
             </summary>
         </member>
         <member name="P:Fusion.NetworkPrefabInfo.Data">
             <summary>
-            Data pointer to the first word of this objects data block
+            Data pointer to the first word of this <see cref="T:Fusion.NetworkObject"/>'s data block.
             </summary>
         </member>
         <member name="M:Fusion.NetworkPrefabTable.TryAdd(Fusion.NetworkObjectGuid,Fusion.INetworkPrefabSource,Fusion.NetworkPrefabId@)">

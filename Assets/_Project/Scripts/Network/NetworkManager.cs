@@ -35,7 +35,12 @@ namespace rwby
             sessions.Remove(id);
         }
 
-        public int GetSessionIDByRunner(NetworkRunner runner)
+        public FusionLauncher GetSessionHandler(int id)
+        {
+            return sessions[id];
+        }
+        
+        public int GetSessionHandlerIDByRunner(NetworkRunner runner)
         {
             foreach (var sessionsKey in sessions.Keys)
             {
@@ -44,7 +49,7 @@ namespace rwby
             return -1;
         }
 
-        public FusionLauncher GetSessionByRunner(NetworkRunner runner)
+        public FusionLauncher GetSessionHandlerByRunner(NetworkRunner runner)
         {
             foreach (var sessionsKey in sessions.Keys)
             {

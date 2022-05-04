@@ -78,7 +78,7 @@ namespace rwby.core.training
         public override void Spawned()
         {
             base.Spawned();
-
+            
             if (Object.HasStateAuthority)
             {
                 PauseMenu.onOpened += OnPaused;
@@ -141,10 +141,8 @@ namespace rwby.core.training
 
         public override async UniTask<bool> VerifyGameModeSettings()
         {
-            return false;
-            /*
-            if (NetworkManager.singleton.FusionLauncher.NetworkRunner.IsRunning == false) return true;
-            List<PlayerRef> failedLoadPlayers = await SessionManagerClassic.singleton.clientContentLoaderService.TellClientsToLoad<IMapDefinition>(mapReference);
+            if (Runner.IsRunning == false) return true;
+            List<PlayerRef> failedLoadPlayers = await sessionManager.clientContentLoaderService.TellClientsToLoad<IMapDefinition>(mapReference);
             if (failedLoadPlayers == null)
             {
                 Debug.LogError("Load Map Local Failure");
@@ -158,7 +156,7 @@ namespace rwby.core.training
 
             if (failedLoadPlayers.Count != 0) return false;
 
-            return true;*/
+            return true;
         }
 
         public override bool VerifyReference(ModObjectReference reference)
@@ -171,23 +169,24 @@ namespace rwby.core.training
         List<int> spawnPointsCurr = new List<int>();
         public override async void StartGamemode()
         {
-            /*
             GamemodeState = GameModeState.INITIALIZING;
 
-            await SessionManagerClassic.singleton.clientMapLoaderService.TellClientsToLoad(mapReference);
-
             IMapDefinition mapDefinition = ContentManager.singleton.GetContentDefinition<IMapDefinition>(mapReference);
-
-            SessionManagerClassic.singleton.currentLoadedScenes.Clear();
-            SessionManagerClassic.singleton.currentLoadedScenes.Add(new CustomSceneRef()
+            
+            /*
+            sessionManager.currentLoadedScenes.Clear();
+            sessionManager.currentLoadedScenes.Add(new CustomSceneRef()
             {
                 source = mapReference.modIdentifier.Item1,
                 modIdentifier = mapReference.modIdentifier.Item2,
-                sceneIndex = mapReference.objectIdentifier
-            });
-
-            Runner.SetActiveScene(1);
-
+                mapIdentifier = mapReference.objectIdentifier,
+                sceneIdentifier =  mapReference.
+                //sceneIndex = mapReference.objectIdentifier
+            });*/
+            
+            //Runner.SetActiveScene(1);
+            
+            /*
             SpawnPointHolder[] spawnPointHolders = GameObject.FindObjectsOfType<SpawnPointHolder>();
 
             spawnPoints.Add(new List<GameObject>());

@@ -20,6 +20,8 @@ namespace rwby.ui.mainmenu
         [SerializeField] private HostLobbyMenu hostLobby;
         [SerializeField] private LobbyMenuHandler lobbyMenu;
         
+        
+        
         private void Awake()
         {
             menus.Add((int)MainMenuType.TITLE_SCREEN, titleScreen);

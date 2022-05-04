@@ -10,12 +10,12 @@ GameObject:
   m_Component:
   - component: {fileID: 8364815210686677246}
   - component: {fileID: 8637228851506255113}
-  - component: {fileID: 4277970008745366763}
+  - component: {fileID: -4991445741246918759}
   - component: {fileID: -583825843932926835}
   - component: {fileID: 1334026102863918720}
   - component: {fileID: 7180919652329208974}
   m_Layer: 0
-  m_Name: SessionManagerClassic
+  m_Name: SessionManagerGameMode
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -31,6 +31,7 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
@@ -47,22 +48,22 @@ MonoBehaviour:
   m_Script: {fileID: -1552182283, guid: e725a070cec140c4caffb81624c8c787, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  AoiMode: 0
-  DefaultPropertyGroups: []
+  ObjectInterest: 0
+  DefaultInterestGroups: []
   DestroyWhenStateAuthorityLeaves: 0
   AllowStateAuthorityOverride: 0
-  AoiPosition: {fileID: 0}
+  AoiPositionSource: {fileID: 0}
   Flags: 2305
   NetworkGuid:
     RawGuidValue: 9b2ea8d77f9d6fa4984abd0f7db0c813
   NestedObjects: []
   NetworkedBehaviours:
-  - {fileID: 4277970008745366763}
+  - {fileID: -4991445741246918759}
   - {fileID: 1334026102863918720}
   - {fileID: 7180919652329208974}
   SimulationBehaviours:
   - {fileID: -583825843932926835}
---- !u!114 &4277970008745366763
+--- !u!114 &-4991445741246918759
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -71,14 +72,32 @@ MonoBehaviour:
   m_GameObject: {fileID: 3083336178892963970}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 43512ffa38c2b7343a730fdec4e4069f, type: 3}
+  m_Script: {fileID: 11500000, guid: 94048e08655857c47ba4902004985694, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   _interpolationDataSource: 0
+  _currentLoadedScenes:
+  - source: 0
+    modIdentifier: 0
+    mapIdentifier: 0
+    sceneIdentifier: 1
+  _teams: 0
+  _maxPlayersPerClient: 0
   clientContentLoaderService: {fileID: 1334026102863918720}
   clientMapLoaderService: {fileID: 7180919652329208974}
-  _maxPlayersPerClient: 4
+  gameManager: {fileID: 0}
+  contentManager: {fileID: 0}
+  sessionHandlerID: -1
+  _GamemodeSettings:
+    gamemodeReference:
+      modIdentifier:
+        Item1: 0
+        Item2: 0
+      objectIdentifier: 0
   _CurrentGameMode: {fileID: 0}
+  _ClientDefinitions: []
+  settings:
+    sessionManagerClassic: {fileID: 0}
 --- !u!114 &-583825843932926835
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -119,4 +138,5 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _interpolationDataSource: 0
+  sessionHandler: {fileID: 0}
   loadInProgress: 0

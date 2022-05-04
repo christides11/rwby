@@ -94,7 +94,7 @@ namespace rwby
                     {
                         manager.SoundbankContainer.PlaySound(hi.hitSoundbankName, hi.hitSoundName);
                     }*/
-                    // TODO
+                    // TODO: Better way of handling camera shake on hit/block/etc.
                     /*
                     if (Runner.IsResimulation == false && Object.HasInputAuthority == true)
                     {
