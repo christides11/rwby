@@ -13,10 +13,11 @@ namespace rwby
         public event SessionGamemodeAction OnLobbySettingsChanged;
         public event SessionGamemodeAction OnCurrentGamemodeChanged;
         public event SessionGamemodeAction OnGamemodeSettingsChanged;
+        public event SessionGamemodeAction OnClientDefinitionsChanged;
         
         [Networked(OnChanged = nameof(OnChangedGamemodeSettings))] public SessionGamemodeSettings GamemodeSettings { get; set; }
         [Networked(OnChanged = nameof(OnChangedCurrentGameMode))] public GameModeBase CurrentGameMode { get; set; }
-        [Networked, Capacity(8)] public NetworkLinkedList<SessionGamemodeClientContainer> ClientDefinitions => default;
+        [Networked(OnChanged = nameof(OnChangedClientDefinitions)), Capacity(8)] public NetworkLinkedList<SessionGamemodeClientContainer> ClientDefinitions => default;
         
         protected static void OnChangedGamemodeSettings(Changed<SessionManagerGamemode> changed)
         {
@@ -26,6 +27,11 @@ namespace rwby
         protected static void OnChangedCurrentGameMode(Changed<SessionManagerGamemode> changed)
         {
             changed.Behaviour.OnCurrentGamemodeChanged?.Invoke(changed.Behaviour);
+        }
+        
+        protected static void OnChangedClientDefinitions(Changed<SessionManagerGamemode> changed)
+        {
+            changed.Behaviour.OnClientDefinitionsChanged?.Invoke(changed.Behaviour);
         }
 
         public override void Spawned()
@@ -181,15 +187,102 @@ namespace rwby
         public override void InitializeClient(ClientManager clientManager)
         {
             ClientDefinitions.Add(new SessionGamemodeClientContainer(){ clientRef = clientManager.Object.InputAuthority });
+            UpdateClientPlayerCount(clientManager, 0);
         }
-
-        // TODO
+        
         public override void UpdateClientPlayerCount(ClientManager clientManager, uint oldAmount)
         {
             for (int i = 0; i < ClientDefinitions.Count; i++)
             {
                 if (ClientDefinitions[i].clientRef != clientManager.Object.InputAuthority) continue;
+                var clientDefinitions = ClientDefinitions;
+                var temp = clientDefinitions[i];
+                var clientPlayers = temp.players;
+                
+                while (clientPlayers.Count > clientManager.ClientPlayerAmount)
+                {
+                    clientPlayers.Remove(clientPlayers[^1]);
+                }
+
+                while (clientPlayers.Count < clientManager.ClientPlayerAmount)
+                {
+                    clientPlayers.Add(new SessionGamemodePlayerDefinition(){ team = 0 });
+                }
+
+                clientDefinitions.Set(i, temp);
             }
+        }
+
+        public SessionGamemodeClientContainer GetClientInformation(PlayerRef client)
+        {
+            foreach (var c in ClientDefinitions)
+            {
+                if (c.clientRef == client) return c;
+            }
+            return default;
+        }
+
+        public void CLIENT_SetPlayerCharacterCount(int playerID, int count)
+        {
+            RPC_SetPlayerCharacterCount(playerID, count);
+        }
+
+        [Rpc(RpcSources.InputAuthority | RpcSources.StateAuthority, RpcTargets.StateAuthority,
+            HostMode = RpcHostMode.SourceIsHostPlayer)]
+        private void RPC_SetPlayerCharacterCount(int playerID, int characterCount, RpcInfo info = default)
+        {
+            for (int i = 0; i < ClientDefinitions.Count; i++)
+            {
+                if (ClientDefinitions[i].clientRef != info.Source) continue;
+                var clientDefinitions = ClientDefinitions;
+                var temp = clientDefinitions[i];
+                var clientPlayers = temp.players;
+                var playerTemp = clientPlayers[playerID];
+                var playerCharacterRefs = playerTemp.characterReferences;
+                
+                while (playerCharacterRefs.Count > characterCount)
+                {
+                    playerCharacterRefs.Remove(playerCharacterRefs.Get(playerCharacterRefs.Count-1));
+                }
+
+                while (playerCharacterRefs.Count < characterCount)
+                {
+                    playerCharacterRefs.Add(new ModObjectReference());
+                }
+
+                clientPlayers.Set(playerID, playerTemp);
+                clientDefinitions.Set(i, temp);
+                return;
+            }
+            Debug.LogError("Could not find client.");
+        }
+        
+        public void CLIENT_SetPlayerCharacter(int playerID, int characterIndex, ModObjectReference characterReference)
+        {
+            RPC_SetPlayerCharacter(playerID, characterIndex, characterReference);
+        }
+
+        [Rpc(RpcSources.InputAuthority | RpcSources.StateAuthority, RpcTargets.StateAuthority,
+            HostMode = RpcHostMode.SourceIsHostPlayer)]
+        private void RPC_SetPlayerCharacter(int playerID, int characterIndex, ModObjectReference characterReference, RpcInfo info = default)
+        {
+            for (int i = 0; i < ClientDefinitions.Count; i++)
+            {
+                if (ClientDefinitions[i].clientRef != info.Source) continue;
+                var clientDefinitions = ClientDefinitions;
+                var temp = clientDefinitions[i];
+                var clientPlayers = temp.players;
+                var playerTemp = clientPlayers[playerID];
+                var playerCharacterRefs = playerTemp.characterReferences;
+
+                playerCharacterRefs.Set(characterIndex, characterReference);
+
+                clientPlayers.Set(playerID, playerTemp);
+                clientDefinitions.Set(i, temp);
+                Debug.Log(clientDefinitions[i].players[playerID].characterReferences[characterIndex].ToString());
+                return;
+            }
+            Debug.LogError("Could not find client.");
         }
     }
 }

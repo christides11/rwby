@@ -9,6 +9,7 @@ namespace rwby
         public Color color;
         public int minimumPlayers;
         public int maximumPlayers;
+        public int minCharactersPerPlayer;
         public int maxCharactersPerPlayer;
         public bool friendlyFire;
     }

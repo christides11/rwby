@@ -23,6 +23,7 @@ namespace rwby.ui.mainmenu
         {
             base.Open(direction, menuHandler);
             ClientManager.OnPlayerCountChanged += WhenClientPlayerCountChanged;
+            sessionManagerGamemode.OnClientDefinitionsChanged += UpdatePlayerInfo;
             sessionManagerGamemode.OnLobbySettingsChanged += UpdateLobbyInfo;
             sessionManagerGamemode.OnGamemodeSettingsChanged += UpdateLobbyInfo;
 
@@ -45,6 +46,7 @@ namespace rwby.ui.mainmenu
             ClientManager.OnPlayerCountChanged -= WhenClientPlayerCountChanged;
             if (sessionManagerGamemode)
             {
+                sessionManagerGamemode.OnClientDefinitionsChanged -= UpdatePlayerInfo;
                 sessionManagerGamemode.OnLobbySettingsChanged -= UpdateLobbyInfo;
                 sessionManagerGamemode.OnGamemodeSettingsChanged -= UpdateLobbyInfo;
             }
@@ -55,6 +57,7 @@ namespace rwby.ui.mainmenu
         public async UniTask StartMatch()
         {
             ClientManager.OnPlayerCountChanged -= WhenClientPlayerCountChanged;
+            sessionManagerGamemode.OnClientDefinitionsChanged -= UpdatePlayerInfo;
             sessionManagerGamemode.OnLobbySettingsChanged -= UpdateLobbyInfo;
             sessionManagerGamemode.OnGamemodeSettingsChanged -= UpdateLobbyInfo;
             bool startResult = await sessionManagerGamemode.TryStartMatch();
@@ -145,6 +148,11 @@ namespace rwby.ui.mainmenu
             {
                 menuInstances[i].ResetCharacterList();
             }
+        }
+
+        private void UpdatePlayerInfo(SessionManagerGamemode sessionManager)
+        {
+            UpdatePlayerInfo();
         }
     }
 }

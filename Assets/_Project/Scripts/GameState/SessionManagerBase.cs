@@ -6,6 +6,7 @@ using UnityEngine;
 
 namespace rwby
 {
+    [OrderBefore(typeof(ClientManager), typeof(GameModeBase))]
     public class SessionManagerBase : NetworkBehaviour
     {
         [Networked, Capacity(5)]
@@ -27,9 +28,6 @@ namespace rwby
             DontDestroyOnLoad(gameObject);
             gameManager = GameManager.singleton;
             contentManager = gameManager.contentManager;
-            
-            sessionHandlerID = GameManager.singleton.networkManager.GetSessionHandlerIDByRunner(Runner);
-            GameManager.singleton.networkManager.sessions[sessionHandlerID].sessionManager = this;
         }
 
         public override void Spawned()
@@ -37,6 +35,9 @@ namespace rwby
             base.Spawned();
             maxPlayersPerClient = 4;
             teams = 1;
+            
+            sessionHandlerID = GameManager.singleton.networkManager.GetSessionHandlerIDByRunner(Runner);
+            GameManager.singleton.networkManager.sessions[sessionHandlerID].sessionManager = this;
         }
 
         public override void Render()

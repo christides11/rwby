@@ -20,6 +20,9 @@ namespace rwby
 		protected NetworkManager networkManager;
 		private GameManager gameManager;
 
+		private bool sessionHandlerSet = false;
+		private FusionLauncher sessionHandler;
+
 		// INPUT //
 		[Networked] public NetworkClientInputData latestConfirmedInput { get; set; }
 		[Networked, Capacity(10)] public NetworkArray<NetworkClientInputData> inputBuffer { get; }
@@ -40,37 +43,8 @@ namespace rwby
 			OnPlayerCountChanged?.Invoke(changed.Behaviour);
 		}
 		
-		/*
-		BaseHUD baseHUD;
-		private void CheckClientPlayers()
-        {
-			if (Object.HasInputAuthority == false) return;
-
-			for (int i = 0; i < ClientPlayers.Count; i++)
-            {
-				if (ClientPlayers[i].characterNetID.IsValid == false) continue;
-				
-				if (playerCameras[i] == null)
-                {
-					playerCameras[i] = GameObject.Instantiate(GameManager.singleton.settings.playerCameraPrefab, transform.position, transform.rotation);
-					playerCameras[i].SetLookAtTarget(Runner.FindObject(ClientPlayers[i].characterNetID).GetBehaviour<FighterManager>());
-
-					if (baseHUD == null)
-					{
-						baseHUD = GameObject.Instantiate(GameManager.singleton.settings.baseUI, transform, false);
-						baseHUD.SetClient(this, i);
-					}
-				}
-			}
-        }*/
-		
 		public override void Spawned()
 		{
-			if (Runner.IsServer)
-			{
-				FusionLauncher sessionHandler = GameManager.singleton.networkManager.GetSessionHandlerByRunner(Runner);
-				sessionHandler.sessionManager.InitializeClient(this);
-			}
 			if (Object.HasInputAuthority)
 			{
 				Runner.AddCallbacks(this);
@@ -89,11 +63,20 @@ namespace rwby
 
 		public override void Render()
 		{
+			if (!sessionHandlerSet)
+			{
+				sessionHandler = GameManager.singleton.networkManager.GetSessionHandlerByRunner(Runner);
+				if (!sessionHandler.sessionManager) return;
+				if(Runner.IsServer) sessionHandler.sessionManager.InitializeClient(this);
+				sessionHandlerSet = true;
+			}
+			
+			/*
 			for(int i = 0; i < playerCameras.Length; i++)
             {
 				if (playerCameras[i] == null) continue;
 				playerCameras[i].CamUpdate();
-            }
+            }*/
 		}
 
 		public void CLIENT_SetPlayerCount(uint playerCount)
