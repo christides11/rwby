@@ -41,7 +41,7 @@ namespace rwby
 
         public virtual void Awake()
         {
-            DontDestroyOnLoad(gameObject);
+            
         }
 
         public override void Spawned()
@@ -51,6 +51,7 @@ namespace rwby
             {
 
             }
+            DontDestroyOnLoad(gameObject);
         }
 
         public override void Despawned(NetworkRunner runner, bool hasState)

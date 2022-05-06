@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using Cysharp.Threading.Tasks;
 using Fusion;
 using UnityEngine;
@@ -84,7 +85,6 @@ namespace rwby
                 }
             }
 
-            Debug.Log("Starting gamemode.");
             CurrentGameMode.StartGamemode();
             return true;
         }
@@ -161,6 +161,7 @@ namespace rwby
             }
         }
         
+        // TODO: Better team verification.
         private bool VerifyTeams(IGameModeDefinition gamemodeDefiniton)
         {
             int[] teamCount = new int[teams];
@@ -170,7 +171,7 @@ namespace rwby
                 for (int j = 0; j < ClientDefinitions[i].players.Count; j++)
                 {
                     byte playerTeam = ClientDefinitions[i].players[j].team;
-                    if (playerTeam == 0) return false;
+                    if (playerTeam == 0) continue;
                     teamCount[playerTeam - 1]++;
                 }
             }
@@ -239,15 +240,18 @@ namespace rwby
                 var clientPlayers = temp.players;
                 var playerTemp = clientPlayers[playerID];
                 var playerCharacterRefs = playerTemp.characterReferences;
+                var playerCharacterNOs = playerTemp.characterNetworkObjects;
                 
                 while (playerCharacterRefs.Count > characterCount)
                 {
                     playerCharacterRefs.Remove(playerCharacterRefs.Get(playerCharacterRefs.Count-1));
+                    playerCharacterNOs.Remove(playerCharacterNOs.Get(playerCharacterNOs.Count-1));
                 }
 
                 while (playerCharacterRefs.Count < characterCount)
                 {
                     playerCharacterRefs.Add(new ModObjectReference());
+                    playerCharacterNOs.Add(new NetworkId());
                 }
 
                 clientPlayers.Set(playerID, playerTemp);
@@ -264,8 +268,15 @@ namespace rwby
 
         [Rpc(RpcSources.InputAuthority | RpcSources.StateAuthority, RpcTargets.StateAuthority,
             HostMode = RpcHostMode.SourceIsHostPlayer)]
-        private void RPC_SetPlayerCharacter(int playerID, int characterIndex, ModObjectReference characterReference, RpcInfo info = default)
+        private async void RPC_SetPlayerCharacter(int playerID, int characterIndex, ModObjectReference characterReference, RpcInfo info = default)
         {
+            var result = await clientContentLoaderService.TellClientsToLoad<IFighterDefinition>(characterReference);
+            if (result.Count > 0)
+            {
+                Debug.LogError($"Error loading: \n {JsonUtility.ToJson(result)}");
+                return;
+            }
+            
             for (int i = 0; i < ClientDefinitions.Count; i++)
             {
                 if (ClientDefinitions[i].clientRef != info.Source) continue;
@@ -283,6 +294,34 @@ namespace rwby
                 return;
             }
             Debug.LogError("Could not find client.");
+        }
+
+        protected override HashSet<ModObjectReference> BuildLoadedContentList()
+        {
+            HashSet<ModObjectReference> references =  base.BuildLoadedContentList();
+
+            for (int i = 0; i < ClientDefinitions.Count; i++)
+            {
+                for (int j = 0; j < ClientDefinitions[i].players.Count; j++)
+                {
+                    for (int f = 0; f < ClientDefinitions[i].players[j].characterReferences.Count; f++)
+                    {
+                        references.Add(ClientDefinitions[i].players[j].characterReferences[f]);
+
+                        if (!ClientDefinitions[i].players[j].characterNetworkObjects[f].IsValid) continue;
+                        
+                        NetworkObject no = Runner.FindObject(ClientDefinitions[i].players[j].characterNetworkObjects[f]);
+                        IContentLoad contentLoad = no.GetComponent<IContentLoad>();
+                        var fighterLoadedContent = contentLoad.loadedContent;
+                        foreach (var loadedContent in fighterLoadedContent)
+                        {
+                            references.Add(loadedContent);
+                        }
+                    }
+                }
+            }
+            
+            return references;
         }
     }
 }

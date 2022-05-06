@@ -27,6 +27,7 @@ namespace rwby
 
         public Dictionary<int, List<ClientLoadRequestTracker>> loadRequests = new Dictionary<int, List<ClientLoadRequestTracker>>();
 
+        // TODO: Tuple with load failure reason.
         public async UniTask<List<PlayerRef>> TellClientsToLoad<T>(ModObjectReference objectReference) where T : IContentDefinition
         {
             bool localLoadResult = await ContentManager.singleton.LoadContentDefinition<T>(objectReference);

@@ -7,8 +7,13 @@ using UnityEngine;
 namespace rwby
 {
     [OrderBefore(typeof(ClientManager), typeof(GameModeBase))]
-    public class SessionManagerBase : NetworkBehaviour
+    public class SessionManagerBase : NetworkBehaviour, IContentLoad
     {
+        public IEnumerable<ModObjectReference> loadedContent
+        {
+            get { return BuildLoadedContentList(); }
+        }
+
         [Networked, Capacity(5)]
         public NetworkLinkedList<CustomSceneRef> currentLoadedScenes { get; } = MakeInitializer(new CustomSceneRef[] {new CustomSceneRef(0, 0, 0, 1)});
 
@@ -25,7 +30,6 @@ namespace rwby
 
         protected virtual void Awake()
         {
-            DontDestroyOnLoad(gameObject);
             gameManager = GameManager.singleton;
             contentManager = gameManager.contentManager;
         }
@@ -38,6 +42,7 @@ namespace rwby
             
             sessionHandlerID = GameManager.singleton.networkManager.GetSessionHandlerIDByRunner(Runner);
             GameManager.singleton.networkManager.sessions[sessionHandlerID].sessionManager = this;
+            DontDestroyOnLoad(gameObject);
         }
 
         public override void Render()
@@ -69,6 +74,22 @@ namespace rwby
         public void SetTeamCount(byte count)
         {
             teams = count;
+        }
+        
+        protected virtual HashSet<ModObjectReference> BuildLoadedContentList()
+        {
+            HashSet<ModObjectReference> references = new HashSet<ModObjectReference>();
+
+            for (int i = 0; i < currentLoadedScenes.Count; i++)
+            {
+                references.Add(new ModObjectReference()
+                {
+                    modIdentifier = new ModIdentifierTuple(currentLoadedScenes[i].source, currentLoadedScenes[i].modIdentifier),
+                    objectIdentifier = currentLoadedScenes[i].mapIdentifier
+                });
+            }
+            
+            return references;
         }
     }
 }

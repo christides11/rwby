@@ -61,7 +61,6 @@ namespace rwby.ui.mainmenu
             sessionManagerGamemode.OnLobbySettingsChanged -= UpdateLobbyInfo;
             sessionManagerGamemode.OnGamemodeSettingsChanged -= UpdateLobbyInfo;
             bool startResult = await sessionManagerGamemode.TryStartMatch();
-            Debug.Log(startResult);
         }
 
         public async void ExitLobby()

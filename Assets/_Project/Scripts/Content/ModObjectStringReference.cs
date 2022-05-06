@@ -8,7 +8,7 @@ namespace rwby
         
         public ModObjectStringReference((byte, uint) modIdentifier, string objectIdentifier)
         {
-            this.modIdentifier = new ModIdentifierTuple(){ Item1 = modIdentifier.Item1, Item2 = modIdentifier.Item2};
+            this.modIdentifier = new ModIdentifierTuple(){ source = modIdentifier.Item1, identifier = modIdentifier.Item2};
             this.objectIdentifier = objectIdentifier;
         }
 
@@ -20,13 +20,13 @@ namespace rwby
 
         public bool IsValid()
         {
-            if (modIdentifier.Item2 == 0 || string.IsNullOrEmpty(objectIdentifier)) return false;
+            if (modIdentifier.identifier == 0 || string.IsNullOrEmpty(objectIdentifier)) return false;
             return true;
         }
 
         public override string ToString()
         {
-            return $"{modIdentifier.Item1}:{modIdentifier.Item2}/{objectIdentifier}";
+            return $"{modIdentifier.source}:{modIdentifier.identifier}/{objectIdentifier}";
         }
     }
 }

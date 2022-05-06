@@ -1,18 +1,19 @@
 using System;
 using Fusion;
+using UnityEngine.Serialization;
 
 namespace rwby
 {
     [System.Serializable]
     public struct ModIdentifierTuple : INetworkStruct, IEquatable<ModIdentifierTuple>
     {
-        public byte Item1;
-        public uint Item2;
+        [FormerlySerializedAs("Item1")] public byte source;
+        [FormerlySerializedAs("Item2")] public uint identifier;
 
-        public ModIdentifierTuple(byte item1, uint item2)
+        public ModIdentifierTuple(byte source, uint identifier)
         {
-            Item1 = item1;
-            Item2 = item2;
+            this.source = source;
+            this.identifier = identifier;
         }
 
         public override bool Equals(object obj)
@@ -27,12 +28,12 @@ namespace rwby
         
         public override int GetHashCode()
         {
-            return (Item1, Item2).GetHashCode();
+            return (Item1: source, Item2: identifier).GetHashCode();
         }
         
         public static bool operator ==(ModIdentifierTuple x, ModIdentifierTuple y) 
         {
-            return x.Item1 == y.Item1 && x.Item2 == y.Item2;
+            return x.source == y.source && x.identifier == y.identifier;
         }
         public static bool operator !=(ModIdentifierTuple x, ModIdentifierTuple y) 
         {

@@ -22,11 +22,11 @@ namespace rwby
 
         [SerializeField] private AssetReference[] sceneReferences;
 
-        [NonSerialized] private AsyncOperationHandle<SceneLoadData>[] sceneHandles;
+        [NonSerialized] private AsyncOperationHandle<SceneInstance>[] sceneHandles;
 
         public override async UniTask<bool> Load()
         {
-            sceneHandles = new AsyncOperationHandle<SceneLoadData>[sceneReferences.Length];
+            sceneHandles = new AsyncOperationHandle<SceneInstance>[sceneReferences.Length];
             return true;
         }
 
@@ -34,16 +34,24 @@ namespace rwby
         {
             for(int i = 0; i < sceneReferences.Length; i++)
             {
-                sceneHandles[i] = AddressablesSceneLoader.LoadSceneAsync(sceneReferences[i], new LoadSceneParameters(loadMode)); //Addressables.LoadSceneAsync(sceneReferences[i], loadMode);
+                sceneHandles[i] = Addressables.LoadSceneAsync(sceneReferences[i], loadMode);
                 await sceneHandles[i];
             }
         }
 
+        //TODO: Better addressables map scene loading.
         public override async UniTask<Scene> LoadScene(int sceneIndex, LoadSceneParameters parameters)
         {
-            sceneHandles[sceneIndex] = AddressablesSceneLoader.LoadSceneAsync(sceneReferences[sceneIndex], parameters);
+            sceneHandles[sceneIndex] = Addressables.LoadSceneAsync(sceneReferences[sceneIndex], parameters.loadSceneMode);
             await sceneHandles[sceneIndex];
-            return sceneHandles[sceneIndex].Result.scene;
+            var loadedScene = sceneHandles[sceneIndex].Result.Scene;
+            var newScene = SceneManager.CreateScene($"{loadedScene.name}.copy", new CreateSceneParameters(parameters.localPhysicsMode));
+            foreach (var rootGameObject in loadedScene.GetRootGameObjects())
+            {
+                SceneManager.MoveGameObjectToScene(rootGameObject, newScene);
+            }
+            await SceneManager.UnloadSceneAsync(loadedScene);
+            return newScene;
         }
 
         public override UniTask UnloadScene(int sceneIndex)
@@ -57,8 +65,8 @@ namespace rwby
             for (int i = 0; i < sceneHandles.Length; i++)
             {
                 if (sceneHandles[i].Status != AsyncOperationStatus.Succeeded) continue;
-                sList.Add(sceneHandles[i].Result.scene.name);
-                Debug.Log($"Returning {sceneHandles[i].Result.scene.name}");
+                sList.Add(sceneHandles[i].Result.Scene.name + ".copy");
+                Debug.Log($"Returning {sceneHandles[i].Result.Scene.name}.copy");
             }
             return sList;
         }

@@ -12,7 +12,7 @@ namespace rwby
         
         public ModObjectReference((byte, uint) modIdentifier, byte objectIdentifier)
         {
-            this.modIdentifier = new ModIdentifierTuple(){ Item1 = modIdentifier.Item1, Item2 = modIdentifier.Item2};
+            this.modIdentifier = new ModIdentifierTuple(){ source = modIdentifier.Item1, identifier = modIdentifier.Item2};
             this.objectIdentifier = objectIdentifier;
         }
 
@@ -24,20 +24,20 @@ namespace rwby
 
         public ModObjectReference(CustomSceneRef sceneRef)
         {
-            this.modIdentifier.Item1 = sceneRef.source;
-            this.modIdentifier.Item2 = sceneRef.modIdentifier;
+            this.modIdentifier.source = sceneRef.source;
+            this.modIdentifier.identifier = sceneRef.modIdentifier;
             objectIdentifier = sceneRef.mapIdentifier;
         }
 
         public bool IsValid()
         {
-            if (modIdentifier.Item1 == 0 || objectIdentifier == 0) return false;
+            if (modIdentifier.source == 0 || objectIdentifier == 0) return false;
             return true;
         }
 
         public override string ToString()
         {
-            return $"{modIdentifier.Item1}:{modIdentifier.Item2}/{objectIdentifier}";
+            return $"{modIdentifier.source}:{modIdentifier.identifier}/{objectIdentifier}";
         }
 
         public override bool Equals(object obj)

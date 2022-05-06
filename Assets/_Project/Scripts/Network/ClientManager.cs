@@ -2,9 +2,7 @@ using Fusion;
 using Fusion.Sockets;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
-using Rewired;
 
 namespace rwby
 {
@@ -15,9 +13,9 @@ namespace rwby
 		public static event ClientAction OnPlayerCountChanged;
 		
 		[Networked(OnChanged = nameof(OnClientPlayerCountChanged))] public uint ClientPlayerAmount { get; set; }
-		public PlayerCamera[] playerCameras = new PlayerCamera[4];
+		//public PlayerCamera[] playerCameras = new PlayerCamera[4];
 
-		protected NetworkManager networkManager;
+		private NetworkManager networkManager;
 		private GameManager gameManager;
 
 		private bool sessionHandlerSet = false;
@@ -35,7 +33,6 @@ namespace rwby
 		{
 			gameManager = GameManager.singleton;
 			networkManager = NetworkManager.singleton;
-			DontDestroyOnLoad(gameObject);
 		}
 		
 		private static void OnClientPlayerCountChanged(Changed<ClientManager> changed)
@@ -50,6 +47,7 @@ namespace rwby
 				Runner.AddCallbacks(this);
 				GameManager.singleton.localPlayerManager.OnPlayerCountChanged += WhenPlayerCountChanged;
 			}
+			DontDestroyOnLoad(gameObject);
 		}
 
 		private void WhenPlayerCountChanged(LocalPlayerManager localplayermanager, int previousplayercount, int currentplaycount)

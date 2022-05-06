@@ -2540,6 +2540,7 @@ MonoBehaviour:
   menuInstances: []
   instancePrefab: {fileID: 474552049}
   instanceParent: {fileID: 75898331}
+  sessionManagerGamemode: {fileID: 0}
   lobbyPlayerCameraPrefab: {fileID: 8270140622770351423, guid: 98b9bcb45da08e7429523e9c7c420ec6, type: 3}
 --- !u!1 &77695631
 GameObject:
@@ -10351,7 +10352,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &474552045
 RectTransform:
   m_ObjectHideFlags: 0
@@ -10469,10 +10470,9 @@ MonoBehaviour:
   - cssSelectable: {fileID: 680831814}
     characterReference:
       modIdentifier:
-        Item1: 1
-        Item2: 1
+        source: 1
+        identifier: 1
       objectIdentifier: 1
-  currentSelectingCharacter: 0
 --- !u!1 &479211542
 GameObject:
   m_ObjectHideFlags: 3
@@ -14338,8 +14338,8 @@ MonoBehaviour:
   selectOnLeft: {fileID: 0}
   selectOnRight: {fileID: 0}
   target: {fileID: 680831815}
-  normalColor: {r: 0.9, g: 0.9, b: 0.9, a: 1}
-  selectedColor: {r: 1, g: 1, b: 1, a: 1}
+  normalColor: {r: 0.8980392, g: 0.16470589, b: 0.16470589, a: 1}
+  selectedColor: {r: 1, g: 0.16470589, b: 0.16470589, a: 1}
   submitColor: {r: 0.8, g: 0.8, b: 0.8, a: 1}
 --- !u!114 &680831815
 MonoBehaviour:

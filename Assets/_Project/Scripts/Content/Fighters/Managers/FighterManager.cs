@@ -11,7 +11,7 @@ namespace rwby
 {
     [OrderBefore(typeof(FighterStateManager), typeof(Fusion.HitboxManager), typeof(FighterPhysicsManager), typeof(FighterBoxManager), typeof(FighterHitManager), typeof(FighterCombatManager))]
     [OrderAfter(typeof(FighterInputManager))]
-    public class FighterManager : NetworkBehaviour, IFighterBase, ITargetable
+    public class FighterManager : NetworkBehaviour, IFighterBase, ITargetable, IContentLoad
     {
         public IFighterCombatManager CombatManager
         {
@@ -34,6 +34,10 @@ namespace rwby
         public SoundbankContainer SoundbankContainer { get { return soundbankContainer; } }
         public EffectbankContainer EffectbankContainer { get { return effectbankContainer; } }
         public Transform TargetOrigin { get { return targetOrigin; } }
+        public IEnumerable<ModObjectReference> loadedContent
+        {
+            get { return GetLoadedContentList(); }
+        }
 
         [Networked] public bool TargetableNetworked { get; set; }
         public bool Targetable { get { return TargetableNetworked; } }
@@ -66,14 +70,13 @@ namespace rwby
         public ParticleSystemEffect guardEffect;
         public Transform visualTransform;
         public Transform myTransform;
+        [SerializeReference] public IContentLoad[] contentLoaders = new IContentLoad[0];
 
         [Header("Lock On")]
         public LayerMask lockonLayerMask;
         public LayerMask lockonVisibilityLayerMask;
         public float lockonMaxDistance = 20;
         public float lockonFudging = 0.1f;
-
-        //[NonSerialized] public SessionManagerClassic SessionManagerClassic;
 
         [Header("Debug")] public bool FRAMEBYFRAME = false;
 
@@ -513,6 +516,18 @@ namespace rwby
         public Bounds GetBounds()
         {
             return capsuleCollider.bounds;
+        }
+
+        public virtual List<ModObjectReference> GetLoadedContentList()
+        {
+            List<ModObjectReference> references = new List<ModObjectReference>();
+
+            foreach (var contentLoad in contentLoaders)
+            {
+                references.AddRange(contentLoad.loadedContent);
+            }
+            
+            return references;
         }
     }
 }

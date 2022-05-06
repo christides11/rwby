@@ -15,17 +15,14 @@ namespace rwby.core.training
         public ModObjectReference characterReference;
         public NetworkId objectId;
     }
-
-    // TODO: Make work with SessionManager.
+    
     public class GamemodeTraining : GameModeBase
     {
         public event EmptyAction OnCPUListUpdated;
-
-        public ModObjectReference mapReference = new ModObjectReference();
+        
         public TrainingSettingsMenu settingsMenu;
 
         [Networked(OnChanged = nameof(CpuListUpdated)), Capacity(4)] public NetworkLinkedList<CPUReference> cpus { get; }
-
         [Networked] public TrainingGamemodeSettings gamemodeSettings { get; set; }
         public TrainingGamemodeSettings localGamemodeSettings;
 
@@ -142,7 +139,7 @@ namespace rwby.core.training
         public override async UniTask<bool> VerifyGameModeSettings()
         {
             if (Runner.IsRunning == false) return true;
-            List<PlayerRef> failedLoadPlayers = await sessionManager.clientContentLoaderService.TellClientsToLoad<IMapDefinition>(mapReference);
+            List<PlayerRef> failedLoadPlayers = await sessionManager.clientContentLoaderService.TellClientsToLoad<IMapDefinition>(gamemodeSettings.map);
             if (failedLoadPlayers == null)
             {
                 Debug.LogError("Load Map Local Failure");
@@ -151,7 +148,7 @@ namespace rwby.core.training
 
             foreach (var v in failedLoadPlayers)
             {
-                Debug.Log($"{v.PlayerId} failed to load {mapReference.ToString()}.");
+                Debug.Log($"{v.PlayerId} failed to load {gamemodeSettings.map.ToString()}.");
             }
 
             if (failedLoadPlayers.Count != 0) return false;
@@ -161,30 +158,30 @@ namespace rwby.core.training
 
         public override bool VerifyReference(ModObjectReference reference)
         {
-            if (reference == mapReference) return true;
+            if (reference == gamemodeSettings.map) return true;
             return false;
         }
 
+        // TODO: Spawn player fighters.
         List<List<GameObject>> spawnPoints = new List<List<GameObject>>();
         List<int> spawnPointsCurr = new List<int>();
         public override async void StartGamemode()
         {
+            Debug.Log("Attempting to start.");
             GamemodeState = GameModeState.INITIALIZING;
 
-            IMapDefinition mapDefinition = ContentManager.singleton.GetContentDefinition<IMapDefinition>(mapReference);
+            IMapDefinition mapDefinition = ContentManager.singleton.GetContentDefinition<IMapDefinition>(gamemodeSettings.map);
             
-            /*
+            
             sessionManager.currentLoadedScenes.Clear();
             sessionManager.currentLoadedScenes.Add(new CustomSceneRef()
             {
-                source = mapReference.modIdentifier.Item1,
-                modIdentifier = mapReference.modIdentifier.Item2,
-                mapIdentifier = mapReference.objectIdentifier,
-                sceneIdentifier =  mapReference.
-                //sceneIndex = mapReference.objectIdentifier
-            });*/
-            
-            //Runner.SetActiveScene(1);
+                source = gamemodeSettings.map.modIdentifier.source,
+                modIdentifier = gamemodeSettings.map.modIdentifier.identifier,
+                mapIdentifier = gamemodeSettings.map.objectIdentifier,
+                sceneIdentifier = 0
+            });
+            Runner.SetActiveScene(5);
             
             /*
             SpawnPointHolder[] spawnPointHolders = GameObject.FindObjectsOfType<SpawnPointHolder>();

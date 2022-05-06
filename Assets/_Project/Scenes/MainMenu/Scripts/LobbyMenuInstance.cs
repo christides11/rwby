@@ -45,7 +45,7 @@ namespace rwby
             readyButton.GetComponentInChildren<TextMeshProUGUI>().text = lobbyMenuHandler.sessionManagerGamemode.Runner.IsServer ? "Start Match" : "Ready";
             if (lobbyMenuHandler.sessionManagerGamemode.Runner.IsServer)
             {
-                readyButton.GetComponent<Selectable>().onSubmit.AddListener(() => _ = lobbyMenuHandler.StartMatch());
+                readyButton.GetComponent<Selectable>().onSubmit.AddListener(async () => await lobbyMenuHandler.StartMatch());
             }
             exitButton.onSubmit.AddListener(menuHandler.ExitLobby);
 
@@ -73,9 +73,14 @@ namespace rwby
 
             for (int i = 0; i < clientInfo.players[playerID].characterReferences.Count; i++)
             {
-                int selectIndex = i;
                 GameObject chara = GameObject.Instantiate(characterContentPrefab, characterContentTransform, false);
                 chara.GetComponentInChildren<TextMeshProUGUI>().text = "?";
+                if (clientInfo.players[playerID].characterReferences[i].IsValid())
+                {
+                    IFighterDefinition fighterDefinition = ContentManager.singleton.GetContentDefinition<IFighterDefinition>(clientInfo.players[playerID].characterReferences[i]);
+                    chara.GetComponentInChildren<TextMeshProUGUI>().text = fighterDefinition.Name;
+                }
+                int selectIndex = i;
                 chara.GetComponent<Selectable>().onSubmit.AddListener(() => {OpenCharacterSelect(selectIndex);});
             }
             
