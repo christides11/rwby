@@ -116,14 +116,11 @@ namespace rwby
             var tempScene = Runner.MultiplePeerUnityScene;
 
             // LOAD //
-            Scene firstLoadedScene = default;
+            //Scene firstLoadedScene = default;
             for (int i = 0; i < newScenes.Count; i++)
             {
                 Scene loadedScene = await LoadSceneAsync(newScenes[i], loadSceneParameters);
-                if (i == 0){ 
-                    SceneManager.SetActiveScene(loadedScene); 
-                    firstLoadedScene = loadedScene;
-                }
+                if (i == 0) Runner.MultiplePeerUnityScene = loadedScene;
 
                 if (!loadedScene.IsValid())
                 {
@@ -147,7 +144,7 @@ namespace rwby
             }
             
             Debug.Log($"Multiple Peer US: {Runner.MultiplePeerUnityScene.name}");
-            Runner.MultiplePeerUnityScene = firstLoadedScene;
+            //Runner.MultiplePeerUnityScene = firstLoadedScene;
             
             LogTrace($"Loaded scenes with parameters: {JsonUtility.ToJson(loadSceneParameters)}");
             

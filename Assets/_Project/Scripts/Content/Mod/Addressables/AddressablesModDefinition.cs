@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Fusion;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 using UnityEngine.Serialization;
@@ -16,7 +17,7 @@ namespace rwby
             public AssetReferenceT<T> asset;
         }
         public string Description { get { return description; } }
-        public string ModGUID { get { return modGUID; } }
+        public string ModGUID { get { return newGUIDs.ToString(); } }
         public Dictionary<int, IContentParser> ContentParsers { get { return contentParserDictionary; } }
         public ModCompatibilityLevel CompatibilityLevel
         {
@@ -29,7 +30,7 @@ namespace rwby
 
         [SerializeField] private ModCompatibilityLevel compatibilityLevel = ModCompatibilityLevel.OnlyIfContentSelected;
         [SerializeField] private ModVersionStrictness versionStrictness = ModVersionStrictness.NeedSameVersion;
-        [FormerlySerializedAs("modIdentifier")] [SerializeField] private string modGUID;
+        [SerializeField] private ContentGUID newGUIDs = new ContentGUID(16);
         [TextArea] [SerializeField] private string description;
         [SerializeReference] public List<IContentParser> contentParsers = new List<IContentParser>();
         [NonSerialized] public Dictionary<int, IContentParser> contentParserDictionary = new Dictionary<int, IContentParser>();
