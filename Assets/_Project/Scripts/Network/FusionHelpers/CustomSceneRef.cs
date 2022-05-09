@@ -6,23 +6,31 @@ namespace rwby
     [System.Serializable]
     public struct CustomSceneRef : INetworkStruct
     {
-        // 0 = internal
-        public byte source;
-        public uint modIdentifier;
-        public byte mapIdentifier;
+        public NetworkModObjectGUIDReference mapReference;
         public sbyte sceneIdentifier;
 
-        public CustomSceneRef(byte source, uint modID, byte mapID, sbyte sceneID)
+        public CustomSceneRef(ModObjectGUIDReference mapReference, sbyte sceneID)
         {
-            this.source = source;
-            modIdentifier = modID;
-            mapIdentifier = mapID;
+            this.mapReference = mapReference;
+            sceneIdentifier = sceneID;
+        }
+        
+        public CustomSceneRef(NetworkModObjectGUIDReference mapReference, sbyte sceneID)
+        {
+            this.mapReference = mapReference;
+            sceneIdentifier = sceneID;
+        }
+
+        public CustomSceneRef(string modGUID, string contentGUID, sbyte sceneID)
+        {
+            mapReference = new NetworkModObjectGUIDReference()
+                { modGUID = modGUID, contentType = (int)ContentType.Map, contentGUID = contentGUID };
             sceneIdentifier = sceneID;
         }
         
         public override string ToString()
         {
-            return $"{source}:{modIdentifier}:{mapIdentifier} scene {sceneIdentifier}";
+            return $"{mapReference.ToString()} scene {sceneIdentifier}";
         }
     }
 }

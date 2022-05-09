@@ -5,6 +5,6 @@ namespace rwby.core.training
     [System.Serializable]
     public struct TrainingGamemodeSettings : INetworkStruct
     {
-        public ModObjectReference map;
+        public NetworkModObjectGUIDReference map;
     }
 }

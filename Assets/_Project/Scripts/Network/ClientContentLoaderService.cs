@@ -28,18 +28,26 @@ namespace rwby
         public Dictionary<int, List<ClientLoadRequestTracker>> loadRequests = new Dictionary<int, List<ClientLoadRequestTracker>>();
 
         // TODO: Tuple with load failure reason.
-        public async UniTask<List<PlayerRef>> TellClientsToLoad<T>(ModObjectReference objectReference) where T : IContentDefinition
+        public async UniTask<List<PlayerRef>> TellClientsToLoad<T>(ModObjectGUIDReference objectReference, bool loadContent = true) where T : IContentDefinition
         {
-            bool localLoadResult = await ContentManager.singleton.LoadContentDefinition<T>(objectReference);
-            if (localLoadResult == false) return null;
+            bool localLoadResult = await ContentManager.singleton.LoadContentDefinition(objectReference);
+            if (localLoadResult == false)
+            {
+                Debug.LogError($"Load Error: {objectReference.ToString()}");
+                return null;
+            }
             bool localContentLoadResult = await ContentManager.singleton.GetContentDefinition<T>(objectReference).Load();
-            if(localContentLoadResult == false) return null;
+            if (localContentLoadResult == false)
+            {
+                Debug.LogError($"Get Error: {objectReference.ToString()}");
+                return null;
+            }
 
             int loadRequestNumber = loadRequestCounter;
             loadRequestCounter++;
             loadRequests.Add(loadRequestNumber, new List<ClientLoadRequestTracker>());
             // Tell clients to load the content.
-            RPC_ClientTryLoad(loadRequestNumber, typeof(T).ToString(), objectReference);
+            RPC_ClientTryLoad(loadRequestNumber, objectReference, loadContent);
 
             // Wait until all other clients report their results, or until the timeout period.
             float startTime = Time.realtimeSinceStartup;
@@ -64,26 +72,22 @@ namespace rwby
         }
 
         [Rpc(RpcSources.StateAuthority, RpcTargets.All, HostMode = RpcHostMode.SourceIsHostPlayer)]
-        public void RPC_ClientTryLoad(int requestNumber, string typeName, ModObjectReference objectReference)
+        public void RPC_ClientTryLoad(int requestNumber, NetworkModObjectGUIDReference objectReference, NetworkBool loadContent)
         {
-            Type typeAsType = Type.GetType(typeName);
-            if (typeAsType == null)
-            {
-                Debug.LogError("Received invalid type.");
-                RPC_ClientReportLoadResult(requestNumber, false);
-                return;
-            }
-            _ = ClientTryLoad(requestNumber, typeAsType, objectReference);
+            _ = ClientTryLoad(requestNumber, objectReference, loadContent);
         }
 
         
-        public async UniTask ClientTryLoad(int requestNumber, Type contentType, ModObjectReference objectReference)
+        public async UniTask ClientTryLoad(int requestNumber, NetworkModObjectGUIDReference objectReference, NetworkBool loadContent)
         {
-            bool loadResult = await ContentManager.singleton.LoadContentDefinition(contentType, objectReference);
+            bool loadResult = await ContentManager.singleton.LoadContentDefinition(objectReference);
             if(loadResult == true)
             {
-                loadResult = await ContentManager.singleton.GetContentDefinition(contentType, objectReference).Load();
-                if(loadResult == false) Debug.LogError($"Error loading {objectReference.ToString()} content.");
+                if (loadContent)
+                {
+                    loadResult = await ContentManager.singleton.GetContentDefinition(objectReference).Load();
+                    if (loadResult == false) Debug.LogError($"Error loading {objectReference.ToString()} content.");
+                }
             }
             else
             {

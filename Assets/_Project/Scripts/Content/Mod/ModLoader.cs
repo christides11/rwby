@@ -30,7 +30,8 @@ namespace rwby
         /// <summary>
         /// A list of all currently enabled mods.
         /// </summary>
-        public Dictionary<ModIdentifierTuple, LoadedModDefinition> loadedMods = new Dictionary<ModIdentifierTuple, LoadedModDefinition>();
+        //public Dictionary<ModIdentifierTuple, LoadedModDefinition> loadedMods = new Dictionary<ModIdentifierTuple, LoadedModDefinition>();
+        public Dictionary<string, LoadedModDefinition> loadedModsByGUID = new Dictionary<string, LoadedModDefinition>();
         /// <summary>
         /// The path where mods are installed.
         /// </summary>
@@ -50,7 +51,7 @@ namespace rwby
             UpdateModList();
             await LoadLocalMod();
             await LoadPreviouslyLoadedMods();
-            Debug.Log($"{loadedMods.Count} mods loaded");
+            Debug.Log($"{loadedModsByGUID.Count} mods loaded");
         }
 
         private void UpdateModList()
@@ -117,24 +118,10 @@ namespace rwby
                     path = new Uri(folderPath),
                     fileName = "info.json",
                     modName = $"{aif.modName}",
-                    identifier = $"addressables.{aif.modIdentifier}"
+                    identifier = $"{aif.modIdentifier}"
                 };
                 modList.Add(mi);
             }
-        }
-
-        private async UniTask LoadLocalMod()
-        {
-            var handle = Addressables.LoadAssetAsync<AddressablesModDefinition>("moddefinition");
-            await handle;
-            if (handle.Status == UnityEngine.ResourceManagement.AsyncOperations.AsyncOperationStatus.Failed) return;
-
-            LoadedLocalAddressablesModDefinition loadedModDefinition = new LoadedLocalAddressablesModDefinition
-            {
-                definition = handle.Result,
-                handle = handle
-            };
-            loadedMods.Add(new ModIdentifierTuple(loadedModDefinition.definition.ModSource, loadedModDefinition.definition.ModID), loadedModDefinition);
         }
 
         private async UniTask LoadPreviouslyLoadedMods()
@@ -147,7 +134,7 @@ namespace rwby
                 savedLoadedMods.Remove(um);
             }
 
-            SaveLoadJsonService.Save(modsLoadedFileName, JsonUtility.ToJson(loadedMods.Keys.ToList()));
+            SaveLoadJsonService.Save(modsLoadedFileName, JsonUtility.ToJson(loadedModsByGUID.Keys.ToList()));
         }
 
         /// <summary>
@@ -172,7 +159,7 @@ namespace rwby
         #region Loading
         public async UniTask LoadAllMods()
         {
-            int startValue = loadedMods.Count;
+            int startValue = loadedModsByGUID.Count;
             foreach (ModInfo mi in modList)
             {
                 await LoadMod(mi);
@@ -220,6 +207,20 @@ namespace rwby
 
             return false;
         }
+        
+        private async UniTask LoadLocalMod()
+        {
+            var handle = Addressables.LoadAssetAsync<AddressablesModDefinition>("moddefinition");
+            await handle;
+            if (handle.Status == UnityEngine.ResourceManagement.AsyncOperations.AsyncOperationStatus.Failed) return;
+
+            LoadedLocalAddressablesModDefinition loadedModDefinition = new LoadedLocalAddressablesModDefinition
+            {
+                definition = handle.Result,
+                handle = handle
+            };
+            loadedModsByGUID.Add(handle.Result.ModGUID, loadedModDefinition);
+        }
 
         private async UniTask<bool> LoadUModMod(ModInfo modInfo)
         {
@@ -237,7 +238,7 @@ namespace rwby
                     definition = mao.Result as IModDefinition,
                     host = mod
                 };
-                loadedMods.Add(new ModIdentifierTuple(loadedModDefinition.definition.ModSource, loadedModDefinition.definition.ModID), loadedModDefinition);
+                loadedModsByGUID.Add(loadedModDefinition.definition.ModGUID, loadedModDefinition);
                 await CheckForLoadedUModDependencies();
                 return true;
             }
@@ -265,7 +266,7 @@ namespace rwby
                     if (typeof(IModDefinition).IsAssignableFrom(loadResult.Locations[key][0].ResourceType))
                     {
                         imd = await Addressables.LoadAssetAsync<IModDefinition>(loadResult.Locations[key][0]);
-                        Debug.Log($"Test: {imd.ModSource}:{imd.ModID}");
+                        Debug.Log($"Test: {imd.ModGUID}");
                         break;
                     }
                 }
@@ -276,7 +277,7 @@ namespace rwby
                     resourceLocatorHandle = handle,
                     resourceLocationMap = loadResult
                 };
-                loadedMods.Add(new ModIdentifierTuple(imd.ModSource, imd.ModID), loadedModDefinition);
+                loadedModsByGUID.Add(loadedModDefinition.definition.ModGUID, loadedModDefinition);
                 return true;
             }
             catch (Exception e)
@@ -288,39 +289,34 @@ namespace rwby
         #endregion
 
         #region Unloading
-        public void UnloadMod(ModIdentifierTuple modIdentifier)
+        public void UnloadMod(string modGUID)
         {
-            if (loadedMods.ContainsKey(modIdentifier)) return;
+            if (loadedModsByGUID.ContainsKey(modGUID)) return;
 
             // Unload mod
-            loadedMods[modIdentifier].Unload();
-            loadedMods.Remove(modIdentifier);
+            loadedModsByGUID[modGUID].Unload();
+            loadedModsByGUID.Remove(modGUID);
         }
 
         public virtual void UnloadAllMods()
         {
-            foreach (var k in loadedMods.Keys)
+            foreach (var k in loadedModsByGUID.Keys)
             {
-                loadedMods[k].Unload();
+                loadedModsByGUID[k].Unload();
             }
-            loadedMods.Clear();
+            loadedModsByGUID.Clear();
         }
         #endregion
 
-        public bool TryGetLoadedMod(ModIdentifierTuple modIdentifier, out LoadedModDefinition loadedMod)
+        public bool TryGetLoadedMod(string modGUID, out LoadedModDefinition loadedMod)
         {
-            if (!loadedMods.ContainsKey(modIdentifier))
-            {
-                loadedMod = null;
-                return false;
-            }
-            loadedMod = loadedMods[modIdentifier];
+            if (!loadedModsByGUID.TryGetValue(modGUID, out loadedMod)) return false;
             return true;
         }
 
-        public bool IsLoaded(ModIdentifierTuple modIdentifier)
+        public bool IsLoaded(string modGUID)
         {
-            return loadedMods.ContainsKey(modIdentifier);
+            return loadedModsByGUID.ContainsKey(modGUID);
         }
 
         public IModInfo GetModInfo(ModInfo modInfo)

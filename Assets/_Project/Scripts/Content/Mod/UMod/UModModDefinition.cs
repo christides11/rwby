@@ -16,9 +16,10 @@ namespace rwby
             get { return modID; }
         }
         public string Description { get { return description; } }
-        public string ModStringID { get { return modIdentifier; } }
-        public Dictionary<Type, IContentParser> ContentParsers { get { return contentParserDictionary; } }
-        [field: SerializeField] public ModCompatibilityLevel CompatibilityLevel { get; } = ModCompatibilityLevel.EveryoneMustHaveModIfSelected;
+        public string ModGUID { get { return modIdentifier; } }
+        public Dictionary<int, IContentParser> ContentParsers { get { return contentParserDictionary; } }
+
+        [field: SerializeField] public ModCompatibilityLevel CompatibilityLevel { get; } = ModCompatibilityLevel.OnlyIfContentSelected;
         [field: SerializeField] public ModVersionStrictness VersionStrictness { get; } = ModVersionStrictness.NeedSameVersion;
         
         [SerializeField] private byte modSource;
@@ -26,7 +27,7 @@ namespace rwby
         [SerializeField] private string modIdentifier;
         [TextArea] [SerializeField] private string description;
         [SerializeReference] public List<IContentParser> contentParsers = new List<IContentParser>();
-        [NonSerialized] public Dictionary<Type, IContentParser> contentParserDictionary = new Dictionary<Type, IContentParser>();
+        [NonSerialized] public Dictionary<int, IContentParser> contentParserDictionary = new Dictionary<int, IContentParser>();
 
         private void OnEnable()
         {

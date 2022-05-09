@@ -30,23 +30,23 @@ namespace rwby
             singleton = this;
         }
 
-        public async UniTask OpenMenu<T>(int player, UnityEngine.Events.UnityAction<int, ModObjectReference> selectAction) where T : IContentDefinition
+        public async UniTask OpenMenu(int player, int contentType, UnityEngine.Events.UnityAction<int, ModObjectGUIDReference> selectAction)
         {
             if (ContentSelectInstances.ContainsKey(player)) return;
             
-            await ContentManager.singleton.LoadContentDefinitions<T>();
-            List<ModObjectReference> conts = ContentManager.singleton.GetContentDefinitionReferences<T>();
+            await ContentManager.singleton.LoadContentDefinitions(contentType);
+            List<ModObjectGUIDReference> conts = ContentManager.singleton.GetContentDefinitionReferences(contentType);
             if (conts.Count == 0) return;
 
             ContentSelectInstance instance = GameObject.Instantiate(instancePrefab, transform, false);
             ContentSelectInstances.Add(player, instance);
             
-            foreach (ModObjectReference con in conts)
+            foreach (ModObjectGUIDReference con in conts)
             {
-                GameObject contentItem = GameObject.Instantiate(this.contentItem, instance.contentTransform, false);
-                ModObjectReference objectReference = con;
-                contentItem.GetComponent<Selectable>().onSubmit.AddListener(() => { selectAction.Invoke(player, objectReference); });
-                contentItem.GetComponentInChildren<TextMeshProUGUI>().text = con.ToString();
+                GameObject contentItemGameobject = GameObject.Instantiate(this.contentItem, instance.contentTransform, false);
+                ModObjectGUIDReference objectReference = con;
+                contentItemGameobject.GetComponent<Selectable>().onSubmit.AddListener(() => { selectAction.Invoke(player, objectReference); });
+                contentItemGameobject.GetComponentInChildren<TextMeshProUGUI>().text = con.ToString();
             }
             
             instance.gameObject.SetActive(true);

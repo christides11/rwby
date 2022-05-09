@@ -5,6 +5,9 @@ namespace rwby
     [AddressablesContentParser("Animationbank")]
     public class AddressablesAnimationbankParser : AddressablesContentParser<IAnimationbankDefinition>
     {
-        public override Type parserType { get { return typeof(IAnimationbankDefinition); } }
+        public override int parserType
+        {
+            get { return (int)ContentType.Animationbank; }
+        }
     }
 }

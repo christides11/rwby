@@ -4,8 +4,10 @@ using UnityEngine;
 
 public class RRoseMan : FighterManager
 {
+    /*
     public override async UniTask<bool> OnFighterLoaded()
     {
+        // TODO: Load Ruby's content.
         var temp = new ModObjectReference((1, 1), 1);
         bool animationbankLoadResult = await ContentManager.singleton.LoadContentDefinition<IAnimationbankDefinition>(temp);
         if (animationbankLoadResult == false)
@@ -19,9 +21,10 @@ public class RRoseMan : FighterManager
     public override void Awake()
     {
         base.Awake();
+        
         var temp = new ModObjectReference((1, 1), 1);
         fighterAnimator.RegisterBank(temp);
-    }
+    }*/
 
     public override void Spawned()
     {

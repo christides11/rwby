@@ -9,13 +9,13 @@ namespace rwby
     [OrderBefore(typeof(ClientManager), typeof(GameModeBase))]
     public class SessionManagerBase : NetworkBehaviour, IContentLoad
     {
-        public IEnumerable<ModObjectReference> loadedContent
+        public IEnumerable<ModObjectGUIDReference> loadedContent
         {
             get { return BuildLoadedContentList(); }
         }
 
         [Networked, Capacity(5)]
-        public NetworkLinkedList<CustomSceneRef> currentLoadedScenes { get; } = MakeInitializer(new CustomSceneRef[] {new CustomSceneRef(0, 0, 0, 1)});
+        public NetworkLinkedList<CustomSceneRef> currentLoadedScenes { get; } = MakeInitializer(new CustomSceneRef[] {new CustomSceneRef("", "", 1)});
 
         [Networked] public byte teams { get; set; }
         [Networked] public int maxPlayersPerClient { get; set; }
@@ -76,17 +76,19 @@ namespace rwby
             teams = count;
         }
         
-        protected virtual HashSet<ModObjectReference> BuildLoadedContentList()
+        protected virtual HashSet<ModObjectGUIDReference> BuildLoadedContentList()
         {
-            HashSet<ModObjectReference> references = new HashSet<ModObjectReference>();
+            HashSet<ModObjectGUIDReference> references = new HashSet<ModObjectGUIDReference>();
 
+            // TODO
             for (int i = 0; i < currentLoadedScenes.Count; i++)
             {
-                references.Add(new ModObjectReference()
+                /*
+                references.Add(new ModObjectGUIDReference()
                 {
                     modIdentifier = new ModIdentifierTuple(currentLoadedScenes[i].source, currentLoadedScenes[i].modIdentifier),
                     objectIdentifier = currentLoadedScenes[i].mapIdentifier
-                });
+                });*/
             }
             
             return references;

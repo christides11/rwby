@@ -26,6 +26,8 @@ namespace rwby
         public List<CustomSceneRef> localLoadedScenes = new List<CustomSceneRef>();
         public int _currentSceneChangeValue = 0;
 
+        public byte loadPercentage = 0;
+        
         protected virtual void OnEnable()
         {
 #if UNITY_EDITOR
@@ -127,6 +129,20 @@ namespace rwby
         
         private IEnumerator UpdateScenesWrapper(List<CustomSceneRef> oldScenes, List<CustomSceneRef> newScenes)
         {
+            loadPercentage = 0;
+            if (Runner.IsServer)
+            {
+                foreach (PlayerRef playerRef in Runner.ActivePlayers)
+                {
+                    NetworkObject po = Runner.GetPlayerObject(playerRef);
+                    if (!po) continue;
+                    po.GetBehaviour<ClientManager>().mapLoadPercent = 0;
+                }
+            }else if (Runner.IsClient)
+            {
+                NetworkObject po = Runner.GetPlayerObject(Runner.LocalPlayer);
+                if(po) po.GetBehaviour<ClientManager>().CLIENT_SetMapLoadPercentage(0);
+            }
             bool finishCalled = false;
             Dictionary<Guid, NetworkObject> sceneObjects = new Dictionary<Guid, NetworkObject>();
             Exception error = null;
@@ -185,6 +201,12 @@ namespace rwby
                 _sceneObjects = sceneObjects;
                 Runner.RegisterUniqueObjects(_sceneObjects.Values);
                 Runner.InvokeSceneLoadDone();
+                if (Runner.LocalPlayer.IsValid)
+                {
+                    NetworkObject no = Runner.GetPlayerObject(Runner.LocalPlayer);
+                    if(no) no.GetBehaviour<ClientManager>().CLIENT_SetMapLoadPercentage(100);
+                }
+                loadPercentage = 100;
             }
         }
 

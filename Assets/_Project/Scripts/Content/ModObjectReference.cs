@@ -22,13 +22,6 @@ namespace rwby
             this.objectIdentifier = objectIdentifier;
         }
 
-        public ModObjectReference(CustomSceneRef sceneRef)
-        {
-            this.modIdentifier.source = sceneRef.source;
-            this.modIdentifier.identifier = sceneRef.modIdentifier;
-            objectIdentifier = sceneRef.mapIdentifier;
-        }
-
         public bool IsValid()
         {
             if (modIdentifier.source == 0 || objectIdentifier == 0) return false;

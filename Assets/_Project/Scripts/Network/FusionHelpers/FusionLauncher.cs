@@ -39,7 +39,7 @@ namespace rwby
 		private Dictionary<PlayerRef, NetworkObject> _players = new Dictionary<PlayerRef, NetworkObject>();
 		private ConnectionStatus _status;
 		private FusionObjectPoolRoot _pool;
-		public CustomNetworkSceneManagerBase networkSceneManagerBase;
+		[FormerlySerializedAs("networkSceneManagerBase")] public CustomNetworkSceneManagerBase netSceneManager;
 
 		private GameMode _gamemode;
 		
@@ -51,7 +51,7 @@ namespace rwby
 
 		public List<CustomSceneRef> defaultSceneList = new List<CustomSceneRef>()
 		{
-			new CustomSceneRef(){source = 0, mapIdentifier = 0, modIdentifier = 0, sceneIdentifier = 1}
+			new CustomSceneRef("", "", 1)
 		};
 		
 		public List<CustomSceneRef> GetCurrentScenes()
@@ -97,7 +97,7 @@ namespace rwby
 				SessionProperties = customProps,
 				SessionName = roomName, 
 				ObjectPool = _pool, 
-				SceneObjectProvider = networkSceneManagerBase, 
+				SceneObjectProvider = netSceneManager, 
 				PlayerCount = playerCount
 			});
 			if(result.Ok == false)
@@ -126,7 +126,7 @@ namespace rwby
 				GameMode = local ? GameMode.Single : GameMode.Host,
 				SessionProperties = customProps,
 				ObjectPool = _pool,
-				SceneObjectProvider = networkSceneManagerBase,
+				SceneObjectProvider = netSceneManager,
 				PlayerCount = playerCount
 			});
 			if (result.Ok == false)
@@ -154,7 +154,7 @@ namespace rwby
 				GameMode = GameMode.Client, 
 				SessionName = sessionID, 
 				ObjectPool = _pool,
-				SceneObjectProvider = networkSceneManagerBase,
+				SceneObjectProvider = netSceneManager,
 				DisableClientSessionCreation = true
 			});
 			if (_status == ConnectionStatus.Failed)
@@ -177,8 +177,8 @@ namespace rwby
 
 			if (!_pool)
 				_pool = gameObject.AddComponent<FusionObjectPoolRoot>();
-			if (!networkSceneManagerBase)
-				networkSceneManagerBase = gameObject.AddComponent<CustomNetworkSceneManager>();
+			if (!netSceneManager)
+				netSceneManager = gameObject.AddComponent<CustomNetworkSceneManager>();
 		}
 
 		public void OnInput(NetworkRunner runner, NetworkInput input){}

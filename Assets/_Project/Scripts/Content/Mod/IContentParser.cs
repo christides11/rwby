@@ -9,21 +9,20 @@ namespace rwby
     [System.Serializable]
     public abstract class IContentParser
     {
-        [SerializeField] public virtual Type parserType { get; }
-
+        [SerializeField] public virtual int parserType { get; }
 
         public abstract void Initialize();
 
-        public virtual bool ContentExist(byte contentIdentfier)
+        public virtual bool ContentExist(string contentIdentfier)
         {
             return false;
         }
 
-        public abstract UniTask<List<byte>> LoadContentDefinitions();
+        public abstract UniTask<List<string>> LoadContentDefinitions();
 
-        public abstract UniTask<bool> LoadContentDefinition(byte contentIdentifier);
+        public abstract UniTask<bool> LoadContentDefinition(string contentIdentifier);
 
-        public virtual IContentDefinition GetContentDefinition(byte contentIdentifier)
+        public virtual IContentDefinition GetContentDefinition(string contentIdentifier)
         {
             return null;
         }
@@ -38,7 +37,7 @@ namespace rwby
 
         }
 
-        public virtual void UnloadContentDefinition(byte contentIdentifier)
+        public virtual void UnloadContentDefinition(string contentIdentifier)
         {
 
         }

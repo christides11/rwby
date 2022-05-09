@@ -34,7 +34,7 @@ namespace rwby
         public SoundbankContainer SoundbankContainer { get { return soundbankContainer; } }
         public EffectbankContainer EffectbankContainer { get { return effectbankContainer; } }
         public Transform TargetOrigin { get { return targetOrigin; } }
-        public IEnumerable<ModObjectReference> loadedContent
+        public IEnumerable<ModObjectGUIDReference> loadedContent
         {
             get { return GetLoadedContentList(); }
         }
@@ -518,9 +518,9 @@ namespace rwby
             return capsuleCollider.bounds;
         }
 
-        public virtual List<ModObjectReference> GetLoadedContentList()
+        public virtual List<ModObjectGUIDReference> GetLoadedContentList()
         {
-            List<ModObjectReference> references = new List<ModObjectReference>();
+            List<ModObjectGUIDReference> references = new List<ModObjectGUIDReference>();
 
             foreach (var contentLoad in contentLoaders)
             {

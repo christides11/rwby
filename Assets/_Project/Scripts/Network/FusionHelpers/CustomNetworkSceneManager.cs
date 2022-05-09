@@ -79,7 +79,7 @@ namespace rwby
             List<CustomSceneRef> newScenes,
             FinishedLoadingDelegate finished)
         {
-            Debug.Log($"Updating Scenes Multi Peer: {oldScenes.Count} to {newScenes.Count}");
+            //Debug.Log($"Updating Scenes Multi Peer: {oldScenes.Count} to {newScenes.Count}");
             List<NetworkObject> sceneObjects = new List<NetworkObject>();
 
             var loadSceneParameters = new LoadSceneParameters(LoadSceneMode.Additive, NetworkProjectConfig.ConvertPhysicsMode(Runner.Config.PhysicsEngine));
@@ -119,8 +119,11 @@ namespace rwby
             Scene firstLoadedScene = default;
             for (int i = 0; i < newScenes.Count; i++)
             {
-                Scene loadedScene = await LoadSceneAsync(newScenes[i], loadSceneParameters);//,scene => loadedScene = scene);
-                if (i == 0) firstLoadedScene = loadedScene;
+                Scene loadedScene = await LoadSceneAsync(newScenes[i], loadSceneParameters);
+                if (i == 0){ 
+                    SceneManager.SetActiveScene(loadedScene); 
+                    firstLoadedScene = loadedScene;
+                }
 
                 if (!loadedScene.IsValid())
                 {
@@ -142,12 +145,13 @@ namespace rwby
                     }
                 }
             }
-
-            // TODO: Check if multiple scenes are working fine.
+            
+            Debug.Log($"Multiple Peer US: {Runner.MultiplePeerUnityScene.name}");
             Runner.MultiplePeerUnityScene = firstLoadedScene;
             
             LogTrace($"Loaded scenes with parameters: {JsonUtility.ToJson(loadSceneParameters)}");
             
+            // unload temp scene
             if (tempScene.IsValid())
             {
                 LogTrace($"Unloading temp scene {tempScene}");

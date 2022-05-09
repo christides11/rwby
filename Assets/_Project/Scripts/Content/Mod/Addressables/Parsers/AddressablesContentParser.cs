@@ -13,8 +13,8 @@ namespace rwby
     {
         [SerializeField] private List<IdentifierAssetReferenceRelation<T>> references = new List<IdentifierAssetReferenceRelation<T>>();
 
-        [NonSerialized] private Dictionary<byte, AssetReferenceT<T>> content = new Dictionary<byte, AssetReferenceT<T>>();
-        [NonSerialized] private Dictionary<byte, AsyncOperationHandle<T>> contentHandles = new Dictionary<byte, AsyncOperationHandle<T>>();
+        [NonSerialized] private Dictionary<string, AssetReferenceT<T>> content = new Dictionary<string, AssetReferenceT<T>>();
+        [NonSerialized] private Dictionary<string, AsyncOperationHandle<T>> contentHandles = new Dictionary<string, AsyncOperationHandle<T>>();
 
         public override void Initialize()
         {
@@ -25,14 +25,14 @@ namespace rwby
             }
         }
 
-        public override bool ContentExist(byte contentIdentfier)
+        public override bool ContentExist(string contentIdentfier)
         {
             return content.ContainsKey(contentIdentfier) ? true : false;
         }
 
-        public override async UniTask<List<byte>> LoadContentDefinitions()
+        public override async UniTask<List<string>> LoadContentDefinitions()
         {
-            List<byte> results = new List<byte>();
+            List<string> results = new List<string>();
             // All of the content is already loaded.
             if (contentHandles.Count == references.Count)
             {
@@ -55,7 +55,7 @@ namespace rwby
             return results;
         }
 
-        public override async UniTask<bool> LoadContentDefinition(byte contentIdentifier)
+        public override async UniTask<bool> LoadContentDefinition(string contentIdentifier)
         {
             // Content doesn't exist.
             if (content.ContainsKey(contentIdentifier) == false)
@@ -102,7 +102,7 @@ namespace rwby
             return contentList;
         }
 
-        public override IContentDefinition GetContentDefinition(byte contentIdentifier)
+        public override IContentDefinition GetContentDefinition(string contentIdentifier)
         {
             // Content does not exist, or was not loaded.
             if (contentHandles.ContainsKey(contentIdentifier) == false)
@@ -121,7 +121,7 @@ namespace rwby
             contentHandles.Clear();
         }
 
-        public override void UnloadContentDefinition(byte contentIdentifier)
+        public override void UnloadContentDefinition(string contentIdentifier)
         {
             if (contentHandles.ContainsKey(contentIdentifier) == false) return;
 

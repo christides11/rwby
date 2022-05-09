@@ -24,6 +24,7 @@ namespace rwby
         public NetworkManager networkManager;
 
         public Settings settings;
+        public string internalModGUID = "";
 
         public async UniTask Initialize()
         {
@@ -91,7 +92,7 @@ namespace rwby
 
         public virtual async UniTask<Scene> LoadScene(CustomSceneRef sceneReference, LoadSceneParameters parameters)
         {
-            if (sceneReference.source == 0)
+            if (sceneReference.mapReference.modGUID.Value == internalModGUID)
             {
                 var scenePath = SceneUtility.GetScenePathByBuildIndex(sceneReference.sceneIdentifier);
                 var s = SceneManager.LoadSceneAsync(sceneReference.sceneIdentifier, parameters);
@@ -116,31 +117,31 @@ namespace rwby
                 return sceneRef;
             }
             
-            IMapDefinition mapDefinition = contentManager.GetContentDefinition<IMapDefinition>(new ModObjectReference((sceneReference.source, sceneReference.modIdentifier), sceneReference.mapIdentifier));
+            IMapDefinition mapDefinition = contentManager.GetContentDefinition<IMapDefinition>(sceneReference.mapReference);
 
             var result = await mapDefinition.LoadScene(sceneReference.sceneIdentifier, parameters);
             return result;
         }
 
         public virtual string[] GetSceneNames(CustomSceneRef sceneReference){
-            if (sceneReference.source == 0)
+            if (sceneReference.mapReference.modGUID.Value == internalModGUID)
             {
                 return new string[] { SceneManager.GetSceneByBuildIndex(sceneReference.sceneIdentifier).name };
             }
 
-            IMapDefinition mapDefinition = contentManager.GetContentDefinition<IMapDefinition>(new ModObjectReference((sceneReference.source, sceneReference.modIdentifier), sceneReference.mapIdentifier));
+            IMapDefinition mapDefinition = contentManager.GetContentDefinition<IMapDefinition>(sceneReference.mapReference);
 
             return mapDefinition.GetSceneNames().ToArray();
         }
 
         public virtual string GetSceneName(CustomSceneRef sceneReference)
         {
-            if (sceneReference.source == 0)
+            if (sceneReference.mapReference.modGUID.Value == internalModGUID)
             {
                 return SceneManager.GetSceneByBuildIndex(sceneReference.sceneIdentifier).name;
             }
             
-            IMapDefinition mapDefinition = contentManager.GetContentDefinition<IMapDefinition>(new ModObjectReference((sceneReference.source, sceneReference.modIdentifier), sceneReference.mapIdentifier));
+            IMapDefinition mapDefinition = contentManager.GetContentDefinition<IMapDefinition>(sceneReference.mapReference);
 
             return mapDefinition.GetSceneNames()[sceneReference.sceneIdentifier];
         }

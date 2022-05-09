@@ -2,8 +2,7 @@ namespace rwby
 {
     public enum ModCompatibilityLevel
     {
-        NoNeedForSync,
-        EveryoneMustHaveModIfSelected,
+        OnlyIfContentSelected,
         EveryoneMustHaveMod
     }
 }

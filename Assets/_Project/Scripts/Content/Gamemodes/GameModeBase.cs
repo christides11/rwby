@@ -90,12 +90,12 @@ namespace rwby
             return true;
         }
 
-        public virtual bool VerifyReference(ModObjectReference reference)
+        public virtual bool VerifyReference(ModObjectGUIDReference reference)
         {
             return false;
         }
 
-        public virtual void StartGamemode()
+        public virtual async UniTaskVoid StartGamemode()
         {
 
         }

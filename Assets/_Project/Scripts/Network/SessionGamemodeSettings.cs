@@ -5,6 +5,6 @@ namespace rwby
     [System.Serializable]
     public struct SessionGamemodeSettings : INetworkStruct
     {
-        public ModObjectReference gamemodeReference;
+        public NetworkModObjectGUIDReference gamemodeReference;
     }
 }

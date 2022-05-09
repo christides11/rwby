@@ -26,8 +26,8 @@ namespace rwby
 		[Networked, Capacity(10)] public NetworkArray<NetworkClientInputData> inputBuffer { get; }
 		[Networked] public int inputBufferPosition { get; set; }
 		public int setInputDelay = 3;
-		
-		[Networked] public float mapLoadPercent { get; set; }
+
+		[Networked] public byte mapLoadPercent { get; set; } = 100;
 
 		protected virtual void Awake()
 		{
@@ -75,6 +75,18 @@ namespace rwby
 				if (playerCameras[i] == null) continue;
 				playerCameras[i].CamUpdate();
             }*/
+		}
+
+		public void CLIENT_SetMapLoadPercentage(byte loadPercentage)
+		{
+			RPC_SetMapLoadPercentage(loadPercentage);
+		}
+
+		[Rpc(RpcSources.InputAuthority | RpcSources.StateAuthority, RpcTargets.StateAuthority,
+			HostMode = RpcHostMode.SourceIsHostPlayer)]
+		private void RPC_SetMapLoadPercentage(byte loadPercentage)
+		{
+			mapLoadPercent = loadPercentage;
 		}
 
 		public void CLIENT_SetPlayerCount(uint playerCount)
@@ -272,6 +284,17 @@ namespace rwby
 			{
 				inputBuffer.Set((inputBufferPosition + setInputDelay) % (inputBuffer.Length), input);
 			}
+
+			/*
+			if ((!Runner.IsRunning || (Runner.IsFirstTick && Runner.IsForward)) && Object.HasInputAuthority)
+			{
+				CustomNetworkSceneManagerBase nsm = networkManager.GetSessionHandlerByRunner(Runner).netSceneManager;
+				if (mapLoadPercent != nsm.loadPercentage)
+				{
+					RPC_SetMapLoadPercentage(nsm.loadPercentage);
+				}
+				mapLoadPercent = nsm.loadPercentage;
+			}*/
 
 			/*
 			for(int i = 0; i < ClientPlayers.Count; i++)

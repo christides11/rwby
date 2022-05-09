@@ -5,11 +5,9 @@ namespace rwby
 {
     public interface IModDefinition
     {
-        byte ModSource { get;  }
-        uint ModID { get; }
-        string ModStringID { get; }
+        string ModGUID { get; }
         string Description { get; }
-        public Dictionary<Type, IContentParser> ContentParsers { get; }
+        public Dictionary<int, IContentParser> ContentParsers { get; }
         public ModCompatibilityLevel CompatibilityLevel { get; }
         public ModVersionStrictness VersionStrictness { get; }
     }

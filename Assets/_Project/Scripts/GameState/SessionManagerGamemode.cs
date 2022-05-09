@@ -55,7 +55,7 @@ namespace rwby
                 return false;
             }
             
-            HashSet<ModObjectReference> fightersToLoad = new HashSet<ModObjectReference>();
+            HashSet<ModObjectGUIDReference> fightersToLoad = new HashSet<ModObjectGUIDReference>();
 
             for (int i = 0; i < ClientDefinitions.Count; i++)
             {
@@ -99,7 +99,7 @@ namespace rwby
             return true;
         }
         
-        public async UniTask<bool> TrySetGamemode(ModObjectReference gamemodeReference)
+        public async UniTask<bool> TrySetGamemode(ModObjectGUIDReference gamemodeReference)
         {
             if (Object.HasStateAuthority == false) return false;
 
@@ -250,7 +250,7 @@ namespace rwby
 
                 while (playerCharacterRefs.Count < characterCount)
                 {
-                    playerCharacterRefs.Add(new ModObjectReference());
+                    playerCharacterRefs.Add(new ModObjectGUIDReference());
                     playerCharacterNOs.Add(new NetworkId());
                 }
 
@@ -261,19 +261,19 @@ namespace rwby
             Debug.LogError("Could not find client.");
         }
         
-        public void CLIENT_SetPlayerCharacter(int playerID, int characterIndex, ModObjectReference characterReference)
+        public void CLIENT_SetPlayerCharacter(int playerID, int characterIndex, ModObjectGUIDReference characterReference)
         {
             RPC_SetPlayerCharacter(playerID, characterIndex, characterReference);
         }
 
         [Rpc(RpcSources.InputAuthority | RpcSources.StateAuthority, RpcTargets.StateAuthority,
             HostMode = RpcHostMode.SourceIsHostPlayer)]
-        private async void RPC_SetPlayerCharacter(int playerID, int characterIndex, ModObjectReference characterReference, RpcInfo info = default)
+        private async void RPC_SetPlayerCharacter(int playerID, int characterIndex, NetworkModObjectGUIDReference characterReference, RpcInfo info = default)
         {
             var result = await clientContentLoaderService.TellClientsToLoad<IFighterDefinition>(characterReference);
-            if (result.Count > 0)
+            if (result == null || result.Count > 0)
             {
-                Debug.LogError($"Error loading: \n {JsonUtility.ToJson(result)}");
+                Debug.LogError($"Error loading.");
                 return;
             }
             
@@ -290,15 +290,14 @@ namespace rwby
 
                 clientPlayers.Set(playerID, playerTemp);
                 clientDefinitions.Set(i, temp);
-                Debug.Log(clientDefinitions[i].players[playerID].characterReferences[characterIndex].ToString());
                 return;
             }
             Debug.LogError("Could not find client.");
         }
 
-        protected override HashSet<ModObjectReference> BuildLoadedContentList()
+        protected override HashSet<ModObjectGUIDReference> BuildLoadedContentList()
         {
-            HashSet<ModObjectReference> references =  base.BuildLoadedContentList();
+            HashSet<ModObjectGUIDReference> references =  base.BuildLoadedContentList();
 
             for (int i = 0; i < ClientDefinitions.Count; i++)
             {

@@ -1,3 +1,4 @@
+
 using System;
 
 namespace rwby
@@ -5,6 +6,9 @@ namespace rwby
     [AddressablesContentParser("Effectbank")]
     public class AddressablesEffectbankParser : AddressablesContentParser<IEffectbankDefinition>
     {
-        public override Type parserType { get { return typeof(IEffectbankDefinition); } }
+        public override int parserType
+        {
+            get { return (int)ContentType.Effectbank; }
+        }
     }
 }

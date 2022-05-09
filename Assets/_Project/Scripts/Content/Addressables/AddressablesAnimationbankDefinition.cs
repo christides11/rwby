@@ -25,6 +25,7 @@ namespace rwby
 
         private void OnEnable()
         {
+            animationMap.Clear();
             for (int i = 0; i < animations.Count; i++)
             {
                 animationMap.Add(animations[i].id, i);

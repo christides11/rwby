@@ -16,7 +16,7 @@ namespace rwby
         public struct CSSConnection
         {
             public Selectable cssSelectable;
-            public ModObjectReference characterReference;
+            [SerializeField] public ModObjectGUIDReference characterReference;
         }
         
         public int playerID;
@@ -38,7 +38,7 @@ namespace rwby
         public GameObject characterSelectMenu;
         public GameObject characterSelectBigCharacter;
         public CSSConnection[] cssConnections;
-
+        
         public void Initialize(LobbyMenuHandler menuHandler)
         {
             this.lobbyMenuHandler = menuHandler;
@@ -110,7 +110,7 @@ namespace rwby
             
         }
         
-        public void SetCharacter(ModObjectReference characterReference)
+        public void SetCharacter(ModObjectGUIDReference characterReference)
         {
             characterSelectMenu.SetActive(false);
             lobbyMenuHandler.sessionManagerGamemode.CLIENT_SetPlayerCharacter(playerID, currentSelectingCharacterIndex, characterReference);

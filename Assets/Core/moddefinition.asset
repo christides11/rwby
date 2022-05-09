@@ -12,86 +12,87 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b830ee64f5bfbbf449ae7ec1272931d4, type: 3}
   m_Name: moddefinition
   m_EditorClassIdentifier: 
-  modSource: 1
-  modID: 1
-  modIdentifier: core
+  compatibilityLevel: 0
+  versionStrictness: 3
+  modGUID: core
   description: 
   contentParsers:
-  - id: 0
-  - id: 1
-  - id: 2
-  - id: 3
-  - id: 4
-  - id: 5
+  - rid: 0
+  - rid: 1
+  - rid: 2
+  - rid: 3
+  - rid: 4
+  - rid: 5
   references:
-    version: 1
-    00000000:
+    version: 2
+    RefIds:
+    - rid: 0
       type: {class: AddressablesGameModeParser, ns: rwby, asm: rwby.csharp}
       data:
         references:
-        - identifier: 1
+        - identifier: train
           asset:
             m_AssetGUID: 6d98f37477091d440b654f77346f0c24
             m_SubObjectName: 
             m_SubObjectType: 
             m_EditorAssetChanged: 0
-        - identifier: 2
+        - identifier: versus
           asset:
             m_AssetGUID: 10562cacfe0440d45aa72a4cbe4ddcea
             m_SubObjectName: 
             m_SubObjectType: 
             m_EditorAssetChanged: 0
-    00000001:
+    - rid: 1
       type: {class: AddressablesFighterParser, ns: rwby, asm: rwby.csharp}
       data:
         references:
-        - identifier: 1
+        - identifier: rr
           asset:
             m_AssetGUID: f0f374ed69303bf499b21d67a399ece3
             m_SubObjectName: 
             m_SubObjectType: 
             m_EditorAssetChanged: 0
-    00000002:
+    - rid: 2
       type: {class: AddressablesMapParser, ns: rwby, asm: rwby.csharp}
       data:
         references:
-        - identifier: 1
+        - identifier: debug
           asset:
             m_AssetGUID: 79ff4822f361f3540b01a83eb3b33154
             m_SubObjectName: 
             m_SubObjectType: 
             m_EditorAssetChanged: 0
-    00000003:
+    - rid: 3
       type: {class: AddressablesSoundbankParser, ns: rwby, asm: rwby.csharp}
       data:
         references:
-        - identifier: 1
+        - identifier: glb
           asset:
             m_AssetGUID: 095716b7fbc40fb4393678c18ce49208
             m_SubObjectName: 
             m_SubObjectType: 
             m_EditorAssetChanged: 0
-        - identifier: 2
+        - identifier: rr
           asset:
             m_AssetGUID: 29d1a35becec4cd46891bf1974f6b9f3
             m_SubObjectName: 
             m_SubObjectType: 
             m_EditorAssetChanged: 0
-    00000004:
+    - rid: 4
       type: {class: AddressablesAnimationbankParser, ns: rwby, asm: rwby.csharp}
       data:
         references:
-        - identifier: 1
+        - identifier: rr
           asset:
             m_AssetGUID: 87992fc2a026b0d459d1d5dbeab9bf54
             m_SubObjectName: 
             m_SubObjectType: 
             m_EditorAssetChanged: 0
-    00000005:
+    - rid: 5
       type: {class: AddressablesEffectbankParser, ns: rwby, asm: rwby.csharp}
       data:
         references:
-        - identifier: 1
+        - identifier: glb
           asset:
             m_AssetGUID: d568adedb7d231e409f4d3d76abe9e1c
             m_SubObjectName: 

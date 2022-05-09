@@ -11,8 +11,8 @@ namespace rwby
     [OrderAfter(typeof(FighterStateManager))]
     public class FighterAnimator : NetworkBehaviour
     {
-        public Dictionary<ModObjectReference, IAnimationbankDefinition> bankMap =
-            new Dictionary<ModObjectReference, IAnimationbankDefinition>();
+        [HideInInspector] public List<ModObjectGUIDReference> bankMap = new List<ModObjectGUIDReference>();
+        [HideInInspector] public List<IAnimationbankDefinition> banks = new List<IAnimationbankDefinition>();
         [SerializeField] private AnimancerComponent animancer;
         
         [Networked] private FighterAnimationRoot currentAnimationSet { get; set; }
@@ -85,26 +85,29 @@ namespace rwby
 
         public override void FixedUpdateNetwork()
         {
+            /*
             if (Runner.IsResimulation && Runner.IsFirstTick && currentAnimancerRepresentation != currentAnimationSet)
             {
                 SyncAnimancer();
-            }
+            }*/
         }
 
         AnimationClip[] clips = new AnimationClip[10];
         private void SyncAnimancer()
         {
+            /*
             currentAnimancerRepresentation = currentAnimationSet;
             if (currentAnimationSet.layer0.Count == 0)
             {
                 return;
             }
             
+            // TODO: Fix animator.
             for (int i = 0; i < 10; i++)
             {
                 if (i < currentAnimationSet.layer0.Count)
                 {
-                    clips[i] = (bankMap[currentAnimationSet.layer0[i].bank]).Animations[currentAnimationSet.layer0[i].animation].clip;
+                    //clips[i] = (bankMap[currentAnimationSet.layer0[i].bank]).Animations[currentAnimationSet.layer0[i].animation].clip;
                 }
                 else
                 {
@@ -119,7 +122,7 @@ namespace rwby
                 var tempChild = animationMixer.GetChild(i);
                 tempChild.Weight = currentAnimationSet.layer0[i].weight;
                 tempChild.Time = currentAnimationSet.layer0[i].currentTime;
-            }
+            }*/
         }
 
         public void ClearAnimationSet(int layer)
@@ -129,10 +132,11 @@ namespace rwby
             currentAnimationSet = temp;
         }
 
-        public void RegisterBank(ModObjectReference bank)
+        public void RegisterBank(ModObjectGUIDReference bank)
         {
+            /*
             if (bankMap.ContainsKey(bank)) return;
-            bankMap.Add(bank, ContentManager.singleton.GetContentDefinition<IAnimationbankDefinition>(bank));
+            bankMap.Add(bank, ContentManager.singleton.GetContentDefinition<IAnimationbankDefinition>(bank));*/
         }
     }
 }

@@ -22,7 +22,7 @@ namespace rwby.ui.mainmenu
         private int playerCount = 8;
         private int maxPlayersPerClient = 4;
         private byte teamCount = 0;
-        private ModObjectReference selectedGamemodeReference;
+        private ModObjectGUIDReference selectedGamemodeReference;
         private IGameModeDefinition selectedGamemodeDefinition;
         private GameModeBase selectedGamemode;
 
@@ -91,10 +91,10 @@ namespace rwby.ui.mainmenu
 
         public void Button_GameMode()
         {
-            ContentSelect.singleton.OpenMenu<IGameModeDefinition>(0, async (a, b) => { await WhenGamemodeSelected(a, b); });
+            ContentSelect.singleton.OpenMenu(0, (int)ContentType.Gamemode, async (a, b) => { await WhenGamemodeSelected(a, b); });
         }
 
-        private async UniTask WhenGamemodeSelected(int player, ModObjectReference arg1)
+        private async UniTask WhenGamemodeSelected(int player, ModObjectGUIDReference arg1)
         {
             Debug.Log($"Gamemode {arg1} selected.");
             ContentSelect.singleton.CloseMenu(0);

@@ -111,7 +111,7 @@ namespace rwby.core.training
 
         private async UniTask OpenMapSelection(int player, bool local = false)
         {
-            await ContentSelect.singleton.OpenMenu<IMapDefinition>(player,(a, b) =>
+            await ContentSelect.singleton.OpenMenu(player, (int)ContentType.Map,(a, b) =>
             {
                 ContentSelect.singleton.CloseMenu(player);
                 if (local)
@@ -156,16 +156,16 @@ namespace rwby.core.training
             return true;
         }
 
-        public override bool VerifyReference(ModObjectReference reference)
+        public override bool VerifyReference(ModObjectGUIDReference reference)
         {
-            if (reference == gamemodeSettings.map) return true;
+            if (reference == (ModObjectGUIDReference)gamemodeSettings.map) return true;
             return false;
         }
 
         // TODO: Spawn player fighters.
         List<List<GameObject>> spawnPoints = new List<List<GameObject>>();
         List<int> spawnPointsCurr = new List<int>();
-        public override async void StartGamemode()
+        public override async UniTaskVoid StartGamemode()
         {
             Debug.Log("Attempting to start.");
             GamemodeState = GameModeState.INITIALIZING;
@@ -176,16 +176,31 @@ namespace rwby.core.training
             sessionManager.currentLoadedScenes.Clear();
             sessionManager.currentLoadedScenes.Add(new CustomSceneRef()
             {
-                source = gamemodeSettings.map.modIdentifier.source,
-                modIdentifier = gamemodeSettings.map.modIdentifier.identifier,
-                mapIdentifier = gamemodeSettings.map.objectIdentifier,
+                mapReference = gamemodeSettings.map,
                 sceneIdentifier = 0
             });
             Runner.SetActiveScene(5);
-            
-            /*
-            SpawnPointHolder[] spawnPointHolders = GameObject.FindObjectsOfType<SpawnPointHolder>();
 
+            await UniTask.WaitForEndOfFrame(); 
+            var sh = sessionManager.gameManager.networkManager.GetSessionHandlerByRunner(Runner);
+            await UniTask.WaitUntil(() => sh.netSceneManager.loadPercentage == 100);
+            
+            int lowestLoadPercentage = 0;
+            while (lowestLoadPercentage != 100)
+            {
+                lowestLoadPercentage = 100;
+                foreach (var playerRef in Runner.ActivePlayers)
+                {
+                    ClientManager cm = Runner.GetPlayerObject(playerRef).GetBehaviour<ClientManager>();
+                    if (cm.mapLoadPercent < lowestLoadPercentage) lowestLoadPercentage = cm.mapLoadPercent;
+                }
+                await UniTask.WaitForEndOfFrame();
+            }
+
+            await UniTask.WaitForEndOfFrame();
+
+            SpawnPointHolder[] spawnPointHolders = Runner.SimulationUnityScene.FindObjectsOfTypeInOrder<SpawnPointHolder>();
+            
             spawnPoints.Add(new List<GameObject>());
             spawnPointsCurr.Add(0);
             foreach (SpawnPointHolder sph in spawnPointHolders)
@@ -201,45 +216,35 @@ namespace rwby.core.training
                 }
             }
 
-            foreach(PlayerRef playerRef in Runner.ActivePlayers)
+            foreach (var clientDefinition in sessionManager.ClientDefinitions)
             {
-                ClientManager cm = Runner.GetPlayerObject(playerRef).GetBehaviour<ClientManager>();
-
-                for(int x = 0; x < cm.ClientPlayers.Count; x++)
+                foreach (var playerDefinition in clientDefinition.players)
                 {
-                    var clientPlayer = cm.ClientPlayers[x];
+                    if (playerDefinition.characterReferences.Count < 1) continue;
 
-                    NetworkObject no = cm.SpawnPlayer(playerRef, x, GetSpawnPosition(cm, clientPlayer));
-                    spawnPointsCurr[clientPlayer.team]++;
+                    IFighterDefinition fighterDefinition = (IFighterDefinition)GameManager.singleton.contentManager.GetContentDefinition(playerDefinition.characterReferences[0]);
+
+                    NetworkObject no = Runner.Spawn(fighterDefinition.GetFighter().GetComponent<NetworkObject>(), GetSpawnPosition(playerDefinition), Quaternion.identity, clientDefinition.clientRef,
+                        (a, b) =>
+                        {
+                            b.gameObject.name = $"{clientDefinition.clientRef.PlayerId} : {fighterDefinition.Name}";
+                            b.GetBehaviour<FighterCombatManager>().Team = playerDefinition.team;
+                            /*
+                            b.gameObject.name = $"{b.Id}.{playerIndex} : {fighterDefinition.Name}";
+                            b.GetBehaviour<FighterCombatManager>().Team = tempCM.ClientPlayers[indexTemp].team;
+                            var list = ClientPlayers;
+                            ClientPlayerDefinition temp = list[indexTemp];
+                            temp.characterNetID = b.Id;
+                            list[indexTemp] = temp;*/
+                        });
+                    spawnPointsCurr[playerDefinition.team]++;
                 }
-            }*/
-        }
-
-        private Vector3 GetSpawnPosition(ClientManager cm, ClientPlayerDefinition clientPlayer)
-        {
-            return spawnPoints[clientPlayer.team][spawnPointsCurr[clientPlayer.team] % spawnPoints[clientPlayer.team].Count].transform.position;
-        }
-
-        /*
-        public override void FixedUpdateNetwork()
-        {
-            for(int i = 0; i < cpus.Count; i++)
-            {
-                if (cpus[i].objectId.IsValid == false) continue;
-                NetworkObject no = Runner.FindObject(cpus[i].objectId);
-                FighterInputManager fim = no.GetBehaviour<FighterInputManager>();
-                fim.FeedInput(Runner.Simulation.Tick, CreateBotInput());
             }
         }
 
-        public bool flickerA = false;
-        private NetworkPlayerInputData CreateBotInput()
+        private Vector3 GetSpawnPosition(SessionGamemodePlayerDefinition clientPlayer)
         {
-            NetworkPlayerInputData npi = new NetworkPlayerInputData();
-
-            npi.buttons.Set(PlayerInputType.A, flickerA && Runner.Simulation.Tick%5 == 0 ? true : false);
-
-            return npi;
-        }*/
+            return spawnPoints[clientPlayer.team][spawnPointsCurr[clientPlayer.team] % spawnPoints[clientPlayer.team].Count].transform.position;
+        }
     }
 }

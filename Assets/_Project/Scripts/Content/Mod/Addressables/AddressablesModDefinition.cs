@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
+using UnityEngine.Serialization;
 
 namespace rwby
 {
@@ -11,21 +12,12 @@ namespace rwby
         [System.Serializable]
         public class IdentifierAssetReferenceRelation<T> where T : UnityEngine.Object
         {
-            public byte identifier;
+            public string identifier;
             public AssetReferenceT<T> asset;
         }
-
-        public byte ModSource
-        {
-            get { return modSource; }
-        }
-        public uint ModID
-        {
-            get { return modID; }
-        }
         public string Description { get { return description; } }
-        public string ModStringID { get { return modIdentifier; } }
-        public Dictionary<Type, IContentParser> ContentParsers { get { return contentParserDictionary; } }
+        public string ModGUID { get { return modGUID; } }
+        public Dictionary<int, IContentParser> ContentParsers { get { return contentParserDictionary; } }
         public ModCompatibilityLevel CompatibilityLevel
         {
             get { return compatibilityLevel; }
@@ -35,14 +27,12 @@ namespace rwby
             get { return versionStrictness; }
         }
 
-        [SerializeField] private ModCompatibilityLevel compatibilityLevel = ModCompatibilityLevel.EveryoneMustHaveModIfSelected;
+        [SerializeField] private ModCompatibilityLevel compatibilityLevel = ModCompatibilityLevel.OnlyIfContentSelected;
         [SerializeField] private ModVersionStrictness versionStrictness = ModVersionStrictness.NeedSameVersion;
-        [SerializeField] private byte modSource;
-        [SerializeField] private uint modID;
-        [SerializeField] private string modIdentifier;
+        [FormerlySerializedAs("modIdentifier")] [SerializeField] private string modGUID;
         [TextArea] [SerializeField] private string description;
         [SerializeReference] public List<IContentParser> contentParsers = new List<IContentParser>();
-        [NonSerialized] public Dictionary<Type, IContentParser> contentParserDictionary = new Dictionary<Type, IContentParser>();
+        [NonSerialized] public Dictionary<int, IContentParser> contentParserDictionary = new Dictionary<int, IContentParser>();
 
         private void OnEnable()
         {
