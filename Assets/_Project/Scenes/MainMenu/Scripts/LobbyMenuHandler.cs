@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Cysharp.Threading.Tasks;
 using UnityEngine.EventSystems;
+using UnityEngine.SceneManagement;
 
 namespace rwby.ui.mainmenu
 {
@@ -23,6 +24,7 @@ namespace rwby.ui.mainmenu
         {
             base.Open(direction, menuHandler);
             ClientManager.OnPlayerCountChanged += WhenClientPlayerCountChanged;
+            sessionManagerGamemode.OnGamemodeStateChanged += WhenGamemodeStateChanged;
             sessionManagerGamemode.OnClientDefinitionsChanged += UpdatePlayerInfo;
             sessionManagerGamemode.OnLobbySettingsChanged += UpdateLobbyInfo;
             sessionManagerGamemode.OnGamemodeSettingsChanged += UpdateLobbyInfo;
@@ -31,6 +33,19 @@ namespace rwby.ui.mainmenu
             
             GameManager.singleton.controllerAssignmentMenu.OnControllersAssigned += OnControllersAssigned;
             GameManager.singleton.controllerAssignmentMenu.OpenMenu();
+        }
+
+        private async void WhenGamemodeStateChanged(SessionManagerGamemode sessionmanager, SessionGamemodeStateType previous)
+        {
+            switch (sessionmanager.SessionState)
+            {
+                case SessionGamemodeStateType.LOADING_GAMEMODE:
+                    await SceneManager.UnloadSceneAsync(SceneManager.GetSceneByName("MainMenu"));
+                    break;
+                case SessionGamemodeStateType.LOBBY:
+                    Debug.Log("Should load MainMenu.");
+                    break;
+            }
         }
 
         public override bool TryClose(MenuDirection direction, bool forceClose = false)
@@ -56,16 +71,18 @@ namespace rwby.ui.mainmenu
 
         public async UniTask StartMatch()
         {
+            bool startResult = await sessionManagerGamemode.TryStartMatch();
+            if (!startResult) return;
             ClientManager.OnPlayerCountChanged -= WhenClientPlayerCountChanged;
             sessionManagerGamemode.OnClientDefinitionsChanged -= UpdatePlayerInfo;
             sessionManagerGamemode.OnLobbySettingsChanged -= UpdateLobbyInfo;
             sessionManagerGamemode.OnGamemodeSettingsChanged -= UpdateLobbyInfo;
-            bool startResult = await sessionManagerGamemode.TryStartMatch();
+            
+            
         }
 
         public async void ExitLobby()
         {
-            //NetworkManager.singleton.LeaveSession();
             currentHandler.Back();
         }
 

@@ -11,14 +11,27 @@ namespace rwby
     {
         public delegate void SessionGamemodeAction(SessionManagerGamemode sessionManager);
 
+        public delegate void SessionGamemodeStateAction(SessionManagerGamemode sessionManager,
+            SessionGamemodeStateType previous);
+
+        public event SessionGamemodeStateAction OnGamemodeStateChanged;
         public event SessionGamemodeAction OnLobbySettingsChanged;
         public event SessionGamemodeAction OnCurrentGamemodeChanged;
         public event SessionGamemodeAction OnGamemodeSettingsChanged;
         public event SessionGamemodeAction OnClientDefinitionsChanged;
-        
+
+        [Networked(OnChanged = nameof(OnChangedSessionState))] public SessionGamemodeStateType SessionState { get; set; }
         [Networked(OnChanged = nameof(OnChangedGamemodeSettings))] public SessionGamemodeSettings GamemodeSettings { get; set; }
         [Networked(OnChanged = nameof(OnChangedCurrentGameMode))] public GameModeBase CurrentGameMode { get; set; }
         [Networked(OnChanged = nameof(OnChangedClientDefinitions)), Capacity(8)] public NetworkLinkedList<SessionGamemodeClientContainer> ClientDefinitions => default;
+
+        protected static void OnChangedSessionState(Changed<SessionManagerGamemode> changed)
+        {
+            changed.LoadOld();
+            var oldState = changed.Behaviour.SessionState;
+            changed.LoadNew();
+            changed.Behaviour.OnGamemodeStateChanged?.Invoke(changed.Behaviour, oldState);
+        }
         
         protected static void OnChangedGamemodeSettings(Changed<SessionManagerGamemode> changed)
         {
@@ -228,7 +241,7 @@ namespace rwby
             RPC_SetPlayerCharacterCount(playerID, count);
         }
 
-        [Rpc(RpcSources.InputAuthority | RpcSources.StateAuthority, RpcTargets.StateAuthority,
+        [Rpc(RpcSources.All, RpcTargets.StateAuthority,
             HostMode = RpcHostMode.SourceIsHostPlayer)]
         private void RPC_SetPlayerCharacterCount(int playerID, int characterCount, RpcInfo info = default)
         {
@@ -250,7 +263,7 @@ namespace rwby
 
                 while (playerCharacterRefs.Count < characterCount)
                 {
-                    playerCharacterRefs.Add(new ModObjectGUIDReference());
+                    playerCharacterRefs.Add(new NetworkModObjectGUIDReference());
                     playerCharacterNOs.Add(new NetworkId());
                 }
 
@@ -266,7 +279,7 @@ namespace rwby
             RPC_SetPlayerCharacter(playerID, characterIndex, characterReference);
         }
 
-        [Rpc(RpcSources.InputAuthority | RpcSources.StateAuthority, RpcTargets.StateAuthority,
+        [Rpc(RpcSources.All, RpcTargets.StateAuthority,
             HostMode = RpcHostMode.SourceIsHostPlayer)]
         private async void RPC_SetPlayerCharacter(int playerID, int characterIndex, NetworkModObjectGUIDReference characterReference, RpcInfo info = default)
         {

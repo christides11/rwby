@@ -1,20 +1,28 @@
 using System;
 using Fusion;
+using UnityEngine;
 
 namespace rwby
 {
     [System.Serializable]
     public struct ModObjectGUIDReference : IEquatable<ModObjectGUIDReference>
     {
-        public string modGUID;
+        public ContentGUID modGUID;
         public int contentType;
-        public string contentGUID;
+        public ContentGUID contentGUID;
 
-        public ModObjectGUIDReference(string modGUID, int contentType, string contentGUID)
+        public ModObjectGUIDReference(ContentGUID modGUID, int contentType, ContentGUID contentGUID)
         {
             this.modGUID = modGUID;
             this.contentType = contentType;
             this.contentGUID = contentGUID;
+        }
+
+        public ModObjectGUIDReference(byte[] modGUID, int contentType, byte[] contentGUID)
+        {
+            this.modGUID = new ContentGUID(modGUID);
+            this.contentType = contentType;
+            this.contentGUID = new ContentGUID(contentGUID);
         }
         
         public bool IsValid()
@@ -25,7 +33,7 @@ namespace rwby
 
         public override string ToString()
         {
-            return $"{modGUID}:{contentType}:{contentGUID}";
+            return $"{modGUID.ToString()}:{contentType}:{contentGUID}";
         }
 
         public bool Equals(ModObjectGUIDReference other)

@@ -10,34 +10,34 @@ using UnityEngine;
 namespace rwby
 {
     [System.Serializable]
-    public struct ContentGUID
+    public struct ContentGUID : IEquatable<ContentGUID>
     {
         public static readonly char[] byteToLetterLookup = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789.".ToCharArray();
-
-        public byte length;
+        
         public byte[] guid;
         
         public ContentGUID(byte length)
         {
-            this.length = length;
             guid = new byte[length];
+        }
+        
+        public ContentGUID(byte[] guid)
+        {
+            this.guid = new byte[guid.Length];
+            for (int i = 0; i < guid.Length; i++)
+            {
+                this.guid[i] = guid[i];
+            }
         }
 
         public ContentGUID(byte length, string input)
         {
-            this.length = length;
             guid = BuildGUID(length, input);
-        }
-
-        public ContentGUID(byte[] guid)
-        {
-            this.length = (byte)guid.Length;
-            this.guid = guid;
         }
 
         public override string ToString()
         {
-            return BuildString(length, guid);
+            return BuildString(guid);
         }
 
         public static byte[] BuildGUID(byte length, string input)
@@ -47,6 +47,7 @@ namespace rwby
             {
                 for (int i = 0; i < length; i++)
                 {
+                    if (i >= input.Length) break;
                     output[i] = (byte)(Array.IndexOf(byteToLetterLookup, input[i])+1);
                 }
             }
@@ -59,6 +60,7 @@ namespace rwby
 
         public static bool TryBuildGUID(byte length, string input, out byte[] output)
         {
+            if(length == 0) length = 8;
             output = new byte[length];
             if (input.Length > length) return false;
             if (String.IsNullOrWhiteSpace(input) || String.IsNullOrEmpty(input)) return true;
@@ -77,11 +79,11 @@ namespace rwby
             return true;
         }
 
-        public static string BuildString(byte length, byte[] guid)
+        public static string BuildString(byte[] guid)
         {
             try
             {
-                StringBuilder sb = new StringBuilder("", length);
+                StringBuilder sb = new StringBuilder("", guid.Length);
 
                 for (int i = 0; i < guid.Length; i++)
                 {
@@ -126,5 +128,40 @@ namespace rwby
 
         public static implicit operator NetworkedContentGUID(ContentGUID cguid) =>
             new NetworkedContentGUID(cguid.guid);
+
+        public bool Equals(ContentGUID other)
+        {
+            for (int i = 0; i < guid.Length; i++)
+            {
+                if (guid[i] != other.guid[i]) return false;
+            }
+            return true;
+        }
+
+        public override bool Equals(object obj)
+        {
+            return obj is ContentGUID other && Equals(other);
+        }
+
+        public override int GetHashCode()
+        {
+            int value=0;
+            for (var i = 0;i< this.guid.Length; i++)
+            {
+                value=HashCode.Combine(this.guid[i],value);
+            }
+
+            return value;
+        }
+        
+        public static bool operator ==(ContentGUID x, ContentGUID y)
+        {
+            return x.Equals(y);
+        }
+
+        public static bool operator !=(ContentGUID x, ContentGUID y)
+        {
+            return !(x == y);
+        }
     }
 }

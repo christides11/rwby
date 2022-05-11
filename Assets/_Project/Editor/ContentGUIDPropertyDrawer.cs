@@ -8,9 +8,6 @@ namespace rwby
     [CustomPropertyDrawer(typeof(ContentGUID), true)]
     public class ContentGUIDPropertyDrawer : PropertyDrawer
     {
-        public bool init;
-        public string tempString;
-
         public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
         {
             return EditorGUIUtility.singleLineHeight;
@@ -18,12 +15,8 @@ namespace rwby
         
         public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
         {
-            byte maxLength = (byte)property.FindPropertyRelative("length").intValue;
-            if (!init)
-            {
-                tempString = ContentGUID.BuildString(maxLength, property.FindPropertyRelative("guid"));
-                init = true;
-            }
+            byte maxLength = (byte)property.FindPropertyRelative("guid").arraySize;
+            string tempString = ContentGUID.BuildString(maxLength, property.FindPropertyRelative("guid"));
 
             tempString = EditorGUI.TextField(position, label, tempString);
 

@@ -23,8 +23,9 @@ namespace rwby.core.training
         public TrainingSettingsMenu settingsMenu;
 
         [Networked(OnChanged = nameof(CpuListUpdated)), Capacity(4)] public NetworkLinkedList<CPUReference> cpus { get; }
-        [Networked] public TrainingGamemodeSettings gamemodeSettings { get; set; }
-        public TrainingGamemodeSettings localGamemodeSettings;
+
+        [Networked] public NetworkModObjectGUIDReference Map { get; set; }
+        public ModObjectGUIDReference localMap;
 
         private static void CpuListUpdated(Changed<GamemodeTraining> changed)
         {
@@ -98,13 +99,14 @@ namespace rwby.core.training
         public override void SetGamemodeSettings(GameModeBase gamemode)
         {
             GamemodeTraining train = gamemode as GamemodeTraining;
-            gamemodeSettings = train.localGamemodeSettings;
+            Map = train.localMap;
         }
 
         public override void AddGamemodeSettings(int player, LobbySettingsMenu settingsMenu, bool local = false)
         {
-            TrainingGamemodeSettings gs = local ? localGamemodeSettings : gamemodeSettings;
-            IMapDefinition mapDefinition = ContentManager.singleton.GetContentDefinition<IMapDefinition>(gs.map);
+            ModObjectGUIDReference mapRef = local ? localMap : Map;
+            
+            IMapDefinition mapDefinition = ContentManager.singleton.GetContentDefinition<IMapDefinition>(mapRef);
             string mapName = mapDefinition != null ? mapDefinition.Name : "None";
             settingsMenu.AddOption("Map", mapName).onSubmit.AddListener(async () => { await OpenMapSelection(player, local); });
         }
@@ -116,30 +118,35 @@ namespace rwby.core.training
                 ContentSelect.singleton.CloseMenu(player);
                 if (local)
                 {
-                    localGamemodeSettings.map = b;
+                    //localGamemodeSettings.map = b;
+                    localMap = b;
                     WhenGamemodeSettingsChanged(true);
                 }
                 else
                 {
+                    Map = b;
+                    /*
                     var temp = gamemodeSettings;
                     temp.map = b;
-                    gamemodeSettings = temp;
+                    gamemodeSettings = temp;*/
                     WhenGamemodeSettingsChanged();
                 }
             });
         }
         #endregion
 
+        /*
         public void ApplyExternalSettings(GameModeBase gmb)
         {
             GamemodeTraining gm = gmb as GamemodeTraining;
-            gamemodeSettings = gm.localGamemodeSettings;
-        }
+            Map = gm.localMap;
+            //gamemodeSettings = gm.localGamemodeSettings;
+        }*/
 
         public override async UniTask<bool> VerifyGameModeSettings()
         {
             if (Runner.IsRunning == false) return true;
-            List<PlayerRef> failedLoadPlayers = await sessionManager.clientContentLoaderService.TellClientsToLoad<IMapDefinition>(gamemodeSettings.map);
+            List<PlayerRef> failedLoadPlayers = await sessionManager.clientContentLoaderService.TellClientsToLoad<IMapDefinition>(Map);
             if (failedLoadPlayers == null)
             {
                 Debug.LogError("Load Map Local Failure");
@@ -148,7 +155,7 @@ namespace rwby.core.training
 
             foreach (var v in failedLoadPlayers)
             {
-                Debug.Log($"{v.PlayerId} failed to load {gamemodeSettings.map.ToString()}.");
+                Debug.Log($"{v.PlayerId} failed to load {Map.ToString()}.");
             }
 
             if (failedLoadPlayers.Count != 0) return false;
@@ -158,7 +165,7 @@ namespace rwby.core.training
 
         public override bool VerifyReference(ModObjectGUIDReference reference)
         {
-            if (reference == (ModObjectGUIDReference)gamemodeSettings.map) return true;
+            if (reference == (ModObjectGUIDReference)Map) return true;
             return false;
         }
 
@@ -168,15 +175,16 @@ namespace rwby.core.training
         public override async UniTaskVoid StartGamemode()
         {
             Debug.Log("Attempting to start.");
+            sessionManager.SessionState = SessionGamemodeStateType.LOADING_GAMEMODE;
             GamemodeState = GameModeState.INITIALIZING;
 
-            IMapDefinition mapDefinition = ContentManager.singleton.GetContentDefinition<IMapDefinition>(gamemodeSettings.map);
+            IMapDefinition mapDefinition = ContentManager.singleton.GetContentDefinition<IMapDefinition>(Map);
             
             
             sessionManager.currentLoadedScenes.Clear();
             sessionManager.currentLoadedScenes.Add(new CustomSceneRef()
             {
-                mapReference = gamemodeSettings.map,
+                mapReference = Map,
                 sceneIdentifier = 0
             });
             Runner.SetActiveScene(5);
@@ -198,6 +206,7 @@ namespace rwby.core.training
             }
 
             await UniTask.WaitForEndOfFrame();
+            sessionManager.SessionState = SessionGamemodeStateType.IN_GAMEMODE;
 
             SpawnPointHolder[] spawnPointHolders = Runner.SimulationUnityScene.FindObjectsOfTypeInOrder<SpawnPointHolder>();
             

@@ -47,7 +47,7 @@ namespace rwby
             loadRequestCounter++;
             loadRequests.Add(loadRequestNumber, new List<ClientLoadRequestTracker>());
             // Tell clients to load the content.
-            RPC_ClientTryLoad(loadRequestNumber, objectReference, loadContent);
+            RPC_ClientTryLoad(loadRequestNumber, new NetworkModObjectGUIDReference(objectReference.modGUID, objectReference.contentType, objectReference.contentGUID), loadContent);
 
             // Wait until all other clients report their results, or until the timeout period.
             float startTime = Time.realtimeSinceStartup;

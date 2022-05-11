@@ -10,7 +10,7 @@ namespace rwby
     [CustomEditor(typeof(AddressablesModDefinition), true)]
     public class AddressablesModDefinitionEditor : Editor
     {
-        protected Dictionary<string, Type> hurtboxGroupTypes = new Dictionary<string, Type>();
+        protected Dictionary<string, (string, Type)> hurtboxGroupTypes = new Dictionary<string, (string, Type)>();
 
         public virtual void OnEnable()
         {
@@ -25,7 +25,7 @@ namespace rwby
                         AddressablesContentParserAttribute acp = (AddressablesContentParserAttribute)givenType.GetCustomAttribute(typeof(AddressablesContentParserAttribute), true);
                         if (acp == null) return;
 
-                        hurtboxGroupTypes.Add(acp.parsetPath, givenType);
+                        hurtboxGroupTypes.Add(acp.parsetPath, (acp.parserNickname, givenType));
                     }
                 }
             }
@@ -37,9 +37,12 @@ namespace rwby
 
             serializedObject.Update();
 
-            //EditorGUILayout.PropertyField(serializedObject.FindProperty("modIdentifier"));
-            //EditorGUILayout.PropertyField(serializedObject.FindProperty("description"));
-
+            /*
+            EditorGUILayout.PropertyField(serializedObject.FindProperty("compatibilityLevel"));
+            EditorGUILayout.PropertyField(serializedObject.FindProperty("versionStrictness"));
+            EditorGUILayout.PropertyField(serializedObject.FindProperty("guid"));
+            EditorGUILayout.PropertyField(serializedObject.FindProperty("description"));*/
+            
             if (GUILayout.Button("Add Content Parser"))
             {
                 GenericMenu menu = new GenericMenu();
@@ -50,13 +53,15 @@ namespace rwby
                 }
                 menu.ShowAsContext();
             }
-
+            
             /*
             EditorGUILayout.LabelField("Content Parsers");
             SerializedProperty property = serializedObject.FindProperty("contentParsers");
+
             for (int i = 0; i < property.arraySize; i++)
             {
-                EditorGUILayout.LabelField(property.GetArrayElementAtIndex(i).type);
+                var nameProperty = property.GetArrayElementAtIndex(i).FindPropertyRelative("name");
+                EditorGUILayout.LabelField(nameProperty != null ? nameProperty.stringValue : "Parser");
                 EditorGUILayout.PropertyField(property.GetArrayElementAtIndex(i));
             }*/
 
@@ -70,7 +75,7 @@ namespace rwby
 
             for (int i = 0; i < property.arraySize; i++)
             {
-                if (property.GetArrayElementAtIndex(i).GetType() == hurtboxGroupTypes[(string)ty])
+                if (property.GetArrayElementAtIndex(i).GetType() == hurtboxGroupTypes[(string)ty].Item2)
                 {
                     serializedObject.ApplyModifiedProperties();
                     return;
@@ -78,7 +83,8 @@ namespace rwby
             }
 
             property.InsertArrayElementAtIndex(property.arraySize);
-            property.GetArrayElementAtIndex(property.arraySize - 1).managedReferenceValue = Activator.CreateInstance(hurtboxGroupTypes[(string)ty]);
+            property.GetArrayElementAtIndex(property.arraySize - 1).managedReferenceValue = Activator.CreateInstance(hurtboxGroupTypes[(string)ty].Item2);
+            property.GetArrayElementAtIndex(property.arraySize - 1).FindPropertyRelative("name").stringValue = hurtboxGroupTypes[(string)ty].Item1;
             serializedObject.ApplyModifiedProperties();
         }
     }

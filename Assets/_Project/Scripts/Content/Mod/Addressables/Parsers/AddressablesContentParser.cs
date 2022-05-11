@@ -13,8 +13,8 @@ namespace rwby
     {
         [SerializeField] private List<IdentifierAssetReferenceRelation<T>> references = new List<IdentifierAssetReferenceRelation<T>>();
 
-        [NonSerialized] private Dictionary<string, AssetReferenceT<T>> content = new Dictionary<string, AssetReferenceT<T>>();
-        [NonSerialized] private Dictionary<string, AsyncOperationHandle<T>> contentHandles = new Dictionary<string, AsyncOperationHandle<T>>();
+        [NonSerialized] private Dictionary<ContentGUID, AssetReferenceT<T>> content = new Dictionary<ContentGUID, AssetReferenceT<T>>();
+        [NonSerialized] private Dictionary<ContentGUID, AsyncOperationHandle<T>> contentHandles = new Dictionary<ContentGUID, AsyncOperationHandle<T>>();
 
         public override void Initialize()
         {
@@ -25,14 +25,14 @@ namespace rwby
             }
         }
 
-        public override bool ContentExist(string contentIdentfier)
+        public override bool ContentExist(ContentGUID contentIdentfier)
         {
             return content.ContainsKey(contentIdentfier) ? true : false;
         }
 
-        public override async UniTask<List<string>> LoadContentDefinitions()
+        public override async UniTask<List<ContentGUID>> LoadContentDefinitions()
         {
-            List<string> results = new List<string>();
+            List<ContentGUID> results = new List<ContentGUID>();
             // All of the content is already loaded.
             if (contentHandles.Count == references.Count)
             {
@@ -55,12 +55,12 @@ namespace rwby
             return results;
         }
 
-        public override async UniTask<bool> LoadContentDefinition(string contentIdentifier)
+        public override async UniTask<bool> LoadContentDefinition(ContentGUID contentIdentifier)
         {
             // Content doesn't exist.
             if (content.ContainsKey(contentIdentifier) == false)
             {
-                Debug.LogError($"Error loading {contentIdentifier}: Content does not exist.");
+                Debug.LogError($"Error loading {contentIdentifier.ToString()}: Content does not exist.");
                 return false;
             }
 
@@ -102,7 +102,7 @@ namespace rwby
             return contentList;
         }
 
-        public override IContentDefinition GetContentDefinition(string contentIdentifier)
+        public override IContentDefinition GetContentDefinition(ContentGUID contentIdentifier)
         {
             // Content does not exist, or was not loaded.
             if (contentHandles.ContainsKey(contentIdentifier) == false)
@@ -121,7 +121,7 @@ namespace rwby
             contentHandles.Clear();
         }
 
-        public override void UnloadContentDefinition(string contentIdentifier)
+        public override void UnloadContentDefinition(ContentGUID contentIdentifier)
         {
             if (contentHandles.ContainsKey(contentIdentifier) == false) return;
 

@@ -6,14 +6,14 @@ namespace rwby
     [System.Serializable]
     public struct NetworkModObjectGUIDReference : INetworkStruct, IEquatable<NetworkModObjectGUIDReference>
     {
-        public NetworkString<_8> modGUID;
-        public int contentType;
-        public NetworkString<_8>  contentGUID;
+        public NetworkedContentGUID modGUID;
+        public byte contentType;
+        public NetworkedContentGUID  contentGUID;
 
-        public NetworkModObjectGUIDReference(string modGUID, int contentType, string contentGUID)
+        public NetworkModObjectGUIDReference(ContentGUID modGUID, int contentType, ContentGUID contentGUID)
         {
-            this.modGUID = modGUID;
-            this.contentType = contentType;
+            this.modGUID = new NetworkedContentGUID(modGUID.guid);
+            this.contentType = (byte)contentType;
             this.contentGUID = contentGUID;
         }
         
@@ -25,7 +25,7 @@ namespace rwby
 
         public override string ToString()
         {
-            return $"{modGUID}:{contentType}:{contentGUID}";
+            return $"{modGUID.ToString()}:{contentType}:{contentGUID}";
         }
 
         public bool Equals(ModObjectGUIDReference other)
@@ -69,6 +69,6 @@ namespace rwby
         }
 
         public static implicit operator ModObjectGUIDReference(NetworkModObjectGUIDReference nmo) =>
-            new ModObjectGUIDReference(nmo.modGUID.Value, nmo.contentType, nmo.contentGUID.Value);
+            new ModObjectGUIDReference(nmo.modGUID.guid.ToArray(), nmo.contentType, nmo.contentGUID.guid.ToArray());
     }
 }

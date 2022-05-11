@@ -13,11 +13,14 @@ namespace rwby
         [System.Serializable]
         public class IdentifierAssetReferenceRelation<T> where T : UnityEngine.Object
         {
-            public string identifier;
+            public ContentGUID identifier;
             public AssetReferenceT<T> asset;
         }
         public string Description { get { return description; } }
-        public string ModGUID { get { return newGUIDs.ToString(); } }
+        public ContentGUID ModGUID { get { return guid; } }
+        public string ModID {
+            get { return guid.ToString(); }
+        }
         public Dictionary<int, IContentParser> ContentParsers { get { return contentParserDictionary; } }
         public ModCompatibilityLevel CompatibilityLevel
         {
@@ -30,7 +33,7 @@ namespace rwby
 
         [SerializeField] private ModCompatibilityLevel compatibilityLevel = ModCompatibilityLevel.OnlyIfContentSelected;
         [SerializeField] private ModVersionStrictness versionStrictness = ModVersionStrictness.NeedSameVersion;
-        [SerializeField] private ContentGUID newGUIDs = new ContentGUID(16);
+        [FormerlySerializedAs("guida")] [SerializeField] private ContentGUID guid = new ContentGUID(8);
         [TextArea] [SerializeField] private string description;
         [SerializeReference] public List<IContentParser> contentParsers = new List<IContentParser>();
         [NonSerialized] public Dictionary<int, IContentParser> contentParserDictionary = new Dictionary<int, IContentParser>();

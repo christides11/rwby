@@ -9,20 +9,21 @@ namespace rwby
     [System.Serializable]
     public abstract class IContentParser
     {
+        [SerializeField, HideInInspector] private string name = "Generic Parser";
         [SerializeField] public virtual int parserType { get; }
 
         public abstract void Initialize();
 
-        public virtual bool ContentExist(string contentIdentfier)
+        public virtual bool ContentExist(ContentGUID contentIdentfier)
         {
             return false;
         }
 
-        public abstract UniTask<List<string>> LoadContentDefinitions();
+        public abstract UniTask<List<ContentGUID>> LoadContentDefinitions();
 
-        public abstract UniTask<bool> LoadContentDefinition(string contentIdentifier);
+        public abstract UniTask<bool> LoadContentDefinition(ContentGUID contentIdentifier);
 
-        public virtual IContentDefinition GetContentDefinition(string contentIdentifier)
+        public virtual IContentDefinition GetContentDefinition(ContentGUID contentIdentifier)
         {
             return null;
         }
@@ -37,7 +38,7 @@ namespace rwby
 
         }
 
-        public virtual void UnloadContentDefinition(string contentIdentifier)
+        public virtual void UnloadContentDefinition(ContentGUID contentIdentifier)
         {
 
         }

@@ -2,7 +2,7 @@ using System;
 
 namespace rwby
 {
-    [AddressablesContentParser("Soundbank")]
+    [AddressablesContentParser("Soundbank", "Soundbanks")]
     public class AddressablesSoundbankParser : AddressablesContentParser<ISoundbankDefinition>
     {
         public override int parserType

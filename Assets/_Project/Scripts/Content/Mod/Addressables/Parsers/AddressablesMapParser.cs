@@ -2,7 +2,7 @@ using System;
 
 namespace rwby
 {
-    [AddressablesContentParser("Map")]
+    [AddressablesContentParser("Map", "Maps")]
     public class AddressablesMapParser : AddressablesContentParser<IMapDefinition>
     {
         public override int parserType

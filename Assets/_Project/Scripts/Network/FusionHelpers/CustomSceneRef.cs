@@ -21,7 +21,7 @@ namespace rwby
             sceneIdentifier = sceneID;
         }
 
-        public CustomSceneRef(string modGUID, string contentGUID, sbyte sceneID)
+        public CustomSceneRef(ContentGUID modGUID, ContentGUID contentGUID, sbyte sceneID)
         {
             mapReference = new NetworkModObjectGUIDReference()
                 { modGUID = modGUID, contentType = (int)ContentType.Map, contentGUID = contentGUID };

@@ -30,8 +30,7 @@ namespace rwby
         /// <summary>
         /// A list of all currently enabled mods.
         /// </summary>
-        //public Dictionary<ModIdentifierTuple, LoadedModDefinition> loadedMods = new Dictionary<ModIdentifierTuple, LoadedModDefinition>();
-        public Dictionary<string, LoadedModDefinition> loadedModsByGUID = new Dictionary<string, LoadedModDefinition>();
+        public Dictionary<ContentGUID, LoadedModDefinition> loadedModsByGUID = new Dictionary<ContentGUID, LoadedModDefinition>();
         /// <summary>
         /// The path where mods are installed.
         /// </summary>
@@ -289,7 +288,7 @@ namespace rwby
         #endregion
 
         #region Unloading
-        public void UnloadMod(string modGUID)
+        public void UnloadMod(ContentGUID modGUID)
         {
             if (loadedModsByGUID.ContainsKey(modGUID)) return;
 
@@ -308,13 +307,13 @@ namespace rwby
         }
         #endregion
 
-        public bool TryGetLoadedMod(string modGUID, out LoadedModDefinition loadedMod)
+        public bool TryGetLoadedMod(ContentGUID modGUID, out LoadedModDefinition loadedMod)
         {
             if (!loadedModsByGUID.TryGetValue(modGUID, out loadedMod)) return false;
             return true;
         }
 
-        public bool IsLoaded(string modGUID)
+        public bool IsLoaded(ContentGUID modGUID)
         {
             return loadedModsByGUID.ContainsKey(modGUID);
         }

@@ -51,7 +51,7 @@ namespace rwby
 
 		public List<CustomSceneRef> defaultSceneList = new List<CustomSceneRef>()
 		{
-			new CustomSceneRef("", "", 1)
+			new CustomSceneRef(new ContentGUID(8), new ContentGUID(8), 1)
 		};
 		
 		public List<CustomSceneRef> GetCurrentScenes()
@@ -137,30 +137,26 @@ namespace rwby
 			return result;
 		}
 
-		public async UniTask JoinSession(SessionInfo session, NetworkObject playerPrefab)
+		public async UniTask<StartGameResult> JoinSession(SessionInfo session)
 		{
-			await JoinSession(session.Name, playerPrefab);
+			return await JoinSession(session.Name);
 		}
 
-		public async UniTask JoinSession(string sessionID, NetworkObject playerPrefab)
+		public async UniTask<StartGameResult> JoinSession(string sessionName)
 		{
-			clientPrefab = playerPrefab;
 			_connectionCallback = OnConnectionStatusUpdate;
 
 			InitSingletions(true);
 			_gamemode = GameMode.Client;
-			await _runner.StartGame(new StartGameArgs()
+			var result = await _runner.StartGame(new StartGameArgs()
 			{
 				GameMode = GameMode.Client, 
-				SessionName = sessionID, 
+				SessionName = sessionName, 
 				ObjectPool = _pool,
 				SceneObjectProvider = netSceneManager,
 				DisableClientSessionCreation = true
 			});
-			if (_status == ConnectionStatus.Failed)
-			{
-				return;
-			}
+			return result;
 		}
 
 		public void LeaveSession()

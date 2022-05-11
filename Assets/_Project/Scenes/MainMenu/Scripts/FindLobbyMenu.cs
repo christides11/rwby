@@ -28,27 +28,31 @@ namespace rwby.ui.mainmenu
 
         private int page = 0;
 
+        private int sessionHandlerID = -1;
+        private FusionLauncher sessionHandler;
+
         public override void Open(MenuDirection direction, IMenuHandler menuHandler)
         {
             base.Open(direction, menuHandler);
-            //NetworkManager.singleton.FusionLauncher.OnSessionsUpdated += OnSessionsUpdated;
-            //_ = NetworkManager.singleton.FusionLauncher.JoinSessionLobby();
+            sessionHandlerID = NetworkManager.singleton.CreateSessionHandler();
+            sessionHandler = NetworkManager.singleton.GetSessionHandler(sessionHandlerID);
+            sessionHandler.OnSessionsUpdated += OnSessionsUpdated;
+            _ = sessionHandler.JoinSessionLobby();
             gameObject.SetActive(true);
         }
 
         public override bool TryClose(MenuDirection direction, bool forceClose = false)
         {
-            //NetworkManager.singleton.FusionLauncher.OnSessionsUpdated -= OnSessionsUpdated;
+            if(sessionHandler) sessionHandler.OnSessionsUpdated -= OnSessionsUpdated;
+            if (direction == MenuDirection.BACKWARDS)
+            {
+                NetworkManager.singleton.DestroySessionHandler(sessionHandlerID);
+            }
             ClearLobbyScrollView();
             gameObject.SetActive(false);
             return true;
         }
-
-        private void OnDisable()
-        {
-            //NetworkManager.singleton.FusionLauncher.OnSessionsUpdated -= OnSessionsUpdated;
-        }
-
+        
         private void Update()
         {
             if (Input.GetKeyDown(KeyCode.Escape))
@@ -73,7 +77,7 @@ namespace rwby.ui.mainmenu
                 lci.serverName.text = session.Name;
                 lci.players.text = "0/0";//$"{session.PlayerCount}/{session.MaxPlayers}";
                 lci.ping.text = "0";
-                lci.selectable.onSubmit.AddListener(() => { Button_JoinLobby(session); });
+                lci.selectable.onSubmit.AddListener(async () => { await Button_JoinLobby(session); });
             }
         }
 
@@ -85,24 +89,20 @@ namespace rwby.ui.mainmenu
             }
         }
         
-        public void Button_JoinLobby(SessionInfo session)
+        public async UniTask Button_JoinLobby(SessionInfo session)
         {
-            //loadingMenu.OpenMenu("Attempting to connect...");
+            GameManager.singleton.loadingMenu.OpenMenu(0, "Attempting to connect...");
 
-            /*
-            NetworkManager.singleton.FusionLauncher.OnConnectionStatusChanged += CheckConnectionStatus;
-            NetworkManager.singleton.JoinHost(session);
-            GameManager.singleton.loadingMenu.OpenMenu(0, "Joining Lobby...");*/
-        }
-
-        private void CheckConnectionStatus(NetworkRunner runner, FusionLauncher.ConnectionStatus status)
-        {
-            if (status == FusionLauncher.ConnectionStatus.Connecting) return;
+            var result = await sessionHandler.JoinSession(session);
             GameManager.singleton.loadingMenu.CloseMenu(0);
-            //NetworkManager.singleton.FusionLauncher.OnConnectionStatusChanged -= CheckConnectionStatus;
-
-            if (status == FusionLauncher.ConnectionStatus.Disconnected || status == FusionLauncher.ConnectionStatus.Failed) return;
-
+            if (!result.Ok)
+            {
+                return;
+            }
+            
+            await UniTask.WaitUntil(() => sessionHandler.sessionManager != null);
+            lobbyMenuHandler.sessionManagerGamemode = (SessionManagerGamemode)sessionHandler.sessionManager;
+            
             currentHandler.Forward((int)MainMenuType.LOBBY);
         }
     }

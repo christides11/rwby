@@ -2,7 +2,7 @@ using System;
 
 namespace rwby
 {
-    [AddressablesContentParser("GameMode")]
+    [AddressablesContentParser("GameMode", "GameModes")]
     public class AddressablesGameModeParser : AddressablesContentParser<IGameModeDefinition>
     {
         public override int parserType

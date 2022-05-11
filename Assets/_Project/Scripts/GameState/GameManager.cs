@@ -24,7 +24,7 @@ namespace rwby
         public NetworkManager networkManager;
 
         public Settings settings;
-        public string internalModGUID = "";
+        public ContentGUID internalModGUID = new ContentGUID(8, "");
 
         public async UniTask Initialize()
         {
@@ -92,7 +92,7 @@ namespace rwby
 
         public virtual async UniTask<Scene> LoadScene(CustomSceneRef sceneReference, LoadSceneParameters parameters)
         {
-            if (sceneReference.mapReference.modGUID.Value == internalModGUID)
+            if (sceneReference.mapReference.modGUID == internalModGUID)
             {
                 var scenePath = SceneUtility.GetScenePathByBuildIndex(sceneReference.sceneIdentifier);
                 var s = SceneManager.LoadSceneAsync(sceneReference.sceneIdentifier, parameters);
@@ -124,7 +124,7 @@ namespace rwby
         }
 
         public virtual string[] GetSceneNames(CustomSceneRef sceneReference){
-            if (sceneReference.mapReference.modGUID.Value == internalModGUID)
+            if (sceneReference.mapReference.modGUID == internalModGUID)
             {
                 return new string[] { SceneManager.GetSceneByBuildIndex(sceneReference.sceneIdentifier).name };
             }
@@ -136,7 +136,7 @@ namespace rwby
 
         public virtual string GetSceneName(CustomSceneRef sceneReference)
         {
-            if (sceneReference.mapReference.modGUID.Value == internalModGUID)
+            if (sceneReference.mapReference.modGUID == internalModGUID)
             {
                 return SceneManager.GetSceneByBuildIndex(sceneReference.sceneIdentifier).name;
             }

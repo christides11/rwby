@@ -1,3 +1,5 @@
+using System;
+using System.Collections.Generic;
 using Fusion;
 using rwby.ui.mainmenu;
 using UnityEngine;
@@ -13,10 +15,11 @@ namespace rwby
     public class LobbyMenuInstance : MonoBehaviour
     {
         [System.Serializable]
-        public struct CSSConnection
+        public class CSSConnection
         {
             public Selectable cssSelectable;
-            [SerializeField] public ModObjectGUIDReference characterReference;
+            [SerializeField] public ModObjectGUIDReference characterReference 
+                = new ModObjectGUIDReference(new ContentGUID(8), 0, new ContentGUID(8));
         }
         
         public int playerID;
@@ -37,10 +40,11 @@ namespace rwby
         public GameObject characterContentPrefab;
         public GameObject characterSelectMenu;
         public GameObject characterSelectBigCharacter;
-        public CSSConnection[] cssConnections;
-        
+        public List<CSSConnection> cssConnections = new List<CSSConnection>();
+
         public void Initialize(LobbyMenuHandler menuHandler)
         {
+            NetworkString<_32> aa;
             this.lobbyMenuHandler = menuHandler;
             readyButton.GetComponentInChildren<TextMeshProUGUI>().text = lobbyMenuHandler.sessionManagerGamemode.Runner.IsServer ? "Start Match" : "Ready";
             if (lobbyMenuHandler.sessionManagerGamemode.Runner.IsServer)
@@ -49,7 +53,7 @@ namespace rwby
             }
             exitButton.onSubmit.AddListener(menuHandler.ExitLobby);
 
-            for (int i = 0; i < cssConnections.Length; i++)
+            for (int i = 0; i < cssConnections.Count; i++)
             {
                 int temp = i;
                 cssConnections[i].cssSelectable.onSubmit.AddListener(() => { SetCharacter(cssConnections[temp].characterReference); });

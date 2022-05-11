@@ -15,10 +15,13 @@ namespace rwby
         }
 
         [Networked, Capacity(5)]
-        public NetworkLinkedList<CustomSceneRef> currentLoadedScenes { get; } = MakeInitializer(new CustomSceneRef[] {new CustomSceneRef("", "", 1)});
+        public NetworkLinkedList<CustomSceneRef> currentLoadedScenes { get; } = MakeInitializer(new CustomSceneRef[]
+        {
+            new CustomSceneRef(new ContentGUID(8), new ContentGUID(8), 1)
+        });
 
         [Networked] public byte teams { get; set; }
-        [Networked] public int maxPlayersPerClient { get; set; }
+        [Networked] public byte maxPlayersPerClient { get; set; }
 
         public ClientContentLoaderService clientContentLoaderService;
         public ClientMapLoaderService clientMapLoaderService;
@@ -68,7 +71,7 @@ namespace rwby
         public void SetMaxPlayersPerClient(int max)
         {
             if (max < 0 || max > 4) return;
-            maxPlayersPerClient = max;
+            maxPlayersPerClient = (byte)max;
         }
         
         public void SetTeamCount(byte count)

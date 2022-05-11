@@ -30,6 +30,7 @@ namespace rwby
 
         public void DestroySessionHandler(int id)
         {
+            if (!sessions.ContainsKey(id)) return;
             sessions[id].LeaveSession();
             Destroy(sessions[id]);
             sessions.Remove(id);

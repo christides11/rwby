@@ -19,7 +19,7 @@ namespace rwby.ui.mainmenu
         [SerializeField] private OptionsMenu options;
         [SerializeField] private HostLobbyMenu hostLobby;
         [SerializeField] private LobbyMenuHandler lobbyMenu;
-        
+        [SerializeField] private FindLobbyMenu findLobby;
         
         
         private void Awake()
@@ -31,6 +31,7 @@ namespace rwby.ui.mainmenu
             menus.Add((int)MainMenuType.OPTIONS, options);
             menus.Add((int)MainMenuType.HOST_LOBBY, hostLobby);
             menus.Add((int)MainMenuType.LOBBY, lobbyMenu);
+            menus.Add((int)MainMenuType.FIND_LOBBY, findLobby);
             history.Add((int)startingMenu);
 
             foreach (var menu in menus.Values)
@@ -67,13 +68,13 @@ namespace rwby.ui.mainmenu
         public IMenu GetPreviousMenu()
         {
             if (history.Count == 0) return null;
-            return menus[history[history.Count - 1]];
+            return menus[history[^1]];
         }
         
         public IMenu GetCurrentMenu()
         {
             if (history.Count == 0) return null;
-            return menus[history[history.Count-1]];
+            return menus[history[^1]];
         }
     }
 }

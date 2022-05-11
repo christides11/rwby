@@ -10,8 +10,8 @@ namespace rwby
     {
         public static ContentManager singleton;
 
-        public Dictionary<string, HashSet<(int, string)>> currentlyLoadedContent =
-            new Dictionary<string, HashSet<(int, string)>>(); 
+        public Dictionary<ContentGUID, HashSet<(int, ContentGUID)>> currentlyLoadedContent =
+            new Dictionary<ContentGUID, HashSet<(int, ContentGUID)>>();
 
         [SerializeField] private ModLoader modLoader;
 
@@ -51,7 +51,7 @@ namespace rwby
             }
         }
 
-        public async UniTask<bool> LoadContentDefinitions(string modGUID, int contentType)
+        public async UniTask<bool> LoadContentDefinitions(ContentGUID modGUID, int contentType)
         {
             if (!modLoader.TryGetLoadedMod(modGUID, out LoadedModDefinition mod)) return false;
             if (!mod.definition.ContentParsers.TryGetValue(contentType, out IContentParser parser)) return false;
@@ -62,7 +62,11 @@ namespace rwby
 
         public async UniTask<bool> LoadContentDefinition(ModObjectGUIDReference objectReference)
         {
-            if (!modLoader.TryGetLoadedMod(objectReference.modGUID, out LoadedModDefinition mod)) return false;
+            if (!modLoader.TryGetLoadedMod(objectReference.modGUID, out LoadedModDefinition mod))
+            {
+                Debug.Log($"Get Failure.{objectReference.modGUID.ToString()}.");
+                return false;
+            }
             if (!mod.definition.ContentParsers.TryGetValue(objectReference.contentType, out IContentParser parser)) return false;
             bool result = await parser.LoadContentDefinition(objectReference.contentGUID);
             if(result) TrackItem(objectReference);
@@ -81,7 +85,7 @@ namespace rwby
             return content;
         }
 
-        public List<ModObjectGUIDReference> GetContentDefinitionReferences(string modGUID, int contentType)
+        public List<ModObjectGUIDReference> GetContentDefinitionReferences(ContentGUID modGUID, int contentType)
         {
             List<ModObjectGUIDReference> content = new List<ModObjectGUIDReference>();
 
@@ -107,7 +111,7 @@ namespace rwby
             return contents;
         }
 
-        public List<T> GetContentDefinitions<T>(string modGUID, int contentType) where T : IContentDefinition
+        public List<T> GetContentDefinitions<T>(ContentGUID modGUID, int contentType) where T : IContentDefinition
         {
             List<T> contents = new List<T>();
 
@@ -162,7 +166,7 @@ namespace rwby
 
         private void TrackItem(ModObjectGUIDReference objectReference)
         {
-            if(currentlyLoadedContent.ContainsKey(objectReference.modGUID) == false) currentlyLoadedContent.Add(objectReference.modGUID, new HashSet<(int, string)>());
+            if(currentlyLoadedContent.ContainsKey(objectReference.modGUID) == false) currentlyLoadedContent.Add(objectReference.modGUID, new HashSet<(int, ContentGUID)>());
             currentlyLoadedContent[objectReference.modGUID].Add((objectReference.contentType, objectReference.contentGUID));
         }
 

@@ -3,7 +3,7 @@ using System;
 
 namespace rwby
 {
-    [AddressablesContentParser("Effectbank")]
+    [AddressablesContentParser("Effectbank", "Effectbanks")]
     public class AddressablesEffectbankParser : AddressablesContentParser<IEffectbankDefinition>
     {
         public override int parserType
