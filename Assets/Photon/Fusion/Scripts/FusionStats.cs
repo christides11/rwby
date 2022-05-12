@@ -165,6 +165,7 @@ public class FusionStats : Fusion.Behaviour {
   /// </summary>
   [InlineHelp]
   [Unit(Units.Seconds, 1f, 0f, DecimalPlaces = 2)]
+  [MultiPropertyDrawersFix]
   public float RedrawInterval = .1f;
 
 
@@ -212,6 +213,7 @@ public class FusionStats : Fusion.Behaviour {
   [InlineHelp]
   [SerializeField]
   [Range(0, 200)]
+  [MultiPropertyDrawersFix]
   int _maxHeaderHeight = 80;
   /// <summary>
   /// Height of button region at top of the stats panel. Values less than or equal to 0 hide the buttons, and reduce the header size.
@@ -230,6 +232,7 @@ public class FusionStats : Fusion.Behaviour {
   [InlineHelp]
   [DrawIf(nameof(_canvasType), (long)StatCanvasTypes.GameObject, DrawIfHideType.Hide)]
   [Range(0, 20f)]
+  [MultiPropertyDrawersFix]
   public float CanvasScale = 5f;
 
   /// <summary>
@@ -238,6 +241,7 @@ public class FusionStats : Fusion.Behaviour {
   [InlineHelp]
   [DrawIf(nameof(_canvasType), (long)StatCanvasTypes.GameObject, DrawIfHideType.Hide)]
   [Range(-10, 10f)]
+  [MultiPropertyDrawersFix]
   public float CanvasDistance = 0f;
 
   /// <summary>
@@ -247,6 +251,7 @@ public class FusionStats : Fusion.Behaviour {
   [SerializeField]
   [DrawIf(nameof(CanvasType), (long)StatCanvasTypes.GameObject, DrawIfHideType.Hide)]
   [NormalizedRect(aspectRatio: 1)]
+  [MultiPropertyDrawersFix]
   Rect _gameObjectRect = new Rect(0.0f, 0.0f, 0.3f, 1.0f);
   public Rect GameObjectRect {
     get => _gameObjectRect;
@@ -265,6 +270,7 @@ public class FusionStats : Fusion.Behaviour {
   [SerializeField]
   [DrawIf(nameof(CanvasType), (long)StatCanvasTypes.Overlay, DrawIfHideType.Hide)]
   [NormalizedRect]
+  [MultiPropertyDrawersFix]
   Rect _overlayRect = new Rect(0.0f, 0.0f, 0.3f, 1.0f);
   public Rect OverlayRect {
     get => _overlayRect;
@@ -327,6 +333,7 @@ public class FusionStats : Fusion.Behaviour {
   /// </summary>
   [InlineHelp]
   [Range(0, 16)]
+  [MultiPropertyDrawersFix]
   public int GraphColumnCount = 1;
 
   /// <summary>
@@ -336,6 +343,7 @@ public class FusionStats : Fusion.Behaviour {
   [SerializeField]
   [DrawIf(nameof(GraphColumnCount), compareToValue: (long)0, DrawIfHideType.ReadOnly)]
   [Range(30, SCREEN_SCALE_W)]
+  [MultiPropertyDrawersFix]
   int _graphMaxWidth = SCREEN_SCALE_W / 4;
 
   /// <summary>
@@ -392,6 +400,7 @@ public class FusionStats : Fusion.Behaviour {
   [SerializeField]
   [DrawIf(nameof(EnableObjectStats), true)]
   [Range(0, 200)]
+  [MultiPropertyDrawersFix]
   int _objectTitleHeight = 48;
   public int ObjectTitleHeight {
     get => _objectTitleHeight;
@@ -408,6 +417,7 @@ public class FusionStats : Fusion.Behaviour {
   [SerializeField]
   [DrawIf(nameof(EnableObjectStats), true)]
   [Range(0, 200)]
+  [MultiPropertyDrawersFix]
   int _objectIdsHeight = 60;
   public int ObjectIdsHeight {
     get => _objectIdsHeight;
@@ -424,6 +434,7 @@ public class FusionStats : Fusion.Behaviour {
   [SerializeField]
   [DrawIf(nameof(EnableObjectStats), true)]
   [Range(0, 200)]
+  [MultiPropertyDrawersFix]
   int _objectMetersHeight = 90;
   public int ObjectMetersHeight {
     get => _objectMetersHeight;
@@ -440,6 +451,7 @@ public class FusionStats : Fusion.Behaviour {
   [SerializeField]
   [InlineHelp]
   [EditorDisabled]
+  [MultiPropertyDrawersFix]
   NetworkRunner _runner;
   public NetworkRunner Runner {
     get {
@@ -496,6 +508,7 @@ public class FusionStats : Fusion.Behaviour {
   /// </summary>
   [InlineHelp]
   [VersaMask]
+  [MultiPropertyDrawersFix]
   public SimulationModes ConnectTo = /*SimulationModes.Host | SimulationModes.Server | */SimulationModes.Client;
 
   /// <summary>
@@ -505,6 +518,7 @@ public class FusionStats : Fusion.Behaviour {
   [SerializeField]
   [VersaMask]
   [DrawIf(nameof(EnableObjectStats), true)]
+  [MultiPropertyDrawersFix]
   Stats.ObjStatFlags _includedObjStats;
   public Stats.ObjStatFlags IncludedObjectStats {
     get => _includedObjStats;
@@ -520,6 +534,7 @@ public class FusionStats : Fusion.Behaviour {
   [InlineHelp]
   [SerializeField]
   [VersaMask]
+  [MultiPropertyDrawersFix]
   Stats.NetStatFlags _includedNetStats;
   public Stats.NetStatFlags IncludedNetStats {
     get => _includedNetStats;
@@ -535,6 +550,7 @@ public class FusionStats : Fusion.Behaviour {
   [InlineHelp]
   [SerializeField]
   [VersaMask]
+  [MultiPropertyDrawersFix]
   Stats.SimStatFlags _includedSimStats;
   public Stats.SimStatFlags IncludedSimStats {
     get => _includedSimStats;
@@ -570,13 +586,14 @@ public class FusionStats : Fusion.Behaviour {
   [SerializeField]
   public string Guid;
 
-  [Header("Customization")]
   /// <summary>
   /// Shows/hides controls in the inspector for defining element colors.
   /// </summary>
+  [Header("Customization")]
   [InlineHelp]
   [SerializeField]
   [DrawIf(nameof(IsPlaying), false, DrawIfHideType.Hide)]
+  [MultiPropertyDrawersFix]
   private bool _modifyColors;
   public bool ModifyColors => _modifyColors;
 

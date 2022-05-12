@@ -258,7 +258,7 @@ namespace rwby
 
         protected virtual void ClearBuffer()
         {
-            inputManager.BufferLimit = Runner.Simulation.Tick;
+            inputManager.BufferLimit = (uint)Runner.Simulation.Tick.Raw;
         }
 
         public void Heal(HealInfoBase healInfo)

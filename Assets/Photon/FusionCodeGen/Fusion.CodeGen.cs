@@ -287,6 +287,9 @@ namespace Fusion.CodeGen {
       GenericInstanceType baseType;
       string surrogateName;
 
+      TypeReference dataType;
+      Instruction initCall = null;
+
       if (type.IsNetworkDictionary(out var keyType, out var valueType)) {
         keyType = asm.Import(keyType);
         valueType = asm.Import(valueType);
@@ -294,20 +297,38 @@ namespace Fusion.CodeGen {
         var valueReaderWriterType = MakeElementReaderWriter(asm, property, valueType).Type;
         baseType = asm.Import(typeof(Fusion.Internal.UnityDictionarySurrogate<,,,>)).MakeGenericInstanceType(keyType, keyReaderWriterType, valueType, valueReaderWriterType);
         surrogateName = "UnityDictionarySurrogate@" + keyReaderWriterType.Name + "@" + valueReaderWriterType.Name;
+        dataType = TypeReferenceRocks.MakeGenericInstanceType(asm.Import(typeof(SerializableDictionary<,>)), keyType, valueType);
+        initCall = Call(new GenericInstanceMethod(asm.Import(asm.Import(typeof(SerializableDictionary)).Resolve().GetMethodOrThrow("Create"))) {
+          GenericArguments = { keyType, valueType }
+        });
       } else if (type.IsNetworkArray(out var elementType)) {
         elementType = asm.Import(elementType);
         var readerWriterType = MakeElementReaderWriter(asm, property, elementType).Type;
         baseType = asm.Import(typeof(Fusion.Internal.UnityArraySurrogate<,>)).MakeGenericInstanceType(elementType, readerWriterType);
         surrogateName = "UnityArraySurrogate@" + readerWriterType.Name;
+        dataType = elementType.MakeArrayType();
+        initCall = Call(new GenericInstanceMethod(asm.Import(asm.Import(typeof(Array)).Resolve().GetMethodOrThrow("Empty"))) {
+          GenericArguments = { elementType }
+        });
       } else if (type.IsNetworkList(out elementType)) {
         elementType = asm.Import(elementType);
         var readerWriterType = MakeElementReaderWriter(asm, property, elementType).Type;
         baseType = asm.Import(typeof(Fusion.Internal.UnityLinkedListSurrogate<,>)).MakeGenericInstanceType(elementType, readerWriterType);
         surrogateName = "UnityLinkedListSurrogate@" + readerWriterType.Name;
+        dataType = elementType.MakeArrayType();
+        initCall = Call(new GenericInstanceMethod(asm.Import(asm.Import(typeof(Array)).Resolve().GetMethodOrThrow("Empty"))) {
+          GenericArguments = { elementType }
+        });
       } else {
         var readerWriterType = MakeElementReaderWriter(asm, property, property.PropertyType).Type;
         baseType = asm.Import(typeof(Fusion.Internal.UnityValueSurrogate<,>)).MakeGenericInstanceType(property.PropertyType, readerWriterType);
         surrogateName = "UnityValueSurrogate@" + readerWriterType.Name;
+        dataType = property.PropertyType;
+      }
+
+      int attributesHash = GetPropertyMovableAttributesHash(property);
+      if (attributesHash != 0) {
+        surrogateName += $"@Attributes_0x{attributesHash:X8}";
       }
 
       if (!_unitySurrogateTypes.TryGetValue(surrogateName, out var surrogateType)) {
@@ -316,8 +337,46 @@ namespace Fusion.CodeGen {
           baseType);
 
         surrogateType.AddTo(asm.CecilAssembly);
-        surrogateType.AddEmptyConstructor(asm);
+        
 
+        var dataProp = new PropertyDefinition("DataProperty", PropertyAttributes.None, dataType);
+        surrogateType.Properties.Add(dataProp);
+
+        var dataField = new FieldDefinition("Data", FieldAttributes.Public, dataType);
+        surrogateType.Fields.Add(dataField);
+
+        var getMethod = new MethodDefinition($"get_{dataProp.Name}", MethodAttributes.Public | MethodAttributes.HideBySig | MethodAttributes.SpecialName | MethodAttributes.Virtual, dataType);
+        {
+          var il = getMethod.Body.GetILProcessor();
+          il.Append(Ldarg_0());
+          il.Append(Ldfld(dataField));
+          il.Append(Ret());
+        }
+        surrogateType.Methods.Add(getMethod);
+
+        var setMethod = new MethodDefinition($"set_{dataProp.Name}", MethodAttributes.Public | MethodAttributes.HideBySig | MethodAttributes.SpecialName | MethodAttributes.Virtual, asm.Void);
+        setMethod.Parameters.Add(new ParameterDefinition("value", ParameterAttributes.None, dataType));
+        {
+          var il = setMethod.Body.GetILProcessor();
+          il.Append(Ldarg_0());
+          il.Append(Ldarg_1());
+          il.Append(Stfld(dataField));
+          il.Append(Ret());
+        }
+        surrogateType.Methods.Add(setMethod);
+
+        dataProp.GetMethod = getMethod;
+        dataProp.SetMethod = setMethod;
+
+        MovePropertyAttributesToBackingField(asm, property, dataField, addSerializeField: false);
+
+        surrogateType.AddEmptyConstructor(asm, il => {
+          if (initCall != null) {
+            il.Append(Ldarg_0());
+            il.Append(initCall);
+            il.Append(Stfld(dataField));
+          }
+        });
         _unitySurrogateTypes.Add(surrogateName, surrogateType);
       }
       return surrogateType;
@@ -2748,7 +2807,18 @@ namespace Fusion.CodeGen {
             capacity = GetCapacity(property, 1);
           }
           storageField.AddAttribute<SerializeField>(asm);
-          storageField.AddAttribute<FixedBufferPropertyAttribute, TypeReference, TypeReference, int>(asm, property.PropertyType, surrogateType, capacity);
+
+          var fixedBufferAttribute = storageField.AddAttribute<FixedBufferPropertyAttribute, TypeReference, TypeReference, int>(asm, property.PropertyType, surrogateType, capacity);
+
+          // this attribute should always be used first; depending on Unity version this means different order
+          fixedBufferAttribute.Properties.Add(new CustomAttributeNamedArgument(nameof(PropertyAttribute.order), new CustomAttributeArgument(asm.Import<int>(),
+#if UNITY_2021_1_OR_NEWER
+            -int.MaxValue
+#else
+            int.MaxValue
+#endif      
+            )));
+
 
           type.Fields.Insert(fieldIndex, storageField);
 
@@ -2863,7 +2933,45 @@ namespace Fusion.CodeGen {
       }
     }
 
-    private void MovePropertyAttributesToBackingField(ILWeaverAssembly asm, PropertyDefinition property, FieldDefinition field) {
+    private int GetPropertyMovableAttributesHash(PropertyDefinition property) {
+      int hash = 0;
+      foreach (var attribute in property.CustomAttributes) {
+        if (attribute.AttributeType.IsSame<NetworkedAttribute>() ||
+            attribute.AttributeType.IsSame<NetworkedWeavedAttribute>() ||
+            attribute.AttributeType.IsSame<AccuracyAttribute>() ||
+            attribute.AttributeType.IsSame<CapacityAttribute>()) {
+          continue;
+        }
+
+        var attribDef = attribute.AttributeType.Resolve();
+
+
+        if (attribDef.TryGetAttribute<UnityPropertyAttributeProxyAttribute>(out var proxy)) {
+          var attribTypeRef = proxy.GetAttributeArgument<TypeReference>(0);
+          var attribTypeDef = attribTypeRef.Resolve();
+
+          if (attribTypeDef.TryGetMatchingConstructor(attribute.Constructor.Resolve(), out var constructor)) {
+            hash = HashCodeUtilities.GetHashDeterministic(constructor.FullName);
+            hash = HashCodeUtilities.GetHashCodeDeterministic(attribute.GetBlob());
+          }
+          continue;
+        }
+
+        if (attribDef.TryGetAttribute<AttributeUsageAttribute>(out var usage)) {
+          var targets = usage.GetAttributeArgument<AttributeTargets>(0);
+          if ((targets & AttributeTargets.Field) != AttributeTargets.Field) {
+            continue;
+          }
+        }
+
+        Log.Debug($"Copying {attribute.AttributeType}");
+        hash = HashCodeUtilities.GetHashDeterministic(attribute.Constructor.FullName);
+        hash = HashCodeUtilities.GetHashCodeDeterministic(attribute.GetBlob());
+      }
+      return hash;
+    }
+
+    private void MovePropertyAttributesToBackingField(ILWeaverAssembly asm, PropertyDefinition property, FieldDefinition field, bool addSerializeField = true) {
       bool hasNonSerialized = false;
 
       foreach (var attribute in property.CustomAttributes) {
@@ -2912,13 +3020,15 @@ namespace Fusion.CodeGen {
         field.CustomAttributes.Add(new CustomAttribute(attribute.Constructor, attribute.GetBlob()));
       }
 
-      if (!hasNonSerialized && !property.GetMethod.IsPrivate) {
-        if (field.IsNotSerialized) {
-          // prohibited
-        } else if (field.HasAttribute<SerializeField>()) {
-          // already added
-        } else { 
-          field.AddAttribute<SerializeField>(asm);
+      if (addSerializeField) {
+        if (!hasNonSerialized && !property.GetMethod.IsPrivate) {
+          if (field.IsNotSerialized) {
+            // prohibited
+          } else if (field.HasAttribute<SerializeField>()) {
+            // already added
+          } else {
+            field.AddAttribute<SerializeField>(asm);
+          }
         }
       }
     }
@@ -4938,7 +5048,7 @@ namespace Fusion.CodeGen {
       }
     }
 
-    public static MethodDefinition AddEmptyConstructor(this TypeDefinition type, ILWeaverAssembly asm) {
+    public static MethodDefinition AddEmptyConstructor(this TypeDefinition type, ILWeaverAssembly asm, Action<ILProcessor> initializers = null) {
       var methodAttributes = MethodAttributes.Public | MethodAttributes.HideBySig | MethodAttributes.SpecialName | MethodAttributes.RTSpecialName;
       var method = new MethodDefinition(".ctor", methodAttributes, asm.Import(typeof(void)));
       method.Body.Instructions.Add(Instruction.Create(OpCodes.Ldarg_0));
@@ -4955,11 +5065,17 @@ namespace Fusion.CodeGen {
         baseConstructor = baseConstructorDef;
       }
 
-      
-
-      method.Body.Instructions.Add(Instruction.Create(OpCodes.Call, asm.Import(baseConstructor)));
-      method.Body.Instructions.Add(Instruction.Create(OpCodes.Ret));
       type.Methods.Add(method);
+
+      var il = method.Body.GetILProcessor();
+
+      if (initializers != null) {
+        initializers(il);
+      }
+
+      il.Append(Instruction.Create(OpCodes.Call, asm.Import(baseConstructor)));
+      il.Append(Instruction.Create(OpCodes.Ret));
+      
       return method;
     }
 

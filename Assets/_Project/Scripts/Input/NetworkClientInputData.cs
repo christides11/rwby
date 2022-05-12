@@ -5,10 +5,7 @@ namespace rwby
 {
 	public struct NetworkClientInputData : INetworkInput
 	{
-		public NetworkPlayerInputData player1;
-		public NetworkPlayerInputData player2;
-		public NetworkPlayerInputData player3;
-		public NetworkPlayerInputData player4;
+		[Networked, Capacity(4)] public NetworkArray<NetworkPlayerInputData> players => default;
 	}
 
 	public struct NetworkPlayerInputData : INetworkStruct

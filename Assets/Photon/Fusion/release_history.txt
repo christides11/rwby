@@ -2,6 +2,58 @@
 
 ## RC Nightly
 
+### Build 472 (May 11, 2022)
+
+**Changes**
+
+- Renamed DeltaCompressor options. Debug option renamed to DebugUncompressed, Default renamed to Managed
+
+### Build 471 (May 09, 2022)
+
+**Changes**
+
+- Big performance optimization for EC packet writes
+
+**Bug Fixes**
+
+- Fixed: Prefabs not being baked on component removal
+
+### Build 468 (May 05, 2022)
+
+**Bug Fixes**
+
+- Fixed: `PhotonAppSetting` inspector throwing `ArgumentNullException` on Unity 2021.x  
+Turns out ScriptAttributeUtility.GetFieldAttributes returns nulls if there are no attributes
+
+### Build 467 (May 04, 2022)
+
+**Changes**
+
+- Shared Mode: All RPCs are handled as if they were defined with `TickAligned = false`
+
+**Bug Fixes**
+
+- Fixed: Runner Shutdown Procedure  
+Most of the process is sync now, only the MultiScene unload and the Photon Cloud disconnect are async
+- Fixed: Order of Fusion property drawers is now consistent across Unity versions
+
+### Build 466 (May 03, 2022)
+
+**What's New**
+
+- Runner.Spawn() method added which accepts a GameObject as the prefab type
+
+**Bug Fixes**
+
+- Fixed: DisableClientSessionCreation
+- Fixed: Issue with incorrect overflow assert triggering in debugmode sometimes
+
+### Build 465 (May 02, 2022)
+
+**Bug Fixes**
+
+- Fixed: Issue in the broad-phase resolution of lag-compensated `OverlapBox` queries when using rotated boxes
+
 ### Build 464 (Apr 30, 2022)
 
 **Bug Fixes**

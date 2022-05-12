@@ -11,10 +11,27 @@ namespace rwby
     [OrderAfter(typeof(ClientManager))]
     public class FighterInputManager : NetworkBehaviour
     {
-        public static int inputCapacity = 1024;
+        public static int inputCapacity = 40;
 
-        [Networked] public int BufferLimit { get; set; }
+        [Networked] public uint BufferLimit { get; set; }
 
+        [Networked, Capacity(40)] protected NetworkArray<NetworkButtons> buttons => default;
+        [Networked] protected ushort heldATime { get; set; }
+        [Networked] protected ushort heldBTime { get; set; }
+        [Networked] protected ushort heldCTime { get; set; }
+        [Networked] protected ushort heldJumpTime { get; set; }
+        [Networked] protected ushort heldBlockTime { get; set; }
+        [Networked] protected ushort heldDashTime { get; set; }
+        [Networked] protected ushort heldLockOnTime { get; set; }
+        [Networked] protected ushort heldAbility1Time { get; set; }
+        [Networked] protected ushort heldAbility2Time { get; set; }
+        [Networked] protected ushort heldAbility3Time { get; set; }
+        [Networked] protected ushort heldAbility4Time { get; set; }
+        [Networked] protected ushort heldExtra1Time { get; set; }
+        [Networked] protected ushort heldExtra2Time { get; set; }
+        [Networked] protected ushort heldExtra3Time { get; set; }
+        [Networked] protected ushort heldExtra4Time { get; set; }
+        
         protected Vector2[] Movement = new Vector2[inputCapacity];
         protected Vector3[] CameraForward = new Vector3[inputCapacity];
         protected Vector3[] CameraRight = new Vector3[inputCapacity];
@@ -36,13 +53,21 @@ namespace rwby
 
         public FighterManager manager;
 
+        [Networked] public NetworkObject inputProvider { get; set; }
+        [Networked] public byte inputSourceIndex { get; set; }
+
         public override void Spawned()
         {
             base.Spawned();
         }
 
-        public void FeedInput(int frame, NetworkPlayerInputData inputData)
+        public void FeedInput()
         {
+            int frame = Runner.Simulation.Tick;
+            if (!inputProvider) return;
+            if (!inputProvider.TryGetComponent<IPlayerInputProvider>(out IPlayerInputProvider pip)) return;
+            //var 
+            /*
             Movement[frame % inputCapacity] = inputData.movement;
             CameraForward[frame % inputCapacity] = inputData.forward;
             CameraRight[frame % inputCapacity] = inputData.right;
@@ -60,7 +85,7 @@ namespace rwby
             Extra1[frame % inputCapacity] = new InputButtonData(inputData.buttons.IsSet(PlayerInputType.EXTRA_1), Extra1[(frame - 1) % inputCapacity]);
             Extra2[frame % inputCapacity] = new InputButtonData(inputData.buttons.IsSet(PlayerInputType.EXTRA_2), Extra2[(frame - 1) % inputCapacity]);
             Extra3[frame % inputCapacity] = new InputButtonData(inputData.buttons.IsSet(PlayerInputType.EXTRA_3), Extra3[(frame - 1) % inputCapacity]);
-            Extra4[frame % inputCapacity] = new InputButtonData(inputData.buttons.IsSet(PlayerInputType.EXTRA_4), Extra4[(frame - 1) % inputCapacity]);
+            Extra4[frame % inputCapacity] = new InputButtonData(inputData.buttons.IsSet(PlayerInputType.EXTRA_4), Extra4[(frame - 1) % inputCapacity]);*/
         }
 
         public virtual Vector2 GetMovement(int startOffset = 0)

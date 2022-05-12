@@ -241,6 +241,12 @@
             Attribute that indicates an enum should render as multi-select mask drop list in the inspector
             </summary>
         </member>
+        <member name="T:Fusion.MultiPropertyDrawersFixAttribute">
+            <summary>
+            Use in Unity 2020.3, when <see cref="T:Fusion.DecoratingPropertyAttribute"/>-based attributes
+            preceeed a PropertyAttribute that creates a per-attribute drawer.
+            </summary>
+        </member>
         <member name="T:Fusion.OnChangedTargets">
             <summary>
             Defines the target authority mask for OnChanged callbacks
@@ -1637,6 +1643,16 @@
         <member name="F:Fusion.NetworkMecanimAnimator.WeightAccuracy">
             <summary>
             Accuracy used for layer weight values.
+            </summary>
+        </member>
+        <member name="F:Fusion.NetworkMecanimAnimator.StateHashes">
+            <summary>
+            States found in the current AnimatorController, converted to hashes.
+            </summary>
+        </member>
+        <member name="F:Fusion.NetworkMecanimAnimator.TriggerHashes">
+            <summary>
+            Triggers found in the current AnimatorController, converted to hashes.
             </summary>
         </member>
         <member name="M:Fusion.NetworkMecanimAnimator.SetTrigger(System.Int32,System.Boolean)">
@@ -4731,11 +4747,12 @@
             Color of the component graphic header in the Unity inspector. None indicates no header graphic should be used.
             </summary>
         </member>
-        <member name="M:Fusion.HashCodeUtilities.GetHashDeterministic(System.String)">
+        <member name="M:Fusion.HashCodeUtilities.GetHashDeterministic(System.String,System.Int32)">
             <summary>
             This may only be deterministic on 64 bit systems.
             </summary>
             <param name="str"></param>
+            <param name="initialHash"></param>
             <returns></returns>
         </member>
         <member name="T:Fusion.InterpolatedErrorCorrectionSettings">
@@ -6092,19 +6109,19 @@
             Delta Compression Implementations
             </summary>
         </member>
-        <member name="F:Fusion.NetworkProjectConfig.DeltaCompressors.Default">
+        <member name="F:Fusion.NetworkProjectConfig.DeltaCompressors.Managed">
             <summary>
-            Default Implementation
+            Default Implementation.
             </summary>
         </member>
         <member name="F:Fusion.NetworkProjectConfig.DeltaCompressors.Burst">
             <summary>
-            Burst Implementation
+            Burst Implementation.
             </summary>
         </member>
-        <member name="F:Fusion.NetworkProjectConfig.DeltaCompressors.Debug">
+        <member name="F:Fusion.NetworkProjectConfig.DeltaCompressors.DebugUncompressed">
             <summary>
-            Debug Implementation
+            Debug Implementation without compression. NOT FOR GENERAL USE.
             </summary>
         </member>
         <member name="F:Fusion.NetworkProjectConfig.DefaultResourceName">
@@ -6192,58 +6209,58 @@
         </member>
         <member name="F:Fusion.NetworkProjectConfig.SceneLoadSpawnMode">
             <summary>
-            Current <see cref="F:Fusion.NetworkProjectConfig.SceneLoadSpawnMode"/>
+            Current <see cref="F:Fusion.NetworkProjectConfig.SceneLoadSpawnMode"/>.
             </summary>
         </member>
         <member name="F:Fusion.NetworkProjectConfig.DeltaCompressor">
             <summary>
-            Current <see cref="F:Fusion.NetworkProjectConfig.DeltaCompressor"/> type
+            Current <see cref="F:Fusion.NetworkProjectConfig.DeltaCompressor"/> type.
             </summary>
         </member>
         <member name="F:Fusion.NetworkProjectConfig.InvokeRenderInBatchMode">
             <summary>
-            Signal if the <see cref="M:Fusion.SimulationBehaviour.Render"/> callbacks should be invoked in Batch Mode
+            Signal if the <see cref="M:Fusion.SimulationBehaviour.Render"/> callbacks should be invoked in Batch Mode.
             </summary>
         </member>
         <member name="F:Fusion.NetworkProjectConfig.MaxNetworkedObjectCount">
             <summary>
-            Max number of allowed <see cref="T:Fusion.NetworkObject"/>
+            Max number of allowed <see cref="T:Fusion.NetworkObject"/>s in a room.
             </summary>
         </member>
         <member name="F:Fusion.NetworkProjectConfig.NetworkIdIsObjectName">
             <summary>
-            Signal if the <see cref="T:Fusion.NetworkId"/> of the <see cref="T:Fusion.NetworkObject"/> should be included on the name of the <see cref="T:UnityEngine.GameObject"/>
+            Signal if the <see cref="T:Fusion.NetworkId"/> of the <see cref="T:Fusion.NetworkObject"/> should be included on the name of the <see cref="T:UnityEngine.GameObject"/>.
             </summary>
         </member>
         <member name="F:Fusion.NetworkProjectConfig.EnableHostMigration">
             <summary>
-            Enable the Support for Host Migration
+            Enable support for Host Migration.
             </summary>
         </member>
         <member name="F:Fusion.NetworkProjectConfig.HostMigrationSnapshotInterval">
             <summary>
             Delay in seconds between each time the Host sends a Snapshot
-            of the current Simulation State to be used in the Host Migration
+            of the current Simulation State, for use in Host Migration.
             </summary>
         </member>
         <member name="F:Fusion.NetworkProjectConfig.PrefabTable">
             <summary>
-            Reference for the current <see cref="T:Fusion.NetworkPrefabTable"/>
+            Reference to the <see cref="T:Fusion.NetworkPrefabTable"/> instance for this <see cref="T:Fusion.NetworkProjectConfig"/>.
             </summary>
         </member>
         <member name="F:Fusion.NetworkProjectConfig.Simulation">
             <summary>
-            Simulation Settings
+            Reference to <see cref="T:Fusion.SimulationConfig"/> settings for this <see cref="T:Fusion.NetworkProjectConfig"/>.
             </summary>
         </member>
         <member name="F:Fusion.NetworkProjectConfig.Interpolation">
             <summary>
-            Interpolation Settings
+            Reference to <see cref="T:Fusion.InterpolationConfiguration"/> settings for this <see cref="T:Fusion.NetworkProjectConfig"/>.
             </summary>
         </member>
         <member name="F:Fusion.NetworkProjectConfig.Network">
             <summary>
-            Network Settings
+            Reference to <see cref="T:Fusion.NetworkConfiguration"/> settings for this <see cref="T:Fusion.NetworkProjectConfig"/>.
             </summary>
         </member>
         <member name="F:Fusion.NetworkProjectConfig.NetworkConditions">
@@ -6263,7 +6280,7 @@
         </member>
         <member name="F:Fusion.NetworkProjectConfig.AssembliesToWeave">
             <summary>
-            Names of assemblies Fusion is going to weave. Not case sensetive.
+            Names of assemblies Fusion is going to weave. Not case sensitive.
             </summary>
         </member>
         <member name="F:Fusion.NetworkProjectConfig.UseSerializableDictionary">
@@ -6281,31 +6298,31 @@
         </member>
         <member name="M:Fusion.NetworkProjectConfig.Copy">
             <summary>
-            Make a copy of the <see cref="T:Fusion.NetworkProjectConfig"/>
+            Make a copy of the <see cref="T:Fusion.NetworkProjectConfig"/>.
             </summary>
         </member>
         <member name="M:Fusion.NetworkProjectConfig.ToString">
             <summary>
-            ToString
+            ToString() implementation.
             </summary>
         </member>
         <member name="M:Fusion.NetworkProjectConfig.Serialize(Fusion.NetworkProjectConfig)">
             <summary>
-            Serialize the a NetworkProjectConfig into a JSON
+            Serialize a <see cref="T:Fusion.NetworkProjectConfig"/> into a JSON string.
             </summary>
             <param name="config">NetworkProjectConfig reference</param>
             <returns>JSON String</returns>
         </member>
         <member name="M:Fusion.NetworkProjectConfig.Deserialize(System.String)">
             <summary>
-            Deserialize the NetworkProjectConfig based on the JSON Serialized version sent by the Room's Creator
+            De-serialize a <see cref="T:Fusion.NetworkProjectConfig"/> from a JSON string (typically sent by the Room's Creator).
             </summary>
-            <param name="data">JSON with a serialized NetworkProjectConfig</param>
-            <returns>NetworkProjectConfig reference deserialized</returns>
+            <param name="data">JSON string of a serialized NetworkProjectConfig</param>
+            <returns>NetworkProjectConfig reference de-serialized from JSON string</returns>
         </member>
         <member name="M:Fusion.NetworkProjectConfig.SerializeMinimal(Fusion.NetworkProjectConfig)">
             <summary>
-            Remove un-unecessary data from serialized version of <see cref="T:Fusion.NetworkProjectConfig"/>
+            Remove unnecessary data from serialized version of <see cref="T:Fusion.NetworkProjectConfig"/>.
             </summary>
         </member>
         <member name="P:Fusion.NetworkProjectConfig.FusionVersionInfo">
@@ -6824,6 +6841,18 @@
             <param name="predictionKey"><see cref="T:Fusion.NetworkObjectPredictionKey"/> reference</param>
             <returns><see cref="T:Fusion.NetworkObject"/> reference, or null if it was not able to spawn the object</returns>
         </member>
+        <member name="M:Fusion.NetworkRunner.Spawn(UnityEngine.GameObject,System.Nullable{UnityEngine.Vector3},System.Nullable{UnityEngine.Quaternion},System.Nullable{Fusion.PlayerRef},Fusion.NetworkRunner.OnBeforeSpawned,System.Nullable{Fusion.NetworkObjectPredictionKey})">
+            <summary>
+            Attempts to network instantiate a GameObject. A <see cref="T:Fusion.NetworkObject"/> is required on the prefab.
+            </summary>
+            <param name="prefab">A GameObject with a <see cref="T:Fusion.NetworkObject"/></param>
+            <param name="position">Spawn Position</param>
+            <param name="rotation">Spawn Rotation</param>
+            <param name="inputAuthority">Player Input Authority</param>
+            <param name="onBeforeSpawned"><see cref="T:Fusion.NetworkRunner.OnBeforeSpawned"/> reference</param>
+            <param name="predictionKey"><see cref="T:Fusion.NetworkObjectPredictionKey"/> reference</param>
+            <returns><see cref="T:Fusion.NetworkObject"/> reference, or null if it was not able to spawn the object</returns>
+        </member>
         <member name="M:Fusion.NetworkRunner.Spawn(Fusion.NetworkObject,System.Nullable{UnityEngine.Vector3},System.Nullable{UnityEngine.Quaternion},System.Nullable{Fusion.PlayerRef},Fusion.NetworkRunner.OnBeforeSpawned,System.Nullable{Fusion.NetworkObjectPredictionKey})">
             <summary>
             Attempts to network instantiate a <see cref="T:Fusion.NetworkObject"/> using a <see cref="T:Fusion.NetworkObject"/> prefab.
@@ -6956,6 +6985,11 @@
             Iterate over the old NetworkObjects from the Resume Snapshot
             </summary>
             <returns>Iterable list of <see cref="T:Fusion.NetworkObject"/></returns>
+        </member>
+        <member name="M:Fusion.NetworkRunner.CleanHostMigrationSnapshots">
+            <summary>
+            Clean all Snapshot references
+            </summary>
         </member>
         <member name="M:Fusion.NetworkRunner.GetResumeNetworkId">
             <summary>

@@ -23,6 +23,12 @@ namespace rwby
             AddPlayer();
         }
 
+        public LocalPlayerData GetRewiredPlayer(int playerID)
+        {
+            if (playerID < 0 || playerID >= localPlayers.Count) return default;
+            return localPlayers[playerID];
+        }
+
         public void ApplyCameraLayout()
         {
             CameraLayoutDefinition layout = playerCameraLayouts[localPlayers.Count-1];
@@ -42,6 +48,7 @@ namespace rwby
             
             localPlayers.Add(new LocalPlayerData()
             {
+                isValid = true,
                 controllerType = PlayerControllerType.NONE,
                 rewiredPlayer = rewiredPlayer
             });

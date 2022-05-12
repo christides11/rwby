@@ -7,16 +7,16 @@ using UnityEngine;
 namespace rwby
 {
 	[OrderBefore(typeof(FighterInputManager), typeof(FighterManager))]
-	public class ClientManager : NetworkBehaviour, INetworkRunnerCallbacks, IBeforeUpdate, IAfterUpdate
+	public class ClientManager : NetworkBehaviour, INetworkRunnerCallbacks, IBeforeUpdate, IAfterUpdate, IPlayerInputProvider
 	{
 		public delegate void ClientAction(ClientManager clientManager);
 		public static event ClientAction OnPlayerCountChanged;
 		
 		[Networked(OnChanged = nameof(OnClientPlayerCountChanged))] public uint ClientPlayerAmount { get; set; }
-		//public PlayerCamera[] playerCameras = new PlayerCamera[4];
 
 		private NetworkManager networkManager;
 		private GameManager gameManager;
+		private LocalPlayerManager localPlayerManager;
 
 		private bool sessionHandlerSet = false;
 		private FusionLauncher sessionHandler;
@@ -32,6 +32,7 @@ namespace rwby
 		protected virtual void Awake()
 		{
 			gameManager = GameManager.singleton;
+			localPlayerManager = gameManager.localPlayerManager;
 			networkManager = NetworkManager.singleton;
 		}
 		
@@ -68,13 +69,6 @@ namespace rwby
 				if(Runner.IsServer) sessionHandler.sessionManager.InitializeClient(this);
 				sessionHandlerSet = true;
 			}
-			
-			/*
-			for(int i = 0; i < playerCameras.Length; i++)
-            {
-				if (playerCameras[i] == null) continue;
-				playerCameras[i].CamUpdate();
-            }*/
 		}
 
 		public void CLIENT_SetMapLoadPercentage(byte loadPercentage)
@@ -104,29 +98,7 @@ namespace rwby
 			sessionManager.UpdateClientPlayerCount(this, temp);
 		}
 
-		/*
-		public NetworkObject SpawnPlayer(PlayerRef owner, int playerIndex, Vector3 spawnPosition)
-		{
-			return null;
-			ModObjectReference characterReference = ClientPlayers[playerIndex].characterReference;
-			IFighterDefinition fighterDefinition = ContentManager.singleton.GetContentDefinition<IFighterDefinition>(characterReference);
-
-			int indexTemp = playerIndex;
-			ClientManager tempCM = this;
-			NetworkObject no = Runner.Spawn(fighterDefinition.GetFighter().GetComponent<NetworkObject>(), spawnPosition, Quaternion.identity, owner, 
-				(a, b) =>
-		        {
-					b.gameObject.name = $"{b.Id}.{playerIndex} : {fighterDefinition.Name}";
-					b.GetBehaviour<FighterCombatManager>().Team = tempCM.ClientPlayers[indexTemp].team;
-					var list = ClientPlayers;
-					ClientPlayerDefinition temp = list[indexTemp];
-					temp.characterNetID = b.Id;
-					list[indexTemp] = temp;
-				});
-			return no;
-		}*/
-
-        Vector2[] buttonMovement = new Vector2[8];
+		Vector2[] buttonMovement = new Vector2[8];
 		Vector2[] buttonCamera = new Vector2[8];
 		Vector3[] buttonCameraForward = new Vector3[8];
 		Vector3[] buttonCameraRight = new Vector3[8];
@@ -151,10 +123,10 @@ namespace rwby
 
 			for (int j = 0; j < ClientPlayerAmount; j++)
 			{
-				/*
-				if (rewiredPlayers[j] == null) continue;
+				var player = localPlayerManager.GetRewiredPlayer(j);
+				if (!player.isValid) continue;
 
-				if (rewiredPlayers[j].GetButtonDown(Action.Pause))
+				if (player.rewiredPlayer.GetButtonDown(Action.Pause))
                 {
                     if (PauseMenu.singleton.paused)
                     {
@@ -168,25 +140,25 @@ namespace rwby
 
 				if (PauseMenu.singleton.paused) return;
 
-				buttonMovement[j] = rewiredPlayers[j].GetAxis2D(Action.Movement_X, Action.Movement_Y);
-				buttonCamera[j] = rewiredPlayers[j].GetAxis2D(Action.Camera_X, Action.Camera_Y);
-				buttonCameraForward[j] = playerCameras[j] ? playerCameras[j].transform.forward : Vector3.forward;
-				buttonCameraRight[j] = playerCameras[j] ? playerCameras[j].transform.right : Vector3.right;
-				if (rewiredPlayers[j].GetButton(Action.Jump)) buttonJump[j] = true;
-				if (rewiredPlayers[j].GetButton(Action.A)) buttonA[j] = true;
-				if (rewiredPlayers[j].GetButton(Action.B)) buttonB[j] = true;
-				if (rewiredPlayers[j].GetButton(Action.C)) buttonC[j] = true;
-				if (rewiredPlayers[j].GetButton(Action.Block)) buttonBlock[j] = true;
-				if (rewiredPlayers[j].GetButton(Action.Dash)) buttonDash[j] = true;
-				if (rewiredPlayers[j].GetButton(Action.Lock_On)) buttonLockOn[j] = true;
-				if (rewiredPlayers[j].GetButton(Action.Ability_1)) buttonAbility1[j] = true;
-				if (rewiredPlayers[j].GetButton(Action.Ability_2)) buttonAbility2[j] = true;
-				if (rewiredPlayers[j].GetButton(Action.Ability_3)) buttonAbility3[j] = true;
-				if (rewiredPlayers[j].GetButton(Action.Ability_4)) buttonAbility4[j] = true;
-				if (rewiredPlayers[j].GetButton(Action.Extra1)) buttonExtra1[j] = true;
-				if (rewiredPlayers[j].GetButton(Action.Extra2)) buttonExtra2[j] = true;
-				if (rewiredPlayers[j].GetButton(Action.Extra3)) buttonExtra3[j] = true;
-				if (rewiredPlayers[j].GetButton(Action.Extra4)) buttonExtra4[j] = true;*/
+				buttonMovement[j] = player.rewiredPlayer.GetAxis2D(Action.Movement_X, Action.Movement_Y);
+				buttonCamera[j] = player.rewiredPlayer.GetAxis2D(Action.Camera_X, Action.Camera_Y);
+				buttonCameraForward[j] = player.camera ? player.camera.transform.forward : Vector3.forward;
+				buttonCameraRight[j] = player.camera ? player.camera.transform.right : Vector3.right;
+				if (player.rewiredPlayer.GetButton(Action.Jump)) buttonJump[j] = true;
+				if (player.rewiredPlayer.GetButton(Action.A)) buttonA[j] = true;
+				if (player.rewiredPlayer.GetButton(Action.B)) buttonB[j] = true;
+				if (player.rewiredPlayer.GetButton(Action.C)) buttonC[j] = true;
+				if (player.rewiredPlayer.GetButton(Action.Block)) buttonBlock[j] = true;
+				if (player.rewiredPlayer.GetButton(Action.Dash)) buttonDash[j] = true;
+				if (player.rewiredPlayer.GetButton(Action.Lock_On)) buttonLockOn[j] = true;
+				if (player.rewiredPlayer.GetButton(Action.Ability_1)) buttonAbility1[j] = true;
+				if (player.rewiredPlayer.GetButton(Action.Ability_2)) buttonAbility2[j] = true;
+				if (player.rewiredPlayer.GetButton(Action.Ability_3)) buttonAbility3[j] = true;
+				if (player.rewiredPlayer.GetButton(Action.Ability_4)) buttonAbility4[j] = true;
+				if (player.rewiredPlayer.GetButton(Action.Extra1)) buttonExtra1[j] = true;
+				if (player.rewiredPlayer.GetButton(Action.Extra2)) buttonExtra2[j] = true;
+				if (player.rewiredPlayer.GetButton(Action.Extra3)) buttonExtra3[j] = true;
+				if (player.rewiredPlayer.GetButton(Action.Extra4)) buttonExtra4[j] = true;
 			}
 		}
 
@@ -255,22 +227,8 @@ namespace rwby
 				playerInput.buttons.Set(PlayerInputType.EXTRA_3, buttonExtra3[i]);
 				playerInput.buttons.Set(PlayerInputType.EXTRA_4, buttonExtra4[i]);
 
-				switch (i)
-				{
-					case 0:
-						frameworkInput.player1 = playerInput;
-						break;
-					case 1:
-						frameworkInput.player2 = playerInput;
-						break;
-					case 2:
-						frameworkInput.player3 = playerInput;
-						break;
-					case 3:
-						frameworkInput.player4 = playerInput;
-						break;
-				}
-			}
+				frameworkInput.players.Set(i, playerInput);
+            }
 
 			// Hand over the data to Fusion
 			input.Set(frameworkInput);
@@ -284,51 +242,16 @@ namespace rwby
 			{
 				inputBuffer.Set((inputBufferPosition + setInputDelay) % (inputBuffer.Length), input);
 			}
-
-			/*
-			if ((!Runner.IsRunning || (Runner.IsFirstTick && Runner.IsForward)) && Object.HasInputAuthority)
-			{
-				CustomNetworkSceneManagerBase nsm = networkManager.GetSessionHandlerByRunner(Runner).netSceneManager;
-				if (mapLoadPercent != nsm.loadPercentage)
-				{
-					RPC_SetMapLoadPercentage(nsm.loadPercentage);
-				}
-				mapLoadPercent = nsm.loadPercentage;
-			}*/
-
-			/*
-			for(int i = 0; i < ClientPlayers.Count; i++)
-            {
-				if (ClientPlayers[i].characterNetID.IsValid == false) continue;
-				FighterInputManager cim = Runner.TryGetNetworkedBehaviourFromNetworkedObjectRef<FighterInputManager>(ClientPlayers[i].characterNetID);
-
-				NetworkPlayerInputData playerInput;
-
-                switch (i)
-                {
-					case 0:
-						playerInput = inputBuffer[(inputBufferPosition) % inputBuffer.Length].player1;
-						break;
-					case 1:
-						playerInput = inputBuffer[(inputBufferPosition) % inputBuffer.Length].player2;
-						break;
-					case 2:
-						playerInput = inputBuffer[(inputBufferPosition) % inputBuffer.Length].player3;
-						break;
-					case 3:
-						playerInput = inputBuffer[(inputBufferPosition) % inputBuffer.Length].player4;
-						break;
-					default:
-						playerInput = new NetworkPlayerInputData();
-						break;
-                }
-
-				cim.FeedInput(Runner.Simulation.Tick, playerInput);
-			}*/
+			
 			inputBufferPosition++;
 		}
+		
+		public NetworkPlayerInputData GetInput(int playerIndex)
+		{
+			return inputBuffer[(inputBufferPosition) % inputBuffer.Length].players[playerIndex];
+		}
 
-        public void OnPlayerJoined(NetworkRunner runner, PlayerRef player) { }
+		public void OnPlayerJoined(NetworkRunner runner, PlayerRef player) { }
 		public void OnPlayerLeft(NetworkRunner runner, PlayerRef player) { }
 		public void OnShutdown(NetworkRunner runner, ShutdownReason shutdownReason) { }
 		public void OnConnectedToServer(NetworkRunner runner) { }
@@ -342,5 +265,5 @@ namespace rwby
         public void OnCustomAuthenticationResponse(NetworkRunner runner, Dictionary<string, object> data) { }
         public void OnHostMigration(NetworkRunner runner, HostMigrationToken hostMigrationToken) { }
         public void OnReliableDataReceived(NetworkRunner runner, PlayerRef player, ArraySegment<byte> data) { }
-    }
+	}
 }

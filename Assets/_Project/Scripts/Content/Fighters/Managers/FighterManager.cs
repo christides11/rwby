@@ -112,6 +112,7 @@ namespace rwby
 
         public override void FixedUpdateNetwork()
         {
+            inputManager.FeedInput();
             if (Runner.Simulation.IsResimulation && Runner.Simulation.IsFirstTick)
             {
                 FPhysicsManager.ResimulationResync();

@@ -225,28 +225,33 @@ namespace rwby.core.training
                 }
             }
 
-            foreach (var clientDefinition in sessionManager.ClientDefinitions)
+            var clientDefinitions = sessionManager.ClientDefinitions;
+            for (int i = 0; i < clientDefinitions.Count; i++)
             {
-                foreach (var playerDefinition in clientDefinition.players)
+                var temp = clientDefinitions[i];
+                var clientPlayers = temp.players;
+                for (int j = 0; j < clientPlayers.Count; j++)
                 {
-                    if (playerDefinition.characterReferences.Count < 1) continue;
-
-                    IFighterDefinition fighterDefinition = (IFighterDefinition)GameManager.singleton.contentManager.GetContentDefinition(playerDefinition.characterReferences[0]);
-
-                    NetworkObject no = Runner.Spawn(fighterDefinition.GetFighter().GetComponent<NetworkObject>(), GetSpawnPosition(playerDefinition), Quaternion.identity, clientDefinition.clientRef,
+                    if (clientPlayers[j].characterReferences.Count == 0) continue;
+                    int clientID = i;
+                    int playerID = j;
+                    var playerTemp = clientPlayers[j];
+                    var playerCharacterRefs = playerTemp.characterReferences;
+                    
+                    IFighterDefinition fighterDefinition = (IFighterDefinition)GameManager.singleton.contentManager.GetContentDefinition(playerCharacterRefs[0]);
+                    
+                    NetworkObject no = Runner.Spawn(fighterDefinition.GetFighter().GetComponent<NetworkObject>(), GetSpawnPosition(playerTemp), Quaternion.identity, clientDefinitions[i].clientRef,
                         (a, b) =>
                         {
-                            b.gameObject.name = $"{clientDefinition.clientRef.PlayerId} : {fighterDefinition.Name}";
-                            b.GetBehaviour<FighterCombatManager>().Team = playerDefinition.team;
-                            /*
-                            b.gameObject.name = $"{b.Id}.{playerIndex} : {fighterDefinition.Name}";
-                            b.GetBehaviour<FighterCombatManager>().Team = tempCM.ClientPlayers[indexTemp].team;
-                            var list = ClientPlayers;
-                            ClientPlayerDefinition temp = list[indexTemp];
-                            temp.characterNetID = b.Id;
-                            list[indexTemp] = temp;*/
+                            b.gameObject.name = $"{temp.clientRef.PlayerId}.{j} : {fighterDefinition.name}";
+                            b.GetBehaviour<FighterCombatManager>().Team = playerTemp.team;
+
+                            var list = playerTemp.characterNetworkObjects;
+                            list.Add(b.Id);
+                            clientPlayers.Set(playerID, playerTemp);
+                            clientDefinitions.Set(clientID, temp);
                         });
-                    spawnPointsCurr[playerDefinition.team]++;
+                    spawnPointsCurr[clientPlayers[j].team]++;
                 }
             }
         }
