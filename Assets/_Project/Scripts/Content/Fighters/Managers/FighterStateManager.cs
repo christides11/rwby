@@ -1,4 +1,6 @@
+using System;
 using Fusion;
+using HnSF;
 using HnSF.Combat;
 using HnSF.Fighters;
 using UnityEngine;
@@ -13,52 +15,97 @@ namespace rwby
         public delegate void EmptyDelegate(FighterStateManager stateManager);
         public event EmptyDelegate OnStateChanged;
         
-        [Networked(OnChanged = nameof(OnChangedState))] public int CurrentStateMoveset { get; set; }
-        [Networked(OnChanged = nameof(OnChangedState))] public int CurrentState { get; set; }
-        [Networked] public int CurrentStateFrame { get; set; }
-        [Networked] public NetworkBool markedForStateChange { get; set; }
-        [Networked] public int nextStateMoveset { get; set; }
-        [Networked] public int nextState { get; set; }
-        
         public int MovesetCount
         {
             get { return movesets.Length; }
         }
+        [Networked(OnChanged = nameof(OnChangedState))] public int CurrentStateMoveset { get; set; }
+        [Networked(OnChanged = nameof(OnChangedState))] public int CurrentState { get; set; }
+        [Networked] public int CurrentStateFrame { get; set; } = 0;
+        [Networked] public NetworkBool markedForStateChange { get; set; } = false;
+        [Networked] public int nextStateMoveset { get; set; } = -1;
+        [Networked] public int nextState { get; set; } = 0;
+        
 
         [SerializeField] protected FighterManager manager;
         [SerializeField] protected FighterCombatManager combatManager;
-        public PlayableDirector director;
-        public PlayableDirector childDirector;
         public rwby.Moveset[] movesets;
+        
+        [NonSerialized] public StateFunctionMapper functionMapper = new StateFunctionMapper(); 
+        [NonSerialized] public StateConditionMapper conditionMapper = new StateConditionMapper();
+        
         public static void OnChangedState(Changed<FighterStateManager> changed){
             changed.Behaviour.OnStateChanged?.Invoke(changed.Behaviour);
         }
         
         public void ResimulationSync()
         {
+            /*
             var currentState = (manager.StateManager.GetMoveset(CurrentStateMoveset) as rwby.Moveset).stateMap[CurrentState];
             if (currentState != director.playableAsset) InitState(currentState);
-            director.time = (float)CurrentStateFrame * Runner.Simulation.DeltaTime;
+            director.time = (float)CurrentStateFrame * Runner.Simulation.DeltaTime;*/
         }
         
         public void Tick()
         {
+            /*
             if (Runner.Simulation.IsResimulation && Runner.Simulation.IsFirstTick)
             {
                 ResimulationSync();
-            }
+            }*/
             
             if (markedForStateChange)
             {
-                ChangeState(nextState, 0, true);
+                ChangeState(nextState, 0, 0, true);
             }
+
             if (CurrentState == 0) return;
-            rwby.StateTimeline s = GetState();
-            director.Evaluate();
-            if(s.useParent) childDirector.Evaluate();
-            if(s.autoIncrement) IncrementFrame();
-            if(s.autoLoop && CurrentStateFrame == s.totalFrames) SetFrame(s.loopFrame);
-            HandleStateGroup(s);
+            var stateTimeline = GetState();
+            ProcessState(stateTimeline, onInterrupt: false, autoIncrement: stateTimeline.autoIncrement, autoLoop: stateTimeline.autoLoop);
+            HandleStateGroup(stateTimeline);
+        }
+
+        private void ProcessState(StateTimeline state, bool onInterrupt = false, bool autoIncrement = false, bool autoLoop = false)
+        {
+            while (true)
+            {
+                int realFrame = onInterrupt ? state.totalFrames+1 : Mathf.Clamp(CurrentStateFrame, 0, state.totalFrames);
+                foreach (var d in state.data)
+                {
+                    ProcessStateVariables(d, realFrame);
+                }
+
+                if (!state.useBaseState) break;
+                state = (StateTimeline)state.baseState;
+            }
+
+            if (onInterrupt != false || !autoIncrement) return;
+            IncrementFrame(1);
+            if (autoLoop && CurrentStateFrame > state.totalFrames)
+            {
+                SetFrame(1);
+            }
+        }
+        
+        private void ProcessStateVariables(IStateVariables d, int realFrame)
+        {
+            var valid = true;
+            for (int j = 0; j < d.FrameRanges.Length; j++)
+            {
+                if (!(realFrame < d.FrameRanges[j].x) &&
+                    !(realFrame > d.FrameRanges[j].y)) continue;
+                valid = false;
+                break;
+            }
+
+            if (!valid) return;
+            if (!conditionMapper.TryCondition(d.Condition.FunctionMap, manager, d.Condition)) return;
+            functionMapper.functions[d.FunctionMap](manager, d);
+
+            foreach (var t in d.Children)
+            {
+                ProcessStateVariables(t, realFrame);
+            }
         }
 
         private void HandleStateGroup(StateTimeline stateTimeline)
@@ -77,55 +124,47 @@ namespace rwby
         {
             return (movesets[CurrentStateMoveset] as Moveset).fighterStats;
         }
-
-        public void MarkForStateChange(int state)
-        {
-            markedForStateChange = true;
-            nextState = state;
-        }
+        
 
         public MovesetDefinition GetMoveset(int index)
         {
             return movesets[index];
         }
 
-        public bool ChangeState(int state, int stateFrame = 0, bool callOnInterrupt = true)
+        public void MarkForStateChange(int state, int moveset = -1)
         {
-            ChangeState(CurrentStateMoveset, state, stateFrame, callOnInterrupt);
-            return true;
+            markedForStateChange = true;
+            nextState = state;
         }
 
-        public void ChangeState(int stateMoveset, int state, int stateFrame = 0, bool callOnInterrupt = true)
+        public bool ChangeState(int state, int moveset = -1, int stateFrame = 0, bool callOnInterrupt = true)
         {
             markedForStateChange = false;
-            int previousStateInt = CurrentState;
-            rwby.StateTimeline previousState = null;
-            if (callOnInterrupt && previousStateInt != 0)
+            int previousState = CurrentState;
+            if (callOnInterrupt && previousState != (int)FighterCmnStates.NULL)
             {
-                previousState = GetState();
-                SetFrame(previousState.totalFrames);
-                if(previousState.useParent) SetChildFrame(previousState.parentTimeline.totalFrames);
-                director.Evaluate();
+                StateTimeline currentStateTimeline = GetState();
+                SetFrame(currentStateTimeline.totalFrames+1);
+                ProcessState(currentStateTimeline, true);
             }
-            
-            CurrentStateMoveset = stateMoveset;
-            CurrentStateFrame = stateFrame;
+
+            CurrentStateMoveset = moveset == -1 ? CurrentStateMoveset : moveset;
             CurrentState = state;
+            CurrentStateFrame = stateFrame;
             if (CurrentStateFrame == 0)
             {
-                InitState();
                 SetFrame(0);
-                director.Evaluate();
-                childDirector.Evaluate();
+                ProcessState(GetState());
                 SetFrame(1);
             }
 
-            if (previousStateInt != 0)
+            if (previousState != (int)FighterCmnStates.NULL)
             {
-                StateChanged(previousState, GetState());
+                StateChanged(GetState(previousState) as rwby.StateTimeline, GetState());
             }
+            return true;
         }
-
+        
         public void StateChanged(rwby.StateTimeline previousState, rwby.StateTimeline currentState)
         {
             combatManager.HitboxManager.Reset();
@@ -142,6 +181,7 @@ namespace rwby
                 }
             }
 
+            /*
             if (currentState.stateType == StateType.MOVEMENT)
             {
                 if(previousState.stateType != currentState.stateType) combatManager.ResetString();
@@ -151,36 +191,18 @@ namespace rwby
                 {
                     combatManager.AddMoveToString();
                 }
-            }
-        }
-
-        public void InitState()
-        {
-            InitState(GetState());
+            }*/
         }
 
         public void InitState(HnSF.StateTimeline state)
         {
-            var rwbyState = state as rwby.StateTimeline;
-            director.playableAsset = state;
-            foreach (var pAO in director.playableAsset.outputs)
-            {
-                director.SetGenericBinding(pAO.sourceObject, manager);
-            }
-            director.RebuildGraph();
-
-            if (!rwbyState.useParent) return;
-            childDirector.playableAsset = rwbyState.parentTimeline;
-            foreach (var pAO in childDirector.playableAsset.outputs)
-            {
-                childDirector.SetGenericBinding(pAO.sourceObject, manager);
-            }
-            childDirector.RebuildGraph();
+            if (CurrentState == 0) return;
+            SetFrame(0);
         }
 
         public StateTimeline GetState()
         {
-            return (GetMoveset(CurrentStateMoveset) as rwby.Moveset).stateMap[CurrentState] as rwby.StateTimeline;
+            return GetState(CurrentState) as rwby.StateTimeline;
         }
         
         public HnSF.StateTimeline GetState(int state)
@@ -200,30 +222,22 @@ namespace rwby
 
         public string GetCurrentStateName()
         {
-            return (GetMoveset(CurrentStateMoveset) as rwby.Moveset).stateMap[CurrentState].name;
+            return ((GetMoveset(CurrentStateMoveset) as rwby.Moveset).stateMap[CurrentState] as rwby.StateTimeline).stateName;
         }
 
         public void IncrementFrame()
         {
             CurrentStateFrame++;
-            director.time = (float)CurrentStateFrame * Runner.DeltaTime;
-            rwby.StateTimeline st = GetState();
-            if (!st.useParent) return;
-            childDirector.time = (float)Mathf.Clamp(CurrentStateFrame, 0, st.parentTimeline.totalFrames-1) * Runner.DeltaTime;
+        }
+        
+        public void IncrementFrame(int amt = 1)
+        {
+            CurrentStateFrame += amt;
         }
 
         public void SetFrame(int frame)
         {
             CurrentStateFrame = frame;
-            director.time = (float)frame * Runner.DeltaTime;
-            rwby.StateTimeline st = GetState();
-            if (!st.useParent) return;
-            childDirector.time = (float)Mathf.Clamp(frame, 0, st.parentTimeline.totalFrames-1) * Runner.DeltaTime;
-        }
-
-        public void SetChildFrame(int frame)
-        {
-            childDirector.time = (float)frame * Runner.DeltaTime;
         }
     }
 }

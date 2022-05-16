@@ -294,7 +294,6 @@ GameObject:
   - component: {fileID: 4275241288035171677}
   - component: {fileID: 8828466035712802024}
   - component: {fileID: 4017428576835799020}
-  - component: {fileID: 2932098468412428962}
   m_Layer: 6
   m_Name: RubyRose
   m_TagString: Player
@@ -397,7 +396,29 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _interpolationDataSource: 0
   _BufferLimit: 0
+  _inputEnabled:
+    _value: 0
+  _movement: []
+  _cameraForward: []
+  _cameraRight: []
+  _heldATime: 0
+  _heldBTime: 0
+  _heldCTime: 0
+  _heldJumpTime: 0
+  _heldBlockTime: 0
+  _heldDashTime: 0
+  _heldLockOnTime: 0
+  _heldAbility1Time: 0
+  _heldAbility2Time: 0
+  _heldAbility3Time: 0
+  _heldAbility4Time: 0
+  _heldExtra1Time: 0
+  _heldExtra2Time: 0
+  _heldExtra3Time: 0
+  _heldExtra4Time: 0
   manager: {fileID: 3846760401122892541}
+  _inputProvider: {fileID: 0}
+  _inputSourceIndex: 0
 --- !u!114 &3846760401122892541
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -467,7 +488,6 @@ MonoBehaviour:
   sideWallDistance: 0
   wallSide: 0
   wallRunHozMultiplier: 1
-  references: []
   references:
     version: 2
     RefIds: []
@@ -549,7 +569,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _interpolationDataSource: 0
-  manager: {fileID: 0}
+  manager: {fileID: 3846760401122892541}
   combatManager: {fileID: 7730901374118442406}
   hRoot: {fileID: 8828466035712802024}
   settings: {fileID: 11400000, guid: fa9f7c1fd91f42e4087fa739f9dd3614, type: 2}
@@ -630,8 +650,6 @@ MonoBehaviour:
   _nextState: 0
   manager: {fileID: 3846760401122892541}
   combatManager: {fileID: 7730901374118442406}
-  director: {fileID: 2932098468412428962}
-  childDirector: {fileID: 1897436691957362551}
   movesets: []
 --- !u!114 &2326289350170218266
 MonoBehaviour:
@@ -824,23 +842,6 @@ MonoBehaviour:
   bankMap: []
   banks: []
   animancer: {fileID: 7881897747762219494}
---- !u!320 &2932098468412428962
-PlayableDirector:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3009557721057671630}
-  m_Enabled: 1
-  serializedVersion: 3
-  m_PlayableAsset: {fileID: 0}
-  m_InitialState: 0
-  m_WrapMode: 0
-  m_DirectorUpdateMode: 3
-  m_InitialTime: 0
-  m_SceneBindings: []
-  m_ExposedReferences:
-    m_References: []
 --- !u!1 &3012196137317099199
 GameObject:
   m_ObjectHideFlags: 0

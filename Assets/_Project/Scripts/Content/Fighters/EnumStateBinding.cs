@@ -4,6 +4,6 @@ namespace rwby
     public struct EnumStateBinding
     {
         public FighterCmnStates state;
-        public StateTimeline stateTimeline;
+        //public StateTimeline stateTimeline;
     }
 }

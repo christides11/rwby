@@ -32,6 +32,7 @@ namespace rwby
             animancer.Layers[0].Play(animationMixer, 0.0f);
         }
         
+        /*
         public void SyncFromState(ForceSetType syncMode, int layer, AnimationEntry[] wantedAnimations)
         {
             if (syncMode == ForceSetType.SET) ClearAnimationSet(layer);
@@ -49,7 +50,7 @@ namespace rwby
             }
             
             SyncAnimancer();
-        }
+        }*/
 
         public void SetAnimationWeight(int layer, int index, float weight)
         {

@@ -294,11 +294,11 @@ namespace rwby
             }
             if (FPhysicsManager.IsGroundedNetworked)
             {
-                FStateManager.ChangeState((ushort)FighterCmnStates.BLOCK_HIGH);
+                FStateManager.ChangeState((int)FighterCmnStates.BLOCK_HIGH);
             }
             else
             {
-                FStateManager.ChangeState((ushort)FighterCmnStates.BLOCK_AIR);
+                FStateManager.ChangeState((int)FighterCmnStates.BLOCK_AIR);
             }
             return true;
         }

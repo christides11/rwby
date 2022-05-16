@@ -1,0 +1,39 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7789f25d17401bc4b915ca6fcecf2a29, type: 3}
+  m_Name: Base.State.Idle
+  m_EditorClassIdentifier: 
+  useBaseState: 0
+  baseState: {fileID: 0}
+  totalFrames: 10
+  autoIncrement: 1
+  autoLoop: 1
+  data:
+  - rid: 6951768201293725696
+  stateName: 
+  stateGroundedGroup: 1
+  references:
+    version: 2
+    RefIds:
+    - rid: 6951768201293725696
+      type: {class: VarApplyTraction, ns: rwby, asm: rwby.csharp}
+      data:
+        frameRanges:
+        - {x: 1, y: 10}
+        condition:
+          rid: 6951768201293725697
+        useTractionStat: 0
+        aerialTraction: 0
+        traction: 0
+        children: []
+    - rid: 6951768201293725697
+      type: {class: ConditionNone, ns: rwby, asm: rwby.csharp}
