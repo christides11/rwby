@@ -308,6 +308,15 @@ namespace rwby
             Debug.LogError("Could not find client.");
         }
 
+        public virtual SessionGamemodeClientContainer GetClientInfo(PlayerRef playerRef)
+        {
+            for (int i = 0; i < ClientDefinitions.Count; i++)
+            {
+                if (ClientDefinitions[i].clientRef == playerRef) return ClientDefinitions[i];
+            }
+            return default;
+        }
+
         protected override HashSet<ModObjectGUIDReference> BuildLoadedContentList()
         {
             HashSet<ModObjectGUIDReference> references =  base.BuildLoadedContentList();

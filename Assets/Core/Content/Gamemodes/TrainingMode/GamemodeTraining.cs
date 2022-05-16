@@ -118,30 +118,17 @@ namespace rwby.core.training
                 ContentSelect.singleton.CloseMenu(player);
                 if (local)
                 {
-                    //localGamemodeSettings.map = b;
                     localMap = b;
                     WhenGamemodeSettingsChanged(true);
                 }
                 else
                 {
                     Map = b;
-                    /*
-                    var temp = gamemodeSettings;
-                    temp.map = b;
-                    gamemodeSettings = temp;*/
                     WhenGamemodeSettingsChanged();
                 }
             });
         }
         #endregion
-
-        /*
-        public void ApplyExternalSettings(GameModeBase gmb)
-        {
-            GamemodeTraining gm = gmb as GamemodeTraining;
-            Map = gm.localMap;
-            //gamemodeSettings = gm.localGamemodeSettings;
-        }*/
 
         public override async UniTask<bool> VerifyGameModeSettings()
         {
@@ -237,23 +224,31 @@ namespace rwby.core.training
                     int playerID = j;
                     var playerTemp = clientPlayers[j];
                     var playerCharacterRefs = playerTemp.characterReferences;
+                    NetworkObject cm = Runner.GetPlayerObject(temp.clientRef);
                     
                     IFighterDefinition fighterDefinition = (IFighterDefinition)GameManager.singleton.contentManager.GetContentDefinition(playerCharacterRefs[0]);
-                    
+
+                    var noClientDefinitions = clientDefinitions;
+                    var noClientPlayers = clientPlayers;
                     NetworkObject no = Runner.Spawn(fighterDefinition.GetFighter().GetComponent<NetworkObject>(), GetSpawnPosition(playerTemp), Quaternion.identity, clientDefinitions[i].clientRef,
                         (a, b) =>
                         {
                             b.gameObject.name = $"{temp.clientRef.PlayerId}.{j} : {fighterDefinition.name}";
                             b.GetBehaviour<FighterCombatManager>().Team = playerTemp.team;
-
+                            b.GetBehaviour<FighterInputManager>().inputProvider = cm;
+                            b.GetBehaviour<FighterInputManager>().inputSourceIndex = (byte)playerID;
+                            b.GetBehaviour<FighterInputManager>().inputEnabled = true;
                             var list = playerTemp.characterNetworkObjects;
-                            list.Add(b.Id);
-                            clientPlayers.Set(playerID, playerTemp);
-                            clientDefinitions.Set(clientID, temp);
+                            list.Set(0, b.Id);
+                            noClientPlayers.Set(playerID, playerTemp);
+                            noClientDefinitions.Set(clientID, temp);
                         });
                     spawnPointsCurr[clientPlayers[j].team]++;
+                    
                 }
             }
+
+            RPC_SetupClientPlayers();
         }
 
         private Vector3 GetSpawnPosition(SessionGamemodePlayerDefinition clientPlayer)

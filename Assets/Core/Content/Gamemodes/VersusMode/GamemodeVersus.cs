@@ -6,6 +6,6 @@ namespace rwby
 {
     public class GamemodeVersus : GameModeBase
     {
-
+        
     }
 }

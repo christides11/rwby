@@ -15,6 +15,10 @@ namespace rwby
 
         [Networked] public uint BufferLimit { get; set; }
 
+        [Networked] public NetworkBool inputEnabled { get; set; } = false;
+        [Networked, Accuracy("Default"), Capacity(40)] protected NetworkArray<Vector2> movement => default;
+        [Networked, Accuracy("Default"), Capacity(40)] protected NetworkArray<Vector3> cameraForward => default;
+        [Networked, Accuracy("Default"), Capacity(40)] protected NetworkArray<Vector3> cameraRight => default;
         [Networked, Capacity(40)] protected NetworkArray<NetworkButtons> buttons => default;
         [Networked] protected ushort heldATime { get; set; }
         [Networked] protected ushort heldBTime { get; set; }
@@ -65,176 +69,156 @@ namespace rwby
         {
             int frame = Runner.Simulation.Tick;
             if (!inputProvider) return;
-            if (!inputProvider.TryGetComponent<IPlayerInputProvider>(out IPlayerInputProvider pip)) return;
-            //var 
-            /*
-            Movement[frame % inputCapacity] = inputData.movement;
-            CameraForward[frame % inputCapacity] = inputData.forward;
-            CameraRight[frame % inputCapacity] = inputData.right;
-            A[frame % inputCapacity] = new InputButtonData(inputData.buttons.IsSet(PlayerInputType.A), A[(frame-1) % inputCapacity]);
-            B[frame % inputCapacity] = new InputButtonData(inputData.buttons.IsSet(PlayerInputType.B), B[(frame - 1) % inputCapacity]);
-            C[frame % inputCapacity] = new InputButtonData(inputData.buttons.IsSet(PlayerInputType.C), C[(frame - 1) % inputCapacity]);
-            Jump[frame % inputCapacity] = new InputButtonData(inputData.buttons.IsSet(PlayerInputType.JUMP), Jump[(frame - 1) % inputCapacity]);
-            Block[frame % inputCapacity] = new InputButtonData(inputData.buttons.IsSet(PlayerInputType.BLOCK), Block[(frame - 1) % inputCapacity]);
-            Dash[frame % inputCapacity] = new InputButtonData(inputData.buttons.IsSet(PlayerInputType.DASH), Dash[(frame - 1) % inputCapacity]);
-            LockOn[frame % inputCapacity] = new InputButtonData(inputData.buttons.IsSet(PlayerInputType.LOCK_ON), LockOn[(frame - 1) % inputCapacity]);
-            Ability1[frame % inputCapacity] = new InputButtonData(inputData.buttons.IsSet(PlayerInputType.ABILITY_1), Ability1[(frame - 1) % inputCapacity]);
-            Ability2[frame % inputCapacity] = new InputButtonData(inputData.buttons.IsSet(PlayerInputType.ABILITY_2), Ability2[(frame - 1) % inputCapacity]);
-            Ability3[frame % inputCapacity] = new InputButtonData(inputData.buttons.IsSet(PlayerInputType.ABILITY_3), Ability3[(frame - 1) % inputCapacity]);
-            Ability4[frame % inputCapacity] = new InputButtonData(inputData.buttons.IsSet(PlayerInputType.ABILITY_4), Ability4[(frame - 1) % inputCapacity]);
-            Extra1[frame % inputCapacity] = new InputButtonData(inputData.buttons.IsSet(PlayerInputType.EXTRA_1), Extra1[(frame - 1) % inputCapacity]);
-            Extra2[frame % inputCapacity] = new InputButtonData(inputData.buttons.IsSet(PlayerInputType.EXTRA_2), Extra2[(frame - 1) % inputCapacity]);
-            Extra3[frame % inputCapacity] = new InputButtonData(inputData.buttons.IsSet(PlayerInputType.EXTRA_3), Extra3[(frame - 1) % inputCapacity]);
-            Extra4[frame % inputCapacity] = new InputButtonData(inputData.buttons.IsSet(PlayerInputType.EXTRA_4), Extra4[(frame - 1) % inputCapacity]);*/
+            if (!inputProvider.TryGetComponent<IInputProvider>(out IInputProvider pip)) return;
+            NetworkPlayerInputData input = pip.GetInput(inputSourceIndex);
+            movement.Set(frame % inputCapacity, input.movement);
+            cameraForward.Set(frame % inputCapacity, input.forward);
+            cameraRight.Set(frame % inputCapacity, input.right);
+            buttons.Set(frame % inputCapacity, input.buttons);
         }
 
         public virtual Vector2 GetMovement(int startOffset = 0)
         {
-            return Movement[(Runner.Simulation.Tick - startOffset) % inputCapacity];
+            return inputEnabled ? movement[(Runner.Simulation.Tick - startOffset) % inputCapacity] : Vector2.zero;
         }
 
         public virtual Vector3 GetCameraForward(int startOffset = 0)
         {
-            return CameraForward[(Runner.Simulation.Tick - startOffset) % inputCapacity];
+            return cameraForward[(Runner.Simulation.Tick - startOffset) % inputCapacity];
         }
 
         public virtual Vector3 GetCameraRight(int startOffset = 0)
         {
-            return CameraRight[(Runner.Simulation.Tick - startOffset) % inputCapacity];
+            return cameraRight[(Runner.Simulation.Tick - startOffset) % inputCapacity];
         }
 
         public virtual InputButtonData GetA(out int buttonOffset, int startOffset = 0, int bufferFrames = 0)
         {
-            return GetButton(ref A, out buttonOffset, startOffset, bufferFrames);
+            return GetButton((int)PlayerInputType.A, out buttonOffset, startOffset, bufferFrames);
         }
 
         public virtual InputButtonData GetB(out int buttonOffset, int startOffset = 0, int bufferFrames = 0)
         {
-            return GetButton(ref B, out buttonOffset, startOffset, bufferFrames);
+            return GetButton((int)PlayerInputType.B, out buttonOffset, startOffset, bufferFrames);
         }
 
         public virtual InputButtonData GetC(out int buttonOffset, int startOffset = 0, int bufferFrames = 0)
         {
-            return GetButton(ref C, out buttonOffset, startOffset, bufferFrames);
+            return GetButton((int)PlayerInputType.C, out buttonOffset, startOffset, bufferFrames);
         }
 
         public virtual InputButtonData GetJump(out int buttonOffset, int startOffset = 0, int bufferFrames = 0)
         {
-            return GetButton(ref Jump, out buttonOffset, startOffset, bufferFrames);
+            return GetButton((int)PlayerInputType.JUMP, out buttonOffset, startOffset, bufferFrames);
         }
 
         public virtual InputButtonData GetDash(out int buttonOffset, int startOffset = 0, int bufferFrames = 0)
         {
-            return GetButton(ref Dash, out buttonOffset, startOffset, bufferFrames);
+            return GetButton((int)PlayerInputType.DASH, out buttonOffset, startOffset, bufferFrames);
         }
 
         public virtual InputButtonData GetBlock(out int buttonOffset, int startOffset = 0, int bufferFrames = 0)
         {
-            return GetButton(ref Block, out buttonOffset, startOffset, bufferFrames);
+            return GetButton((int)PlayerInputType.BLOCK, out buttonOffset, startOffset, bufferFrames);
         }
 
         public virtual InputButtonData GetLockOn(out int buttonOffset, int startOffset = 0, int bufferFrames = 0)
         {
-            return GetButton(ref LockOn, out buttonOffset, startOffset, bufferFrames);
+            return GetButton((int)PlayerInputType.LOCK_ON, out buttonOffset, startOffset, bufferFrames);
         }
 
         public virtual InputButtonData GetAbility1(out int buttonOffset, int startOffset = 0, int bufferFrames = 0)
         {
-            return GetButton(ref Ability1, out buttonOffset, startOffset, bufferFrames);
+            return GetButton((int)PlayerInputType.ABILITY_1, out buttonOffset, startOffset, bufferFrames);
         }
 
         public virtual InputButtonData GetAbility2(out int buttonOffset, int startOffset = 0, int bufferFrames = 0)
         {
-            return GetButton(ref Ability2, out buttonOffset, startOffset, bufferFrames);
+            return GetButton((int)PlayerInputType.ABILITY_2, out buttonOffset, startOffset, bufferFrames);
         }
 
         public virtual InputButtonData GetAbility3(out int buttonOffset, int startOffset = 0, int bufferFrames = 0)
         {
-            return GetButton(ref Ability3, out buttonOffset, startOffset, bufferFrames);
+            return GetButton((int)PlayerInputType.ABILITY_3, out buttonOffset, startOffset, bufferFrames);
         }
 
         public virtual InputButtonData GetAbility4(out int buttonOffset, int startOffset = 0, int bufferFrames = 0)
         {
-            return GetButton(ref Ability4, out buttonOffset, startOffset, bufferFrames);
+            return GetButton((int)PlayerInputType.ABILITY_4, out buttonOffset, startOffset, bufferFrames);
         }
 
         public virtual InputButtonData GetExtra1(out int buttonOffset, int startOffset = 0, int bufferFrames = 0)
         {
-            return GetButton(ref Extra1, out buttonOffset, startOffset, bufferFrames);
+            return GetButton((int)PlayerInputType.EXTRA_1, out buttonOffset, startOffset, bufferFrames);
         }
 
         public virtual InputButtonData GetExtra2(out int buttonOffset, int startOffset = 0, int bufferFrames = 0)
         {
-            return GetButton(ref Extra2, out buttonOffset, startOffset, bufferFrames);
+            return GetButton((int)PlayerInputType.EXTRA_2, out buttonOffset, startOffset, bufferFrames);
         }
 
         public virtual InputButtonData GetExtra3(out int buttonOffset, int startOffset = 0, int bufferFrames = 0)
         {
-            return GetButton(ref Extra3, out buttonOffset, startOffset, bufferFrames);
+            return GetButton((int)PlayerInputType.EXTRA_3, out buttonOffset, startOffset, bufferFrames);
         }
 
         public virtual InputButtonData GetExtra4(out int buttonOffset, int startOffset = 0, int bufferFrames = 0)
         {
-            return GetButton(ref Extra4, out buttonOffset, startOffset, bufferFrames);
+            return GetButton((int)PlayerInputType.EXTRA_4, out buttonOffset, startOffset, bufferFrames);
         }
 
-        public virtual InputButtonData GetButton(PlayerInputType button, out int buttonOffset, int startOffset = 0, int bufferFrames = 0)
+        public virtual InputButtonData GetButton(int button, int startOffset = 0, int bufferFrames = 0)
         {
-            buttonOffset = startOffset;
-            switch (button)
-            {
-                case PlayerInputType.JUMP:
-                    return GetJump(out buttonOffset, startOffset, bufferFrames);
-                case PlayerInputType.A:
-                    return GetA(out buttonOffset, startOffset, bufferFrames);
-                case PlayerInputType.B:
-                    return GetB(out buttonOffset, startOffset, bufferFrames);
-                case PlayerInputType.C:
-                    return GetC(out buttonOffset, startOffset, bufferFrames);
-                case PlayerInputType.DASH:
-                    return GetDash(out buttonOffset, startOffset, bufferFrames);
-                case PlayerInputType.ABILITY_1:
-                    return GetAbility1(out buttonOffset, startOffset, bufferFrames);
-                case PlayerInputType.ABILITY_2:
-                    return GetAbility2(out buttonOffset, startOffset, bufferFrames);
-                case PlayerInputType.ABILITY_3:
-                    return GetAbility3(out buttonOffset, startOffset, bufferFrames);
-                case PlayerInputType.ABILITY_4:
-                    return GetAbility4(out buttonOffset, startOffset, bufferFrames);
-                case PlayerInputType.LOCK_ON:
-                    return GetLockOn(out buttonOffset, startOffset, bufferFrames);
-                case PlayerInputType.EXTRA_1:
-                    return GetExtra1(out buttonOffset, startOffset, bufferFrames);
-                case PlayerInputType.EXTRA_2:
-                    return GetExtra2(out buttonOffset, startOffset, bufferFrames);
-                case PlayerInputType.EXTRA_3:
-                    return GetExtra3(out buttonOffset, startOffset, bufferFrames);
-                case PlayerInputType.EXTRA_4:
-                    return GetExtra4(out buttonOffset, startOffset, bufferFrames);
-                default:
-                    return new InputButtonData();
-            }
+            return GetButton(button, out int bOff, startOffset, bufferFrames);
         }
-
-		// TODO: fix startoffset handling.
-        protected virtual InputButtonData GetButton(ref InputButtonData[] buttonArray, out int buttonOffset, int startOffset = 0, int bufferFrames = 0)
+        
+        public virtual InputButtonData GetButton(int button, out int buttonOffset, int startOffset = 0, int bufferFrames = 0)
         {
             buttonOffset = startOffset;
-            int currentTick = Runner.Simulation.Tick;
+            if (!inputEnabled) return default;
+            int inputTick = Runner.Simulation.Tick - startOffset;
             for(int i = 0; i < bufferFrames; i++)
             {
-                if (BufferLimit >= currentTick - (bufferFrames + i))
+                if (BufferLimit >= inputTick - i)
                 {
                     break;
                 }
-
-                if (buttonArray[(currentTick - (bufferFrames + i)) % inputCapacity].firstPress)
-                {
-                    buttonOffset = startOffset + i;
-                    return buttonArray[(currentTick - (bufferFrames + i)) % inputCapacity];
-                }
+                
+                if (!IsFirstPress(button, inputTick - i)) continue;
+                buttonOffset = startOffset + i;
+                return new InputButtonData(){ firstPress = true, isDown = true, released = false};
             }
-            return buttonArray[(currentTick - startOffset) % inputCapacity];
+
+            return CreateButtonData(button, inputTick);
+        }
+        
+        protected virtual InputButtonData CreateButtonData(int button, int frame)
+        {
+            bool isFirstPress = IsFirstPress(button, frame);
+            return new InputButtonData()
+            {
+                firstPress = isFirstPress, 
+                isDown = isFirstPress || IsDown(button, frame),
+                released = !isFirstPress && IsRelease(button, frame)
+            };
+        }
+
+        protected virtual bool IsFirstPress(int button, int frame)
+        {
+            if (buttons[frame % inputCapacity].IsSet(button) && !buttons[(frame - 1) % inputCapacity].IsSet(button)) return true;
+            return false;
+        }
+        
+        protected virtual bool IsRelease(int button, int frame)
+        {
+            if (!buttons[frame % inputCapacity].IsSet(button) && buttons[(frame - 1) % inputCapacity].IsSet(button)) return true;
+            return false;
+        }
+        
+        protected virtual bool IsDown(int button, int frame)
+        {
+            if (buttons[frame % inputCapacity].IsSet(button)) return true;
+            return false;
         }
     }
 }

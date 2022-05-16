@@ -9,7 +9,7 @@ using HnSF.Combat;
 
 namespace rwby
 {
-    public class PlayerCamera : MonoBehaviour
+    public class PlayerCamera : MonoBehaviour, Fusion.IAfterUpdate
     {
         public enum CameraState
         {
@@ -21,7 +21,7 @@ namespace rwby
 
         public static PlayerCamera instance;
 
-        private FighterManager followTarget;
+        [SerializeField] private FighterManager followTarget;
         private GameObject LockOnTarget;
         private ITargetable lockOnTargetable;
         Rewired.Player p = null;
@@ -87,7 +87,7 @@ namespace rwby
 
         private void TryLockOn()
         {
-            if (followTarget.HardTargeting == false || followTarget.CurrentTarget == null) return;
+            if (!followTarget || followTarget.HardTargeting == false || followTarget.CurrentTarget == null) return;
             LockOnToTarget(followTarget.CurrentTarget.gameObject);
         }
 
@@ -156,6 +156,8 @@ namespace rwby
                     virtualCameraAnimator.Play("Target");
                 }
             }
+            
+            CamUpdate();
         }
 
         public void LookAt(Vector3 position)
@@ -207,6 +209,10 @@ namespace rwby
             {
                 virtualCameraShake[i].ShakeCamera(intensity, time);
             }
+        }
+        public void AfterUpdate()
+        {
+            //CamUpdate();
         }
     }
 }

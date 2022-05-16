@@ -7,7 +7,7 @@ using UnityEngine;
 namespace rwby
 {
 	[OrderBefore(typeof(FighterInputManager), typeof(FighterManager))]
-	public class ClientManager : NetworkBehaviour, INetworkRunnerCallbacks, IBeforeUpdate, IAfterUpdate, IPlayerInputProvider
+	public class ClientManager : NetworkBehaviour, INetworkRunnerCallbacks, IBeforeUpdate, IAfterUpdate, IInputProvider
 	{
 		public delegate void ClientAction(ClientManager clientManager);
 		public static event ClientAction OnPlayerCountChanged;
@@ -123,9 +123,9 @@ namespace rwby
 
 			for (int j = 0; j < ClientPlayerAmount; j++)
 			{
-				var player = localPlayerManager.GetRewiredPlayer(j);
+				var player = localPlayerManager.GetPlayer(j);
 				if (!player.isValid) continue;
-
+				
 				if (player.rewiredPlayer.GetButtonDown(Action.Pause))
                 {
                     if (PauseMenu.singleton.paused)
@@ -246,9 +246,9 @@ namespace rwby
 			inputBufferPosition++;
 		}
 		
-		public NetworkPlayerInputData GetInput(int playerIndex)
+		public NetworkPlayerInputData GetInput(int inputIndex)
 		{
-			return inputBuffer[(inputBufferPosition) % inputBuffer.Length].players[playerIndex];
+			return inputBuffer[(inputBufferPosition) % inputBuffer.Length].players[inputIndex];
 		}
 
 		public void OnPlayerJoined(NetworkRunner runner, PlayerRef player) { }

@@ -21,7 +21,7 @@ namespace rwby.state.conditions
         public override bool IsTrue(IFighterBase fm)
         {
             FighterManager manager = fm as FighterManager;
-            var result = manager.InputManager.GetButton(button, out int buttonOffset, offset, buffer);
+            var result = manager.InputManager.GetButton((int)button, out int buttonOffset, offset, buffer);
             bool fResult = false;
             switch (buttonState)
             {

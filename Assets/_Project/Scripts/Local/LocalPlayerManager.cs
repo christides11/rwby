@@ -23,10 +23,19 @@ namespace rwby
             AddPlayer();
         }
 
-        public LocalPlayerData GetRewiredPlayer(int playerID)
+        public LocalPlayerData GetPlayer(int playerID)
         {
             if (playerID < 0 || playerID >= localPlayers.Count) return default;
             return localPlayers[playerID];
+        }
+
+        public void SetPlayerCamera(int playerID, Camera camera)
+        {
+            var temp = localPlayers[playerID];
+            temp.camera = camera;
+            localPlayers[playerID] = temp;
+            
+            ApplyCameraLayout();
         }
 
         public void ApplyCameraLayout()

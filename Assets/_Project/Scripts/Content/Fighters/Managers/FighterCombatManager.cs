@@ -147,7 +147,7 @@ namespace rwby
                         }
                         break;
                     case HnSF.Input.InputDefinitionType.Button:
-                        if (inputManager.GetButton((PlayerInputType)sequence.executeInputs[e].buttonID, out int gotOffset, baseOffset, (int)sequence.executeWindow).firstPress == false)
+                        if (inputManager.GetButton(sequence.executeInputs[e].buttonID, out int gotOffset, baseOffset, (int)sequence.executeWindow).firstPress == false)
                         {
                             return false;
                         }
@@ -186,8 +186,8 @@ namespace rwby
                     case HnSF.Input.InputDefinitionType.Button:
                         for (uint f = currentOffset; f < currentOffset + sequence.sequenceWindow; f++)
                         {
-                            if ((!holdInput && inputManager.GetButton((PlayerInputType)sequence.sequenceInputs[s].buttonID, out int gotOffset, (int)f, 0).firstPress)
-                                || (holdInput && inputManager.GetButton((PlayerInputType)sequence.sequenceInputs[s].buttonID, out int gotOffsetTwo, (int)f, 0).isDown))
+                            if ((!holdInput && inputManager.GetButton(sequence.sequenceInputs[s].buttonID, out int gotOffset, (int)f, 0).firstPress)
+                                || (holdInput && inputManager.GetButton(sequence.sequenceInputs[s].buttonID, out int gotOffsetTwo, (int)f, 0).isDown))
                             {
                                 foundInput = true;
                                 currentOffset = f;

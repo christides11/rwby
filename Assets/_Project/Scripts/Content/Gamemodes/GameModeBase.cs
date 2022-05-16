@@ -109,5 +109,32 @@ namespace rwby
         {
 
         }
+
+        [Rpc(RpcSources.InputAuthority | RpcSources.StateAuthority, RpcTargets.All, HostMode = RpcHostMode.SourceIsHostPlayer)]
+        public virtual async void RPC_SetupClientPlayers()
+        {
+            if (!Runner.LocalPlayer.IsValid) return;
+            var cInfo = sessionManager.GetClientInfo(Runner.LocalPlayer);
+
+            await SetupClientPlayers(cInfo);
+        }
+
+        protected virtual async UniTask SetupClientPlayers(SessionGamemodeClientContainer cInfo)
+        {
+            NetworkObject no = null;
+            for (int i = 0; i < cInfo.players.Count; i++)
+            {
+                if (cInfo.players[i].characterNetworkObjects.Count < 1) return;
+
+                PlayerCamera c = GameObject.Instantiate(GameManager.singleton.settings.playerCameraPrefab, Vector3.zero,
+                    Quaternion.identity);
+                
+                int playerID = i;
+                await UniTask.WaitUntil(() => Runner.TryFindObject(cInfo.players[playerID].characterNetworkObjects[0], out no));
+                
+                c.SetLookAtTarget(no.GetComponent<FighterManager>());
+                GameManager.singleton.localPlayerManager.SetPlayerCamera(i, c.Cam);
+            }
+        }
     }
 }
