@@ -14,187 +14,188 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   states:
   - state:
-      id: 0
-    stateTimeline: {fileID: 11400000, guid: 9f2a55405b549c3438759b04070a56f3, type: 2}
+      rid: 0
+    stateTimeline: {fileID: 11400000, guid: f0a95ca4251509f48845ae8bc1f6fad6, type: 2}
   - state:
-      id: 1
-    stateTimeline: {fileID: 11400000, guid: d438d007c5b3ead4c8970f17e3d29940, type: 2}
+      rid: 1
+    stateTimeline: {fileID: 11400000, guid: f56f3b8269a1d364b8ffce5b1636054d, type: 2}
   - state:
-      id: 2
+      rid: 2
     stateTimeline: {fileID: 11400000, guid: bbc0992d692489f43ab876081eee29b2, type: 2}
   - state:
-      id: 3
+      rid: 3
     stateTimeline: {fileID: 11400000, guid: 436fa92369f1a5842a3364c249da6ebf, type: 2}
   - state:
-      id: 4
+      rid: 4
     stateTimeline: {fileID: 11400000, guid: e1bfcb3d7d0dabc43b6d39b492aa106e, type: 2}
   - state:
-      id: 5
+      rid: 5
     stateTimeline: {fileID: 11400000, guid: db7dd47263570ac41b56a496f69e6a7f, type: 2}
   - state:
-      id: 6
+      rid: 6
     stateTimeline: {fileID: 11400000, guid: f8ebcc0df9df93f47b3028e4fabf440e, type: 2}
   - state:
-      id: 7
+      rid: 7
     stateTimeline: {fileID: 11400000, guid: 854b8585d2766cd46830f60a4dae8829, type: 2}
   - state:
-      id: 8
-    stateTimeline: {fileID: 11400000, guid: f31548da83a15de43ba912ee049b0921, type: 2}
+      rid: 8
+    stateTimeline: {fileID: 11400000, guid: af2f04682fdddc647b21661a780b8919, type: 2}
   - state:
-      id: 9
+      rid: 9
     stateTimeline: {fileID: 11400000, guid: efdab27b1f01c504bb48eebbd7049706, type: 2}
   - state:
-      id: 10
+      rid: 10
     stateTimeline: {fileID: 11400000, guid: 721d3c54ec068ff4484a87467793c0e3, type: 2}
   - state:
-      id: 11
+      rid: 11
     stateTimeline: {fileID: 11400000, guid: 47c56acda95d3a947bcd6365ffccffc6, type: 2}
   - state:
-      id: 12
+      rid: 12
     stateTimeline: {fileID: 11400000, guid: 9a86ec778ddafcb46b9f492f38cc06a9, type: 2}
   - state:
-      id: 13
+      rid: 13
     stateTimeline: {fileID: 11400000, guid: f45fdb44af5baaf47b8f819b085cb719, type: 2}
   - state:
-      id: 14
+      rid: 14
     stateTimeline: {fileID: 11400000, guid: b40908e4f5a33564d8540934944a54dd, type: 2}
   - state:
-      id: 15
+      rid: 15
     stateTimeline: {fileID: 11400000, guid: 5465a2b65d321494a93e6d9fb2f81d34, type: 2}
   - state:
-      id: 16
+      rid: 16
     stateTimeline: {fileID: 11400000, guid: 5465a2b65d321494a93e6d9fb2f81d34, type: 2}
   - state:
-      id: 17
+      rid: 17
     stateTimeline: {fileID: 11400000, guid: cbed6b25a317cf14d9d4dbdbe8e00e91, type: 2}
   - state:
-      id: 18
+      rid: 18
     stateTimeline: {fileID: 11400000, guid: 5465a2b65d321494a93e6d9fb2f81d34, type: 2}
   - state:
-      id: 19
+      rid: 19
     stateTimeline: {fileID: 11400000, guid: 128977e494886c241805c356a66b8972, type: 2}
   - state:
-      id: 20
+      rid: 20
     stateTimeline: {fileID: 11400000, guid: 5465a2b65d321494a93e6d9fb2f81d34, type: 2}
   - state:
-      id: 21
+      rid: 21
     stateTimeline: {fileID: 11400000, guid: 5465a2b65d321494a93e6d9fb2f81d34, type: 2}
   - state:
-      id: 22
+      rid: 22
     stateTimeline: {fileID: 11400000, guid: 5465a2b65d321494a93e6d9fb2f81d34, type: 2}
   - state:
-      id: 23
+      rid: 23
     stateTimeline: {fileID: 11400000, guid: bf5436c8f1c215d4c8f359a72bbfcecc, type: 2}
   - state:
-      id: 24
+      rid: 24
     stateTimeline: {fileID: 11400000, guid: 378594cf8c0e23a4e83c35bc3775e3d9, type: 2}
   - state:
-      id: 25
+      rid: 25
     stateTimeline: {fileID: 11400000, guid: 2404a745aeeae044285500217e5f3caa, type: 2}
   fighterStats: {fileID: 11400000, guid: 9db018607e1c48c498ee3d8a7c4cefc3, type: 2}
   references:
-    version: 1
-    00000000:
+    version: 2
+    RefIds:
+    - rid: 0
       type: {class: FighterCmnStateReference, ns: rwby, asm: rwby.csharp}
       data:
         state: 1
-    00000001:
+    - rid: 1
       type: {class: FighterCmnStateReference, ns: rwby, asm: rwby.csharp}
       data:
         state: 2
-    00000002:
+    - rid: 2
       type: {class: FighterCmnStateReference, ns: rwby, asm: rwby.csharp}
       data:
         state: 6
-    00000003:
+    - rid: 3
       type: {class: FighterCmnStateReference, ns: rwby, asm: rwby.csharp}
       data:
         state: 4
-    00000004:
+    - rid: 4
       type: {class: FighterCmnStateReference, ns: rwby, asm: rwby.csharp}
       data:
         state: 26
-    00000005:
+    - rid: 5
       type: {class: FighterCmnStateReference, ns: rwby, asm: rwby.csharp}
       data:
         state: 5
-    00000006:
+    - rid: 6
       type: {class: FighterCmnStateReference, ns: rwby, asm: rwby.csharp}
       data:
         state: 3
-    00000007:
+    - rid: 7
       type: {class: FighterCmnStateReference, ns: rwby, asm: rwby.csharp}
       data:
         state: 7
-    00000008:
+    - rid: 8
       type: {class: FighterCmnStateReference, ns: rwby, asm: rwby.csharp}
       data:
         state: 27
-    00000009:
+    - rid: 9
       type: {class: FighterCmnStateReference, ns: rwby, asm: rwby.csharp}
       data:
         state: 9
-    0000000A:
+    - rid: 10
       type: {class: FighterCmnStateReference, ns: rwby, asm: rwby.csharp}
       data:
         state: 28
-    0000000B:
+    - rid: 11
       type: {class: FighterCmnStateReference, ns: rwby, asm: rwby.csharp}
       data:
         state: 8
-    0000000C:
+    - rid: 12
       type: {class: RubyRoseStateReference, ns: rwby.core, asm: rwby.core}
       data:
         state: 50
-    0000000D:
+    - rid: 13
       type: {class: RubyRoseStateReference, ns: rwby.core, asm: rwby.core}
       data:
         state: 51
-    0000000E:
+    - rid: 14
       type: {class: RubyRoseStateReference, ns: rwby.core, asm: rwby.core}
       data:
         state: 52
-    0000000F:
+    - rid: 15
       type: {class: FighterCmnStateReference, ns: rwby, asm: rwby.csharp}
       data:
         state: 30
-    00000010:
+    - rid: 16
       type: {class: FighterCmnStateReference, ns: rwby, asm: rwby.csharp}
       data:
         state: 31
-    00000011:
+    - rid: 17
       type: {class: FighterCmnStateReference, ns: rwby, asm: rwby.csharp}
       data:
         state: 32
-    00000012:
+    - rid: 18
       type: {class: FighterCmnStateReference, ns: rwby, asm: rwby.csharp}
       data:
         state: 33
-    00000013:
+    - rid: 19
       type: {class: FighterCmnStateReference, ns: rwby, asm: rwby.csharp}
       data:
         state: 34
-    00000014:
+    - rid: 20
       type: {class: FighterCmnStateReference, ns: rwby, asm: rwby.csharp}
       data:
         state: 35
-    00000015:
+    - rid: 21
       type: {class: FighterCmnStateReference, ns: rwby, asm: rwby.csharp}
       data:
         state: 36
-    00000016:
+    - rid: 22
       type: {class: FighterCmnStateReference, ns: rwby, asm: rwby.csharp}
       data:
         state: 37
-    00000017:
+    - rid: 23
       type: {class: RubyRoseStateReference, ns: rwby.core, asm: rwby.core}
       data:
         state: 53
-    00000018:
+    - rid: 24
       type: {class: RubyRoseStateReference, ns: rwby.core, asm: rwby.core}
       data:
         state: 54
-    00000019:
+    - rid: 25
       type: {class: FighterCmnStateReference, ns: rwby, asm: rwby.csharp}
       data:
         state: 22

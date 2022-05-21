@@ -3,11 +3,12 @@ using UnityEngine;
 
 namespace rwby
 {
-    public struct ChangeState : IStateVariables
+    public struct VarSetECB : IStateVariables
     {
-        public int FunctionMap => (int)BaseStateFunctionEnum.CHANGE_STATE;
+        public int FunctionMap => (int)BaseStateFunctionEnum.SET_ECB;
         public IConditionVariables Condition => condition;
         public IStateVariables[] Children => children;
+
         public Vector2[] FrameRanges
         {
             get => frameRanges;
@@ -18,9 +19,11 @@ namespace rwby
         [SelectImplementation(typeof(IConditionVariables))] [SerializeField, SerializeReference] 
         public IConditionVariables condition;
 
-        public int stateMovesetID;
-        public int stateID;
-        [SelectImplementation(typeof(IConditionVariables))] [SerializeField, SerializeReference] 
+        public float ecbCenter;
+        public float ecbRadius;
+        public float ecbHeight;
+        
+        [SelectImplementation(typeof(IStateVariables))] [SerializeField, SerializeReference] 
         private IStateVariables[] children;
     }
 }

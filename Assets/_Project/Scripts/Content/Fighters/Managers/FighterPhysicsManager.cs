@@ -108,9 +108,14 @@ namespace rwby
             IsGroundedNetworked = value;
         }
 
+        public virtual void ApplyMovementFriction(float friction)
+        {
+            forceMovement = Vector3.MoveTowards(forceMovement, Vector3.zero, friction * Runner.DeltaTime);
+        }
+        
         public virtual void ApplyGravityFriction(float friction)
         {
-            forceGravity = ApplyFriction(forceGravity, friction * Runner.DeltaTime);
+            forceGravity = Mathf.MoveTowards(forceGravity, 0, friction * Runner.DeltaTime);
         }
 
         public virtual float GetFrictionValue(float value, float traction)

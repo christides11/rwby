@@ -5,9 +5,10 @@ namespace rwby
     {
         NONE = 0,
         BOOLEAN,
-        MOVEMENT_MAGNITUDE,
-        GROUNDED_STATE,
+        MOVEMENT_STICK_MAGNITUDE,
+        IS_GROUNDED,
         FALL_SPEED,
-        BUTTON
+        BUTTON,
+        BUTTON_SEQUENCE
     }
 }

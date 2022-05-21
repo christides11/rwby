@@ -87,11 +87,12 @@ namespace rwby
             }
         }
         
-        private void ProcessStateVariables(IStateVariables d, int realFrame)
+        public void ProcessStateVariables(IStateVariables d, int realFrame)
         {
             var valid = true;
             for (int j = 0; j < d.FrameRanges.Length; j++)
             {
+                if (d.FrameRanges[j].x == -1) break;
                 if (!(realFrame < d.FrameRanges[j].x) &&
                     !(realFrame > d.FrameRanges[j].y)) continue;
                 valid = false;

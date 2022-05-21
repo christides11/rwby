@@ -479,6 +479,16 @@ namespace rwby
             return forward * vertical + right * horizontal;
         }
 
+        public virtual Vector3 GetVisualMovementVector(int frame = 0)
+        {
+            Vector2 movement = ExtDebug.DeadZoner(InputManager.GetMovement(frame), InputConstants.movementDeadzone);
+            if(movement == Vector2.zero)
+            {
+                return Vector3.zero;
+            }
+            return GetVisualMovementVector(movement.x, movement.y);
+        }
+
         public virtual Vector3 GetVisualMovementVector(float horizontal, float vertical)
         {
             Vector3 forward = transform.forward;
@@ -493,10 +503,10 @@ namespace rwby
             return forward * vertical + right * horizontal;
         }
 
-        public virtual Vector3 GetVisualRotation(Vector3 direction, float speed)
+        public virtual void RotateTowards(Vector3 direction, float speed)
         {
-            Vector3 newDirection = Vector3.RotateTowards(transform.forward, direction, speed * Runner.DeltaTime, 0.0f);
-            return newDirection - transform.forward;
+            Vector3 newDir = Vector3.RotateTowards(transform.forward, direction, speed * Runner.DeltaTime, 0.0f);
+            transform.rotation = Quaternion.LookRotation(newDir);
         }
 
         public void SetVisualRotation(Vector3 direction)

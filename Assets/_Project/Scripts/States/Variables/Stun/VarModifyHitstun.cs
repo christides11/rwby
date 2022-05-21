@@ -3,9 +3,9 @@ using UnityEngine;
 
 namespace rwby
 {
-    public struct VarApplyGravity : IStateVariables
+    public struct VarModifyHitstun : IStateVariables
     {
-        public int FunctionMap => (int)BaseStateFunctionEnum.APPLY_GRAVITY;
+        public int FunctionMap => (int)BaseStateFunctionEnum.MODIFY_HITSTUN;
         public IConditionVariables Condition => condition;
         public IStateVariables[] Children => children;
 
@@ -19,12 +19,10 @@ namespace rwby
         [SelectImplementation(typeof(IConditionVariables))] [SerializeField, SerializeReference] 
         public IConditionVariables condition;
 
-        public bool useMaxFallSpeedStat;
-        public bool useGravityStat;
-        public float maxFallSpeed;
-        public float gravity;
+        public VarModifyType modifyType;
+        public int value;
         
-        [SelectImplementation(typeof(IConditionVariables))] [SerializeField, SerializeReference] 
+        [SelectImplementation(typeof(IStateVariables))] [SerializeField, SerializeReference] 
         private IStateVariables[] children;
     }
 }

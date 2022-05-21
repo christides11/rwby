@@ -19,11 +19,13 @@ namespace rwby
         [SelectImplementation(typeof(IConditionVariables))] [SerializeField, SerializeReference] 
         public IConditionVariables condition;
 
-        public bool useTractionStat;
-        public bool aerialTraction;
-        public float traction;
+        [SelectImplementation(typeof(FighterStatReferenceFloatBase))] [SerializeField, SerializeReference]
+        public FighterStatReferenceFloatBase traction;
+
+        public bool applyMovement;
+        public bool applyGravity;
         
-        [SelectImplementation(typeof(IConditionVariables))] [SerializeField, SerializeReference] 
+        [SelectImplementation(typeof(IStateVariables))] [SerializeField, SerializeReference] 
         private IStateVariables[] children;
     }
 }

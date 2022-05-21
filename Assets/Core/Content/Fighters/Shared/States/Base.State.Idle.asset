@@ -18,8 +18,9 @@ MonoBehaviour:
   autoIncrement: 1
   autoLoop: 1
   data:
+  - rid: 6951768280129339395
   - rid: 6951768201293725696
-  stateName: 
+  stateName: Idle
   stateGroundedGroup: 1
   references:
     version: 2
@@ -31,9 +32,27 @@ MonoBehaviour:
         - {x: 1, y: 10}
         condition:
           rid: 6951768201293725697
-        useTractionStat: 0
-        aerialTraction: 0
-        traction: 0
+        traction:
+          rid: 6951768222506156032
+        applyMovement: 1
+        applyGravity: 0
         children: []
     - rid: 6951768201293725697
+      type: {class: ConditionNone, ns: rwby, asm: rwby.csharp}
+    - rid: 6951768222506156032
+      type: {class: FighterBaseStatReferenceFloat, ns: rwby, asm: rwby.csharp}
+      data:
+        inverse: 0
+        statReference: 1
+        value: 0
+        variable: 0
+    - rid: 6951768280129339395
+      type: {class: VarExternal, ns: rwby, asm: rwby.csharp}
+      data:
+        frameRanges: []
+        condition:
+          rid: 6951768280129339396
+        asset: {fileID: 11400000, guid: 124c79362d203b84da4165660d6a1f1a, type: 2}
+        children: []
+    - rid: 6951768280129339396
       type: {class: ConditionNone, ns: rwby, asm: rwby.csharp}

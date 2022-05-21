@@ -1,0 +1,62 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d4d62b28b52db7d459dd2f283317c705, type: 3}
+  m_Name: External.IdleInterrupts
+  m_EditorClassIdentifier: 
+  data:
+  - rid: 6951768313468026889
+  - rid: 6951768313468026886
+  references:
+    version: 2
+    RefIds:
+    - rid: 6951768313468026886
+      type: {class: VarChangeState, ns: rwby, asm: rwby.csharp}
+      data:
+        frameRanges:
+        - {x: -1, y: -1}
+        condition:
+          rid: 6951768313468026887
+        stateMovesetID: -1
+        state:
+          rid: 6951768313468026888
+        children: []
+    - rid: 6951768313468026887
+      type: {class: ConditionMoveStickMagnitude, ns: rwby, asm: rwby.csharp}
+      data:
+        minValue: 0.1
+        maxValue: 1
+    - rid: 6951768313468026888
+      type: {class: FighterCmnStateReference, ns: rwby, asm: rwby.csharp}
+      data:
+        state: 2
+    - rid: 6951768313468026889
+      type: {class: VarChangeState, ns: rwby, asm: rwby.csharp}
+      data:
+        frameRanges:
+        - {x: -1, y: -1}
+        condition:
+          rid: 6951768313468026890
+        stateMovesetID: -1
+        state:
+          rid: 6951768313468026891
+        children: []
+    - rid: 6951768313468026890
+      type: {class: ConditionButton, ns: rwby, asm: rwby.csharp}
+      data:
+        button: 4
+        buttonState: 1
+        offset: 0
+        buffer: 3
+    - rid: 6951768313468026891
+      type: {class: FighterCmnStateReference, ns: rwby, asm: rwby.csharp}
+      data:
+        state: 27
