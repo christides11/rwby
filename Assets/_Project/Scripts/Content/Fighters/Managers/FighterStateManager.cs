@@ -72,7 +72,7 @@ namespace rwby
                 int realFrame = onInterrupt ? state.totalFrames+1 : Mathf.Clamp(CurrentStateFrame, 0, state.totalFrames);
                 foreach (var d in state.data)
                 {
-                    ProcessStateVariables(d, realFrame);
+                    ProcessStateVariables(state, d, realFrame);
                 }
 
                 if (!state.useBaseState) break;
@@ -87,7 +87,7 @@ namespace rwby
             }
         }
         
-        public void ProcessStateVariables(IStateVariables d, int realFrame)
+        public void ProcessStateVariables(StateTimeline state, IStateVariables d, int realFrame)
         {
             var valid = true;
             for (int j = 0; j < d.FrameRanges.Length; j++)
@@ -100,12 +100,12 @@ namespace rwby
             }
 
             if (!valid) return;
-            if (!conditionMapper.TryCondition(d.Condition.FunctionMap, manager, d.Condition)) return;
-            functionMapper.functions[d.FunctionMap](manager, d);
+            if (!conditionMapper.TryCondition(d.Condition.GetType(), manager, d.Condition, state, realFrame)) return;
+            functionMapper.functions[d.GetType()](manager, d, state, realFrame);
 
             foreach (var t in d.Children)
             {
-                ProcessStateVariables(t, realFrame);
+                ProcessStateVariables(state, t, realFrame);
             }
         }
 

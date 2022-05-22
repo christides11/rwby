@@ -4,22 +4,22 @@ namespace rwby
     {
         public StateFunctionMapper()
         {
-            functions.Add((int)BaseStateFunctionEnum.NULL, BaseStateFunctions.Null);
-            functions.Add((int)BaseStateFunctionEnum.CHANGE_STATE, BaseStateFunctions.ChangeState);
-            functions.Add((int)BaseStateFunctionEnum.APPLY_GRAVITY, BaseStateFunctions.ApplyGravity);
-            functions.Add((int)BaseStateFunctionEnum.APPLY_TRACTION, BaseStateFunctions.ApplyTraction);
-            functions.Add((int)BaseStateFunctionEnum.SET_MOVEMENT, BaseStateFunctions.SetMovement);
-            functions.Add((int)BaseStateFunctionEnum.APPLY_MOVEMENT, BaseStateFunctions.ApplyMovement);
-            functions.Add((int)BaseStateFunctionEnum.SET_FALL_SPEED, BaseStateFunctions.SetFallSpeed);
-            functions.Add((int)BaseStateFunctionEnum.MODIFY_AIR_DASH_COUNT, BaseStateFunctions.ModifyAirDashCount);
-            functions.Add((int)BaseStateFunctionEnum.MODIFY_HITSTUN, BaseStateFunctions.ModifyHitstun);
-            functions.Add((int)BaseStateFunctionEnum.SET_ECB, BaseStateFunctions.SetECB);
-            functions.Add((int)BaseStateFunctionEnum.SNAP_ECB, BaseStateFunctions.SnapECB);
-            functions.Add((int)BaseStateFunctionEnum.MODIFY_FRAME, BaseStateFunctions.ModifyFrame);
-            functions.Add((int)BaseStateFunctionEnum.APPLY_JUMP_FORCE, BaseStateFunctions.ApplyJumpForce);
-            functions.Add((int)BaseStateFunctionEnum.EXTERNAL, BaseStateFunctions.External);
-            functions.Add((int)BaseStateFunctionEnum.MODIFY_ROTATION, BaseStateFunctions.ModifyRotation);
-            functions.Add((int)BaseStateFunctionEnum.ROTATE_TOWARDS, BaseStateFunctions.RotateTowards);
+            functions.Add(typeof(VarEmpty), BaseStateFunctions.Null);
+            functions.Add(typeof(VarChangeState), BaseStateFunctions.ChangeState);
+            functions.Add(typeof(VarApplyGravity), BaseStateFunctions.ApplyGravity);
+            functions.Add(typeof(VarApplyTraction), BaseStateFunctions.ApplyTraction);
+            functions.Add(typeof(VarSetMovement), BaseStateFunctions.SetMovement);
+            functions.Add(typeof(VarApplyMovement), BaseStateFunctions.ApplyMovement);
+            functions.Add(typeof(VarSetFallSpeed), BaseStateFunctions.SetFallSpeed);
+            functions.Add(typeof(VarModifyAirDashCount), BaseStateFunctions.ModifyAirDashCount);
+            functions.Add(typeof(VarModifyHitstun), BaseStateFunctions.ModifyHitstun);
+            functions.Add(typeof(VarSetECB), BaseStateFunctions.SetECB);
+            functions.Add(typeof(VarSnapECB), BaseStateFunctions.SnapECB);
+            functions.Add(typeof(VarModifyFrame), BaseStateFunctions.ModifyFrame);
+            functions.Add(typeof(VarApplyJumpForce), BaseStateFunctions.ApplyJumpForce);
+            functions.Add(typeof(VarExternal), BaseStateFunctions.External);
+            functions.Add(typeof(VarModifyRotation), BaseStateFunctions.ModifyRotation);
+            functions.Add(typeof(VarRotateTowards), BaseStateFunctions.RotateTowards);
         }
     }
 }

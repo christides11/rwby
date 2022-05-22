@@ -4,12 +4,12 @@ namespace rwby
     {
         public StateConditionMapper()
         {
-            functions.Add((int)BaseStateConditionEnum.NONE, BaseStateConditionFunctions.NoCondition);
-            functions.Add((int)BaseStateConditionEnum.MOVEMENT_STICK_MAGNITUDE, BaseStateConditionFunctions.MovementStickMagnitude);
-            functions.Add((int)BaseStateConditionEnum.FALL_SPEED, BaseStateConditionFunctions.FallSpeed);
-            functions.Add((int)BaseStateConditionEnum.IS_GROUNDED, BaseStateConditionFunctions.IsGrounded);
-            functions.Add((int)BaseStateConditionEnum.BUTTON, BaseStateConditionFunctions.Button);
-            functions.Add((int)BaseStateConditionEnum.BUTTON_SEQUENCE, BaseStateConditionFunctions.ButtonSequence);
+            functions.Add(typeof(ConditionNone), BaseStateConditionFunctions.NoCondition);
+            functions.Add(typeof(ConditionMoveStickMagnitude), BaseStateConditionFunctions.MovementStickMagnitude);
+            functions.Add(typeof(ConditionFallSpeed), BaseStateConditionFunctions.FallSpeed);
+            functions.Add(typeof(ConditionIsGrounded), BaseStateConditionFunctions.IsGrounded);
+            functions.Add(typeof(ConditionButton), BaseStateConditionFunctions.Button);
+            functions.Add(typeof(ConditionButtonSequence), BaseStateConditionFunctions.ButtonSequence);
         }
     }
 }

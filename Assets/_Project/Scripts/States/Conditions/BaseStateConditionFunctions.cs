@@ -9,12 +9,12 @@ namespace rwby
 {
     public static class BaseStateConditionFunctions
     {
-        public static bool NoCondition(IFighterBase fighter, IConditionVariables variables)
+        public static bool NoCondition(IFighterBase fighter, IConditionVariables variables, HnSF.StateTimeline arg3, int arg4)
         {
             return true;
         }
 
-        public static bool MovementStickMagnitude(IFighterBase fighter, IConditionVariables variables)
+        public static bool MovementStickMagnitude(IFighterBase fighter, IConditionVariables variables, HnSF.StateTimeline arg3, int arg4)
         {
             FighterManager f = fighter as FighterManager;
             ConditionMoveStickMagnitude vars = (ConditionMoveStickMagnitude)variables;
@@ -26,7 +26,7 @@ namespace rwby
             return true;
         }
 
-        public static bool FallSpeed(IFighterBase fighter, IConditionVariables variables)
+        public static bool FallSpeed(IFighterBase fighter, IConditionVariables variables, HnSF.StateTimeline arg3, int arg4)
         {
             FighterManager f = fighter as FighterManager;
             ConditionFallSpeed vars = (ConditionFallSpeed)variables;
@@ -38,7 +38,7 @@ namespace rwby
             return true;
         }
         
-        public static bool IsGrounded(IFighterBase fighter, IConditionVariables variables)
+        public static bool IsGrounded(IFighterBase fighter, IConditionVariables variables, HnSF.StateTimeline arg3, int arg4)
         {
             FighterManager f = fighter as FighterManager;
             ConditionIsGrounded vars = (ConditionIsGrounded)variables;
@@ -48,7 +48,7 @@ namespace rwby
             return r;
         }
 
-        public static bool Button(IFighterBase fighter, IConditionVariables variables)
+        public static bool Button(IFighterBase fighter, IConditionVariables variables, HnSF.StateTimeline arg3, int arg4)
         {
             FighterManager f = fighter as FighterManager;
             ConditionButton vars = (ConditionButton)variables;
@@ -72,7 +72,7 @@ namespace rwby
             return fResult;
         }
 
-        public static bool ButtonSequence(IFighterBase fighter, IConditionVariables variables)
+        public static bool ButtonSequence(IFighterBase fighter, IConditionVariables variables, HnSF.StateTimeline arg3, int arg4)
         {
             FighterManager f = fighter as FighterManager;
             ConditionButtonSequence vars = (ConditionButtonSequence)variables;
