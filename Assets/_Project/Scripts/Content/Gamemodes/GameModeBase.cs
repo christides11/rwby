@@ -132,6 +132,7 @@ namespace rwby
                 int playerID = i;
                 await UniTask.WaitUntil(() => Runner.TryFindObject(cInfo.players[playerID].characterNetworkObjects[0], out no));
                 
+                Runner.AddSimulationBehaviour(c, null);
                 c.SetLookAtTarget(no.GetComponent<FighterManager>());
                 GameManager.singleton.localPlayerManager.SetPlayerCamera(i, c.Cam);
             }

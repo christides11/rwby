@@ -100,7 +100,7 @@ namespace rwby
             }
 
             if (!valid) return;
-            if (!conditionMapper.TryCondition(d.Condition.GetType(), manager, d.Condition, state, realFrame)) return;
+            if (d.Condition != null && !conditionMapper.TryCondition(d.Condition.GetType(), manager, d.Condition, state, realFrame)) return;
             functionMapper.functions[d.GetType()](manager, d, state, realFrame);
 
             foreach (var t in d.Children)
@@ -134,6 +134,7 @@ namespace rwby
 
         public void MarkForStateChange(int state, int moveset = -1)
         {
+            if (markedForStateChange) return;
             markedForStateChange = true;
             nextState = state;
         }

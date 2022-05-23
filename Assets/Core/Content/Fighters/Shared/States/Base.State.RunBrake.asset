@@ -1,0 +1,65 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7789f25d17401bc4b915ca6fcecf2a29, type: 3}
+  m_Name: Base.State.RunBrake
+  m_EditorClassIdentifier: 
+  useBaseState: 0
+  baseState: {fileID: 0}
+  totalFrames: 5
+  autoIncrement: 1
+  autoLoop: 1
+  data:
+  - rid: 6951768320479592456
+  - rid: 6951768320479592460
+  stateName: Run Brake
+  stateGroundedGroup: 1
+  allowBaseStateTransitions: 1
+  references:
+    version: 2
+    RefIds:
+    - rid: 6951768320479592456
+      type: {class: VarChangeState, ns: rwby, asm: rwby.csharp}
+      data:
+        frameRanges:
+        - {x: 5, y: 5}
+        condition:
+          rid: 6951768320479592457
+        stateMovesetID: -1
+        state:
+          rid: 6951768320479592458
+        children: []
+    - rid: 6951768320479592457
+      type: {class: ConditionNone, ns: rwby, asm: rwby.csharp}
+    - rid: 6951768320479592458
+      type: {class: FighterCmnStateReference, ns: rwby, asm: rwby.csharp}
+      data:
+        state: 1
+    - rid: 6951768320479592460
+      type: {class: VarApplyTraction, ns: rwby, asm: rwby.csharp}
+      data:
+        frameRanges: []
+        condition:
+          rid: 6951768320479592461
+        traction:
+          rid: 6951768320479592462
+        applyMovement: 1
+        applyGravity: 0
+        children: []
+    - rid: 6951768320479592461
+      type: {class: ConditionNone, ns: rwby, asm: rwby.csharp}
+    - rid: 6951768320479592462
+      type: {class: FighterBaseStatReferenceFloat, ns: rwby, asm: rwby.csharp}
+      data:
+        inverse: 0
+        statReference: 1
+        value: 0
+        variable: 0

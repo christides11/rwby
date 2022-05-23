@@ -9,5 +9,6 @@ namespace rwby
     {
         public string stateName;
         public StateGroundedGroupType stateGroundedGroup;
+        public bool allowBaseStateTransitions = true;
     }
 }

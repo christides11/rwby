@@ -9,7 +9,8 @@ using HnSF.Combat;
 
 namespace rwby
 {
-    public class PlayerCamera : MonoBehaviour, Fusion.IAfterUpdate
+    [OrderBefore(typeof(FighterInputManager), typeof(FighterManager))]
+    public class PlayerCamera : SimulationBehaviour
     {
         public enum CameraState
         {
@@ -64,6 +65,12 @@ namespace rwby
                 virtualCameraPOV[i] = virtualCameras[i].GetCinemachineComponent<CinemachinePOV>();
                 virtualCameraShake[i] = virtualCameras[i].GetComponent<CinemachineShake>();
             } 
+        }
+
+        public override void Render()
+        {
+            base.Render();
+            CamUpdate();
         }
 
         public virtual void CamUpdate()
@@ -156,8 +163,6 @@ namespace rwby
                     virtualCameraAnimator.Play("Target");
                 }
             }
-            
-            CamUpdate();
         }
 
         public void LookAt(Vector3 position)
@@ -209,10 +214,6 @@ namespace rwby
             {
                 virtualCameraShake[i].ShakeCamera(intensity, time);
             }
-        }
-        public void AfterUpdate()
-        {
-            //CamUpdate();
         }
     }
 }

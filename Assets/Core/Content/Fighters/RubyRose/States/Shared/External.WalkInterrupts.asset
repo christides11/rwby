@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: External.WalkInterrupts
   m_EditorClassIdentifier: 
   data:
+  - rid: 6951768320479592464
   - rid: 6951768313468026899
   references:
     version: 2
@@ -37,3 +38,24 @@ MonoBehaviour:
       type: {class: FighterCmnStateReference, ns: rwby, asm: rwby.csharp}
       data:
         state: 1
+    - rid: 6951768320479592464
+      type: {class: VarChangeState, ns: rwby, asm: rwby.csharp}
+      data:
+        frameRanges: []
+        condition:
+          rid: 6951768320479592466
+        stateMovesetID: -1
+        state:
+          rid: 6951768320479592465
+        children: []
+    - rid: 6951768320479592465
+      type: {class: FighterCmnStateReference, ns: rwby, asm: rwby.csharp}
+      data:
+        state: 27
+    - rid: 6951768320479592466
+      type: {class: ConditionButton, ns: rwby, asm: rwby.csharp}
+      data:
+        button: 4
+        buttonState: 0
+        offset: 0
+        buffer: 3
