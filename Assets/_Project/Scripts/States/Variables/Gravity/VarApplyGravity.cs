@@ -1,4 +1,5 @@
 using HnSF;
+using NaughtyAttributes;
 using UnityEngine;
 
 namespace rwby
@@ -19,10 +20,21 @@ namespace rwby
         [SelectImplementation(typeof(IConditionVariables))] [SerializeField, SerializeReference] 
         public IConditionVariables condition;
 
-        public bool useMaxFallSpeedStat;
-        public bool useGravityStat;
-        public float maxFallSpeed;
-        public float gravity;
+        private bool calculateValue => !useValue;
+        public bool useValue;
+
+        [SelectImplementation((typeof(FighterStatReferenceBase<float>)))] [SerializeReference] [ShowIf("calculateValue")] [AllowNesting]
+        public FighterStatReferenceFloatBase jumpHeight;
+        [SelectImplementation((typeof(FighterStatReferenceBase<float>)))] [SerializeReference] [ShowIf("calculateValue")] [AllowNesting]
+        public FighterStatReferenceFloatBase jumpTime;
+        
+        [SelectImplementation((typeof(FighterStatReferenceBase<float>)))] [SerializeReference] [ShowIf("useValue")] [AllowNesting]
+        public FighterStatReferenceFloatBase value;
+
+        [SelectImplementation((typeof(FighterStatReferenceBase<float>)))] [SerializeReference]
+        public FighterStatReferenceFloatBase gravityMultiplier;
+        [SelectImplementation((typeof(FighterStatReferenceBase<float>)))] [SerializeReference]
+        public FighterStatReferenceFloatBase maxFallSpeed;
         
         [SelectImplementation(typeof(IStateVariables))] [SerializeField, SerializeReference] 
         private IStateVariables[] children;

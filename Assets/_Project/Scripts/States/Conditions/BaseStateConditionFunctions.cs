@@ -69,7 +69,7 @@ namespace rwby
                 default:
                     throw new ArgumentOutOfRangeException();
             }
-            return fResult;
+            return vars.inverse ? !fResult : fResult;
         }
 
         public static bool ButtonSequence(IFighterBase fighter, IConditionVariables variables, HnSF.StateTimeline arg3, int arg4)

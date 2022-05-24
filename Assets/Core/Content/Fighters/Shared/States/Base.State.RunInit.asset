@@ -18,6 +18,7 @@ MonoBehaviour:
   autoIncrement: 1
   autoLoop: 1
   data:
+  - rid: 6951768358483656713
   - rid: 6951768320479592453
   - rid: 6951768320479592456
   - rid: 6951768313468026895
@@ -28,6 +29,8 @@ MonoBehaviour:
   references:
     version: 2
     RefIds:
+    - rid: -2
+      type: {class: , ns: , asm: }
     - rid: 6951768246662725633
       type: {class: VarApplyMovement, ns: rwby, asm: rwby.csharp}
       data:
@@ -168,3 +171,12 @@ MonoBehaviour:
       type: {class: FighterCmnStateReference, ns: rwby, asm: rwby.csharp}
       data:
         state: 7
+    - rid: 6951768358483656713
+      type: {class: VarExternal, ns: rwby, asm: rwby.csharp}
+      data:
+        frameRanges:
+        - {x: 1, y: 15}
+        condition:
+          rid: -2
+        asset: {fileID: 11400000, guid: 42dc6338964d9494b9492888c730d00e, type: 2}
+        children: []

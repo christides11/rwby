@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7789f25d17401bc4b915ca6fcecf2a29, type: 3}
-  m_Name: Base.State.RunBrake
+  m_Name: Base.State.JumpSquat
   m_EditorClassIdentifier: 
   useBaseState: 0
   baseState: {fileID: 0}
@@ -18,48 +18,58 @@ MonoBehaviour:
   autoIncrement: 1
   autoLoop: 0
   data:
-  - rid: 6951768320479592456
-  - rid: 6951768320479592460
-  stateName: Run Brake
-  stateGroundedGroup: 1
+  - rid: 6951768358483656714
+  - rid: 6951768358483656707
+  stateName: Jump Squat
+  stateGroundedGroup: 2
   allowBaseStateTransitions: 1
   references:
     version: 2
     RefIds:
-    - rid: 6951768320479592456
+    - rid: -2
+      type: {class: , ns: , asm: }
+    - rid: 6951768358483656707
       type: {class: VarChangeState, ns: rwby, asm: rwby.csharp}
       data:
         frameRanges:
         - {x: 5, y: 5}
         condition:
-          rid: 6951768320479592457
+          rid: 6951768358483656708
         stateMovesetID: -1
         state:
-          rid: 6951768320479592458
+          rid: 6951768358483656709
         children: []
-    - rid: 6951768320479592457
+    - rid: 6951768358483656708
       type: {class: ConditionNone, ns: rwby, asm: rwby.csharp}
-    - rid: 6951768320479592458
+    - rid: 6951768358483656709
       type: {class: FighterCmnStateReference, ns: rwby, asm: rwby.csharp}
       data:
-        state: 1
-    - rid: 6951768320479592460
-      type: {class: VarApplyTraction, ns: rwby, asm: rwby.csharp}
+        state: 4
+    - rid: 6951768358483656714
+      type: {class: VarApplyJumpForce, ns: rwby, asm: rwby.csharp}
       data:
-        frameRanges: []
+        frameRanges:
+        - {x: 6, y: 6}
         condition:
-          rid: 6951768320479592461
-        traction:
-          rid: 6951768320479592462
-        applyMovement: 1
-        applyGravity: 0
+          rid: -2
+        useValue: 0
+        value: 0
+        maxJumpTime:
+          rid: 6951768358483656715
+        jumpHeight:
+          rid: 6951768358483656716
         children: []
-    - rid: 6951768320479592461
-      type: {class: ConditionNone, ns: rwby, asm: rwby.csharp}
-    - rid: 6951768320479592462
+    - rid: 6951768358483656715
       type: {class: FighterBaseStatReferenceFloat, ns: rwby, asm: rwby.csharp}
       data:
         inverse: 0
         statReference: 1
         value: 0
-        variable: 0
+        variable: 12
+    - rid: 6951768358483656716
+      type: {class: FighterBaseStatReferenceFloat, ns: rwby, asm: rwby.csharp}
+      data:
+        inverse: 0
+        statReference: 1
+        value: 0
+        variable: 13

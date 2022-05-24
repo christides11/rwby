@@ -18,7 +18,7 @@ namespace rwby
 
         public virtual T GetValue(FighterManager fm)
         {
-            throw new NotImplementedException("Stat reference GetValue not set.");
+            return value;
         }
     }
 }

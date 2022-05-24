@@ -7,7 +7,6 @@ namespace rwby
     [CreateAssetMenu(fileName = "State", menuName = "rwby/statetimeline")]
     public class StateTimeline : HnSF.StateTimeline
     {
-        public string stateName;
         public StateGroundedGroupType stateGroundedGroup;
         public bool allowBaseStateTransitions = true;
     }

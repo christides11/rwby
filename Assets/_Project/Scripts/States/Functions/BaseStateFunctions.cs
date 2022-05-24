@@ -54,7 +54,11 @@ namespace rwby
 
         public static void ApplyGravity(IFighterBase fighter, IStateVariables variables, HnSF.StateTimeline arg3, int arg4)
         {
-            
+            FighterManager f = (FighterManager)fighter;
+            VarApplyGravity vars = (VarApplyGravity)variables;
+
+            float gravity = vars.useValue ? vars.value.GetValue(f) : (2 * vars.jumpHeight.GetValue(f)) / Mathf.Pow(vars.jumpTime.GetValue(f) / 2.0f, 2);
+            f.FPhysicsManager.HandleGravity(vars.maxFallSpeed.GetValue(f), gravity, vars.gravityMultiplier.GetValue(f));
         }
         
         public static void ApplyMovement(IFighterBase fighter, IStateVariables variables, HnSF.StateTimeline arg3, int arg4)
@@ -152,7 +156,7 @@ namespace rwby
 
             foreach (var d in vars.asset.data)
             {
-                f.FStateManager.ProcessStateVariables((rwby.StateTimeline)arg3, d, arg4);
+                f.FStateManager.ProcessStateVariables((rwby.StateTimeline)arg3, d, arg4, false);
             }
         }
 

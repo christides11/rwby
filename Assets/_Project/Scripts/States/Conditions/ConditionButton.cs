@@ -13,7 +13,8 @@ namespace rwby
             FirstPress = 1,
             Released = 2
         }
-        
+
+        public bool inverse;
         public PlayerInputType button;
         public ButtonStateType buttonState;
         public int offset;

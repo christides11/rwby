@@ -18,14 +18,18 @@ MonoBehaviour:
   autoIncrement: 1
   autoLoop: 1
   data:
+  - rid: 6951768358483656711
   - rid: 6951768313468026897
   - rid: 6951768246662725633
   - rid: 6951768313468026892
   stateName: Walk
   stateGroundedGroup: 1
+  allowBaseStateTransitions: 1
   references:
     version: 2
     RefIds:
+    - rid: -2
+      type: {class: , ns: , asm: }
     - rid: 6951768246662725633
       type: {class: VarApplyMovement, ns: rwby, asm: rwby.csharp}
       data:
@@ -122,10 +126,20 @@ MonoBehaviour:
     - rid: 6951768313468026897
       type: {class: VarExternal, ns: rwby, asm: rwby.csharp}
       data:
-        frameRanges: []
+        frameRanges:
+        - {x: -1, y: -1}
         condition:
           rid: 6951768313468026898
         asset: {fileID: 11400000, guid: 4a2cf81f18e66e149b41758e4103a6ff, type: 2}
         children: []
     - rid: 6951768313468026898
       type: {class: ConditionNone, ns: rwby, asm: rwby.csharp}
+    - rid: 6951768358483656711
+      type: {class: VarExternal, ns: rwby, asm: rwby.csharp}
+      data:
+        frameRanges:
+        - {x: -1, y: -1}
+        condition:
+          rid: -2
+        asset: {fileID: 11400000, guid: 42dc6338964d9494b9492888c730d00e, type: 2}
+        children: []
