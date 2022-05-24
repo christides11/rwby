@@ -10,6 +10,9 @@ namespace rwby
             functions.Add(typeof(ConditionIsGrounded), BaseStateConditionFunctions.IsGrounded);
             functions.Add(typeof(ConditionButton), BaseStateConditionFunctions.Button);
             functions.Add(typeof(ConditionButtonSequence), BaseStateConditionFunctions.ButtonSequence);
+            functions.Add(typeof(ConditionAnd), BaseStateConditionFunctions.ANDCondition);
+            functions.Add(typeof(ConditionOr), BaseStateConditionFunctions.ORCondition);
+            functions.Add(typeof(ConditionCanAirJump), BaseStateConditionFunctions.CanAirJump);
         }
     }
 }

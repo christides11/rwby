@@ -10,20 +10,20 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7789f25d17401bc4b915ca6fcecf2a29, type: 3}
-  m_Name: Base.State.Fall
+  m_Name: Base.State.AirJump
   m_EditorClassIdentifier: 
-  stateName: Fall
+  stateName: Air Jump
   useBaseState: 0
   baseState: {fileID: 0}
   totalFrames: 10
   autoIncrement: 1
   autoLoop: 1
-  autoLoopFrame: 1
+  autoLoopFrame: 2
   data:
-  - rid: 6951768367642443823
-  - rid: 6951768367642443804
+  - rid: 6951768367642443794
   - rid: 6951768358483656717
   - rid: 6951768367642443779
+  - rid: 6951768367642443811
   stateGroundedGroup: 2
   allowBaseStateTransitions: 1
   references:
@@ -56,14 +56,14 @@ MonoBehaviour:
         inverse: 0
         statReference: 1
         value: 0
-        variable: 13
+        variable: 18
     - rid: 6951768367642443777
       type: {class: FighterBaseStatReferenceFloat, ns: rwby, asm: rwby.csharp}
       data:
         inverse: 0
         statReference: 1
         value: 0
-        variable: 12
+        variable: 17
     - rid: 6951768367642443778
       type: {class: FighterBaseStatReferenceFloat, ns: rwby, asm: rwby.csharp}
       data:
@@ -145,24 +145,55 @@ MonoBehaviour:
       type: {class: FighterBaseStatReferenceFloat, ns: rwby, asm: rwby.csharp}
       data:
         inverse: 0
-        statReference: 1
+        statReference: 0
         value: 1
-        variable: 16
-    - rid: 6951768367642443804
-      type: {class: VarExternal, ns: rwby, asm: rwby.csharp}
+        variable: 0
+    - rid: 6951768367642443794
+      type: {class: VarChangeState, ns: rwby, asm: rwby.csharp}
       data:
         frameRanges:
-        - {x: -1, y: -1}
+        - {x: 2, y: 10}
         condition:
-          rid: -2
-        asset: {fileID: 11400000, guid: ecbe9389242b2d644bb796ca1e9bd28f, type: 2}
+          rid: 6951768367642443795
+        stateMovesetID: -1
+        state:
+          rid: 6951768367642443796
         children: []
-    - rid: 6951768367642443823
-      type: {class: VarExternal, ns: rwby, asm: rwby.csharp}
+    - rid: 6951768367642443795
+      type: {class: ConditionFallSpeed, ns: rwby, asm: rwby.csharp}
+      data:
+        absoluteValue: 0
+        minValue: -100
+        maxValue: 5
+    - rid: 6951768367642443796
+      type: {class: FighterCmnStateReference, ns: rwby, asm: rwby.csharp}
+      data:
+        state: 26
+    - rid: 6951768367642443811
+      type: {class: VarApplyJumpForce, ns: rwby, asm: rwby.csharp}
       data:
         frameRanges:
-        - {x: -1, y: -1}
+        - {x: 0, y: 0}
         condition:
           rid: -2
-        asset: {fileID: 11400000, guid: bc799e59dd7b59244a7f8dcbdcafabf0, type: 2}
+        useValue: 0
+        value: 0
+        maxJumpTime:
+          rid: 6951768367642443812
+        jumpHeight:
+          rid: 6951768367642443824
         children: []
+    - rid: 6951768367642443812
+      type: {class: FighterBaseStatReferenceFloat, ns: rwby, asm: rwby.csharp}
+      data:
+        inverse: 0
+        statReference: 1
+        value: 0
+        variable: 17
+    - rid: 6951768367642443824
+      type: {class: FighterBaseStatReferenceFloat, ns: rwby, asm: rwby.csharp}
+      data:
+        inverse: 0
+        statReference: 1
+        value: 0
+        variable: 18

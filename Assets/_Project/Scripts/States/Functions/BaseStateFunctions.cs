@@ -49,7 +49,10 @@ namespace rwby
 
         public static void SetFallSpeed(IFighterBase fighter, IStateVariables variables, HnSF.StateTimeline arg3, int arg4)
         {
-            
+            FighterManager f = (FighterManager)fighter;
+            VarSetFallSpeed vars = (VarSetFallSpeed)variables;
+
+            f.FPhysicsManager.forceGravity = vars.value;
         }
 
         public static void ApplyGravity(IFighterBase fighter, IStateVariables variables, HnSF.StateTimeline arg3, int arg4)

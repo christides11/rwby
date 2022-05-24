@@ -79,5 +79,42 @@ namespace rwby
             
             return f.CombatManager.CheckForInputSequence(vars.sequence, (uint)vars.offset, vars.processSequenceButtons, vars.holdInput);
         }
+
+        public static bool ANDCondition(IFighterBase fighter, IConditionVariables variables, HnSF.StateTimeline arg3,
+            int arg4)
+        {
+            FighterManager f = fighter as FighterManager;
+            ConditionAnd vars = (ConditionAnd)variables;
+
+            for (int i = 0; i < vars.conditions.Length; i++)
+            {
+                if (!f.FStateManager.conditionMapper.TryCondition(vars.conditions[i].GetType(), f, vars.conditions[i],
+                        arg3, arg4)) return false;
+            }
+            return true;
+        }        
+        
+        public static bool ORCondition(IFighterBase fighter, IConditionVariables variables, HnSF.StateTimeline arg3,
+            int arg4)
+        {
+            FighterManager f = fighter as FighterManager;
+            ConditionOr vars = (ConditionOr)variables;
+
+            for (int i = 0; i < vars.conditions.Length; i++)
+            {
+                if (f.FStateManager.conditionMapper.TryCondition(vars.conditions[i].GetType(), f, vars.conditions[i],
+                        arg3, arg4)) return true;
+            }
+            return false;
+        }
+        
+        public static bool CanAirJump(IFighterBase fighter, IConditionVariables variables, HnSF.StateTimeline arg3,
+            int arg4)
+        {
+            FighterManager f = fighter as FighterManager;
+            ConditionCanAirJump vars = (ConditionCanAirJump)variables;
+
+            return f.CurrentJump < vars.maxAirJumps.GetValue(f);
+        }
     }
 }

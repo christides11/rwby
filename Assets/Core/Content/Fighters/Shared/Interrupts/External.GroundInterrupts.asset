@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: External.GroundInterrupts
   m_EditorClassIdentifier: 
   data:
+  - rid: 6951768367642443808
   - rid: 6951768358483656704
   references:
     version: 2
@@ -30,6 +31,7 @@ MonoBehaviour:
     - rid: 6951768358483656705
       type: {class: ConditionButton, ns: rwby, asm: rwby.csharp}
       data:
+        inverse: 0
         button: 0
         buttonState: 0
         offset: 0
@@ -38,3 +40,22 @@ MonoBehaviour:
       type: {class: FighterCmnStateReference, ns: rwby, asm: rwby.csharp}
       data:
         state: 6
+    - rid: 6951768367642443808
+      type: {class: VarChangeState, ns: rwby, asm: rwby.csharp}
+      data:
+        frameRanges:
+        - {x: -1, y: -1}
+        condition:
+          rid: 6951768367642443809
+        stateMovesetID: -1
+        state:
+          rid: 6951768367642443810
+        children: []
+    - rid: 6951768367642443809
+      type: {class: ConditionIsGrounded, ns: rwby, asm: rwby.csharp}
+      data:
+        inverse: 1
+    - rid: 6951768367642443810
+      type: {class: FighterCmnStateReference, ns: rwby, asm: rwby.csharp}
+      data:
+        state: 5

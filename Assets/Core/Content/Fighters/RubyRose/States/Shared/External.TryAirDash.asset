@@ -10,40 +10,38 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d4d62b28b52db7d459dd2f283317c705, type: 3}
-  m_Name: External.AerialInterrupts
+  m_Name: External.TryAirDash
   m_EditorClassIdentifier: 
   data:
-  - rid: 6951768367642443801
-  - rid: 6951768367642443837
+  - rid: 6951768367642443815
   references:
     version: 2
     RefIds:
-    - rid: -2
-      type: {class: , ns: , asm: }
-    - rid: 6951768367642443801
+    - rid: 6951768367642443815
       type: {class: VarChangeState, ns: rwby, asm: rwby.csharp}
       data:
         frameRanges:
         - {x: -1, y: -1}
         condition:
-          rid: 6951768367642443802
+          rid: 6951768367642443817
         stateMovesetID: -1
         state:
-          rid: 6951768367642443803
+          rid: 6951768367642443816
         children: []
-    - rid: 6951768367642443802
-      type: {class: ConditionIsGrounded, ns: rwby, asm: rwby.csharp}
-      data:
-        inverse: 0
-    - rid: 6951768367642443803
+    - rid: 6951768367642443816
       type: {class: FighterCmnStateReference, ns: rwby, asm: rwby.csharp}
       data:
-        state: 28
-    - rid: 6951768367642443837
-      type: {class: VarExternal, ns: rwby, asm: rwby.csharp}
+        state: 9
+    - rid: 6951768367642443817
+      type: {class: ConditionAnd, ns: rwby, asm: rwby.csharp}
       data:
-        frameRanges: []
-        condition:
-          rid: -2
-        asset: {fileID: 11400000, guid: 280b115f7de70e2429fc1b2a1d4051f2, type: 2}
-        children: []
+        conditions:
+        - rid: 6951768367642443818
+    - rid: 6951768367642443818
+      type: {class: ConditionButton, ns: rwby, asm: rwby.csharp}
+      data:
+        inverse: 0
+        button: 4
+        buttonState: 1
+        offset: 0
+        buffer: 0
