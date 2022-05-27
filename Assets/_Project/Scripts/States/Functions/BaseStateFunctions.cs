@@ -191,5 +191,22 @@ namespace rwby
             
             f.RotateTowards(wantedDir, vars.rotationSpeed.GetValue(f));
         }
+
+        public static void ModifyAnimationSet(IFighterBase fighter, IStateVariables variables, HnSF.StateTimeline arg3,
+            int arg4)
+        {
+            FighterManager f = (FighterManager)fighter;
+            VarModifyAnimationSet vars = (VarModifyAnimationSet)variables;
+
+            switch (vars.modifyType)
+            {
+                case VarModifyType.SET:
+                    f.fighterAnimator.SetAnimationSet(0, vars.wantedAnimations, 0.0f);
+                    break;
+                case VarModifyType.ADD:
+                    f.fighterAnimator.AddAnimationToSet(0, vars.wantedAnimations);
+                    break;
+            }
+        }
     }
 }

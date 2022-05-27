@@ -19,7 +19,7 @@ namespace rwby
         {
             for (int i = 0; i < animations.Count; i++)
             {
-                animations[i].index = i;
+                //animations[i].index = i;
             }
         }
 

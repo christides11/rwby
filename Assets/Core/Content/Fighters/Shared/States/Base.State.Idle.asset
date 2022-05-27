@@ -12,16 +12,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7789f25d17401bc4b915ca6fcecf2a29, type: 3}
   m_Name: Base.State.Idle
   m_EditorClassIdentifier: 
+  stateName: Idle
   useBaseState: 0
   baseState: {fileID: 0}
   totalFrames: 10
   autoIncrement: 1
   autoLoop: 1
+  autoLoopFrame: 1
   data:
   - rid: 6951768358483656710
   - rid: 6951768280129339395
   - rid: 6951768201293725696
-  stateName: Idle
+  - rid: 6951768432040214528
   stateGroundedGroup: 1
   allowBaseStateTransitions: 1
   references:
@@ -69,4 +71,22 @@ MonoBehaviour:
         condition:
           rid: -2
         asset: {fileID: 11400000, guid: 42dc6338964d9494b9492888c730d00e, type: 2}
+        children: []
+    - rid: 6951768432040214528
+      type: {class: VarModifyAnimationSet, ns: rwby, asm: rwby.csharp}
+      data:
+        frameRanges:
+        - {x: 0, y: 0}
+        condition:
+          rid: -2
+        modifyType: 1
+        wantedAnimations:
+        - animationbank:
+            modGUID:
+              guid: 1d292c1f00000000
+            contentType: 7
+            contentGUID:
+              guid: 2c2c000000000000
+          animation: idle
+        fadeTime: 0
         children: []

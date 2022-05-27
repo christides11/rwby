@@ -4,16 +4,17 @@ using UnityEngine;
 
 public class RRoseMan : FighterManager
 {
-    /*
+    public ModObjectGUIDReference[] animationbankReferences;
     public override async UniTask<bool> OnFighterLoaded()
     {
-        // TODO: Load Ruby's content.
-        var temp = new ModObjectReference((1, 1), 1);
-        bool animationbankLoadResult = await ContentManager.singleton.LoadContentDefinition<IAnimationbankDefinition>(temp);
-        if (animationbankLoadResult == false)
+        for (int i = 0; i < animationbankReferences.Length; i++)
         {
-            Debug.LogError("Error loading animationbank.");
-            return false;
+            bool animationbankLoadResult = await ContentManager.singleton.LoadContentDefinition(animationbankReferences[i]);
+            if (animationbankLoadResult == false)
+            {
+                Debug.LogError("Error loading animationbank.");
+                return false;
+            }
         }
         return true;
     }
@@ -21,10 +22,12 @@ public class RRoseMan : FighterManager
     public override void Awake()
     {
         base.Awake();
-        
-        var temp = new ModObjectReference((1, 1), 1);
-        fighterAnimator.RegisterBank(temp);
-    }*/
+
+        for (int i = 0; i < animationbankReferences.Length; i++)
+        {
+            fighterAnimator.RegisterBank(animationbankReferences[i]);
+        }
+    }
 
     public override void Spawned()
     {

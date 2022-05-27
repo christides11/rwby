@@ -5,20 +5,20 @@ using System.Linq;
 using UnityEngine;
 using Fusion;
 using Animancer;
+using UnityEngine.Profiling;
 
 namespace rwby
 {
     [OrderAfter(typeof(FighterStateManager))]
     public class FighterAnimator : NetworkBehaviour
     {
-        [HideInInspector] public List<ModObjectGUIDReference> bankMap = new List<ModObjectGUIDReference>();
+        [HideInInspector] public Dictionary<ModObjectGUIDReference, int> bankMap = new Dictionary<ModObjectGUIDReference, int>();
         [HideInInspector] public List<IAnimationbankDefinition> banks = new List<IAnimationbankDefinition>();
         [SerializeField] private AnimancerComponent animancer;
         
         [Networked] private FighterAnimationRoot currentAnimationSet { get; set; }
         // For interpolation.
-        [Networked] private FighterAnimationRoot previousAnimationSet { get; set; }
-        //[Networked] public bool tickAccurate { get; set; } = false;
+        //[Networked] private FighterAnimationRoot previousAnimationSet { get; set; }
 
         private FighterAnimationRoot currentAnimancerRepresentation;
 
@@ -31,52 +31,57 @@ namespace rwby
             animancer.Layers[0].Speed = 0.0f;
             animancer.Layers[0].Play(animationMixer, 0.0f);
         }
-        
-        /*
-        public void SyncFromState(ForceSetType syncMode, int layer, AnimationEntry[] wantedAnimations)
+
+        public void SetAnimationSet(int layer, AnimationReference[] wantedAnimations, float fadeTime = 0.0f)
         {
-            if (syncMode == ForceSetType.SET) ClearAnimationSet(layer);
+            ClearAnimationSet(layer);
+            AddAnimationToSet(layer, wantedAnimations);
+            //SyncAnimancer();
+        }
+
+        public void AddAnimationToSet(int layer, AnimationReference[] wantedAnimations)
+        {
+            Profiler.BeginSample("ADD ANIMATION TO SET", gameObject);
             for (int i = 0; i < wantedAnimations.Length; i++)
             {
                 var temp = currentAnimationSet;
                 temp.layer0.Add(new FighterAnimationNode()
                 {
-                    bank = wantedAnimations[i].animationbankReference,
-                    animation = wantedAnimations[i].animation,
-                    weight = wantedAnimations[i].startWeight,
-                    currentTime = wantedAnimations[i].time
+                    bank = bankMap[wantedAnimations[i].animationbank],
+                    animation = banks[bankMap[wantedAnimations[i].animationbank]].AnimationMap[wantedAnimations[i].animation],
+                    frame = 0,
+                    weight = 1.0f
                 });
                 currentAnimationSet = temp;
             }
-            
-            SyncAnimancer();
-        }*/
+            Profiler.EndSample();
+            //SyncAnimancer();
+        }
 
         public void SetAnimationWeight(int layer, int index, float weight)
         {
             var fighterAnimationNode = currentAnimationSet.layer0[index];
             fighterAnimationNode.weight = weight;
             currentAnimationSet.layer0.Set(index, fighterAnimationNode);
-            
             animancer.Layers[layer].GetChild(index).Weight = weight;
         }
 
-        public void SetAnimationTime(int layer, int index, float time)
+        public void SetAnimationTime(int layer, int index, int frame)
         {
             var fighterAnimationNode = currentAnimationSet.layer0[index];
-            fighterAnimationNode.currentTime = time;
+            fighterAnimationNode.frame = frame;
             currentAnimationSet.layer0.Set(index, fighterAnimationNode);
 
-            animancer.Layers[layer].GetChild(index).Time = time;
+            animancer.Layers[layer].GetChild(index).Time = frame * Runner.Simulation.DeltaTime;
         }
 
-        public void AddAnimationTime(int layer, int index, float time)
+        public void AddAnimationTime(int layer, int index, int frame)
         {
             var fighterAnimationNode = currentAnimationSet.layer0[index];
-            fighterAnimationNode.currentTime += time;
+            fighterAnimationNode.frame += frame;
             currentAnimationSet.layer0.Set(index, fighterAnimationNode);
 
-            animancer.Layers[layer].GetChild(index).Time += time;
+            animancer.Layers[layer].GetChild(index).Time += frame * Runner.Simulation.DeltaTime;
         }
 
         public override void Render()
@@ -135,9 +140,9 @@ namespace rwby
 
         public void RegisterBank(ModObjectGUIDReference bank)
         {
-            /*
             if (bankMap.ContainsKey(bank)) return;
-            bankMap.Add(bank, ContentManager.singleton.GetContentDefinition<IAnimationbankDefinition>(bank));*/
+            banks.Add(ContentManager.singleton.GetContentDefinition<IAnimationbankDefinition>(bank));
+            bankMap.Add(bank, banks.Count-1);
         }
     }
 }

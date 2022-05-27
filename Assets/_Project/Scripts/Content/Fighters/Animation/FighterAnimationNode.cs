@@ -6,10 +6,10 @@ namespace rwby
 {
     public struct FighterAnimationNode : INetworkStruct, IEquatable<rwby.FighterAnimationNode>
     {
-        public ModObjectReference bank;
+        public int bank;
         public int animation;
         public float weight;
-        public float currentTime;
+        public int frame;
 
         public override bool Equals(object obj)
         {
@@ -25,7 +25,7 @@ namespace rwby
         {
             return a.bank == b.bank && a.animation == b.animation
                                     && Mathf.Approximately(a.weight, b.weight) &&
-                                    Mathf.Approximately(a.currentTime, b.currentTime);
+                                    a.frame == b.frame;
         }
 
         public static bool operator !=(rwby.FighterAnimationNode a, rwby.FighterAnimationNode b)
@@ -35,7 +35,7 @@ namespace rwby
 
         public override int GetHashCode()
         {
-            return (bank, animation, weight, currentTime).GetHashCode();
+            return (bank, animation, weight, frame).GetHashCode();
         }
     }
 }
