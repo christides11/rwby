@@ -24,7 +24,7 @@ namespace rwby
 
         [FormerlySerializedAs("currentLoadedScenes")] 
         public List<CustomSceneRef> localLoadedScenes = new List<CustomSceneRef>();
-        public int _currentSceneChangeValue = 0;
+        public int _currentSceneChangeValue = -1;
 
         public byte loadPercentage = 0;
         
@@ -212,11 +212,10 @@ namespace rwby
 
         private bool IsSceneListUpToDate()
         {
-            // Scene list changed, count didn't.
-            if (Runner.CurrentScene != _currentSceneChangeValue) return false;
-            // Scene list changed by count.
-            if (SessionHandler.GetCurrentScenes().Count != localLoadedScenes.Count) return false;
-            return true;
+            if (Runner.CurrentScene == _currentSceneChangeValue) return true;
+            if (SessionHandler.GetCurrentScenes() == localLoadedScenes) return true;
+            _currentSceneChangeValue = Runner.CurrentScene;
+            return false;
         }
 
         // TODO: ?

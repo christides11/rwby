@@ -37,23 +37,9 @@ namespace rwby
         public static void OnChangedState(Changed<FighterStateManager> changed){
             changed.Behaviour.OnStateChanged?.Invoke(changed.Behaviour);
         }
-        
-        public void ResimulationSync()
-        {
-            /*
-            var currentState = (manager.StateManager.GetMoveset(CurrentStateMoveset) as rwby.Moveset).stateMap[CurrentState];
-            if (currentState != director.playableAsset) InitState(currentState);
-            director.time = (float)CurrentStateFrame * Runner.Simulation.DeltaTime;*/
-        }
-        
+
         public void Tick()
         {
-            /*
-            if (Runner.Simulation.IsResimulation && Runner.Simulation.IsFirstTick)
-            {
-                ResimulationSync();
-            }*/
-            
             if (markedForStateChange)
             {
                 ChangeState(nextState, 0, 0, true);
@@ -67,6 +53,7 @@ namespace rwby
 
         private void ProcessState(StateTimeline state, bool onInterrupt = false, bool autoIncrement = false, bool autoLoop = false)
         {
+            var topState = state;
             while (true)
             {
                 int realFrame = onInterrupt ? state.totalFrames+1 : Mathf.Clamp(CurrentStateFrame, 0, state.totalFrames);
@@ -78,7 +65,7 @@ namespace rwby
                 if (!state.useBaseState) break;
                 state = (StateTimeline)state.baseState;
             }
-
+            state = topState;
             if (onInterrupt != false || !autoIncrement) return;
             IncrementFrame(1);
             if (autoLoop && CurrentStateFrame > state.totalFrames)

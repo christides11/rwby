@@ -208,5 +208,39 @@ namespace rwby
                     break;
             }
         }
+        
+        public static void ModifyAnimationFrame(IFighterBase fighter, IStateVariables variables, HnSF.StateTimeline arg3,
+            int arg4)
+        {
+            FighterManager f = (FighterManager)fighter;
+            VarModifyAnimationFrame vars = (VarModifyAnimationFrame)variables;
+
+            switch (vars.modifyType)
+            {
+                case VarModifyType.SET:
+                    f.fighterAnimator.SetAnimationTime(0, vars.animations, vars.frame);
+                    break;
+                case VarModifyType.ADD:
+                    f.fighterAnimator.AddAnimationTime(0, vars.animations, vars.frame);
+                    break;
+            }
+        }
+        
+        public static void ModifyAnimationWeight(IFighterBase fighter, IStateVariables variables, HnSF.StateTimeline arg3,
+            int arg4)
+        {
+            FighterManager f = (FighterManager)fighter;
+            VarModifyAnimationWeight vars = (VarModifyAnimationWeight)variables;
+
+            switch (vars.modifyType)
+            {
+                case VarModifyType.SET:
+                    f.fighterAnimator.SetAnimationWeight(0, vars.animations, vars.weight);
+                    break;
+                case VarModifyType.ADD:
+                    f.fighterAnimator.AddAnimationWeight(0, vars.animations, vars.weight);
+                    break;
+            }
+        }
     }
 }

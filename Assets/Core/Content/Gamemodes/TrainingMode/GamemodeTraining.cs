@@ -174,7 +174,7 @@ namespace rwby.core.training
                 mapReference = Map,
                 sceneIdentifier = 0
             });
-            Runner.SetActiveScene(5);
+            Runner.SetActiveScene(Runner.CurrentScene+1);
 
             await UniTask.WaitForEndOfFrame(); 
             var sh = sessionManager.gameManager.networkManager.GetSessionHandlerByRunner(Runner);

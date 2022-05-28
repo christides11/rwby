@@ -15,6 +15,11 @@ namespace rwby
             throw new System.NotImplementedException();
         }
 
+        public virtual AnimationbankAnimationEntry GetAnimation(string name)
+        {
+            return Animations[AnimationMap[name]];
+        }
+
         public override bool Unload()
         {
             throw new System.NotImplementedException();

@@ -21,6 +21,8 @@ namespace rwby
             functions.Add(typeof(VarModifyRotation), BaseStateFunctions.ModifyRotation);
             functions.Add(typeof(VarRotateTowards), BaseStateFunctions.RotateTowards);
             functions.Add(typeof(VarModifyAnimationSet), BaseStateFunctions.ModifyAnimationSet);
+            functions.Add(typeof(VarModifyAnimationFrame), BaseStateFunctions.ModifyAnimationFrame);
+            functions.Add(typeof(VarModifyAnimationWeight), BaseStateFunctions.ModifyAnimationWeight);
         }
     }
 }
