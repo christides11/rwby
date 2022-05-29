@@ -5,6 +5,8 @@ namespace rwby
 {
     public struct FighterAnimationRoot : INetworkStruct
     {
+        public float layerFadeWeight;
+        public float layerFadeAmt;
         [Networked, Capacity(10)] public NetworkArray<FighterAnimationNode> layer0 => default;
         [Networked, Capacity(10)] public NetworkArray<FighterAnimationNode> fadeLayer => default;
 
@@ -25,7 +27,6 @@ namespace rwby
             }
 
             return true;
-            //return Mathf.Approximately(a.weight, b.weight);
         }
 
         public static bool operator !=(FighterAnimationRoot a, FighterAnimationRoot b)

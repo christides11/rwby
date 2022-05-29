@@ -23,9 +23,10 @@ namespace rwby
 
         public static bool operator ==(rwby.FighterAnimationNode a, rwby.FighterAnimationNode b)
         {
-            return a.bank == b.bank && a.animation == b.animation
-                                    && Mathf.Approximately(a.weight, b.weight) &&
-                                    a.frame == b.frame;
+            return a.bank == b.bank 
+                   && a.animation == b.animation
+                   && Mathf.Approximately(a.weight, b.weight) &
+                   a.frame == b.frame;
         }
 
         public static bool operator !=(rwby.FighterAnimationNode a, rwby.FighterAnimationNode b)

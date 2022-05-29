@@ -24,14 +24,15 @@ namespace rwby
         [SerializeField] private AnimancerComponent animancer;
         
         [Networked] private FighterAnimationRoot animationSet { get; set; }
-        [Networked] private float layerFadeWeight { get; set; } = 0.0f;
-        [Networked] private float layerFadeAmt { get; set; } = 0.0f;
         private bool animDirty = true;
+        public bool smoothAnimate = true;
 
+        private FighterAnimationRoot previousAnimationSet;
         private FighterAnimationRoot currentAnimancerRepresentation;
 
         private void Awake()
         {
+            animancer.Playable.PauseGraph();
             animancer.Layers[0].Weight = 1.0f;
             animDirty = true;
         }
@@ -45,18 +46,18 @@ namespace rwby
 
         private void UpdateFadeSet(float fadeTime)
         {
+            var temp = animationSet;
             if (Mathf.Approximately(fadeTime, 0.0f) || animationSet.layer0[0].bank == 0)
             {
                 ClearFadeLayer();
-                layerFadeAmt = 0;
-                layerFadeWeight = 0;
+                temp.layerFadeAmt = 0;
+                temp.layerFadeWeight = 0;
+                animationSet = temp;
                 return;
             }
             
-            layerFadeAmt = 1.0f / fadeTime;
-            layerFadeWeight = 1.0f;
-
-            var temp = animationSet;
+            temp.layerFadeAmt = 1.0f / fadeTime;
+            temp.layerFadeWeight = 1.0f;
 
             for (int i = 0; i < temp.layer0.Length; i++)
             {
@@ -68,7 +69,6 @@ namespace rwby
 
         public void AddAnimationToSet(int layer, AnimationReference[] wantedAnimations)
         {
-            Profiler.BeginSample("ADD ANIMATION TO SET", gameObject);
             for (int i = 0; i < wantedAnimations.Length; i++)
             {
                 var temp = animationSet;
@@ -83,7 +83,6 @@ namespace rwby
             }
 
             animDirty = true;
-            Profiler.EndSample();
         }
 
         public void SetAnimationWeight(int layer, int[] animations, float weight)
@@ -141,6 +140,25 @@ namespace rwby
         public override void Render()
         {
             base.Render();
+
+            if (smoothAnimate)
+            {
+                float alpha = Runner.Simulation.StateAlpha;
+                for (int i = 0; i < animationSet.layer0.Length; i++)
+                {
+                    if (previousAnimationSet.layer0[i] != animationSet.layer0[i]) break;
+                    if (previousAnimationSet.layer0[i].bank == 0) break;
+                    var c = banks[animationSet.layer0[i].bank - 1].Animations[animationSet.layer0[i].animation - 1]
+                        .clip;
+                    var cState = animancer.Layers[0].GetOrCreateState(c);
+                    cState.Weight = (animationSet.layer0[i].weight) * alpha
+                                    + (previousAnimationSet.layer0[i].weight) * (1.0f - alpha);
+                    cState.Time = (animationSet.layer0[i].frame * Runner.DeltaTime) * alpha
+                                  + (previousAnimationSet.layer0[i].frame * Runner.DeltaTime) * (1.0f - alpha);
+                }
+
+                animancer.Evaluate();
+            }
         }
 
         public override void FixedUpdateNetwork()
@@ -151,14 +169,17 @@ namespace rwby
                 animDirty = false;
             }
 
-            if (!Mathf.Approximately(layerFadeWeight, 0.0f))
+            if (!Mathf.Approximately(animationSet.layerFadeWeight, 0.0f))
             {
-                layerFadeWeight = Mathf.Clamp(layerFadeWeight-(layerFadeAmt*Runner.DeltaTime), 0.0f, 1.0f);
+                var temp = animationSet;
+                temp.layerFadeWeight = Mathf.Clamp(temp.layerFadeWeight-(temp.layerFadeAmt * Runner.DeltaTime), 0.0f, 1.0f);
                 animDirty = true;
+                animationSet = temp;
             }
 
             if (animDirty)
             {
+                previousAnimationSet = currentAnimancerRepresentation;
                 SyncAnimancer();
                 animDirty = false;
             }
@@ -166,14 +187,9 @@ namespace rwby
         
         private void SyncAnimancer()
         {
-            Profiler.BeginSample("SYNCING ANIMANCER", gameObject);
-            
-            Profiler.BeginSample("UPDATING REPRESENTATION", gameObject);
             currentAnimancerRepresentation = animationSet;
             ClearWeights(0);
-            Profiler.EndSample();
             
-            Profiler.BeginSample("UPDATING CLIPS", gameObject);
             for (int i = 0; i < animationSet.layer0.Length; i++)
             {
                 if (animationSet.layer0[i].bank == 0) break;
@@ -191,14 +207,9 @@ namespace rwby
                 cState.Weight = animationSet.fadeLayer[i].weight;
                 cState.Time = animationSet.fadeLayer[i].frame * Runner.DeltaTime;
             }
-            Profiler.EndSample();
-
-            Profiler.BeginSample("APPLY CHANGES", gameObject);
-            animancer.Layers[3].Weight = layerFadeWeight;
-            animancer.Evaluate();
-            Profiler.EndSample();
             
-            Profiler.EndSample();
+            animancer.Layers[3].Weight = animationSet.layerFadeWeight;
+            animancer.Evaluate();
         }
 
         public AnimationClip GetClip(AnimationReference animation)
