@@ -22,7 +22,7 @@ namespace rwby
 
         public VarModifyType modifyType;
         public AnimationReference[] wantedAnimations;
-        [ShowIf("modifyType", VarModifyType.SET)]public float fadeTime;
+        [ShowIf("modifyType", VarModifyType.SET)] public float fadeTime;
         
         [SelectImplementation(typeof(IStateVariables))] [SerializeField, SerializeReference] 
         private IStateVariables[] children;

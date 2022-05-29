@@ -46,7 +46,7 @@ MonoBehaviour:
             contentGUID:
               guid: 2c2c000000000000
           animation: walk.f
-        fadeTime: 0
+        fadeTime: 0.5
         children: []
     - rid: 6951768472487198722
       type: {class: VarModifyAnimationFrame, ns: rwby, asm: rwby.csharp}
@@ -56,14 +56,7 @@ MonoBehaviour:
         condition:
           rid: -2
         modifyType: 1
-        animations:
-        - animationbank:
-            modGUID:
-              guid: 1d292c1f00000000
-            contentType: 7
-            contentGUID:
-              guid: 2c2c000000000000
-          animation: walk.f
+        animations: 00000000
         frame: 0
         children: []
     - rid: 6951768472487198723
@@ -74,13 +67,6 @@ MonoBehaviour:
         condition:
           rid: -2
         modifyType: 0
-        animations:
-        - animationbank:
-            modGUID:
-              guid: 1d292c1f00000000
-            contentType: 7
-            contentGUID:
-              guid: 2c2c000000000000
-          animation: walk.f
+        animations: 00000000
         frame: 1
         children: []

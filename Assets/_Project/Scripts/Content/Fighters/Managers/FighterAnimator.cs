@@ -24,19 +24,46 @@ namespace rwby
         [SerializeField] private AnimancerComponent animancer;
         
         [Networked] private FighterAnimationRoot animationSet { get; set; }
+        [Networked] private float layerFadeWeight { get; set; } = 0.0f;
+        [Networked] private float layerFadeAmt { get; set; } = 0.0f;
         private bool animDirty = true;
 
         private FighterAnimationRoot currentAnimancerRepresentation;
 
-        public void Awake()
+        private void Awake()
         {
             animancer.Layers[0].Weight = 1.0f;
+            animDirty = true;
         }
 
         public void SetAnimationSet(int layer, AnimationReference[] wantedAnimations, float fadeTime = 0.0f)
         {
+            UpdateFadeSet(fadeTime);
             ClearAnimationSet(layer);
             AddAnimationToSet(layer, wantedAnimations);
+        }
+
+        private void UpdateFadeSet(float fadeTime)
+        {
+            if (Mathf.Approximately(fadeTime, 0.0f) || animationSet.layer0[0].bank == 0)
+            {
+                ClearFadeLayer();
+                layerFadeAmt = 0;
+                layerFadeWeight = 0;
+                return;
+            }
+            
+            layerFadeAmt = 1.0f / fadeTime;
+            layerFadeWeight = 1.0f;
+
+            var temp = animationSet;
+
+            for (int i = 0; i < temp.layer0.Length; i++)
+            {
+                temp.fadeLayer.Set(i, temp.layer0[i]);
+            }
+            
+            animationSet = temp;
         }
 
         public void AddAnimationToSet(int layer, AnimationReference[] wantedAnimations)
@@ -45,10 +72,10 @@ namespace rwby
             for (int i = 0; i < wantedAnimations.Length; i++)
             {
                 var temp = animationSet;
-                temp.layer0.Add(new FighterAnimationNode()
+                temp.layer0.Set(i, new FighterAnimationNode()
                 {
-                    bank = bankMap[wantedAnimations[i].animationbank],
-                    animation = banks[bankMap[wantedAnimations[i].animationbank]].AnimationMap[wantedAnimations[i].animation],
+                    bank = bankMap[wantedAnimations[i].animationbank]+1,
+                    animation = banks[bankMap[wantedAnimations[i].animationbank]].AnimationMap[wantedAnimations[i].animation]+1,
                     frame = 0,
                     weight = 1.0f
                 });
@@ -78,7 +105,7 @@ namespace rwby
             for (int i = 0; i < animations.Length; i++)
             {
                 var temp2 = temp.layer0[animations[i]];
-                temp2.weight += weight;
+                temp2.weight = Mathf.Clamp(temp2.weight + weight, 0, 1);
                 temp.layer0.Set(animations[i], temp2);
             }
             animationSet = temp;
@@ -124,6 +151,12 @@ namespace rwby
                 animDirty = false;
             }
 
+            if (!Mathf.Approximately(layerFadeWeight, 0.0f))
+            {
+                layerFadeWeight = Mathf.Clamp(layerFadeWeight-(layerFadeAmt*Runner.DeltaTime), 0.0f, 1.0f);
+                animDirty = true;
+            }
+
             if (animDirty)
             {
                 SyncAnimancer();
@@ -138,25 +171,30 @@ namespace rwby
             Profiler.BeginSample("UPDATING REPRESENTATION", gameObject);
             currentAnimancerRepresentation = animationSet;
             ClearWeights(0);
-            if (animationSet.layer0.Count == 0)
-            {
-                Profiler.EndSample();
-                Profiler.EndSample();
-                return;
-            }
             Profiler.EndSample();
             
             Profiler.BeginSample("UPDATING CLIPS", gameObject);
-            for (int i = 0; i < animationSet.layer0.Count; i++)
+            for (int i = 0; i < animationSet.layer0.Length; i++)
             {
-                var c = banks[animationSet.layer0[i].bank].Animations[animationSet.layer0[i].animation].clip;
-                var cState = animancer.States.GetOrCreate(c);
+                if (animationSet.layer0[i].bank == 0) break;
+                var c = banks[animationSet.layer0[i].bank-1].Animations[animationSet.layer0[i].animation-1].clip;
+                var cState = animancer.Layers[0].GetOrCreateState(c);
                 cState.Weight = animationSet.layer0[i].weight;
                 cState.Time = animationSet.layer0[i].frame * Runner.DeltaTime;
             }
-            Profiler.EndSample();
             
+            for (int i = 0; i < animationSet.fadeLayer.Length; i++)
+            {
+                if (animationSet.fadeLayer[i].bank == 0) break;
+                var c = banks[animationSet.fadeLayer[i].bank-1].Animations[animationSet.fadeLayer[i].animation-1].clip;
+                var cState = animancer.Layers[3].GetOrCreateState(c);
+                cState.Weight = animationSet.fadeLayer[i].weight;
+                cState.Time = animationSet.fadeLayer[i].frame * Runner.DeltaTime;
+            }
+            Profiler.EndSample();
+
             Profiler.BeginSample("APPLY CHANGES", gameObject);
+            animancer.Layers[3].Weight = layerFadeWeight;
             animancer.Evaluate();
             Profiler.EndSample();
             
@@ -168,18 +206,36 @@ namespace rwby
             return banks[bankMap[animation.animationbank]].GetAnimation(animation.animation).clip;
         }
 
-        public void ClearWeights(int layer)
+        private void ClearWeights(int layer)
         {
             for (int i = 0; i < animancer.Layers[0].ChildCount; i++)
             {
                 animancer.Layers[0].GetChild(i).Weight = 0;
             }
+            
+            for (int i = 0; i < animancer.Layers[3].ChildCount; i++)
+            {
+                animancer.Layers[3].GetChild(i).Weight = 0;
+            }
         }
-        
-        public void ClearAnimationSet(int layer)
+
+        private void ClearAnimationSet(int layer)
         {
             var temp = animationSet;
-            temp.layer0.Clear();
+            for (int i = 0; i < temp.layer0.Length; i++)
+            {
+                temp.layer0.Set(i, new FighterAnimationNode());
+            }
+            animationSet = temp;
+        }
+        
+        private void ClearFadeLayer()
+        {
+            var temp = animationSet;
+            for (int i = 0; i < temp.fadeLayer.Length; i++)
+            {
+                temp.fadeLayer.Set(i, new FighterAnimationNode());
+            }
             animationSet = temp;
         }
 

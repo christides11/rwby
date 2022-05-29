@@ -5,22 +5,27 @@ namespace rwby
 {
     public struct FighterAnimationRoot : INetworkStruct
     {
-        public float weight;
-        [Networked, Capacity(10)] public NetworkLinkedList<FighterAnimationNode> layer0 => default;
-        
+        [Networked, Capacity(10)] public NetworkArray<FighterAnimationNode> layer0 => default;
+        [Networked, Capacity(10)] public NetworkArray<FighterAnimationNode> fadeLayer => default;
+
         public override bool Equals(object obj)
         {
-            return obj is rwby.FighterAnimationRoot && this == (rwby.FighterAnimationRoot)obj;
+            return obj is rwby.FighterAnimationRoot root && this == root;
         }
         
         public static bool operator ==(FighterAnimationRoot a, rwby.FighterAnimationRoot b)
         {
-            if (a.layer0.Count != b.layer0.Count) return false;
-            for (int i = 0; i < a.layer0.Count; i++)
+            for (int i = 0; i < a.layer0.Length; i++)
             {
                 if (a.layer0[i] != b.layer0[i]) return false;
             }
-            return Mathf.Approximately(a.weight, b.weight);
+            for (int i = 0; i < a.fadeLayer.Length; i++)
+            {
+                if (a.fadeLayer[i] != b.fadeLayer[i]) return false;
+            }
+
+            return true;
+            //return Mathf.Approximately(a.weight, b.weight);
         }
 
         public static bool operator !=(FighterAnimationRoot a, FighterAnimationRoot b)
@@ -30,7 +35,7 @@ namespace rwby
 
         public override int GetHashCode()
         {
-            return (weight, layer0).GetHashCode();
+            return (layer0, fadeLayer).GetHashCode();
         }
     }
 }

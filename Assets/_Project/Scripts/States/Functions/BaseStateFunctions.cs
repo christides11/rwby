@@ -201,7 +201,7 @@ namespace rwby
             switch (vars.modifyType)
             {
                 case VarModifyType.SET:
-                    f.fighterAnimator.SetAnimationSet(0, vars.wantedAnimations, 0.0f);
+                    f.fighterAnimator.SetAnimationSet(0, vars.wantedAnimations, vars.fadeTime);
                     break;
                 case VarModifyType.ADD:
                     f.fighterAnimator.AddAnimationToSet(0, vars.wantedAnimations);
