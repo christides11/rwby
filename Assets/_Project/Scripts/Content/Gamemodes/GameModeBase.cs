@@ -119,6 +119,7 @@ namespace rwby
             await SetupClientPlayers(cInfo);
         }
 
+        public ModObjectGUIDReference testReference;
         protected virtual async UniTask SetupClientPlayers(SessionGamemodeClientContainer cInfo)
         {
             NetworkObject no = null;
@@ -135,6 +136,21 @@ namespace rwby
                 Runner.AddSimulationBehaviour(c, null);
                 c.SetLookAtTarget(no.GetComponent<FighterManager>());
                 GameManager.singleton.localPlayerManager.SetPlayerCamera(i, c.Cam);
+
+                BaseHUD playerHUD = GameObject.Instantiate(GameManager.singleton.settings.baseUI);
+                playerHUD.canvas.worldCamera = c.Cam;
+                playerHUD.playerFighter = no.GetComponent<FighterManager>();
+                Runner.AddSimulationBehaviour(playerHUD, null);
+
+                await GameManager.singleton.contentManager.LoadContentDefinition(testReference);
+
+                IHUDElementbankDefinition HUDElementbank =
+                    GameManager.singleton.contentManager.GetContentDefinition<IHUDElementbankDefinition>(testReference);
+                
+                await HUDElementbank.Load();
+
+                var debugInfo = GameObject.Instantiate(HUDElementbank.GetHUDElement("debug"), playerHUD.transform, false);
+                playerHUD.AddHUDElement(debugInfo.GetComponent<HUDElement>());
             }
         }
     }

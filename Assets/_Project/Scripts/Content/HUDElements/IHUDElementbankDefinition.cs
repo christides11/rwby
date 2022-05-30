@@ -10,6 +10,6 @@ namespace rwby
         public virtual List<HUDElementbankEntry> HUDElements { get; }
         public virtual Dictionary<string, int> HUDElementMap { get; }
         
-        //public abstract GameObject GetHUDElement();
+        public abstract GameObject GetHUDElement(string name);
     }
 }

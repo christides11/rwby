@@ -12,6 +12,7 @@ namespace rwby
         public override string Description { get { return description; } }
         public override List<HUDElementbankEntry> HUDElements => hudElements;
         public override Dictionary<string, int> HUDElementMap => bankMap;
+
         [SerializeField] private string bankName;
         [SerializeField] [TextArea] private string description;
 
@@ -21,11 +22,16 @@ namespace rwby
         public override async UniTask<bool> Load()
         {
             if (bankMap.Count > 0) return true;
-            for(int i = 0; i < bankMap.Count; i++)
+            for(int i = 0; i < hudElements.Count; i++)
             {
                 bankMap.Add(hudElements[i].name, i);
             }
             return true;
+        }
+        
+        public override GameObject GetHUDElement(string name)
+        {
+            return hudElements[bankMap[name]].element.gameObject;
         }
 
         public override bool Unload()

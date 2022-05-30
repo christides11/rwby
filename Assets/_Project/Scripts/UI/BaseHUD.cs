@@ -1,14 +1,18 @@
 using System.Collections;
 using System.Collections.Generic;
+using Fusion;
 using UnityEngine;
 
 namespace rwby
 {
-    public class BaseHUD : MonoBehaviour
+    public class BaseHUD : SimulationBehaviour
     {
+        public Canvas canvas;
+        public ClientManager client;
+        public int playerIndex;
+        public FighterManager playerFighter;
 
-        protected ClientManager client;
-        protected int playerIndex;
+        public List<HUDElement> hudElements = new List<HUDElement>();
 
         public virtual void SetClient(ClientManager client, int playerIndex)
         {
@@ -16,9 +20,20 @@ namespace rwby
             this.playerIndex = playerIndex;
         }
 
-        public virtual void Update()
+        public virtual void AddHUDElement(HUDElement hudElement)
         {
+            hudElement.InitializeElement(this);
+            hudElements.Add(hudElement);
+        }
 
+        public override void Render()
+        {
+            base.Render();
+
+            for (int i = 0; i < hudElements.Count; i++)
+            {
+                hudElements[i].UpdateElement(this);
+            }
         }
     }
 }
