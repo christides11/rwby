@@ -10,19 +10,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7789f25d17401bc4b915ca6fcecf2a29, type: 3}
-  m_Name: RR.Shared.Walk
+  m_Name: RR.Shared.RunBrake
   m_EditorClassIdentifier: 
-  stateName: Walk
+  stateName: Run (Brake)
   useBaseState: 1
-  baseState: {fileID: 11400000, guid: f56f3b8269a1d364b8ffce5b1636054d, type: 2}
-  totalFrames: 79
+  baseState: {fileID: 11400000, guid: d471c153309010740a9f496a76da7192, type: 2}
+  totalFrames: 5
   autoIncrement: 1
-  autoLoop: 1
+  autoLoop: 0
   autoLoopFrame: 1
   data:
-  - rid: 6951768472487198721
-  - rid: 6951768472487198722
-  - rid: 6951768472487198723
+  - rid: 6951768482046017540
   stateGroundedGroup: 1
   allowBaseStateTransitions: 1
   references:
@@ -30,14 +28,14 @@ MonoBehaviour:
     RefIds:
     - rid: -2
       type: {class: , ns: , asm: }
-    - rid: 6951768472487198721
+    - rid: 6951768482046017540
       type: {class: VarModifyAnimationSet, ns: rwby, asm: rwby.csharp}
       data:
         frameRanges:
         - {x: 0, y: 0}
         condition:
           rid: -2
-        modifyType: 1
+        modifyType: 0
         wantedAnimations:
         - animationbank:
             modGUID:
@@ -45,28 +43,6 @@ MonoBehaviour:
             contentType: 7
             contentGUID:
               guid: 2c2c000000000000
-          animation: walk.f
+          animation: run.break
         fadeTime: 0.05
-        children: []
-    - rid: 6951768472487198722
-      type: {class: VarModifyAnimationFrame, ns: rwby, asm: rwby.csharp}
-      data:
-        frameRanges:
-        - {x: 1, y: 1}
-        condition:
-          rid: -2
-        modifyType: 1
-        animations: 00000000
-        frame: 0
-        children: []
-    - rid: 6951768472487198723
-      type: {class: VarModifyAnimationFrame, ns: rwby, asm: rwby.csharp}
-      data:
-        frameRanges:
-        - {x: 1, y: 79}
-        condition:
-          rid: -2
-        modifyType: 0
-        animations: 00000000
-        frame: 1
         children: []

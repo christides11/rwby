@@ -116,5 +116,14 @@ namespace rwby
 
             return f.CurrentJump < vars.maxAirJumps.GetValue(f);
         }
+        
+        public static bool Moveset(IFighterBase fighter, IConditionVariables variables, HnSF.StateTimeline arg3,
+            int arg4)
+        {
+            FighterManager f = fighter as FighterManager;
+            ConditionMoveset vars = (ConditionMoveset)variables;
+
+            return f.StateManager.CurrentStateMoveset == vars.moveset;
+        }
     }
 }

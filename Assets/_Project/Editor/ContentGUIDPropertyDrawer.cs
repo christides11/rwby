@@ -5,20 +5,24 @@ using UnityEngine;
 
 namespace rwby
 {
-    [CustomPropertyDrawer(typeof(ContentGUID), true)]
+    [CustomPropertyDrawer(typeof(ContentGUID))]
     public class ContentGUIDPropertyDrawer : PropertyDrawer
     {
-        public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
-        {
-            return EditorGUIUtility.singleLineHeight;
-        }
-        
+
         public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
         {
+            EditorGUI.BeginProperty(position, label, property);
             byte maxLength = (byte)property.FindPropertyRelative("guid").arraySize;
             string tempString = ContentGUID.BuildString(maxLength, property.FindPropertyRelative("guid"));
+            string oldString = tempString;
 
             tempString = EditorGUI.TextField(position, label, tempString);
+
+            if (tempString == oldString)
+            {
+                EditorGUI.EndProperty();
+                return;
+            }
 
             if (tempString.Length > maxLength)
                 tempString = tempString.Remove(maxLength, tempString.Length-maxLength);
@@ -32,6 +36,7 @@ namespace rwby
                     property.FindPropertyRelative("guid").GetArrayElementAtIndex(i).intValue = output[i];
                 }
             }
+            EditorGUI.EndProperty();
         }
     }
 }

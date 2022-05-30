@@ -1,11 +1,7 @@
-using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 using Fusion;
 using Animancer;
-using UnityEngine.Profiling;
 
 namespace rwby
 {
@@ -13,12 +9,6 @@ namespace rwby
     [OrderAfter(typeof(FighterStateManager))]
     public class FighterAnimator : NetworkBehaviour
     {
-        public enum AnimationSetDirtyReason
-        {
-            NOT_DIRTY,
-            ANIMATION_NODE_DIRTY,
-            ANIMATION_SET_DIRTY
-        }
         [HideInInspector] public Dictionary<ModObjectGUIDReference, int> bankMap = new Dictionary<ModObjectGUIDReference, int>();
         [HideInInspector] public List<IAnimationbankDefinition> banks = new List<IAnimationbankDefinition>();
         [SerializeField] private AnimancerComponent animancer;

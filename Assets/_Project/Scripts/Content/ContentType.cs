@@ -9,6 +9,7 @@ namespace rwby
         Map,
         Soundbank,
         Effectbank,
-        Animationbank
+        Animationbank,
+        HUDElementbank
     }
 }

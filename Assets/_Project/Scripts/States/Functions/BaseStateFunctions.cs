@@ -167,6 +167,24 @@ namespace rwby
         {
             FighterManager f = (FighterManager)fighter;
             VarModifyRotation vars = (VarModifyRotation)variables;
+
+            
+            Vector3 wantedDir = Vector3.zero;
+            switch (vars.rotateTowards)
+            {
+                case VarRotateTowardsType.stick:
+                    wantedDir = f.GetMovementVector().normalized;
+                    break;
+                case VarRotateTowardsType.movement:
+                    wantedDir = f.FPhysicsManager.forceMovement.normalized;
+                    break;
+                case VarRotateTowardsType.custom:
+                    wantedDir = vars.eulerAngle;
+                    break;
+            }
+            if (wantedDir.sqrMagnitude == 0) wantedDir = f.transform.forward;
+            
+            f.SetVisualRotation(wantedDir);
         }
         
         public static void RotateTowards(IFighterBase fighter, IStateVariables variables, HnSF.StateTimeline arg3, int arg4)

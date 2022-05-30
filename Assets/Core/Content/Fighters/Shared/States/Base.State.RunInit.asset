@@ -12,18 +12,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7789f25d17401bc4b915ca6fcecf2a29, type: 3}
   m_Name: Base.State.RunInit
   m_EditorClassIdentifier: 
+  stateName: Run (Init)
   useBaseState: 0
   baseState: {fileID: 0}
   totalFrames: 15
   autoIncrement: 1
   autoLoop: 1
+  autoLoopFrame: 1
   data:
   - rid: 6951768358483656713
   - rid: 6951768320479592453
   - rid: 6951768320479592456
   - rid: 6951768313468026895
-  - rid: 6951768246662725633
-  stateName: Run (Init)
+  - rid: 6951768482046017541
   stateGroundedGroup: 1
   allowBaseStateTransitions: 1
   references:
@@ -31,96 +32,6 @@ MonoBehaviour:
     RefIds:
     - rid: -2
       type: {class: , ns: , asm: }
-    - rid: 6951768246662725633
-      type: {class: VarApplyMovement, ns: rwby, asm: rwby.csharp}
-      data:
-        frameRanges:
-        - {x: 0, y: 0}
-        condition:
-          rid: 6951768246662725634
-        inputSource: 0
-        normalizeInputSource: 1
-        useRotationIfInputZero: 1
-        baseAccel:
-          rid: 6951768246662725635
-        movementAccel:
-          rid: 6951768246662725636
-        deceleration:
-          rid: 6951768246662725637
-        minSpeed:
-          rid: 6951768246662725638
-        maxSpeed:
-          rid: 6951768246662725639
-        accelerationFromDot:
-          rid: 6951768246662725640
-        children: []
-    - rid: 6951768246662725634
-      type: {class: ConditionNone, ns: rwby, asm: rwby.csharp}
-    - rid: 6951768246662725635
-      type: {class: FighterBaseStatReferenceFloat, ns: rwby, asm: rwby.csharp}
-      data:
-        inverse: 0
-        statReference: 1
-        value: 0
-        variable: 35
-    - rid: 6951768246662725636
-      type: {class: FighterBaseStatReferenceFloat, ns: rwby, asm: rwby.csharp}
-      data:
-        inverse: 0
-        statReference: 0
-        value: 0
-        variable: 5
-    - rid: 6951768246662725637
-      type: {class: FighterBaseStatReferenceFloat, ns: rwby, asm: rwby.csharp}
-      data:
-        inverse: 0
-        statReference: 0
-        value: 0
-        variable: 0
-    - rid: 6951768246662725638
-      type: {class: FighterBaseStatReferenceFloat, ns: rwby, asm: rwby.csharp}
-      data:
-        inverse: 0
-        statReference: 1
-        value: 0
-        variable: 36
-    - rid: 6951768246662725639
-      type: {class: FighterBaseStatReferenceFloat, ns: rwby, asm: rwby.csharp}
-      data:
-        inverse: 0
-        statReference: 1
-        value: 0
-        variable: 36
-    - rid: 6951768246662725640
-      type: {class: FighterBaseStatReferenceAnimationCurve, ns: rwby, asm: rwby.csharp}
-      data:
-        inverse: 0
-        statReference: 0
-        value:
-          serializedVersion: 2
-          m_Curve:
-          - serializedVersion: 3
-            time: -1
-            value: 1
-            inSlope: 0
-            outSlope: 0
-            tangentMode: 34
-            weightedMode: 0
-            inWeight: 0
-            outWeight: 0.33333334
-          - serializedVersion: 3
-            time: 1
-            value: 1
-            inSlope: 0
-            outSlope: 0
-            tangentMode: 34
-            weightedMode: 0
-            inWeight: 0.33333334
-            outWeight: 0
-          m_PreInfinity: 2
-          m_PostInfinity: 2
-          m_RotationOrder: 4
-        variable: 1
     - rid: 6951768313468026895
       type: {class: VarModifyRotation, ns: rwby, asm: rwby.csharp}
       data:
@@ -180,3 +91,23 @@ MonoBehaviour:
           rid: -2
         asset: {fileID: 11400000, guid: 42dc6338964d9494b9492888c730d00e, type: 2}
         children: []
+    - rid: 6951768482046017541
+      type: {class: VarSetMovement, ns: rwby, asm: rwby.csharp}
+      data:
+        frameRanges:
+        - {x: 0, y: 0}
+        condition:
+          rid: -2
+        inputSource: 0
+        normalizeInputSource: 1
+        useRotationIfInputZero: 1
+        force:
+          rid: 6951768482046017542
+        children: []
+    - rid: 6951768482046017542
+      type: {class: FighterBaseStatReferenceFloat, ns: rwby, asm: rwby.csharp}
+      data:
+        inverse: 0
+        statReference: 1
+        value: 0
+        variable: 36

@@ -10,19 +10,19 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7789f25d17401bc4b915ca6fcecf2a29, type: 3}
-  m_Name: RR.Shared.Walk
+  m_Name: RR.Shared.Run
   m_EditorClassIdentifier: 
-  stateName: Walk
+  stateName: Run
   useBaseState: 1
-  baseState: {fileID: 11400000, guid: f56f3b8269a1d364b8ffce5b1636054d, type: 2}
-  totalFrames: 79
+  baseState: {fileID: 11400000, guid: a400ebffd29dd7c43992e10d98480769, type: 2}
+  totalFrames: 31
   autoIncrement: 1
   autoLoop: 1
   autoLoopFrame: 1
   data:
-  - rid: 6951768472487198721
-  - rid: 6951768472487198722
-  - rid: 6951768472487198723
+  - rid: 6951768482046017536
+  - rid: 6951768482046017537
+  - rid: 6951768482046017538
   stateGroundedGroup: 1
   allowBaseStateTransitions: 1
   references:
@@ -30,7 +30,7 @@ MonoBehaviour:
     RefIds:
     - rid: -2
       type: {class: , ns: , asm: }
-    - rid: 6951768472487198721
+    - rid: 6951768482046017536
       type: {class: VarModifyAnimationSet, ns: rwby, asm: rwby.csharp}
       data:
         frameRanges:
@@ -45,10 +45,10 @@ MonoBehaviour:
             contentType: 7
             contentGUID:
               guid: 2c2c000000000000
-          animation: walk.f
-        fadeTime: 0.05
+          animation: run.f
+        fadeTime: 0
         children: []
-    - rid: 6951768472487198722
+    - rid: 6951768482046017537
       type: {class: VarModifyAnimationFrame, ns: rwby, asm: rwby.csharp}
       data:
         frameRanges:
@@ -59,11 +59,11 @@ MonoBehaviour:
         animations: 00000000
         frame: 0
         children: []
-    - rid: 6951768472487198723
+    - rid: 6951768482046017538
       type: {class: VarModifyAnimationFrame, ns: rwby, asm: rwby.csharp}
       data:
         frameRanges:
-        - {x: 1, y: 79}
+        - {x: 2, y: 31}
         condition:
           rid: -2
         modifyType: 0
