@@ -154,9 +154,6 @@ namespace rwby
                     FCombatManager.hitstopCounter = 0;
                 }
             }
-            
-            if(inputManager.GetButton((int)PlayerInputType.A).firstPress) healthManager.ModifyHealth(-val);
-            if(inputManager.GetButton((int)PlayerInputType.B).firstPress) healthManager.ModifyHealth(val);
         }
         
         public Vector3[] shakeDirs;

@@ -15,7 +15,7 @@ namespace rwby.core.training {
         public void Open()
         {
             gameObject.SetActive(true);
-            PlayerPointerHandler.singleton.ShowMice();
+            //PlayerPointerHandler.singleton.ShowMice();
 
             foreach(Transform child in transform)
             {
@@ -35,11 +35,11 @@ namespace rwby.core.training {
                 {
                     currentSubmenu = null;
                 }
-                PlayerPointerHandler.singleton.ShowMice();
+                //PlayerPointerHandler.singleton.ShowMice();
                 return false;
             }
             gameObject.SetActive(false);
-            PlayerPointerHandler.singleton.HideMice();
+            //PlayerPointerHandler.singleton.HideMice();
             return true;
         }
 

@@ -11,69 +11,22 @@ using UnityEngine.Serialization;
 
 namespace rwby.core.training
 {
-    public struct CPUReference : INetworkStruct
-    {
-        public ModObjectReference characterReference;
-        public NetworkId objectId;
-    }
-    
     public class GamemodeTraining : GameModeBase
     {
-        public event EmptyAction OnCPUListUpdated;
-        
-        public TrainingSettingsMenu settingsMenu;
 
-        [Networked(OnChanged = nameof(CpuListUpdated)), Capacity(4)] public NetworkLinkedList<CPUReference> cpus { get; }
+        public TrainingSettingsMenu settingsMenu;
 
         [Networked] public NetworkModObjectGUIDReference Map { get; set; }
         public ModObjectGUIDReference localMap;
         
         [FormerlySerializedAs("testReference")] public ModObjectGUIDReference hudBankReference;
 
-        private static void CpuListUpdated(Changed<GamemodeTraining> changed)
-        {
-            changed.Behaviour.OnCPUListUpdated?.Invoke();
-            _ = changed.Behaviour.CheckCPUList();
-        }
+        public TrainingCPUHandler cpuHandler;
 
         public override void Awake()
         {
             base.Awake();
             settingsMenu.gameObject.SetActive(false);
-        }
-
-        private async UniTask CheckCPUList()
-        {
-            /*
-            if (Object.HasStateAuthority == false) return;
-
-            for(int i = 0; i < cpus.Count; i++)
-            {
-                ModObjectReference objectReference = cpus[i].characterReference;
-                if(objectReference.IsValid() && cpus[i].objectId.IsValid == false)
-                {
-                    List<PlayerRef> failedLoadPlayers = await SessionManagerClassic.singleton.clientContentLoaderService.TellClientsToLoad<IFighterDefinition>(objectReference);
-                    if (failedLoadPlayers == null)
-                    {
-                        Debug.LogError($"Load CPU {objectReference} failure.");
-                        continue;
-                    }
-
-                    int indexTemp = i;
-                    IFighterDefinition fighterDefinition = ContentManager.singleton.GetContentDefinition<IFighterDefinition>(objectReference);
-                    NetworkObject no = Runner.Spawn(fighterDefinition.GetFighter().GetComponent<NetworkObject>(), Vector3.up, Quaternion.identity, null,
-                        (a, b) =>
-                        {
-                            b.gameObject.name = $"CPU.{b.Id} : {fighterDefinition.Name}";
-                            b.GetBehaviour<FighterCombatManager>().Team = 0;
-                            _ = b.GetBehaviour<FighterManager>().OnFighterLoaded();
-                            var list = cpus;
-                            CPUReference temp = list[indexTemp];
-                            temp.objectId = b.Id;
-                            list[indexTemp] = temp;
-                        });
-                }
-            }*/
         }
 
         public override void Spawned()
@@ -237,10 +190,12 @@ namespace rwby.core.training
                         (a, b) =>
                         {
                             b.gameObject.name = $"{temp.clientRef.PlayerId}.{j} : {fighterDefinition.name}";
+                            var fManager = b.GetBehaviour<FighterManager>();
                             b.GetBehaviour<FighterCombatManager>().Team = playerTemp.team;
                             b.GetBehaviour<FighterInputManager>().inputProvider = cm;
                             b.GetBehaviour<FighterInputManager>().inputSourceIndex = (byte)playerID;
                             b.GetBehaviour<FighterInputManager>().inputEnabled = true;
+                            fManager.HealthManager.Health = fManager.fighterDefinition.Health;
                             var list = playerTemp.characterNetworkObjects;
                             list.Set(0, b.Id);
                             noClientPlayers.Set(playerID, playerTemp);

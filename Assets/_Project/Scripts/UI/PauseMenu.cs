@@ -40,8 +40,6 @@ namespace rwby
             AddOption("Exit Session", (a) => { });
 
             canvas.SetActive(true);
-
-            PlayerPointerHandler.singleton.ShowMice();
         }
 
         public void Close()
@@ -53,14 +51,14 @@ namespace rwby
                 {
                     currentSubmenu = null;
                 }
-                PlayerPointerHandler.singleton.ShowMice();
+                //PlayerPointerHandler.singleton.ShowMice();
                 return;
             }
 
             canvas.SetActive(false);
             paused = false;
 
-            PlayerPointerHandler.singleton.HideMice();
+            //PlayerPointerHandler.singleton.HideMice();
         }
 
         public void AddOption(string text, UnityEngine.Events.UnityAction<Rewired.Integration.UnityUI.PlayerPointerEventData> callback)
