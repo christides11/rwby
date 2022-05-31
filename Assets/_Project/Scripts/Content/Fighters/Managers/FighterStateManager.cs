@@ -176,7 +176,6 @@ namespace rwby
                 }
             }
 
-            /*
             if (currentState.stateType == StateType.MOVEMENT)
             {
                 if(previousState.stateType != currentState.stateType) combatManager.ResetString();
@@ -186,7 +185,7 @@ namespace rwby
                 {
                     combatManager.AddMoveToString();
                 }
-            }*/
+            }
         }
 
         public void InitState(HnSF.StateTimeline state)

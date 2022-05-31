@@ -11,6 +11,8 @@ namespace rwby
     public class StateTimeline : HnSF.StateTimeline
     {
         public StateGroundedGroupType stateGroundedGroup;
+        public StateType stateType;
+        public int maxUsesInString = -1;
         public bool allowBaseStateTransitions = true;
 
         [FormerlySerializedAs("stateInputSequence")] public InputSequence inputSequence;

@@ -19,9 +19,51 @@ MonoBehaviour:
   autoIncrement: 1
   autoLoop: 0
   autoLoopFrame: 1
-  data: []
-  stateGroundedGroup: 2
+  data:
+  - rid: 6951768528003006476
+  - rid: 6951768538707132418
+  stateGroundedGroup: 1
+  stateType: 0
+  maxUsesInString: -1
   allowBaseStateTransitions: 1
+  inputSequence:
+    executeWindow: 3
+    executeInputs: []
+    sequenceWindow: 8
+    sequenceInputs: []
+  condition:
+    rid: -2
   references:
     version: 2
-    RefIds: []
+    RefIds:
+    - rid: -2
+      type: {class: , ns: , asm: }
+    - rid: 6951768528003006476
+      type: {class: VarModifyAnimationSet, ns: rwby, asm: rwby.csharp}
+      data:
+        frameRanges:
+        - {x: 0, y: 0}
+        condition:
+          rid: -2
+        modifyType: 1
+        wantedAnimations:
+        - animationbank:
+            modGUID:
+              guid: 1d292c1f00000000
+            contentType: 7
+            contentGUID:
+              guid: 2c2c000000000000
+          animation: jumpsquat
+        fadeTime: 0.016666668
+        children: []
+    - rid: 6951768538707132418
+      type: {class: VarSetECB, ns: rwby, asm: rwby.csharp}
+      data:
+        frameRanges:
+        - {x: -1, y: -1}
+        condition:
+          rid: -2
+        ecbCenter: 0.4125
+        ecbRadius: 0.3
+        ecbHeight: 0.825
+        children: []

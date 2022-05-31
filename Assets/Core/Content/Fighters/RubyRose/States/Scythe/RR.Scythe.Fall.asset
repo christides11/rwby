@@ -21,8 +21,18 @@ MonoBehaviour:
   autoLoopFrame: 1
   data:
   - rid: 6951768528003006465
+  - rid: 6951768538707132417
   stateGroundedGroup: 2
+  stateType: 1
+  maxUsesInString: -1
   allowBaseStateTransitions: 1
+  inputSequence:
+    executeWindow: 3
+    executeInputs: []
+    sequenceWindow: 8
+    sequenceInputs: []
+  condition:
+    rid: -2
   references:
     version: 2
     RefIds:
@@ -45,4 +55,15 @@ MonoBehaviour:
               guid: 2c2c000000000000
           animation: fall
         fadeTime: 0
+        children: []
+    - rid: 6951768538707132417
+      type: {class: VarSetECB, ns: rwby, asm: rwby.csharp}
+      data:
+        frameRanges:
+        - {x: -1, y: -1}
+        condition:
+          rid: -2
+        ecbCenter: 2
+        ecbRadius: 0.3
+        ecbHeight: 1.65
         children: []

@@ -24,7 +24,10 @@ MonoBehaviour:
   - rid: 6951768472487198741
   - rid: 6951768472487198742
   - rid: 6951768472487198743
+  - rid: 6951768538707132416
   stateGroundedGroup: 1
+  stateType: 1
+  maxUsesInString: -1
   allowBaseStateTransitions: 1
   inputSequence:
     executeWindow: 3
@@ -86,4 +89,15 @@ MonoBehaviour:
         condition:
           rid: -2
         asset: {fileID: 11400000, guid: 38d47b53b1c6fa24580e163448503c28, type: 2}
+        children: []
+    - rid: 6951768538707132416
+      type: {class: VarSetECB, ns: rwby, asm: rwby.csharp}
+      data:
+        frameRanges:
+        - {x: -1, y: -1}
+        condition:
+          rid: -2
+        ecbCenter: 0.825
+        ecbRadius: 0.3
+        ecbHeight: 1.65
         children: []

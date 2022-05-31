@@ -14,6 +14,7 @@ namespace rwby
         [SerializeField] private AnimancerComponent animancer;
         
         [Networked] private FighterAnimationRoot animationSet { get; set; }
+        [Networked] public bool animateInResimulation { get; set; }
         private bool animDirty = true;
         public bool smoothAnimate = true;
 
@@ -154,6 +155,16 @@ namespace rwby
 
         public override void FixedUpdateNetwork()
         {
+            if (!animateInResimulation && Runner.IsResimulation)
+            {
+                if (Runner.IsLastTick && currentAnimancerRepresentation != animationSet)
+                {
+                    SyncAnimancer();
+                    animDirty = false;
+                }
+                return;
+            }
+            
             if (Runner.IsResimulation && Runner.IsFirstTick && currentAnimancerRepresentation != animationSet)
             {
                 SyncAnimancer();
