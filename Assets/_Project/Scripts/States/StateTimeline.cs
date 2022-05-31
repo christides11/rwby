@@ -1,6 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
+using HnSF;
+using HnSF.Input;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace rwby
 {
@@ -9,5 +12,10 @@ namespace rwby
     {
         public StateGroundedGroupType stateGroundedGroup;
         public bool allowBaseStateTransitions = true;
+
+        [FormerlySerializedAs("stateInputSequence")] public InputSequence inputSequence;
+
+        [SelectImplementation(typeof(IConditionVariables))] [SerializeField, SerializeReference]
+        public IConditionVariables condition;
     }
 }
