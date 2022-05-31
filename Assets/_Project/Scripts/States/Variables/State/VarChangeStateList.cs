@@ -1,18 +1,37 @@
-using System.Collections;
-using System.Collections.Generic;
+using HnSF;
+using NaughtyAttributes;
 using UnityEngine;
 
-public class VarChangeStateList : MonoBehaviour
+namespace rwby
 {
-    // Start is called before the first frame update
-    void Start()
+    public struct VarChangeStateList : IStateVariables
     {
-        
-    }
+        [System.Serializable]
+        public struct StateListEntry
+        {
+            public int movesetID;
+            [SelectImplementation(typeof(FighterStateReferenceBase))] [SerializeField, SerializeReference] [AllowNesting]
+            public FighterStateReferenceBase state;
+        }
+        public int FunctionMap => (int)BaseStateFunctionEnum.NULL;
+        public IConditionVariables Condition => condition;
+        public IStateVariables[] Children => children;
+        public Vector2[] FrameRanges
+        {
+            get => frameRanges;
+            set => frameRanges = value;
+        }
+    
+        [SerializeField] public Vector2[] frameRanges;
+        [SelectImplementation(typeof(IConditionVariables))] [SerializeField, SerializeReference] 
+        public IConditionVariables condition;
 
-    // Update is called once per frame
-    void Update()
-    {
-        
+        public bool checkInputSequence;
+        public bool checkCondition;
+
+        public StateListEntry[] states;
+
+        [SelectImplementation(typeof(IStateVariables))] [SerializeField, SerializeReference] 
+        private IStateVariables[] children;
     }
 }

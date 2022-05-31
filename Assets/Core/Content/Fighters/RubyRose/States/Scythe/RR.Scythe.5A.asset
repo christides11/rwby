@@ -21,10 +21,11 @@ MonoBehaviour:
   autoLoopFrame: 1
   data:
   - rid: 6951768528003006469
+  - rid: 6951768528003006475
   - rid: 6951768528003006470
   stateGroundedGroup: 1
   allowBaseStateTransitions: 1
-  stateInputSequence:
+  inputSequence:
     executeWindow: 3
     executeInputs:
     - inputType: 0
@@ -33,6 +34,8 @@ MonoBehaviour:
       directionDeviation: 0
     sequenceWindow: 8
     sequenceInputs: []
+  condition:
+    rid: -2
   references:
     version: 2
     RefIds:
@@ -71,3 +74,14 @@ MonoBehaviour:
       type: {class: FighterCmnStateReference, ns: rwby, asm: rwby.csharp}
       data:
         state: 1
+    - rid: 6951768528003006475
+      type: {class: VarModifyAnimationFrame, ns: rwby, asm: rwby.csharp}
+      data:
+        frameRanges:
+        - {x: 1, y: 18}
+        condition:
+          rid: -2
+        modifyType: 0
+        animations: 00000000
+        frame: 1
+        children: []

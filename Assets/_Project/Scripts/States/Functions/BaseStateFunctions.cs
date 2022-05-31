@@ -20,6 +20,25 @@ namespace rwby
             fighter.StateManager.MarkForStateChange(vars.state.GetState(), vars.stateMovesetID);
         }
         
+        public static void ChangeStateList(IFighterBase fighter, IStateVariables variables, HnSF.StateTimeline arg3, int arg4)
+        {
+            FighterManager fm = (FighterManager)fighter;
+            VarChangeStateList vars = (VarChangeStateList)variables;
+
+            for (int i = 0; i < vars.states.Length; i++)
+            {
+                StateTimeline state = (StateTimeline)(vars.states[i].movesetID == -1
+                    ? fm.FStateManager.GetState(vars.states[i].state.GetState())
+                    : fm.FStateManager.GetState(vars.states[i].movesetID, vars.states[i].state.GetState()));
+
+                if (vars.checkInputSequence && !fm.FCombatManager.CheckForInputSequence(state.inputSequence)) continue;
+                if (vars.checkCondition && !fm.FStateManager.TryCondition(state, state.condition, arg4)) continue;
+
+                fm.FStateManager.ChangeState(vars.states[i].state.GetState(), vars.states[i].movesetID);
+                return;
+            }
+        }
+        
         public static void ApplyTraction(IFighterBase fighter, IStateVariables variables, HnSF.StateTimeline arg3, int arg4)
         {
             VarApplyTraction vars = (VarApplyTraction)variables;

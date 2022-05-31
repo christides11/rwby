@@ -96,6 +96,12 @@ namespace rwby
             }
         }
 
+        public bool TryCondition(StateTimeline state, IConditionVariables condition, int frame)
+        {
+            if (condition == null) return true;
+            return conditionMapper.TryCondition(condition.GetType(), manager, condition, state, frame);
+        }
+
         private void HandleStateGroup(StateTimeline stateTimeline)
         {
             switch (stateTimeline.stateGroundedGroup)

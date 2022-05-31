@@ -6,6 +6,7 @@ namespace rwby
         {
             functions.Add(typeof(VarEmpty), BaseStateFunctions.Null);
             functions.Add(typeof(VarChangeState), BaseStateFunctions.ChangeState);
+            functions.Add(typeof(VarChangeStateList), BaseStateFunctions.ChangeStateList);
             functions.Add(typeof(VarApplyGravity), BaseStateFunctions.ApplyGravity);
             functions.Add(typeof(VarApplyTraction), BaseStateFunctions.ApplyTraction);
             functions.Add(typeof(VarSetMovement), BaseStateFunctions.SetMovement);

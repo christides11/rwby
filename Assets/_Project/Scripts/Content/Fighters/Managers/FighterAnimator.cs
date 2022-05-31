@@ -40,6 +40,7 @@ namespace rwby
             if (Mathf.Approximately(fadeTime, 0.0f) || animationSet.layer0[0].bank == 0)
             {
                 ClearFadeLayer();
+                temp = animationSet;
                 temp.layerFadeAmt = 0;
                 temp.layerFadeWeight = 0;
                 animationSet = temp;
@@ -192,12 +193,13 @@ namespace rwby
             for (int i = 0; i < animationSet.fadeLayer.Length; i++)
             {
                 if (animationSet.fadeLayer[i].bank == 0) break;
-                var c = banks[animationSet.fadeLayer[i].bank-1].Animations[animationSet.fadeLayer[i].animation-1].clip;
+                var c = banks[animationSet.fadeLayer[i].bank - 1]
+                    .Animations[animationSet.fadeLayer[i].animation - 1].clip;
                 var cState = animancer.Layers[3].GetOrCreateState(c);
                 cState.Weight = animationSet.fadeLayer[i].weight;
                 cState.Time = animationSet.fadeLayer[i].frame * Runner.DeltaTime;
             }
-            
+
             animancer.Layers[3].Weight = animationSet.layerFadeWeight;
             animancer.Evaluate();
         }

@@ -20,11 +20,19 @@ MonoBehaviour:
   autoLoop: 1
   autoLoopFrame: 1
   data:
+  - rid: 6951768528003006474
   - rid: 6951768472487198741
   - rid: 6951768472487198742
   - rid: 6951768472487198743
   stateGroundedGroup: 1
   allowBaseStateTransitions: 1
+  inputSequence:
+    executeWindow: 3
+    executeInputs: []
+    sequenceWindow: 8
+    sequenceInputs: []
+  condition:
+    rid: -2
   references:
     version: 2
     RefIds:
@@ -69,4 +77,13 @@ MonoBehaviour:
         modifyType: 0
         animations: 00000000
         frame: 1
+        children: []
+    - rid: 6951768528003006474
+      type: {class: VarExternal, ns: rwby, asm: rwby.csharp}
+      data:
+        frameRanges:
+        - {x: -1, y: -1}
+        condition:
+          rid: -2
+        asset: {fileID: 11400000, guid: 38d47b53b1c6fa24580e163448503c28, type: 2}
         children: []
