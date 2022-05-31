@@ -1,18 +1,31 @@
-using System.Collections;
-using System.Collections.Generic;
+using HnSF;
 using UnityEngine;
 
-public class VarClampGravity : MonoBehaviour
+namespace rwby
 {
-    // Start is called before the first frame update
-    void Start()
+    public struct VarClampGravity : IStateVariables
     {
-        
-    }
+        public int FunctionMap => (int)BaseStateFunctionEnum.NULL;
+        public IConditionVariables Condition => condition;
+        public IStateVariables[] Children => children;
 
-    // Update is called once per frame
-    void Update()
-    {
-        
+        public Vector2[] FrameRanges
+        {
+            get => frameRanges;
+            set => frameRanges = value;
+        }
+    
+        [SerializeField] public Vector2[] frameRanges;
+        [SelectImplementation(typeof(IConditionVariables))] [SerializeField, SerializeReference] 
+        public IConditionVariables condition;
+
+        [SelectImplementation((typeof(FighterStatReferenceBase<float>)))] [SerializeField, SerializeReference]
+        public FighterStatReferenceFloatBase minValue;
+
+        [SelectImplementation((typeof(FighterStatReferenceBase<float>)))] [SerializeField, SerializeReference]
+        public FighterStatReferenceFloatBase maxValue;
+
+        [SelectImplementation(typeof(IStateVariables))] [SerializeField, SerializeReference] 
+        private IStateVariables[] children;
     }
 }

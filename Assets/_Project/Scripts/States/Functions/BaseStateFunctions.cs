@@ -65,6 +65,17 @@ namespace rwby
             if (vars.useRotationIfInputZero && input == Vector3.zero) input = f.myTransform.forward;
             f.FPhysicsManager.forceMovement = input * vars.force.GetValue(f);
         }
+        
+        public static void AddMovement(IFighterBase fighter, IStateVariables variables, HnSF.StateTimeline arg3, int arg4)
+        {
+            FighterManager f = (FighterManager)fighter;
+            VarAddMovement vars = (VarAddMovement)variables;
+            
+            Vector3 input = vars.inputSource == VarSetMovement.InputSource.stick ? f.GetMovementVector(0) : f.myTransform.forward;
+            if(vars.normalizeInputSource) input.Normalize();
+            if (vars.useRotationIfInputZero && input == Vector3.zero) input = f.myTransform.forward;
+            f.FPhysicsManager.forceMovement += input * vars.force.GetValue(f);
+        }
 
         public static void SetFallSpeed(IFighterBase fighter, IStateVariables variables, HnSF.StateTimeline arg3, int arg4)
         {
@@ -286,6 +297,30 @@ namespace rwby
             VarCreateBox vars = (VarCreateBox)variables;
             
             f.BoxManager.AddBox(vars.boxType, vars.attachedTo, vars.shape, vars.offset, vars.boxExtents, vars.radius, vars.definitionIndex, (StateTimeline)arg3);
+        }
+
+        public static void MultiplyMovement(IFighterBase fighter, IStateVariables variables, HnSF.StateTimeline arg3, int arg4)
+        {
+            FighterManager f = (FighterManager)fighter;
+            VarMultiplyMovement vars = (VarMultiplyMovement)variables;
+
+            f.FPhysicsManager.forceMovement *= vars.multiplier.GetValue(f);
+        }
+
+        public static void ClampGravity(IFighterBase fighter, IStateVariables variables, HnSF.StateTimeline arg3, int arg4)
+        {
+            FighterManager f = (FighterManager)fighter;
+            VarClampGravity vars = (VarClampGravity)variables;
+
+            f.FPhysicsManager.forceGravity = Mathf.Clamp(f.FPhysicsManager.forceGravity, vars.minValue.GetValue(f), vars.maxValue.GetValue(f));
+        }
+
+        public static void MultiplyGravity(IFighterBase fighter, IStateVariables variables, HnSF.StateTimeline arg3, int arg4)
+        {
+            FighterManager f = (FighterManager)fighter;
+            VarMultiplyGravity vars = (VarMultiplyGravity)variables;
+
+            f.FPhysicsManager.forceGravity *= vars.multiplier.GetValue(f);
         }
     }
 }

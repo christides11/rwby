@@ -1,18 +1,33 @@
-using System.Collections;
-using System.Collections.Generic;
+using HnSF;
 using UnityEngine;
 
-public class VarModifyAttackStringList : MonoBehaviour
+namespace rwby
 {
-    // Start is called before the first frame update
-    void Start()
+    public struct VarModifyAttackStringList : IStateVariables
     {
-        
-    }
+        public enum StringListActionTypes
+        {
+            ADD,
+            CLEAR
+        }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
+        public int FunctionMap => (int)BaseStateFunctionEnum.NULL;
+        public IConditionVariables Condition => condition;
+        public IStateVariables[] Children => children;
+
+        public Vector2[] FrameRanges
+        {
+            get => frameRanges;
+            set => frameRanges = value;
+        }
+    
+        [SerializeField] public Vector2[] frameRanges;
+        [SelectImplementation(typeof(IConditionVariables))] [SerializeField, SerializeReference] 
+        public IConditionVariables condition;
+
+        public StringListActionTypes actionType;
+
+        [SelectImplementation(typeof(IStateVariables))] [SerializeField, SerializeReference] 
+        private IStateVariables[] children;
     }
 }

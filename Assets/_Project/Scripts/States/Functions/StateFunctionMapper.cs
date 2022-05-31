@@ -25,6 +25,10 @@ namespace rwby
             functions.Add(typeof(VarModifyAnimationFrame), BaseStateFunctions.ModifyAnimationFrame);
             functions.Add(typeof(VarModifyAnimationWeight), BaseStateFunctions.ModifyAnimationWeight);
             functions.Add(typeof(VarCreateBox), BaseStateFunctions.CreateBox);
+            functions.Add(typeof(VarMultiplyMovement), BaseStateFunctions.MultiplyMovement);
+            functions.Add(typeof(VarAddMovement), BaseStateFunctions.AddMovement);
+            functions.Add(typeof(VarClampGravity), BaseStateFunctions.ClampGravity);
+            functions.Add(typeof(VarMultiplyGravity), BaseStateFunctions.MultiplyGravity);
         }
     }
 }

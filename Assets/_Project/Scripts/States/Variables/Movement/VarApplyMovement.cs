@@ -5,12 +5,6 @@ namespace rwby
 {
     public struct VarApplyMovement : IStateVariables
     {
-        public enum InputSource
-        {
-            stick,
-            rotation
-        }
-
         public int FunctionMap => (int)BaseStateFunctionEnum.APPLY_MOVEMENT;
         public IConditionVariables Condition => condition;
         public IStateVariables[] Children => children;
@@ -25,7 +19,7 @@ namespace rwby
         [SelectImplementation(typeof(IConditionVariables))] [SerializeField, SerializeReference] 
         public IConditionVariables condition;
 
-        public InputSource inputSource;
+        public VarSetMovement.InputSource inputSource;
         public bool normalizeInputSource;
         public bool useRotationIfInputZero;
         
