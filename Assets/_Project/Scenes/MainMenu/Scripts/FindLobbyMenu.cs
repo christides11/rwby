@@ -10,7 +10,6 @@ using UnityEngine.EventSystems;
 
 namespace rwby.ui.mainmenu
 {
-    // TODO: Link to given session manager.
     public class FindLobbyMenu : MainMenuMenu
     {
         [SerializeField] private Transform LobbyContentHolder;

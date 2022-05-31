@@ -39,9 +39,7 @@ namespace rwby
         public Vector3 aerialBlockForce;
         public float aerialHitGravity = -1;
         public float aerialCounterHitGravity = -1;
-        //public AnimationCurve hitGravityOverTime;
-        //public AnimationCurve counterHitGravityOverTime;
-        
+
         // STUN
         public int attackerHitstop;
         public int hitstop;

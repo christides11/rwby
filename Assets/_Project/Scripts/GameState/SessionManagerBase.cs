@@ -83,7 +83,7 @@ namespace rwby
         {
             HashSet<ModObjectGUIDReference> references = new HashSet<ModObjectGUIDReference>();
 
-            // TODO
+            // TODO: Build list of content references.
             for (int i = 0; i < currentLoadedScenes.Count; i++)
             {
                 /*

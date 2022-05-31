@@ -23,7 +23,10 @@ MonoBehaviour:
   - rid: 6951768528003006469
   - rid: 6951768528003006475
   - rid: 6951768528003006470
+  - rid: 6951768538707132419
   stateGroundedGroup: 1
+  stateType: 2
+  maxUsesInString: 1
   allowBaseStateTransitions: 1
   inputSequence:
     executeWindow: 3
@@ -36,6 +39,45 @@ MonoBehaviour:
     sequenceInputs: []
   condition:
     rid: -2
+  hitboxInfo:
+  - ID: 0
+    groundHitState: 30
+    groundCounterHitState: 30
+    aerialHitState: 32
+    aerialCounterHitState: 32
+    groundBounces: 0
+    wallBounces: 0
+    counterHitGroundBounces: 0
+    counterHitWallBounces: 0
+    groundBounceForcePercentage: 0
+    wallBounceForcePercentage: 0
+    hitKills: 1
+    hitStateGroundedGroups: -1
+    hitForceType: 0
+    hitForceRelation: 0
+    autolink: 0
+    autolinkPercentage: 0
+    groundHitForce: {x: 0, y: 0, z: 5}
+    groundCounterHitForce: {x: 0, y: 0, z: 0}
+    groundBlockForce: {x: 0, y: 0, z: 0}
+    groundHitGravity: -1
+    groundCounterHitGravity: 0
+    aerialHitForce: {x: 0, y: 0, z: 5}
+    aerialCounterHitForce: {x: 0, y: 0, z: 0}
+    aerialBlockForce: {x: 0, y: 0, z: 0}
+    aerialHitGravity: -1
+    aerialCounterHitGravity: 0
+    attackerHitstop: 10
+    hitstop: 10
+    counterHitAddedHitstop: 0
+    groundHitstun: 60
+    groundCounterHitstun: 0
+    aerialHitstun: 60
+    aerialCounterHitstun: 0
+    groundBlockstun: 10
+    aerialBlockstun: 10
+  throwboxInfo: []
+  hurtboxInfo: []
   references:
     version: 2
     RefIds:
@@ -84,4 +126,19 @@ MonoBehaviour:
         modifyType: 0
         animations: 00000000
         frame: 1
+        children: []
+    - rid: 6951768538707132419
+      type: {class: VarCreateBox, ns: rwby, asm: rwby.csharp}
+      data:
+        frameRanges:
+        - {x: 7, y: 15}
+        condition:
+          rid: -2
+        boxType: 1
+        attachedTo: 0
+        shape: 0
+        offset: {x: 0, y: 1, z: 1}
+        boxExtents: {x: 2, y: 2, z: 2}
+        radius: 0
+        definitionIndex: 0
         children: []
