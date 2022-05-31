@@ -636,6 +636,12 @@
             Signal if the local peer is already inside a Room
             </summary>
         </member>
+        <!-- Badly formed XML comment ignored for member "P:Fusion.CloudServices.IsInLobby" -->
+        <member name="P:Fusion.CloudServices.SessionSlots">
+            <summary>
+            Max Number of players a Session can handle
+            </summary>
+        </member>
         <member name="P:Fusion.CloudServices.IsMasterClient">
             <summary>
             Signal if the local peer is also the Master Client of the Current Room
@@ -763,7 +769,7 @@
             Update the <see cref="T:Fusion.SessionInfo"/> data based on the current LBC Information after the peer enters a Room
             </summary>
         </member>
-        <member name="M:Fusion.CloudServices.OnRoomPropertiesChanged">
+        <member name="M:Fusion.CloudServices.OnRoomChanged">
             <summary>
             Callback invoked when any Room Property has changed
             </summary>
@@ -4636,6 +4642,27 @@
             PhysX collider hit. Null in case hit is a Fusion <see cref="F:Fusion.LagCompensatedHit.Hitbox"/>.
             </summary>
         </member>
+        <member name="F:Fusion.LagCompensatedHit._sortAux">
+            <summary>
+            Auxiliary field used when sorting hits in a collection.
+            </summary>
+        </member>
+        <member name="M:Fusion.LagCompensatedExt.SortReference(System.Collections.Generic.List{Fusion.LagCompensatedHit},UnityEngine.Vector3)">
+            <summary>
+            Sorts all <paramref name="hits"/> in ascending order of distance
+            from <see cref="F:Fusion.LagCompensatedHit.Point"/> to the <paramref name="reference"/> point.
+            </summary>
+            <param name="hits">List containing hits to be sorted.</param>
+            <param name="reference">Used as reference point to compute distance from hit points.</param>
+            <exception cref="T:System.NullReferenceException"> If <paramref name="hits"/> are null.</exception>
+        </member>
+        <member name="M:Fusion.LagCompensatedExt.SortDistance(System.Collections.Generic.List{Fusion.LagCompensatedHit})">
+            <summary>
+            Sorts all <paramref name="hits"/> in ascending order of <see cref="F:Fusion.LagCompensatedHit.Distance"/>.
+            </summary>
+            <param name="hits">List containing hits to be sorted.</param>
+            <exception cref="T:System.NullReferenceException"> If <paramref name="hits"/> are null.</exception>
+        </member>
         <member name="T:Fusion.HitboxBuffer">
             <summary>
             HitboxBuffer will store all snapshots of the colliders into a circular buffer
@@ -6232,6 +6259,13 @@
             Signal if the <see cref="T:Fusion.NetworkId"/> of the <see cref="T:Fusion.NetworkObject"/> should be included on the name of the <see cref="T:UnityEngine.GameObject"/>.
             </summary>
         </member>
+        <member name="F:Fusion.NetworkProjectConfig.HideNetworkObjectInactivityGuard">
+            <summary>
+            Inactive <see cref="T:Fusion.NetworkObject"/> need special handling in case they get destroyed without ever being activated. This is achieved
+            with adding a nested GameObject called "NetworkObjectInactivityGuard" that tracks the OnDestroy message. <see cref="F:Fusion.NetworkProjectConfig.HideNetworkObjectInactivityGuard"/>
+            can be used to control whether these guards are visible in the hierarchy or not.
+            </summary>
+        </member>
         <member name="F:Fusion.NetworkProjectConfig.EnableHostMigration">
             <summary>
             Enable support for Host Migration.
@@ -6294,6 +6328,12 @@
             <summary>
             If set, the weaver will add a check to all [Networked] properties on each <see cref="T:Fusion.NetworkBehaviour"/>
             to verify if owing <see cref="T:Fusion.NetworkObject"/> has been attached to.
+            </summary>
+        </member>
+        <member name="F:Fusion.NetworkProjectConfig.CheckRpcAttributeUsage">
+            <summary>
+            If set, the weaver will check if <see cref="T:Fusion.RpcAttribute"/> is used in types that do not support it. This requires
+            all types to be scanned and can increase weaving duration.
             </summary>
         </member>
         <member name="M:Fusion.NetworkProjectConfig.Copy">
@@ -6422,18 +6462,6 @@
         <member name="T:Fusion.NetworkRunner.DeferredShutdownParams">
             <summary>
             Stores the Shutdown parameters used when requesting a Shutdown from inside a Runner Callback
-            </summary>
-        </member>
-        <member name="M:Fusion.NetworkRunner.GetInstancesEnumerator">
-            <summary>
-            Get enumerator for the collection of all <see cref="T:Fusion.NetworkRunner"/>s. Allows
-            to enumerate alloc-free.
-            </summary>
-            <returns></returns>
-        </member>
-        <member name="P:Fusion.NetworkRunner.Instances">
-            <summary>
-            A list of all <see cref="T:Fusion.NetworkRunner"/>s.
             </summary>
         </member>
         <member name="P:Fusion.NetworkRunner.IsSimulationUpdating">
@@ -6594,6 +6622,11 @@
             Returns the collection of <see cref="T:Fusion.PlayerRef"/> objects for this NetworkRunner's <see cref="T:Fusion.Simulation"/>.
             </summary>
         </member>
+        <member name="P:Fusion.NetworkRunner.SceneObjectProvider">
+            <summary>
+            Returns the <see cref="T:Fusion.INetworkSceneObjectProvider"/> instance used to resolve scene objects.
+            </summary>
+        </member>
         <member name="P:Fusion.NetworkRunner.LagCompensation">
             <summary>
             Returns the global instance of a lag compensation buffer <see cref="T:Fusion.HitboxManager"/>.
@@ -6610,7 +6643,7 @@
             Connect this <see cref="T:Fusion.NetworkRunner"/> as a client to a Server.
             </summary>
         </member>
-        <member name="M:Fusion.NetworkRunner.Shutdown(System.Boolean,Fusion.ShutdownReason)">
+        <member name="M:Fusion.NetworkRunner.Shutdown(System.Boolean,Fusion.ShutdownReason,System.Boolean)">
             <summary>
             Initiates a <see cref="M:Fusion.Simulation.Dispose"/>.
             </summary>
@@ -6828,7 +6861,7 @@
             Returns if the <see cref="T:Fusion.Simulation"/> contains a reference to a <see cref="T:Fusion.NetworkObject"/> in the specified State <see cref="T:Fusion.SimulationSnapshot"/>.
             </summary>
         </member>
-        <member name="M:Fusion.NetworkRunner.Spawn``1(``0,System.Nullable{UnityEngine.Vector3},System.Nullable{UnityEngine.Quaternion},System.Nullable{Fusion.PlayerRef},Fusion.NetworkRunner.OnBeforeSpawned,System.Nullable{Fusion.NetworkObjectPredictionKey})">
+        <member name="M:Fusion.NetworkRunner.Spawn``1(``0,System.Nullable{UnityEngine.Vector3},System.Nullable{UnityEngine.Quaternion},System.Nullable{Fusion.PlayerRef},Fusion.NetworkRunner.OnBeforeSpawned,System.Nullable{Fusion.NetworkObjectPredictionKey},System.Boolean)">
             <summary>
             Attempts to network instantiate a <see cref="T:Fusion.NetworkObject"/> using a Component type that is part of a <see cref="T:Fusion.NetworkObject"/>
             </summary>
@@ -6839,11 +6872,15 @@
             <param name="inputAuthority">Player Input Authority</param>
             <param name="onBeforeSpawned"><see cref="T:Fusion.NetworkRunner.OnBeforeSpawned"/> reference</param>
             <param name="predictionKey"><see cref="T:Fusion.NetworkObjectPredictionKey"/> reference</param>
+            <param name="syncPhysics">
+            If <see cref="M:UnityEngine.Physics.SyncTransforms"/> and <see cref="M:UnityEngine.Physics2D.SyncTransforms"/> should be called after
+            setting the network object <paramref name="position"/> and/or <paramref name="rotation"/>, if provided.
+            </param>
             <returns><see cref="T:Fusion.NetworkObject"/> reference, or null if it was not able to spawn the object</returns>
         </member>
-        <member name="M:Fusion.NetworkRunner.Spawn(UnityEngine.GameObject,System.Nullable{UnityEngine.Vector3},System.Nullable{UnityEngine.Quaternion},System.Nullable{Fusion.PlayerRef},Fusion.NetworkRunner.OnBeforeSpawned,System.Nullable{Fusion.NetworkObjectPredictionKey})">
+        <member name="M:Fusion.NetworkRunner.Spawn(UnityEngine.GameObject,System.Nullable{UnityEngine.Vector3},System.Nullable{UnityEngine.Quaternion},System.Nullable{Fusion.PlayerRef},Fusion.NetworkRunner.OnBeforeSpawned,System.Nullable{Fusion.NetworkObjectPredictionKey},System.Boolean)">
             <summary>
-            Attempts to network instantiate a GameObject. A <see cref="T:Fusion.NetworkObject"/> is required on the prefab.
+            Attempts to network instantiate a <see cref="T:Fusion.NetworkObject"/> using a GameObject. The supplied GameObject must have a <see cref="T:Fusion.NetworkObject"/> component.
             </summary>
             <param name="prefab">A GameObject with a <see cref="T:Fusion.NetworkObject"/></param>
             <param name="position">Spawn Position</param>
@@ -6851,9 +6888,13 @@
             <param name="inputAuthority">Player Input Authority</param>
             <param name="onBeforeSpawned"><see cref="T:Fusion.NetworkRunner.OnBeforeSpawned"/> reference</param>
             <param name="predictionKey"><see cref="T:Fusion.NetworkObjectPredictionKey"/> reference</param>
+            <param name="syncPhysics">
+            If <see cref="M:UnityEngine.Physics.SyncTransforms"/> and <see cref="M:UnityEngine.Physics2D.SyncTransforms"/> should be called after
+            setting the network object <paramref name="position"/> and/or <paramref name="rotation"/>, if provided.
+            </param>
             <returns><see cref="T:Fusion.NetworkObject"/> reference, or null if it was not able to spawn the object</returns>
         </member>
-        <member name="M:Fusion.NetworkRunner.Spawn(Fusion.NetworkObject,System.Nullable{UnityEngine.Vector3},System.Nullable{UnityEngine.Quaternion},System.Nullable{Fusion.PlayerRef},Fusion.NetworkRunner.OnBeforeSpawned,System.Nullable{Fusion.NetworkObjectPredictionKey})">
+        <member name="M:Fusion.NetworkRunner.Spawn(Fusion.NetworkObject,System.Nullable{UnityEngine.Vector3},System.Nullable{UnityEngine.Quaternion},System.Nullable{Fusion.PlayerRef},Fusion.NetworkRunner.OnBeforeSpawned,System.Nullable{Fusion.NetworkObjectPredictionKey},System.Boolean)">
             <summary>
             Attempts to network instantiate a <see cref="T:Fusion.NetworkObject"/> using a <see cref="T:Fusion.NetworkObject"/> prefab.
             Note: position and rotation values are only used locally for the instantiation of the object, and are not inherently networked.
@@ -6865,6 +6906,10 @@
             <param name="inputAuthority">Player Input Authority</param>
             <param name="onBeforeSpawned"><see cref="T:Fusion.NetworkRunner.OnBeforeSpawned"/> reference</param>
             <param name="predictionKey"><see cref="T:Fusion.NetworkObjectPredictionKey"/> reference</param>
+            <param name="syncPhysics">
+            If <see cref="M:UnityEngine.Physics.SyncTransforms"/> and <see cref="M:UnityEngine.Physics2D.SyncTransforms"/> should be called after
+            setting the network object <paramref name="position"/> and/or <paramref name="rotation"/>, if provided.
+            </param>
             <returns><see cref="T:Fusion.NetworkObject"/> reference, or null if it was not able to spawn the object</returns>
         </member>
         <member name="M:Fusion.NetworkRunner.Spawn(Fusion.NetworkPrefabRef,System.Nullable{UnityEngine.Vector3},System.Nullable{UnityEngine.Quaternion},System.Nullable{Fusion.PlayerRef},Fusion.NetworkRunner.OnBeforeSpawned,System.Nullable{Fusion.NetworkObjectPredictionKey})">
@@ -6895,7 +6940,7 @@
             <param name="predictionKey"><see cref="T:Fusion.NetworkObjectPredictionKey"/> reference</param>
             <returns><see cref="T:Fusion.NetworkObject"/> reference, or null if it was not able to spawn the object</returns>
         </member>
-        <member name="M:Fusion.NetworkRunner.Spawn(Fusion.NetworkObjectGuid,System.Nullable{UnityEngine.Vector3},System.Nullable{UnityEngine.Quaternion},System.Nullable{Fusion.PlayerRef},Fusion.NetworkRunner.OnBeforeSpawned,System.Nullable{Fusion.NetworkObjectPredictionKey})">
+        <member name="M:Fusion.NetworkRunner.Spawn(Fusion.NetworkObjectGuid,System.Nullable{UnityEngine.Vector3},System.Nullable{UnityEngine.Quaternion},System.Nullable{Fusion.PlayerRef},Fusion.NetworkRunner.OnBeforeSpawned,System.Nullable{Fusion.NetworkObjectPredictionKey},System.Boolean)">
             <summary>
             Attempts to network instantiate a <see cref="T:Fusion.NetworkObject"/> using a <see cref="T:Fusion.NetworkObjectGuid"/>
             Note: position and rotation values are only used locally for the instantiation of the object, and are not inherently networked.
@@ -6907,9 +6952,13 @@
             <param name="inputAuthority">Player Input Authority</param>
             <param name="onBeforeSpawned"><see cref="T:Fusion.NetworkRunner.OnBeforeSpawned"/> reference</param>
             <param name="predictionKey"><see cref="T:Fusion.NetworkObjectPredictionKey"/> reference</param>
+            <param name="syncPhysics">
+            If <see cref="M:UnityEngine.Physics.SyncTransforms"/> and <see cref="M:UnityEngine.Physics2D.SyncTransforms"/> should be called after
+            setting the network object <paramref name="position"/> and/or <paramref name="rotation"/>, if provided.
+            </param>
             <returns><see cref="T:Fusion.NetworkObject"/> reference, or null if it was not able to spawn the object</returns>
         </member>
-        <member name="M:Fusion.NetworkRunner.Spawn(Fusion.NetworkPrefabId,System.Nullable{UnityEngine.Vector3},System.Nullable{UnityEngine.Quaternion},System.Nullable{Fusion.PlayerRef},Fusion.NetworkRunner.OnBeforeSpawned,System.Nullable{Fusion.NetworkObjectPredictionKey})">
+        <member name="M:Fusion.NetworkRunner.Spawn(Fusion.NetworkPrefabId,System.Nullable{UnityEngine.Vector3},System.Nullable{UnityEngine.Quaternion},System.Nullable{Fusion.PlayerRef},Fusion.NetworkRunner.OnBeforeSpawned,System.Nullable{Fusion.NetworkObjectPredictionKey},System.Boolean)">
             <summary>
             Attempts to network instantiate a <see cref="T:Fusion.NetworkObject"/> using a <see cref="T:Fusion.NetworkPrefabId"/>
             Note: position and rotation values are only used locally for the instantiation of the object, and are not inherently networked.
@@ -6921,6 +6970,10 @@
             <param name="inputAuthority">Player Input Authority</param>
             <param name="onBeforeSpawned"><see cref="T:Fusion.NetworkRunner.OnBeforeSpawned"/> reference</param>
             <param name="predictionKey"><see cref="T:Fusion.NetworkObjectPredictionKey"/> reference</param>
+            <param name="syncPhysics">
+            If <see cref="M:UnityEngine.Physics.SyncTransforms"/> and <see cref="M:UnityEngine.Physics2D.SyncTransforms"/> should be called after
+            setting the network object <paramref name="position"/> and/or <paramref name="rotation"/>, if provided.
+            </param>
             <returns><see cref="T:Fusion.NetworkObject"/> reference, or null if it was not able to spawn the object</returns>
         </member>
         <member name="M:Fusion.NetworkRunner.Despawn(Fusion.NetworkObject,System.Boolean)">
@@ -6956,7 +7009,7 @@
             <param name="networkObject">The object to attach</param>
             <param name="inputAuthority">If assigned who is the default input authority for this object</param>
         </member>
-        <member name="M:Fusion.NetworkRunner.SpawnInternal(Fusion.NetworkPrefabId,System.Nullable{UnityEngine.Vector3},System.Nullable{UnityEngine.Quaternion},System.Nullable{Fusion.PlayerRef},System.Object,System.Nullable{Fusion.NetworkObjectPredictionKey})">
+        <member name="M:Fusion.NetworkRunner.SpawnInternal(Fusion.NetworkPrefabId,System.Nullable{UnityEngine.Vector3},System.Nullable{UnityEngine.Quaternion},System.Nullable{Fusion.PlayerRef},System.Object,System.Nullable{Fusion.NetworkObjectPredictionKey},System.Boolean)">
             <summary>
             Attempts to network instantiate a <see cref="T:Fusion.NetworkObject"/> using a <see cref="T:Fusion.NetworkPrefabId"/>
             Note: position and rotation values are only used locally for the instantiation of the object, and are not inherently networked.
@@ -6968,6 +7021,10 @@
             <param name="inputAuthority">Player Input Authority</param>
             <param name="onBeforeSpawned"><see cref="T:Fusion.NetworkRunner.OnBeforeSpawned"/> reference</param>
             <param name="predictionKey"><see cref="T:Fusion.NetworkObjectPredictionKey"/> reference</param>
+            <param name="syncPhysics">
+            If <see cref="M:UnityEngine.Physics.SyncTransforms"/> and <see cref="M:UnityEngine.Physics2D.SyncTransforms"/> should be called after
+            setting the network object <paramref name="position"/> and/or <paramref name="rotation"/>, if provided.
+            </param>
             <returns><see cref="T:Fusion.NetworkObject"/> reference, or null if it was not able to spawn the object</returns>
         </member>
         <member name="P:Fusion.NetworkRunner.IsHostMigrationEnabled">
@@ -7041,6 +7098,18 @@
         <member name="T:Fusion.NetworkRunner.HostSnapshotCompressionJob">
             <summary>
             Unity Job responsible for computing a Server Snapshot
+            </summary>
+        </member>
+        <member name="M:Fusion.NetworkRunner.GetInstancesEnumerator">
+            <summary>
+            Get enumerator for the collection of all <see cref="T:Fusion.NetworkRunner"/>s. Allows
+            to enumerate alloc-free.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="P:Fusion.NetworkRunner.Instances">
+            <summary>
+            A list of all <see cref="T:Fusion.NetworkRunner"/>s.
             </summary>
         </member>
         <member name="P:Fusion.NetworkRunner.IsCloudReady">
@@ -7542,6 +7611,21 @@
             </summary>
             <returns>Formatted <see cref="T:Fusion.SessionInfo"/></returns>
         </member>
+        <member name="F:Fusion.SessionInfo.SessionUpdateState.DONE">
+            <summary>
+            Session is ready to be used
+            </summary>
+        </member>
+        <member name="F:Fusion.SessionInfo.SessionUpdateState.WAIT_FOR_UPDATE">
+            <summary>
+            There is a pending refresh to be done
+            </summary>
+        </member>
+        <member name="F:Fusion.SessionInfo.SessionUpdateState.TRIGGER_UPDATE">
+            <summary>
+            Signal the Session data must be updated
+            </summary>
+        </member>
         <member name="T:Fusion.StartGameResult">
             <summary>
             Represents the result of starting the Fusion Simulation
@@ -7703,6 +7787,16 @@
         <member name="F:Fusion.ShutdownReason.HostMigration">
             <summary>
             Signal this Runner is shutting down because of a Host Migration is about to happen
+            </summary>
+        </member>
+        <member name="F:Fusion.ShutdownReason.ConnectionTimeout">
+            <summary>
+            Connection with a remote server failed by timeout
+            </summary>
+        </member>
+        <member name="F:Fusion.ShutdownReason.ConnectionRefused">
+            <summary>
+            Connection with a remote server failed because it was refused
             </summary>
         </member>
         <member name="T:Fusion.INetworkRunnerCallbacks">

@@ -2,6 +2,141 @@
 
 ## RC Nightly
 
+### Build 496 (May 30, 2022)
+
+**Changes**
+
+- Network Transforms that do not have an Interpolation Target now will no longer use the object's own transform as target on clients that have state authority
+
+### Build 491 (May 27, 2022)
+
+**What's New**
+
+- ConnectionTimeout Shutdown Reason
+- ConnectionRefused Shutdown Reason
+
+**Removed**
+
+- FailedToConnect Shutdown Reason, replaced by GameIsFull, ConnectionTimeout, ConnectionRefused
+
+**Bug Fixes**
+
+- Fixed: Refused Connections remaining registered
+
+### Build 488 (May 26, 2022)
+
+**What's New**
+
+- `NetworkProjectConfig.HideNetworkObjectInactivityGuard` toggle
+- Type thumbnails next to prefab list in `NetworkProjectConfig`
+
+**Changes**
+
+- Prefabs in `NetworkProjectConfig` are now sorted by path (were: sorted by guid)
+- Prefabs in `NetworkProjectConfig` are now drawn as object fields pointing to the target prefab
+- Massive improvements in packet write performance in EC mode when a lot of clients are connected to a server
+
+**Removed**
+
+- NetworkRunner.NotifyEditorPlayModeExit (no longer needed)
+
+### Build 484 (May 25, 2022)
+
+**Changes**
+
+- `NetworkRunner.RegisterUniqueObjects` throws `InvalidOperationException` if an object has already been attached to
+- Logging an error due to scene object being missed moved to `NetworkSceneManagerBase`
+- If a remote object fails to be attached (missing prefab, missing scene object), another attempt will be made next frame, until it is either successful or the object got removed from the simulation. No errors are emit. This allows for a more flexible scene loading scenarios
+- If making a Standalone build, a warning is emit if `PlayerSettings.runInBackground` is not enabled
+
+**Bug Fixes**
+
+- Fixed: Inactive Prefabs/scene objects not having their state objects released on being destroyed
+- Fixed: Not being able to load and unload a scene repeatedly on a client
+- Fixed: `NullReferenceException` occasionally thrown when a runner was shutdown shortly after it has been started  
+Tests: More additive scene loading tests
+
+### Build 483 (May 24, 2022)
+
+**Changes**
+
+- FusionInstaller - sets PlayerSettings.runInBackground to true
+
+### Build 482 (May 23, 2022)
+
+**Changes**
+
+- NanoSockets for macOS Import Settings
+
+### Build 480 (May 20, 2022)
+
+**Bug Fixes**
+
+- Fixed: Lag-compensated `OverlapBox` missing hitboxes with box shape that are not in the position they are initialized
+- Fixed: Shutting down a runner in `FixedUpdateNetwork` throwing an exception
+- Fixed: NetworkRunner.Spawn() overload that takes a GameObject was returning the NetworkObject of the prefab, rather than the instantiated object
+
+### Build 479 (May 19, 2022)
+
+**Changes**
+
+- Shared/Client StartGame only returns after connection or error
+- Host/Server always create new Sessions  
+It will not try to join a Random Session if no Session Name is passed, but always create a new one with a Random name
+
+**Bug Fixes**
+
+- Fixed: PlayerCount on Clients if not Default Value
+
+### Build 478 (May 18, 2022)
+
+**Bug Fixes**
+
+- Fixed: Join Session from Lobby
+- Fixed: Update SessionInfo after MasterClient leave
+
+### Build 477 (May 17, 2022)
+
+**Changes**
+
+- Rework Shutdown Procedure
+
+**Bug Fixes**
+
+- Fixed: NullRef on Ping Procedure
+
+### Build 476 (May 16, 2022)
+
+**Bug Fixes**
+
+- Fixed: BVH Nodes are now recycled in the Lag-compensation structure after network objects with hitboxes are destroyed
+
+### Build 474 (May 13, 2022)
+
+**What's New**
+
+- `SortDistance` and `SortReference` extension methods to sort a list of lag-compensated hits according to the hit `Distance` or the distance from the hit `Point` to a reference point, respectively
+- `NetworkProjectConfig.CheckRpcAttributeUsage` - if set, the weaver will check if `RpcAttribute` is used in types that do not support it. This requires all types to be scanned and can increase the weaving duration
+
+**Bug Fixes**
+
+- Fixed: DontDestroyOnLoad objects not occasionally despawning correctly
+
+### Build 473 (May 12, 2022)
+
+**Changes**
+
+- Postpone Spawn if Shared Client is not fully connected
+- Spawning network objects with position and/or rotation will now call physics `SyncTransform` by default (optional parameter), avoiding issues with collider and/or rigidbody data not being synchronized
+
+**Bug Fixes**
+
+- Fixed: Handle Cloud Timeout while in Lobby
+- Fixed: Initialized execution order
+- Fixed: Despawning objects in OnChanged handlers causing `NullReferenceExceptions` being thrown in some cases
+- Fixed: A typo in `NetworkBehaviour.OnChangeAdd` parameter
+- Fixed: Invalid alignment of help button for some properties on Unity 2021.1+
+
 ### Build 472 (May 11, 2022)
 
 **Changes**

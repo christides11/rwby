@@ -7,6 +7,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace rwby.core.training
 {
@@ -26,6 +27,8 @@ namespace rwby.core.training
 
         [Networked] public NetworkModObjectGUIDReference Map { get; set; }
         public ModObjectGUIDReference localMap;
+        
+        [FormerlySerializedAs("testReference")] public ModObjectGUIDReference hudBankReference;
 
         private static void CpuListUpdated(Changed<GamemodeTraining> changed)
         {
@@ -254,6 +257,42 @@ namespace rwby.core.training
         private Vector3 GetSpawnPosition(SessionGamemodePlayerDefinition clientPlayer)
         {
             return spawnPoints[clientPlayer.team][spawnPointsCurr[clientPlayer.team] % spawnPoints[clientPlayer.team].Count].transform.position;
+        }
+
+        protected override async UniTask SetupClientPlayerCharacters(SessionGamemodeClientContainer clientInfo, int playerIndex)
+        {
+            NetworkObject no = null;
+            PlayerCamera c = GameObject.Instantiate(GameManager.singleton.settings.playerCameraPrefab, Vector3.zero,
+                Quaternion.identity);
+            
+            await UniTask.WaitUntil(() => Runner.TryFindObject(clientInfo.players[playerIndex].characterNetworkObjects[0], out no));
+                
+            Runner.AddSimulationBehaviour(c, null);
+            c.SetLookAtTarget(no.GetComponent<FighterManager>());
+            GameManager.singleton.localPlayerManager.SetPlayerCamera(playerIndex, c.Cam);
+        }
+        
+        protected override async UniTask SetupClientPlayerHUD(SessionGamemodeClientContainer clientInfo, int playerIndex)
+        {
+            NetworkObject no = null;
+            await UniTask.WaitUntil(() => Runner.TryFindObject(clientInfo.players[playerIndex].characterNetworkObjects[0], out no));
+            PlayerCamera c = GameManager.singleton.localPlayerManager.GetPlayer(playerIndex).camera.GetComponent<PlayerCamera>();
+            
+            BaseHUD playerHUD = GameObject.Instantiate(GameManager.singleton.settings.baseUI);
+            playerHUD.canvas.worldCamera = c.Cam;
+            playerHUD.playerFighter = no.GetComponent<FighterManager>();
+            Runner.AddSimulationBehaviour(playerHUD, null);
+            
+            await GameManager.singleton.contentManager.LoadContentDefinition(hudBankReference);
+            
+            IHUDElementbankDefinition HUDElementbank = GameManager.singleton.contentManager.GetContentDefinition<IHUDElementbankDefinition>(hudBankReference);
+                
+            await HUDElementbank.Load();
+            
+            var debugInfo = GameObject.Instantiate(HUDElementbank.GetHUDElement("debug"), playerHUD.transform, false);
+            playerHUD.AddHUDElement(debugInfo.GetComponent<HUDElement>());
+            var healthbar = GameObject.Instantiate(HUDElementbank.GetHUDElement("healthbar"), playerHUD.transform, false);
+            playerHUD.AddHUDElement(healthbar.GetComponent<HUDElement>());
         }
     }
 }

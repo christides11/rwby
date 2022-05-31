@@ -1401,7 +1401,7 @@ namespace Fusion.CodeGen {
       return false;
     }
 
-    void WeaveInput(ILWeaverAssembly asm, TypeDefinition type) {
+    public void WeaveInput(ILWeaverAssembly asm, TypeDefinition type) {
       if (type.TryGetAttribute<NetworkInputWeavedAttribute>(out var attribute)) {
         if (_typeData.ContainsKey(type.FullName) == false) {
           _typeData.Add(type.FullName, new TypeMetaData {
@@ -2627,6 +2627,21 @@ namespace Fusion.CodeGen {
               WeaveSimulation(asm, t);
             } catch (Exception ex) {
               throw new ILWeaverException($"Failed to weave behaviour {t}", ex);
+            }
+          }
+        }
+
+        if (ILWeaverSettings.CheckRpcAttributeUsage()) {
+          using (Log.Scope("Checking RpcAttribute usage")) {
+            foreach (var t in moduleAllTypes) {
+              if (t.IsSubclassOf<SimulationBehaviour>()) {
+                continue;
+              }
+              foreach (var method in t.Methods) {
+                if (method.TryGetAttribute<RpcAttribute>(out _)) {
+                  Log.Warn($"Incorrect {nameof(RpcAttribute)} usage on {method}: only types derived from {nameof(SimulationBehaviour)} and {nameof(NetworkBehaviour)} are supported");
+                }
+              }
             }
           }
         }
@@ -6134,6 +6149,12 @@ namespace Fusion.CodeGen {
       return result;
     }
 
+    internal static bool CheckRpcAttributeUsage() {
+      bool result = true;
+      CheckRpcAttributeUsagePartial(ref result);
+      return result;
+    }
+
     static partial void GetAccuracyPartial(string tag, ref float? accuracy);
 
     static partial void IsAssemblyWeavablePartial(string name, ref bool result);
@@ -6141,6 +6162,8 @@ namespace Fusion.CodeGen {
     static partial void UseSerializableDictionaryForNetworkDictionaryPropertiesPartial(ref bool result);
 
     static partial void NullChecksForNetworkedPropertiesPartial(ref bool result);
+
+    static partial void CheckRpcAttributeUsagePartial(ref bool result);
   }
 }
 #endif
@@ -6234,6 +6257,10 @@ namespace Fusion.CodeGen {
       result = _useSerializableDictionary.Value ?? result;
     }
 
+    static partial void CheckRpcAttributeUsagePartial(ref bool result) {
+      result = _checkRpcAttributeUsage.Value ?? result;
+    }
+
     public static bool ValidateConfig(out ConfigStatus errorType, out Exception error) {
       try {
         error = null;
@@ -6293,6 +6320,10 @@ namespace Fusion.CodeGen {
 
     static Lazy<bool?> _useSerializableDictionary = new Lazy<bool?>(() => {
       return (bool?)_config.Value.Root.Element(nameof(NetworkProjectConfig.UseSerializableDictionary));
+    });
+
+    static Lazy<bool?> _checkRpcAttributeUsage = new Lazy<bool?>(() => {
+      return (bool?)_config.Value.Root.Element(nameof(NetworkProjectConfig.CheckRpcAttributeUsage));
     });
 
 
@@ -6359,6 +6390,10 @@ namespace Fusion.CodeGen {
 
     static partial void NullChecksForNetworkedPropertiesPartial(ref bool result) {
       result = NetworkProjectConfig.Global.NullChecksForNetworkedProperties;
+    }
+
+    static partial void CheckRpcAttributeUsagePartial(ref bool result) {
+      result = NetworkProjectConfig.Global.CheckRpcAttributeUsage;
     }
   }
 }

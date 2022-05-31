@@ -16,11 +16,25 @@ PluginImporter:
     second:
       enabled: 0
       settings:
-        Exclude Editor: 1
+        Exclude Android: 1
+        Exclude Editor: 0
+        Exclude GameCoreScarlett: 1
+        Exclude GameCoreXboxOne: 1
         Exclude Linux64: 1
         Exclude OSXUniversal: 0
+        Exclude PS5: 1
+        Exclude Switch: 1
+        Exclude WebGL: 1
         Exclude Win: 1
         Exclude Win64: 1
+        Exclude WindowsStoreApps: 1
+        Exclude XboxOne: 1
+  - first:
+      Android: Android
+    second:
+      enabled: 0
+      settings:
+        CPU: ARMv7
   - first:
       Any: 
     second:
@@ -29,9 +43,9 @@ PluginImporter:
   - first:
       Editor: Editor
     second:
-      enabled: 0
+      enabled: 1
       settings:
-        CPU: AnyCPU
+        CPU: ARM64
         DefaultValueInitialized: true
         OS: OSX
   - first:
@@ -58,6 +72,16 @@ PluginImporter:
       enabled: 0
       settings:
         CPU: x86_64
+  - first:
+      Windows Store Apps: WindowsStoreApps
+    second:
+      enabled: 0
+      settings:
+        CPU: AnyCPU
+        DontProcess: false
+        PlaceholderPath: 
+        SDK: AnySDK
+        ScriptingBackend: AnyScriptingBackend
   userData: 
   assetBundleName: 
   assetBundleVariant: 

@@ -1939,6 +1939,8 @@ namespace Fusion.Editor {
     private bool _initialized;
     private PropertyDrawer _typePropertyDrawer;
 
+    public PropertyDrawer TypePropertyDrawer => _typePropertyDrawer;
+
     [Obsolete("Derived classes should override and call OnGUIInternal", true)]
 #pragma warning disable CS0809 // Obsolete member overrides non-obsolete member
     public sealed override void OnGUI(Rect position, SerializedProperty prop, GUIContent label) {
@@ -2177,6 +2179,10 @@ namespace Fusion.Editor {
     }
 
     internal PropertyDrawer GetNextDrawer(PropertyDrawer drawer) {
+      Debug.Assert(_mainDrawer != null);
+      if (_mainDrawer != this) {
+        return _mainDrawer.GetNextDrawer(drawer);
+      }
       if (drawer is ForwardingPropertyDrawer forwarding) {
         var index = _subDrawers.IndexOf(forwarding);
         if (index < 0) {
@@ -3663,6 +3669,46 @@ namespace Fusion.Editor {
 #endregion
 
 
+#region Assets/Photon/Fusion/Scripts/Editor/CustomTypes/ResolveNetworkPrefabSourceUnityDrawer.cs
+
+namespace Fusion.Editor {
+  using UnityEditor;
+  using UnityEngine;
+
+  [CustomPropertyDrawer(typeof(ResolveNetworkPrefabSourceUnityAttribute))]
+  public class ResolveNetworkPrefabSourceUnityDrawer : PropertyDrawerWithErrorHandling {
+
+    const int ThumbnailWidth = 20;
+
+    protected override void OnGUIInternal(Rect position, SerializedProperty property, GUIContent label) {
+
+      var source = (NetworkPrefabSourceUnityBase)property.objectReferenceValue;
+      if (source == null) {
+        EditorGUI.PropertyField(position, property, label);
+        return;
+      }
+
+      var prefab = NetworkPrefabSourceFactory.ResolveOrThrow(source);
+
+      EditorGUI.ObjectField(position, label, prefab.gameObject, typeof(GameObject), false);
+
+      // draw thumbnail
+      { 
+        var pos = position;
+        pos.x += EditorGUIUtility.labelWidth;
+        pos.width = ThumbnailWidth;
+        pos.x -= ThumbnailWidth;
+
+        var objectType = property.objectReferenceValue.GetType();
+        FusionEditorGUI.DrawTypeThumbnail(pos, objectType, "NetworkPrefabSourceUnity", tooltip: source.EditorSummary);
+      }
+    }
+  }
+}
+
+#endregion
+
+
 #region Assets/Photon/Fusion/Scripts/Editor/CustomTypes/ResourcePathAttributeDrawer.cs
 
 namespace Fusion.Editor {
@@ -4723,11 +4769,45 @@ namespace Fusion.Editor {
       var runners = NetworkRunner.GetInstancesEnumerator();
 
       while (runners.MoveNext()) {
-        runners.Current.Shutdown();
+        if (runners.Current) {
+          runners.Current.Shutdown();
+        }
       }
     }
   }
 }
+
+#endregion
+
+
+#region Assets/Photon/Fusion/Scripts/Editor/FusionBuildTriggers.cs
+
+namespace Fusion.Editor {
+ 
+  using UnityEditor;
+  using UnityEditor.Build;
+  using UnityEditor.Build.Reporting;
+
+
+  public class FusionBuildTriggers : IPreprocessBuildWithReport {
+
+    public const int CallbackOrder = 1000;
+
+    public int callbackOrder => CallbackOrder;
+
+    public void OnPreprocessBuild(BuildReport report) {
+      if (report.summary.platformGroup != BuildTargetGroup.Standalone) {
+        return;
+      }
+
+      if (!PlayerSettings.runInBackground) {
+        FusionEditorLog.Warn($"Standalone builds should have {nameof(PlayerSettings)}.{nameof(PlayerSettings.runInBackground)} enabled. " +
+          $"Otherwise, loss of application focus may result in connection termination.");
+      }
+    }
+  }
+}
+
 
 #endregion
 
@@ -6026,17 +6106,22 @@ namespace Fusion.Editor {
         return;
       }
 
+      if (!PlayerSettings.runInBackground) {
+        FusionEditorLog.LogInstaller($"Setting {nameof(PlayerSettings)}.{nameof(PlayerSettings.runInBackground)} to true");
+        PlayerSettings.runInBackground = true;
+      }
+
       var manifest = Path.Combine(Path.GetDirectoryName(Application.dataPath), PACKAGES_DIR, MANIFEST_FILE);
 
       if (File.ReadAllText(manifest).IndexOf(PACKAGE_TO_SEARCH, StringComparison.Ordinal) >= 0) {
-        Debug.Log($"Setting '{DEFINE}' Define");
+        FusionEditorLog.LogInstaller($"Setting '{DEFINE}' Define");
 #if UNITY_SERVER
         PlayerSettings.SetScriptingDefineSymbols(UnityEditor.Build.NamedBuildTarget.Server, defines + ";" + DEFINE);
 #else
         PlayerSettings.SetScriptingDefineSymbolsForGroup(group, defines + ";" + DEFINE);
 #endif
       } else {
-        Debug.Log($"Installing '{PACKAGE_TO_INSTALL}' package");
+        FusionEditorLog.LogInstaller($"Installing '{PACKAGE_TO_INSTALL}' package");
         Client.Add(PACKAGE_TO_INSTALL);
       }
     }
@@ -6103,6 +6188,7 @@ namespace Fusion.Editor {
 
         hash.Append(cfg.UseSerializableDictionary ? 1 : 0);
         hash.Append(cfg.NullChecksForNetworkedProperties ? 1 : 0);
+        hash.Append(cfg.CheckRpcAttributeUsage ? 1 : 0);
 
         AssetDatabase.RegisterCustomDependency(DependencyName, hash);
         AssetDatabase.Refresh();
@@ -6613,6 +6699,9 @@ namespace Fusion.Editor {
           if (!flags.IsVersionCurrent()) {
             flags = flags.SetCurrentVersion();
           }
+
+          flags &= ~NetworkObjectFlags.RuntimeFlagsMask;
+
 
           if (prefabGuid == null) {
             if (flags.IsPrefab()) {
@@ -8663,8 +8752,12 @@ namespace Fusion.Editor {
     }
 
     public static PropertyDrawer GetNextDrawer(PropertyDrawer drawer, SerializedProperty property) {
-      var handler = UnityInternal.ScriptAttributeUtility.propertyHandlerCache.GetHandler(property);
 #if UNITY_2021_1_OR_NEWER
+      if (drawer is ForwardingPropertyDrawer forwarding) {
+        return forwarding.TypePropertyDrawer;
+      }
+
+      var handler = UnityInternal.ScriptAttributeUtility.propertyHandlerCache.GetHandler(property);
       var drawers = handler.m_PropertyDrawers;
       var index = drawers.IndexOf(drawer);
       if (index < 0 || index >= drawers.Count - 1) {
@@ -8673,7 +8766,7 @@ namespace Fusion.Editor {
         return drawers[index + 1];
       }
 #else
-      return (handler.m_PropertyDrawer as ForwardingPropertyDrawer)?.GetNextDrawer(drawer);
+      return (drawer as ForwardingPropertyDrawer)?.GetNextDrawer(drawer);
 #endif
     }
 
@@ -9056,6 +9149,145 @@ namespace Fusion.Editor {
 #endregion
 
 
+#region Assets/Photon/Fusion/Scripts/Editor/Utilities/FusionEditorGUI.Thumbnail.cs
+
+namespace Fusion.Editor {
+  using System;
+  using System.Text;
+  using UnityEngine;
+
+  public static partial class FusionEditorGUI {
+
+    static readonly int _thumbnailFieldHash = "Thumbnail".GetHashCode();
+    static Texture2D _thumbnailBackground;
+    static GUIStyle _thumbnailStyle;
+
+    public static void DrawTypeThumbnail(Rect position, Type type, string prefixToSkip, string tooltip = null) {
+      EnsureThumbnailStyles();
+
+      var acronym = GenerateAcronym(type, prefixToSkip);
+      var content = new GUIContent(acronym, tooltip ?? type.FullName);
+      int controlID = GUIUtility.GetControlID(_thumbnailFieldHash, FocusType.Passive, position);
+
+      if (Event.current.type == EventType.Repaint) {
+        var originalColor = GUI.backgroundColor;
+        try {
+          GUI.backgroundColor = GetPersistentColor(type.FullName);
+          _thumbnailStyle.fixedWidth = position.width;
+          _thumbnailStyle.Draw(position, content, controlID);
+        } finally {
+          GUI.backgroundColor = originalColor;
+        }
+      }
+    }
+
+    static Color GetPersistentColor(string str) {
+      return GeneratePastelColor(HashCodeUtilities.GetHashDeterministic(str));
+    }
+
+    static Color GeneratePastelColor(int seed) {
+      var rng = new System.Random(seed);
+      int r = rng.Next(256) + 128;
+      int g = rng.Next(256) + 128;
+      int b = rng.Next(256) + 128;
+
+      r = Mathf.Min(r / 2, 255);
+      g = Mathf.Min(g / 2, 255);
+      b = Mathf.Min(b / 2, 255);
+
+      var result = new Color32((byte)r, (byte)g, (byte)b, 255);
+      return result;
+    }
+
+    static string GenerateAcronym(Type type, string prefixToStrip) {
+      StringBuilder acronymBuilder = new StringBuilder();
+
+      var str = type.Name;
+      if (!string.IsNullOrEmpty(prefixToStrip)) {
+        if (str.StartsWith(prefixToStrip)) {
+          str = str.Substring(prefixToStrip.Length);
+        }
+      }
+
+      for (int i = 0; i < str.Length; ++i) {
+        var c = str[i];
+        if (i != 0 && char.IsLower(c)) {
+          continue;
+        }
+        acronymBuilder.Append(c);
+      }
+
+      return acronymBuilder.ToString();
+    }
+
+    static void EnsureThumbnailStyles() {
+      if (_thumbnailBackground != null) {
+        return;
+      }
+
+      byte[] data = {
+        0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a, 0x00, 0x00, 0x00, 0x0d,
+        0x49, 0x48, 0x44, 0x52, 0x00, 0x00, 0x00, 0x14, 0x00, 0x00, 0x00, 0x14,
+        0x08, 0x06, 0x00, 0x00, 0x00, 0x8d, 0x89, 0x1d, 0x0d, 0x00, 0x00, 0x00,
+        0x01, 0x73, 0x52, 0x47, 0x42, 0x00, 0xae, 0xce, 0x1c, 0xe9, 0x00, 0x00,
+        0x00, 0x04, 0x67, 0x41, 0x4d, 0x41, 0x00, 0x00, 0xb1, 0x8f, 0x0b, 0xfc,
+        0x61, 0x05, 0x00, 0x00, 0x00, 0x09, 0x70, 0x48, 0x59, 0x73, 0x00, 0x00,
+        0x0e, 0xc3, 0x00, 0x00, 0x0e, 0xc3, 0x01, 0xc7, 0x6f, 0xa8, 0x64, 0x00,
+        0x00, 0x00, 0xf2, 0x49, 0x44, 0x41, 0x54, 0x38, 0x4f, 0xed, 0x95, 0x31,
+        0x0a, 0x83, 0x30, 0x14, 0x86, 0x63, 0x11, 0x74, 0x50, 0x74, 0x71, 0xf1,
+        0x34, 0x01, 0x57, 0x6f, 0xe8, 0xe0, 0xd0, 0xa5, 0x07, 0x10, 0x0a, 0xbd,
+        0x40, 0x0f, 0xe2, 0xa8, 0x9b, 0xee, 0xf6, 0x7d, 0x69, 0x4a, 0xa5, 0xd2,
+        0x2a, 0xa6, 0x4b, 0xa1, 0x1f, 0x04, 0x5e, 0xc2, 0xff, 0xbe, 0x68, 0x90,
+        0xa8, 0x5e, 0xd0, 0x69, 0x9a, 0x9e, 0xc3, 0x30, 0x1c, 0xa4, 0x9e, 0x3e,
+        0x0d, 0x32, 0x64, 0xa5, 0xd6, 0x32, 0x16, 0xf8, 0x51, 0x14, 0x1d, 0xb3,
+        0x2c, 0x1b, 0xab, 0xaa, 0x9a, 0xda, 0xb6, 0x9d, 0xd6, 0x20, 0x43, 0x96,
+        0x1e, 0x7a, 0x71, 0xdc, 0x55, 0x02, 0x0b, 0x45, 0x51, 0x0c, 0x82, 0x8d,
+        0x6f, 0x87, 0x1e, 0x7a, 0xad, 0xd4, 0xa0, 0xd9, 0x65, 0x8f, 0xec, 0x01,
+        0xbd, 0x38, 0x70, 0x29, 0xce, 0x81, 0x47, 0x77, 0x05, 0x87, 0x39, 0x53,
+        0x0e, 0x77, 0xcb, 0x99, 0xad, 0x81, 0x03, 0x97, 0x27, 0x8f, 0xc9, 0xdc,
+        0xbc, 0xbb, 0x2b, 0x9e, 0xe7, 0xa9, 0x83, 0xad, 0xbf, 0xc6, 0x5f, 0xe8,
+        0xce, 0x0f, 0x08, 0xe5, 0x63, 0x1c, 0xfb, 0xbe, 0xb7, 0xd3, 0xfd, 0xe0,
+        0xc0, 0x75, 0x08, 0x82, 0xe0, 0xda, 0x34, 0x8d, 0x5d, 0xde, 0x0f, 0x0e,
+        0x5c, 0xd4, 0x3a, 0xcf, 0x73, 0xe7, 0xcb, 0x01, 0x07, 0x2e, 0x84, 0x2a,
+        0x8e, 0xe3, 0x53, 0x59, 0x96, 0xbb, 0xa4, 0xf4, 0xd0, 0x8b, 0xc3, 0xc8,
+        0x2c, 0x3e, 0x0b, 0xec, 0x52, 0xd7, 0xf5, 0xd4, 0x75, 0x9d, 0x8d, 0xbf,
+        0x87, 0x0c, 0x59, 0x7a, 0xac, 0xec, 0x79, 0xc1, 0xce, 0xd0, 0x49, 0x92,
+        0x5c, 0xb8, 0x35, 0xa4, 0x5e, 0x5c, 0xfb, 0xf3, 0x41, 0x86, 0xac, 0xd4,
+        0xb3, 0x5f, 0x80, 0x52, 0x37, 0xfd, 0x56, 0x1b, 0x09, 0x40, 0x56, 0xe4,
+        0x85, 0x00, 0x00, 0x00, 0x00, 0x49, 0x45, 0x4e, 0x44, 0xae, 0x42, 0x60,
+        0x82
+      };
+
+      var texture = new Texture2D(2, 2, TextureFormat.ARGB32, false);
+      if (!texture.LoadImage(data)) {
+        throw new InvalidOperationException();
+      }
+
+      _thumbnailBackground = texture;
+
+      _thumbnailStyle = new GUIStyle() {
+        normal = new GUIStyleState { background = _thumbnailBackground, textColor = Color.white },
+        border = new RectOffset(6, 6, 6, 6),
+        padding = new RectOffset(2, 1, 1, 1),
+        imagePosition = ImagePosition.TextOnly,
+        alignment = TextAnchor.MiddleCenter,
+        clipping = TextClipping.Clip,
+        wordWrap = true,
+        stretchWidth = false,
+        fontSize = 8,
+        fontStyle = FontStyle.Bold,
+        fixedWidth = texture.width,
+      };
+
+    }
+
+  }
+}
+
+
+#endregion
+
+
 #region Assets/Photon/Fusion/Scripts/Editor/Utilities/FusionEditorGUI.Utils.cs
 
 namespace Fusion.Editor {
@@ -9146,15 +9378,17 @@ namespace Fusion.Editor {
     static string ImportPrefix;
     static string ConfigPrefix;
     static string InspectorPrefix;
+    static string InstallerPrefix;
 
     static FusionEditorLog() {
       // Color duplicated from FusionUnityLogger - should use a direct reference when ASMDEFs exist
       var c = UnityEditor.EditorGUIUtility.isProSkin ? new Color32(115, 172, 229, 255) : new Color32(20, 64, 120, 255);
       var cs = string.Format("#{0:X6}", (c.r << 16) | (c.g << 8) | c.b);
-      LogPrefix       = $"[<color={cs}>Fusion/Editor</color>]";
-      ImportPrefix    = $"[<color={cs}>Fusion/Import</color>]";
-      ConfigPrefix    = $"[<color={cs}>Fusion/Config</color>]";
-      InspectorPrefix = $"[<color={cs}>Fusion/Inspector</color>]";
+      LogPrefix       = $"<color={cs}>[Fusion/Editor]</color>";
+      ImportPrefix    = $"<color={cs}>[Fusion/Import]</color>";
+      ConfigPrefix    = $"<color={cs}>[Fusion/Config]</color>";
+      InspectorPrefix = $"<color={cs}>[Fusion/Inspector]</color>";
+      InstallerPrefix = $"<color={cs}>[Fusion/Installer]</color>";
     }
 
     [Conditional("FUSION_EDITOR_TRACE")]
@@ -9166,6 +9400,9 @@ namespace Fusion.Editor {
       Debug.Log($"{LogPrefix} {msg}");
     }
 
+    internal static void Warn(string msg) {
+      Debug.LogWarning($"{LogPrefix} {msg}");
+    }
 
     [Conditional("FUSION_EDITOR_TRACE")]
     public static void TraceConfig(string msg) {
@@ -9178,6 +9415,10 @@ namespace Fusion.Editor {
 
     public static void LogConfig(string msg) {
       Debug.Log($"{ConfigPrefix} {msg}");
+    }
+
+    public static void LogInstaller(string msg) {
+      Debug.Log($"{InstallerPrefix} {msg}");
     }
 
     [Conditional("FUSION_EDITOR_TRACE")]
@@ -9672,18 +9913,6 @@ namespace Fusion.Editor {
   using Fusion;
 
   public static class NetworkRunnerUtilities {
-
-    [InitializeOnLoadMethod]
-    static void ListenToPlaymodeChanges() {
-      EditorApplication.playModeStateChanged += mode => {
-        if (mode == PlayModeStateChange.ExitingPlayMode) {
-          var it = NetworkRunner.GetInstancesEnumerator();
-          while (it.MoveNext()) {
-            it.Current.NotifyEditorPlayModeExit();
-          }
-        }
-      };
-    }
 
     static List<NetworkRunner> reusableRunnerList = new List<NetworkRunner>();
 

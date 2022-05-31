@@ -111,47 +111,32 @@ namespace rwby
         }
 
         [Rpc(RpcSources.InputAuthority | RpcSources.StateAuthority, RpcTargets.All, HostMode = RpcHostMode.SourceIsHostPlayer)]
-        public virtual async void RPC_SetupClientPlayers()
+        public async void RPC_SetupClientPlayers()
         {
             if (!Runner.LocalPlayer.IsValid) return;
             var cInfo = sessionManager.GetClientInfo(Runner.LocalPlayer);
 
             await SetupClientPlayers(cInfo);
         }
-
-        public ModObjectGUIDReference testReference;
+        
         protected virtual async UniTask SetupClientPlayers(SessionGamemodeClientContainer cInfo)
         {
-            NetworkObject no = null;
             for (int i = 0; i < cInfo.players.Count; i++)
             {
                 if (cInfo.players[i].characterNetworkObjects.Count < 1) return;
-
-                PlayerCamera c = GameObject.Instantiate(GameManager.singleton.settings.playerCameraPrefab, Vector3.zero,
-                    Quaternion.identity);
-                
-                int playerID = i;
-                await UniTask.WaitUntil(() => Runner.TryFindObject(cInfo.players[playerID].characterNetworkObjects[0], out no));
-                
-                Runner.AddSimulationBehaviour(c, null);
-                c.SetLookAtTarget(no.GetComponent<FighterManager>());
-                GameManager.singleton.localPlayerManager.SetPlayerCamera(i, c.Cam);
-
-                BaseHUD playerHUD = GameObject.Instantiate(GameManager.singleton.settings.baseUI);
-                playerHUD.canvas.worldCamera = c.Cam;
-                playerHUD.playerFighter = no.GetComponent<FighterManager>();
-                Runner.AddSimulationBehaviour(playerHUD, null);
-
-                await GameManager.singleton.contentManager.LoadContentDefinition(testReference);
-
-                IHUDElementbankDefinition HUDElementbank =
-                    GameManager.singleton.contentManager.GetContentDefinition<IHUDElementbankDefinition>(testReference);
-                
-                await HUDElementbank.Load();
-
-                var debugInfo = GameObject.Instantiate(HUDElementbank.GetHUDElement("debug"), playerHUD.transform, false);
-                playerHUD.AddHUDElement(debugInfo.GetComponent<HUDElement>());
+                await SetupClientPlayerCharacters(cInfo, i);
+                await SetupClientPlayerHUD(cInfo, i);
             }
+        }
+
+        protected virtual async UniTask SetupClientPlayerCharacters(SessionGamemodeClientContainer clientInfo, int playerIndex)
+        {
+            
+        }
+        
+        protected virtual async UniTask SetupClientPlayerHUD(SessionGamemodeClientContainer clientInfo, int playerIndex)
+        {
+            
         }
     }
 }

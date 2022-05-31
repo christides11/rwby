@@ -450,6 +450,7 @@ MonoBehaviour:
   physicsManager: {fileID: 8508573390081789594}
   boxManager: {fileID: 4732546850545760940}
   statManager: {fileID: 7571525903815252237}
+  healthManager: {fileID: 2326289350170218266}
   fighterDefinition: {fileID: 11400000, guid: f0f374ed69303bf499b21d67a399ece3, type: 2}
   capsuleCollider: {fileID: 2898563863352299436}
   soundbankContainer: {fileID: 4006742894894194177}
@@ -472,6 +473,7 @@ MonoBehaviour:
   hitstopShakeDistance: 0.5
   hitstopDir: 1
   hitstopShakeFrames: 1
+  val: 100
   shakeDirs:
   - {x: -1, y: 0, z: 0}
   - {x: 0, y: 0, z: 1}
@@ -847,6 +849,7 @@ MonoBehaviour:
   _interpolationDataSource: 0
   banks: []
   animancer: {fileID: 7881897747762219494}
+  smoothAnimate: 1
 --- !u!1 &3012196137317099199
 GameObject:
   m_ObjectHideFlags: 0

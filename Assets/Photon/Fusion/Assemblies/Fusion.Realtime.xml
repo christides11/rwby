@@ -39,11 +39,6 @@
             Thread ID
             </summary>
         </member>
-        <member name="P:Fusion.Photon.Realtime.FusionRelayClient.FallbackThreadRunning">
-            <summary>
-            Check if Thread is running by checking the Thread ID
-            </summary>
-        </member>
         <member name="M:Fusion.Photon.Realtime.FusionRelayClient.StartFallbackSendAck">
             <summary>
             Starts a new rhread to send ACK to Cloud
@@ -105,7 +100,7 @@
             Flag to signal if the Client is Ready to perform cloud action and it is in a Room
             </summary>
         </member>
-        <member name="E:Fusion.Photon.Realtime.FusionRelayClient.OnRoomPropertiesChanged">
+        <member name="E:Fusion.Photon.Realtime.FusionRelayClient.OnRoomChanged">
             <summary>
             Signal if some room property has changed
             </summary>

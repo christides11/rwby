@@ -30,6 +30,7 @@ namespace rwby
         public FighterStateManager FStateManager { get { return stateManager; } }
         public FighterStatManager StatManager { get { return statManager; } }
         public FighterPhysicsManager FPhysicsManager { get { return physicsManager; } }
+        public HealthManager HealthManager{ get { return healthManager; } }
         public FighterBoxManager BoxManager { get { return boxManager; } }
         public SoundbankContainer SoundbankContainer { get { return soundbankContainer; } }
         public EffectbankContainer EffectbankContainer { get { return effectbankContainer; } }
@@ -61,7 +62,8 @@ namespace rwby
         [SerializeField] protected FighterPhysicsManager physicsManager;
         [SerializeField] protected FighterBoxManager boxManager;
         [SerializeField] protected FighterStatManager statManager;
-        [SerializeField] protected IFighterDefinition fighterDefinition;
+        [SerializeField] protected HealthManager healthManager;
+        public IFighterDefinition fighterDefinition;
         [SerializeField] protected CapsuleCollider capsuleCollider;
         [SerializeField] protected SoundbankContainer soundbankContainer;
         [SerializeField] protected EffectbankContainer effectbankContainer;
@@ -110,6 +112,7 @@ namespace rwby
         public int hitstopDir = 1;
         public int hitstopShakeFrames = 1;
 
+        public int val = 100;
         public override void FixedUpdateNetwork()
         {
             inputManager.FeedInput();
@@ -151,6 +154,9 @@ namespace rwby
                     FCombatManager.hitstopCounter = 0;
                 }
             }
+            
+            if(inputManager.GetButton((int)PlayerInputType.A).firstPress) healthManager.ModifyHealth(-val);
+            if(inputManager.GetButton((int)PlayerInputType.B).firstPress) healthManager.ModifyHealth(val);
         }
         
         public Vector3[] shakeDirs;

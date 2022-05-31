@@ -125,6 +125,7 @@ namespace Fusion.Editor {
       FusionEditorLog.TraceImport(assetPath, $"Found {guids.Length} assets marked with {FusionPrefabTag} label");
 
       var detailsLog = new System.Text.StringBuilder();
+      var paths = new List<string>();
 
       foreach (var guid in guids) {
         var assetPath = AssetDatabase.GUIDToAssetPath(guid);
@@ -147,12 +148,17 @@ namespace Fusion.Editor {
         ctx.DependsOnSourceAsset(assetPath);
         ctx.AddObjectToAsset(guid, prefabSource);
 
-        result.Add(prefabSource);
+        var index = paths.BinarySearch(assetPath);
+        if (index < 0) {
+          index = ~index;
+        } else {
+          ctx.LogImportWarning($"Prefab with path {assetPath} already added");
+        }
+        paths.Insert(index, assetPath);
+        result.Insert(index, prefabSource);
       }
 
       FusionEditorLog.TraceImport($"Discover prefabs details [{result.Count}] :\n{detailsLog}");
-
-      result.Sort((a, b) => a.AssetGuid.CompareTo(b.AssetGuid));
       return result.ToArray();
     }
 
