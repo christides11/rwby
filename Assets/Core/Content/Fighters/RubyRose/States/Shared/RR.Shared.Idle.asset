@@ -25,6 +25,7 @@ MonoBehaviour:
   - rid: 6951768472487198742
   - rid: 6951768472487198743
   - rid: 6951768538707132416
+  - rid: 220443314582978560
   stateGroundedGroup: 1
   stateType: 1
   maxUsesInString: -1
@@ -36,11 +37,30 @@ MonoBehaviour:
     sequenceInputs: []
   condition:
     rid: -2
+  hitboxInfo: []
+  throwboxInfo: []
+  hurtboxInfo:
+  - hitInvincible: 0
+    projectileInvincible: 0
   references:
     version: 2
     RefIds:
     - rid: -2
       type: {class: , ns: , asm: }
+    - rid: 220443314582978560
+      type: {class: VarCreateBox, ns: rwby, asm: rwby.csharp}
+      data:
+        frameRanges: []
+        condition:
+          rid: -2
+        boxType: 0
+        attachedTo: 0
+        shape: 0
+        offset: {x: 0, y: 1, z: 0}
+        boxExtents: {x: 1, y: 2, z: 1}
+        radius: 0
+        definitionIndex: 0
+        children: []
     - rid: 6951768472487198741
       type: {class: VarModifyAnimationSet, ns: rwby, asm: rwby.csharp}
       data:

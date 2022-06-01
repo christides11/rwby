@@ -125,5 +125,13 @@ namespace rwby
 
             return f.StateManager.CurrentStateMoveset == vars.moveset;
         }
+
+        public static bool HitstunValue(IFighterBase fighter, IConditionVariables variables, HnSF.StateTimeline arg3, int arg4)
+        {
+            FighterManager f = fighter as FighterManager;
+            ConditionHitstunValue vars = (ConditionHitstunValue)variables;
+
+            return f.FCombatManager.HitStun >= vars.minValue && f.FCombatManager.HitStun <= vars.maxValue;
+        }
     }
 }

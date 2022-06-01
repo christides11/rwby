@@ -274,9 +274,9 @@ namespace rwby
             HitInfo hitInfo = hurtInfo.hitInfo as HitInfo;
             HitReaction hitReaction = new HitReaction();
             hitReaction.reaction = HitReactionType.AVOIDED;
-            // TODO
-            //var currentState = stateManager.GetState();
-            /*
+            
+            var currentState = stateManager.GetState();
+            
             if (!hitInfo.hitStateGroundedGroups.HasFlag(currentState.stateGroundedGroup)) return hitReaction;
 
             bool groundedState = currentState.stateGroundedGroup == StateGroundedGroupType.GROUND;
@@ -330,7 +330,7 @@ namespace rwby
                     stateManager.ChangeState(CounterhitState ? (int)hitInfo.aerialCounterHitState : (int)hitInfo.aerialHitState);
                     break;
             }
-            manager.FCombatManager.Cleanup();*/
+            manager.FCombatManager.Cleanup();
             return hitReaction;
         }
 

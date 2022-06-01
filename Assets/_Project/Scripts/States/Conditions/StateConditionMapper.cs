@@ -14,6 +14,7 @@ namespace rwby
             functions.Add(typeof(ConditionOr), BaseStateConditionFunctions.ORCondition);
             functions.Add(typeof(ConditionCanAirJump), BaseStateConditionFunctions.CanAirJump);
             functions.Add(typeof(ConditionMoveset), BaseStateConditionFunctions.Moveset);
+            functions.Add(typeof(ConditionHitstunValue), BaseStateConditionFunctions.HitstunValue);
         }
     }
 }
