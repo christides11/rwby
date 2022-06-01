@@ -29,6 +29,7 @@ namespace rwby
             functions.Add(typeof(VarAddMovement), BaseStateFunctions.AddMovement);
             functions.Add(typeof(VarClampGravity), BaseStateFunctions.ClampGravity);
             functions.Add(typeof(VarMultiplyGravity), BaseStateFunctions.MultiplyGravity);
+            functions.Add(typeof(VarModifyFallSpeed), BaseStateFunctions.ModifyFallSpeed);
         }
     }
 }

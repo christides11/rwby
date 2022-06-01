@@ -13,17 +13,14 @@ MonoBehaviour:
   m_Name: RR.Scythe.Hit.Ground.Upper
   m_EditorClassIdentifier: 
   stateName: Hit Ground (Upper)
-  useBaseState: 0
-  baseState: {fileID: 0}
+  useBaseState: 1
+  baseState: {fileID: 11400000, guid: ef5f7051f026ab940adda2074ee475d5, type: 2}
   totalFrames: 10
   autoIncrement: 1
   autoLoop: 0
   autoLoopFrame: 1
   data:
-  - rid: 220443314582978564
   - rid: 220443314582978562
-  - rid: 220443314582978561
-  - rid: 220443314582978563
   stateGroundedGroup: 1
   stateType: 1
   maxUsesInString: -1
@@ -45,16 +42,6 @@ MonoBehaviour:
     RefIds:
     - rid: -2
       type: {class: , ns: , asm: }
-    - rid: 220443314582978561
-      type: {class: VarModifyHitstun, ns: rwby, asm: rwby.csharp}
-      data:
-        frameRanges:
-        - {x: -1, y: -1}
-        condition:
-          rid: -2
-        modifyType: 0
-        value: -1
-        children: []
     - rid: 220443314582978562
       type: {class: VarModifyAnimationSet, ns: rwby, asm: rwby.csharp}
       data:
@@ -71,34 +58,5 @@ MonoBehaviour:
             contentGUID:
               guid: 2c2c000000000000
           animation: flinch.high
-        fadeTime: 0.04
+        fadeTime: 0.02
         children: []
-    - rid: 220443314582978563
-      type: {class: VarCreateBox, ns: rwby, asm: rwby.csharp}
-      data:
-        frameRanges:
-        - {x: -1, y: -1}
-        condition:
-          rid: -2
-        boxType: 0
-        attachedTo: 0
-        shape: 0
-        offset: {x: 0, y: 1, z: 0}
-        boxExtents: {x: 1, y: 2, z: 1}
-        radius: 0
-        definitionIndex: 0
-        children: []
-    - rid: 220443314582978564
-      type: {class: VarExternal, ns: rwby, asm: rwby.csharp}
-      data:
-        frameRanges:
-        - {x: -1, y: -1}
-        condition:
-          rid: 220443314582978565
-        asset: {fileID: 11400000, guid: c8d832c162e368d439cbe63210340e04, type: 2}
-        children: []
-    - rid: 220443314582978565
-      type: {class: ConditionHitstunValue, ns: rwby, asm: rwby.csharp}
-      data:
-        minValue: 0
-        maxValue: 0

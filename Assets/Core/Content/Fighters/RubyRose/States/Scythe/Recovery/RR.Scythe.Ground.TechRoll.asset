@@ -1,0 +1,127 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7789f25d17401bc4b915ca6fcecf2a29, type: 3}
+  m_Name: RR.Scythe.Ground.TechRoll
+  m_EditorClassIdentifier: 
+  stateName: Tech Roll
+  useBaseState: 0
+  baseState: {fileID: 0}
+  totalFrames: 30
+  autoIncrement: 1
+  autoLoop: 0
+  autoLoopFrame: 1
+  data:
+  - rid: 220443324362784796
+  - rid: 220443324362784797
+  - rid: 220443324362784799
+  - rid: 220443324362784801
+  - rid: 220443324362784804
+  stateGroundedGroup: 1
+  stateType: 0
+  maxUsesInString: -1
+  allowBaseStateTransitions: 1
+  inputSequence:
+    executeWindow: 3
+    executeInputs: []
+    sequenceWindow: 8
+    sequenceInputs: []
+  condition:
+    rid: -2
+  hitboxInfo: []
+  throwboxInfo: []
+  hurtboxInfo:
+  - hitInvincible: 0
+    projectileInvincible: 0
+  references:
+    version: 2
+    RefIds:
+    - rid: -2
+      type: {class: , ns: , asm: }
+    - rid: 220443324362784796
+      type: {class: VarModifyAnimationSet, ns: rwby, asm: rwby.csharp}
+      data:
+        frameRanges:
+        - {x: 0, y: 0}
+        condition:
+          rid: -2
+        modifyType: 1
+        wantedAnimations:
+        - animationbank:
+            modGUID:
+              guid: 1d292c1f00000000
+            contentType: 7
+            contentGUID:
+              guid: 2c2c000000000000
+          animation: jumpsquat
+        fadeTime: 0
+        children: []
+    - rid: 220443324362784797
+      type: {class: VarSetMovement, ns: rwby, asm: rwby.csharp}
+      data:
+        frameRanges:
+        - {x: 0, y: 0}
+        condition:
+          rid: -2
+        inputSource: 0
+        normalizeInputSource: 1
+        useRotationIfInputZero: 1
+        force:
+          rid: 220443324362784798
+        children: []
+    - rid: 220443324362784798
+      type: {class: FighterBaseStatReferenceFloat, ns: rwby, asm: rwby.csharp}
+      data:
+        inverse: 0
+        statReference: 0
+        value: 10
+        variable: 0
+    - rid: 220443324362784799
+      type: {class: VarExternal, ns: rwby, asm: rwby.csharp}
+      data:
+        frameRanges:
+        - {x: 30, y: 30}
+        condition:
+          rid: 220443324362784800
+        asset: {fileID: 11400000, guid: c8d832c162e368d439cbe63210340e04, type: 2}
+        children: []
+    - rid: 220443324362784800
+      type: {class: ConditionIsGrounded, ns: rwby, asm: rwby.csharp}
+      data:
+        inverse: 0
+    - rid: 220443324362784801
+      type: {class: VarExternal, ns: rwby, asm: rwby.csharp}
+      data:
+        frameRanges:
+        - {x: 30, y: 30}
+        condition:
+          rid: 220443324362784802
+        asset: {fileID: 11400000, guid: 3e988135845709d4594e5628d0bf81cd, type: 2}
+        children: []
+    - rid: 220443324362784802
+      type: {class: ConditionIsGrounded, ns: rwby, asm: rwby.csharp}
+      data:
+        inverse: 1
+    - rid: 220443324362784804
+      type: {class: VarCreateBox, ns: rwby, asm: rwby.csharp}
+      data:
+        frameRanges:
+        - {x: 16, y: 30}
+        condition:
+          rid: -2
+        boxType: 0
+        attachedTo: 0
+        shape: 0
+        offset: {x: 0, y: 0.75, z: 0}
+        boxExtents: {x: 0.5, y: 0.75, z: 0.5}
+        radius: 0
+        definitionIndex: 0
+        children: []

@@ -322,5 +322,21 @@ namespace rwby
 
             f.FPhysicsManager.forceGravity *= vars.multiplier.GetValue(f);
         }
+
+        public static void ModifyFallSpeed(IFighterBase fighter, IStateVariables variables, HnSF.StateTimeline arg3, int arg4)
+        {
+            FighterManager f = (FighterManager)fighter;
+            VarModifyFallSpeed vars = (VarModifyFallSpeed)variables;
+
+            switch (vars.modifyType)
+            {
+                case VarModifyType.SET:
+                    f.FPhysicsManager.forceGravity = vars.value.GetValue(f);
+                    break;
+                case VarModifyType.ADD:
+                    f.FPhysicsManager.forceGravity += vars.value.GetValue(f);
+                    break;
+            }
+        }
     }
 }
