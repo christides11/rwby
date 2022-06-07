@@ -291,9 +291,9 @@ GameObject:
   - component: {fileID: 2898563863352299436}
   - component: {fileID: 5710829672531719765}
   - component: {fileID: 4006742894894194177}
-  - component: {fileID: 4275241288035171677}
   - component: {fileID: 8828466035712802024}
   - component: {fileID: 4017428576835799020}
+  - component: {fileID: 6390373237626046470}
   m_Layer: 6
   m_Name: RubyRose
   m_TagString: Player
@@ -378,9 +378,9 @@ MonoBehaviour:
   - {fileID: 1765053112054983048}
   - {fileID: 5710829672531719765}
   - {fileID: 4006742894894194177}
-  - {fileID: 4275241288035171677}
   - {fileID: 8828466035712802024}
   - {fileID: 4017428576835799020}
+  - {fileID: 6390373237626046470}
   SimulationBehaviours: []
 --- !u!114 &728284172682202706
 MonoBehaviour:
@@ -454,7 +454,7 @@ MonoBehaviour:
   fighterDefinition: {fileID: 11400000, guid: f0f374ed69303bf499b21d67a399ece3, type: 2}
   capsuleCollider: {fileID: 2898563863352299436}
   soundbankContainer: {fileID: 4006742894894194177}
-  effectbankContainer: {fileID: 4275241288035171677}
+  fighterEffector: {fileID: 6390373237626046470}
   fighterAnimator: {fileID: 4017428576835799020}
   targetOrigin: {fileID: 4535680941175032872}
   guardEffect: {fileID: 678739726598552823}
@@ -496,6 +496,11 @@ MonoBehaviour:
     contentType: 7
     contentGUID:
       guid: 2c2c000000000000
+  effectbankReferences:
+  - modGUID:
+      guid: 1d292c1f00000000
+    contentGUID:
+      guid: 21261c0000000000
   references:
     version: 2
     RefIds: []
@@ -791,20 +796,6 @@ MonoBehaviour:
   _interpolationDataSource: 0
   soundbanks: []
   audioSourcePrefab: {fileID: 7106954603056005566, guid: ddaaed784009a95478cc139acb2d4850, type: 3}
---- !u!114 &4275241288035171677
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3009557721057671630}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 28d280872d7e7f34b9ad8bd02ccf1288, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _interpolationDataSource: 0
-  effectbanks: []
 --- !u!114 &8828466035712802024
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -849,7 +840,36 @@ MonoBehaviour:
   _interpolationDataSource: 0
   banks: []
   animancer: {fileID: 7881897747762219494}
+  _animateInResimulation: 0
   smoothAnimate: 1
+--- !u!114 &6390373237626046470
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3009557721057671630}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e719efb7c0bc5bc43a0267b14bcf01ef, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _interpolationDataSource: 0
+  banks: []
+  _effects:
+    _effects:
+      Data: 00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+  effectObjects:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
 --- !u!1 &3012196137317099199
 GameObject:
   m_ObjectHideFlags: 0
@@ -6054,8 +6074,7 @@ MonoBehaviour:
   NetworkGuid:
     RawGuidValue: 00000000000000000000000000000000
   NestedObjects: []
-  NetworkedBehaviours:
-  - {fileID: 678739726598552823}
+  NetworkedBehaviours: []
   SimulationBehaviours: []
 --- !u!114 &678739726598552823
 MonoBehaviour:
@@ -6069,11 +6088,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b1b5d4ab8b0e47a438b92b147fe43a48, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _interpolationDataSource: 0
-  particleSystems:
-  - {fileID: 8485071527537255552}
-  _networkedPlayMode: 0
-  _networkedStartTick: 0
 --- !u!1 &7575742505723308957
 GameObject:
   m_ObjectHideFlags: 0

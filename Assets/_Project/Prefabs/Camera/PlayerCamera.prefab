@@ -31,6 +31,7 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 7265751757701851014}
   m_Father: {fileID: 0}
@@ -109,7 +110,8 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 1
   m_VolumeTrigger: {fileID: 0}
-  m_RenderPostProcessing: 0
+  m_VolumeFrameworkUpdateModeOption: 2
+  m_RenderPostProcessing: 1
   m_Antialiasing: 0
   m_AntialiasingQuality: 2
   m_StopNaN: 0
@@ -131,16 +133,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 94dfa9dd9fee5b0478c887165ccb0281, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  followTarget: {fileID: 0}
   cam: {fileID: 3857231048421817447}
   cinemachineBrain: {fileID: 9101689328735284347}
   targetGroup: {fileID: 4178664963536039396}
-  mouseDeadzone: 0.05
-  mouseXAxisSpeed: 1
-  mouseYAxisSpeed: 1
-  stickDeadzone: 0.2
-  stickAxialDeadZone: 0.15
-  stickXAxisSpeed: 1
-  stickYAxisSpeed: 1
   lockonLayerMask:
     serializedVersion: 2
     m_Bits: 64
@@ -211,6 +207,7 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 3306778991701139097}
   m_RootOrder: 0

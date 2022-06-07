@@ -33,7 +33,6 @@ namespace rwby
         public HealthManager HealthManager{ get { return healthManager; } }
         public FighterBoxManager BoxManager { get { return boxManager; } }
         public SoundbankContainer SoundbankContainer { get { return soundbankContainer; } }
-        public EffectbankContainer EffectbankContainer { get { return effectbankContainer; } }
         public Transform TargetOrigin { get { return targetOrigin; } }
         public IEnumerable<ModObjectGUIDReference> loadedContent
         {
@@ -66,7 +65,7 @@ namespace rwby
         public IFighterDefinition fighterDefinition;
         [SerializeField] protected CapsuleCollider capsuleCollider;
         [SerializeField] protected SoundbankContainer soundbankContainer;
-        [SerializeField] protected EffectbankContainer effectbankContainer;
+        public FighterEffector fighterEffector;
         public FighterAnimator fighterAnimator;
         [SerializeField] protected Transform targetOrigin;
         public ParticleSystemEffect guardEffect;

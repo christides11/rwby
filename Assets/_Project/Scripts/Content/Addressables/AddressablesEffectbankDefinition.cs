@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -13,7 +14,7 @@ namespace rwby
         [SerializeField] private string effectbankName;
         [SerializeField] private List<EffectbankEffectEntry> effects = new List<EffectbankEffectEntry>();
 
-        public Dictionary<string, int> effectMap = new Dictionary<string, int>();
+        [NonSerialized] public Dictionary<string, int> effectMap = new Dictionary<string, int>();
 
         private void OnValidate()
         {
@@ -25,6 +26,7 @@ namespace rwby
 
         private void OnEnable()
         {
+            effectMap.Clear();
             for (int i = 0; i < effects.Count; i++)
             {
                 effectMap.Add(effects[i].id, i);

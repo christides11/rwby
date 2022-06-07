@@ -5,6 +5,7 @@ using UnityEngine;
 public class RRoseMan : FighterManager
 {
     public ModObjectGUIDReference[] animationbankReferences;
+    public ModObjectSetContentReference[] effectbankReferences;
     public override async UniTask<bool> OnFighterLoaded()
     {
         for (int i = 0; i < animationbankReferences.Length; i++)
@@ -13,6 +14,22 @@ public class RRoseMan : FighterManager
             if (animationbankLoadResult == false)
             {
                 Debug.LogError("Error loading animationbank.");
+                return false;
+            }
+        }
+        
+        for (int i = 0; i < effectbankReferences.Length; i++)
+        {
+            bool animationbankLoadResult = await ContentManager.singleton.LoadContentDefinition(
+                new ModObjectGUIDReference()
+                {
+                    contentGUID = effectbankReferences[i].contentGUID,
+                    contentType = (int)ContentType.Effectbank,
+                    modGUID =  effectbankReferences[i].modGUID
+                });
+            if (animationbankLoadResult == false)
+            {
+                Debug.LogError("Error loading effectbank.");
                 return false;
             }
         }
@@ -26,6 +43,16 @@ public class RRoseMan : FighterManager
         for (int i = 0; i < animationbankReferences.Length; i++)
         {
             fighterAnimator.RegisterBank(animationbankReferences[i]);
+        }
+        
+        for (int i = 0; i < effectbankReferences.Length; i++)
+        {
+            fighterEffector.RegisterBank(new ModObjectGUIDReference()
+            {
+                contentGUID = effectbankReferences[i].contentGUID,
+                contentType = (int)ContentType.Effectbank,
+                modGUID =  effectbankReferences[i].modGUID
+            });
         }
     }
 

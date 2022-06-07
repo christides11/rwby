@@ -15,6 +15,11 @@ namespace rwby
             throw new System.NotImplementedException();
         }
 
+        public virtual EffectbankEffectEntry GetEffect(string effect)
+        {
+            return Animations[EffectMap[effect]];
+        }
+
         public override bool Unload()
         {
             throw new System.NotImplementedException();

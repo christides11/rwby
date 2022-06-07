@@ -24,7 +24,6 @@ namespace rwby
         [Networked] public byte maxPlayersPerClient { get; set; }
 
         public ClientContentLoaderService clientContentLoaderService;
-        public ClientMapLoaderService clientMapLoaderService;
         
         [HideInInspector] public GameManager gameManager;
         [HideInInspector] public ContentManager contentManager;

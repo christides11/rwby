@@ -1,61 +1,67 @@
 using System;
 using Fusion;
+using UnityEngine;
 
 namespace rwby
 {
-    
     [System.Serializable]
-    public struct ModObjectReference : INetworkStruct, IEquatable<ModObjectReference>
+    public struct ModObjectReference : IEquatable<ModObjectReference>
     {
-        public ModIdentifierTuple modIdentifier;
-        public byte objectIdentifier;
+        public ContentGUID modGUID;
+        public int contentType;
+        public int contentIdx;
+
+        public ModObjectReference(ContentGUID modGUID, int contentType, int contentIdx)
+        {
+            this.modGUID = modGUID;
+            this.contentType = contentType;
+            this.contentIdx = contentIdx;
+        }
+
+        public ModObjectReference(byte[] modGUID, int contentType, int contentIdx)
+        {
+            this.modGUID = new ContentGUID(modGUID);
+            this.contentType = contentType;
+            this.contentIdx = contentIdx;
+        }
         
-        public ModObjectReference((byte, uint) modIdentifier, byte objectIdentifier)
-        {
-            this.modIdentifier = new ModIdentifierTuple(){ source = modIdentifier.Item1, identifier = modIdentifier.Item2};
-            this.objectIdentifier = objectIdentifier;
-        }
-
-        public ModObjectReference(ModIdentifierTuple modIdentifier, byte objectIdentifier)
-        {
-            this.modIdentifier = modIdentifier;
-            this.objectIdentifier = objectIdentifier;
-        }
-
         public bool IsValid()
         {
-            if (modIdentifier.source == 0 || objectIdentifier == 0) return false;
+            if (contentType == (int)ContentType.NONE) return false;
             return true;
         }
 
         public override string ToString()
         {
-            return $"{modIdentifier.source}:{modIdentifier.identifier}/{objectIdentifier}";
-        }
-
-        public override bool Equals(object obj)
-        {
-            return obj is ModObjectReference && this == (ModObjectReference)obj;
+            return $"{modGUID.ToString()}:{contentType}:{contentIdx}";
         }
 
         public bool Equals(ModObjectReference other)
         {
-            return modIdentifier == other.modIdentifier && objectIdentifier == other.objectIdentifier;
+            return contentType == other.contentType && modGUID.Equals(other.modGUID) && contentIdx == other.contentIdx;
+        }
+
+        public override bool Equals(object obj)
+        {
+            return obj is ModObjectReference other && Equals(other);
         }
 
         public override int GetHashCode()
         {
-            return (modIdentifier, objectIdentifier).GetHashCode();
+            return HashCode.Combine(modGUID, contentType, contentIdx);
         }
         
         public static bool operator ==(ModObjectReference x, ModObjectReference y)
         {
-            return x.modIdentifier == y.modIdentifier && x.objectIdentifier == y.objectIdentifier;
+            return x.Equals(y);
         }
 
         public static bool operator !=(ModObjectReference x, ModObjectReference y)
         {
             return !(x == y);
         }
+        
+        //public static implicit operator NetworkModObjectGUIDReference(ModObjectGUIDReference nmo) =>
+        //    new NetworkModObjectGUIDReference(nmo.modGUID, nmo.contentType, nmo.contentGUID);//
     }
 }

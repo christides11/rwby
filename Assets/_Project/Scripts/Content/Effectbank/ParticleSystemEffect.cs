@@ -8,6 +8,7 @@ namespace rwby
 {
     public class ParticleSystemEffect : BaseEffect
     {
+        /*
         [SerializeField] protected ParticleSystem[] particleSystems;
 
         [Networked] public AudioPlayMode networkedPlayMode { get; set; }
@@ -94,6 +95,6 @@ namespace rwby
                     particleSystems[i].Simulate( (Runner.Simulation.Tick - startTick) * Runner.DeltaTime , true, true);
                 }
             }
-        }
+        }*/
     }
 }
