@@ -10,6 +10,11 @@ namespace rwby
 
         }
 
+        public virtual void SetFrame(float time)
+        {
+            
+        }
+
         public virtual void PauseEffect()
         {
 

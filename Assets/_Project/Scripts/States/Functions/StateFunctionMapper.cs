@@ -31,6 +31,7 @@ namespace rwby
             functions.Add(typeof(VarMultiplyGravity), BaseStateFunctions.MultiplyGravity);
             functions.Add(typeof(VarModifyFallSpeed), BaseStateFunctions.ModifyFallSpeed);
             functions.Add(typeof(VarModifyEffectSet), BaseStateFunctions.ModifyEffectSet);
+            functions.Add(typeof(VarModifyEffectFrame), BaseStateFunctions.ModifyEffectFrame);
         }
     }
 }

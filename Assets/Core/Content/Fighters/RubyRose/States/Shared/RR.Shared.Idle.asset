@@ -26,8 +26,6 @@ MonoBehaviour:
   - rid: 6951768472487198743
   - rid: 6951768538707132416
   - rid: 220443314582978560
-  - rid: 220443445379727360
-  - rid: 220443445379727363
   stateGroundedGroup: 1
   stateType: 1
   maxUsesInString: -1
@@ -62,35 +60,6 @@ MonoBehaviour:
         boxExtents: {x: 1, y: 2, z: 1}
         radius: 0
         definitionIndex: 0
-        children: []
-    - rid: 220443445379727360
-      type: {class: VarModifyEffectSet, ns: rwby, asm: rwby.csharp}
-      data:
-        frameRanges:
-        - {x: 1, y: 1}
-        condition:
-          rid: -2
-        modifyType: 1
-        wantedEffects:
-        - effectbank:
-            modGUID:
-              guid: 1d292c1f00000000
-            contentType: 6
-            contentGUID:
-              guid: 21261c0000000000
-          effect: slash
-          parented: 1
-          offset: {x: 0, y: 1, z: 1}
-        children: []
-    - rid: 220443445379727363
-      type: {class: VarModifyEffectSet, ns: rwby, asm: rwby.csharp}
-      data:
-        frameRanges:
-        - {x: 61, y: 61}
-        condition:
-          rid: -2
-        modifyType: 1
-        wantedEffects: []
         children: []
     - rid: 6951768472487198741
       type: {class: VarModifyAnimationSet, ns: rwby, asm: rwby.csharp}

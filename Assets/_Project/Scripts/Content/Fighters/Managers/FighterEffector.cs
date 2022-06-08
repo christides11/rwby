@@ -41,7 +41,8 @@ namespace rwby
                     effect = banks[bankMap[wantedEffects[i].effectbank]].EffectMap[wantedEffects[i].effect]+1,
                     frame = 0,
                     parented = wantedEffects[i].parented,
-                    pos = wantedEffects[i].offset
+                    pos = wantedEffects[i].offset,
+                    rot = wantedEffects[i].rotation
                 });
                 effects = temp;
             }
@@ -98,19 +99,22 @@ namespace rwby
             {
                 if (effects.effects[i].bank == 0)
                 {
-                    if(effectObjects[i]) Destroy(effectObjects[i]);
+                    if(effectObjects[i]) Destroy(effectObjects[i].gameObject);
                     continue;
                 }
                 
                 if (currentEffectsRepresentation.effects[i] != effects.effects[i])
                 {
-                    if(effectObjects[i]) Destroy(effectObjects[i]);
+                    if(effectObjects[i]) Destroy(effectObjects[i].gameObject);
                     var e = GetEffect(effects.effects[i]);
                     effectObjects[i] = effects.effects[i].parented ?
                         GameObject.Instantiate(e, transform, false)
                         : GameObject.Instantiate(e, effects.effects[i].pos, Quaternion.identity);
                     effectObjects[i].transform.localPosition = effects.effects[i].pos;
+                    effectObjects[i].transform.localRotation = Quaternion.Euler(effects.effects[i].rot);
                 }
+                
+                effectObjects[i].SetFrame(effects.effects[i].frame * Runner.DeltaTime);
             }
             
             currentEffectsRepresentation = effects;

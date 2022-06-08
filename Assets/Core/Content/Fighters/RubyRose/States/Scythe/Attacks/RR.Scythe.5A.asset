@@ -22,6 +22,8 @@ MonoBehaviour:
   data:
   - rid: 6951768528003006469
   - rid: 6951768528003006475
+  - rid: 220443471284797440
+  - rid: 220443471284797443
   - rid: 6951768528003006470
   - rid: 6951768538707132419
   stateGroundedGroup: 1
@@ -83,6 +85,35 @@ MonoBehaviour:
     RefIds:
     - rid: -2
       type: {class: , ns: , asm: }
+    - rid: 220443471284797440
+      type: {class: VarModifyEffectSet, ns: rwby, asm: rwby.csharp}
+      data:
+        frameRanges:
+        - {x: 0, y: 0}
+        condition:
+          rid: -2
+        modifyType: 1
+        wantedEffects:
+        - effectbank:
+            modGUID:
+              guid: 1d292c1f00000000
+            contentType: 6
+            contentGUID:
+              guid: 21261c0000000000
+          effect: slash
+          parented: 1
+          offset: {x: 0, y: 1, z: 1}
+        children: []
+    - rid: 220443471284797443
+      type: {class: VarModifyEffectSet, ns: rwby, asm: rwby.csharp}
+      data:
+        frameRanges:
+        - {x: 31, y: 31}
+        condition:
+          rid: -2
+        modifyType: 1
+        wantedEffects: []
+        children: []
     - rid: 6951768528003006469
       type: {class: VarModifyAnimationSet, ns: rwby, asm: rwby.csharp}
       data:
@@ -108,7 +139,7 @@ MonoBehaviour:
         - {x: 30, y: 30}
         condition:
           rid: -2
-        stateMovesetID: -8
+        stateMovesetID: -1
         state:
           rid: 6951768528003006471
         children: []

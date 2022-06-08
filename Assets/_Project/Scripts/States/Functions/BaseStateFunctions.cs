@@ -354,5 +354,21 @@ namespace rwby
                     break;
             }
         }
+
+        public static void ModifyEffectFrame(IFighterBase fighter, IStateVariables variables, HnSF.StateTimeline arg3, int arg4)
+        {
+            FighterManager f = (FighterManager)fighter;
+            VarModifyEffectFrame vars = (VarModifyEffectFrame)variables;
+
+            switch (vars.modifyType)
+            {
+                case VarModifyType.SET:
+                    f.fighterEffector.SetEffectTime(vars.effects, vars.frame);
+                    break;
+                case VarModifyType.ADD:
+                    f.fighterEffector.AddEffectTime(vars.effects, vars.frame);
+                    break;
+            }
+        }
     }
 }

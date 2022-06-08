@@ -12,10 +12,16 @@ namespace rwby
         public int frame;
         public NetworkBool parented;
         public Vector3 pos;
+        public Vector3 rot;
 
         public bool Equals(FighterEffectNode other)
         {
-            return bank == other.bank && effect == other.effect && frame == other.frame && parented.Equals(other.parented) && pos.Equals(other.pos);
+            return bank == other.bank 
+                   && effect == other.effect 
+                   && frame == other.frame 
+                   && parented.Equals(other.parented) 
+                   && pos.Equals(other.pos)
+                   && rot.Equals(other.rot);
         }
 
         public override bool Equals(object obj)
@@ -29,7 +35,8 @@ namespace rwby
                    && a.effect == b.effect
                    && a.frame == b.frame
                    && a.parented == b.parented
-                   && a.pos == b.pos;
+                   && a.pos == b.pos
+                   && a.rot == b.rot;
         }
 
         public static bool operator !=(rwby.FighterEffectNode a, rwby.FighterEffectNode b)
@@ -39,7 +46,7 @@ namespace rwby
 
         public override int GetHashCode()
         {
-            return HashCode.Combine(bank, effect, frame, parented, pos);
+            return HashCode.Combine(bank, effect, frame, parented, pos, rot);
         }
     }
 }

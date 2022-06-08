@@ -9,5 +9,6 @@ namespace rwby
         public string effect;
         public bool parented;
         public Vector3 offset;
+        public Vector3 rotation;
     }
 }
