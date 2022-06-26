@@ -34,7 +34,7 @@ namespace rwby
         public FighterBoxManager BoxManager { get { return boxManager; } }
         public SoundbankContainer SoundbankContainer { get { return soundbankContainer; } }
         public Transform TargetOrigin { get { return targetOrigin; } }
-        public IEnumerable<ModObjectGUIDReference> loadedContent
+        public IEnumerable<ModGUIDContentReference> loadedContent
         {
             get { return GetLoadedContentList(); }
         }
@@ -531,9 +531,9 @@ namespace rwby
             return capsuleCollider.bounds;
         }
 
-        public virtual List<ModObjectGUIDReference> GetLoadedContentList()
+        public virtual List<ModGUIDContentReference> GetLoadedContentList()
         {
-            List<ModObjectGUIDReference> references = new List<ModObjectGUIDReference>();
+            List<ModGUIDContentReference> references = new List<ModGUIDContentReference>();
 
             foreach (var contentLoad in contentLoaders)
             {

@@ -18,8 +18,8 @@ namespace rwby
         public class CSSConnection
         {
             public Selectable cssSelectable;
-            [SerializeField] public ModObjectGUIDReference characterReference 
-                = new ModObjectGUIDReference(new ContentGUID(8), 0, new ContentGUID(8));
+            [FormerlySerializedAs("characterReference")] [SerializeField] public ModGUIDContentReference characterContentReference 
+                = new ModGUIDContentReference(new ContentGUID(8), 0, 0);
         }
         
         public int playerID;
@@ -56,7 +56,7 @@ namespace rwby
             for (int i = 0; i < cssConnections.Count; i++)
             {
                 int temp = i;
-                cssConnections[i].cssSelectable.onSubmit.AddListener(() => { SetCharacter(cssConnections[temp].characterReference); });
+                cssConnections[i].cssSelectable.onSubmit.AddListener(() => { SetCharacter(cssConnections[temp].characterContentReference); });
             }
             
             ResetCharacterList();
@@ -114,10 +114,10 @@ namespace rwby
             
         }
         
-        public void SetCharacter(ModObjectGUIDReference characterReference)
+        public void SetCharacter(ModGUIDContentReference characterContentReference)
         {
             characterSelectMenu.SetActive(false);
-            lobbyMenuHandler.sessionManagerGamemode.CLIENT_SetPlayerCharacter(playerID, currentSelectingCharacterIndex, characterReference);
+            lobbyMenuHandler.sessionManagerGamemode.CLIENT_SetPlayerCharacter(playerID, currentSelectingCharacterIndex, characterContentReference);
         }
         
         public void Cleanup()

@@ -1,5 +1,6 @@
 using System;
 using Fusion;
+using UnityEngine.Serialization;
 
 namespace rwby
 {
@@ -8,13 +9,13 @@ namespace rwby
     {
         public NetworkedContentGUID modGUID;
         public byte contentType;
-        public NetworkedContentGUID  contentGUID;
+        public int contentIdx;
 
-        public NetworkModObjectGUIDReference(ContentGUID modGUID, int contentType, ContentGUID contentGUID)
+        public NetworkModObjectGUIDReference(ContentGUID modGUID, int contentType, int contentIdx)
         {
             this.modGUID = new NetworkedContentGUID(modGUID.guid);
             this.contentType = (byte)contentType;
-            this.contentGUID = contentGUID;
+            this.contentIdx = contentIdx;
         }
         
         public bool IsValid()
@@ -25,17 +26,17 @@ namespace rwby
 
         public override string ToString()
         {
-            return $"{modGUID.ToString()}:{contentType}:{contentGUID}";
+            return $"{modGUID.ToString()}:{contentType}:{contentIdx}";
         }
 
-        public bool Equals(ModObjectGUIDReference other)
+        public bool Equals(ModGUIDContentReference other)
         {
-            return contentType == other.contentType && modGUID.Equals(other.modGUID) && contentGUID.Equals(other.contentGUID);
+            return contentType == other.contentType && modGUID.Equals(other.modGUID) && contentIdx.Equals(other.contentIdx);
         }
         
         public bool Equals(NetworkModObjectGUIDReference other)
         {
-            return contentType == other.contentType && modGUID.Equals(other.modGUID) && contentGUID.Equals(other.contentGUID);
+            return contentType == other.contentType && modGUID.Equals(other.modGUID) && contentIdx.Equals(other.contentIdx);
         }
 
         public override bool Equals(object obj)
@@ -45,7 +46,7 @@ namespace rwby
 
         public override int GetHashCode()
         {
-            return HashCode.Combine(modGUID, contentType, contentGUID);
+            return HashCode.Combine(modGUID, contentType, contentIdx);
         }
         
         public static bool operator ==(NetworkModObjectGUIDReference x, NetworkModObjectGUIDReference y)
@@ -53,12 +54,12 @@ namespace rwby
             return x.Equals(y);
         }
         
-        public static bool operator ==(NetworkModObjectGUIDReference x,ModObjectGUIDReference y)
+        public static bool operator ==(NetworkModObjectGUIDReference x,ModGUIDContentReference y)
         {
             return x.Equals(y);
         }
 
-        public static bool operator !=(NetworkModObjectGUIDReference x, ModObjectGUIDReference y)
+        public static bool operator !=(NetworkModObjectGUIDReference x, ModGUIDContentReference y)
         {
             return !(x == y);
         }
@@ -68,7 +69,7 @@ namespace rwby
             return !(x == y);
         }
 
-        public static implicit operator ModObjectGUIDReference(NetworkModObjectGUIDReference nmo) =>
-            new ModObjectGUIDReference(nmo.modGUID.guid.ToArray(), nmo.contentType, nmo.contentGUID.guid.ToArray());
+        public static implicit operator ModGUIDContentReference(NetworkModObjectGUIDReference nmo) =>
+            new ModGUIDContentReference(nmo.modGUID.guid.ToArray(), nmo.contentType, nmo.contentIdx);
     }
 }

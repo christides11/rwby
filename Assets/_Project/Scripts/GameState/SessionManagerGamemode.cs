@@ -68,7 +68,7 @@ namespace rwby
                 return false;
             }
             
-            HashSet<ModObjectGUIDReference> fightersToLoad = new HashSet<ModObjectGUIDReference>();
+            HashSet<ModGUIDContentReference> fightersToLoad = new HashSet<ModGUIDContentReference>();
 
             for (int i = 0; i < ClientDefinitions.Count; i++)
             {
@@ -112,11 +112,11 @@ namespace rwby
             return true;
         }
         
-        public async UniTask<bool> TrySetGamemode(ModObjectGUIDReference gamemodeReference)
+        public async UniTask<bool> TrySetGamemode(ModGUIDContentReference gamemodeContentReference)
         {
             if (Object.HasStateAuthority == false) return false;
 
-            List<PlayerRef> failedLoadPlayers = await clientContentLoaderService.TellClientsToLoad<IGameModeDefinition>(gamemodeReference);
+            List<PlayerRef> failedLoadPlayers = await clientContentLoaderService.TellClientsToLoad<IGameModeDefinition>(gamemodeContentReference);
             if (failedLoadPlayers == null)
             {
                 Debug.LogError("Set Gamemode Local Failure");
@@ -125,7 +125,7 @@ namespace rwby
 
             foreach (var v in failedLoadPlayers)
             {
-                Debug.LogError($"{v.PlayerId} failed to load {gamemodeReference.ToString()}.");
+                Debug.LogError($"{v.PlayerId} failed to load {gamemodeContentReference.ToString()}.");
             }
 
             if (CurrentGameMode != null)
@@ -147,13 +147,13 @@ namespace rwby
             }
 
             IGameModeDefinition gamemodeDefinition =
-                ContentManager.singleton.GetContentDefinition<IGameModeDefinition>(gamemodeReference);
+                ContentManager.singleton.GetContentDefinition<IGameModeDefinition>(gamemodeContentReference);
             GameObject gamemodePrefab = gamemodeDefinition.GetGamemode();
             CurrentGameMode = Runner.Spawn(gamemodePrefab.GetComponent<GameModeBase>(), Vector3.zero, Quaternion.identity, onBeforeSpawned:
                 (runner, o) => { o.GetBehaviour<GameModeBase>().sessionManager = this; });
 
             SessionGamemodeSettings temp = GamemodeSettings;
-            temp.gamemodeReference = gamemodeReference; 
+            temp.gamemodeReference = gamemodeContentReference; 
             GamemodeSettings = temp;
             
             teams = (byte)gamemodeDefinition.maximumTeams;
@@ -274,9 +274,9 @@ namespace rwby
             Debug.LogError("Could not find client.");
         }
         
-        public void CLIENT_SetPlayerCharacter(int playerID, int characterIndex, ModObjectGUIDReference characterReference)
+        public void CLIENT_SetPlayerCharacter(int playerID, int characterIndex, ModGUIDContentReference characterContentReference)
         {
-            RPC_SetPlayerCharacter(playerID, characterIndex, characterReference);
+            RPC_SetPlayerCharacter(playerID, characterIndex, characterContentReference);
         }
 
         [Rpc(RpcSources.All, RpcTargets.StateAuthority,
@@ -317,9 +317,9 @@ namespace rwby
             return default;
         }
 
-        protected override HashSet<ModObjectGUIDReference> BuildLoadedContentList()
+        protected override HashSet<ModGUIDContentReference> BuildLoadedContentList()
         {
-            HashSet<ModObjectGUIDReference> references =  base.BuildLoadedContentList();
+            HashSet<ModGUIDContentReference> references =  base.BuildLoadedContentList();
 
             for (int i = 0; i < ClientDefinitions.Count; i++)
             {

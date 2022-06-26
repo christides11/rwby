@@ -22,7 +22,7 @@ namespace rwby.ui.mainmenu
         private int playerCount = 8;
         private int maxPlayersPerClient = 4;
         private byte teamCount = 0;
-        private ModObjectGUIDReference selectedGamemodeReference;
+        private ModGUIDContentReference _selectedGamemodeContentReference;
         private IGameModeDefinition selectedGamemodeDefinition;
         private GameModeBase selectedGamemode;
 
@@ -38,7 +38,7 @@ namespace rwby.ui.mainmenu
         public override bool TryClose(MenuDirection direction, bool forceClose = false)
         {
             if(selectedGamemode) Destroy(selectedGamemode.gameObject);
-            selectedGamemodeReference = default;
+            _selectedGamemodeContentReference = default;
             selectedGamemodeDefinition = null;
             lobbySettings.Close();
             gameObject.SetActive(false);
@@ -94,18 +94,18 @@ namespace rwby.ui.mainmenu
             ContentSelect.singleton.OpenMenu(0, (int)ContentType.Gamemode, async (a, b) => { await WhenGamemodeSelected(a, b); });
         }
 
-        private async UniTask WhenGamemodeSelected(int player, ModObjectGUIDReference arg1)
+        private async UniTask WhenGamemodeSelected(int player, ModGUIDContentReference arg1)
         {
             Debug.Log($"Gamemode {arg1} selected.");
             ContentSelect.singleton.CloseMenu(0);
 
-            selectedGamemodeReference = arg1;
-            if (selectedGamemodeReference.IsValid() == false)
+            _selectedGamemodeContentReference = arg1;
+            if (_selectedGamemodeContentReference.IsValid() == false)
             {
                 return;
             }
 
-            IGameModeDefinition gameModeDefinition = ContentManager.singleton.GetContentDefinition<IGameModeDefinition>(selectedGamemodeReference);
+            IGameModeDefinition gameModeDefinition = ContentManager.singleton.GetContentDefinition<IGameModeDefinition>(_selectedGamemodeContentReference);
             if (gameModeDefinition == null) return;
 
             if (selectedGamemode)
@@ -133,7 +133,7 @@ namespace rwby.ui.mainmenu
             
             SessionManagerGamemode smc = (SessionManagerGamemode)fl.sessionManager;
             
-            bool setGamemodeResult = await smc.TrySetGamemode(selectedGamemodeReference);
+            bool setGamemodeResult = await smc.TrySetGamemode(_selectedGamemodeContentReference);
 
             smc.SetTeamCount(teamCount);
             smc.SetMaxPlayersPerClient(maxPlayersPerClient);

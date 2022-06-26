@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using static rwby.AddressablesModDefinition;
 using UnityEngine.AddressableAssets;
@@ -13,26 +14,34 @@ namespace rwby
     {
         [SerializeField] private List<IdentifierAssetReferenceRelation<T>> references = new List<IdentifierAssetReferenceRelation<T>>();
 
-        [NonSerialized] private Dictionary<ContentGUID, AssetReferenceT<T>> content = new Dictionary<ContentGUID, AssetReferenceT<T>>();
-        [NonSerialized] private Dictionary<ContentGUID, AsyncOperationHandle<T>> contentHandles = new Dictionary<ContentGUID, AsyncOperationHandle<T>>();
-
+        [NonSerialized] private Dictionary<int, AssetReferenceT<T>> content = new Dictionary<int, AssetReferenceT<T>>();
+        [NonSerialized] private Dictionary<int, AsyncOperationHandle<T>> contentHandles = new Dictionary<int, AsyncOperationHandle<T>>();
+        
         public override void Initialize()
         {
             content.Clear();
-            foreach (IdentifierAssetReferenceRelation<T> a in references)
+            GUIDToInt.Clear();
+            for (int i = 0; i < references.Count; i++)
             {
-                content.Add(a.identifier, a.asset);
+                content.Add(i, references[i].asset);
+                GUIDToInt.Add(references[i].identifier, i);
+                IntToGUID.Add(i, references[i].identifier);
             }
         }
 
         public override bool ContentExist(ContentGUID contentIdentfier)
         {
-            return content.ContainsKey(contentIdentfier) ? true : false;
+            return ContentExist(GUIDToInt[contentIdentfier]);
         }
 
-        public override async UniTask<List<ContentGUID>> LoadContentDefinitions()
+        public override bool ContentExist(int contentIdentifier)
         {
-            List<ContentGUID> results = new List<ContentGUID>();
+            return content.ContainsKey(contentIdentifier) ? true : false;
+        }
+
+        public override async UniTask<List<int>> LoadContentDefinitions()
+        {
+            List<int> results = new List<int>();
             // All of the content is already loaded.
             if (contentHandles.Count == references.Count)
             {
@@ -57,38 +66,43 @@ namespace rwby
 
         public override async UniTask<bool> LoadContentDefinition(ContentGUID contentIdentifier)
         {
+            return await LoadContentDefinition(GUIDToInt[contentIdentifier]);
+        }
+
+        public override async UniTask<bool> LoadContentDefinition(int index)
+        {
             // Content doesn't exist.
-            if (content.ContainsKey(contentIdentifier) == false)
+            if (content.ContainsKey(index) == false)
             {
-                Debug.LogError($"Error loading {contentIdentifier.ToString()}: Content does not exist.");
+                Debug.LogError($"Error loading {IntToGUID[index].ToString()}: Content does not exist.");
                 return false;
             }
 
-            bool handleExist = contentHandles.ContainsKey(contentIdentifier) == true;
+            bool handleExist = contentHandles.ContainsKey(index) == true;
             // Content already loaded.
-            if (handleExist && contentHandles[contentIdentifier].Status == AsyncOperationStatus.Succeeded)
+            if (handleExist && contentHandles[index].Status == AsyncOperationStatus.Succeeded)
             {
                 return true;
             }
 
             if (handleExist == false)
             {
-                contentHandles.Add(contentIdentifier, Addressables.LoadAssetAsync<T>(content[contentIdentifier]));
+                contentHandles.Add(index, Addressables.LoadAssetAsync<T>(content[index]));
             }
 
-            if(contentHandles[contentIdentifier].IsDone == false || contentHandles[contentIdentifier].Status == AsyncOperationStatus.Failed)
+            if(contentHandles[index].IsDone == false || contentHandles[index].Status == AsyncOperationStatus.Failed)
             {
-                await contentHandles[contentIdentifier];
+                await contentHandles[index];
             }
 
-            if(contentHandles[contentIdentifier].Status == AsyncOperationStatus.Succeeded)
+            if(contentHandles[index].Status == AsyncOperationStatus.Succeeded)
             {
-                contentHandles[contentIdentifier].Result.Identifier = contentIdentifier;
+                contentHandles[index].Result.Identifier = index;
                 return true;
             }
 
-            Debug.LogError($"Error loading {contentIdentifier}: could not load.");
-            contentHandles.Remove(contentIdentifier);
+            Debug.LogError($"Error loading {GUIDToInt.First(x => x.Value == index).Key.ToString()}: could not load.");
+            contentHandles.Remove(index);
             return false;
         }
 
@@ -105,11 +119,20 @@ namespace rwby
         public override IContentDefinition GetContentDefinition(ContentGUID contentIdentifier)
         {
             // Content does not exist, or was not loaded.
-            if (contentHandles.ContainsKey(contentIdentifier) == false)
+            if (contentHandles.ContainsKey(GUIDToInt[contentIdentifier]) == false)
             {
                 return null;
             }
-            return contentHandles[contentIdentifier].Result;
+            return contentHandles[GUIDToInt[contentIdentifier]].Result;
+        }
+
+        public override IContentDefinition GetContentDefinition(int index)
+        {
+            if (contentHandles.ContainsKey(index) == false)
+            {
+                return null;
+            }
+            return contentHandles[index].Result;
         }
 
         public override void UnloadContentDefinitions()
@@ -123,10 +146,18 @@ namespace rwby
 
         public override void UnloadContentDefinition(ContentGUID contentIdentifier)
         {
-            if (contentHandles.ContainsKey(contentIdentifier) == false) return;
+            if (contentHandles.ContainsKey(GUIDToInt[contentIdentifier]) == false) return;
 
-            if(contentHandles[contentIdentifier].Status == AsyncOperationStatus.Succeeded) Addressables.Release(contentHandles[contentIdentifier]);
-            contentHandles.Remove(contentIdentifier);
+            if(contentHandles[GUIDToInt[contentIdentifier]].Status == AsyncOperationStatus.Succeeded) Addressables.Release(contentHandles[GUIDToInt[contentIdentifier]]);
+            contentHandles.Remove(GUIDToInt[contentIdentifier]);
+        }
+
+        public override void UnloadContentDefinition(int index)
+        {
+            if (contentHandles.ContainsKey(index) == false) return;
+
+            if(contentHandles[index].Status == AsyncOperationStatus.Succeeded) Addressables.Release(contentHandles[index]);
+            contentHandles.Remove(index);
         }
     }
 }

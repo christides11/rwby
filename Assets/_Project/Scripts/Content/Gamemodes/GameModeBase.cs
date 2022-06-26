@@ -90,7 +90,7 @@ namespace rwby
             return true;
         }
 
-        public virtual bool VerifyReference(ModObjectGUIDReference reference)
+        public virtual bool VerifyReference(ModGUIDContentReference contentReference)
         {
             return false;
         }

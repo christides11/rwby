@@ -30,22 +30,22 @@ namespace rwby
             singleton = this;
         }
 
-        public async UniTask OpenMenu(int player, int contentType, UnityEngine.Events.UnityAction<int, ModObjectGUIDReference> selectAction)
+        public async UniTask OpenMenu(int player, int contentType, UnityEngine.Events.UnityAction<int, ModGUIDContentReference> selectAction)
         {
             if (ContentSelectInstances.ContainsKey(player)) return;
             
             await ContentManager.singleton.LoadContentDefinitions(contentType);
-            List<ModObjectGUIDReference> conts = ContentManager.singleton.GetContentDefinitionReferences(contentType);
+            List<ModGUIDContentReference> conts = ContentManager.singleton.GetContentDefinitionReferences(contentType);
             if (conts.Count == 0) return;
 
             ContentSelectInstance instance = GameObject.Instantiate(instancePrefab, transform, false);
             ContentSelectInstances.Add(player, instance);
             
-            foreach (ModObjectGUIDReference con in conts)
+            foreach (ModGUIDContentReference con in conts)
             {
                 GameObject contentItemGameobject = GameObject.Instantiate(this.contentItem, instance.contentTransform, false);
-                ModObjectGUIDReference objectReference = con;
-                contentItemGameobject.GetComponent<Selectable>().onSubmit.AddListener(() => { selectAction.Invoke(player, objectReference); });
+                ModGUIDContentReference contentReference = con;
+                contentItemGameobject.GetComponent<Selectable>().onSubmit.AddListener(() => { selectAction.Invoke(player, contentReference); });
                 contentItemGameobject.GetComponentInChildren<TextMeshProUGUI>().text = con.ToString();
             }
             

@@ -21,13 +21,37 @@ MonoBehaviour:
   autoLoopFrame: 1
   data:
   - rid: 6951768528003006464
+  - rid: 220443876391911424
   stateGroundedGroup: 2
+  stateType: 0
+  maxUsesInString: -1
   allowBaseStateTransitions: 1
+  inputSequence:
+    executeWindow: 3
+    executeInputs: []
+    sequenceWindow: 8
+    sequenceInputs: []
+  condition:
+    rid: -2
+  hitboxInfo: []
+  throwboxInfo: []
+  hurtboxInfo: []
   references:
     version: 2
     RefIds:
     - rid: -2
       type: {class: , ns: , asm: }
+    - rid: 220443876391911424
+      type: {class: VarModifyAnimationFrame, ns: rwby, asm: rwby.csharp}
+      data:
+        frameRanges:
+        - {x: -1, y: -1}
+        condition:
+          rid: -2
+        modifyType: 0
+        animations: 00000000
+        frame: 1
+        children: []
     - rid: 6951768528003006464
       type: {class: VarModifyAnimationSet, ns: rwby, asm: rwby.csharp}
       data:
@@ -41,8 +65,7 @@ MonoBehaviour:
             modGUID:
               guid: 1d292c1f00000000
             contentType: 7
-            contentGUID:
-              guid: 2c2c000000000000
+            contentIdx: 0
           animation: jumpsquat
         fadeTime: 0.02
         children: []

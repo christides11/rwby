@@ -51,7 +51,7 @@ namespace rwby
 
 		public List<CustomSceneRef> defaultSceneList = new List<CustomSceneRef>()
 		{
-			new CustomSceneRef(new ContentGUID(8), new ContentGUID(8), 1)
+			new CustomSceneRef(new ContentGUID(8), 0, 1)
 		};
 		
 		public List<CustomSceneRef> GetCurrentScenes()

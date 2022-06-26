@@ -4,13 +4,23 @@ using UnityEngine;
 
 public class RRoseMan : FighterManager
 {
-    public ModObjectGUIDReference[] animationbankReferences;
+    public ModObjectSetContentReference[] animationbankReferences;
     public ModObjectSetContentReference[] effectbankReferences;
+
+    private ModGUIDContentReference[] animationbankRefs;
+    private ModGUIDContentReference[] effectbankRefs;
+    
     public override async UniTask<bool> OnFighterLoaded()
     {
         for (int i = 0; i < animationbankReferences.Length; i++)
         {
-            bool animationbankLoadResult = await ContentManager.singleton.LoadContentDefinition(animationbankReferences[i]);
+            bool animationbankLoadResult = await ContentManager.singleton.LoadContentDefinition(ContentManager.singleton.ConvertModContentGUIDReference(new ModContentGUIDReference()
+                {
+                    contentGUID = animationbankReferences[i].contentGUID,
+                    contentType = (int)ContentType.Animationbank,
+                    modGUID = animationbankReferences[i].modGUID
+                }
+            ));
             if (animationbankLoadResult == false)
             {
                 Debug.LogError("Error loading animationbank.");
@@ -20,39 +30,54 @@ public class RRoseMan : FighterManager
         
         for (int i = 0; i < effectbankReferences.Length; i++)
         {
-            bool animationbankLoadResult = await ContentManager.singleton.LoadContentDefinition(
-                new ModObjectGUIDReference()
+            bool animationbankLoadResult = await ContentManager.singleton.LoadContentDefinition(ContentManager.singleton.ConvertModContentGUIDReference(new ModContentGUIDReference()
                 {
                     contentGUID = effectbankReferences[i].contentGUID,
                     contentType = (int)ContentType.Effectbank,
-                    modGUID =  effectbankReferences[i].modGUID
-                });
+                    modGUID = effectbankReferences[i].modGUID
+                }
+            ));
             if (animationbankLoadResult == false)
             {
                 Debug.LogError("Error loading effectbank.");
                 return false;
             }
         }
+
         return true;
     }
 
     public override void Awake()
     {
         base.Awake();
-
-        for (int i = 0; i < animationbankReferences.Length; i++)
+        
+        animationbankRefs = new ModGUIDContentReference[animationbankReferences.Length];
+        effectbankRefs = new ModGUIDContentReference[effectbankReferences.Length];
+        
+        for (int i = 0; i < animationbankRefs.Length; i++)
         {
-            fighterAnimator.RegisterBank(animationbankReferences[i]);
+            animationbankRefs[i] = ContentManager.singleton.ConvertModContentGUIDReference(new ModContentGUIDReference()
+                {
+                    contentGUID = animationbankReferences[i].contentGUID,
+                    contentType = (int)ContentType.Animationbank,
+                    modGUID = animationbankReferences[i].modGUID
+                }
+            );
+            
+            fighterAnimator.RegisterBank(animationbankRefs[i]);
         }
         
-        for (int i = 0; i < effectbankReferences.Length; i++)
+        for (int i = 0; i < effectbankRefs.Length; i++)
         {
-            fighterEffector.RegisterBank(new ModObjectGUIDReference()
-            {
-                contentGUID = effectbankReferences[i].contentGUID,
-                contentType = (int)ContentType.Effectbank,
-                modGUID =  effectbankReferences[i].modGUID
-            });
+            effectbankRefs[i] = ContentManager.singleton.ConvertModContentGUIDReference(new ModContentGUIDReference()
+                {
+                    contentGUID = effectbankReferences[i].contentGUID,
+                    contentType = (int)ContentType.Effectbank,
+                    modGUID = effectbankReferences[i].modGUID
+                }
+            );
+            
+            fighterEffector.RegisterBank(effectbankRefs[i]);
         }
     }
 

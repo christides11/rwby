@@ -9,7 +9,7 @@ namespace rwby
     [OrderAfter(typeof(FighterStateManager))]
     public class FighterAnimator : NetworkBehaviour
     {
-        [HideInInspector] public Dictionary<ModObjectGUIDReference, int> bankMap = new Dictionary<ModObjectGUIDReference, int>();
+        [HideInInspector] public Dictionary<ModGUIDContentReference, int> bankMap = new Dictionary<ModGUIDContentReference, int>();
         [HideInInspector] public List<IAnimationbankDefinition> banks = new List<IAnimationbankDefinition>();
         [SerializeField] private AnimancerComponent animancer;
         
@@ -253,7 +253,7 @@ namespace rwby
             animationSet = temp;
         }
 
-        public void RegisterBank(ModObjectGUIDReference bank)
+        public void RegisterBank(ModGUIDContentReference bank)
         {
             if (bankMap.ContainsKey(bank)) return;
             banks.Add(ContentManager.singleton.GetContentDefinition<IAnimationbankDefinition>(bank));

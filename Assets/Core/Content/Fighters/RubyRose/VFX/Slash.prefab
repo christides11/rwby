@@ -28,7 +28,7 @@ Transform:
   m_GameObject: {fileID: 5759294007909399138}
   m_LocalRotation: {x: 0, y: 0, z: 1, w: 0}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 1, y: 0.2, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 5217321348522873657}
@@ -134,6 +134,14 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -5897514677422032375, guid: ade5b1617e43bda459098772eb7d95d8, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 0.8
+      objectReference: {fileID: 0}
+    - target: {fileID: -5897514677422032375, guid: ade5b1617e43bda459098772eb7d95d8, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 0.8
+      objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: ade5b1617e43bda459098772eb7d95d8, type: 3}
       propertyPath: m_Name
       value: Smear_Circle
@@ -142,6 +150,18 @@ PrefabInstance:
       propertyPath: m_Materials.Array.data[0]
       value: 
       objectReference: {fileID: 2100000, guid: 41aa3db081339874e84bb69a7b314979, type: 2}
+    - target: {fileID: 8799897564634158134, guid: ade5b1617e43bda459098772eb7d95d8, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 2.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 8799897564634158134, guid: ade5b1617e43bda459098772eb7d95d8, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8799897564634158134, guid: ade5b1617e43bda459098772eb7d95d8, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 2.5
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ade5b1617e43bda459098772eb7d95d8, type: 3}
 --- !u!4 &5217321348522873657 stripped

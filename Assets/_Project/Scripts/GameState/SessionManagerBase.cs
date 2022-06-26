@@ -9,7 +9,7 @@ namespace rwby
     [OrderBefore(typeof(ClientManager), typeof(GameModeBase))]
     public class SessionManagerBase : NetworkBehaviour, IContentLoad
     {
-        public IEnumerable<ModObjectGUIDReference> loadedContent
+        public IEnumerable<ModGUIDContentReference> loadedContent
         {
             get { return BuildLoadedContentList(); }
         }
@@ -17,7 +17,7 @@ namespace rwby
         [Networked, Capacity(5)]
         public NetworkLinkedList<CustomSceneRef> currentLoadedScenes { get; } = MakeInitializer(new CustomSceneRef[]
         {
-            new CustomSceneRef(new ContentGUID(8), new ContentGUID(8), 1)
+            new CustomSceneRef(new ContentGUID(8), 0, 1)
         });
 
         [Networked] public byte teams { get; set; }
@@ -78,9 +78,9 @@ namespace rwby
             teams = count;
         }
         
-        protected virtual HashSet<ModObjectGUIDReference> BuildLoadedContentList()
+        protected virtual HashSet<ModGUIDContentReference> BuildLoadedContentList()
         {
-            HashSet<ModObjectGUIDReference> references = new HashSet<ModObjectGUIDReference>();
+            HashSet<ModGUIDContentReference> references = new HashSet<ModGUIDContentReference>();
 
             // TODO: Build list of content references.
             for (int i = 0; i < currentLoadedScenes.Count; i++)

@@ -9,7 +9,7 @@ namespace rwby
     [OrderAfter(typeof(FighterStateManager))]
     public class FighterEffector : NetworkBehaviour
     {
-        [HideInInspector] public Dictionary<ModObjectGUIDReference, int> bankMap = new Dictionary<ModObjectGUIDReference, int>();
+        [HideInInspector] public Dictionary<ModGUIDContentReference, int> bankMap = new Dictionary<ModGUIDContentReference, int>();
         [HideInInspector] public List<IEffectbankDefinition> banks = new List<IEffectbankDefinition>();
 
         [Networked, Capacity(10)] public FighterEffectsRoot effects { get; set; }
@@ -91,6 +91,7 @@ namespace rwby
                 SyncEffects();
                 dirty = false;
             }
+            
         }
 
         private void SyncEffects()
@@ -149,7 +150,7 @@ namespace rwby
             return banks[bankMap[animation.effectbank]].GetEffect(animation.effect).effect;
         }
         
-        public void RegisterBank(ModObjectGUIDReference bank)
+        public void RegisterBank(ModGUIDContentReference bank)
         {
             if (bankMap.ContainsKey(bank)) return;
             banks.Add(ContentManager.singleton.GetContentDefinition<IEffectbankDefinition>(bank));

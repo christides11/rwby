@@ -92,7 +92,7 @@ namespace rwby
 
         public virtual async UniTask<Scene> LoadScene(CustomSceneRef sceneReference, LoadSceneParameters parameters)
         {
-            if (sceneReference.mapReference.modGUID == internalModGUID)
+            if (sceneReference.mapContentReference.modGUID == internalModGUID)
             {
                 var scenePath = SceneUtility.GetScenePathByBuildIndex(sceneReference.sceneIdentifier);
                 var s = SceneManager.LoadSceneAsync(sceneReference.sceneIdentifier, parameters);
@@ -117,31 +117,31 @@ namespace rwby
                 return sceneRef;
             }
             
-            IMapDefinition mapDefinition = contentManager.GetContentDefinition<IMapDefinition>(sceneReference.mapReference);
+            IMapDefinition mapDefinition = contentManager.GetContentDefinition<IMapDefinition>(sceneReference.mapContentReference);
 
             var result = await mapDefinition.LoadScene(sceneReference.sceneIdentifier, parameters);
             return result;
         }
 
         public virtual string[] GetSceneNames(CustomSceneRef sceneReference){
-            if (sceneReference.mapReference.modGUID == internalModGUID)
+            if (sceneReference.mapContentReference.modGUID == internalModGUID)
             {
                 return new string[] { SceneManager.GetSceneByBuildIndex(sceneReference.sceneIdentifier).name };
             }
 
-            IMapDefinition mapDefinition = contentManager.GetContentDefinition<IMapDefinition>(sceneReference.mapReference);
+            IMapDefinition mapDefinition = contentManager.GetContentDefinition<IMapDefinition>(sceneReference.mapContentReference);
 
             return mapDefinition.GetSceneNames().ToArray();
         }
 
         public virtual string GetSceneName(CustomSceneRef sceneReference)
         {
-            if (sceneReference.mapReference.modGUID == internalModGUID)
+            if (sceneReference.mapContentReference.modGUID == internalModGUID)
             {
                 return SceneManager.GetSceneByBuildIndex(sceneReference.sceneIdentifier).name;
             }
             
-            IMapDefinition mapDefinition = contentManager.GetContentDefinition<IMapDefinition>(sceneReference.mapReference);
+            IMapDefinition mapDefinition = contentManager.GetContentDefinition<IMapDefinition>(sceneReference.mapContentReference);
 
             return mapDefinition.GetSceneNames()[sceneReference.sceneIdentifier];
         }

@@ -90,7 +90,7 @@ MonoBehaviour:
       type: {class: VarModifyEffectSet, ns: rwby, asm: rwby.csharp}
       data:
         frameRanges:
-        - {x: 0, y: 0}
+        - {x: 8, y: 8}
         condition:
           rid: -2
         modifyType: 1
@@ -99,12 +99,11 @@ MonoBehaviour:
             modGUID:
               guid: 1d292c1f00000000
             contentType: 6
-            contentGUID:
-              guid: 21261c0000000000
+            contentIdx: 0
           effect: slash
           parented: 1
-          offset: {x: 0, y: 1, z: 0}
-          rotation: {x: -20, y: 100, z: 180}
+          offset: {x: 0, y: 0.8, z: 0}
+          rotation: {x: -15, y: 65, z: 180}
         children: []
     - rid: 220443471284797443
       type: {class: VarModifyEffectSet, ns: rwby, asm: rwby.csharp}
@@ -120,7 +119,7 @@ MonoBehaviour:
       type: {class: VarModifyEffectFrame, ns: rwby, asm: rwby.csharp}
       data:
         frameRanges:
-        - {x: -1, y: -1}
+        - {x: 9, y: 30}
         condition:
           rid: -2
         modifyType: 0
@@ -140,8 +139,7 @@ MonoBehaviour:
             modGUID:
               guid: 1d292c1f00000000
             contentType: 7
-            contentGUID:
-              guid: 2c2c000000000000
+            contentIdx: 0
           animation: scythe.grd.a
         fadeTime: 0.05
         children: []
@@ -164,7 +162,7 @@ MonoBehaviour:
       type: {class: VarModifyAnimationFrame, ns: rwby, asm: rwby.csharp}
       data:
         frameRanges:
-        - {x: 1, y: 18}
+        - {x: -1, y: -1}
         condition:
           rid: -2
         modifyType: 0

@@ -1,10 +1,11 @@
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace rwby
 {
     [CreateAssetMenu(fileName = "SharedReference", menuName = "Mahou/ModObjectSharedReference")]
     public class ModObjectSharedReference : ScriptableObject
     {
-        public ModObjectGUIDReference reference;
+        [FormerlySerializedAs("reference")] public ModGUIDContentReference contentReference;
     }
 }

@@ -29,18 +29,18 @@ namespace rwby
             
             for(int i = 0; i < cpus.Count; i++)
             {
-                ModObjectGUIDReference objectReference = cpus[i].characterReference;
-                if(objectReference.IsValid() && cpus[i].objectId.IsValid == false)
+                ModGUIDContentReference contentReference = cpus[i].characterReference;
+                if(contentReference.IsValid() && cpus[i].objectId.IsValid == false)
                 {
-                    List<PlayerRef> failedLoadPlayers = await gamemode.sessionManager.clientContentLoaderService.TellClientsToLoad<IFighterDefinition>(objectReference);
+                    List<PlayerRef> failedLoadPlayers = await gamemode.sessionManager.clientContentLoaderService.TellClientsToLoad<IFighterDefinition>(contentReference);
                     if (failedLoadPlayers == null)
                     {
-                        Debug.LogError($"Load CPU {objectReference} failure.");
+                        Debug.LogError($"Load CPU {contentReference} failure.");
                         continue;
                     }
 
                     int indexTemp = i;
-                    IFighterDefinition fighterDefinition = ContentManager.singleton.GetContentDefinition<IFighterDefinition>(objectReference);
+                    IFighterDefinition fighterDefinition = ContentManager.singleton.GetContentDefinition<IFighterDefinition>(contentReference);
                     NetworkObject no = Runner.Spawn(fighterDefinition.GetFighter().GetComponent<NetworkObject>(), Vector3.up, Quaternion.identity, null,
                         (a, b) =>
                         {

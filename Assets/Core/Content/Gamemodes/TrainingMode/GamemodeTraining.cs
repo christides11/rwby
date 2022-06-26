@@ -17,9 +17,9 @@ namespace rwby.core.training
         public TrainingSettingsMenu settingsMenu;
 
         [Networked] public NetworkModObjectGUIDReference Map { get; set; }
-        public ModObjectGUIDReference localMap;
+        public ModGUIDContentReference localMap;
         
-        [FormerlySerializedAs("testReference")] public ModObjectGUIDReference hudBankReference;
+        [FormerlySerializedAs("hudBankReference")] [FormerlySerializedAs("testReference")] public ModGUIDContentReference hudBankContentReference;
 
         public TrainingCPUHandler cpuHandler;
 
@@ -60,7 +60,7 @@ namespace rwby.core.training
 
         public override void AddGamemodeSettings(int player, LobbySettingsMenu settingsMenu, bool local = false)
         {
-            ModObjectGUIDReference mapRef = local ? localMap : Map;
+            ModGUIDContentReference mapRef = local ? localMap : Map;
             
             IMapDefinition mapDefinition = ContentManager.singleton.GetContentDefinition<IMapDefinition>(mapRef);
             string mapName = mapDefinition != null ? mapDefinition.Name : "None";
@@ -106,9 +106,9 @@ namespace rwby.core.training
             return true;
         }
 
-        public override bool VerifyReference(ModObjectGUIDReference reference)
+        public override bool VerifyReference(ModGUIDContentReference contentReference)
         {
-            if (reference == (ModObjectGUIDReference)Map) return true;
+            if (contentReference == (ModGUIDContentReference)Map) return true;
             return false;
         }
 
@@ -127,7 +127,7 @@ namespace rwby.core.training
             sessionManager.currentLoadedScenes.Clear();
             sessionManager.currentLoadedScenes.Add(new CustomSceneRef()
             {
-                mapReference = Map,
+                mapContentReference = Map,
                 sceneIdentifier = 0
             });
             Runner.SetActiveScene(Runner.CurrentScene+1);
@@ -238,9 +238,9 @@ namespace rwby.core.training
             playerHUD.playerFighter = no.GetComponent<FighterManager>();
             Runner.AddSimulationBehaviour(playerHUD, null);
             
-            await GameManager.singleton.contentManager.LoadContentDefinition(hudBankReference);
+            await GameManager.singleton.contentManager.LoadContentDefinition(hudBankContentReference);
             
-            IHUDElementbankDefinition HUDElementbank = GameManager.singleton.contentManager.GetContentDefinition<IHUDElementbankDefinition>(hudBankReference);
+            IHUDElementbankDefinition HUDElementbank = GameManager.singleton.contentManager.GetContentDefinition<IHUDElementbankDefinition>(hudBankContentReference);
                 
             await HUDElementbank.Load();
             

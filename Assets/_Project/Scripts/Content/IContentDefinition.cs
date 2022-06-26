@@ -7,7 +7,7 @@ namespace rwby
 {
     public abstract class IContentDefinition : ScriptableObject
     {
-        public virtual ContentGUID Identifier { get; set; }
+        public virtual int Identifier { get; set; }
         public virtual string Name { get; }
         public virtual string Description { get; }
 

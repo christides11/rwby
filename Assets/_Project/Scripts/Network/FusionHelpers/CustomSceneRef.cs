@@ -6,31 +6,31 @@ namespace rwby
     [System.Serializable]
     public struct CustomSceneRef : INetworkStruct
     {
-        public NetworkModObjectGUIDReference mapReference;
+        [FormerlySerializedAs("mapReference")] public NetworkModObjectGUIDReference mapContentReference;
         public sbyte sceneIdentifier;
 
-        public CustomSceneRef(ModObjectGUIDReference mapReference, sbyte sceneID)
+        public CustomSceneRef(ModGUIDContentReference mapContentReference, sbyte sceneID)
         {
-            this.mapReference = mapReference;
+            this.mapContentReference = mapContentReference;
             sceneIdentifier = sceneID;
         }
         
-        public CustomSceneRef(NetworkModObjectGUIDReference mapReference, sbyte sceneID)
+        public CustomSceneRef(NetworkModObjectGUIDReference mapContentReference, sbyte sceneID)
         {
-            this.mapReference = mapReference;
+            this.mapContentReference = mapContentReference;
             sceneIdentifier = sceneID;
         }
 
-        public CustomSceneRef(ContentGUID modGUID, ContentGUID contentGUID, sbyte sceneID)
+        public CustomSceneRef(ContentGUID modGUID, int contentIdx, sbyte sceneID)
         {
-            mapReference = new NetworkModObjectGUIDReference()
-                { modGUID = modGUID, contentType = (int)ContentType.Map, contentGUID = contentGUID };
+            mapContentReference = new NetworkModObjectGUIDReference()
+                { modGUID = modGUID, contentType = (int)ContentType.Map, contentIdx = contentIdx };
             sceneIdentifier = sceneID;
         }
         
         public override string ToString()
         {
-            return $"{mapReference.ToString()} scene {sceneIdentifier}";
+            return $"{mapContentReference.ToString()} scene {sceneIdentifier}";
         }
     }
 }
