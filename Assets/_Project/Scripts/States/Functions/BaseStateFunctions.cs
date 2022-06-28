@@ -16,7 +16,19 @@ namespace rwby
         
         public static void ChangeState(IFighterBase fighter, IStateVariables variables, HnSF.StateTimeline arg3, int arg4)
         {
+            FighterManager fm = (FighterManager)fighter;
             VarChangeState vars = (VarChangeState)variables;
+            
+            int movesetID = vars.stateMovesetID == -1
+                ? fm.FStateManager.CurrentStateMoveset
+                : vars.stateMovesetID;
+            int stateID = vars.state.GetState();
+            StateTimeline state = (StateTimeline)(fm.FStateManager.GetState(movesetID, stateID));
+
+            //if (!fm.FCombatManager.MovePossible(new MovesetStateIdentifier(movesetID, stateID), state.maxUsesInString)) return;
+            if (vars.checkInputSequence && !fm.FCombatManager.CheckForInputSequence(state.inputSequence)) return;
+            if (vars.checkCondition && !fm.FStateManager.TryCondition(state, state.condition, arg4)) return;
+            
             fighter.StateManager.MarkForStateChange(vars.state.GetState(), vars.stateMovesetID);
         }
         
@@ -27,14 +39,17 @@ namespace rwby
 
             for (int i = 0; i < vars.states.Length; i++)
             {
-                StateTimeline state = (StateTimeline)(vars.states[i].movesetID == -1
-                    ? fm.FStateManager.GetState(vars.states[i].state.GetState())
-                    : fm.FStateManager.GetState(vars.states[i].movesetID, vars.states[i].state.GetState()));
+                int movesetID = vars.states[i].movesetID == -1
+                    ? fm.FStateManager.CurrentStateMoveset
+                    : vars.states[i].movesetID;
+                int stateID = vars.states[i].state.GetState();
+                StateTimeline state = (StateTimeline)(fm.FStateManager.GetState(movesetID, stateID));
 
+                if (!fm.FCombatManager.MovePossible(new MovesetStateIdentifier(movesetID, stateID), state.maxUsesInString)) continue;
                 if (vars.checkInputSequence && !fm.FCombatManager.CheckForInputSequence(state.inputSequence)) continue;
                 if (vars.checkCondition && !fm.FStateManager.TryCondition(state, state.condition, arg4)) continue;
 
-                fm.FStateManager.ChangeState(vars.states[i].state.GetState(), vars.states[i].movesetID);
+                fm.FStateManager.ChangeState(stateID, vars.states[i].movesetID);
                 return;
             }
         }
@@ -367,6 +382,22 @@ namespace rwby
                     break;
                 case VarModifyType.ADD:
                     f.fighterEffector.AddEffectTime(vars.effects, vars.frame);
+                    break;
+            }
+        }
+        
+        public static void ModifyEffectRotation(IFighterBase fighter, IStateVariables variables, HnSF.StateTimeline arg3, int arg4)
+        {
+            FighterManager f = (FighterManager)fighter;
+            VarModifyEffectRotation vars = (VarModifyEffectRotation)variables;
+
+            switch (vars.modifyType)
+            {
+                case VarModifyType.SET:
+                    f.fighterEffector.SetEffectRotation(vars.effects, vars.rotation);
+                    break;
+                case VarModifyType.ADD:
+                    f.fighterEffector.AddEffectRotation(vars.effects, vars.rotation);
                     break;
             }
         }

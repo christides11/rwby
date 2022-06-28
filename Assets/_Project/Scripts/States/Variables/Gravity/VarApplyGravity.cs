@@ -31,9 +31,9 @@ namespace rwby
         [SelectImplementation((typeof(FighterStatReferenceBase<float>)))] [SerializeReference] [ShowIf("useValue")] [AllowNesting]
         public FighterStatReferenceFloatBase value;
 
-        [SelectImplementation((typeof(FighterStatReferenceBase<float>)))] [SerializeReference]
+        [SelectImplementation((typeof(FighterStatReferenceBase<float>)))] [SerializeReference] [AllowNesting]
         public FighterStatReferenceFloatBase gravityMultiplier;
-        [SelectImplementation((typeof(FighterStatReferenceBase<float>)))] [SerializeReference]
+        [SelectImplementation((typeof(FighterStatReferenceBase<float>)))] [SerializeReference] [AllowNesting]
         public FighterStatReferenceFloatBase maxFallSpeed;
         
         [SelectImplementation(typeof(IStateVariables))] [SerializeField, SerializeReference] 

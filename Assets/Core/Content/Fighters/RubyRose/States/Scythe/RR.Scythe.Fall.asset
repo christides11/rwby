@@ -22,6 +22,7 @@ MonoBehaviour:
   data:
   - rid: 6951768528003006465
   - rid: 6951768538707132417
+  - rid: 220443925126053891
   stateGroundedGroup: 2
   stateType: 1
   maxUsesInString: -1
@@ -41,6 +42,15 @@ MonoBehaviour:
     RefIds:
     - rid: -2
       type: {class: , ns: , asm: }
+    - rid: 220443925126053891
+      type: {class: VarExternal, ns: rwby, asm: rwby.csharp}
+      data:
+        frameRanges:
+        - {x: -1, y: -1}
+        condition:
+          rid: -2
+        asset: {fileID: 11400000, guid: 852b081cfd9efbb449cca3171458f8cc, type: 2}
+        children: []
     - rid: 6951768528003006465
       type: {class: VarModifyAnimationSet, ns: rwby, asm: rwby.csharp}
       data:
@@ -54,8 +64,7 @@ MonoBehaviour:
             modGUID:
               guid: 1d292c1f00000000
             contentType: 7
-            contentGUID:
-              guid: 2c2c000000000000
+            contentIdx: 0
           animation: fall
         fadeTime: 0
         children: []

@@ -6,5 +6,11 @@ namespace rwby
     {
         public int movesetIdentifier;
         public int stateIdentifier;
+
+        public MovesetStateIdentifier(int movesetID, int stateID)
+        {
+            movesetIdentifier = movesetID;
+            stateIdentifier = stateID;
+        }
     }
 }

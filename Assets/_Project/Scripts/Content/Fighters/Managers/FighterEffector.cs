@@ -42,7 +42,8 @@ namespace rwby
                     frame = 0,
                     parented = wantedEffects[i].parented,
                     pos = wantedEffects[i].offset,
-                    rot = wantedEffects[i].rotation
+                    rot = wantedEffects[i].rotation,
+                    scale = wantedEffects[i].scale
                 });
                 effects = temp;
             }
@@ -69,6 +70,32 @@ namespace rwby
                 var temp = effects;
                 var t = temp.effects[effectToModify[i]];
                 t.frame += frame;
+                temp.effects.Set(effectToModify[i], t);
+                effects = temp;
+            }
+            dirty = true;
+        }
+        
+        public void SetEffectRotation(int[] effectToModify, Vector3 rot)
+        {
+            for (int i = 0; i < effectToModify.Length; i++)
+            {
+                var temp = effects;
+                var t = temp.effects[effectToModify[i]];
+                t.rot = rot;
+                temp.effects.Set(effectToModify[i], t);
+                effects = temp;
+            }
+            dirty = true;
+        }
+        
+        public void AddEffectRotation(int[] effectToModify, Vector3 rot)
+        {
+            for (int i = 0; i < effectToModify.Length; i++)
+            {
+                var temp = effects;
+                var t = temp.effects[effectToModify[i]];
+                t.rot += rot;
                 temp.effects.Set(effectToModify[i], t);
                 effects = temp;
             }
@@ -113,6 +140,7 @@ namespace rwby
                         : GameObject.Instantiate(e, effects.effects[i].pos, Quaternion.identity);
                     effectObjects[i].transform.localPosition = effects.effects[i].pos;
                     effectObjects[i].transform.localRotation = Quaternion.Euler(effects.effects[i].rot);
+                    effectObjects[i].transform.localScale = effects.effects[i].scale;
                 }
                 
                 effectObjects[i].SetFrame(effects.effects[i].frame * Runner.DeltaTime);

@@ -1,0 +1,316 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7789f25d17401bc4b915ca6fcecf2a29, type: 3}
+  m_Name: RR.Scythe.Air.5a
+  m_EditorClassIdentifier: 
+  stateName: 5a (air)
+  useBaseState: 0
+  baseState: {fileID: 0}
+  totalFrames: 30
+  autoIncrement: 1
+  autoLoop: 0
+  autoLoopFrame: 1
+  data:
+  - rid: 6951768528003006469
+  - rid: 6951768528003006475
+  - rid: 220443471284797440
+  - rid: 220443471284797443
+  - rid: 220443471284797448
+  - rid: 220443896379604993
+  - rid: 6951768528003006470
+  - rid: 6951768538707132419
+  - rid: 220443896379604999
+  - rid: 220443896379604994
+  - rid: 220443896379604996
+  - rid: 220443896379605001
+  - rid: 220443925126053895
+  stateGroundedGroup: 2
+  stateType: 2
+  maxUsesInString: 1
+  allowBaseStateTransitions: 1
+  inputSequence:
+    executeWindow: 3
+    executeInputs:
+    - inputType: 0
+      buttonID: 2
+      stickDirection: {x: 0, y: 0}
+      directionDeviation: 0
+    sequenceWindow: 8
+    sequenceInputs: []
+  condition:
+    rid: -2
+  hitboxInfo:
+  - ID: 0
+    groundHitState: 30
+    groundCounterHitState: 30
+    aerialHitState: 32
+    aerialCounterHitState: 32
+    groundBounces: 0
+    wallBounces: 0
+    counterHitGroundBounces: 0
+    counterHitWallBounces: 0
+    groundBounceForcePercentage: 0
+    wallBounceForcePercentage: 0
+    hitKills: 1
+    hitStateGroundedGroups: -1
+    hitForceType: 0
+    hitForceRelation: 0
+    autolink: 0
+    autolinkPercentage: 0
+    groundHitForce: {x: 0, y: 0, z: 10}
+    groundCounterHitForce: {x: 0, y: 0, z: 0}
+    groundBlockForce: {x: 0, y: 0, z: 0}
+    groundHitGravity: -1
+    groundCounterHitGravity: 0
+    aerialHitForce: {x: 0, y: 0, z: 5}
+    aerialCounterHitForce: {x: 0, y: 0, z: 0}
+    aerialBlockForce: {x: 0, y: 0, z: 0}
+    aerialHitGravity: -1
+    aerialCounterHitGravity: 0
+    attackerHitstop: 4
+    hitstop: 4
+    counterHitAddedHitstop: 0
+    groundHitstun: 60
+    groundCounterHitstun: 0
+    aerialHitstun: 60
+    aerialCounterHitstun: 0
+    groundBlockstun: 10
+    aerialBlockstun: 10
+  throwboxInfo: []
+  hurtboxInfo: []
+  references:
+    version: 2
+    RefIds:
+    - rid: -2
+      type: {class: , ns: , asm: }
+    - rid: 220443471284797440
+      type: {class: VarModifyEffectSet, ns: rwby, asm: rwby.csharp}
+      data:
+        frameRanges:
+        - {x: 7, y: 7}
+        condition:
+          rid: -2
+        modifyType: 1
+        wantedEffects:
+        - effectbank:
+            modGUID:
+              guid: 1d292c1f00000000
+            contentType: 6
+            contentIdx: 0
+          effect: slash
+          parented: 1
+          offset: {x: 0, y: 0.8, z: 0}
+          rotation: {x: 0, y: 180, z: 180}
+          scale: {x: 1, y: 0.2, z: 1}
+        children: []
+    - rid: 220443471284797443
+      type: {class: VarModifyEffectSet, ns: rwby, asm: rwby.csharp}
+      data:
+        frameRanges:
+        - {x: 31, y: 31}
+        condition:
+          rid: -2
+        modifyType: 1
+        wantedEffects: []
+        children: []
+    - rid: 220443471284797448
+      type: {class: VarModifyEffectFrame, ns: rwby, asm: rwby.csharp}
+      data:
+        frameRanges:
+        - {x: 9, y: 30}
+        condition:
+          rid: -2
+        modifyType: 0
+        effects: 00000000
+        frame: 1
+        children: []
+    - rid: 220443896379604993
+      type: {class: VarModifyEffectRotation, ns: rwby, asm: rwby.csharp}
+      data:
+        frameRanges:
+        - {x: 10, y: 21}
+        condition:
+          rid: -2
+        modifyType: 0
+        effects: 00000000
+        rotation: {x: 0, y: -10, z: 0}
+        children: []
+    - rid: 220443896379604994
+      type: {class: VarApplyTraction, ns: rwby, asm: rwby.csharp}
+      data:
+        frameRanges:
+        - {x: 3, y: 30}
+        condition:
+          rid: -2
+        traction:
+          rid: 220443896379604995
+        applyMovement: 1
+        applyGravity: 0
+        children: []
+    - rid: 220443896379604995
+      type: {class: FighterBaseStatReferenceFloat, ns: rwby, asm: rwby.csharp}
+      data:
+        inverse: 0
+        statReference: 0
+        value: 30
+        variable: 0
+    - rid: 220443896379604996
+      type: {class: VarAddMovement, ns: rwby, asm: rwby.csharp}
+      data:
+        frameRanges:
+        - {x: 2, y: 2}
+        condition:
+          rid: -2
+        inputSource: 1
+        normalizeInputSource: 0
+        useRotationIfInputZero: 0
+        force:
+          rid: 220443896379604998
+        children: []
+    - rid: 220443896379604998
+      type: {class: FighterBaseStatReferenceFloat, ns: rwby, asm: rwby.csharp}
+      data:
+        inverse: 0
+        statReference: 0
+        value: 7
+        variable: 0
+    - rid: 220443896379604999
+      type: {class: VarCreateBox, ns: rwby, asm: rwby.csharp}
+      data:
+        frameRanges:
+        - {x: 10, y: 15}
+        condition:
+          rid: -2
+        boxType: 0
+        attachedTo: 0
+        shape: 0
+        offset: {x: -0.5, y: 1, z: 0}
+        boxExtents: {x: 0.6, y: 1, z: 1.4}
+        radius: 0
+        definitionIndex: 0
+        children: []
+    - rid: 220443896379605001
+      type: {class: VarExternal, ns: rwby, asm: rwby.csharp}
+      data:
+        frameRanges:
+        - {x: 13, y: 30}
+        condition:
+          rid: -2
+        asset: {fileID: 11400000, guid: 852b081cfd9efbb449cca3171458f8cc, type: 2}
+        children: []
+    - rid: 220443925126053895
+      type: {class: VarApplyGravity, ns: rwby, asm: rwby.csharp}
+      data:
+        frameRanges:
+        - {x: -1, y: -1}
+        condition:
+          rid: -2
+        useValue: 0
+        jumpHeight:
+          rid: 220443925126053896
+        jumpTime:
+          rid: 220443925126053897
+        value:
+          rid: 220443925126053904
+        gravityMultiplier:
+          rid: -2
+        maxFallSpeed:
+          rid: 220443925126053900
+        children: []
+    - rid: 220443925126053896
+      type: {class: FighterBaseStatReferenceFloat, ns: rwby, asm: rwby.csharp}
+      data:
+        inverse: 0
+        statReference: 1
+        value: 0
+        variable: 13
+    - rid: 220443925126053897
+      type: {class: FighterBaseStatReferenceFloat, ns: rwby, asm: rwby.csharp}
+      data:
+        inverse: 0
+        statReference: 1
+        value: 0
+        variable: 12
+    - rid: 220443925126053900
+      type: {class: FighterBaseStatReferenceFloat, ns: rwby, asm: rwby.csharp}
+      data:
+        inverse: 0
+        statReference: 1
+        value: 0
+        variable: 23
+    - rid: 220443925126053904
+      type: {class: FighterBaseStatReferenceFloat, ns: rwby, asm: rwby.csharp}
+      data:
+        inverse: 0
+        statReference: 0
+        value: 0
+        variable: 0
+    - rid: 6951768528003006469
+      type: {class: VarModifyAnimationSet, ns: rwby, asm: rwby.csharp}
+      data:
+        frameRanges:
+        - {x: 0, y: 0}
+        condition:
+          rid: -2
+        modifyType: 1
+        wantedAnimations:
+        - animationbank:
+            modGUID:
+              guid: 1d292c1f00000000
+            contentType: 7
+            contentIdx: 0
+          animation: scythe.air.5a
+        fadeTime: 0.05
+        children: []
+    - rid: 6951768528003006470
+      type: {class: VarChangeState, ns: rwby, asm: rwby.csharp}
+      data:
+        frameRanges:
+        - {x: 30, y: 30}
+        condition:
+          rid: -2
+        checkInputSequence: 0
+        checkCondition: 0
+        stateMovesetID: -1
+        state:
+          rid: 6951768528003006471
+        children: []
+    - rid: 6951768528003006471
+      type: {class: FighterCmnStateReference, ns: rwby, asm: rwby.csharp}
+      data:
+        state: 1
+    - rid: 6951768528003006475
+      type: {class: VarModifyAnimationFrame, ns: rwby, asm: rwby.csharp}
+      data:
+        frameRanges:
+        - {x: -1, y: -1}
+        condition:
+          rid: -2
+        modifyType: 0
+        animations: 00000000
+        frame: 1
+        children: []
+    - rid: 6951768538707132419
+      type: {class: VarCreateBox, ns: rwby, asm: rwby.csharp}
+      data:
+        frameRanges:
+        - {x: 7, y: 9}
+        condition:
+          rid: -2
+        boxType: 1
+        attachedTo: 0
+        shape: 0
+        offset: {x: 0.5, y: 1, z: 0}
+        boxExtents: {x: 0.6, y: 1, z: 1.4}
+        radius: 0
+        definitionIndex: 0
+        children: []

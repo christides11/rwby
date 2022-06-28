@@ -21,13 +21,47 @@ MonoBehaviour:
   autoLoopFrame: 1
   data:
   - rid: 6951768528003006468
+  - rid: 220443919468986375
+  - rid: 220443925126053893
   stateGroundedGroup: 2
+  stateType: 0
+  maxUsesInString: -1
   allowBaseStateTransitions: 1
+  inputSequence:
+    executeWindow: 3
+    executeInputs: []
+    sequenceWindow: 8
+    sequenceInputs: []
+  condition:
+    rid: -2
+  hitboxInfo: []
+  throwboxInfo: []
+  hurtboxInfo: []
   references:
     version: 2
     RefIds:
     - rid: -2
       type: {class: , ns: , asm: }
+    - rid: 220443919468986375
+      type: {class: VarSetECB, ns: rwby, asm: rwby.csharp}
+      data:
+        frameRanges:
+        - {x: 0, y: 0}
+        condition:
+          rid: -2
+        ecbCenter: 1.1
+        ecbRadius: 0.3
+        ecbHeight: 1.25
+        children: []
+    - rid: 220443925126053893
+      type: {class: VarExternal, ns: rwby, asm: rwby.csharp}
+      data:
+        frameRanges:
+        - {x: 5, y: 15}
+        condition:
+          rid: -2
+        asset: {fileID: 11400000, guid: 852b081cfd9efbb449cca3171458f8cc, type: 2}
+        children: []
     - rid: 6951768528003006468
       type: {class: VarModifyAnimationSet, ns: rwby, asm: rwby.csharp}
       data:
@@ -41,8 +75,7 @@ MonoBehaviour:
             modGUID:
               guid: 1d292c1f00000000
             contentType: 7
-            contentGUID:
-              guid: 2c2c000000000000
+            contentIdx: 0
           animation: airdash
         fadeTime: 0.05
         children: []

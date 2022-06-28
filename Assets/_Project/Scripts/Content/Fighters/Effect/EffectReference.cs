@@ -10,5 +10,6 @@ namespace rwby
         public bool parented;
         public Vector3 offset;
         public Vector3 rotation;
+        public Vector3 scale;
     }
 }

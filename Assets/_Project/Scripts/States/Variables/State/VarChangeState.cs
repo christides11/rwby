@@ -18,6 +18,9 @@ namespace rwby
         [SelectImplementation(typeof(IConditionVariables))] [SerializeField, SerializeReference] 
         public IConditionVariables condition;
 
+        public bool checkInputSequence;
+        public bool checkCondition;
+
         public int stateMovesetID;
         [SelectImplementation(typeof(FighterStateReferenceBase))] [SerializeField, SerializeReference]
         public FighterStateReferenceBase state;
