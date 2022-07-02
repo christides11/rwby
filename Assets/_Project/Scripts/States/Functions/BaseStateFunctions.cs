@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using ExitGames.Client.Photon.StructWrapping;
+using Fusion;
 using HnSF;
 using HnSF.Fighters;
 using UnityEngine;
@@ -12,6 +13,14 @@ namespace rwby
         public static void Null(IFighterBase fighter, IStateVariables variables, HnSF.StateTimeline arg3, int arg4)
         {
             
+        }
+        
+        public static void TrySpecial(IFighterBase fighter, IStateVariables variables, HnSF.StateTimeline arg3, int arg4)
+        {
+            FighterManager fm = (FighterManager)fighter;
+            VarTrySpecial vars = (VarTrySpecial)variables;
+
+            fm.FCombatManager.TrySpecial();
         }
         
         public static void ChangeState(IFighterBase fighter, IStateVariables variables, HnSF.StateTimeline arg3, int arg4)
@@ -106,7 +115,7 @@ namespace rwby
             VarApplyGravity vars = (VarApplyGravity)variables;
 
             float gravity = vars.useValue ? vars.value.GetValue(f) : (2 * vars.jumpHeight.GetValue(f)) / Mathf.Pow(vars.jumpTime.GetValue(f) / 2.0f, 2);
-            f.FPhysicsManager.HandleGravity(vars.maxFallSpeed.GetValue(f), gravity, vars.gravityMultiplier.GetValue(f));
+            f.FPhysicsManager.HandleGravity(vars.maxFallSpeed.GetValue(f), gravity, vars.multi.GetValue(f));
         }
         
         public static void ApplyMovement(IFighterBase fighter, IStateVariables variables, HnSF.StateTimeline arg3, int arg4)
@@ -400,6 +409,21 @@ namespace rwby
                     f.fighterEffector.AddEffectRotation(vars.effects, vars.rotation);
                     break;
             }
+        }
+        
+        public static void CreateProjectile(IFighterBase fighter, IStateVariables variables, HnSF.StateTimeline arg3, int arg4)
+        {
+            FighterManager fm = (FighterManager)fighter;
+            VarCreateProjectile vars = (VarCreateProjectile)variables;
+
+            var pos = fm.myTransform.position;
+            pos += fm.myTransform.forward * vars.positionOffset.z;
+            pos += fm.myTransform.right * vars.positionOffset.x;
+            pos += fm.myTransform.up * vars.positionOffset.y;
+            
+            var predictionKey = new NetworkObjectPredictionKey {Byte0 = (byte) fm.Runner.Simulation.Tick, Byte1 = (byte)fm.Object.InputAuthority.PlayerId};
+            
+            fm.Runner.Spawn(vars.projectile, pos, Quaternion.Euler(fm.myTransform.eulerAngles + vars.rotation), fm.Object.InputAuthority, null, predictionKey);
         }
     }
 }

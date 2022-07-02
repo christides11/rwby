@@ -17,11 +17,12 @@ namespace rwby
             HitHurtbox
         }
 
+        /*
         public struct BroadphasePair
         {
-            public FighterBoxManager objA;
-            public FighterBoxManager objB;
-        }
+            public EntityBoxManager objA;
+            public EntityBoxManager objB;
+        }*/
 
         public struct HitboxCombatPair
         {
@@ -99,7 +100,7 @@ namespace rwby
                     for (int f = 0; f < numHit; f++)
                     {
                         Hurtbox h = hitsList[f].GameObject.GetComponent<Hurtbox>();
-                        if (h.HitboxActive == true && broadphaseObjects[i].GetBehaviour<FighterHitManager>().IsHitHurtboxValid(boxCollection.Hitboxes[a], h))
+                        if (h.HitboxActive == true && broadphaseObjects[i].GetComponent<IAttacker>().IsHitHurtboxValid(boxCollection.Hitboxes[a], h))
                         {
                             var tuple = (broadphaseObjects[i].GetBehaviour<NetworkObject>(), h.ownerNetworkObject);
                             if (hitboxCombatPairs.ContainsKey(tuple))
@@ -147,7 +148,7 @@ namespace rwby
                     for(int g = 0; g < hitboxNumHit; g++)
                     {
                         CustomHitbox h = hitsList[g].GameObject.GetComponent<CustomHitbox>();
-                        if (h.HitboxActive == true && broadphaseObjects[i].GetBehaviour<FighterHitManager>().IsHitHitboxValid(boxCollection.Hitboxes[a], h))
+                        if (h.HitboxActive == true && broadphaseObjects[i].GetComponent<IAttacker>().IsHitHitboxValid(boxCollection.Hitboxes[a], h))
                         {
                             var tuple = (broadphaseObjects[i].GetBehaviour<NetworkObject>(), h.ownerNetworkObject);
                             if (hitboxCombatPairs.ContainsKey(tuple))

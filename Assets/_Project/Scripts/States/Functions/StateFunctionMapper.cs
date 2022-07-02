@@ -33,6 +33,8 @@ namespace rwby
             functions.Add(typeof(VarModifyEffectSet), BaseStateFunctions.ModifyEffectSet);
             functions.Add(typeof(VarModifyEffectFrame), BaseStateFunctions.ModifyEffectFrame);
             functions.Add(typeof(VarModifyEffectRotation), BaseStateFunctions.ModifyEffectRotation);
+            functions.Add(typeof(VarTrySpecial), BaseStateFunctions.TrySpecial);
+            functions.Add(typeof(VarCreateProjectile), BaseStateFunctions.CreateProjectile);
         }
     }
 }

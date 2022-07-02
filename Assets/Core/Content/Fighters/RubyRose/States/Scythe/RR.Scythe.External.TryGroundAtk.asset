@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: RR.Scythe.External.TryGroundAtk
   m_EditorClassIdentifier: 
   data:
+  - rid: 220443939427844101
   - rid: 6951768528003006472
   references:
     version: 2
@@ -23,6 +24,13 @@ MonoBehaviour:
       type: {class: RubyRoseStateReference, ns: rwby.core, asm: rwby.core}
       data:
         state: 51
+    - rid: 220443939427844101
+      type: {class: VarTrySpecial, ns: rwby, asm: rwby.csharp}
+      data:
+        frameRanges: []
+        condition:
+          rid: -2
+        children: []
     - rid: 6951768528003006472
       type: {class: VarChangeStateList, ns: rwby, asm: rwby.csharp}
       data:

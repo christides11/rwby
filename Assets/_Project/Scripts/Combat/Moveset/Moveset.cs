@@ -10,6 +10,8 @@ namespace rwby
     public class Moveset : HnSF.Combat.MovesetDefinition
     {
         public FighterStats fighterStats;
+
+        public SpecialDefinition[] specials;
         
         public virtual void Initialize()
         {

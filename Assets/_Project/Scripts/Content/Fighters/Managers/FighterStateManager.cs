@@ -118,8 +118,13 @@ namespace rwby
         {
             return (movesets[CurrentStateMoveset] as Moveset).fighterStats;
         }
-        
 
+
+        public rwby.Moveset GetMoveset()
+        {
+            return (rwby.Moveset)GetMoveset(CurrentStateMoveset);
+        }
+        
         public MovesetDefinition GetMoveset(int index)
         {
             return movesets[index];

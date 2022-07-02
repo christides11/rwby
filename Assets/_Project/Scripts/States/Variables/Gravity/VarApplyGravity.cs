@@ -1,6 +1,7 @@
 using HnSF;
 using NaughtyAttributes;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace rwby
 {
@@ -23,17 +24,17 @@ namespace rwby
         private bool calculateValue => !useValue;
         public bool useValue;
 
-        [SelectImplementation((typeof(FighterStatReferenceBase<float>)))] [SerializeReference] [ShowIf("calculateValue")] [AllowNesting]
-        public FighterStatReferenceFloatBase jumpHeight;
-        [SelectImplementation((typeof(FighterStatReferenceBase<float>)))] [SerializeReference] [ShowIf("calculateValue")] [AllowNesting]
-        public FighterStatReferenceFloatBase jumpTime;
-        
-        [SelectImplementation((typeof(FighterStatReferenceBase<float>)))] [SerializeReference] [ShowIf("useValue")] [AllowNesting]
+        [SelectImplementation((typeof(FighterStatReferenceBase<float>)))] [SerializeReference] [ShowIf("useValue")]
         public FighterStatReferenceFloatBase value;
 
-        [SelectImplementation((typeof(FighterStatReferenceBase<float>)))] [SerializeReference] [AllowNesting]
-        public FighterStatReferenceFloatBase gravityMultiplier;
-        [SelectImplementation((typeof(FighterStatReferenceBase<float>)))] [SerializeReference] [AllowNesting]
+        [SelectImplementation((typeof(FighterStatReferenceBase<float>)))] [SerializeReference] [ShowIf("calculateValue")]
+        public FighterStatReferenceFloatBase jumpHeight;
+        [SelectImplementation((typeof(FighterStatReferenceBase<float>)))] [SerializeReference] [ShowIf("calculateValue")]
+        public FighterStatReferenceFloatBase jumpTime;
+
+        [SelectImplementation((typeof(FighterStatReferenceBase<float>)))] [SerializeReference] [FormerlySerializedAs("gravityMultiplier")]
+        public FighterStatReferenceFloatBase multi;
+        [SelectImplementation((typeof(FighterStatReferenceBase<float>)))] [SerializeReference]
         public FighterStatReferenceFloatBase maxFallSpeed;
         
         [SelectImplementation(typeof(IStateVariables))] [SerializeField, SerializeReference] 

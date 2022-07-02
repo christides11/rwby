@@ -38,6 +38,52 @@ namespace rwby
         [Networked] public int GroundBounces { get; set; }
         [Networked] public float GroundBounceForcePercentage { get; set; }
 
+        [Networked, Capacity(4)] public NetworkArray<int> assignedSpecials => default;
+
+        public override void Spawned()
+        {
+            base.Spawned();
+            for (int i = 0; i < 4; i++)
+            {
+                assignedSpecials.Set(i, i + 1);
+            }
+        }
+
+        public virtual bool TrySpecial()
+        {
+            int bOff = 0;
+            var currentState = stateManager.GetState();
+            if (assignedSpecials[0] != 0 && inputManager.GetAbility1(out bOff).firstPress)
+            {
+                stateManager.MarkForStateChange(currentState.stateGroundedGroup == StateGroundedGroupType.GROUND
+                    ? stateManager.GetMoveset().specials[assignedSpecials[0] - 1].groundState.GetState()
+                    : stateManager.GetMoveset().specials[assignedSpecials[0] - 1].aerialState.GetState());
+                return true;
+            }
+            if (assignedSpecials[1] != 0 && inputManager.GetAbility2(out bOff).firstPress)
+            {
+                stateManager.MarkForStateChange(currentState.stateGroundedGroup == StateGroundedGroupType.GROUND
+                    ? stateManager.GetMoveset().specials[assignedSpecials[1] - 1].groundState.GetState()
+                    : stateManager.GetMoveset().specials[assignedSpecials[1] - 1].aerialState.GetState());
+                return true;
+            }
+            if (assignedSpecials[2] != 0 && inputManager.GetAbility3(out bOff).firstPress)
+            {
+                stateManager.MarkForStateChange(currentState.stateGroundedGroup == StateGroundedGroupType.GROUND
+                    ? stateManager.GetMoveset().specials[assignedSpecials[2] - 1].groundState.GetState()
+                    : stateManager.GetMoveset().specials[assignedSpecials[2] - 1].aerialState.GetState());
+                return true;
+            }
+            if (assignedSpecials[3] != 0 && inputManager.GetAbility4(out bOff).firstPress)
+            {
+                stateManager.MarkForStateChange(currentState.stateGroundedGroup == StateGroundedGroupType.GROUND
+                    ? stateManager.GetMoveset().specials[assignedSpecials[3] - 1].groundState.GetState()
+                    : stateManager.GetMoveset().specials[assignedSpecials[3] - 1].aerialState.GetState());
+                return true;
+            }
+            return false;
+        }
+
         public virtual void ResetString()
         {
             movesUsedInString.Clear();
@@ -288,7 +334,7 @@ namespace rwby
                     SetHitStop(hitInfo.hitstop);
                     BlockStun = groundedState ? hitInfo.groundBlockstun : hitInfo.aerialBlockstun;
                     
-                    ApplyHitForces(hitInfo.hitForceType, groundedState ? hitInfo.groundBlockForce : hitInfo.aerialBlockForce, hurtInfo);
+                    ApplyHitForces(hitInfo.hitForceType, groundedState ? hitInfo.groundBlockForce : hitInfo.aerialBlockForce, hurtInfo, hitInfo, currentState);
                     return hitReaction;
                 }
             }
@@ -301,7 +347,7 @@ namespace rwby
             SetHitStop(hitInfo.hitstop + (CounterhitState ? hitInfo.counterHitAddedHitstop : 0));
             SetHitStun(CounterhitState ? (groundedState ? hitInfo.groundCounterHitstun : hitInfo.aerialCounterHitstun) : (groundedState ? hitInfo.groundHitstun : hitInfo.aerialHitstun));
             Vector3 baseForce = CounterhitState ? (groundedState ? hitInfo.groundCounterHitForce : hitInfo.aerialCounterHitForce) : (groundedState ? hitInfo.groundHitForce : hitInfo.aerialHitForce);
-            ApplyHitForces(hitInfo.hitForceType, baseForce, hurtInfo);
+            ApplyHitForces(hitInfo.hitForceType, baseForce, hurtInfo, hitInfo, currentState);
 
             WallBounces = hitInfo.wallBounces;
             WallBounceForcePercentage = hitInfo.wallBounceForcePercentage;
@@ -334,7 +380,7 @@ namespace rwby
             return hitReaction;
         }
 
-        protected void ApplyHitForces(HitboxForceType forceType, Vector3 baseForce, HurtInfo hurtInfo)
+        protected void ApplyHitForces(HitboxForceType forceType, Vector3 baseForce, HurtInfo hurtInfo, HitInfo hitInfo, StateTimeline currentState)
         {
             switch (forceType)
             {
@@ -344,7 +390,8 @@ namespace rwby
                     physicsManager.forceMovement = forces;
                     break;
                 case HitboxForceType.PULL:
-                    /*Vector3 pullDir = Vector3.ClampMagnitude((hurtInfo.center - (transform.position + Vector3.up)) * hitInfo.opponentForceMultiplier, hitInfo.opponentMaxMagnitude);
+                    /*
+                    Vector3 pullDir = Vector3.ClampMagnitude((hurtInfo.center - (transform.position + Vector3.up)) * hitInfo.opponentForceMultiplier, hitInfo.opponentMaxMagnitude);
                     if (pullDir.magnitude < hitInfo.opponentMinMagnitude)
                     {
                         pullDir = (hurtInfo.center - (transform.position + Vector3.up) ).normalized * hitInfo.opponentMinMagnitude;
