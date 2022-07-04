@@ -5,7 +5,7 @@ using UnityEditor.IMGUI.Controls;
 using UnityEngine.UIElements;
 
 // https://gist.github.com/MPozek/f13eea941a7d59b7d4bdf0f83a2e4534
-[CustomPropertyDrawer(typeof(Enum), true)]
+/*[CustomPropertyDrawer(typeof(Enum), true)]
 public class EnumPropertyDrawer : PropertyDrawer
 {
     public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
@@ -28,7 +28,7 @@ public class EnumPropertyDrawer : PropertyDrawer
             _dropdown.Show(position);
         }
     }
-}
+}*/
 
 public class AdvancedStringOptionsDropdown : AdvancedDropdown
 {

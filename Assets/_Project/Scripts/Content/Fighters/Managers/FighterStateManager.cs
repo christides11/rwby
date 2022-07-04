@@ -168,9 +168,9 @@ namespace rwby
         public void StateChanged(rwby.StateTimeline previousState, rwby.StateTimeline currentState)
         {
             combatManager.HitboxManager.Reset();
-            manager.FPhysicsManager.SnapECB();
             if (previousState.stateGroundedGroup != currentState.stateGroundedGroup)
             {
+                manager.FPhysicsManager.SnapECB();
                 if (previousState.stateGroundedGroup == StateGroundedGroupType.AERIAL)
                 {
                     manager.ResetVariablesOnGround();

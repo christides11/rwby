@@ -322,41 +322,43 @@ namespace rwby
             hitReaction.reaction = HitReactionType.AVOIDED;
             
             var currentState = stateManager.GetState();
+            //if (!hitInfo.hitStateGroundedGroups.HasFlag(currentState.stateGroundedGroup)) return hitReaction;
             
-            if (!hitInfo.hitStateGroundedGroups.HasFlag(currentState.stateGroundedGroup)) return hitReaction;
-
             bool groundedState = currentState.stateGroundedGroup == StateGroundedGroupType.GROUND;
+            HitInfo.HitInfoGroup hitInfoGroup = groundedState ? (CounterhitState ? hitInfo.groundCounterHitGroup : hitInfo.groundGroup) 
+                : (CounterhitState ? hitInfo.aerialCounterHitGroup : hitInfo.aerialGroup);
+            hitReaction.hitInfoGroup = hitInfoGroup;
+            
             if(BlockState != BlockStateType.NONE)
             {
                 if(Vector3.Angle(transform.forward, hurtInfo.forward) > 90)
                 {
                     hitReaction.reaction = HitReactionType.BLOCKED;
-                    SetHitStop(hitInfo.hitstop);
-                    BlockStun = groundedState ? hitInfo.groundBlockstun : hitInfo.aerialBlockstun;
+                    SetHitStop(hitInfoGroup.hitstop);
+                    BlockStun = hitInfoGroup.blockstun;
                     
-                    ApplyHitForces(hitInfo.hitForceType, groundedState ? hitInfo.groundBlockForce : hitInfo.aerialBlockForce, hurtInfo, hitInfo, currentState);
+                    ApplyHitForces(hurtInfo, currentState, hitInfoGroup.hitForceType, hitInfoGroup.blockForce, hitInfoGroup.pullPushCurve, hitInfoGroup.pullPushMaxDistance);
                     return hitReaction;
                 }
             }
             
             hurtboxHitCount.Set(hurtInfo.hurtboxHit, hurtboxHitCount[hurtInfo.hurtboxHit] + 1);
-            
             manager.FPhysicsManager.SetRotation((hurtInfo.forward * -1).normalized);
+            
             // Got hit, apply stun, damage, and forces.
             hitReaction.reaction = HitReactionType.HIT;
-            SetHitStop(hitInfo.hitstop + (CounterhitState ? hitInfo.counterHitAddedHitstop : 0));
-            SetHitStun(CounterhitState ? (groundedState ? hitInfo.groundCounterHitstun : hitInfo.aerialCounterHitstun) : (groundedState ? hitInfo.groundHitstun : hitInfo.aerialHitstun));
-            Vector3 baseForce = CounterhitState ? (groundedState ? hitInfo.groundCounterHitForce : hitInfo.aerialCounterHitForce) : (groundedState ? hitInfo.groundHitForce : hitInfo.aerialHitForce);
-            ApplyHitForces(hitInfo.hitForceType, baseForce, hurtInfo, hitInfo, currentState);
+            SetHitStop(hitInfoGroup.hitstop);
+            SetHitStun(hitInfoGroup.hitstun);
+            ApplyHitForces(hurtInfo, currentState, hitInfoGroup.hitForceType, hitInfoGroup.hitForce, hitInfoGroup.pullPushCurve, hitInfoGroup.pullPushMaxDistance);
+            
+            WallBounces = hitInfoGroup.wallBounces;
+            WallBounceForcePercentage = hitInfoGroup.wallBounceForcePercentage;
+            GroundBounces = hitInfoGroup.groundBounces;
+            GroundBounceForcePercentage = hitInfoGroup.groundBounceForcePercentage;
 
-            WallBounces = hitInfo.wallBounces;
-            WallBounceForcePercentage = hitInfo.wallBounceForcePercentage;
-            GroundBounces = hitInfo.groundBounces;
-            GroundBounceForcePercentage = hitInfo.groundBounceForcePercentage;
-
-            if (hitInfo.autolink)
+            if (hitInfoGroup.autolink)
             {
-                Vector3 calcForce = hurtInfo.attackerVelocity * hitInfo.autolinkPercentage;
+                Vector3 calcForce = hurtInfo.attackerVelocity * hitInfoGroup.autolinkPercentage;
                 physicsManager.forceGravity += calcForce.y;
                 calcForce.y = 0;
                 physicsManager.forceMovement += calcForce;
@@ -366,42 +368,46 @@ namespace rwby
             {
                 physicsManager.SetGrounded(false);
             }
-
+            
+            /*
             switch (currentState.stateGroundedGroup)
             {
                 case StateGroundedGroupType.GROUND:
-                    stateManager.ChangeState(CounterhitState ? (int)hitInfo.groundCounterHitState : (int)hitInfo.groundHitState);
+                    stateManager.ChangeState((int)hitInfoGroup.hitState);
                     break;
                 case StateGroundedGroupType.AERIAL:
                     stateManager.ChangeState(CounterhitState ? (int)hitInfo.aerialCounterHitState : (int)hitInfo.aerialHitState);
                     break;
-            }
+            }*/
+            stateManager.ChangeState((int)hitInfoGroup.hitState);
             manager.FCombatManager.Cleanup();
             return hitReaction;
         }
 
-        protected void ApplyHitForces(HitboxForceType forceType, Vector3 baseForce, HurtInfo hurtInfo, HitInfo hitInfo, StateTimeline currentState)
+        protected void ApplyHitForces(HurtInfo hurtInfo, StateTimeline currentState, HitboxForceType forceType, Vector3 force = default, AnimationCurve pullPushCurve = default,
+            float pullPushMaxDistance = default)
         {
+            
             switch (forceType)
             {
                 case HitboxForceType.SET:
-                    Vector3 forces = (baseForce.x * hurtInfo.right) + (baseForce.z * hurtInfo.forward);
-                    physicsManager.forceGravity = baseForce.y;
+                    Vector3 forces = (force.x * hurtInfo.right) + (force.z * hurtInfo.forward);
+                    physicsManager.forceGravity = force.y;
                     physicsManager.forceMovement = forces;
                     break;
                 case HitboxForceType.PULL:
-                    /*
-                    Vector3 pullDir = Vector3.ClampMagnitude((hurtInfo.center - (transform.position + Vector3.up)) * hitInfo.opponentForceMultiplier, hitInfo.opponentMaxMagnitude);
-                    if (pullDir.magnitude < hitInfo.opponentMinMagnitude)
-                    {
-                        pullDir = (hurtInfo.center - (transform.position + Vector3.up) ).normalized * hitInfo.opponentMinMagnitude;
-                    }
-                    if (hitInfo.forceIncludeYForce)
-                    {
-                        physicsManager.forceGravity = pullDir.y;
-                    }
-                    pullDir.y = 0;
-                    physicsManager.forceMovement = pullDir;*/
+                    var position = manager.myTransform.position;
+                    Vector3 dir = (hurtInfo.center - (position + Vector3.up)).normalized;
+                    float t = Mathf.Clamp(Vector3.Distance(hurtInfo.center, (position + Vector3.up)), 0.0f, 1.0f);
+                    dir *= pullPushCurve.Evaluate(t);
+
+                    //if (hitInfo.forceIncludeYForce)
+                    //{
+                    physicsManager.forceGravity = dir.y;
+                    //}
+                    dir.y = 0;
+
+                    physicsManager.forceMovement = dir;
                     break;
                 case HitboxForceType.PUSH:
                     break;

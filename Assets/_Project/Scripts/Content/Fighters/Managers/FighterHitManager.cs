@@ -50,10 +50,11 @@ namespace rwby
             return true;
         }
         
-        public override void HandleHitReaction(CustomHitbox hitbox, Hurtbox enemyHurtbox, HurtInfo hurtInfo, HitInfo hi)
+        public override void HandleHitReaction(CustomHitbox hitbox, Hurtbox enemyHurtbox, HurtInfo hurtInfo, HitInfo hi,
+            HitReaction hitReaction)
         {
-            base.HandleHitReaction(hitbox, enemyHurtbox, hurtInfo, hi);
-            combatManager.SetHitStop(hi.attackerHitstop);
+            base.HandleHitReaction(hitbox, enemyHurtbox, hurtInfo, hi, hitReaction);
+            combatManager.SetHitStop(hitReaction.hitInfoGroup.attackerHitstop);
             /*
             if (string.IsNullOrEmpty(hi.effectbankName) == false)
             {
@@ -73,10 +74,11 @@ namespace rwby
             }*/
         }
 
-        public override void HandleBlockReaction(CustomHitbox hitbox, Hurtbox enemyHurtbox, HurtInfo hurtInfo, HitInfo hi)
+        public override void HandleBlockReaction(CustomHitbox hitbox, Hurtbox enemyHurtbox, HurtInfo hurtInfo,
+            HitInfo hi, HitReaction hitReaction)
         {
-            base.HandleBlockReaction(hitbox, enemyHurtbox, hurtInfo, hi);
-            combatManager.SetHitStop(hi.attackerHitstop);
+            base.HandleBlockReaction(hitbox, enemyHurtbox, hurtInfo, hi, hitReaction);
+            combatManager.SetHitStop(hitReaction.hitInfoGroup.attackerHitstop);
             /*BaseEffect bb = manager.EffectbankContainer.CreateEffect(enemyHurtbox.transform.position,
                     transform.rotation * Quaternion.Euler(0, 180, 0), "global", "shieldhit1");
             bb.PlayEffect(true, false);
@@ -95,6 +97,8 @@ namespace rwby
 
         public override HurtInfo BuildHurtInfo(CustomHitbox hitbox, Hurtbox hurtbox)
         {
+            return base.BuildHurtInfo(hitbox, hurtbox);
+            /*
             Vector3 hitPoint = hurtbox.transform.position;
             HitInfo hitInfo = hitbox.definition.HitboxInfo[hitbox.definitionIndex];
             HurtInfo hurtInfo;
@@ -123,7 +127,7 @@ namespace rwby
                         manager.FPhysicsManager.GetOverallForce(), hitPoint);
                     break;
             }
-            return hurtInfo;
+            return hurtInfo;*/
         }
     }
 }

@@ -425,5 +425,16 @@ namespace rwby
             
             fm.Runner.Spawn(vars.projectile, pos, Quaternion.Euler(fm.myTransform.eulerAngles + vars.rotation), fm.Object.InputAuthority, null, predictionKey);
         }
+        
+        public static void ClearHitList(IFighterBase fighter, IStateVariables variables, HnSF.StateTimeline arg3, int arg4)
+        {
+            FighterManager fm = (FighterManager)fighter;
+            VarClearHitList vars = (VarClearHitList)variables;
+
+            if (vars.frameDivider == 0 || fm.FStateManager.CurrentStateFrame % vars.frameDivider == 0)
+            {
+                fm.FCombatManager.HitboxManager.Reset();
+            }
+        }
     }
 }

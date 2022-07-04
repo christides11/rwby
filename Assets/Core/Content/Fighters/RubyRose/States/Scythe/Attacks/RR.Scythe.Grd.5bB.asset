@@ -49,41 +49,107 @@ MonoBehaviour:
     rid: -2
   hitboxInfo:
   - ID: 0
-    groundHitState: 30
-    groundCounterHitState: 30
-    aerialHitState: 32
-    aerialCounterHitState: 32
-    groundBounces: 0
-    wallBounces: 0
-    counterHitGroundBounces: 0
-    counterHitWallBounces: 0
-    groundBounceForcePercentage: 0
-    wallBounceForcePercentage: 0
-    hitKills: 1
     hitStateGroundedGroups: -1
-    hitForceType: 0
-    hitForceRelation: 0
-    autolink: 0
-    autolinkPercentage: 0
-    groundHitForce: {x: 0, y: 0, z: 25}
-    groundCounterHitForce: {x: 0, y: 0, z: 0}
-    groundBlockForce: {x: 0, y: 0, z: 0}
-    groundHitGravity: -1
-    groundCounterHitGravity: 0
-    aerialHitForce: {x: 0, y: 0, z: 5}
-    aerialCounterHitForce: {x: 0, y: 0, z: 0}
-    aerialBlockForce: {x: 0, y: 0, z: 0}
-    aerialHitGravity: -1
-    aerialCounterHitGravity: 0
-    attackerHitstop: 4
-    hitstop: 4
-    counterHitAddedHitstop: 0
-    groundHitstun: 60
-    groundCounterHitstun: 0
-    aerialHitstun: 60
-    aerialCounterHitstun: 0
-    groundBlockstun: 10
-    aerialBlockstun: 10
+    groundGroup:
+      hitState: 30
+      groundBounces: 0
+      wallBounces: 0
+      groundBounceForcePercentage: 0
+      wallBounceForcePercentage: 0
+      hitKills: 0
+      hitForceType: 0
+      hitForceRelation: 0
+      autolink: 0
+      autolinkPercentage: 0
+      hitForce: {x: 0, y: 0, z: 15}
+      blockForce: {x: 0, y: 0, z: 0}
+      hitGravity: 0
+      pullPushCurve:
+        serializedVersion: 2
+        m_Curve: []
+        m_PreInfinity: 2
+        m_PostInfinity: 2
+        m_RotationOrder: 4
+      pullPushMaxDistance: 0
+      attackerHitstop: 6
+      hitstop: 6
+      hitstun: 60
+      blockstun: 60
+    groundCounterHitGroup:
+      hitState: 0
+      groundBounces: 0
+      wallBounces: 0
+      groundBounceForcePercentage: 0
+      wallBounceForcePercentage: 0
+      hitKills: 0
+      hitForceType: 0
+      hitForceRelation: 0
+      autolink: 0
+      autolinkPercentage: 0
+      hitForce: {x: 0, y: 0, z: 0}
+      blockForce: {x: 0, y: 0, z: 0}
+      hitGravity: 0
+      pullPushCurve:
+        serializedVersion: 2
+        m_Curve: []
+        m_PreInfinity: 2
+        m_PostInfinity: 2
+        m_RotationOrder: 4
+      pullPushMaxDistance: 0
+      attackerHitstop: 0
+      hitstop: 0
+      hitstun: 0
+      blockstun: 0
+    aerialGroup:
+      hitState: 32
+      groundBounces: 0
+      wallBounces: 0
+      groundBounceForcePercentage: 0
+      wallBounceForcePercentage: 0
+      hitKills: 0
+      hitForceType: 0
+      hitForceRelation: 0
+      autolink: 0
+      autolinkPercentage: 0
+      hitForce: {x: 0, y: 0, z: 15}
+      blockForce: {x: 0, y: 0, z: 0}
+      hitGravity: 0
+      pullPushCurve:
+        serializedVersion: 2
+        m_Curve: []
+        m_PreInfinity: 2
+        m_PostInfinity: 2
+        m_RotationOrder: 4
+      pullPushMaxDistance: 0
+      attackerHitstop: 6
+      hitstop: 6
+      hitstun: 60
+      blockstun: 60
+    aerialCounterHitGroup:
+      hitState: 0
+      groundBounces: 0
+      wallBounces: 0
+      groundBounceForcePercentage: 0
+      wallBounceForcePercentage: 0
+      hitKills: 0
+      hitForceType: 0
+      hitForceRelation: 0
+      autolink: 0
+      autolinkPercentage: 0
+      hitForce: {x: 0, y: 0, z: 0}
+      blockForce: {x: 0, y: 0, z: 0}
+      hitGravity: 0
+      pullPushCurve:
+        serializedVersion: 2
+        m_Curve: []
+        m_PreInfinity: 2
+        m_PostInfinity: 2
+        m_RotationOrder: 4
+      pullPushMaxDistance: 0
+      attackerHitstop: 0
+      hitstop: 0
+      hitstun: 0
+      blockstun: 0
   throwboxInfo: []
   hurtboxInfo: []
   references:
@@ -159,7 +225,7 @@ MonoBehaviour:
         - {x: 2, y: 2}
         condition:
           rid: -2
-        ecbCenter: 2
+        ecbCenter: 1.5
         ecbRadius: 0.5
         ecbHeight: 1
         children: []

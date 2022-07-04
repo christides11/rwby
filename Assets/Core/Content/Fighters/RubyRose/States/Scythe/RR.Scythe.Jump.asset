@@ -22,6 +22,7 @@ MonoBehaviour:
   data:
   - rid: 6951768528003006465
   - rid: 220443925126053889
+  - rid: 5282967647150669826
   stateGroundedGroup: 2
   stateType: 0
   maxUsesInString: -1
@@ -49,6 +50,16 @@ MonoBehaviour:
         condition:
           rid: -2
         asset: {fileID: 11400000, guid: 852b081cfd9efbb449cca3171458f8cc, type: 2}
+        children: []
+    - rid: 5282967647150669826
+      type: {class: VarSetECB, ns: rwby, asm: rwby.csharp}
+      data:
+        frameRanges: []
+        condition:
+          rid: -2
+        ecbCenter: 1.1
+        ecbRadius: 0.3
+        ecbHeight: 1.25
         children: []
     - rid: 6951768528003006465
       type: {class: VarModifyAnimationSet, ns: rwby, asm: rwby.csharp}

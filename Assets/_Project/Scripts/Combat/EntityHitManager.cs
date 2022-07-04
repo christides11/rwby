@@ -81,28 +81,31 @@ namespace rwby
             switch (reaction.reaction)
             {
                 case HitReactionType.HIT:
-                    HandleHitReaction(hitbox, enemyHurtbox, hurtInfo, hi);
+                    HandleHitReaction(hitbox, enemyHurtbox, hurtInfo, hi, reaction);
                     break;
                 case HitReactionType.BLOCKED:
-                    HandleBlockReaction(hitbox, enemyHurtbox, hurtInfo, hi);
+                    HandleBlockReaction(hitbox, enemyHurtbox, hurtInfo, hi, reaction);
                     break;
                 case HitReactionType.AVOIDED:
-                    HandleAvoidReaction(hitbox, enemyHurtbox, hurtInfo, hi);
+                    HandleAvoidReaction(hitbox, enemyHurtbox, hurtInfo, hi, reaction);
                     break;
             }
         }
 
-        public virtual void HandleHitReaction(CustomHitbox hitbox, Hurtbox enemyHurtbox, HurtInfo hurtInfo, HitInfo hi)
+        public virtual void HandleHitReaction(CustomHitbox hitbox, Hurtbox enemyHurtbox, HurtInfo hurtInfo, HitInfo hi,
+            HitReaction hitReaction)
         {
             hitboxGroupHitCounts.Set(hitbox.definitionIndex, hitboxGroupHitCounts[hitbox.definitionIndex] + 1);
         }
 
-        public virtual void HandleBlockReaction(CustomHitbox hitbox, Hurtbox enemyHurtbox, HurtInfo hurtInfo, HitInfo hi)
+        public virtual void HandleBlockReaction(CustomHitbox hitbox, Hurtbox enemyHurtbox, HurtInfo hurtInfo,
+            HitInfo hi, HitReaction hitReaction)
         {
             hitboxGroupBlockedCounts.Set(hitbox.definitionIndex, hitboxGroupBlockedCounts[hitbox.definitionIndex] + 1);
         }
         
-        public virtual void HandleAvoidReaction(CustomHitbox hitbox, Hurtbox enemyHurtbox, HurtInfo hurtInfo, HitInfo hi)
+        public virtual void HandleAvoidReaction(CustomHitbox hitbox, Hurtbox enemyHurtbox, HurtInfo hurtInfo,
+            HitInfo hi, HitReaction hitReaction)
         {
             
         }
@@ -123,30 +126,9 @@ namespace rwby
             HitInfo hitInfo = hitbox.definition.HitboxInfo[hitbox.definitionIndex];
             HurtInfo hurtInfo;
             
-            // TODO: Attack origin point.
-            switch (hitInfo.hitForceRelation)
-            {
-                case HitboxForceRelation.ATTACKER:
-                    hurtInfo = new HurtInfo(hitInfo, hurtbox.definitionIndex,
-                        myTransform.position, myTransform.forward, myTransform.right,
-                        Vector3.zero, hitPoint);
-                    break;
-                case HitboxForceRelation.HITBOX:
-                    hurtInfo = new HurtInfo(hitInfo, hurtbox.definitionIndex,
-                         hitbox.Position, myTransform.forward, myTransform.right,
-                         Vector3.zero, hitPoint);
-                    break;
-                case HitboxForceRelation.WORLD:
-                    hurtInfo = new HurtInfo(hitInfo, hurtbox.definitionIndex,
-                        myTransform.position, Vector3.forward, Vector3.right,
-                        Vector3.zero, hitPoint);
-                    break;
-                default:
-                    hurtInfo = new HurtInfo(hitInfo, hurtbox.definitionIndex,
-                        myTransform.position, myTransform.forward, myTransform.right,
-                        Vector3.zero, hitPoint);
-                    break;
-            }
+            hurtInfo = new HurtInfo(hitInfo, hurtbox.definitionIndex,
+                myTransform.position, myTransform.forward, myTransform.right,
+                Vector3.zero, hitPoint);
             return hurtInfo;
         }
     }
