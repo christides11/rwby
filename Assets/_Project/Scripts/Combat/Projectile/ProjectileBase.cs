@@ -1,6 +1,3 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using Fusion;
 using UnityEngine;
 
@@ -8,6 +5,7 @@ namespace rwby
 {
     public class ProjectileBase : NetworkBehaviour, IBoxDefinitionCollection, IAttacker
     {
+        [Networked, Capacity(5)] public NetworkLinkedList<IDGroupCollisionInfo> hh => default;
         [Networked] public NetworkObject owner { get; set; }
         
         public HitInfo[] HitboxInfo
@@ -29,30 +27,91 @@ namespace rwby
         [SerializeField] private HitInfo[] hitboxInfo;
         [SerializeField] private ThrowInfo[] throwboxInfo;
         [SerializeField] private HurtboxInfo[] hurtboxInfo;
-        
+
         public bool IsHitHurtboxValid(CustomHitbox atackerHitbox, Hurtbox h)
         {
-            throw new System.NotImplementedException();
+            /*
+            if (h.ownerNetworkObject == Object || h.ownerNetworkObject == owner) return false;
+            for(int i = 0; i < hitObjects.Count; i++)
+            {
+                if(hitObjects[i].collisionType == IDGroupCollisionType.Hurtbox
+                   && hitObjects[i].hitIHurtableNetID == h.ownerNetworkObject.Id
+                   && hitObjects[i].hitByIDGroup == atackerHitbox.definition.HitboxInfo[atackerHitbox.definitionIndex].ID)
+                {
+                    return false;
+                }
+            }*/
+            return true;
         }
 
         public bool IsHitHitboxValid(CustomHitbox attackerHitbox, CustomHitbox h)
         {
-            throw new System.NotImplementedException();
+            /*
+            if (h.ownerNetworkObject == Object || h.ownerNetworkObject == owner) return false;
+            for (int i = 0; i < hitObjects.Count; i++)
+            {
+                if (hitObjects[i].collisionType == IDGroupCollisionType.Hitbox
+                    && hitObjects[i].hitIHurtableNetID == h.ownerNetworkObject.Id
+                    && hitObjects[i].hitByIDGroup == attackerHitbox.definition.HitboxInfo[attackerHitbox.definitionIndex].ID)
+                {
+                    return false;
+                }
+            }*/
+            return true;
         }
 
-        public HurtInfo BuildHurtInfo(CustomHitbox hitbox, Hurtbox enemyHurtbox)
+        public HurtInfo BuildHurtInfo(CustomHitbox hitbox, Hurtbox hurtbox)
         {
-            throw new System.NotImplementedException();
+            Vector3 hitPoint = hurtbox.transform.position;
+            HitInfo hitInfo = hitbox.definition.HitboxInfo[hitbox.definitionIndex];
+            HurtInfo hurtInfo;
+            
+            hurtInfo = new HurtInfo(hitInfo, hurtbox.definitionIndex,
+                transform.position, transform.forward, transform.right,
+                Vector3.zero, hitPoint);
+            return hurtInfo;
         }
 
         public void DoHit(CustomHitbox hitbox, Hurtbox enemyHurtbox, HurtInfo hurtInfo)
         {
-            throw new System.NotImplementedException();
+            /*
+            hitObjects.Add(new IDGroupCollisionInfo()
+            {
+                collisionType = IDGroupCollisionType.Hurtbox,
+                hitByIDGroup = hitbox.definition.HitboxInfo[hitbox.definitionIndex].ID,
+                hitIHurtableNetID = enemyHurtbox.ownerNetworkObject.Id
+            });*/
+
+            HitReaction reaction = (HitReaction)enemyHurtbox.hurtable.Hurt(hurtInfo);
+
+            HitInfo hi = hurtInfo.hitInfo as HitInfo;
+            
+            /*
+            switch (reaction.reaction)
+            {
+                case HitReactionType.HIT:
+                    HandleHitReaction(hitbox, enemyHurtbox, hurtInfo, hi, reaction);
+                    break;
+                case HitReactionType.BLOCKED:
+                    HandleBlockReaction(hitbox, enemyHurtbox, hurtInfo, hi, reaction);
+                    break;
+                case HitReactionType.AVOIDED:
+                    HandleAvoidReaction(hitbox, enemyHurtbox, hurtInfo, hi, reaction);
+                    break;
+            }*/
         }
 
         public void DoClash(CustomHitbox hitbox, CustomHitbox enemyHitbox)
         {
-            throw new System.NotImplementedException();
+            /*
+            hitObjects.Add(new IDGroupCollisionInfo()
+            {
+                collisionType = IDGroupCollisionType.Hitbox,
+                hitByIDGroup = hitbox.definition.HitboxInfo[hitbox.definitionIndex].ID,
+                hitIHurtableNetID = enemyHitbox.ownerNetworkObject.Id
+            }); */
+            
+            //TODO: Clashing.
         }
     }
 }

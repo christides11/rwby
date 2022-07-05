@@ -178,7 +178,7 @@
             <para>Value of condition method is converted to a long. Null = 0, False = 0, True = 1, Unity Object = InstanceId</para>
             </summary>
         </member>
-        <member name="M:Fusion.DrawIfAttribute.#ctor(System.String,System.Int64,Fusion.DrawIfHideType,Fusion.DoIfCompareOperator)">
+        <member name="M:Fusion.DrawIfAttribute.#ctor(System.String,System.Double,Fusion.DrawIfHideType,Fusion.DoIfCompareOperator)">
             <summary>
             Constructor.
             </summary>
@@ -198,7 +198,7 @@
             <param name="hide">How the field should be hidden (disabled or removed)</param>
             <param name="compare">How the condition member value and compareToValye will be evaluated.</param>
         </member>
-        <member name="M:Fusion.DrawIfAttribute.#ctor(System.String,System.Int64,Fusion.DoIfCompareOperator)">
+        <member name="M:Fusion.DrawIfAttribute.#ctor(System.String,System.Double,Fusion.DoIfCompareOperator)">
             <summary>
             Constructor.
             </summary>
@@ -553,7 +553,7 @@
             <para>Value of condition method is converted to a long. Null = 0, False = 0, True = 1, Unity Object = InstanceId</para>
             </summary>
         </member>
-        <member name="M:Fusion.WarnIfAttribute.#ctor(System.String,System.Int64,System.String,System.Int32,Fusion.DoIfCompareOperator)">
+        <member name="M:Fusion.WarnIfAttribute.#ctor(System.String,System.Double,System.String,System.Int32,Fusion.DoIfCompareOperator)">
             <summary>
             Constructor.
             </summary>
@@ -636,7 +636,11 @@
             Signal if the local peer is already inside a Room
             </summary>
         </member>
-        <!-- Badly formed XML comment ignored for member "P:Fusion.CloudServices.IsInLobby" -->
+        <member name="P:Fusion.CloudServices.IsInLobby">
+            <summary>
+            Signal if the local peer is already inside a Lobby
+            </summary>
+        </member>
         <member name="P:Fusion.CloudServices.SessionSlots">
             <summary>
             Max Number of players a Session can handle
@@ -1093,6 +1097,16 @@
             immediately after state is set to the latest server snapshot.
             </summary>
         </member>
+        <member name="T:Fusion.IAfterHostMigration">
+            <summary>
+            Used to mark NetworkBehaviors that need to be react after a Host Migration process
+            </summary>
+        </member>
+        <member name="M:Fusion.IAfterHostMigration.AfterHostMigration">
+            <summary>
+            Invoked after the Host Migration happens in order to setup non-networked data on NetworkBehaviors
+            </summary>
+        </member>
         <member name="T:Fusion.IAfterPhysicsStep">
             <summary>
             Interface for <see cref="M:Fusion.IAfterPhysicsStep.AfterPhysicsStep"/> callback. Called immediately after Physics.Simulate().
@@ -1454,7 +1468,7 @@
             Get 'To' and 'From' states, and the Alpha (t) values needed for lerping.
             </summary>
             <param name="data">The returned values.</param>
-            <param name="force">Force interpolation to the current <see cref="T:Fusion.Simulation"/>s time frame</param>
+            <param name="predicted">Force interpolation to the current <see cref="T:Fusion.Simulation"/>s time frame</param>
             <returns>True valid state data was returned.</returns>
         </member>
         <member name="M:Fusion.NetworkBehaviour.GetInterpolationData(Fusion.InterpolationData@,System.Boolean@)">
@@ -1695,6 +1709,273 @@
             Only used when <see cref="F:Fusion.NetworkProjectConfig.PhysicsEngines.Physics3D"/> == true.
             </summary>
         </member>
+        <member name="T:Fusion.OrderAttribute">
+            <summary>
+            Base class for OrderBefore and OrderAfter attributes.
+            </summary>
+        </member>
+        <member name="T:Fusion.OrderAfterAttribute">
+            <summary>
+            <para>Fusion attribute used to indicate relative execution order of <see cref="T:Fusion.SimulationBehaviour"/> and <see cref="T:Fusion.NetworkBehaviour"/> derived scripts.
+            Any number of scripts can be specified.</para>
+            <para>Usage:</para>
+            <code>[OrderAfter(typeof(MySimulationBehaviour), typeof(MyNetworkBehaviour), etc)]
+            </code>
+            </summary>
+        </member>
+        <member name="P:Fusion.OrderAfterAttribute.After">
+            <summary>
+            The array of scripts the attributed script should run before.
+            </summary>
+        </member>
+        <member name="M:Fusion.OrderAfterAttribute.#ctor(System.Type[])">
+            <summary>
+            Fusion attribute that defines execution order of this script relative to specified other scripts.
+            </summary>
+            <param name="types">The <see cref="T:Fusion.SimulationBehaviour"/> and <see cref="T:Fusion.NetworkBehaviour"/> scripts this attributed script should execute AFTER.</param>
+        </member>
+        <member name="T:Fusion.OrderBeforeAttribute">
+            <summary>
+            <para>Fusion attribute used to indicate relative execution order of <see cref="T:Fusion.SimulationBehaviour"/> and <see cref="T:Fusion.NetworkBehaviour"/> derived scripts.
+            Any number of scripts can be specified.</para>
+            <para>Usage:</para>
+            <code>[OrderBefore(typeof(MySimulationBehaviour), typeof(MyNetworkBehaviour), etc)]
+            </code>
+            </summary>
+        </member>
+        <member name="P:Fusion.OrderBeforeAttribute.Before">
+            <summary>
+            The array of scripts the attributed script should run before.
+            </summary>
+        </member>
+        <member name="M:Fusion.OrderBeforeAttribute.#ctor(System.Type[])">
+            <summary>
+            Fusion attribute that defines execution order of this script relative to specified other scripts.
+            </summary>
+            <param name="types">The <see cref="T:Fusion.SimulationBehaviour"/> and <see cref="T:Fusion.NetworkBehaviour"/> scripts this attributed script should execute BEFORE.</param>
+        </member>
+        <member name="T:Fusion.OrderSorter">
+            <summary>
+            This sorting class is meant to be released and garbage collected after use.
+            </summary>
+        </member>
+        <member name="M:Fusion.OrderSorter.Run">
+            <summary>
+            Returns sorted list of Types.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Fusion.OrderSorter.Scanlibrary">
+            <summary>
+            Locate all SimulationBehaviours, and add them to this system.
+            </summary>
+        </member>
+        <member name="M:Fusion.OrderSorter.AlphabetizeTypes">
+            <summary>
+            Alphabetize the initial list to create determinism in all following steps.
+            </summary>
+        </member>
+        <member name="M:Fusion.OrderSorter.RegisterNode(System.Type)">
+            <summary>
+            Create the node without searching for attributes yet.
+            </summary>
+        </member>
+        <member name="M:Fusion.OrderSorter.MergeChains">
+            <summary>
+            Merge Before and Afters based on the logic: If A is Before B, and B is Before C, then A is Before C... etc
+            This allows obvious conflicts to be quickly spotted.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Fusion.OrderSorter.ConvertNodesToSortedArray">
+            <summary>
+            Converts linked OrderNode list to Type[]
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:Fusion.IRunnerVisibilityRecognizedType">
+            <summary>
+            Flags a Unity component class as a RunnerVisibilityNodes recognized type. 
+            Will be included in <see cref="P:Fusion.NetworkRunner.IsVisible"/> handling, and will be found by <see cref="T:Fusion.RunnerVisibilityNodes"/> component finds.
+            </summary>
+        </member>
+        <member name="T:Fusion.RunnerVisibilityNodeRoot">
+            <summary>
+            Flag component which indicates a NetworkObject has already been factored into a Runner's VisibilityNode list.
+            </summary>
+        </member>
+        <member name="T:Fusion.RunnerVisibilityNode">
+            <summary>
+            Identifies visible/audible components (such as renderers, canvases, lights) that should be enabled/disabled by <see cref="P:Fusion.NetworkRunner.IsVisible"/>.
+            Automatically added to scene objects and spawned objects during play if running in <see cref="F:Fusion.NetworkProjectConfig.PeerModes.Multiple"/>. 
+            Additionally this component can be added manually at development time to identify specific Behaviours or Renderers you would like to restrict to one enabled copy at a time.
+            </summary>
+        </member>
+        <member name="F:Fusion.RunnerVisibilityNode._recognizedBehaviourNames">
+            <summary>
+            Types that fusion.runtime isn't aware of, which need to be found using names instead.
+            </summary>
+        </member>
+        <member name="T:Fusion.RunnerVisibilityNode.PreferredRunners">
+            <summary>
+            The peer runner that will be used if more than one runner is visible, and this node was manually added by developer (indicating only one instance should be visible at a time).
+            </summary>
+        </member>
+        <member name="F:Fusion.RunnerVisibilityNode.PreferredRunners.InputAuthority">
+            <summary>
+            The peer/runner with input authority will be used if visible.
+            </summary>
+        </member>
+        <member name="F:Fusion.RunnerVisibilityNode.PreferredRunners.Server">
+            <summary>
+            The server peer/runner will be used if visible.
+            </summary>
+        </member>
+        <member name="F:Fusion.RunnerVisibilityNode.PreferredRunners.Client">
+            <summary>
+            The first client peer/runner will be used if visible.
+            </summary>
+        </member>
+        <member name="F:Fusion.RunnerVisibilityNode.PreferredRunner">
+            <summary>
+            If more than one runner instance is visible, this indicates which peer's clone of this entity should be visible.
+            </summary>
+        </member>
+        <member name="F:Fusion.RunnerVisibilityNode.Component">
+            <summary>
+            The associated component with this node. This Behaviour or Renderer will be enabled/disabled when its parent <see cref="P:Fusion.NetworkRunner.IsVisible"/> is changed.
+            </summary>
+        </member>
+        <member name="F:Fusion.RunnerVisibilityNode.Guid">
+            <summary>
+            Guid is used for common objects (user flagged nodes that should only run in one instance), to identify matching clones.
+            </summary>
+        </member>
+        <member name="P:Fusion.RunnerVisibilityNode.DefaultState">
+            <summary>
+            Set to false to indicate that this object should remain disabled even when <see cref="P:Fusion.NetworkRunner.IsVisible"/> is set to true.
+            </summary>
+        </member>
+        <member name="M:Fusion.RunnerVisibilityNode.SetEnabled(System.Boolean)">
+            <summary>
+            Sets the visibility state of this node.
+            </summary>
+            <param name="enabled"></param>
+        </member>
+        <member name="F:Fusion.RunnerVisibilityNode.CommonObjectLookup">
+            <summary>
+            Dictionary lookup for manually added visibility nodes (which indicates only one instance should be visible at a time), 
+            which returns a list of nodes for a given LocalIdentifierInFile.
+            </summary>
+        </member>
+        <member name="M:Fusion.RunnerVisibilityNode.AddVisibilityNodes(UnityEngine.GameObject,Fusion.NetworkRunner)">
+            <summary>
+            Find all component types that contribute to a scene rendering, and associate them with a <see cref="T:Fusion.RunnerVisibilityNode"/> component, 
+            and add them to the runner's list of visibility nodes.
+            </summary>
+            <param name="go"></param>
+            <param name="runner"></param>
+        </member>
+        <member name="M:Fusion.RunnerVisibilityNode.RefreshAllRunnerVisibilities">
+            <summary>
+            Force a complete visibility refresh on all runners. Typically used if a runner is destroyed/shutdown.
+            </summary>
+        </member>
+        <member name="M:Fusion.RunnerVisibilityNode.RefreshRunnerVisibility(Fusion.NetworkRunner,System.Boolean)">
+            <summary>
+            Reapplies a runner's IsVisibile setting to all of its registered visibility nodes.
+            </summary>
+            <param name="runner"></param>
+            <param name="refreshCommonObjects"></param>
+        </member>
+        <member name="T:Fusion.RunnerVisibilityNodes">
+            <summary>
+            Automatically adds a <see cref="T:Fusion.RunnerVisibilityNode"/> for each indicated component. 
+            These indicated components will be limited to no more than one enabled instance when running in Multi-Peer mode.
+            </summary>
+        </member>
+        <member name="F:Fusion.RunnerVisibilityNodes.PreferredRunner">
+            <summary>
+            If more than one runner instance is visible, this indicates which peer's clone of this entity should be visible.
+            </summary>
+        </member>
+        <member name="F:Fusion.RunnerVisibilityNodes.Components">
+            <summary>
+            Collection of components that will be marked for Multi-Peer mode as objects that should only have one enabled instance.
+            </summary>
+        </member>
+        <member name="F:Fusion.RunnerVisibilityNodes._guid">
+            <summary>
+            Prefix for the GUIDs of <see cref="T:Fusion.RunnerVisibilityNode"/> components which are added at runtime.
+            </summary>
+        </member>
+        <member name="M:Fusion.RunnerVisibilityNodes.AddNodes">
+            <summary>
+            At runtime startup, this adds a <see cref="T:Fusion.RunnerVisibilityNode"/> for each component reference to this GameObject.
+            </summary>
+        </member>
+        <member name="M:Fusion.RunnerVisibilityNodes.FindRecognizedTypes">
+            <summary>
+            Finds visual/audio components on this GameObject, and adds them to the Components collection.
+            </summary>
+        </member>
+        <member name="M:Fusion.RunnerVisibilityNodes.FindNestedRecognizedTypes">
+            <summary>
+            Finds visual/audio nested components on this GameObject and its children, and adds them to the Components collection.
+            </summary>
+        </member>
+        <member name="T:Fusion.SimulationBehaviour">
+            <summary>
+            Base class for a Fusion aware Behaviour (derived from UnityEngine.MonoBehavour).
+            Objects derived from this object can be associated with a <see cref="T:Fusion.NetworkRunner"/> and <see cref="T:Fusion.Simulation"/>.
+            If a parent <see cref="T:Fusion.NetworkObject"/> is found, this component will also be associated with that network entity.
+            </summary>
+        </member>
+        <member name="F:Fusion.SimulationBehaviour.Runner">
+            <summary>
+            The <see cref="T:Fusion.NetworkRunner"/> this component is associated with.
+            </summary>
+        </member>
+        <member name="F:Fusion.SimulationBehaviour.Object">
+            <summary>
+            The <see cref="T:Fusion.NetworkObject"/> this component is associated with. May be null if this GameObject does not have a <see cref="T:Fusion.NetworkObject"/>.
+            </summary>
+        </member>
+        <member name="M:Fusion.SimulationBehaviour.FixedUpdateNetwork">
+            <summary>
+            Fusion FixedUpdate timing callback.
+            </summary>
+        </member>
+        <member name="M:Fusion.SimulationBehaviour.Render">
+            <summary>
+            Post simulation frame rendering callback. Runs after all simulations have finished. Use in place of Unity's Update when Fusion is handling Physics.
+            </summary>
+        </member>
+        <member name="T:Fusion.SimulationBehaviourAttribute">
+            <summary>
+            Attribute for specifying which <see cref="T:Fusion.SimulationStages"/> and <see cref="T:Fusion.SimulationModes"/> this <see cref="T:Fusion.SimulationBehaviour"/> will execute in.
+            Can be used to limit execution to only Host, Server or Client peers, or to only execute on Resimulation or Forward ticks.
+            Usage:
+            <code>
+            [SimulationBehaviour(Stages = SimulationStages.Forward, Modes = SimulationModes.Server | SimulationModes.Host)]
+            </code>
+            </summary>
+        </member>
+        <member name="P:Fusion.SimulationBehaviourAttribute.Stages">
+            <summary>
+            Flag for which stages of the simulation loop this component will execute this script.
+            </summary>
+        </member>
+        <member name="P:Fusion.SimulationBehaviourAttribute.Modes">
+            <summary>
+            Flag for which indicated peers in <see cref="T:Fusion.SimulationModes"/> will execute this script.
+            </summary>
+        </member>
+        <member name="P:Fusion.SimulationBehaviourUpdater.CallbackInterfacesDefualts">
+            <summary>
+            The default behaviour interfaces
+            </summary>
+        </member>
         <member name="T:Fusion.NetworkPositionRotation">
             <summary>
             Replicates a Unity Transform's position and rotation states from the <see cref="P:Fusion.NetworkObject.StateAuthority"/> to all other peers.
@@ -1799,6 +2080,9 @@
             <summary>
             Sets a rotation value to the engine. By default, the value is set to the transform's world rotation field.
             </summary>
+        </member>
+        <member name="M:Fusion.NetworkPositionRotation.AfterHostMigration">
+            <inheritdoc cref="M:Fusion.IAfterHostMigration.AfterHostMigration"/>
         </member>
         <member name="F:Fusion.NetworkPositionRotation.WORD_COUNT_NPR">
             <summary>
@@ -2691,6 +2975,217 @@
             </remarks>
             </summary>
         </member>
+        <member name="F:Fusion.NetworkTransform._consecutiveInterp">
+            <summary>
+            Cached <see cref="T:Fusion.NetworkTransform.ConsecutiveStateInterp"/>.
+            <see cref="F:Fusion.NetworkTransform._currInterpImpl"/> will point to this object if/when it
+            is the interpolation implementation being used.
+            </summary>
+        </member>
+        <member name="T:Fusion.NetworkTransform.ConsecutiveStateInterp">
+            <summary>
+            Implements interpolation logic between two consecutive states, be them snapshots or not.
+            This implementation does not perform smooth prediction error correction (see <see cref="T:Fusion.NetworkTransform.SmoothErrorCorrectionInterp"/>).
+            </summary>
+        </member>
+        <member name="F:Fusion.NetworkTransform.ConsecutiveStateInterp._nt">
+            <summary>
+            <see cref="T:Fusion.NetworkTransform"/> tracked by the implementation logic.
+            </summary>
+        </member>
+        <member name="M:Fusion.NetworkTransform.ConsecutiveStateInterp.Reset(Fusion.NetworkTransform)">
+            <summary>
+            Reset must be called to set or reset the tracked <see cref="T:Fusion.NetworkTransform"/>
+            and/or to reset any cached state in the interpolation implementation, like when switching implementation.
+            </summary>
+            <param name="nt"></param>
+        </member>
+        <member name="T:Fusion.NetworkTransform.InterpolatedTransformParameters">
+            <summary>
+            Struct that provides relevant parameters when interpolating a
+            view representation with position and rotation data between two
+            known states, referred as 'From' and 'To'.
+            </summary>
+        </member>
+        <member name="F:Fusion.NetworkTransform.InterpolatedTransformParameters.InterpolationAlpha">
+            <summary>
+            Normalized factor that represents the exact point between From and To states
+            at which the view should be displayed.
+            </summary>
+        </member>
+        <member name="F:Fusion.NetworkTransform.InterpolatedTransformParameters.UninterpolatedPositionFrom">
+            <summary>
+            Position value at the From state.
+            </summary>
+        </member>
+        <member name="F:Fusion.NetworkTransform.InterpolatedTransformParameters.UninterpolatedPositionTo">
+            <summary>
+            Position value at the To state.
+            </summary>
+        </member>
+        <member name="F:Fusion.NetworkTransform.InterpolatedTransformParameters.InterpolatedPosition">
+            <summary>
+            Position value interpolated between From (<see cref="F:Fusion.NetworkTransform.InterpolatedTransformParameters.UninterpolatedPositionFrom"/>)
+            and To (<see cref="F:Fusion.NetworkTransform.InterpolatedTransformParameters.UninterpolatedPositionTo"/>) with factor <see cref="F:Fusion.NetworkTransform.InterpolatedTransformParameters.InterpolationAlpha"/>.
+            </summary>
+        </member>
+        <member name="F:Fusion.NetworkTransform.InterpolatedTransformParameters.InterpolatedPositionErrorCorrection">
+            <summary>
+            Computed value for smooth correction of prediction error.
+            In order to apply it, add its value to the <see cref="F:Fusion.NetworkTransform.InterpolatedTransformParameters.InterpolatedPosition"/>
+            before setting the result to the view transform.
+            The value will be <see cref="P:UnityEngine.Vector3.zero"/> if there is no prediction error
+            or <see cref="F:Fusion.NetworkTransform.InterpolateErrorCorrection"/> is disabled.
+            </summary>
+        </member>
+        <member name="F:Fusion.NetworkTransform.InterpolatedTransformParameters.UninterpolatedRotationFrom">
+            <summary>
+            Rotation value at the From state.
+            </summary>
+        </member>
+        <member name="F:Fusion.NetworkTransform.InterpolatedTransformParameters.UninterpolatedRotationTo">
+            <summary>
+            Rotation value at the To state.
+            </summary>
+        </member>
+        <member name="F:Fusion.NetworkTransform.InterpolatedTransformParameters.InterpolatedRotation">
+            <summary>
+            Rotation value interpolated between From (<see cref="F:Fusion.NetworkTransform.InterpolatedTransformParameters.UninterpolatedRotationFrom"/>)
+            and To (<see cref="F:Fusion.NetworkTransform.InterpolatedTransformParameters.UninterpolatedRotationTo"/>) with factor <see cref="F:Fusion.NetworkTransform.InterpolatedTransformParameters.InterpolationAlpha"/>.
+            </summary>
+        </member>
+        <member name="F:Fusion.NetworkTransform.InterpolatedTransformParameters.InterpolatedRotationErrorCorrection">
+            <summary>
+            Computed value for smooth correction of prediction error.
+            In order to apply it, multiply its value by the <see cref="F:Fusion.NetworkTransform.InterpolatedTransformParameters.InterpolatedRotation"/>
+            before setting the result to the view transform.
+            The value will be <see cref="P:UnityEngine.Quaternion.identity"/> if there is no prediction error
+            or <see cref="F:Fusion.NetworkTransform.InterpolateErrorCorrection"/> is disabled.
+            </summary>
+        </member>
+        <member name="F:Fusion.NetworkTransform._currInterpImpl">
+            <summary>
+            Current <see cref="T:Fusion.NetworkTransform.IInterpolationImplementation"/> being used.
+            </summary>
+        </member>
+        <member name="F:Fusion.NetworkTransform._wasRenderedThisUpdate">
+            <summary>
+            If <see cref="M:Fusion.NetworkTransform.Render"/> was already called this update.
+            </summary>
+        </member>
+        <member name="F:Fusion.NetworkTransform.InterpolationSpace">
+            <summary>
+            If the <see cref="F:Fusion.NetworkTransform.InterpolationTarget"/> should be interpolated in world space or in the local space of a networked parent.
+            Interpolating in local space requires more computations, but gives more accurate visuals if/when a parent rotates. 
+            </summary>
+        </member>
+        <member name="F:Fusion.NetworkTransform.InterpolationTarget">
+            <summary>
+            The Transform object used for smooth view interpolation.
+            Should be a non-physics GameObject, typically a child of this GameObject or a separate object without colliders.
+            </summary>
+        </member>
+        <member name="P:Fusion.NetworkTransform.InvalidInterpolationTarget">
+            <summary>
+            If current interpolation target is considered invalid.
+            </summary>
+        </member>
+        <member name="M:Fusion.NetworkTransform.Spawned">
+            <summary>
+            Overrides <see cref="M:Fusion.NetworkBehaviour.Spawned"/>.
+            If overriding this method in an inheritor, the base method should be called.
+            </summary>
+        </member>
+        <member name="M:Fusion.NetworkTransform.BeforeUpdate">
+            <summary>
+            Overrides <see cref="M:Fusion.NetworkPositionRotation.BeforeUpdate"/>.
+            If overriding this method in an inheritor, the base method should be called.
+            </summary>
+        </member>
+        <member name="M:Fusion.NetworkTransform.Render">
+            <summary>
+            Overrides <see cref="M:Fusion.SimulationBehaviour.Render"/>, computing the interpolated position and rotation values
+            according to the <see cref="P:Fusion.NetworkBehaviour.InterpolationDataSource"/>, updating the prediction error correction
+            and calling <see cref="M:Fusion.NetworkTransform.ApplyInterpolatedTransform(Fusion.NetworkTransform.InterpolatedTransformParameters@)"/> to apply the results to the <see cref="F:Fusion.NetworkTransform.InterpolationTarget"/>.
+            </summary>
+        </member>
+        <member name="M:Fusion.NetworkTransform.AfterTick">
+            <summary>
+            Implements <see cref="T:Fusion.IAfterTick"/>.
+            If overriding this method in an inheritor, the base method should be called.
+            </summary>
+        </member>
+        <member name="M:Fusion.NetworkTransform.ApplyInterpolatedTransform(Fusion.NetworkTransform.InterpolatedTransformParameters@)">
+            <summary>
+            Applies the interpolated position and rotation values and prediction error corrections
+            computed on <see cref="M:Fusion.NetworkTransform.Render"/> to the <see cref="F:Fusion.NetworkTransform.InterpolationTarget"/>.
+            </summary>
+        </member>
+        <member name="M:Fusion.NetworkTransform.GetUninterpolatedWorldPositions(Fusion.InterpolationData@,UnityEngine.Vector3@,UnityEngine.Vector3@)">
+            <summary>
+            Retrieves the world position values from the From and To states made
+            available in the interpolation <paramref name="data"/>, setting them
+            to <paramref name="posFrom"/> and <paramref name="posTo"/>, respectively.
+            </summary>
+        </member>
+        <member name="M:Fusion.NetworkTransform.GetUninterpolatedWorldRotations(Fusion.InterpolationData@,UnityEngine.Quaternion@,UnityEngine.Quaternion@)">
+            <summary>
+            Retrieves the world rotation values from the From and To states made
+            available in the interpolation <paramref name="data"/>, setting them
+            to <paramref name="rotFrom"/> and <paramref name="rotTo"/>, respectively.
+            </summary>
+        </member>
+        <member name="F:Fusion.NetworkTransform._intermittentInterp">
+            <summary>
+            Cached <see cref="T:Fusion.NetworkTransform.IntermittentStateInterp"/>.
+            <see cref="F:Fusion.NetworkTransform._currInterpImpl"/> will point to this object if/when it
+            is the interpolation implementation being used.
+            </summary>
+        </member>
+        <member name="T:Fusion.NetworkTransform.IntermittentStateInterp">
+            <summary>
+            Implements interpolation logic between two snapshots that are not
+            consecutive and/or are not consumed with a steady frequency.
+            </summary>
+        </member>
+        <member name="F:Fusion.NetworkTransform.IntermittentStateInterp._nt">
+            <summary>
+            <see cref="T:Fusion.NetworkTransform"/> tracked by the implementation logic.
+            </summary>
+        </member>
+        <member name="M:Fusion.NetworkTransform.IntermittentStateInterp.Reset(Fusion.NetworkTransform)">
+            <summary>
+            Reset must be called to set or reset the tracked <see cref="T:Fusion.NetworkTransform"/>
+            and/or to reset any cached state in the interpolation implementation, like when switching implementation.
+            </summary>
+            <param name="nt"></param>
+        </member>
+        <member name="F:Fusion.NetworkTransform.InterpolateErrorCorrection">
+            <summary>
+            If the computed prediction error should be smoothly corrected on
+            the <see cref="F:Fusion.NetworkTransform.InterpolationTarget">InterpolationTarget</see> according to
+            the <see cref="F:Fusion.NetworkTransform.InterpolatedErrorCorrectionSettings">InterpolatedErrorCorrectionSettings</see>.
+            </summary>
+        </member>
+        <member name="F:Fusion.NetworkTransform.InterpolatedErrorCorrectionSettings">
+            <summary>
+            A set of parameters to tune the interpolated correction of prediction
+            error to be applied on the <see cref="F:Fusion.NetworkTransform.InterpolationTarget">InterpolationTarget</see>.
+            </summary>
+        </member>
+        <member name="F:Fusion.NetworkTransform._smoothErrorCorrectedInterp">
+            <summary>
+            Cached <see cref="T:Fusion.NetworkTransform.SmoothErrorCorrectionInterp"/>.
+            <see cref="F:Fusion.NetworkTransform._currInterpImpl"/> will point to this object if/when it
+            is the interpolation implementation being used.
+            </summary>
+        </member>
+        <member name="T:Fusion.NetworkTransform.SmoothErrorCorrectionInterp">
+            <summary>
+            Uses a <see cref="T:Fusion.NetworkTransform.ConsecutiveStateInterp"/> instance to interpolate between two
+            consecutive predicted states and performs smoothed prediction error correction.
+            </summary>
+        </member>
         <member name="P:Fusion.NetworkTransform.DefaultTeleportInterpolationVelocity">
             <summary>
             The interpolation velocity used when calling <see cref="M:Fusion.NetworkTransform.TeleportToPosition(UnityEngine.Vector3,System.Nullable{UnityEngine.Vector3},System.Boolean)"/> and not specifying a value.
@@ -2706,6 +3201,9 @@
             Some behaviours like <see cref="T:Fusion.NetworkRigidbody"/> and <see cref="T:Fusion.NetworkRigidbody2D"/> override
             this property to provide better default values, like the latest known angular velocity of the rigid body. 
             </summary>
+        </member>
+        <member name="M:Fusion.NetworkTransform.CopyFromEngineToBuffer">
+            <inheritdoc cref="M:Fusion.NetworkPositionRotation.CopyFromEngineToBuffer"/>
         </member>
         <member name="M:Fusion.NetworkTransform.TeleportToPosition(UnityEngine.Vector3,System.Nullable{UnityEngine.Vector3},System.Boolean)">
             <summary>
@@ -2915,6 +3413,32 @@
             or backwards (Emulated From based on To state - interpolation).
             </summary>
         </member>
+        <member name="M:Fusion.NetworkTransform.ReadPositionRotationChanged">
+            <summary>
+            Reads from this object's field holding information about whether the position and/or
+            rotation values changed when written to the buffer.
+            </summary>
+        </member>
+        <member name="M:Fusion.NetworkTransform.ReadPositionRotationChanged(System.Int32*)">
+            <summary>
+            Reads from the networked data pointer by <paramref name="ptr"/>
+            a field holding information about whether the position and/or
+            rotation values changed when written to the buffer.
+            </summary>
+        </member>
+        <member name="M:Fusion.NetworkTransform.ReadPositionRotationChangedTick">
+            <summary>
+            Reads from this object's field holding the tick number when
+            the written position and/or rotation values changed.
+            </summary>
+        </member>
+        <member name="M:Fusion.NetworkTransform.ReadPositionRotationChangedTick(System.Int32*)">
+            <summary>
+            Reads from the networked data pointer by <paramref name="ptr"/>
+            a field holding the tick number when the written position and/or
+            rotation values changed.
+            </summary>
+        </member>
         <member name="M:Fusion.NetworkTransform.WriteTeleportInterpolationVelocity(UnityEngine.Vector3)">
             <summary>
             Writes to this object's networked data field holding the interpolation velocity
@@ -3007,142 +3531,30 @@
             (Emulated From based on To state - interpolation).
             </summary>
         </member>
-        <member name="T:Fusion.NetworkTransform.InterpolatedTransformParameters">
+        <member name="M:Fusion.NetworkTransform.WritePositionRotationChanged(System.Boolean,System.Boolean)">
             <summary>
-            Struct that provides relevant parameters when interpolating a
-            view representation with position and rotation data between two
-            known states, referred as 'From' and 'To'.
+            Writes to this object's field holding information about whether the position and/or
+            rotation values changed when written to the buffer.
             </summary>
         </member>
-        <member name="F:Fusion.NetworkTransform.InterpolatedTransformParameters.InterpolationAlpha">
+        <member name="M:Fusion.NetworkTransform.WritePositionRotationChanged(System.Int32*,System.Boolean,System.Boolean)">
             <summary>
-            Normalized factor that represents the exact point between From and To states
-            at which the view should be displayed.
+            Writes to the networked data pointer by <paramref name="ptr"/>, on
+            a field holding information about whether the position and/or
+            rotation values changed when written to the buffer.
             </summary>
         </member>
-        <member name="F:Fusion.NetworkTransform.InterpolatedTransformParameters.UninterpolatedPositionFrom">
+        <member name="M:Fusion.NetworkTransform.WritePositionRotationChangedTick(System.Int32)">
             <summary>
-            Position value at the From state.
+            Writes to this object's field holding the tick number when
+            the written position and/or rotation values changed.
             </summary>
         </member>
-        <member name="F:Fusion.NetworkTransform.InterpolatedTransformParameters.UninterpolatedPositionTo">
+        <member name="M:Fusion.NetworkTransform.WritePositionRotationChangedTick(System.Int32,System.Int32*)">
             <summary>
-            Position value at the To state.
-            </summary>
-        </member>
-        <member name="F:Fusion.NetworkTransform.InterpolatedTransformParameters.InterpolatedPosition">
-            <summary>
-            Position value interpolated between From (<see cref="F:Fusion.NetworkTransform.InterpolatedTransformParameters.UninterpolatedPositionFrom"/>)
-            and To (<see cref="F:Fusion.NetworkTransform.InterpolatedTransformParameters.UninterpolatedPositionTo"/>) with factor <see cref="F:Fusion.NetworkTransform.InterpolatedTransformParameters.InterpolationAlpha"/>.
-            </summary>
-        </member>
-        <member name="F:Fusion.NetworkTransform.InterpolatedTransformParameters.InterpolatedPositionErrorCorrection">
-            <summary>
-            Computed value for smooth correction of prediction error.
-            In order to apply it, add its value to the <see cref="F:Fusion.NetworkTransform.InterpolatedTransformParameters.InterpolatedPosition"/>
-            before setting the result to the view transform.
-            The value will be <see cref="P:UnityEngine.Vector3.zero"/> if there is no prediction error
-            or <see cref="F:Fusion.NetworkTransform.InterpolateErrorCorrection"/> is disabled.
-            </summary>
-        </member>
-        <member name="F:Fusion.NetworkTransform.InterpolatedTransformParameters.UninterpolatedRotationFrom">
-            <summary>
-            Rotation value at the From state.
-            </summary>
-        </member>
-        <member name="F:Fusion.NetworkTransform.InterpolatedTransformParameters.UninterpolatedRotationTo">
-            <summary>
-            Rotation value at the To state.
-            </summary>
-        </member>
-        <member name="F:Fusion.NetworkTransform.InterpolatedTransformParameters.InterpolatedRotation">
-            <summary>
-            Rotation value interpolated between From (<see cref="F:Fusion.NetworkTransform.InterpolatedTransformParameters.UninterpolatedRotationFrom"/>)
-            and To (<see cref="F:Fusion.NetworkTransform.InterpolatedTransformParameters.UninterpolatedRotationTo"/>) with factor <see cref="F:Fusion.NetworkTransform.InterpolatedTransformParameters.InterpolationAlpha"/>.
-            </summary>
-        </member>
-        <member name="F:Fusion.NetworkTransform.InterpolatedTransformParameters.InterpolatedRotationErrorCorrection">
-            <summary>
-            Computed value for smooth correction of prediction error.
-            In order to apply it, multiply its value by the <see cref="F:Fusion.NetworkTransform.InterpolatedTransformParameters.InterpolatedRotation"/>
-            before setting the result to the view transform.
-            The value will be <see cref="P:UnityEngine.Quaternion.identity"/> if there is no prediction error
-            or <see cref="F:Fusion.NetworkTransform.InterpolateErrorCorrection"/> is disabled.
-            </summary>
-        </member>
-        <member name="F:Fusion.NetworkTransform.InterpolationSpace">
-            <summary>
-            If the <see cref="F:Fusion.NetworkTransform.InterpolationTarget"/> should be interpolated in world space or in the local space of a networked parent.
-            Interpolating in local space requires more computations, but gives more accurate visuals if/when a parent rotates. 
-            </summary>
-        </member>
-        <member name="F:Fusion.NetworkTransform.InterpolationTarget">
-            <summary>
-            The Transform object used for smooth view interpolation.
-            Should be a non-physics GameObject, typically a child of this GameObject or a separate object without colliders.
-            </summary>
-        </member>
-        <member name="M:Fusion.NetworkTransform.Spawned">
-            <summary>
-            Overrides <see cref="M:Fusion.NetworkBehaviour.Spawned"/>.
-            If overriding this method in an inheritor, the base method should be called.
-            </summary>
-        </member>
-        <member name="M:Fusion.NetworkTransform.BeforeUpdate">
-            <summary>
-            Overrides <see cref="M:Fusion.NetworkPositionRotation.BeforeUpdate"/>.
-            If overriding this method in an inheritor, the base method should be called.
-            </summary>
-        </member>
-        <member name="M:Fusion.NetworkTransform.Render">
-            <summary>
-            Overrides <see cref="M:Fusion.SimulationBehaviour.Render"/>, computing the interpolated position and rotation values
-            according to the <see cref="P:Fusion.NetworkBehaviour.InterpolationDataSource"/>, updating the prediction error correction
-            and calling <see cref="M:Fusion.NetworkTransform.ApplyInterpolatedTransform(Fusion.NetworkTransform.InterpolatedTransformParameters@)"/> to apply the results to the <see cref="F:Fusion.NetworkTransform.InterpolationTarget"/>.
-            </summary>
-        </member>
-        <member name="M:Fusion.NetworkTransform.ApplyInterpolatedTransform(Fusion.NetworkTransform.InterpolatedTransformParameters@)">
-            <summary>
-            Applies the interpolated position and rotation values and prediction error corrections
-            computed on <see cref="M:Fusion.NetworkTransform.Render"/> to the <see cref="F:Fusion.NetworkTransform.InterpolationTarget"/>.
-            </summary>
-        </member>
-        <member name="M:Fusion.NetworkTransform.GetUninterpolatedWorldPositions(Fusion.InterpolationData@,UnityEngine.Vector3@,UnityEngine.Vector3@)">
-            <summary>
-            Retrieves the world position values from the From and To states made
-            available in the interpolation <paramref name="data"/>, setting them
-            to <paramref name="posFrom"/> and <paramref name="posTo"/>, respectively.
-            </summary>
-        </member>
-        <member name="M:Fusion.NetworkTransform.GetUninterpolatedWorldRotations(Fusion.InterpolationData@,UnityEngine.Quaternion@,UnityEngine.Quaternion@)">
-            <summary>
-            Retrieves the world rotation values from the From and To states made
-            available in the interpolation <paramref name="data"/>, setting them
-            to <paramref name="rotFrom"/> and <paramref name="rotTo"/>, respectively.
-            </summary>
-        </member>
-        <member name="M:Fusion.NetworkTransform.ComputeInterpolatedTransform(Fusion.InterpolationData@,Fusion.NetworkTransform.InterpolatedTransformParameters@)">
-            <summary>
-            Computes the interpolated transform parameters based on the interpolation data provided.
-            </summary>
-        </member>
-        <member name="F:Fusion.NetworkTransform.InterpolateErrorCorrection">
-            <summary>
-            If the computed prediction error should be smoothly corrected on
-            the <see cref="F:Fusion.NetworkTransform.InterpolationTarget">InterpolationTarget</see> according to
-            the <see cref="F:Fusion.NetworkTransform.InterpolatedErrorCorrectionSettings">InterpolatedErrorCorrectionSettings</see>.
-            </summary>
-        </member>
-        <member name="F:Fusion.NetworkTransform.InterpolatedErrorCorrectionSettings">
-            <summary>
-            A set of parameters to tune the interpolated correction of prediction
-            error to be applied on the <see cref="F:Fusion.NetworkTransform.InterpolationTarget">InterpolationTarget</see>.
-            </summary>
-        </member>
-        <member name="M:Fusion.NetworkTransform.AfterTick">
-            <summary>
-            Implements <see cref="T:Fusion.IAfterTick"/>.
-            If overriding this method in an inheritor, the base method should be called.
+            Writes to the networked data pointer by <paramref name="ptr"/>, on
+            a field holding the tick number when the written position and/or
+            rotation values changed.
             </summary>
         </member>
         <member name="T:Fusion.NetworkCharacterController">
@@ -3688,273 +4100,6 @@
         <member name="M:Fusion.NetworkTransformObsolete.ApplyQueuedTeleport">
             <summary>
             Applies the latest unconsumed Teleport() call after the Forward simulation is complete, and before the TRS state is captured.
-            </summary>
-        </member>
-        <member name="T:Fusion.OrderAttribute">
-            <summary>
-            Base class for OrderBefore and OrderAfter attributes.
-            </summary>
-        </member>
-        <member name="T:Fusion.OrderAfterAttribute">
-            <summary>
-            <para>Fusion attribute used to indicate relative execution order of <see cref="T:Fusion.SimulationBehaviour"/> and <see cref="T:Fusion.NetworkBehaviour"/> derived scripts.
-            Any number of scripts can be specified.</para>
-            <para>Usage:</para>
-            <code>[OrderAfter(typeof(MySimulationBehaviour), typeof(MyNetworkBehaviour), etc)]
-            </code>
-            </summary>
-        </member>
-        <member name="P:Fusion.OrderAfterAttribute.After">
-            <summary>
-            The array of scripts the attributed script should run before.
-            </summary>
-        </member>
-        <member name="M:Fusion.OrderAfterAttribute.#ctor(System.Type[])">
-            <summary>
-            Fusion attribute that defines execution order of this script relative to specified other scripts.
-            </summary>
-            <param name="types">The <see cref="T:Fusion.SimulationBehaviour"/> and <see cref="T:Fusion.NetworkBehaviour"/> scripts this attributed script should execute AFTER.</param>
-        </member>
-        <member name="T:Fusion.OrderBeforeAttribute">
-            <summary>
-            <para>Fusion attribute used to indicate relative execution order of <see cref="T:Fusion.SimulationBehaviour"/> and <see cref="T:Fusion.NetworkBehaviour"/> derived scripts.
-            Any number of scripts can be specified.</para>
-            <para>Usage:</para>
-            <code>[OrderBefore(typeof(MySimulationBehaviour), typeof(MyNetworkBehaviour), etc)]
-            </code>
-            </summary>
-        </member>
-        <member name="P:Fusion.OrderBeforeAttribute.Before">
-            <summary>
-            The array of scripts the attributed script should run before.
-            </summary>
-        </member>
-        <member name="M:Fusion.OrderBeforeAttribute.#ctor(System.Type[])">
-            <summary>
-            Fusion attribute that defines execution order of this script relative to specified other scripts.
-            </summary>
-            <param name="types">The <see cref="T:Fusion.SimulationBehaviour"/> and <see cref="T:Fusion.NetworkBehaviour"/> scripts this attributed script should execute BEFORE.</param>
-        </member>
-        <member name="T:Fusion.OrderSorter">
-            <summary>
-            This sorting class is meant to be released and garbage collected after use.
-            </summary>
-        </member>
-        <member name="M:Fusion.OrderSorter.Run">
-            <summary>
-            Returns sorted list of Types.
-            </summary>
-            <returns></returns>
-        </member>
-        <member name="M:Fusion.OrderSorter.Scanlibrary">
-            <summary>
-            Locate all SimulationBehaviours, and add them to this system.
-            </summary>
-        </member>
-        <member name="M:Fusion.OrderSorter.AlphabetizeTypes">
-            <summary>
-            Alphabetize the initial list to create determinism in all following steps.
-            </summary>
-        </member>
-        <member name="M:Fusion.OrderSorter.RegisterNode(System.Type)">
-            <summary>
-            Create the node without searching for attributes yet.
-            </summary>
-        </member>
-        <member name="M:Fusion.OrderSorter.MergeChains">
-            <summary>
-            Merge Before and Afters based on the logic: If A is Before B, and B is Before C, then A is Before C... etc
-            This allows obvious conflicts to be quickly spotted.
-            </summary>
-            <returns></returns>
-        </member>
-        <member name="M:Fusion.OrderSorter.ConvertNodesToSortedArray">
-            <summary>
-            Converts linked OrderNode list to Type[]
-            </summary>
-            <returns></returns>
-        </member>
-        <member name="T:Fusion.IRunnerVisibilityRecognizedType">
-            <summary>
-            Flags a Unity component class as a RunnerVisibilityNodes recognized type. 
-            Will be included in <see cref="P:Fusion.NetworkRunner.IsVisible"/> handling, and will be found by <see cref="T:Fusion.RunnerVisibilityNodes"/> component finds.
-            </summary>
-        </member>
-        <member name="T:Fusion.RunnerVisibilityNodeRoot">
-            <summary>
-            Flag component which indicates a NetworkObject has already been factored into a Runner's VisibilityNode list.
-            </summary>
-        </member>
-        <member name="T:Fusion.RunnerVisibilityNode">
-            <summary>
-            Identifies visible/audible components (such as renderers, canvases, lights) that should be enabled/disabled by <see cref="P:Fusion.NetworkRunner.IsVisible"/>.
-            Automatically added to scene objects and spawned objects during play if running in <see cref="F:Fusion.NetworkProjectConfig.PeerModes.Multiple"/>. 
-            Additionally this component can be added manually at development time to identify specific Behaviours or Renderers you would like to restrict to one enabled copy at a time.
-            </summary>
-        </member>
-        <member name="F:Fusion.RunnerVisibilityNode._recognizedBehaviourNames">
-            <summary>
-            Types that fusion.runtime isn't aware of, which need to be found using names instead.
-            </summary>
-        </member>
-        <member name="T:Fusion.RunnerVisibilityNode.PreferredRunners">
-            <summary>
-            The peer runner that will be used if more than one runner is visible, and this node was manually added by developer (indicating only one instance should be visible at a time).
-            </summary>
-        </member>
-        <member name="F:Fusion.RunnerVisibilityNode.PreferredRunners.InputAuthority">
-            <summary>
-            The peer/runner with input authority will be used if visible.
-            </summary>
-        </member>
-        <member name="F:Fusion.RunnerVisibilityNode.PreferredRunners.Server">
-            <summary>
-            The server peer/runner will be used if visible.
-            </summary>
-        </member>
-        <member name="F:Fusion.RunnerVisibilityNode.PreferredRunners.Client">
-            <summary>
-            The first client peer/runner will be used if visible.
-            </summary>
-        </member>
-        <member name="F:Fusion.RunnerVisibilityNode.PreferredRunner">
-            <summary>
-            If more than one runner instance is visible, this indicates which peer's clone of this entity should be visible.
-            </summary>
-        </member>
-        <member name="F:Fusion.RunnerVisibilityNode.Component">
-            <summary>
-            The associated component with this node. This Behaviour or Renderer will be enabled/disabled when its parent <see cref="P:Fusion.NetworkRunner.IsVisible"/> is changed.
-            </summary>
-        </member>
-        <member name="F:Fusion.RunnerVisibilityNode.Guid">
-            <summary>
-            Guid is used for common objects (user flagged nodes that should only run in one instance), to identify matching clones.
-            </summary>
-        </member>
-        <member name="P:Fusion.RunnerVisibilityNode.DefaultState">
-            <summary>
-            Set to false to indicate that this object should remain disabled even when <see cref="P:Fusion.NetworkRunner.IsVisible"/> is set to true.
-            </summary>
-        </member>
-        <member name="M:Fusion.RunnerVisibilityNode.SetEnabled(System.Boolean)">
-            <summary>
-            Sets the visibility state of this node.
-            </summary>
-            <param name="enabled"></param>
-        </member>
-        <member name="F:Fusion.RunnerVisibilityNode.CommonObjectLookup">
-            <summary>
-            Dictionary lookup for manually added visibility nodes (which indicates only one instance should be visible at a time), 
-            which returns a list of nodes for a given LocalIdentifierInFile.
-            </summary>
-        </member>
-        <member name="M:Fusion.RunnerVisibilityNode.AddVisibilityNodes(UnityEngine.GameObject,Fusion.NetworkRunner)">
-            <summary>
-            Find all component types that contribute to a scene rendering, and associate them with a <see cref="T:Fusion.RunnerVisibilityNode"/> component, 
-            and add them to the runner's list of visibility nodes.
-            </summary>
-            <param name="go"></param>
-            <param name="runner"></param>
-        </member>
-        <member name="M:Fusion.RunnerVisibilityNode.RefreshAllRunnerVisibilities">
-            <summary>
-            Force a complete visibility refresh on all runners. Typically used if a runner is destroyed/shutdown.
-            </summary>
-        </member>
-        <member name="M:Fusion.RunnerVisibilityNode.RefreshRunnerVisibility(Fusion.NetworkRunner,System.Boolean)">
-            <summary>
-            Reapplies a runner's IsVisibile setting to all of its registered visibility nodes.
-            </summary>
-            <param name="runner"></param>
-            <param name="refreshCommonObjects"></param>
-        </member>
-        <member name="T:Fusion.RunnerVisibilityNodes">
-            <summary>
-            Automatically adds a <see cref="T:Fusion.RunnerVisibilityNode"/> for each indicated component. 
-            These indicated components will be limited to no more than one enabled instance when running in Multi-Peer mode.
-            </summary>
-        </member>
-        <member name="F:Fusion.RunnerVisibilityNodes.PreferredRunner">
-            <summary>
-            If more than one runner instance is visible, this indicates which peer's clone of this entity should be visible.
-            </summary>
-        </member>
-        <member name="F:Fusion.RunnerVisibilityNodes.Components">
-            <summary>
-            Collection of components that will be marked for Multi-Peer mode as objects that should only have one enabled instance.
-            </summary>
-        </member>
-        <member name="F:Fusion.RunnerVisibilityNodes._guid">
-            <summary>
-            Prefix for the GUIDs of <see cref="T:Fusion.RunnerVisibilityNode"/> components which are added at runtime.
-            </summary>
-        </member>
-        <member name="M:Fusion.RunnerVisibilityNodes.AddNodes">
-            <summary>
-            At runtime startup, this adds a <see cref="T:Fusion.RunnerVisibilityNode"/> for each component reference to this GameObject.
-            </summary>
-        </member>
-        <member name="M:Fusion.RunnerVisibilityNodes.FindRecognizedTypes">
-            <summary>
-            Finds visual/audio components on this GameObject, and adds them to the Components collection.
-            </summary>
-        </member>
-        <member name="M:Fusion.RunnerVisibilityNodes.FindNestedRecognizedTypes">
-            <summary>
-            Finds visual/audio nested components on this GameObject and its children, and adds them to the Components collection.
-            </summary>
-        </member>
-        <member name="T:Fusion.SimulationBehaviour">
-            <summary>
-            Base class for a Fusion aware Behaviour (derived from UnityEngine.MonoBehavour).
-            Objects derived from this object can be associated with a <see cref="T:Fusion.NetworkRunner"/> and <see cref="T:Fusion.Simulation"/>.
-            If a parent <see cref="T:Fusion.NetworkObject"/> is found, this component will also be associated with that network entity.
-            </summary>
-        </member>
-        <member name="F:Fusion.SimulationBehaviour.Runner">
-            <summary>
-            The <see cref="T:Fusion.NetworkRunner"/> this component is associated with.
-            </summary>
-        </member>
-        <member name="F:Fusion.SimulationBehaviour.Object">
-            <summary>
-            The <see cref="T:Fusion.NetworkObject"/> this component is associated with. May be null if this GameObject does not have a <see cref="T:Fusion.NetworkObject"/>.
-            </summary>
-        </member>
-        <member name="M:Fusion.SimulationBehaviour.FixedUpdateNetwork">
-            <summary>
-            Fusion FixedUpdate timing callback.
-            </summary>
-        </member>
-        <member name="M:Fusion.SimulationBehaviour.Render">
-            <summary>
-            Post simulation frame rendering callback. Runs after all simulations have finished. Use in place of Unity's Update when Fusion is handling Physics.
-            </summary>
-        </member>
-        <member name="T:Fusion.SimulationBehaviourAttribute">
-            <summary>
-            Attribute for specifying which <see cref="T:Fusion.SimulationStages"/> and <see cref="T:Fusion.SimulationModes"/> this <see cref="T:Fusion.SimulationBehaviour"/> will execute in.
-            Can be used to limit execution to only Host, Server or Client peers, or to only execute on Resimulation or Forward ticks.
-            Usage:
-            <code>
-            [SimulationBehaviour(Stages = SimulationStages.Forward, Modes = SimulationModes.Server | SimulationModes.Host)]
-            </code>
-            </summary>
-        </member>
-        <member name="P:Fusion.SimulationBehaviourAttribute.Stages">
-            <summary>
-            Flag for which stages of the simulation loop this component will execute this script.
-            </summary>
-        </member>
-        <member name="P:Fusion.SimulationBehaviourAttribute.Modes">
-            <summary>
-            Flag for which indicated peers in <see cref="T:Fusion.SimulationModes"/> will execute this script.
-            </summary>
-        </member>
-        <member name="P:Fusion.SimulationBehaviourUpdater.CallbackInterfacesDefualts">
-            <summary>
-            The default behaviour interfaces
             </summary>
         </member>
         <member name="T:Fusion.NestedComponentUtilities">
@@ -4781,6 +4926,7 @@
             <param name="str"></param>
             <param name="initialHash"></param>
             <returns></returns>
+            
         </member>
         <member name="T:Fusion.InterpolatedErrorCorrectionSettings">
             <summary>
@@ -5688,6 +5834,12 @@
             </summary>
             <param name="networkObject">NetworkObject to copy the State from</param>
         </member>
+        <member name="M:Fusion.NetworkObject.CopyStateFromSceneObject(Fusion.NetworkObjectHeaderPtr)">
+            <summary>
+            Copies the entire State from another Scene Object.
+            They must have the same Scene Guid
+            </summary>
+        </member>
         <member name="M:Fusion.NetworkObject.SetInterestGroup(Fusion.PlayerRef,System.String,System.Boolean)">
             <summary>
             Add or remove Player's interest in a specific named Interest Group for this <see cref="T:Fusion.NetworkObject"/>.
@@ -6084,12 +6236,12 @@
         </member>
         <member name="F:Fusion.NetworkProjectConfig.PhysicsEngines.Physics2D">
             <summary>
-            The Unity PhysX2D simulation is used, but auto-simulation is disabled and simulations are controlled by Fusion.
+            The Unity Box2D simulation is used, but auto-simulation is disabled and simulations are controlled by Fusion.
             </summary>
         </member>
         <member name="F:Fusion.NetworkProjectConfig.PhysicsEngines.None">
             <summary>
-            Fusion preforms no simulation calls.
+            Fusion preforms no Physics Simulate() calls.
             </summary>
         </member>
         <member name="T:Fusion.NetworkProjectConfig.PhysicsModes">
@@ -6336,6 +6488,11 @@
             all types to be scanned and can increase weaving duration.
             </summary>
         </member>
+        <member name="F:Fusion.NetworkProjectConfig.CheckNetworkedPropertiesBeingEmpty">
+            <summary>
+            If set, the weaver will check if <see cref="T:Fusion.NetworkedAttribute"/> properties getters and setters are empty.
+            </summary>
+        </member>
         <member name="M:Fusion.NetworkProjectConfig.Copy">
             <summary>
             Make a copy of the <see cref="T:Fusion.NetworkProjectConfig"/>.
@@ -6472,6 +6629,11 @@
         <member name="F:Fusion.NetworkRunner._initializeOperation">
             <summary>
             Completion Source for the startup Photon Cloud Operations
+            </summary>
+        </member>
+        <member name="P:Fusion.NetworkRunner.IsInitialized">
+            <summary>
+            Check if the Runner was properly Initialized
             </summary>
         </member>
         <member name="P:Fusion.NetworkRunner.IsVisible">
@@ -6622,9 +6784,14 @@
             Returns the collection of <see cref="T:Fusion.PlayerRef"/> objects for this NetworkRunner's <see cref="T:Fusion.Simulation"/>.
             </summary>
         </member>
-        <member name="P:Fusion.NetworkRunner.SceneObjectProvider">
+        <member name="P:Fusion.NetworkRunner.SceneManager">
             <summary>
-            Returns the <see cref="T:Fusion.INetworkSceneObjectProvider"/> instance used to resolve scene objects.
+            Returns the <see cref="T:Fusion.INetworkSceneManager"/> instance.
+            </summary>
+        </member>
+        <member name="P:Fusion.NetworkRunner.ObjectPool">
+            <summary>
+            Returns the <see cref="T:Fusion.INetworkObjectPool"/> instance.
             </summary>
         </member>
         <member name="P:Fusion.NetworkRunner.LagCompensation">
@@ -6742,6 +6909,14 @@
             </summary>
             <param name="player">PlayerRef to check for a Connection Token</param>
             <returns>Copy of the Connection Token</returns>
+        </member>
+        <member name="M:Fusion.NetworkRunner.GetPlayerConnectionType(Fusion.PlayerRef)">
+            <summary>
+            Return the <see cref="T:Fusion.ConnectionType"/> with a Remote <see cref="T:Fusion.PlayerRef"/>.
+            Valid only when invoked from a Server (<see cref="P:Fusion.NetworkRunner.IsServer"/>)
+            </summary>
+            <param name="player">Remote Player to check the <see cref="T:Fusion.ConnectionType"/></param>
+            <returns><see cref="T:Fusion.ConnectionType"/> with a <see cref="T:Fusion.PlayerRef"/></returns>
         </member>
         <member name="M:Fusion.NetworkRunner.GetAllBehaviours(System.Type)">
             <summary>
@@ -6995,11 +7170,13 @@
         <member name="M:Fusion.NetworkRunner.AddSimulationBehaviour(Fusion.SimulationBehaviour,Fusion.NetworkObject)">
             <summary>
             Register a <see cref="T:Fusion.SimulationBehaviour"/> instance with the <see cref="T:Fusion.SimulationBehaviourUpdater"/>. 
+            Invalid if NetworkRunner has not been started and initialized.
             </summary>
         </member>
         <member name="M:Fusion.NetworkRunner.RemoveSimulationBehavior(Fusion.SimulationBehaviour)">
             <summary>
-            Unregister a <see cref="T:Fusion.SimulationBehaviour"/> instance from the <see cref="T:Fusion.SimulationBehaviourUpdater"/> callbacks.
+            Unregister a <see cref="T:Fusion.SimulationBehaviour"/> instance from the <see cref="T:Fusion.SimulationBehaviourUpdater"/> callbacks. 
+            Invalid if NetworkRunner has not been started and initialized.
             </summary>
         </member>
         <member name="M:Fusion.NetworkRunner.Attach(Fusion.NetworkObject,System.Nullable{Fusion.PlayerRef})">
@@ -7043,6 +7220,13 @@
             </summary>
             <returns>Iterable list of <see cref="T:Fusion.NetworkObject"/></returns>
         </member>
+        <member name="M:Fusion.NetworkRunner.GetResumeSnapshotNetworkSceneObjects">
+            <summary>
+            Iterate over the Scene NetworkObjects from the Resume Snapshot while giving the reference of the old 
+            Snapshot data associated with that particular Scene Object
+            </summary>
+            <returns>Iterable list of Scene <see cref="T:Fusion.NetworkObject"/> and Scene Object Header</returns>
+        </member>
         <member name="M:Fusion.NetworkRunner.CleanHostMigrationSnapshots">
             <summary>
             Clean all Snapshot references
@@ -7057,6 +7241,11 @@
         <member name="M:Fusion.NetworkRunner.GetNetworkObjectFromResumeSnapshot(Fusion.NetworkObjectHeaderPtr)">
             <summary>
             Gets a temporary representation of a <see cref="T:Fusion.NetworkObject"/> from the old Server Snapshot
+            </summary>
+        </member>
+        <member name="M:Fusion.NetworkRunner.GetSceneNetworkObjectFromResumeSnapshot(Fusion.NetworkObjectHeaderPtr)">
+            <summary>
+            Get the reference of a specific Scene Object associated with a NO Header from the old Server Snapshot
             </summary>
         </member>
         <member name="M:Fusion.NetworkRunner.SetupHostMigration(Fusion.Protocol.HostMigration)">
@@ -7136,6 +7325,11 @@
         <member name="P:Fusion.NetworkRunner.SessionInfo">
             <summary>
             Stores information about the current running session
+            </summary>
+        </member>
+        <member name="P:Fusion.NetworkRunner.LobbyInfo">
+            <summary>
+            Signal if the local peer is already inside a Lobby
             </summary>
         </member>
         <member name="P:Fusion.NetworkRunner.CurrentConnectionType">
@@ -7383,9 +7577,9 @@
             Object pool to use
             </summary>
         </member>
-        <member name="F:Fusion.StartGameArgs.SceneObjectProvider">
+        <member name="F:Fusion.StartGameArgs.SceneManager">
             <summary>
-            Custom <see cref="T:Fusion.INetworkSceneObjectProvider"/> reference
+            See <see cref="T:Fusion.INetworkSceneManager"/>.
             </summary>
         </member>
         <member name="F:Fusion.StartGameArgs.Config">
@@ -7546,6 +7740,22 @@
         <member name="F:Fusion.SessionLobby.Custom">
             <summary>
             Custom Lobby - works in conjuction with a Lobby Name/ID
+            </summary>
+        </member>
+        <member name="T:Fusion.LobbyInfo">
+            <summary>
+            Holds information about a Lobby
+            </summary>
+        </member>
+        <member name="F:Fusion.LobbyInfo.IsValid">
+            <summary>
+            Flag to signal if the <see cref="T:Fusion.LobbyInfo"/> is ready for use.
+            This is only true if the peer is currently connected to a Lobby.
+            </summary>
+        </member>
+        <member name="F:Fusion.LobbyInfo.Name">
+            <summary>
+            Lobby Name
             </summary>
         </member>
         <member name="T:Fusion.SessionInfo">
@@ -8086,12 +8296,19 @@
             </para>
             </summary>
         </member>
-        <member name="M:Fusion.Simulation.PlayerConnectionToken(Fusion.PlayerRef)">
+        <member name="M:Fusion.Simulation.GetPlayerConnectionToken(Fusion.PlayerRef)">
             <summary>
             Return a copy if a Player's Connection Token
             </summary>
             <param name="player">Player to check for the Connection Token</param>
             <returns>Connection Token Copy</returns>
+        </member>
+        <member name="M:Fusion.Simulation.GetPlayerAddress(Fusion.PlayerRef)">
+            <summary>
+            Return the Address of a remote Player
+            </summary>
+            <param name="player">Player to check for the NetAddress</param>
+            <returns>NetAddress of a specific player</returns>
         </member>
         <member name="M:Fusion.Simulation.Update(System.Double)">
             <summary>

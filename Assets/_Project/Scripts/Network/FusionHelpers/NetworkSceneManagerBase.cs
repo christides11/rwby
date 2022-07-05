@@ -153,54 +153,13 @@ namespace Fusion
         }
 
         #region INetworkSceneObjectProvider
-
-        void INetworkSceneObjectProvider.Initialize(NetworkRunner runner)
-        {
-            Initialize(runner);
-        }
-
-        void INetworkSceneObjectProvider.Shutdown(NetworkRunner runner)
-        {
-            Shutdown(runner);
-        }
-
-        bool INetworkSceneObjectProvider.IsReady(NetworkRunner runner)
-        {
-            Assert.Check(Runner == runner);
-            if (_runningCoroutine != null)
-            {
-                return false;
-            }
-
-            if (_currentSceneOutdated)
-            {
-                return false;
-            }
-
-            if (runner.CurrentScene != _currentScene)
-            {
-                return false;
-            }
-
-            return true;
-        }
-
-        bool INetworkSceneObjectProvider.TryResolveSceneObject(NetworkRunner runner, Guid sceneObjectGuid,
-            out NetworkObject instance)
-        {
-            Assert.Check(Runner == runner);
-            return _sceneObjects.TryGetValue(sceneObjectGuid, out instance);
-        }
-
-        #endregion
-
-        protected virtual void Initialize(NetworkRunner runner)
+        public virtual void Initialize(NetworkRunner runner)
         {
             Assert.Check(!Runner);
             Runner = runner;
         }
 
-        protected virtual void Shutdown(NetworkRunner runner)
+        public virtual void Shutdown(NetworkRunner runner)
         {
             Assert.Check(Runner == runner);
 
@@ -223,6 +182,36 @@ namespace Fusion
                 _sceneObjects.Clear();
             }
         }
+        
+        public bool IsReady(NetworkRunner runner)
+        {
+            Assert.Check(Runner == runner);
+            if (_runningCoroutine != null)
+            {
+                return false;
+            }
+
+            if (_currentSceneOutdated)
+            {
+                return false;
+            }
+
+            if (runner.CurrentScene != _currentScene)
+            {
+                return false;
+            }
+
+            return true;
+        }
+
+        public bool TryResolveSceneObject(NetworkRunner runner, Guid sceneObjectGuid,
+            out NetworkObject instance)
+        {
+            Assert.Check(Runner == runner);
+            return _sceneObjects.TryGetValue(sceneObjectGuid, out instance);
+        }
+
+        #endregion
 
         protected delegate void FinishedLoadingDelegate(IEnumerable<NetworkObject> sceneObjects);
 

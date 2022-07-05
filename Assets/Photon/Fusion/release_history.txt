@@ -1,6 +1,205 @@
-# 1.1.0
+# 1.1.2
+
+## Nightly
+
+### Build 526 (Jul 01, 2022)
+
+**Bug Fixes**
+
+- Fixed: Targeted RPCs being broadcast to all the clients in shared mode
+
+### Build 525 (Jun 30, 2022)
+
+**What's New**
+
+- NetworkRunner.GetResumeSnapshotNetworkSceneObjects()
+- NetworkObject.CopyStateFromSceneObject()
+- IAfterHostMigration to be used on NetworkBehaviours
+
+**Changes**
+
+- Host Migration now waits for the Scene to be fully ready before proceeding
+
+**Bug Fixes**
+
+- Fixed: Support for SceneObject on Host Migration
+- Fixed: `NetworkPhysics2D` and 3D behaviours now restore the respective physics engine auto-simulation mode back to its value prior to the Runner startup when it is shutdown
+
+### Build 524 (Jun 29, 2022)
+
+**Bug Fixes**
+
+- Fixed: Visual teleports when interpolation starts on `NetworkTransform` objects by initializing the `InterpolationTarget` position and rotation during `Spawned`
+
+### Build 521 (Jun 24, 2022)
+
+**Bug Fixes**
+
+- Fixed: `NetworkString` inspector setting the length to maximum
+
+### Build 520 (Jun 23, 2022)
+
+**Bug Fixes**
+
+- Fixed: Errors in Unity 2021+ when inspecting `AssembliesToWeave` and `Prefabs` in `NetworkPrefabConfig`
+- Fixed: Issue on the lag-compensated structure that could eventually cause an `InvalidOperationException` when adding a `HitboxRoot` to the BVH
+
+### Build 519 (Jun 22, 2022)
+
+**Improvements**
+
+- `FixedBufferPropertyAttributeDrawer` error handling
+
+**Bug Fixes**
+
+- Fixed: `NetworkCharacterControllerPrototype` initialization during `Spawned` causing objects to glitch when spawned on clients
+- Fixed: `NetworkArrays` not being properly initialized when inspecting a struct in the inspector
+- Fixed: Some drawers not being used when using Odin inspector
+- Fixed: Assertion raised for some properties when using Odin inspector
+
+### Build 518 (Jun 20, 2022)
+
+**Bug Fixes**
+
+- Fixed: Warning about `hasStateAuthorityForAllTargets` variable being unused
+
+### Build 516 (Jun 16, 2022)
+
+**What's New**
+
+- `NetworkProjectConfig.CheckNetworkedPropertiesBeingEmpty`: if enable, ILWeaver will emit a warning for each `[Networked]` property that is not either compiler-generated or empty
+
+### Build 515 (Jun 15, 2022)
+
+**Bug Fixes**
+
+- Fixed: Rotation interpolation of proxy objects with `NetworkTransform` in Shared Mode
+
+### Build 514 (Jun 14, 2022)
+
+**Bug Fixes**
+
+- Fixed: Protected `[Networked]` properties being serialized by Unity by default. Use `[field: SerializeField]` or `[UnitySerializeField]` attribute to make them serializable again
+- Fixed: Compile error when using Mono Cecil 1.11+
+- Fixed: Some custom property drawers missing in Unity 2021+ with Odin
+
+# 1.1.1
+
+## F
+
+### Build 512 (Jun 14, 2022)
+
+- Releasing 1.1.1 Stable
 
 ## RC Nightly
+
+### Build 511 (Jun 13, 2022)
+
+**What's New**
+
+- NetworkRunner.GetPlayerConnectionType(PlayerRef)
+- NetworkRunner.LobbyInfo
+
+**Bug Fixes**
+
+- Fixed: `InvalidOperationException` thrown when calling `NetworkDebugStart.ShutdownAll()`
+- Fixed: Crash when the animator used by `NetworkMecanimAnimator` has 0 layers
+- Fixed: Compile warning "While looking for class Fusion.Editor a namespace modification was detected. Namespace modification with preprocessor directives is not supported. Please ensure that all directives do not change the namespaces of types."
+
+### Build 509 (Jun 09, 2022)
+
+**Bug Fixes**
+
+- Fixed: `INetworkStruct`, `SimulationBehaviour` and `NetworkBehaviour` not being weaved/weaved incorrectly if they are generic types. Note that it is still impossible to use generic parameters in `[Networked]` properties 
+- Fixed: Accessing `[Networked]` `string` properties in `NetworkBehaviours` throwing `InvalidProgramException`
+- Fixed: "'' does not exist"  warning when reimporting prefabs using `NetworkObjectEditor` inspector
+
+# 1.1.0
+
+## F
+
+### Build 506 (Jun 08, 2022)
+
+**Bug Fixes**
+
+- Fixed: UTF-8 BOM in source files causing merged files to have invalid characters
+- Fixed: Issue with spawning a lot of big objects in shared mode
+
+## RC Nightly
+
+### Build 503 (Jun 07, 2022)
+
+**Bug Fixes**
+
+- Fixed: Rare shared mode plugin startup crash
+
+### Build 502 (Jun 06, 2022)
+
+**What's New**
+
+- WebGL Support
+
+### Build 499 (Jun 02, 2022)
+
+**Breaking Changes**
+
+- `INetworkSceneObjectProvider` has been made obsolete. Use `INetworkSceneManager` instead and if you need custom scene object resolving - `INetworkSceneManagerObjectResolver`
+- `NetworkRunner.RegisterUniqueObjects` has been made obsolete. Use `NetworkRunner.RegisterSceneObjects`
+
+**What's New**
+
+- `NetworkRunner.ObjectPool` property
+
+**Changes**
+
+- Fusion handles scene object resolving by default, provided `INetworkSceneManager` implementation calls `NetworkRunner.RegisterSceneObjects`. If `INetworkSceneManager` implementation also implements `INetworkSceneManagerObjectResolver`, it will be used to resolve scene objects instead
+- `NetworkObject.Runner` field gets set in each scene objects that gets passed to `NetworkRunner.RegisterSceneObjects`
+- Assertion is raised if attaching to an object that already has been attached to
+
+**Removed**
+
+- `NetworkSceneManagerBase.TryResolveSceneObject`
+
+**Bug Fixes**
+
+- Fixed: Inactive scene objects not being unregistered in case they never get attached to
+- Fixed: Self-activating unattached scene objects attaching twice  
+Tests: Task-based tests seem to have to do their own timeout, otherwise the editor hangs  
+Tests: Added more RPC tests
+- Fixed: Occasional editor crash when client switches a scene
+
+### Build 497 (May 31, 2022)
+
+**What's New**
+
+- ILWeaver: support for Wrapping/Unwrapping without a `NetworkRunner`. There are three constructs Fusion supports:  
+```  
+    public struct Wrapper : INetworkStruct {  
+       ...  
+    }  
+    public class WrappedByValue {  
+      [NetworkSerializeMethod]   public static Wrapper Wrap(WrappedByValue obj) { ... };  
+      [NetworkDeserializeMethod] public static WrappedByValue Unwrap(Wrapper wrapper) { ... }  
+    }  
+    public class WrappedByRef {  
+      [NetworkSerializeMethod]   public static Wrapper Wrap(WrappedByRef obj) { ... }  
+      [NetworkDeserializeMethod] public static void Unwrap(Wrapper wrapper, ref WrappedByRef result) { ... }  
+    }  
+    // both methods return number of bytes read/written  
+    public class WrappedRaw {  
+      [NetworkSerializeMethod(MaxSize = ...)] public static int Wrap(WrappedRaw obj, byte* data) { ... }  
+      [NetworkDeserializeMethod] public static int Unwrap(byte* data, ref WrappedRaw result) { ... }  
+    }  
+```  
+Such wrapped types (`WrappedByValue`, `WrappedByRef` and `WrappedRaw`) can be used in any `[Networked]` property (both in structs and `NetworkBehaviours`) and RPC
+
+**Improvements**
+
+- ILWeaver: multiple invalid constructs are now detected during weaving time and reported as errors
+
+**Bug Fixes**
+
+- Fixed: ILWeaver: inconsistent support for `string` and `bool`. Both types can be used in collections from now on
 
 ### Build 496 (May 30, 2022)
 

@@ -32,7 +32,8 @@ MonoBehaviour:
   - rid: 220443919468986371
   - rid: 220443919468986374
   - rid: 220443925126053892
-  stateGroundedGroup: 2
+  - rid: 5282967647150669830
+  stateGroundedGroup: 1
   stateType: 2
   maxUsesInString: 1
   allowBaseStateTransitions: 1
@@ -225,15 +226,15 @@ MonoBehaviour:
         - {x: 2, y: 2}
         condition:
           rid: -2
-        ecbCenter: 1.5
-        ecbRadius: 0.5
+        ecbCenter: 1
+        ecbRadius: 0.3
         ecbHeight: 1
         children: []
     - rid: 220443919468986374
       type: {class: VarSetECB, ns: rwby, asm: rwby.csharp}
       data:
         frameRanges:
-        - {x: 28, y: 30}
+        - {x: 28, y: 28}
         condition:
           rid: -2
         ecbCenter: 0.825
@@ -248,6 +249,14 @@ MonoBehaviour:
         condition:
           rid: -2
         asset: {fileID: 11400000, guid: 852b081cfd9efbb449cca3171458f8cc, type: 2}
+        children: []
+    - rid: 5282967647150669830
+      type: {class: VarSnapECB, ns: rwby, asm: rwby.csharp}
+      data:
+        frameRanges:
+        - {x: 31, y: 31}
+        condition:
+          rid: -2
         children: []
     - rid: 6951768528003006469
       type: {class: VarModifyAnimationSet, ns: rwby, asm: rwby.csharp}

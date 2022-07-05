@@ -36,6 +36,7 @@
     "InvokeRenderInBatchMode": true,
     "MaxNetworkedObjectCount": 8192,
     "NetworkIdIsObjectName": false,
+    "HideNetworkObjectInactivityGuard": false,
     "EnableHostMigration": false,
     "HostMigrationSnapshotInterval": 60,
     "Simulation": {
@@ -156,10 +157,12 @@
     "AssembliesToWeave": [
         "Assembly-CSharp",
         "Assembly-CSharp-firstpass",
-        "rwby.csharp",
+        "kcc.core",
         "rwby.core",
-        "kcc.core"
+        "rwby.csharp"
     ],
     "UseSerializableDictionary": true,
-    "NullChecksForNetworkedProperties": true
+    "NullChecksForNetworkedProperties": true,
+    "CheckRpcAttributeUsage": false,
+    "CheckNetworkedPropertiesBeingEmpty": false
 }

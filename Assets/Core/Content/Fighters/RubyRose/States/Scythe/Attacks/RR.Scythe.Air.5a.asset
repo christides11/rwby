@@ -33,6 +33,7 @@ MonoBehaviour:
   - rid: 220443925126053895
   - rid: 5282967647150669825
   - rid: 5282967647150669827
+  - rid: 5282967647150669828
   stateGroundedGroup: 2
   stateType: 2
   maxUsesInString: 1
@@ -327,6 +328,19 @@ MonoBehaviour:
           rid: -2
         asset: {fileID: 11400000, guid: 3e988135845709d4594e5628d0bf81cd, type: 2}
         children: []
+    - rid: 5282967647150669828
+      type: {class: VarExternal, ns: rwby, asm: rwby.csharp}
+      data:
+        frameRanges:
+        - {x: -1, y: -1}
+        condition:
+          rid: 5282967647150669829
+        asset: {fileID: 11400000, guid: c8d832c162e368d439cbe63210340e04, type: 2}
+        children: []
+    - rid: 5282967647150669829
+      type: {class: ConditionIsGrounded, ns: rwby, asm: rwby.csharp}
+      data:
+        inverse: 0
     - rid: 6951768528003006469
       type: {class: VarModifyAnimationSet, ns: rwby, asm: rwby.csharp}
       data:

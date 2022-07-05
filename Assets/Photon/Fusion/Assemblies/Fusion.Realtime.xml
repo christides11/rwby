@@ -443,6 +443,11 @@
         <member name="F:Fusion.Photon.Realtime.ConnectionHandler.AppQuits">
             <summary>Indicates that the app is closing. Set in OnApplicationQuit().</summary>
         </member>
+        <member name="M:Fusion.Photon.Realtime.ConnectionHandler.StaticReset">
+            <summary>
+            Resets statics for Domain Reload
+            </summary>
+        </member>
         <member name="M:Fusion.Photon.Realtime.ConnectionHandler.OnApplicationQuit">
             <summary>Called by Unity when the application gets closed. The UnityEngine will also call OnDisable, which disconnects.</summary>
         </member>
@@ -2106,20 +2111,20 @@
              Called when room properties changed. The propertiesThatChanged contain only the keys that changed.
              </summary>
              <remarks>
-             In most cases, this method gets called due to some player settings Room Properties.
-             However, there are also "Well Known Properties", which use byte keys and this callback may include them.
-             Especially when entering a room, the server will also send the required Well Known Properties and those
-             are not filtered out before Realtime calls OnRoomPropertiesUpdate.
+             In most cases, this method gets called when some player changes the Room Properties.
+             However, there are also "Well Known Properties" (which use byte keys) and this callback may include them.
+             Especially when entering a room, the server will also send the required Well Known Properties and they
+             are not filtered out for the OnRoomPropertiesUpdate callback.
             
              You can safely ignore the byte typed keys in propertiesThatChanged.
-             
+            
              Changing properties is usually done by Room.SetCustomProperties.
              </remarks>
              <param name="propertiesThatChanged"></param>
         </member>
         <member name="M:Fusion.Photon.Realtime.IInRoomCallbacks.OnPlayerPropertiesUpdate(Fusion.Photon.Realtime.Player,ExitGames.Client.Photon.Hashtable)">
             <summary>
-            Called when custom player-properties are changed. Player and the changed properties are passed as object[].
+            Called when custom player-properties are changed.
             </summary>
             <remarks>
             Changing properties must be done by Player.SetCustomProperties, which causes this callback locally, too.
@@ -4447,6 +4452,21 @@
         </member>
         <member name="P:Fusion.Photon.Realtime.PhotonAppSettings.Instance">
             <summary>Serialized server settings, written by the Setup Wizard for use in ConnectUsingSettings.</summary>
+        </member>
+        <member name="F:Fusion.RuntimeUnityFlagsSetup.flagsBuildFlags">
+            <summary>
+            Flags for BuildFlags
+            </summary>
+        </member>
+        <member name="F:Fusion.RuntimeUnityFlagsSetup.flagsBuildTypes">
+            <summary>
+            Flags for BuildTypes
+            </summary>
+        </member>
+        <member name="F:Fusion.RuntimeUnityFlagsSetup.flagsDotNetVersion">
+            <summary>
+            Flags for DotNetVersion
+            </summary>
         </member>
         <member name="T:Fusion.SessionProperty">
             <summary>

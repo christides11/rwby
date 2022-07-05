@@ -97,7 +97,7 @@ namespace rwby
 				SessionProperties = customProps,
 				SessionName = roomName, 
 				ObjectPool = _pool, 
-				SceneObjectProvider = netSceneManager, 
+				SceneManager = netSceneManager, 
 				PlayerCount = playerCount
 			});
 			if(result.Ok == false)
@@ -126,7 +126,7 @@ namespace rwby
 				GameMode = local ? GameMode.Single : GameMode.Host,
 				SessionProperties = customProps,
 				ObjectPool = _pool,
-				SceneObjectProvider = netSceneManager,
+				SceneManager = netSceneManager,
 				PlayerCount = playerCount
 			});
 			if (result.Ok == false)
@@ -153,7 +153,7 @@ namespace rwby
 				GameMode = GameMode.Client, 
 				SessionName = sessionName, 
 				ObjectPool = _pool,
-				SceneObjectProvider = netSceneManager,
+				SceneManager = netSceneManager,
 				DisableClientSessionCreation = true
 			});
 			return result;

@@ -45,24 +45,14 @@ namespace rwby
 #endif
         }
         
-        void INetworkSceneObjectProvider.Initialize(NetworkRunner runner)
-        {
-            Initialize(runner);
-        }
-
-        void INetworkSceneObjectProvider.Shutdown(NetworkRunner runner)
-        {
-            Shutdown(runner);
-        }
-        
-        protected virtual void Initialize(NetworkRunner runner)
+        public virtual void Initialize(NetworkRunner runner)
         {
             Assert.Check(!Runner);
             SessionHandler = GameManager.singleton.networkManager.GetSessionHandlerByRunner(runner);
             Runner = runner;
         }
 
-        protected virtual void Shutdown(NetworkRunner runner)
+        public virtual void Shutdown(NetworkRunner runner)
         {
             Assert.Check(Runner == runner);
             Runner = null;

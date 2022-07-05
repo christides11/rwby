@@ -5,8 +5,10 @@ using UnityEngine;
 
 namespace rwby
 {
+    /*
     public class CRProjectile : ProjectileBase
     {
+        
         [Networked] public TickTimer timer { get; set; }
         public int ticksToExist = 200;
 
@@ -24,5 +26,5 @@ namespace rwby
                 Runner.Despawn(Object, true);
             }
         }
-    }
+    }*/
 }
