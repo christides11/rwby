@@ -92,7 +92,8 @@ namespace rwby
             }
         }
 
-        public void AddBox(FighterBoxType boxType, int attachedTo, BoxShape shape, Vector3 offset, Vector3 boxExtents, float sphereRadius, int definitionIndex, IBoxDefinitionCollection definition)
+        public void AddBox(FighterBoxType boxType, int attachedTo, BoxShape shape, Vector3 offset, Vector3 boxExtents, float sphereRadius, 
+            int definitionIndex, IBoxDefinitionCollection definition)
         {
             CustomHitbox fusionHitbox = GetNextCustomHitbox(boxType);
             SetFusionHitboxSize(fusionHitbox, shape, offset, boxExtents, sphereRadius);

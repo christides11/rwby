@@ -23,6 +23,7 @@ namespace rwby
         public VarRotateTowardsType rotateTowards;
         [ShowIf("rotateTowards", VarRotateTowardsType.custom)][AllowNesting]
         public Vector3 eulerAngle;
+        public bool rotateTowardsTarget;
 
         [SelectImplementation((typeof(FighterStatReferenceBase<float>)))] [SerializeReference]
         public FighterStatReferenceFloatBase rotationSpeed;

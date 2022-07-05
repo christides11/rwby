@@ -196,7 +196,7 @@ namespace rwby
         private void TryLockon()
         {
             if (inputManager.GetLockOn(out int bOffset).firstPress == false) return;
-            PickLockonTarget();
+            PickLockonTarget(lockonMaxDistance);
             HardTargeting = true;
         }
 
@@ -213,9 +213,21 @@ namespace rwby
             HardTargeting = false;
         }
 
-        private void PickLockonTarget()
+        public void PickLockonTarget(float maxDistance)
         {
-            Collider[] list = Physics.OverlapSphere(GetCenter(), lockonMaxDistance, lockonLayerMask);
+            CurrentTarget = null;
+            var target = GetLockonTarget(maxDistance);
+            if(target != null)
+            {
+                CurrentTarget = target.GetComponent<NetworkObject>();
+            }
+        }
+
+        private Collider[] lockonResultList = new Collider[10];
+        public GameObject GetLockonTarget(float maxDistance)
+        {
+            int hitCount = Runner.GetPhysicsScene().OverlapSphere(GetCenter(), maxDistance, lockonResultList, 
+                lockonLayerMask, QueryTriggerInteraction.UseGlobal);
             // The direction of the lockon defaults to the forward of the camera.
             Vector3 referenceDirection = GetMovementVector(0, 1);
             // If the movement stick is pointing in a direction, then our lockon should
@@ -230,8 +242,9 @@ namespace rwby
             GameObject closestTarget = null;
             float closestAngle = -2.0f;
             float closestDistance = Mathf.Infinity;
-            foreach (Collider c in list)
+            for(int i = 0; i < hitCount; i++)
             {
+                Collider c = lockonResultList[i];
                 // Ignore self.
                 if (c.gameObject == gameObject)
                 {
@@ -276,11 +289,7 @@ namespace rwby
                     closestDistance = targetDistance.sqrMagnitude;
                 }
             }
-
-            if(closestTarget != null)
-            {
-                CurrentTarget = closestTarget.GetComponent<NetworkObject>();
-            }
+            return closestTarget;
         }
 
         public Vector3 GetCenter()

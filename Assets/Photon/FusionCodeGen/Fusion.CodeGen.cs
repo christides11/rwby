@@ -243,6 +243,8 @@ namespace Fusion.CodeGen {
 
     private TypeDefinition MakeElementReaderWriter(ILWeaverAssembly asm, TypeReference declaringType, ICustomAttributeProvider member, TypeReference elementType) {
 
+      elementType = asm.Import(elementType);
+
       void AddIElementReaderWriterImplementation(ILWeaverAssembly asm, TypeDefinition readerWriterType, ICustomAttributeProvider member, TypeReference elementType, int elementWordCount, bool isExplicit = false) {
 
         var dataType = asm.Import(typeof(byte*));

@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: a2f5edea154374a25bfdffaf6f0d04f8
+guid: 2c0df08904df4144ebd5a1e9b53c4b34
 PluginImporter:
   externalObjects: {}
   serializedVersion: 2
@@ -16,25 +16,12 @@ PluginImporter:
     second:
       enabled: 0
       settings:
-        Exclude Android: 1
-        Exclude Editor: 1
-        Exclude GameCoreScarlett: 1
-        Exclude GameCoreXboxOne: 1
+        Exclude Editor: 0
         Exclude Linux64: 1
-        Exclude OSXUniversal: 1
-        Exclude PS5: 1
-        Exclude Switch: 1
-        Exclude WebGL: 1
+        Exclude OSXUniversal: 0
         Exclude Win: 1
         Exclude Win64: 1
         Exclude WindowsStoreApps: 1
-        Exclude XboxOne: 1
-  - first:
-      Android: Android
-    second:
-      enabled: 0
-      settings:
-        CPU: ARMv7
   - first:
       Any: 
     second:
@@ -43,7 +30,7 @@ PluginImporter:
   - first:
       Editor: Editor
     second:
-      enabled: 0
+      enabled: 1
       settings:
         CPU: AnyCPU
         DefaultValueInitialized: true
@@ -57,21 +44,21 @@ PluginImporter:
   - first:
       Standalone: OSXUniversal
     second:
-      enabled: 0
+      enabled: 1
       settings:
-        CPU: ARM64
+        CPU: AnyCPU
   - first:
       Standalone: Win
     second:
       enabled: 0
       settings:
-        CPU: None
+        CPU: x86
   - first:
       Standalone: Win64
     second:
       enabled: 0
       settings:
-        CPU: None
+        CPU: x86_64
   - first:
       Windows Store Apps: WindowsStoreApps
     second:

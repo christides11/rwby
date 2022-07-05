@@ -2,6 +2,27 @@
 
 ## Nightly
 
+### Build 528 (Jul 05, 2022)
+
+**What's New**
+
+- Universal macOS NanoSockets lib
+
+**Changes**
+
+- Remove from build old macOS NanoSockets libs
+
+**Bug Fixes**
+
+- Fixed: Eventual warnings messages when performing lag-compensated queries with sub-tick accuracy on a Server or Host and querying a tick that is not yet on the hitbox snapshot history
+- Fixed: ILWeaver: error when subclassing types from different assemblies
+
+### Build 527 (Jul 04, 2022)
+
+**Bug Fixes**
+
+- Fixed: Network Conditions settings with DelayMin and LossChanceMin values == zero allowed now
+
 ### Build 526 (Jul 01, 2022)
 
 **Bug Fixes**

@@ -1,13 +1,15 @@
 using Fusion;
+using HnSF.Combat;
 using UnityEngine;
 
 namespace rwby
 {
-    public class ProjectileBase : NetworkBehaviour, IBoxDefinitionCollection, IAttacker
+    public class ProjectileBase : NetworkBehaviour, IBoxDefinitionCollection, IAttacker, IHurtable
     {
-        [Networked, Capacity(5)] public NetworkLinkedList<IDGroupCollisionInfo> hh => default;
+        [Networked, Capacity(5)] public NetworkLinkedList<IDGroupCollisionInfo> hitObjects => default;
         [Networked] public NetworkObject owner { get; set; }
-        
+        [Networked] public int team { get; set; }
+
         public HitInfo[] HitboxInfo
         {
             get { return hitboxInfo; }
@@ -28,9 +30,14 @@ namespace rwby
         [SerializeField] private ThrowInfo[] throwboxInfo;
         [SerializeField] private HurtboxInfo[] hurtboxInfo;
 
+        public override void FixedUpdateNetwork()
+        {
+            base.FixedUpdateNetwork();
+            boxManager.ResetAllBoxes();
+        }
+
         public bool IsHitHurtboxValid(CustomHitbox atackerHitbox, Hurtbox h)
         {
-            /*
             if (h.ownerNetworkObject == Object || h.ownerNetworkObject == owner) return false;
             for(int i = 0; i < hitObjects.Count; i++)
             {
@@ -40,13 +47,12 @@ namespace rwby
                 {
                     return false;
                 }
-            }*/
+            }
             return true;
         }
 
         public bool IsHitHitboxValid(CustomHitbox attackerHitbox, CustomHitbox h)
         {
-            /*
             if (h.ownerNetworkObject == Object || h.ownerNetworkObject == owner) return false;
             for (int i = 0; i < hitObjects.Count; i++)
             {
@@ -56,7 +62,7 @@ namespace rwby
                 {
                     return false;
                 }
-            }*/
+            }
             return true;
         }
 
@@ -74,13 +80,12 @@ namespace rwby
 
         public void DoHit(CustomHitbox hitbox, Hurtbox enemyHurtbox, HurtInfo hurtInfo)
         {
-            /*
             hitObjects.Add(new IDGroupCollisionInfo()
             {
                 collisionType = IDGroupCollisionType.Hurtbox,
                 hitByIDGroup = hitbox.definition.HitboxInfo[hitbox.definitionIndex].ID,
                 hitIHurtableNetID = enemyHurtbox.ownerNetworkObject.Id
-            });*/
+            });
 
             HitReaction reaction = (HitReaction)enemyHurtbox.hurtable.Hurt(hurtInfo);
 
@@ -103,15 +108,25 @@ namespace rwby
 
         public void DoClash(CustomHitbox hitbox, CustomHitbox enemyHitbox)
         {
-            /*
             hitObjects.Add(new IDGroupCollisionInfo()
             {
                 collisionType = IDGroupCollisionType.Hitbox,
                 hitByIDGroup = hitbox.definition.HitboxInfo[hitbox.definitionIndex].ID,
                 hitIHurtableNetID = enemyHitbox.ownerNetworkObject.Id
-            }); */
+            });
             
             //TODO: Clashing.
+        }
+
+        public int GetTeam()
+        {
+            return team;
+        }
+
+        public HitReactionBase Hurt(HurtInfoBase hurtInfo)
+        {
+            HitReaction hr = new HitReaction();
+            return hr;
         }
     }
 }

@@ -259,7 +259,14 @@ namespace rwby
                     wantedDir = vars.eulerAngle;
                     break;
             }
-            if (wantedDir.sqrMagnitude == 0) return;
+
+            if (wantedDir.sqrMagnitude == 0)
+            {
+                if (!vars.rotateTowardsTarget || f.CurrentTarget == null) return;
+                wantedDir = f.CurrentTarget.transform.position - f.myTransform.position;
+                wantedDir.y = 0;
+                wantedDir.Normalize();
+            }
             
             f.RotateTowards(wantedDir, vars.rotationSpeed.GetValue(f));
         }
@@ -423,7 +430,12 @@ namespace rwby
             
             var predictionKey = new NetworkObjectPredictionKey {Byte0 = (byte) fm.Runner.Simulation.Tick, Byte1 = (byte)fm.Object.InputAuthority.PlayerId};
             
-            fm.Runner.Spawn(vars.projectile, pos, Quaternion.Euler(fm.myTransform.eulerAngles + vars.rotation), fm.Object.InputAuthority, null, predictionKey);
+            fm.Runner.Spawn(vars.projectile, pos, Quaternion.Euler(fm.myTransform.eulerAngles + vars.rotation), fm.Object.InputAuthority,
+                (a, b) =>
+                {
+                    b.GetComponent<ProjectileBase>().owner = fm.Object;
+                }, 
+                predictionKey);
         }
         
         public static void ClearHitList(IFighterBase fighter, IStateVariables variables, HnSF.StateTimeline arg3, int arg4)
@@ -434,6 +446,20 @@ namespace rwby
             if (vars.frameDivider == 0 || fm.FStateManager.CurrentStateFrame % vars.frameDivider == 0)
             {
                 fm.FCombatManager.HitboxManager.Reset();
+            }
+        }
+        
+        public static void FindSoftTarget(IFighterBase fighter, IStateVariables variables, HnSF.StateTimeline arg3, int arg4)
+        {
+            FighterManager fm = (FighterManager)fighter;
+            if (fm.HardTargeting) return;
+            VarFindSoftTarget vars = (VarFindSoftTarget)variables;
+            
+            fm.CurrentTarget = null;
+            Vector2 movementDir = fm.InputManager.GetMovement(0);
+            if (movementDir.sqrMagnitude <= InputConstants.movementDeadzone * InputConstants.movementDeadzone)
+            {
+                fm.PickLockonTarget(fm.lockonMaxDistance);
             }
         }
     }

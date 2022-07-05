@@ -20,6 +20,8 @@ MonoBehaviour:
   autoLoop: 0
   autoLoopFrame: 1
   data:
+  - rid: 5282967687436435456
+  - rid: 5282967687436435458
   - rid: 6951768528003006469
   - rid: 6951768528003006475
   - rid: 220443471284797440
@@ -30,7 +32,6 @@ MonoBehaviour:
   - rid: 6951768538707132419
   - rid: 220443896379604999
   - rid: 220443896379604994
-  - rid: 220443896379604996
   - rid: 220443896379605001
   stateGroundedGroup: 1
   stateType: 2
@@ -244,27 +245,7 @@ MonoBehaviour:
       data:
         inverse: 0
         statReference: 0
-        value: 30
-        variable: 0
-    - rid: 220443896379604996
-      type: {class: VarAddMovement, ns: rwby, asm: rwby.csharp}
-      data:
-        frameRanges:
-        - {x: 2, y: 2}
-        condition:
-          rid: -2
-        inputSource: 1
-        normalizeInputSource: 0
-        useRotationIfInputZero: 0
-        force:
-          rid: 220443896379604998
-        children: []
-    - rid: 220443896379604998
-      type: {class: FighterBaseStatReferenceFloat, ns: rwby, asm: rwby.csharp}
-      data:
-        inverse: 0
-        statReference: 0
-        value: 7
+        value: 40
         variable: 0
     - rid: 220443896379604999
       type: {class: VarCreateBox, ns: rwby, asm: rwby.csharp}
@@ -290,6 +271,34 @@ MonoBehaviour:
           rid: -2
         asset: {fileID: 11400000, guid: 38d47b53b1c6fa24580e163448503c28, type: 2}
         children: []
+    - rid: 5282967687436435456
+      type: {class: VarFindSoftTarget, ns: rwby, asm: rwby.csharp}
+      data:
+        frameRanges:
+        - {x: 0, y: 0}
+        condition:
+          rid: -2
+        children: []
+    - rid: 5282967687436435458
+      type: {class: VarRotateTowards, ns: rwby, asm: rwby.csharp}
+      data:
+        frameRanges:
+        - {x: 1, y: 3}
+        condition:
+          rid: -2
+        rotateTowards: 0
+        eulerAngle: {x: 0, y: 0, z: 0}
+        rotateTowardsTarget: 1
+        rotationSpeed:
+          rid: 5282967687436435459
+        children: []
+    - rid: 5282967687436435459
+      type: {class: FighterBaseStatReferenceFloat, ns: rwby, asm: rwby.csharp}
+      data:
+        inverse: 0
+        statReference: 0
+        value: 60
+        variable: 0
     - rid: 6951768528003006469
       type: {class: VarModifyAnimationSet, ns: rwby, asm: rwby.csharp}
       data:

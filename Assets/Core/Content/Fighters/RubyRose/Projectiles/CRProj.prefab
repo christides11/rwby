@@ -155,18 +155,136 @@ MonoBehaviour:
   m_GameObject: {fileID: 6670276480319028338}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7f3202993fe80cb4e8478de3e155641d, type: 3}
+  m_Script: {fileID: 11500000, guid: ce6c95df41a5e8d49b358383239aff80, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   _interpolationDataSource: 0
   _owner: {fileID: 0}
+  _team: 0
   boxManager: {fileID: -433963475003683376}
-  hitboxInfo: []
+  hitboxInfo:
+  - ID: 0
+    hitStateGroundedGroups: -1
+    groundGroup:
+      hitState: 30
+      groundBounces: 0
+      wallBounces: 0
+      groundBounceForcePercentage: 0
+      wallBounceForcePercentage: 0
+      hitKills: 0
+      hitForceType: 0
+      hitForceRelation: 0
+      autolink: 0
+      autolinkPercentage: 0
+      hitForce: {x: 0, y: 0, z: 30}
+      blockForce: {x: 0, y: 0, z: 0}
+      hitGravity: 0
+      pullPushCurve:
+        serializedVersion: 2
+        m_Curve: []
+        m_PreInfinity: 0
+        m_PostInfinity: 0
+        m_RotationOrder: 0
+      pullPushMaxDistance: 0
+      attackerHitstop: 8
+      hitstop: 8
+      hitstun: 60
+      blockstun: 60
+    groundCounterHitGroup:
+      hitState: 0
+      groundBounces: 0
+      wallBounces: 0
+      groundBounceForcePercentage: 0
+      wallBounceForcePercentage: 0
+      hitKills: 0
+      hitForceType: 0
+      hitForceRelation: 0
+      autolink: 0
+      autolinkPercentage: 0
+      hitForce: {x: 0, y: 0, z: 0}
+      blockForce: {x: 0, y: 0, z: 0}
+      hitGravity: 0
+      pullPushCurve:
+        serializedVersion: 2
+        m_Curve: []
+        m_PreInfinity: 0
+        m_PostInfinity: 0
+        m_RotationOrder: 0
+      pullPushMaxDistance: 0
+      attackerHitstop: 0
+      hitstop: 0
+      hitstun: 0
+      blockstun: 0
+    aerialGroup:
+      hitState: 32
+      groundBounces: 0
+      wallBounces: 0
+      groundBounceForcePercentage: 0
+      wallBounceForcePercentage: 0
+      hitKills: 0
+      hitForceType: 0
+      hitForceRelation: 0
+      autolink: 0
+      autolinkPercentage: 0
+      hitForce: {x: 0, y: 0, z: 30}
+      blockForce: {x: 0, y: 0, z: 0}
+      hitGravity: 0
+      pullPushCurve:
+        serializedVersion: 2
+        m_Curve: []
+        m_PreInfinity: 0
+        m_PostInfinity: 0
+        m_RotationOrder: 0
+      pullPushMaxDistance: 0
+      attackerHitstop: 8
+      hitstop: 8
+      hitstun: 60
+      blockstun: 60
+    aerialCounterHitGroup:
+      hitState: 0
+      groundBounces: 0
+      wallBounces: 0
+      groundBounceForcePercentage: 0
+      wallBounceForcePercentage: 0
+      hitKills: 0
+      hitForceType: 0
+      hitForceRelation: 0
+      autolink: 0
+      autolinkPercentage: 0
+      hitForce: {x: 0, y: 0, z: 0}
+      blockForce: {x: 0, y: 0, z: 0}
+      hitGravity: 0
+      pullPushCurve:
+        serializedVersion: 2
+        m_Curve: []
+        m_PreInfinity: 0
+        m_PostInfinity: 0
+        m_RotationOrder: 0
+      pullPushMaxDistance: 0
+      attackerHitstop: 0
+      hitstop: 0
+      hitstun: 0
+      blockstun: 0
   throwboxInfo: []
   hurtboxInfo: []
+  ticksToExist: 200
+  box:
+    frameRanges: []
+    condition:
+      rid: -2
+    boxType: 1
+    attachedTo: 0
+    shape: 0
+    offset: {x: 0, y: 1, z: 0}
+    boxExtents: {x: 3, y: 3, z: 3}
+    radius: 0
+    definitionIndex: 0
+    children: []
   references:
     version: 2
-    RefIds: []
+    RefIds:
+    - rid: -2
+      type: {class: , ns: , asm: }
 --- !u!114 &-433963475003683376
 MonoBehaviour:
   m_ObjectHideFlags: 0

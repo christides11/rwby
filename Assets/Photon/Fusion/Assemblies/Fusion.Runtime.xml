@@ -8722,7 +8722,7 @@
         </member>
         <member name="F:Fusion.NetworkSimulationConfiguration.DelayPeriod">
             <summary>
-            The period of the <see cref="F:Fusion.NetworkSimulationConfiguration.DelayShape"/> oscillator (the rate at which delay oscillates between <see cref="F:Fusion.NetworkSimulationConfiguration.DelayMin"/> and <see cref="F:Fusion.NetworkSimulationConfiguration.DelayMax"/>).
+            The period of the <see cref="F:Fusion.NetworkSimulationConfiguration.DelayShape"/> oscillator (the rate at which delay oscillates in seconds).
             </summary>
         </member>
         <member name="F:Fusion.NetworkSimulationConfiguration.DelayThreshold">
@@ -8762,7 +8762,7 @@
         </member>
         <member name="F:Fusion.NetworkSimulationConfiguration.AdditionalLoss">
             <summary>
-            After the <see cref="F:Fusion.NetworkSimulationConfiguration.LossChanceShape"/> oscillation loss calculated, an additional 0 to this (normalized) percentage of loss chance is added.
+            After the <see cref="F:Fusion.NetworkSimulationConfiguration.LossChanceShape"/> oscillation loss chance is calculated, an additional random value of 0 to this (normalized) percentage of loss chance is added.
             </summary>
         </member>
         <member name="T:Fusion.SimulationGlobalState">
