@@ -5,6 +5,7 @@ namespace rwby
     {
         stick,
         movement,
+        target,
         custom
     }
 }

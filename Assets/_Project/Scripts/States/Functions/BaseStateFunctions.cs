@@ -255,6 +255,14 @@ namespace rwby
                 case VarRotateTowardsType.movement:
                     wantedDir = f.FPhysicsManager.forceMovement;
                     break;
+                case VarRotateTowardsType.target:
+                    if (f.CurrentTarget != null)
+                    {
+                        wantedDir = f.CurrentTarget.transform.position - f.myTransform.position;
+                        wantedDir.y = 0;
+                        wantedDir.Normalize();
+                    }
+                    break;
                 case VarRotateTowardsType.custom:
                     wantedDir = vars.eulerAngle;
                     break;
@@ -434,6 +442,7 @@ namespace rwby
                 (a, b) =>
                 {
                     b.GetComponent<ProjectileBase>().owner = fm.Object;
+                    b.GetComponent<ProjectileBase>().team = fm.FCombatManager.Team;
                 }, 
                 predictionKey);
         }

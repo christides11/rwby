@@ -111,6 +111,16 @@ namespace rwby
         public int hitstopDir = 1;
         public int hitstopShakeFrames = 1;
 
+        public override void Render()
+        {
+            base.Render();
+            visualTransform.localPosition = Vector3.zero;
+            if (FCombatManager.HitStop == 0) return;
+            Vector3 dir = shakeDirs[currentShakeDirection].z * transform.forward
+                          + shakeDirs[currentShakeDirection].x * transform.right;
+            visualTransform.localPosition = dir * hitstopShakeDistance * hitstopDir;
+        }
+
         public int val = 100;
         public override void FixedUpdateNetwork()
         {
@@ -128,7 +138,7 @@ namespace rwby
             boxManager.ResetAllBoxes();
             visualTransform.gameObject.SetActive(Visible);
 
-            //HitstopShake();
+            HitstopShake();
             HandleLockon();
 
             
@@ -167,7 +177,6 @@ namespace rwby
             {
                 Vector3 dir = shakeDirs[currentShakeDirection].z * transform.forward
                     + shakeDirs[currentShakeDirection].x * transform.right;
-                physicsManager.SetPosition(transform.position + (dir * hitstopShakeDistance * hitstopDir), true);
                 hitstopDir *= -1;
                 
                 if(hitstopDir == 1)

@@ -133,5 +133,13 @@ namespace rwby
 
             return f.FCombatManager.HitStun >= vars.minValue && f.FCombatManager.HitStun <= vars.maxValue;
         }
+        
+        public static bool LockedOn(IFighterBase fighter, IConditionVariables variables, HnSF.StateTimeline arg3, int arg4)
+        {
+            FighterManager f = fighter as FighterManager;
+            ConditionLockedOn vars = (ConditionLockedOn)variables;
+
+            return vars.inverse ? !f.HardTargeting : f.HardTargeting;
+        }
     }
 }

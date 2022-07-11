@@ -145,12 +145,12 @@ namespace rwby
         {
             Vector2 stickInput = p.GetAxis2D(Action.Camera_X, Action.Camera_Y);
             bool cameraSwitch = p.GetButtonDown(Action.Camera_Switch);
-
+            
             for (int i = 0; i < inputProvider.Length; i++)
             {
                 inputProvider[i].input = stickInput;
             }
-
+            
             if (cameraSwitch && currentCameraState == CameraState.LOCK_ON)
             {
                 lockon2DMode = !lockon2DMode;
