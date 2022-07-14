@@ -3,11 +3,34 @@ using UnityEngine;
 
 namespace rwby
 {
+    [StateVariable("Frame/Modify Frame")]
     public struct VarModifyFrame : IStateVariables
     {
+        public string name;
+        public string Name
+        {
+            get => name;
+            set => name = value;
+        }
+        public int ID
+        {
+            get => id;
+            set => id = value;
+        }
         public int FunctionMap => (int)BaseStateFunctionEnum.MODIFY_FRAME;
         public IConditionVariables Condition => condition;
-        public IStateVariables[] Children => children;
+        
+        public int Parent
+        {
+            get => parent;
+            set => parent = value;
+        }
+
+        public int[] Children
+        {
+            get => children;
+            set => children = value;
+        }
 
         public Vector2[] FrameRanges
         {
@@ -15,6 +38,7 @@ namespace rwby
             set => frameRanges = value;
         }
     
+        [SerializeField, HideInInspector] private int id;
         [SerializeField] public Vector2[] frameRanges;
         [SelectImplementation(typeof(IConditionVariables))] [SerializeField, SerializeReference] 
         public IConditionVariables condition;
@@ -22,7 +46,7 @@ namespace rwby
         public VarModifyType modifyType;
         public int value;
         
-        [SelectImplementation(typeof(IStateVariables))] [SerializeField, SerializeReference] 
-        private IStateVariables[] children;
+        [SerializeField, HideInInspector] private int parent;
+        [SerializeField, HideInInspector] private int[] children;
     }
 }
