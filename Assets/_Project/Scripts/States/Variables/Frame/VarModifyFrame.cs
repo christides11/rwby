@@ -17,7 +17,6 @@ namespace rwby
             get => id;
             set => id = value;
         }
-        public int FunctionMap => (int)BaseStateFunctionEnum.MODIFY_FRAME;
         public IConditionVariables Condition => condition;
         
         public int Parent

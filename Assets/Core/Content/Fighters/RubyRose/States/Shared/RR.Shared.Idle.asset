@@ -20,12 +20,8 @@ MonoBehaviour:
   autoLoop: 1
   autoLoopFrame: 1
   data:
-  - rid: 6951768528003006474
-  - rid: 6951768472487198741
-  - rid: 6951768472487198742
-  - rid: 6951768472487198743
-  - rid: 6951768538707132416
-  - rid: 220443314582978560
+  - rid: 2193520579074588672
+  - rid: 2193520579074588673
   stateGroundedGroup: 1
   stateType: 1
   maxUsesInString: -1
@@ -47,71 +43,23 @@ MonoBehaviour:
     RefIds:
     - rid: -2
       type: {class: , ns: , asm: }
-    - rid: 220443314582978560
-      type: {class: VarCreateBox, ns: rwby, asm: rwby.csharp}
-      data:
-        frameRanges: []
-        condition:
-          rid: -2
-        boxType: 0
-        attachedTo: 0
-        shape: 0
-        offset: {x: 0, y: 0.9, z: 0}
-        boxExtents: {x: 0.4, y: 0.9, z: 0.4}
-        radius: 0
-        definitionIndex: 0
-        children: []
-    - rid: 6951768472487198741
-      type: {class: VarModifyAnimationSet, ns: rwby, asm: rwby.csharp}
-      data:
-        frameRanges:
-        - {x: 0, y: 0}
-        condition:
-          rid: -2
-        modifyType: 1
-        wantedAnimations:
-        - animationbank:
-            modGUID:
-              guid: 1d292c1f00000000
-            contentType: 7
-            contentIdx: 0
-          animation: idle
-        fadeTime: 0.05
-        children: []
-    - rid: 6951768472487198742
-      type: {class: VarModifyAnimationFrame, ns: rwby, asm: rwby.csharp}
-      data:
-        frameRanges:
-        - {x: 1, y: 1}
-        condition:
-          rid: -2
-        modifyType: 1
-        animations: 00000000
-        frame: 0
-        children: []
-    - rid: 6951768472487198743
-      type: {class: VarModifyAnimationFrame, ns: rwby, asm: rwby.csharp}
-      data:
-        frameRanges:
-        - {x: 2, y: 60}
-        condition:
-          rid: -2
-        modifyType: 0
-        animations: 00000000
-        frame: 1
-        children: []
-    - rid: 6951768528003006474
+    - rid: 2193520579074588672
       type: {class: VarExternal, ns: rwby, asm: rwby.csharp}
       data:
+        name: Try Ground Attack
+        id: 0
+        parent: -1
         frameRanges:
         - {x: -1, y: -1}
         condition:
           rid: -2
         asset: {fileID: 11400000, guid: 38d47b53b1c6fa24580e163448503c28, type: 2}
-        children: []
-    - rid: 6951768538707132416
+    - rid: 2193520579074588673
       type: {class: VarSetECB, ns: rwby, asm: rwby.csharp}
       data:
+        name: Set ECB
+        id: 1
+        parent: -1
         frameRanges:
         - {x: -1, y: -1}
         condition:
@@ -119,4 +67,3 @@ MonoBehaviour:
         ecbCenter: 0.825
         ecbRadius: 0.3
         ecbHeight: 1.65
-        children: []

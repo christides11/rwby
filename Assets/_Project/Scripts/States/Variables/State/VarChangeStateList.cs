@@ -4,6 +4,7 @@ using UnityEngine;
 
 namespace rwby
 {
+    [StateVariable("State/Change State List")]
     public struct VarChangeStateList : IStateVariables
     {
         [System.Serializable]
@@ -13,25 +14,44 @@ namespace rwby
             [SelectImplementation(typeof(FighterStateReferenceBase))] [SerializeField, SerializeReference] [AllowNesting]
             public FighterStateReferenceBase state;
         }
-        public int FunctionMap => (int)BaseStateFunctionEnum.NULL;
-        public IConditionVariables Condition => condition;
-        public IStateVariables[] Children => children;
+        
+        public string name;
+        public string Name
+        {
+            get => name;
+            set => name = value;
+        }
+        [SerializeField, HideInInspector] private int id;
+        public int ID
+        {
+            get => id;
+            set => id = value;
+        }
+        [SerializeField, HideInInspector] private int parent;
+        public int Parent
+        {
+            get => parent;
+            set => parent = value;
+        }
+        private int[] children;
+        public int[] Children
+        {
+            get => children;
+            set => children = value;
+        }
+        [SerializeField] public Vector2[] frameRanges;
         public Vector2[] FrameRanges
         {
             get => frameRanges;
             set => frameRanges = value;
         }
-    
-        [SerializeField] public Vector2[] frameRanges;
-        [SelectImplementation(typeof(IConditionVariables))] [SerializeField, SerializeReference] 
+        [SelectImplementation(typeof(IConditionVariables))] [SerializeField, SerializeReference]
         public IConditionVariables condition;
+        public IConditionVariables Condition => condition;
 
         public bool checkInputSequence;
         public bool checkCondition;
 
         public StateListEntry[] states;
-
-        [SelectImplementation(typeof(IStateVariables))] [SerializeField, SerializeReference] 
-        private IStateVariables[] children;
     }
 }

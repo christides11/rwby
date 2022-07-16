@@ -21,6 +21,7 @@ namespace rwby
         {
             content.Clear();
             GUIDToInt.Clear();
+            IntToGUID.Clear();
             for (int i = 0; i < references.Count; i++)
             {
                 content.Add(i, references[i].asset);

@@ -24,6 +24,7 @@ namespace rwby
             stateMap.Clear();
             foreach (var intStateMap in states)
             {
+                intStateMap.stateTimeline.Initialize();
                 stateMap.Add(intStateMap.state.GetState(), intStateMap.stateTimeline);
             }
         }

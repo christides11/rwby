@@ -92,7 +92,8 @@ namespace rwby
 
             foreach (var t in d.Children)
             {
-                ProcessStateVariables(state, t, realFrame, onInterrupt);
+                int childStateIndex = state.stateVariablesIDMap[t];
+                ProcessStateVariables(state, state.data[childStateIndex], realFrame, onInterrupt);
             }
         }
 
