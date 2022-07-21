@@ -20,9 +20,8 @@ MonoBehaviour:
   autoLoop: 1
   autoLoopFrame: 1
   data:
-  - rid: 6951768358483656710
-  - rid: 6951768280129339395
-  - rid: 6951768201293725696
+  - rid: 2193520623268134912
+  - rid: 2193520623268134913
   stateGroundedGroup: 1
   stateType: 1
   maxUsesInString: -1
@@ -42,44 +41,25 @@ MonoBehaviour:
     RefIds:
     - rid: -2
       type: {class: , ns: , asm: }
-    - rid: 6951768201293725696
-      type: {class: VarApplyTraction, ns: rwby, asm: rwby.csharp}
-      data:
-        frameRanges:
-        - {x: -1, y: -1}
-        condition:
-          rid: 6951768201293725697
-        traction:
-          rid: 6951768222506156032
-        applyMovement: 1
-        applyGravity: 0
-        children: []
-    - rid: 6951768201293725697
-      type: {class: ConditionNone, ns: rwby, asm: rwby.csharp}
-    - rid: 6951768222506156032
-      type: {class: FighterBaseStatReferenceFloat, ns: rwby, asm: rwby.csharp}
-      data:
-        inverse: 0
-        statReference: 1
-        value: 0
-        variable: 0
-    - rid: 6951768280129339395
+    - rid: 2193520623268134912
       type: {class: VarExternal, ns: rwby, asm: rwby.csharp}
       data:
+        name: Ground Interrupts
+        id: 0
+        parent: -1
         frameRanges:
-        - {x: -1, y: -1}
-        condition:
-          rid: 6951768280129339396
-        asset: {fileID: 11400000, guid: 124c79362d203b84da4165660d6a1f1a, type: 2}
-        children: []
-    - rid: 6951768280129339396
-      type: {class: ConditionNone, ns: rwby, asm: rwby.csharp}
-    - rid: 6951768358483656710
-      type: {class: VarExternal, ns: rwby, asm: rwby.csharp}
-      data:
-        frameRanges:
-        - {x: -1, y: -1}
+        - {x: 1, y: -1}
         condition:
           rid: -2
         asset: {fileID: 11400000, guid: 42dc6338964d9494b9492888c730d00e, type: 2}
-        children: []
+    - rid: 2193520623268134913
+      type: {class: VarExternal, ns: rwby, asm: rwby.csharp}
+      data:
+        name: Idle Interrupts
+        id: 1
+        parent: -1
+        frameRanges:
+        - {x: 1, y: -1}
+        condition:
+          rid: -2
+        asset: {fileID: 11400000, guid: 124c79362d203b84da4165660d6a1f1a, type: 2}

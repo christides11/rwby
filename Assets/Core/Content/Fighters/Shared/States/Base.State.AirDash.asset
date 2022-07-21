@@ -20,57 +20,79 @@ MonoBehaviour:
   autoLoop: 0
   autoLoopFrame: 1
   data:
-  - rid: 6951768367642443829
-  - rid: 6951768367642443827
-  - rid: 6951768367642443830
+  - rid: 2193520669817307137
+  - rid: 2193520669817307136
+  - rid: 2193520691360038912
   stateGroundedGroup: 2
+  stateType: 0
+  maxUsesInString: -1
   allowBaseStateTransitions: 1
+  inputSequence:
+    executeWindow: 3
+    executeInputs: []
+    sequenceWindow: 8
+    sequenceInputs: []
+  condition:
+    rid: -2
+  hitboxInfo: []
+  throwboxInfo: []
+  hurtboxInfo: []
   references:
     version: 2
     RefIds:
     - rid: -2
       type: {class: , ns: , asm: }
-    - rid: 6951768367642443827
+    - rid: 2193520669817307136
       type: {class: VarSetMovement, ns: rwby, asm: rwby.csharp}
       data:
+        name: Forward Movement
+        id: 0
+        parent: -1
         frameRanges:
         - {x: 0, y: 0}
         condition:
           rid: -2
         inputSource: 0
         normalizeInputSource: 0
-        useRotationIfInputZero: 1
+        useRotationIfInputZero: 0
         force:
-          rid: 6951768367642443828
-        children: []
-    - rid: 6951768367642443828
-      type: {class: FighterBaseStatReferenceFloat, ns: rwby, asm: rwby.csharp}
+          rid: 2193520669817307138
+    - rid: 2193520669817307137
+      type: {class: VarModifyRotation, ns: rwby, asm: rwby.csharp}
       data:
-        inverse: 0
-        statReference: 1
-        value: 0
-        variable: 30
-    - rid: 6951768367642443829
-      type: {class: VarSetFallSpeed, ns: rwby, asm: rwby.csharp}
-      data:
+        name: Set Rotation
+        id: 1
+        parent: -1
         frameRanges:
         - {x: 0, y: 0}
         condition:
           rid: -2
-        value: 0
-        children: []
-    - rid: 6951768367642443830
-      type: {class: VarChangeState, ns: rwby, asm: rwby.csharp}
+        modifyType: 1
+        rotateTowards: 0
+        eulerAngle: {x: 0, y: 0, z: 0}
+    - rid: 2193520669817307138
+      type: {class: FighterBaseStatReferenceFloat, ns: rwby, asm: rwby.csharp}
       data:
+        inverse: 0
+        statReference: 0
+        value: 30
+        variable: 0
+    - rid: 2193520691360038912
+      type: {class: VarModifyFallSpeed, ns: rwby, asm: rwby.csharp}
+      data:
+        name: Zero Fall Speed
+        id: 2
+        parent: -1
         frameRanges:
-        - {x: 15, y: 15}
+        - {x: 0, y: 0}
         condition:
           rid: -2
-        stateMovesetID: -1
-        state:
-          rid: 6951768367642443831
-        children: []
-    - rid: 6951768367642443831
-      type: {class: FighterCmnStateReference, ns: rwby, asm: rwby.csharp}
+        modifyType: 1
+        value:
+          rid: 2193520691360038913
+    - rid: 2193520691360038913
+      type: {class: FighterStatReferenceFloatBase, ns: rwby, asm: rwby.csharp}
       data:
-        state: 5
+        inverse: 0
+        statReference: 0
+        value: 0

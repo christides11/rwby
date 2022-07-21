@@ -17,7 +17,8 @@ namespace rwby
             return wnd;
         }
 
-        public override void DataBarsDrawParentAndChildren(List<VisualElement> dbs, int dataID, int incr)
+        /*
+        public override void DataBarsDrawParentAndChildren(List<VisualElement> dbs, int dataID, ref int incr, HnSF.StateTimeline stateTimeline)
         {
             int index = stateTimeline.stateVariablesIDMap[dataID];
 
@@ -26,10 +27,10 @@ namespace rwby
                 for (int j = 0; j < stateTimeline.data[index].FrameRanges.Length; j++)
                 {
                     int framebarStart = stateTimeline.data[index].FrameRanges[j].x < 0
-                        ? 1
+                        ? (stateTimeline.data[index].FrameRanges[j].x == -1 ? 1 : this.stateTimeline.totalFrames+1) 
                         : (int)stateTimeline.data[index].FrameRanges[j].x;
                     int framebarWidth = stateTimeline.data[index].FrameRanges[j].x < 0
-                        ? stateTimeline.totalFrames-1
+                        ?  (stateTimeline.data[index].FrameRanges[j].x == -1 ? this.stateTimeline.totalFrames-1 : 0)
                         : (int)stateTimeline.data[index].FrameRanges[j].y -
                           (int)stateTimeline.data[index].FrameRanges[j].x;
                     mainFrameBarLabel.CloneTree(dbs[incr]);
@@ -47,8 +48,8 @@ namespace rwby
             {
                 int childIndex = stateTimeline.stateVariablesIDMap[stateTimeline.data[index].Children[i]];
                 incr++;
-                DataBarsDrawParentAndChildren(dbs, stateTimeline.data[childIndex].ID, incr);
+                DataBarsDrawParentAndChildren(dbs, stateTimeline.data[childIndex].ID, ref incr, stateTimeline);
             }
-        }
+        }*/
     }
 }

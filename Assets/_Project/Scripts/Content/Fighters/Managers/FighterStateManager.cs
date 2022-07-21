@@ -80,6 +80,7 @@ namespace rwby
             for (int j = 0; j < d.FrameRanges.Length; j++)
             {
                 if (!onInterrupt && realFrame != 0 && d.FrameRanges[j].x == -1) break;
+                if (onInterrupt && d.FrameRanges[j].x == -2) break;
                 if (!(realFrame < d.FrameRanges[j].x) &&
                     !(realFrame > d.FrameRanges[j].y)) continue;
                 valid = false;
