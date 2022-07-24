@@ -114,11 +114,13 @@ namespace rwby
         public override void Render()
         {
             base.Render();
-            visualTransform.localPosition = Vector3.zero;
+            //visualTransform.localPosition = Vector3.zero;
+            physicsManager.kCC.Motor.visualExtraOffset = Vector3.zero;
             if (FCombatManager.HitStop == 0) return;
             Vector3 dir = shakeDirs[currentShakeDirection].z * transform.forward
                           + shakeDirs[currentShakeDirection].x * transform.right;
-            visualTransform.localPosition = dir * hitstopShakeDistance * hitstopDir;
+            physicsManager.kCC.Motor.visualExtraOffset = dir * hitstopShakeDistance * hitstopDir;
+            //visualTransform.localPosition = dir * hitstopShakeDistance * hitstopDir;
         }
 
         public int val = 100;

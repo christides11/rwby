@@ -19,11 +19,7 @@ MonoBehaviour:
   autoIncrement: 1
   autoLoop: 1
   autoLoopFrame: 1
-  data:
-  - rid: 220443939427844106
-  - rid: 6951768482046017536
-  - rid: 6951768482046017537
-  - rid: 6951768482046017538
+  data: []
   stateGroundedGroup: 1
   stateType: 1
   maxUsesInString: -1
@@ -43,51 +39,3 @@ MonoBehaviour:
     RefIds:
     - rid: -2
       type: {class: , ns: , asm: }
-    - rid: 220443939427844106
-      type: {class: VarExternal, ns: rwby, asm: rwby.csharp}
-      data:
-        frameRanges:
-        - {x: -1, y: -1}
-        condition:
-          rid: -2
-        asset: {fileID: 11400000, guid: 38d47b53b1c6fa24580e163448503c28, type: 2}
-        children: []
-    - rid: 6951768482046017536
-      type: {class: VarModifyAnimationSet, ns: rwby, asm: rwby.csharp}
-      data:
-        frameRanges:
-        - {x: 0, y: 0}
-        condition:
-          rid: -2
-        modifyType: 1
-        wantedAnimations:
-        - animationbank:
-            modGUID:
-              guid: 1d292c1f00000000
-            contentType: 7
-            contentIdx: 0
-          animation: run.f
-        fadeTime: 0
-        children: []
-    - rid: 6951768482046017537
-      type: {class: VarModifyAnimationFrame, ns: rwby, asm: rwby.csharp}
-      data:
-        frameRanges:
-        - {x: 1, y: 1}
-        condition:
-          rid: -2
-        modifyType: 1
-        animations: 00000000
-        frame: 0
-        children: []
-    - rid: 6951768482046017538
-      type: {class: VarModifyAnimationFrame, ns: rwby, asm: rwby.csharp}
-      data:
-        frameRanges:
-        - {x: 2, y: 31}
-        condition:
-          rid: -2
-        modifyType: 0
-        animations: 00000000
-        frame: 1
-        children: []

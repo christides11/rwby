@@ -31,8 +31,8 @@ namespace rwby
             get => children;
             set => children = value;
         }
-        [SerializeField] public Vector2[] frameRanges;
-        public Vector2[] FrameRanges
+        [SerializeField] public Vector2Int[] frameRanges;
+        public Vector2Int[] FrameRanges
         {
             get => frameRanges;
             set => frameRanges = value;

@@ -56,10 +56,10 @@ namespace rwby
             var topState = state;
             while (true)
             {
-                int realFrame = onInterrupt ? state.totalFrames+1 : Mathf.Clamp(CurrentStateFrame, 0, state.totalFrames);
+                int realFrame = onInterrupt ? topState.totalFrames+1 : Mathf.Clamp(CurrentStateFrame, 0, state.totalFrames);
                 foreach (var d in state.data)
                 {
-                    ProcessStateVariables(state, d, realFrame, onInterrupt);
+                    ProcessStateVariables(state, d, realFrame, topState.totalFrames, onInterrupt);
                 }
 
                 if (!state.useBaseState) break;
@@ -74,15 +74,14 @@ namespace rwby
             }
         }
         
-        public void ProcessStateVariables(StateTimeline state, IStateVariables d, int realFrame, bool onInterrupt)
+        public void ProcessStateVariables(StateTimeline state, IStateVariables d, int realFrame, int totalFrames, bool onInterrupt)
         {
             var valid = true;
             for (int j = 0; j < d.FrameRanges.Length; j++)
             {
-                if (!onInterrupt && realFrame != 0 && d.FrameRanges[j].x == -1) break;
-                if (onInterrupt && d.FrameRanges[j].x == -2) break;
-                if (!(realFrame < d.FrameRanges[j].x) &&
-                    !(realFrame > d.FrameRanges[j].y)) continue;
+                int frx = ConvertFrameRangeNumber((int)d.FrameRanges[j].x, totalFrames);
+                int fry = ConvertFrameRangeNumber((int)d.FrameRanges[j].y, totalFrames);
+                if (!(realFrame < frx) && !(realFrame > fry)) continue;
                 valid = false;
                 break;
             }
@@ -94,8 +93,15 @@ namespace rwby
             foreach (var t in d.Children)
             {
                 int childStateIndex = state.stateVariablesIDMap[t];
-                ProcessStateVariables(state, state.data[childStateIndex], realFrame, onInterrupt);
+                ProcessStateVariables(state, state.data[childStateIndex], realFrame, totalFrames, onInterrupt);
             }
+        }
+
+        private int ConvertFrameRangeNumber(int number, int totalFrames)
+        {
+            if (number == -1) return totalFrames;
+            if (number == -2) return totalFrames+1;
+            return number;
         }
 
         public bool TryCondition(StateTimeline state, IConditionVariables condition, int frame)

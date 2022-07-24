@@ -21,7 +21,6 @@ MonoBehaviour:
   autoLoopFrame: 1
   data:
   - rid: 2193520669817307137
-  - rid: 2193520669817307136
   - rid: 2193520691360038912
   stateGroundedGroup: 2
   stateType: 0
@@ -42,21 +41,6 @@ MonoBehaviour:
     RefIds:
     - rid: -2
       type: {class: , ns: , asm: }
-    - rid: 2193520669817307136
-      type: {class: VarSetMovement, ns: rwby, asm: rwby.csharp}
-      data:
-        name: Forward Movement
-        id: 0
-        parent: -1
-        frameRanges:
-        - {x: 0, y: 0}
-        condition:
-          rid: -2
-        inputSource: 0
-        normalizeInputSource: 0
-        useRotationIfInputZero: 0
-        force:
-          rid: 2193520669817307138
     - rid: 2193520669817307137
       type: {class: VarModifyRotation, ns: rwby, asm: rwby.csharp}
       data:
@@ -70,13 +54,6 @@ MonoBehaviour:
         modifyType: 1
         rotateTowards: 0
         eulerAngle: {x: 0, y: 0, z: 0}
-    - rid: 2193520669817307138
-      type: {class: FighterBaseStatReferenceFloat, ns: rwby, asm: rwby.csharp}
-      data:
-        inverse: 0
-        statReference: 0
-        value: 30
-        variable: 0
     - rid: 2193520691360038912
       type: {class: VarModifyFallSpeed, ns: rwby, asm: rwby.csharp}
       data:

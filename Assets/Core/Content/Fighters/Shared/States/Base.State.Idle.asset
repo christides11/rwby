@@ -22,6 +22,7 @@ MonoBehaviour:
   data:
   - rid: 2193520623268134912
   - rid: 2193520623268134913
+  - rid: 2193520697185665054
   stateGroundedGroup: 1
   stateType: 1
   maxUsesInString: -1
@@ -63,3 +64,24 @@ MonoBehaviour:
         condition:
           rid: -2
         asset: {fileID: 11400000, guid: 124c79362d203b84da4165660d6a1f1a, type: 2}
+    - rid: 2193520697185665054
+      type: {class: VarApplyTraction, ns: rwby, asm: rwby.csharp}
+      data:
+        name: 
+        id: 2
+        parent: -1
+        frameRanges:
+        - {x: 1, y: -1}
+        condition:
+          rid: -2
+        traction:
+          rid: 2193520697185665055
+        applyMovement: 1
+        applyGravity: 0
+    - rid: 2193520697185665055
+      type: {class: FighterBaseStatReferenceFloat, ns: rwby, asm: rwby.csharp}
+      data:
+        inverse: 0
+        statReference: 1
+        value: 0
+        variable: 0

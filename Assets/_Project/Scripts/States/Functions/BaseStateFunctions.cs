@@ -213,7 +213,7 @@ namespace rwby
 
             foreach (var d in vars.asset.data)
             {
-                f.FStateManager.ProcessStateVariables((rwby.StateTimeline)arg3, d, arg4, false);
+                f.FStateManager.ProcessStateVariables((rwby.StateTimeline)arg3, d, arg4, arg3.totalFrames, false);
             }
         }
 

@@ -15,7 +15,7 @@ namespace rwby
         [Networked] public float forceGravity { get; set; }
 
         [SerializeField] protected FighterManager manager;
-        [SerializeField] protected FighterCC kCC;
+        public FighterCC kCC;
 
         protected Vector3 rotationDir;
 

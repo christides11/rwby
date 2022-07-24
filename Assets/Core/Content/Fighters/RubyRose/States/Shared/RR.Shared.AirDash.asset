@@ -10,19 +10,20 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7789f25d17401bc4b915ca6fcecf2a29, type: 3}
-  m_Name: Base.State.RunBrake
+  m_Name: RR.Shared.AirDash
   m_EditorClassIdentifier: 
-  stateName: Run Brake
-  useBaseState: 0
-  baseState: {fileID: 0}
-  totalFrames: 5
+  stateName: Air Dash
+  useBaseState: 1
+  baseState: {fileID: 11400000, guid: b327741d551d31c4185926fec1031b5e, type: 2}
+  totalFrames: 15
   autoIncrement: 1
-  autoLoop: 0
+  autoLoop: 1
   autoLoopFrame: 1
   data:
-  - rid: 2193520716547358734
-  stateGroundedGroup: 1
-  stateType: 0
+  - rid: 2193520740721754112
+  - rid: 2193520740721754114
+  stateGroundedGroup: 2
+  stateType: 1
   maxUsesInString: -1
   allowBaseStateTransitions: 1
   inputSequence:
@@ -34,30 +35,44 @@ MonoBehaviour:
     rid: -2
   hitboxInfo: []
   throwboxInfo: []
-  hurtboxInfo: []
+  hurtboxInfo:
+  - hitInvincible: 0
+    projectileInvincible: 0
   references:
     version: 2
     RefIds:
     - rid: -2
       type: {class: , ns: , asm: }
-    - rid: 2193520716547358734
-      type: {class: VarApplyTraction, ns: rwby, asm: rwby.csharp}
+    - rid: 2193520740721754112
+      type: {class: VarSetMovement, ns: rwby, asm: rwby.csharp}
       data:
         name: 
         id: 0
         parent: -1
         frameRanges:
-        - {x: 1, y: -1}
+        - {x: 0, y: 0}
         condition:
           rid: -2
-        traction:
-          rid: 2193520716547358735
-        applyMovement: 1
-        applyGravity: 0
-    - rid: 2193520716547358735
+        inputSource: 0
+        normalizeInputSource: 0
+        useRotationIfInputZero: 0
+        force:
+          rid: 2193520740721754113
+    - rid: 2193520740721754113
       type: {class: FighterBaseStatReferenceFloat, ns: rwby, asm: rwby.csharp}
       data:
         inverse: 0
-        statReference: 1
-        value: 0
+        statReference: 0
+        value: 30
         variable: 0
+    - rid: 2193520740721754114
+      type: {class: VarExternal, ns: rwby, asm: rwby.csharp}
+      data:
+        name: Return to Aerial
+        id: 1
+        parent: -1
+        frameRanges:
+        - {x: -1, y: -1}
+        condition:
+          rid: -2
+        asset: {fileID: 0}

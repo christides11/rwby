@@ -10,18 +10,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7789f25d17401bc4b915ca6fcecf2a29, type: 3}
-  m_Name: RR.Shared.Walk
+  m_Name: RR.Shared.Fall
   m_EditorClassIdentifier: 
-  stateName: Walk
+  stateName: Fall
   useBaseState: 1
-  baseState: {fileID: 11400000, guid: f56f3b8269a1d364b8ffce5b1636054d, type: 2}
-  totalFrames: 79
+  baseState: {fileID: 11400000, guid: ee529483836de604baef12cfb3fe819b, type: 2}
+  totalFrames: 10
   autoIncrement: 1
   autoLoop: 1
   autoLoopFrame: 1
   data:
-  - rid: 2193520740721754118
-  stateGroundedGroup: 1
+  - rid: 2193520740721754121
+  stateGroundedGroup: 2
   stateType: 1
   maxUsesInString: -1
   allowBaseStateTransitions: 1
@@ -40,27 +40,26 @@ MonoBehaviour:
     RefIds:
     - rid: -2
       type: {class: , ns: , asm: }
-    - rid: 2193520740721754118
+    - rid: 2193520740721754121
       type: {class: VarChangeState, ns: rwby, asm: rwby.csharp}
       data:
-        name: Try Idle
+        name: Try Land
         id: 0
         parent: -1
         frameRanges:
         - {x: 1, y: -1}
         condition:
-          rid: 2193520740721754120
+          rid: 2193520740721754123
         checkInputSequence: 0
         checkCondition: 0
         stateMovesetID: -1
         state:
-          rid: 2193520740721754119
-    - rid: 2193520740721754119
+          rid: 2193520740721754122
+    - rid: 2193520740721754122
       type: {class: FighterCmnStateReference, ns: rwby, asm: rwby.csharp}
       data:
         state: 1
-    - rid: 2193520740721754120
-      type: {class: ConditionMoveStickMagnitude, ns: rwby, asm: rwby.csharp}
+    - rid: 2193520740721754123
+      type: {class: ConditionIsGrounded, ns: rwby, asm: rwby.csharp}
       data:
-        minValue: 0
-        maxValue: 0
+        inverse: 0

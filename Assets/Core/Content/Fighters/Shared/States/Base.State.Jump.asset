@@ -20,118 +20,138 @@ MonoBehaviour:
   autoLoop: 1
   autoLoopFrame: 5
   data:
-  - rid: 6951768367642443821
-  - rid: 6951768367642443836
-  - rid: 6951768367642443794
-  - rid: 6951768358483656717
-  - rid: 6951768367642443788
-  - rid: 6951768367642443779
+  - rid: 2193520703102779392
+  - rid: 2193520703102779404
+  - rid: 2193520703102779397
   stateGroundedGroup: 2
+  stateType: 0
+  maxUsesInString: -1
   allowBaseStateTransitions: 1
+  inputSequence:
+    executeWindow: 3
+    executeInputs: []
+    sequenceWindow: 8
+    sequenceInputs: []
+  condition:
+    rid: -2
+  hitboxInfo: []
+  throwboxInfo: []
+  hurtboxInfo: []
   references:
     version: 2
     RefIds:
     - rid: -2
       type: {class: , ns: , asm: }
-    - rid: 6951768358483656717
+    - rid: 2193520703102779392
       type: {class: VarApplyGravity, ns: rwby, asm: rwby.csharp}
       data:
+        name: 
+        id: 0
+        parent: -1
         frameRanges:
-        - {x: 2, y: 10}
+        - {x: 2, y: -1}
         condition:
           rid: -2
         useValue: 0
-        jumpHeight:
-          rid: 6951768367642443776
-        jumpTime:
-          rid: 6951768367642443777
         value:
           rid: -2
-        gravityMultiplier:
-          rid: 6951768367642443786
+        jumpHeight:
+          rid: 2193520703102779393
+        jumpTime:
+          rid: 2193520703102779394
+        multi:
+          rid: 2193520703102779395
         maxFallSpeed:
-          rid: 6951768367642443778
-        children: []
-    - rid: 6951768367642443776
+          rid: 2193520703102779396
+    - rid: 2193520703102779393
       type: {class: FighterBaseStatReferenceFloat, ns: rwby, asm: rwby.csharp}
       data:
         inverse: 0
         statReference: 1
         value: 0
         variable: 13
-    - rid: 6951768367642443777
+    - rid: 2193520703102779394
       type: {class: FighterBaseStatReferenceFloat, ns: rwby, asm: rwby.csharp}
       data:
         inverse: 0
         statReference: 1
         value: 0
         variable: 12
-    - rid: 6951768367642443778
+    - rid: 2193520703102779395
+      type: {class: FighterBaseStatReferenceFloat, ns: rwby, asm: rwby.csharp}
+      data:
+        inverse: 0
+        statReference: 0
+        value: 1
+        variable: 0
+    - rid: 2193520703102779396
       type: {class: FighterBaseStatReferenceFloat, ns: rwby, asm: rwby.csharp}
       data:
         inverse: 0
         statReference: 1
         value: 0
         variable: 23
-    - rid: 6951768367642443779
+    - rid: 2193520703102779397
       type: {class: VarApplyMovement, ns: rwby, asm: rwby.csharp}
       data:
+        name: 
+        id: 1
+        parent: -1
         frameRanges:
-        - {x: -1, y: -1}
+        - {x: 1, y: -1}
         condition:
           rid: -2
         inputSource: 0
         normalizeInputSource: 0
         useRotationIfInputZero: 0
         baseAccel:
-          rid: 6951768367642443780
+          rid: 2193520703102779398
         movementAccel:
-          rid: 6951768367642443781
+          rid: 2193520703102779399
         deceleration:
-          rid: 6951768367642443782
+          rid: 2193520703102779400
         minSpeed:
-          rid: 6951768367642443783
+          rid: 2193520703102779401
         maxSpeed:
-          rid: 6951768367642443784
+          rid: 2193520703102779402
         accelerationFromDot:
-          rid: 6951768367642443785
-        children: []
-    - rid: 6951768367642443780
+          rid: 2193520703102779403
+    - rid: 2193520703102779398
       type: {class: FighterBaseStatReferenceFloat, ns: rwby, asm: rwby.csharp}
       data:
         inverse: 0
         statReference: 1
         value: 0
         variable: 25
-    - rid: 6951768367642443781
+    - rid: 2193520703102779399
       type: {class: FighterBaseStatReferenceFloat, ns: rwby, asm: rwby.csharp}
       data:
         inverse: 0
         statReference: 1
         value: 0
         variable: 26
-    - rid: 6951768367642443782
+    - rid: 2193520703102779400
       type: {class: FighterBaseStatReferenceFloat, ns: rwby, asm: rwby.csharp}
       data:
         inverse: 0
         statReference: 1
         value: 0
         variable: 27
-    - rid: 6951768367642443783
+    - rid: 2193520703102779401
       type: {class: FighterBaseStatReferenceFloat, ns: rwby, asm: rwby.csharp}
       data:
         inverse: 0
         statReference: 0
         value: 0
         variable: 0
-    - rid: 6951768367642443784
+    - rid: 2193520703102779402
       type: {class: FighterBaseStatReferenceFloat, ns: rwby, asm: rwby.csharp}
       data:
         inverse: 0
         statReference: 1
         value: 0
         variable: 24
-    - rid: 6951768367642443785
+    - rid: 2193520703102779403
       type: {class: FighterBaseStatReferenceAnimationCurve, ns: rwby, asm: rwby.csharp}
       data:
         inverse: 0
@@ -143,33 +163,28 @@ MonoBehaviour:
           m_PostInfinity: 2
           m_RotationOrder: 4
         variable: 2
-    - rid: 6951768367642443786
-      type: {class: FighterBaseStatReferenceFloat, ns: rwby, asm: rwby.csharp}
-      data:
-        inverse: 0
-        statReference: 0
-        value: 1
-        variable: 0
-    - rid: 6951768367642443788
+    - rid: 2193520703102779404
       type: {class: VarApplyGravity, ns: rwby, asm: rwby.csharp}
       data:
+        name: Extra Gravity
+        id: 2
+        parent: -1
         frameRanges:
-        - {x: 5, y: 10}
+        - {x: 5, y: -1}
         condition:
-          rid: 6951768367642443789
+          rid: 2193520703102779405
         useValue: 0
-        jumpHeight:
-          rid: 6951768367642443790
-        jumpTime:
-          rid: 6951768367642443791
         value:
           rid: -2
-        gravityMultiplier:
-          rid: 6951768367642443792
+        jumpHeight:
+          rid: 2193520703102779407
+        jumpTime:
+          rid: 2193520703102779408
+        multi:
+          rid: 2193520703102779409
         maxFallSpeed:
-          rid: 6951768367642443793
-        children: []
-    - rid: 6951768367642443789
+          rid: 2193520703102779410
+    - rid: 2193520703102779405
       type: {class: ConditionButton, ns: rwby, asm: rwby.csharp}
       data:
         inverse: 1
@@ -177,69 +192,31 @@ MonoBehaviour:
         buttonState: 0
         offset: 0
         buffer: 0
-    - rid: 6951768367642443790
+    - rid: 2193520703102779407
       type: {class: FighterBaseStatReferenceFloat, ns: rwby, asm: rwby.csharp}
       data:
         inverse: 0
         statReference: 1
         value: 0
         variable: 13
-    - rid: 6951768367642443791
+    - rid: 2193520703102779408
       type: {class: FighterBaseStatReferenceFloat, ns: rwby, asm: rwby.csharp}
       data:
         inverse: 0
         statReference: 1
         value: 0
         variable: 12
-    - rid: 6951768367642443792
+    - rid: 2193520703102779409
       type: {class: FighterBaseStatReferenceFloat, ns: rwby, asm: rwby.csharp}
       data:
         inverse: 0
         statReference: 0
         value: 0.2
         variable: 0
-    - rid: 6951768367642443793
+    - rid: 2193520703102779410
       type: {class: FighterBaseStatReferenceFloat, ns: rwby, asm: rwby.csharp}
       data:
         inverse: 0
         statReference: 1
         value: 0
         variable: 23
-    - rid: 6951768367642443794
-      type: {class: VarChangeState, ns: rwby, asm: rwby.csharp}
-      data:
-        frameRanges:
-        - {x: 5, y: 10}
-        condition:
-          rid: 6951768367642443795
-        stateMovesetID: -1
-        state:
-          rid: 6951768367642443796
-        children: []
-    - rid: 6951768367642443795
-      type: {class: ConditionFallSpeed, ns: rwby, asm: rwby.csharp}
-      data:
-        absoluteValue: 0
-        minValue: -100
-        maxValue: 5
-    - rid: 6951768367642443796
-      type: {class: FighterCmnStateReference, ns: rwby, asm: rwby.csharp}
-      data:
-        state: 26
-    - rid: 6951768367642443821
-      type: {class: VarExternal, ns: rwby, asm: rwby.csharp}
-      data:
-        frameRanges:
-        - {x: 5, y: 10}
-        condition:
-          rid: -2
-        asset: {fileID: 11400000, guid: bc799e59dd7b59244a7f8dcbdcafabf0, type: 2}
-        children: []
-    - rid: 6951768367642443836
-      type: {class: VarExternal, ns: rwby, asm: rwby.csharp}
-      data:
-        frameRanges: []
-        condition:
-          rid: -2
-        asset: {fileID: 11400000, guid: 280b115f7de70e2429fc1b2a1d4051f2, type: 2}
-        children: []
