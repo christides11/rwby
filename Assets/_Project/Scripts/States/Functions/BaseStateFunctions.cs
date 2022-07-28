@@ -471,5 +471,14 @@ namespace rwby
                 fm.PickLockonTarget(fm.lockonMaxDistance);
             }
         }
+        
+        public static void LogMessage(IFighterBase fighter, IStateVariables variables, HnSF.StateTimeline arg3, int arg4)
+        {
+            FighterManager fm = (FighterManager)fighter;
+            if (fm.HardTargeting) return;
+            VarDebugLog vars = (VarDebugLog)variables;
+            
+            Debug.Log(vars.message);
+        }
     }
 }

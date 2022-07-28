@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d4d62b28b52db7d459dd2f283317c705, type: 3}
-  m_Name: External.IdleInterrupts
+  m_Name: Base.External.IdleInterrupts
   m_EditorClassIdentifier: 
   data:
   - rid: 6951768313468026889
@@ -21,14 +21,18 @@ MonoBehaviour:
     - rid: 6951768313468026886
       type: {class: VarChangeState, ns: rwby, asm: rwby.csharp}
       data:
+        name: Try Walk
+        id: 0
+        parent: 0
         frameRanges:
         - {x: -1, y: -1}
         condition:
           rid: 6951768313468026887
+        checkInputSequence: 0
+        checkCondition: 0
         stateMovesetID: -1
         state:
           rid: 6951768313468026888
-        children: []
     - rid: 6951768313468026887
       type: {class: ConditionMoveStickMagnitude, ns: rwby, asm: rwby.csharp}
       data:
@@ -41,14 +45,18 @@ MonoBehaviour:
     - rid: 6951768313468026889
       type: {class: VarChangeState, ns: rwby, asm: rwby.csharp}
       data:
+        name: Try Run
+        id: 0
+        parent: 0
         frameRanges:
         - {x: -1, y: -1}
         condition:
           rid: 6951768313468026890
+        checkInputSequence: 0
+        checkCondition: 0
         stateMovesetID: -1
         state:
           rid: 6951768313468026891
-        children: []
     - rid: 6951768313468026890
       type: {class: ConditionButton, ns: rwby, asm: rwby.csharp}
       data:

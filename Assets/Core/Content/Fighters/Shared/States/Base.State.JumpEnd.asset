@@ -20,8 +20,10 @@ MonoBehaviour:
   autoLoop: 0
   autoLoopFrame: 1
   data:
+  - rid: 2193520768546504705
   - rid: 2193520703102779412
   - rid: 2193520703102779417
+  - rid: 2193520791838261257
   stateGroundedGroup: 2
   stateType: 0
   maxUsesInString: -1
@@ -162,3 +164,37 @@ MonoBehaviour:
           m_PostInfinity: 2
           m_RotationOrder: 4
         variable: 2
+    - rid: 2193520768546504705
+      type: {class: VarChangeState, ns: rwby, asm: rwby.csharp}
+      data:
+        name: Try Land
+        id: 2
+        parent: -1
+        frameRanges:
+        - {x: 1, y: -1}
+        condition:
+          rid: 2193520768546504707
+        checkInputSequence: 0
+        checkCondition: 0
+        stateMovesetID: -1
+        state:
+          rid: 2193520768546504706
+    - rid: 2193520768546504706
+      type: {class: FighterCmnStateReference, ns: rwby, asm: rwby.csharp}
+      data:
+        state: 28
+    - rid: 2193520768546504707
+      type: {class: ConditionIsGrounded, ns: rwby, asm: rwby.csharp}
+      data:
+        inverse: 0
+    - rid: 2193520791838261257
+      type: {class: VarExternal, ns: rwby, asm: rwby.csharp}
+      data:
+        name: Aerial Intterrupt
+        id: 3
+        parent: -1
+        frameRanges:
+        - {x: 1, y: -1}
+        condition:
+          rid: -2
+        asset: {fileID: 11400000, guid: 60616eb90e93a5644a1f15ae2743f165, type: 2}

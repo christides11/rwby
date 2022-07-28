@@ -13,27 +13,23 @@ MonoBehaviour:
   m_Name: RR.Scythe.External.TryGroundAtk
   m_EditorClassIdentifier: 
   data:
-  - rid: 220443939427844101
   - rid: 6951768528003006472
   references:
     version: 2
     RefIds:
     - rid: -2
       type: {class: , ns: , asm: }
-    - rid: 220443896379605000
+    - rid: 2193520832531922950
       type: {class: RubyRoseStateReference, ns: rwby.core, asm: rwby.core}
       data:
         state: 51
-    - rid: 220443939427844101
-      type: {class: VarTrySpecial, ns: rwby, asm: rwby.csharp}
-      data:
-        frameRanges: []
-        condition:
-          rid: -2
-        children: []
     - rid: 6951768528003006472
       type: {class: VarChangeStateList, ns: rwby, asm: rwby.csharp}
       data:
+        name: 
+        id: 0
+        parent: 0
+        children: 
         frameRanges: []
         condition:
           rid: -2
@@ -45,8 +41,7 @@ MonoBehaviour:
             rid: 6951768528003006473
         - movesetID: -1
           state:
-            rid: 220443896379605000
-        children: []
+            rid: 2193520832531922950
     - rid: 6951768528003006473
       type: {class: RubyRoseStateReference, ns: rwby.core, asm: rwby.core}
       data:

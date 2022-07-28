@@ -10,19 +10,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7789f25d17401bc4b915ca6fcecf2a29, type: 3}
-  m_Name: Base.State.RunInit
+  m_Name: RR.Shared.Jump
   m_EditorClassIdentifier: 
-  stateName: Run (Init)
-  useBaseState: 0
-  baseState: {fileID: 0}
-  totalFrames: 15
+  stateName: Jump
+  useBaseState: 1
+  baseState: {fileID: 11400000, guid: 20910d20eb91c5740b393cf8e38b81f1, type: 2}
+  totalFrames: 10
   autoIncrement: 1
   autoLoop: 1
-  autoLoopFrame: 1
+  autoLoopFrame: 5
   data:
-  - rid: 2193520783924396044
-  - rid: 2193520716547358736
-  stateGroundedGroup: 1
+  - rid: 2193520750553202689
+  stateGroundedGroup: 2
   stateType: 0
   maxUsesInString: -1
   allowBaseStateTransitions: 1
@@ -41,44 +40,28 @@ MonoBehaviour:
     RefIds:
     - rid: -2
       type: {class: , ns: , asm: }
-    - rid: 2193520716547358736
-      type: {class: VarSetMovement, ns: rwby, asm: rwby.csharp}
+    - rid: 2193520750553202689
+      type: {class: VarChangeState, ns: rwby, asm: rwby.csharp}
       data:
-        name: 
+        name: Try JumpEnd
         id: 0
         parent: -1
         frameRanges:
-        - {x: 0, y: 0}
+        - {x: 5, y: -1}
         condition:
-          rid: -2
-        inputSource: 0
-        normalizeInputSource: 0
-        useRotationIfInputZero: 0
-        force:
-          rid: 2193520716547358737
-    - rid: 2193520716547358737
-      type: {class: FighterBaseStatReferenceFloat, ns: rwby, asm: rwby.csharp}
-      data:
-        inverse: 0
-        statReference: 1
-        value: 0
-        variable: 7
-    - rid: 2193520783924396044
-      type: {class: VarChangeState, ns: rwby, asm: rwby.csharp}
-      data:
-        name: 
-        id: 1
-        parent: -1
-        frameRanges:
-        - {x: -1, y: -1}
-        condition:
-          rid: -2
+          rid: 2193520750553202691
         checkInputSequence: 0
         checkCondition: 0
         stateMovesetID: -1
         state:
-          rid: 2193520783924396045
-    - rid: 2193520783924396045
+          rid: 2193520750553202690
+    - rid: 2193520750553202690
       type: {class: FighterCmnStateReference, ns: rwby, asm: rwby.csharp}
       data:
-        state: 3
+        state: 26
+    - rid: 2193520750553202691
+      type: {class: ConditionFallSpeed, ns: rwby, asm: rwby.csharp}
+      data:
+        absoluteValue: 0
+        minValue: -100
+        maxValue: 5

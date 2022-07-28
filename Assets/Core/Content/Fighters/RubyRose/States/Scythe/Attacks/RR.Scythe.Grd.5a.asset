@@ -20,19 +20,9 @@ MonoBehaviour:
   autoLoop: 0
   autoLoopFrame: 1
   data:
-  - rid: 5282967687436435456
-  - rid: 5282967687436435458
-  - rid: 6951768528003006469
-  - rid: 6951768528003006475
-  - rid: 220443471284797440
-  - rid: 220443471284797443
-  - rid: 220443471284797448
-  - rid: 220443896379604993
-  - rid: 6951768528003006470
-  - rid: 6951768538707132419
-  - rid: 220443896379604999
-  - rid: 220443896379604994
-  - rid: 220443896379605001
+  - rid: 2193520813467238401
+  - rid: 2193520813467238403
+  - rid: 2193520817874927616
   stateGroundedGroup: 1
   stateType: 2
   maxUsesInString: 2
@@ -62,7 +52,7 @@ MonoBehaviour:
       hitForceRelation: 0
       autolink: 0
       autolinkPercentage: 0
-      hitForce: {x: 0, y: 0, z: 10}
+      hitForce: {x: 0, y: 0, z: 15}
       blockForce: {x: 0, y: 0, z: 0}
       hitGravity: 0
       pullPushCurve:
@@ -90,8 +80,8 @@ MonoBehaviour:
         m_PostInfinity: 2
         m_RotationOrder: 4
       pullPushMaxDistance: 10
-      attackerHitstop: 8
-      hitstop: 8
+      attackerHitstop: 4
+      hitstop: 4
       hitstun: 60
       blockstun: 15
     groundCounterHitGroup:
@@ -176,186 +166,63 @@ MonoBehaviour:
     RefIds:
     - rid: -2
       type: {class: , ns: , asm: }
-    - rid: 220443471284797440
-      type: {class: VarModifyEffectSet, ns: rwby, asm: rwby.csharp}
-      data:
-        frameRanges:
-        - {x: 7, y: 7}
-        condition:
-          rid: -2
-        modifyType: 1
-        wantedEffects:
-        - effectbank:
-            modGUID:
-              guid: 1d292c1f00000000
-            contentType: 6
-            contentIdx: 0
-          effect: slash
-          parented: 1
-          offset: {x: 0, y: 0.8, z: 0}
-          rotation: {x: -15, y: 180, z: 180}
-          scale: {x: 1, y: 0.2, z: 1}
-        children: []
-    - rid: 220443471284797443
-      type: {class: VarModifyEffectSet, ns: rwby, asm: rwby.csharp}
-      data:
-        frameRanges:
-        - {x: 31, y: 31}
-        condition:
-          rid: -2
-        modifyType: 1
-        wantedEffects: []
-        children: []
-    - rid: 220443471284797448
-      type: {class: VarModifyEffectFrame, ns: rwby, asm: rwby.csharp}
-      data:
-        frameRanges:
-        - {x: 9, y: 30}
-        condition:
-          rid: -2
-        modifyType: 0
-        effects: 00000000
-        frame: 1
-        children: []
-    - rid: 220443896379604993
-      type: {class: VarModifyEffectRotation, ns: rwby, asm: rwby.csharp}
-      data:
-        frameRanges:
-        - {x: 10, y: 21}
-        condition:
-          rid: -2
-        modifyType: 0
-        effects: 00000000
-        rotation: {x: 0, y: -10, z: 0}
-        children: []
-    - rid: 220443896379604994
-      type: {class: VarApplyTraction, ns: rwby, asm: rwby.csharp}
-      data:
-        frameRanges:
-        - {x: 3, y: 30}
-        condition:
-          rid: -2
-        traction:
-          rid: 220443896379604995
-        applyMovement: 1
-        applyGravity: 0
-        children: []
-    - rid: 220443896379604995
-      type: {class: FighterBaseStatReferenceFloat, ns: rwby, asm: rwby.csharp}
-      data:
-        inverse: 0
-        statReference: 0
-        value: 40
-        variable: 0
-    - rid: 220443896379604999
-      type: {class: VarCreateBox, ns: rwby, asm: rwby.csharp}
-      data:
-        frameRanges:
-        - {x: 10, y: 15}
-        condition:
-          rid: -2
-        boxType: 1
-        attachedTo: 0
-        shape: 0
-        offset: {x: -0.5, y: 1, z: 0}
-        boxExtents: {x: 0.6, y: 1, z: 1.4}
-        radius: 0
-        definitionIndex: 0
-        children: []
-    - rid: 220443896379605001
-      type: {class: VarExternal, ns: rwby, asm: rwby.csharp}
-      data:
-        frameRanges:
-        - {x: 13, y: 30}
-        condition:
-          rid: -2
-        asset: {fileID: 11400000, guid: 38d47b53b1c6fa24580e163448503c28, type: 2}
-        children: []
-    - rid: 5282967687436435456
-      type: {class: VarFindSoftTarget, ns: rwby, asm: rwby.csharp}
-      data:
-        frameRanges:
-        - {x: 0, y: 0}
-        condition:
-          rid: -2
-        children: []
-    - rid: 5282967687436435458
-      type: {class: VarRotateTowards, ns: rwby, asm: rwby.csharp}
-      data:
-        frameRanges:
-        - {x: 1, y: 3}
-        condition:
-          rid: -2
-        rotateTowards: 0
-        eulerAngle: {x: 0, y: 0, z: 0}
-        rotateTowardsTarget: 1
-        rotationSpeed:
-          rid: 5282967687436435459
-        children: []
-    - rid: 5282967687436435459
-      type: {class: FighterBaseStatReferenceFloat, ns: rwby, asm: rwby.csharp}
-      data:
-        inverse: 0
-        statReference: 0
-        value: 60
-        variable: 0
-    - rid: 6951768528003006469
-      type: {class: VarModifyAnimationSet, ns: rwby, asm: rwby.csharp}
-      data:
-        frameRanges:
-        - {x: 0, y: 0}
-        condition:
-          rid: -2
-        modifyType: 1
-        wantedAnimations:
-        - animationbank:
-            modGUID:
-              guid: 1d292c1f00000000
-            contentType: 7
-            contentIdx: 0
-          animation: scythe.grd.a
-        fadeTime: 0.05
-        children: []
-    - rid: 6951768528003006470
+    - rid: 2193520813467238401
       type: {class: VarChangeState, ns: rwby, asm: rwby.csharp}
       data:
+        name: To Idle
+        id: 0
+        parent: -1
+        children: 
         frameRanges:
-        - {x: 30, y: 30}
+        - {x: -1, y: -1}
         condition:
           rid: -2
         checkInputSequence: 0
         checkCondition: 0
         stateMovesetID: -1
         state:
-          rid: 6951768528003006471
-        children: []
-    - rid: 6951768528003006471
+          rid: 2193520813467238402
+    - rid: 2193520813467238402
       type: {class: FighterCmnStateReference, ns: rwby, asm: rwby.csharp}
       data:
         state: 1
-    - rid: 6951768528003006475
-      type: {class: VarModifyAnimationFrame, ns: rwby, asm: rwby.csharp}
-      data:
-        frameRanges:
-        - {x: -1, y: -1}
-        condition:
-          rid: -2
-        modifyType: 0
-        animations: 00000000
-        frame: 1
-        children: []
-    - rid: 6951768538707132419
+    - rid: 2193520813467238403
       type: {class: VarCreateBox, ns: rwby, asm: rwby.csharp}
       data:
+        name: Hitbox
+        id: 1
+        parent: -1
+        children: 
         frameRanges:
-        - {x: 7, y: 9}
+        - {x: 5, y: 10}
         condition:
           rid: -2
         boxType: 1
         attachedTo: 0
         shape: 0
-        offset: {x: 0.5, y: 1, z: 0}
-        boxExtents: {x: 0.6, y: 1, z: 1.4}
+        offset: {x: 0, y: 1, z: 0}
+        boxExtents: {x: 1, y: 1, z: 1}
         radius: 0
         definitionIndex: 0
-        children: []
+    - rid: 2193520817874927616
+      type: {class: VarApplyTraction, ns: rwby, asm: rwby.csharp}
+      data:
+        name: 
+        id: 2
+        parent: -1
+        children: 
+        frameRanges:
+        - {x: 4, y: -1}
+        condition:
+          rid: -2
+        traction:
+          rid: 2193520817874927617
+        applyMovement: 1
+        applyGravity: 0
+    - rid: 2193520817874927617
+      type: {class: FighterBaseStatReferenceFloat, ns: rwby, asm: rwby.csharp}
+      data:
+        inverse: 0
+        statReference: 0
+        value: 30
+        variable: 0

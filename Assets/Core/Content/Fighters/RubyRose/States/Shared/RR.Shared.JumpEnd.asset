@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7789f25d17401bc4b915ca6fcecf2a29, type: 3}
-  m_Name: RR.Scythe.JumpEnd
+  m_Name: RR.Shared.JumpEnd
   m_EditorClassIdentifier: 
   stateName: Jump (End)
   useBaseState: 1
@@ -20,8 +20,7 @@ MonoBehaviour:
   autoLoop: 0
   autoLoopFrame: 1
   data:
-  - rid: 6951768528003006466
-  - rid: 220443925126053890
+  - rid: 2193520750553202692
   stateGroundedGroup: 2
   stateType: 0
   maxUsesInString: -1
@@ -41,29 +40,22 @@ MonoBehaviour:
     RefIds:
     - rid: -2
       type: {class: , ns: , asm: }
-    - rid: 220443925126053890
-      type: {class: VarExternal, ns: rwby, asm: rwby.csharp}
+    - rid: 2193520750553202692
+      type: {class: VarChangeState, ns: rwby, asm: rwby.csharp}
       data:
+        name: Fall Transition
+        id: 0
+        parent: -1
         frameRanges:
         - {x: -1, y: -1}
         condition:
           rid: -2
-        asset: {fileID: 11400000, guid: 852b081cfd9efbb449cca3171458f8cc, type: 2}
-        children: []
-    - rid: 6951768528003006466
-      type: {class: VarModifyAnimationSet, ns: rwby, asm: rwby.csharp}
+        checkInputSequence: 0
+        checkCondition: 0
+        stateMovesetID: -1
+        state:
+          rid: 2193520750553202693
+    - rid: 2193520750553202693
+      type: {class: FighterCmnStateReference, ns: rwby, asm: rwby.csharp}
       data:
-        frameRanges:
-        - {x: 0, y: 0}
-        condition:
-          rid: -2
-        modifyType: 1
-        wantedAnimations:
-        - animationbank:
-            modGUID:
-              guid: 1d292c1f00000000
-            contentType: 7
-            contentIdx: 0
-          animation: fall
-        fadeTime: 0.05
-        children: []
+        state: 5

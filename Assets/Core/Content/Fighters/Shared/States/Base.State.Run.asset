@@ -22,6 +22,8 @@ MonoBehaviour:
   data:
   - rid: 2193520716547358725
   - rid: 2193520716547358732
+  - rid: 2193520789975990277
+  - rid: 2193520783924396046
   stateGroundedGroup: 1
   stateType: 0
   maxUsesInString: -1
@@ -135,3 +137,38 @@ MonoBehaviour:
         statReference: 1
         value: 0
         variable: 11
+    - rid: 2193520783924396046
+      type: {class: VarChangeState, ns: rwby, asm: rwby.csharp}
+      data:
+        name: Try RunBrake
+        id: 2
+        parent: -1
+        frameRanges:
+        - {x: 1, y: -1}
+        condition:
+          rid: 2193520783924396047
+        checkInputSequence: 0
+        checkCondition: 0
+        stateMovesetID: -1
+        state:
+          rid: 2193520783924396048
+    - rid: 2193520783924396047
+      type: {class: ConditionMoveStickMagnitude, ns: rwby, asm: rwby.csharp}
+      data:
+        minValue: 0
+        maxValue: 0
+    - rid: 2193520783924396048
+      type: {class: FighterCmnStateReference, ns: rwby, asm: rwby.csharp}
+      data:
+        state: 7
+    - rid: 2193520789975990277
+      type: {class: VarExternal, ns: rwby, asm: rwby.csharp}
+      data:
+        name: Ground Interrupts
+        id: 3
+        parent: -1
+        frameRanges:
+        - {x: 1, y: -1}
+        condition:
+          rid: -2
+        asset: {fileID: 11400000, guid: 42dc6338964d9494b9492888c730d00e, type: 2}

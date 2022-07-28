@@ -21,7 +21,7 @@ MonoBehaviour:
   autoLoopFrame: 1
   data:
   - rid: 2193520740721754112
-  - rid: 2193520740721754114
+  - rid: 2193520783924396052
   stateGroundedGroup: 2
   stateType: 1
   maxUsesInString: -1
@@ -63,16 +63,24 @@ MonoBehaviour:
       data:
         inverse: 0
         statReference: 0
-        value: 30
+        value: 15
         variable: 0
-    - rid: 2193520740721754114
-      type: {class: VarExternal, ns: rwby, asm: rwby.csharp}
+    - rid: 2193520783924396052
+      type: {class: VarChangeState, ns: rwby, asm: rwby.csharp}
       data:
-        name: Return to Aerial
+        name: To Fall
         id: 1
         parent: -1
         frameRanges:
         - {x: -1, y: -1}
         condition:
           rid: -2
-        asset: {fileID: 0}
+        checkInputSequence: 0
+        checkCondition: 0
+        stateMovesetID: -1
+        state:
+          rid: 2193520783924396053
+    - rid: 2193520783924396053
+      type: {class: FighterCmnStateReference, ns: rwby, asm: rwby.csharp}
+      data:
+        state: 5

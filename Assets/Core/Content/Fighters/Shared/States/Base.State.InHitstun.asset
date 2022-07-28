@@ -10,20 +10,19 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7789f25d17401bc4b915ca6fcecf2a29, type: 3}
-  m_Name: RR.Shared.Walk
+  m_Name: Base.State.InHitstun
   m_EditorClassIdentifier: 
-  stateName: Walk
-  useBaseState: 1
-  baseState: {fileID: 11400000, guid: f56f3b8269a1d364b8ffce5b1636054d, type: 2}
-  totalFrames: 79
+  stateName: 
+  useBaseState: 0
+  baseState: {fileID: 0}
+  totalFrames: 10
   autoIncrement: 1
   autoLoop: 1
   autoLoopFrame: 1
   data:
-  - rid: 2193520817874927619
-  - rid: 2193520817874927621
-  stateGroundedGroup: 1
-  stateType: 1
+  - rid: 2193520836063002624
+  stateGroundedGroup: 0
+  stateType: 0
   maxUsesInString: -1
   allowBaseStateTransitions: 1
   inputSequence:
@@ -41,30 +40,21 @@ MonoBehaviour:
     RefIds:
     - rid: -2
       type: {class: , ns: , asm: }
-    - rid: 2193520817874927619
-      type: {class: VarEmpty, ns: rwby, asm: rwby.csharp}
+    - rid: 2193520836063002624
+      type: {class: VarModifyHitstun, ns: rwby, asm: rwby.csharp}
       data:
-        name: Scythe
+        name: 
         id: 0
         parent: -1
-        children: 01000000
-        frameRanges:
-        - {x: 1, y: -1}
-        condition:
-          rid: 2193520817874927620
-    - rid: 2193520817874927620
-      type: {class: ConditionMoveset, ns: rwby, asm: rwby.csharp}
-      data:
-        moveset: 0
-    - rid: 2193520817874927621
-      type: {class: VarExternal, ns: rwby, asm: rwby.csharp}
-      data:
-        name: Try Ground Atk
-        id: 1
-        parent: 0
         children: 
         frameRanges:
         - {x: 1, y: -1}
         condition:
-          rid: -2
-        asset: {fileID: 11400000, guid: 38d47b53b1c6fa24580e163448503c28, type: 2}
+          rid: 2193520836063002625
+        modifyType: 0
+        value: -1
+    - rid: 2193520836063002625
+      type: {class: ConditionHitstunValue, ns: rwby, asm: rwby.csharp}
+      data:
+        minValue: 1
+        maxValue: 2147483647

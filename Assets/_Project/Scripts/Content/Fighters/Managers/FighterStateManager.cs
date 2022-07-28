@@ -5,6 +5,7 @@ using HnSF.Combat;
 using HnSF.Fighters;
 using UnityEngine;
 using UnityEngine.Playables;
+using UnityEngine.Profiling;
 
 namespace rwby
 {
@@ -53,12 +54,14 @@ namespace rwby
 
         private void ProcessState(StateTimeline state, bool onInterrupt = false, bool autoIncrement = false, bool autoLoop = false)
         {
+            //Profiler.BeginSample($"State Processing: {state.stateName}");
             var topState = state;
             while (true)
             {
                 int realFrame = onInterrupt ? topState.totalFrames+1 : Mathf.Clamp(CurrentStateFrame, 0, state.totalFrames);
                 foreach (var d in state.data)
                 {
+                    if (d.Parent != -1) continue; 
                     ProcessStateVariables(state, d, realFrame, topState.totalFrames, onInterrupt);
                 }
 
@@ -66,12 +69,17 @@ namespace rwby
                 state = (StateTimeline)state.baseState;
             }
             state = topState;
-            if (onInterrupt != false || !autoIncrement) return;
+            if (onInterrupt != false || !autoIncrement)
+            {
+                //Profiler.EndSample();
+                return;
+            }
             IncrementFrame(1);
             if (autoLoop && CurrentStateFrame > state.totalFrames)
             {
                 SetFrame(1);
             }
+            //Profiler.EndSample();
         }
         
         public void ProcessStateVariables(StateTimeline state, IStateVariables d, int realFrame, int totalFrames, bool onInterrupt)
@@ -90,6 +98,7 @@ namespace rwby
             if (d.Condition != null && !conditionMapper.TryCondition(d.Condition.GetType(), manager, d.Condition, state, realFrame)) return;
             functionMapper.functions[d.GetType()](manager, d, state, realFrame);
 
+            if (d.Children is null) return;
             foreach (var t in d.Children)
             {
                 int childStateIndex = state.stateVariablesIDMap[t];

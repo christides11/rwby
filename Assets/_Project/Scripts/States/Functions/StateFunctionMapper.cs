@@ -37,6 +37,7 @@ namespace rwby
             functions.Add(typeof(VarCreateProjectile), BaseStateFunctions.CreateProjectile);
             functions.Add(typeof(VarClearHitList), BaseStateFunctions.ClearHitList);
             functions.Add(typeof(VarFindSoftTarget), BaseStateFunctions.FindSoftTarget);
+            functions.Add(typeof(VarDebugLog), BaseStateFunctions.LogMessage);
         }
     }
 }

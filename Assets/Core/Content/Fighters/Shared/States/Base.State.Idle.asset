@@ -23,6 +23,7 @@ MonoBehaviour:
   - rid: 2193520623268134912
   - rid: 2193520623268134913
   - rid: 2193520697185665054
+  - rid: 2193520794128351234
   stateGroundedGroup: 1
   stateType: 1
   maxUsesInString: -1
@@ -85,3 +86,25 @@ MonoBehaviour:
         statReference: 1
         value: 0
         variable: 0
+    - rid: 2193520794128351234
+      type: {class: VarRotateTowards, ns: rwby, asm: rwby.csharp}
+      data:
+        name: 
+        id: 3
+        parent: -1
+        frameRanges:
+        - {x: 1, y: -1}
+        condition:
+          rid: -2
+        rotateTowards: 2
+        eulerAngle: {x: 0, y: 0, z: 0}
+        rotateTowardsTarget: 1
+        rotationSpeed:
+          rid: 2193520794128351235
+    - rid: 2193520794128351235
+      type: {class: FighterBaseStatReferenceFloat, ns: rwby, asm: rwby.csharp}
+      data:
+        inverse: 0
+        statReference: 1
+        value: 0
+        variable: 6

@@ -21,7 +21,9 @@ MonoBehaviour:
   autoLoopFrame: 1
   data:
   - rid: 2193520579074588673
-  - rid: 2193520579074588672
+  - rid: 2193520791838261265
+  - rid: 2193520817874927618
+  - rid: 2193520836063002646
   stateGroundedGroup: 1
   stateType: 1
   maxUsesInString: -1
@@ -43,23 +45,13 @@ MonoBehaviour:
     RefIds:
     - rid: -2
       type: {class: , ns: , asm: }
-    - rid: 2193520579074588672
-      type: {class: VarExternal, ns: rwby, asm: rwby.csharp}
-      data:
-        name: Try Ground Attack
-        id: 0
-        parent: -1
-        frameRanges:
-        - {x: 100, y: 100}
-        condition:
-          rid: -2
-        asset: {fileID: 11400000, guid: 38d47b53b1c6fa24580e163448503c28, type: 2}
     - rid: 2193520579074588673
       type: {class: VarSetECB, ns: rwby, asm: rwby.csharp}
       data:
         name: Set ECB
         id: 1
         parent: -1
+        children: 
         frameRanges:
         - {x: 0, y: 0}
         condition:
@@ -67,3 +59,44 @@ MonoBehaviour:
         ecbCenter: 0.825
         ecbRadius: 0.3
         ecbHeight: 1.65
+    - rid: 2193520791838261265
+      type: {class: VarEmpty, ns: rwby, asm: rwby.csharp}
+      data:
+        name: Scythe
+        id: 2
+        parent: -1
+        children: 0300000004000000
+        frameRanges:
+        - {x: 1, y: -1}
+        condition:
+          rid: -2
+    - rid: 2193520817874927618
+      type: {class: VarExternal, ns: rwby, asm: rwby.csharp}
+      data:
+        name: Try Ground Attack
+        id: 3
+        parent: 2
+        children: 
+        frameRanges:
+        - {x: 1, y: -1}
+        condition:
+          rid: -2
+        asset: {fileID: 11400000, guid: 38d47b53b1c6fa24580e163448503c28, type: 2}
+    - rid: 2193520836063002646
+      type: {class: VarCreateBox, ns: rwby, asm: rwby.csharp}
+      data:
+        name: Hurtbox 1
+        id: 4
+        parent: 2
+        children: 
+        frameRanges:
+        - {x: 1, y: -1}
+        condition:
+          rid: -2
+        boxType: 0
+        attachedTo: 0
+        shape: 0
+        offset: {x: 0, y: 1, z: 0}
+        boxExtents: {x: 0.5, y: 1, z: 0.5}
+        radius: 0
+        definitionIndex: 0

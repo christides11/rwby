@@ -26,7 +26,7 @@ namespace rwby
             get => parent;
             set => parent = value;
         }
-        private int[] children;
+        [SerializeField, HideInInspector] private int[] children;
         public int[] Children
         {
             get => children;

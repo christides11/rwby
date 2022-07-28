@@ -19,7 +19,9 @@ MonoBehaviour:
   autoIncrement: 1
   autoLoop: 1
   autoLoopFrame: 1
-  data: []
+  data:
+  - rid: 2193520817874927622
+  - rid: 2193520817874927624
   stateGroundedGroup: 1
   stateType: 1
   maxUsesInString: -1
@@ -39,3 +41,29 @@ MonoBehaviour:
     RefIds:
     - rid: -2
       type: {class: , ns: , asm: }
+    - rid: 2193520817874927622
+      type: {class: VarEmpty, ns: rwby, asm: rwby.csharp}
+      data:
+        name: Scythe
+        id: 0
+        parent: -1
+        children: 01000000
+        frameRanges: []
+        condition:
+          rid: 2193520817874927623
+    - rid: 2193520817874927623
+      type: {class: ConditionMoveset, ns: rwby, asm: rwby.csharp}
+      data:
+        moveset: 0
+    - rid: 2193520817874927624
+      type: {class: VarExternal, ns: rwby, asm: rwby.csharp}
+      data:
+        name: Try Ground Attack
+        id: 1
+        parent: 0
+        children: 
+        frameRanges:
+        - {x: 1, y: -1}
+        condition:
+          rid: -2
+        asset: {fileID: 11400000, guid: 38d47b53b1c6fa24580e163448503c28, type: 2}

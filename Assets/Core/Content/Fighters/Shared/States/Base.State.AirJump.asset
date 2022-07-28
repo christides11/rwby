@@ -24,6 +24,8 @@ MonoBehaviour:
   - rid: 2193520697185665027
   - rid: 2193520697185665034
   - rid: 2193520697185665052
+  - rid: 2193520791838261259
+  - rid: 2193520791838261261
   stateGroundedGroup: 2
   stateType: 0
   maxUsesInString: -1
@@ -215,3 +217,24 @@ MonoBehaviour:
         statReference: 1
         value: 0
         variable: 28
+    - rid: 2193520791838261259
+      type: {class: VarExternal, ns: rwby, asm: rwby.csharp}
+      data:
+        name: Aerial Interrupts
+        id: 4
+        parent: -1
+        frameRanges:
+        - {x: 1, y: -1}
+        condition:
+          rid: -2
+        asset: {fileID: 11400000, guid: 60616eb90e93a5644a1f15ae2743f165, type: 2}
+    - rid: 2193520791838261261
+      type: {class: VarExternal, ns: rwby, asm: rwby.csharp}
+      data:
+        name: Try JumpEnd
+        id: 5
+        parent: -1
+        frameRanges: []
+        condition:
+          rid: -2
+        asset: {fileID: 11400000, guid: e3eaa1968ad0197499aa52999cb46489, type: 2}

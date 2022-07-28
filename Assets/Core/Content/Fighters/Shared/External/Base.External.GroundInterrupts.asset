@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d4d62b28b52db7d459dd2f283317c705, type: 3}
-  m_Name: External.GroundInterrupts
+  m_Name: Base.External.GroundInterrupts
   m_EditorClassIdentifier: 
   data:
   - rid: 6951768367642443808
@@ -21,13 +21,17 @@ MonoBehaviour:
     - rid: 6951768358483656704
       type: {class: VarChangeState, ns: rwby, asm: rwby.csharp}
       data:
+        name: Try JumpSquat
+        id: 0
+        parent: 0
         frameRanges: []
         condition:
           rid: 6951768358483656705
+        checkInputSequence: 0
+        checkCondition: 0
         stateMovesetID: -1
         state:
           rid: 6951768358483656706
-        children: []
     - rid: 6951768358483656705
       type: {class: ConditionButton, ns: rwby, asm: rwby.csharp}
       data:
@@ -43,14 +47,18 @@ MonoBehaviour:
     - rid: 6951768367642443808
       type: {class: VarChangeState, ns: rwby, asm: rwby.csharp}
       data:
+        name: Try Fall
+        id: 0
+        parent: 0
         frameRanges:
         - {x: -1, y: -1}
         condition:
           rid: 6951768367642443809
+        checkInputSequence: 0
+        checkCondition: 0
         stateMovesetID: -1
         state:
           rid: 6951768367642443810
-        children: []
     - rid: 6951768367642443809
       type: {class: ConditionIsGrounded, ns: rwby, asm: rwby.csharp}
       data:

@@ -20,7 +20,11 @@ MonoBehaviour:
   autoLoop: 1
   autoLoopFrame: 1
   data:
+  - rid: 2193520783924396038
+  - rid: 2193520783924396035
   - rid: 2193520716547358738
+  - rid: 2193520789975990276
+  - rid: 2193520794128351232
   stateGroundedGroup: 1
   stateType: 0
   maxUsesInString: -1
@@ -112,3 +116,98 @@ MonoBehaviour:
         statReference: 1
         value: 0
         variable: 3
+    - rid: 2193520783924396035
+      type: {class: VarChangeState, ns: rwby, asm: rwby.csharp}
+      data:
+        name: Try Idle
+        id: 1
+        parent: -1
+        frameRanges:
+        - {x: 1, y: -1}
+        condition:
+          rid: 2193520783924396036
+        checkInputSequence: 0
+        checkCondition: 0
+        stateMovesetID: -1
+        state:
+          rid: 2193520783924396037
+    - rid: 2193520783924396036
+      type: {class: ConditionMoveStickMagnitude, ns: rwby, asm: rwby.csharp}
+      data:
+        minValue: 0
+        maxValue: 0
+    - rid: 2193520783924396037
+      type: {class: FighterCmnStateReference, ns: rwby, asm: rwby.csharp}
+      data:
+        state: 1
+    - rid: 2193520783924396038
+      type: {class: VarChangeState, ns: rwby, asm: rwby.csharp}
+      data:
+        name: Try RunInit
+        id: 2
+        parent: -1
+        frameRanges:
+        - {x: 1, y: -1}
+        condition:
+          rid: 2193520783924396041
+        checkInputSequence: 0
+        checkCondition: 0
+        stateMovesetID: -1
+        state:
+          rid: 2193520783924396039
+    - rid: 2193520783924396039
+      type: {class: FighterCmnStateReference, ns: rwby, asm: rwby.csharp}
+      data:
+        state: 27
+    - rid: 2193520783924396041
+      type: {class: ConditionAnd, ns: rwby, asm: rwby.csharp}
+      data:
+        conditions:
+        - rid: 2193520783924396042
+        - rid: 2193520783924396043
+    - rid: 2193520783924396042
+      type: {class: ConditionButton, ns: rwby, asm: rwby.csharp}
+      data:
+        inverse: 0
+        button: 4
+        buttonState: 0
+        offset: 0
+        buffer: 0
+    - rid: 2193520783924396043
+      type: {class: ConditionMoveStickMagnitude, ns: rwby, asm: rwby.csharp}
+      data:
+        minValue: 0.1
+        maxValue: 2
+    - rid: 2193520789975990276
+      type: {class: VarExternal, ns: rwby, asm: rwby.csharp}
+      data:
+        name: Ground Interrupts
+        id: 3
+        parent: -1
+        frameRanges:
+        - {x: 1, y: -1}
+        condition:
+          rid: -2
+        asset: {fileID: 11400000, guid: 42dc6338964d9494b9492888c730d00e, type: 2}
+    - rid: 2193520794128351232
+      type: {class: VarRotateTowards, ns: rwby, asm: rwby.csharp}
+      data:
+        name: 
+        id: 4
+        parent: -1
+        frameRanges:
+        - {x: 1, y: -1}
+        condition:
+          rid: -2
+        rotateTowards: 0
+        eulerAngle: {x: 0, y: 0, z: 0}
+        rotateTowardsTarget: 0
+        rotationSpeed:
+          rid: 2193520794128351233
+    - rid: 2193520794128351233
+      type: {class: FighterBaseStatReferenceFloat, ns: rwby, asm: rwby.csharp}
+      data:
+        inverse: 0
+        statReference: 1
+        value: 0
+        variable: 6
