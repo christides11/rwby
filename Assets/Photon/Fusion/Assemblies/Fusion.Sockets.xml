@@ -96,41 +96,6 @@
             <param name="subnetMask">Subnet Mask</param>
             <returns>Network Address based on the Subnet Mask</returns>
         </member>
-        <member name="M:Fusion.Sockets.NetBitBufferBlock.Create(System.Int32,System.Int32)">
-            <summary>
-            Build and alloc a <see cref="T:Fusion.Sockets.NetBitBufferBlock"/> based on the number of packets 
-            it need to keep track and the size of each packets.
-            </summary>
-            <param name="packetCount">Number of blocks to allocate</param>
-            <param name="packetSize">Size of each block</param>
-            <returns>Reference to a <see cref="T:Fusion.Sockets.NetBitBufferBlock"/></returns>
-        </member>
-        <member name="M:Fusion.Sockets.NetBitBufferBlock.Release(Fusion.Sockets.NetBitBuffer*)">
-            <summary>
-            Release the <see cref="T:Fusion.Sockets.NetBitBuffer"/> that is part of this Block and
-            mark it as available again by including it on the list of buffers
-            </summary>
-            <param name="ptr"></param>
-        </member>
-        <member name="M:Fusion.Sockets.NetBitBufferBlock.TryAcquire">
-            <summary>
-            Tries to get a valid <see cref="T:Fusion.Sockets.NetBitBuffer"/> reference from the Buffer block
-            </summary>
-            <returns>A valid NetBitBuffer reference if it can be retrieved from this block, null otherwise</returns>
-        </member>
-        <member name="M:Fusion.Sockets.NetBitBufferBlock.Empty">
-            <summary>
-            Creates a new empty <see cref="T:Fusion.Sockets.NetBitBuffer"/>
-            </summary>
-            <returns>NetBitBuffer reference</returns>
-        </member>
-        <member name="M:Fusion.Sockets.NetBitBufferBlock.TryAcquire(Fusion.Sockets.NetBitBuffer*@)">
-            <summary>
-            Tries to get a valid <see cref="T:Fusion.Sockets.NetBitBuffer"/> reference from the Buffer block
-            </summary>
-            <param name="ptr">Reference to a NetBitBuffer</param>
-            <returns>True if a valid NetBitBuffer reference can be retrieved from this block, false otherwise</returns>
-        </member>
         <member name="T:Fusion.Sockets.NetBitBufferList">
             <summary>
             Represents a linked list of <see cref="T:Fusion.Sockets.NetBitBuffer"/>

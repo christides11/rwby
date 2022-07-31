@@ -25,6 +25,7 @@ MonoBehaviour:
   - rid: 2193520716547358738
   - rid: 2193520789975990276
   - rid: 2193520794128351232
+  - rid: 2193520838792970256
   stateGroundedGroup: 1
   stateType: 0
   maxUsesInString: -1
@@ -34,6 +35,7 @@ MonoBehaviour:
     executeInputs: []
     sequenceWindow: 8
     sequenceInputs: []
+  inputSequenceAsHoldInputs: 0
   condition:
     rid: -2
   hitboxInfo: []
@@ -50,6 +52,7 @@ MonoBehaviour:
         name: 
         id: 0
         parent: -1
+        children: 
         frameRanges:
         - {x: 1, y: -1}
         condition:
@@ -122,6 +125,7 @@ MonoBehaviour:
         name: Try Idle
         id: 1
         parent: -1
+        children: 
         frameRanges:
         - {x: 1, y: -1}
         condition:
@@ -146,6 +150,7 @@ MonoBehaviour:
         name: Try RunInit
         id: 2
         parent: -1
+        children: 
         frameRanges:
         - {x: 1, y: -1}
         condition:
@@ -184,6 +189,7 @@ MonoBehaviour:
         name: Ground Interrupts
         id: 3
         parent: -1
+        children: 
         frameRanges:
         - {x: 1, y: -1}
         condition:
@@ -192,19 +198,51 @@ MonoBehaviour:
     - rid: 2193520794128351232
       type: {class: VarRotateTowards, ns: rwby, asm: rwby.csharp}
       data:
-        name: 
+        name: Rotate Towards Stick
         id: 4
         parent: -1
+        children: 
         frameRanges:
         - {x: 1, y: -1}
         condition:
-          rid: -2
+          rid: 2193520838792970255
         rotateTowards: 0
         eulerAngle: {x: 0, y: 0, z: 0}
         rotateTowardsTarget: 0
         rotationSpeed:
           rid: 2193520794128351233
     - rid: 2193520794128351233
+      type: {class: FighterBaseStatReferenceFloat, ns: rwby, asm: rwby.csharp}
+      data:
+        inverse: 0
+        statReference: 1
+        value: 0
+        variable: 6
+    - rid: 2193520838792970255
+      type: {class: ConditionLockedOn, ns: rwby, asm: rwby.csharp}
+      data:
+        inverse: 1
+    - rid: 2193520838792970256
+      type: {class: VarRotateTowards, ns: rwby, asm: rwby.csharp}
+      data:
+        name: Rotate Towards Target
+        id: 5
+        parent: -1
+        children: 
+        frameRanges:
+        - {x: 1, y: -1}
+        condition:
+          rid: 2193520838792970257
+        rotateTowards: 2
+        eulerAngle: {x: 0, y: 0, z: 0}
+        rotateTowardsTarget: 1
+        rotationSpeed:
+          rid: 2193520838792970258
+    - rid: 2193520838792970257
+      type: {class: ConditionLockedOn, ns: rwby, asm: rwby.csharp}
+      data:
+        inverse: 0
+    - rid: 2193520838792970258
       type: {class: FighterBaseStatReferenceFloat, ns: rwby, asm: rwby.csharp}
       data:
         inverse: 0

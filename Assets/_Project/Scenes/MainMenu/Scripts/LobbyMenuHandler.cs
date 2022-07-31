@@ -123,6 +123,8 @@ namespace rwby.ui.mainmenu
                 currentplaycount = (int)manager.ClientPlayerAmount;
             }
             
+            manager.profiles.Add(ProfilesManager.defaultProfileIdentifier);
+            
             while (menuInstances.Count > currentplaycount)
             {
                 int i = menuInstances.Count;

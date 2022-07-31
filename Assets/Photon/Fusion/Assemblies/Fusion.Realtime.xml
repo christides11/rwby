@@ -294,7 +294,7 @@
             <param name="createServiceTask">Runs client.Service() during the operation</param>
             <returns>Photon Connection Handler object</returns>
         </member>
-        <member name="M:Fusion.Photon.Realtime.Async.LoadBalancingClientAsyncExtensions.CreateServiceTask(Fusion.Photon.Realtime.LoadBalancingClient,System.Threading.CancellationToken,System.Threading.Tasks.TaskCompletionSource{System.Int16})">
+        <member name="M:Fusion.Photon.Realtime.Async.LoadBalancingClientAsyncExtensions.Service_ClientUpdate(Fusion.Photon.Realtime.LoadBalancingClient,System.Threading.CancellationToken,System.Threading.Tasks.TaskCompletionSource{System.Int16})">
             <summary>
             Starts a task that calls <see cref="M:Fusion.Photon.Realtime.LoadBalancingClient.Service"/> every updateIntervalMs milliseconds.
             The task is stopped by the cancellation token from <see cref="P:Fusion.Photon.Realtime.Async.OperationHandler.Token"/>.

@@ -2,6 +2,119 @@
 
 ## Nightly
 
+### Build 546 (Jul 28, 2022)
+
+**Bug Fixes**
+
+- Fixed: Potential `NullReferenceException` when performing a lag-compensated query against a `HitboxRoot` that is alive but has a network `Object` that is not alive
+
+### Build 545 (Jul 27, 2022)
+
+**What's New**
+
+- Support to Session Creation Control
+- SimulationBehaviour and NetworkBehaviour property shortcuts for HasStateAuthority, HasInputAuthority and IsProxy added. Runner.Tick shortcut added
+
+### Build 543 (Jul 25, 2022)
+
+**Removed**
+
+- Old NanoSockets libs for macOS
+
+**Bug Fixes**
+
+- Fixed: NanoSockets signature for macOS
+- Fixed: TickRate increasing with each Play Mode enter when Domain Reloading is off
+- Fixed: Mixing `OnChanged` callbacks for statically and dynamically defined properties
+
+### Build 542 (Jul 24, 2022)
+
+**Bug Fixes**
+
+- Fixed: Fixxed isssues with NetBitBuffer and burst delta compressor
+
+### Build 540 (Jul 22, 2022)
+
+**Bug Fixes**
+
+- Fixed: `NetworkRunner.Shutdown` invoked in `DisconnectedFromServer` callback not preventing simulation from updating
+
+### Build 539 (Jul 21, 2022)
+
+**Bug Fixes**
+
+- Fixed: Removed all pre-allocation of packet buffers
+
+### Build 538 (Jul 20, 2022)
+
+**What's New**
+
+- Experimental support for disabled `Domain Reloading` for faster Enter Play Mode
+
+**Bug Fixes**
+
+- Fixed: `NetworkProjectConfig` inspector's `Apply` and `Revert` buttons being permanently disabled
+
+### Build 537 (Jul 19, 2022)
+
+**Changes**
+
+- NetworkRunner.AddPlayerAreaOfInterest() argument renamed from radius to extent, to better reflect the rectangular nature of the query
+
+**Bug Fixes**
+
+- Fixed: Local prefab being occasionally respawned when the spawn is followed by a despawn in next update (shared mode)
+
+### Build 535 (Jul 14, 2022)
+
+**Changes**
+
+- Renamed `Fusion/Rebuild Object Table` to `Fusion/Rebuild Prefab Table`
+- Renamed `Rebuild Object Table (slow)` button label in config inspector to `Rebuild Prefab Table`.  
+Rename: `NetworkProjectConfigUtilities.RebuildObjectTable` to `NetworkProjectConfigUtilities.RebuildPrefabTable`
+- `Prefabs` list in the config inspector is read-only
+
+### Build 534 (Jul 13, 2022)
+
+**What's New**
+
+- Lag-compensated API now has a `ResolveQuery` method. Respective query settings can be created through `RaycastQuery.`, `SphereOverlapQuery.` and `BoxOverlapQuery.CreateQuery` methods
+- Lag-compensated queries now support an optional delegate to pre-process hitbox roots candidates resultant from the query's broad-phase resolution
+- `HitOptions.IgnoreInputAuthority`, a lag-compensated query option that can be used to automatically ignore hitbox roots which the player performing the query (if specified) has input authority over
+
+**Changes**
+
+- UnitAttribute unit overlay adapts to width of field in inspector, and will use abbreviated unit names at smaller sizes
+
+### Build 533 (Jul 12, 2022)
+
+**Bug Fixes**
+
+- Fixed: NetworkObjectPredictionKey.AsFloat field changed to type float (was unintentionally byte)
+- Fixed: SinglePlayer Startup
+
+### Build 532 (Jul 11, 2022)
+
+**What's New**
+
+- Fusion Unity scipt xml documentation located under Assets/Photon/Fusion/Editor/Resources/Assembly-CSharp.xml
+
+**Bug Fixes**
+
+- Fixed: NDS SessionName when starting multiple clients
+
+### Build 531 (Jul 08, 2022)
+
+**Bug Fixes**
+
+- Fixed: Access modifiers of LobbyInfo fields
+
+### Build 529 (Jul 06, 2022)
+
+**Changes**
+
+- FusionGraph added StatsPerDefault value, allowing an initial 'per' setting for the graph, rather than the required clicking on the value at runtime to cycle to the desired setting
+
 ### Build 528 (Jul 05, 2022)
 
 **What's New**

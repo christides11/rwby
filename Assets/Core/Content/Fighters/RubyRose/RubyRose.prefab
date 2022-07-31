@@ -399,24 +399,6 @@ MonoBehaviour:
   _BufferLimit: 0
   _inputEnabled:
     _value: 0
-  _movement: []
-  _cameraForward: []
-  _cameraRight: []
-  _heldATime: 0
-  _heldBTime: 0
-  _heldCTime: 0
-  _heldJumpTime: 0
-  _heldBlockTime: 0
-  _heldDashTime: 0
-  _heldLockOnTime: 0
-  _heldAbility1Time: 0
-  _heldAbility2Time: 0
-  _heldAbility3Time: 0
-  _heldAbility4Time: 0
-  _heldExtra1Time: 0
-  _heldExtra2Time: 0
-  _heldExtra3Time: 0
-  _heldExtra4Time: 0
   manager: {fileID: 3846760401122892541}
   _inputProvider: {fileID: 0}
   _inputSourceIndex: 0
@@ -476,10 +458,10 @@ MonoBehaviour:
   hitstopShakeFrames: 1
   val: 100
   shakeDirs:
-  - {x: -1, y: 0, z: 0}
-  - {x: 0, y: 0, z: 1}
-  - {x: 1, y: 0, z: 0}
-  - {x: 0, y: 0, z: -1}
+  - {x: -0.2, y: 0, z: 0}
+  - {x: 0, y: 0, z: 0.2}
+  - {x: 0.2, y: 0, z: 0}
+  - {x: 0, y: 0, z: -0.2}
   _currentShakeDirection: 0
   wallLayerMask:
     serializedVersion: 2
@@ -782,6 +764,7 @@ MonoBehaviour:
   _InitialSimulationPosition: {x: 0, y: 0, z: 0}
   _InitialSimulationRotation: {x: 0, y: 0, z: 0, w: 0}
   _InitialTickRotation: {x: 0, y: 0, z: 0, w: 0}
+  _visualExtraOffset: {x: 0, y: 0, z: 0}
 --- !u!114 &4006742894894194177
 MonoBehaviour:
   m_ObjectHideFlags: 0

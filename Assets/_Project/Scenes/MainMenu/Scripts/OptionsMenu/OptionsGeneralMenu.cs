@@ -20,7 +20,7 @@ namespace rwby.ui.mainmenu
 
         public void BUTTON_Profiles()
         {
-            currentHandler.Forward((int)OptionsMenu.OptionsSubmenuType.PROFILES);
+            currentHandler.Forward((int)OptionsMenu.OptionsSubmenuType.PROFILE_SELECTION);
         }
         
         public void BUTTON_KeyboardControls()
@@ -55,7 +55,7 @@ namespace rwby.ui.mainmenu
 
         public void BUTTON_Back()
         {
-            
+            currentHandler.Back();
         }
     }
 }

@@ -57,11 +57,13 @@ namespace rwby.ui.mainmenu
         private UnityAction screenCloseAction;
         public void BUTTON_Profile(int index)
         {
+            currentHandler.Forward((int)OptionsMenu.OptionsSubmenuType.PROFILE_CUSTOMIZATION);
+            /*
             screenCloseAction = () => { AssignProfile(index); GameManager.singleton.cMapper.Close(false); };
             canvasGroup.interactable = false;
             GameManager.singleton.profilesManager.ApplyProfileToPlayer(0, index);
             GameManager.singleton.cMapper.onScreenClosed += screenCloseAction;
-            GameManager.singleton.cMapper.Open();
+            GameManager.singleton.cMapper.Open();*/
         }
 
         private void AssignProfile(int profileIndex)

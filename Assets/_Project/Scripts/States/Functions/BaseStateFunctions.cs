@@ -35,7 +35,7 @@ namespace rwby
             StateTimeline state = (StateTimeline)(fm.FStateManager.GetState(movesetID, stateID));
 
             //if (!fm.FCombatManager.MovePossible(new MovesetStateIdentifier(movesetID, stateID), state.maxUsesInString)) return;
-            if (vars.checkInputSequence && !fm.FCombatManager.CheckForInputSequence(state.inputSequence)) return;
+            if (vars.checkInputSequence && !fm.FCombatManager.CheckForInputSequence(state.inputSequence, holdInput: state.inputSequenceAsHoldInputs)) return;
             if (vars.checkCondition && !fm.FStateManager.TryCondition(state, state.condition, arg4)) return;
             
             fighter.StateManager.MarkForStateChange(vars.state.GetState(), vars.stateMovesetID);
@@ -55,7 +55,7 @@ namespace rwby
                 StateTimeline state = (StateTimeline)(fm.FStateManager.GetState(movesetID, stateID));
 
                 if (!fm.FCombatManager.MovePossible(new MovesetStateIdentifier(movesetID, stateID), state.maxUsesInString)) continue;
-                if (vars.checkInputSequence && !fm.FCombatManager.CheckForInputSequence(state.inputSequence)) continue;
+                if (vars.checkInputSequence && !fm.FCombatManager.CheckForInputSequence(state.inputSequence, holdInput: state.inputSequenceAsHoldInputs)) continue;
                 if (vars.checkCondition && !fm.FStateManager.TryCondition(state, state.condition, arg4)) continue;
 
                 fm.FStateManager.ChangeState(stateID, vars.states[i].movesetID);

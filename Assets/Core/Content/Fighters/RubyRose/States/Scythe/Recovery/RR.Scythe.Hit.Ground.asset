@@ -23,6 +23,7 @@ MonoBehaviour:
   - rid: 2193520836063002626
   - rid: 2193520836063002628
   - rid: 2193520836063002630
+  - rid: 2193520838792970254
   stateGroundedGroup: 1
   stateType: 1
   maxUsesInString: -1
@@ -32,6 +33,7 @@ MonoBehaviour:
     executeInputs: []
     sequenceWindow: 8
     sequenceInputs: []
+  inputSequenceAsHoldInputs: 0
   condition:
     rid: -2
   hitboxInfo: []
@@ -107,3 +109,21 @@ MonoBehaviour:
       type: {class: ConditionIsGrounded, ns: rwby, asm: rwby.csharp}
       data:
         inverse: 1
+    - rid: 2193520838792970254
+      type: {class: VarCreateBox, ns: rwby, asm: rwby.csharp}
+      data:
+        name: 
+        id: 3
+        parent: -1
+        children: 
+        frameRanges:
+        - {x: 1, y: -1}
+        condition:
+          rid: -2
+        boxType: 0
+        attachedTo: 0
+        shape: 0
+        offset: {x: 0, y: 1, z: 0}
+        boxExtents: {x: 0.5, y: 1, z: 0.5}
+        radius: 0
+        definitionIndex: 0

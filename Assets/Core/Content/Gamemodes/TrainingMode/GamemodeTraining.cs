@@ -216,13 +216,15 @@ namespace rwby.core.training
 
         protected override async UniTask SetupClientPlayerCharacters(SessionGamemodeClientContainer clientInfo, int playerIndex)
         {
+            ClientManager cm = Runner.GetPlayerObject(clientInfo.clientRef).GetBehaviour<ClientManager>();
             NetworkObject no = null;
-            PlayerCamera c = GameObject.Instantiate(GameManager.singleton.settings.playerCameraPrefab, Vector3.zero,
+            PlayerCamera c = Runner.InstantiateInRunnerScene(GameManager.singleton.settings.playerCameraPrefab, Vector3.zero,
                 Quaternion.identity);
-            
+
             await UniTask.WaitUntil(() => Runner.TryFindObject(clientInfo.players[playerIndex].characterNetworkObjects[0], out no));
                 
             Runner.AddSimulationBehaviour(c, null);
+            c.Initialize(cm, playerIndex);
             c.SetLookAtTarget(no.GetComponent<FighterManager>());
             GameManager.singleton.localPlayerManager.SetPlayerCamera(playerIndex, c.Cam);
         }

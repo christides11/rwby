@@ -75,6 +75,8 @@ namespace rwby
             if (clientInfo.players.Count <= playerID) return;
             ClientManager cm = lobbyMenuHandler.sessionManagerGamemode.Runner.GetPlayerObject(localPlayerRef).GetComponent<ClientManager>();
 
+            profileButton.GetComponentInChildren<TextMeshProUGUI>().text = $"Profile: {cm.profiles[playerID]}";
+            
             for (int i = 0; i < clientInfo.players[playerID].characterReferences.Count; i++)
             {
                 GameObject chara = GameObject.Instantiate(characterContentPrefab, characterContentTransform, false);

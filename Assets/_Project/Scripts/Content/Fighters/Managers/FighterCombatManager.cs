@@ -180,7 +180,7 @@ namespace rwby
             return true;
         }
 
-                protected virtual bool CheckExecuteInputs(InputSequence sequence, int baseOffset, ref uint currentOffset)
+        protected virtual bool CheckExecuteInputs(InputSequence sequence, int baseOffset, ref uint currentOffset)
         {
             for (int e = 0; e < sequence.executeInputs.Count; e++)
             {

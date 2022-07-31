@@ -29,6 +29,8 @@ namespace rwby
 
 		[Networked] public byte mapLoadPercent { get; set; } = 100;
 
+		public List<string> profiles = new List<string>(4);
+
 		protected virtual void Awake()
 		{
 			gameManager = GameManager.singleton;

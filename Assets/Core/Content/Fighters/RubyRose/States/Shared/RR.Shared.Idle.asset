@@ -24,6 +24,7 @@ MonoBehaviour:
   - rid: 2193520791838261265
   - rid: 2193520817874927618
   - rid: 2193520836063002646
+  - rid: 2193520862594334720
   stateGroundedGroup: 1
   stateType: 1
   maxUsesInString: -1
@@ -33,6 +34,7 @@ MonoBehaviour:
     executeInputs: []
     sequenceWindow: 8
     sequenceInputs: []
+  inputSequenceAsHoldInputs: 0
   condition:
     rid: -2
   hitboxInfo: []
@@ -94,6 +96,24 @@ MonoBehaviour:
         condition:
           rid: -2
         boxType: 0
+        attachedTo: 0
+        shape: 0
+        offset: {x: 0, y: 1, z: 0}
+        boxExtents: {x: 0.5, y: 1, z: 0.5}
+        radius: 0
+        definitionIndex: 0
+    - rid: 2193520862594334720
+      type: {class: VarCreateBox, ns: rwby, asm: rwby.csharp}
+      data:
+        name: Colbox
+        id: 5
+        parent: -1
+        children: 
+        frameRanges:
+        - {x: 1, y: -1}
+        condition:
+          rid: -2
+        boxType: 2
         attachedTo: 0
         shape: 0
         offset: {x: 0, y: 1, z: 0}

@@ -16,20 +16,19 @@ namespace rwby
             HitHitbox,
             HitHurtbox
         }
-
-        /*
-        public struct BroadphasePair
-        {
-            public EntityBoxManager objA;
-            public EntityBoxManager objB;
-        }*/
-
+        
         public struct HitboxCombatPair
         {
             public HitboxCombatResult result;
             public CustomHitbox attackerHitbox;
             public Hurtbox attackeeHurtbox;
             public CustomHitbox attackeeHitbox;
+        }
+
+        public struct CollisionPair
+        {
+            public Collbox boxa;
+            public Collbox boxb;
         }
 
         public struct ThrowboxCombatPair
@@ -44,9 +43,11 @@ namespace rwby
         // (Atacker, Atackee)
         public Dictionary<(NetworkObject, NetworkObject), HitboxCombatPair> hitboxCombatPairs = new Dictionary<(NetworkObject, NetworkObject), HitboxCombatPair>();
         public Dictionary<(NetworkObject, NetworkObject), ThrowboxCombatPair> throwboxCombatPairs = new Dictionary<(NetworkObject, NetworkObject), ThrowboxCombatPair>();
+        public Dictionary<(NetworkObject, NetworkObject), CollisionPair> collisionPairs = new Dictionary<(NetworkObject, NetworkObject), CollisionPair>();
 
         public LayerMask hitboxLayermask;
         public LayerMask hurtboxLayermask;
+        public LayerMask collboxLayermask;
         public LayerMask throwboxLayermask;
 
         private void Awake()
@@ -61,10 +62,56 @@ namespace rwby
 
         public override void FixedUpdateNetwork()
         {
+            ResolveCollisionInteractions();
             ResolveHitInteractions();
             ResolveGrabInteractions();
 
             broadphaseObjects.Clear();
+        }
+        
+        private void ResolveCollisionInteractions()
+        {
+            for (int i = broadphaseObjects.Count - 1; i >= 0; i--)
+            {
+                EntityBoxManager boxCollection = (EntityBoxManager)broadphaseObjects[i].GetComponent<IBoxCollection>();
+                
+                for (int b = 0; b < boxCollection.Collboxes.Length; b++)
+                {
+                    if (boxCollection.Collboxes[b].enabled == false) break;
+
+                    int numHit = 0;
+                    
+                    switch (boxCollection.Collboxes[b].Type)
+                    {
+                        case HitboxTypes.Box:
+                            numHit = Runner.LagCompensation.OverlapBox(boxCollection.Collboxes[b].transform.position,
+                                boxCollection.Collboxes[b].BoxExtents, boxCollection.Collboxes[b].transform.rotation,
+                                new PlayerRef(), hitsList, collboxLayermask);
+                            break;
+                        case HitboxTypes.Sphere:
+                            numHit = Runner.LagCompensation.OverlapSphere(boxCollection.Collboxes[b].transform.position,
+                                boxCollection.Collboxes[b].SphereRadius,
+                                new PlayerRef(), hitsList, collboxLayermask);
+                            break;
+                    }
+
+                    for (int f = 0; f < numHit; f++)
+                    {
+                        Collbox h = hitsList[f].GameObject.GetComponent<Collbox>();
+                        if (!h.HitboxActive || h.ownerNetworkObject == broadphaseObjects[i]) continue;
+                        if (collisionPairs.ContainsKey((h.ownerNetworkObject,
+                                broadphaseObjects[i].GetBehaviour<NetworkObject>()))
+                            || collisionPairs.ContainsKey((broadphaseObjects[i].GetBehaviour<NetworkObject>(),
+                                h.ownerNetworkObject))) continue;
+                        collisionPairs.Add((broadphaseObjects[i].GetBehaviour<NetworkObject>(), h.ownerNetworkObject),
+                            new CollisionPair()
+                            {
+                                boxa = boxCollection.Collboxes[b],
+                                boxb = h
+                            });
+                    }
+                }
+            }
         }
 
         private List<LagCompensatedHit> hitsList = new List<LagCompensatedHit>();
@@ -76,7 +123,7 @@ namespace rwby
 
                 bool objHasHitboxes = boxCollection.Hitboxes[0].HitboxActive == true;
                 if (objHasHitboxes == false) continue;
-
+                
                 for (int a = 0; a < boxCollection.Hitboxes.Length; a++)
                 {
                     if (boxCollection.Hitboxes[a].HitboxActive == false) break;

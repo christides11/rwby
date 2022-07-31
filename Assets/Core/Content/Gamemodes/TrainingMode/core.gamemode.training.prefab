@@ -1330,21 +1330,17 @@ MonoBehaviour:
       _guid:
         Data: 0000000000000000000000000000000000000000000000000000000000000000
     contentType: 0
-    contentGUID:
-      _guid:
-        Data: 0000000000000000000000000000000000000000000000000000000000000000
+    contentIdx: 0
   localMap:
     modGUID:
       guid: 0000000000000000
     contentType: 0
-    contentGUID:
-      guid: 0000000000000000
-  hudBankReference:
+    contentIdx: 0
+  hudBankContentReference:
     modGUID:
       guid: 1d292c1f00000000
     contentType: 8
-    contentGUID:
-      guid: 1d27280000000000
+    contentIdx: 0
   cpuHandler: {fileID: 1780266029459074878}
 --- !u!114 &8481148300307289351
 MonoBehaviour:
@@ -1365,6 +1361,9 @@ MonoBehaviour:
   hurtboxLayermask:
     serializedVersion: 2
     m_Bits: 128
+  collboxLayermask:
+    serializedVersion: 2
+    m_Bits: 256
   throwboxLayermask:
     serializedVersion: 2
     m_Bits: 512

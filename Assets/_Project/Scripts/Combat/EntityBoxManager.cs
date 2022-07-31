@@ -52,6 +52,7 @@ namespace rwby
 
         public override void FixedUpdateNetwork()
         {
+            /*
             combatBoxBounds = new Bounds(Vector3.zero, -Vector3.one);
         
             foreach(CustomHitbox hb in hitboxes)
@@ -67,7 +68,7 @@ namespace rwby
                 }
             }
 
-            if (combatBoxBounds.size == -Vector3.one) return;
+            if (combatBoxBounds.size == -Vector3.one) return;*/
             CombatPairFinder.singleton.RegisterObject(Object);
         }
 
@@ -77,7 +78,6 @@ namespace rwby
             {
                 hRoot.SetHitboxActive(hb, false);
             }
-
             foreach (var hb in hitboxes)
             {
                 hRoot.SetHitboxActive(hb, false);
@@ -136,16 +136,18 @@ namespace rwby
 
         private void SetFusionHitboxSize(CustomHitbox fusionHitbox, BoxShape shape, Vector3 offset, Vector3 boxExtents, float sphereRadius)
         {
-            fusionHitbox.transform.localPosition = offset;
+            //fusionHitbox.transform.localPosition = offset;
             switch (shape)
             {
                 case BoxShape.Rectangle:
-                    fusionHitbox.Type = HitboxTypes.Box;
-                    fusionHitbox.BoxExtents = boxExtents;
+                    fusionHitbox.SetBoxSize(offset, boxExtents);
+                    //fusionHitbox.Type = HitboxTypes.Box;
+                    //fusionHitbox.BoxExtents = boxExtents;
                     break;
                 case BoxShape.Circle:
-                    fusionHitbox.Type = HitboxTypes.Sphere;
-                    fusionHitbox.SphereRadius = sphereRadius;
+                    fusionHitbox.SetSphereSize(offset, sphereRadius);
+                    //fusionHitbox.Type = HitboxTypes.Sphere;
+                    //fusionHitbox.SphereRadius = sphereRadius;
                     break;
             }
         }

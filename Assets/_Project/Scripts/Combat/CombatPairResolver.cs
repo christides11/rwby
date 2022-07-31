@@ -13,11 +13,37 @@ namespace rwby
         public CombatPairFinder pairFinder;
 
         private HashSet<(NetworkObject, NetworkObject)> resolvedPairs = new HashSet<(NetworkObject, NetworkObject)>();
+        
+        public float collisionSolvePercentage = 1.0f;
 
         public override void FixedUpdateNetwork()
         {
+            CollisionPairResolver();
             HitboxPairResolver();
             resolvedPairs.Clear();
+        }
+
+        private void CollisionPairResolver()
+        {
+            foreach (var pair in pairFinder.collisionPairs)
+            {
+                Vector3 direction;
+                float distance;
+                bool overlapped = Physics.ComputePenetration(
+                    pair.Value.boxa.boxCollider, pair.Value.boxa.transform.position, pair.Value.boxa.transform.rotation,
+                    pair.Value.boxb.boxCollider, pair.Value.boxb.transform.position, pair.Value.boxb.transform.rotation,
+                    out direction, out distance
+                );
+                
+                if (overlapped)
+                {
+                    direction.y = 0;
+                    direction.Normalize();
+                    pair.Key.Item1.GetComponent<FighterPhysicsManager>().kCC.Motor.SetPosition(pair.Key.Item1.transform.position + (direction * (distance/2.0f) * collisionSolvePercentage), false);
+                    pair.Key.Item2.GetComponent<FighterPhysicsManager>().kCC.Motor.SetPosition(pair.Key.Item2.transform.position - (direction * (distance/2.0f) * collisionSolvePercentage), false);
+                }
+            }
+            pairFinder.collisionPairs.Clear();
         }
 
         private void HitboxPairResolver()

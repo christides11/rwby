@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 3777466094522296228}
   - component: {fileID: 2559108704263925469}
   - component: {fileID: 2158316734981574143}
+  - component: {fileID: -5414921312063682898}
   - component: {fileID: 9101689328735284347}
   m_Layer: 0
   m_Name: PlayerCamera
@@ -146,6 +147,49 @@ MonoBehaviour:
   lockonMaxDistance: 20
   lockonFudging: 0.1
   currentCameraState: 0
+  blockingObject: {fileID: -5414921312063682898}
+  currentProfile:
+    undeletable: 0
+    version: 0
+    profileName: 
+    behaviours: []
+    joystickMaps: []
+    controllerCam:
+      deadzoneHoz: 0
+      deadzoneVert: 0
+      speedHoz: 0
+      speedVert: 0
+      speedLockOnHoz: 0
+      speedLockOnVert: 0
+    keyboardCam:
+      deadzoneHoz: 0
+      deadzoneVert: 0
+      speedHoz: 0
+      speedVert: 0
+      speedLockOnHoz: 0
+      speedLockOnVert: 0
+--- !u!114 &-5414921312063682898
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1510336844590790844}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8f7a380e894d0704dbe2d16c19891afc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  LayerMask:
+    serializedVersion: 2
+    m_Bits: 8
+  Target: {fileID: 0}
+  Camera: {fileID: 3857231048421817447}
+  FadedAlpha: 0.33
+  RetainShadows: 1
+  TargetPositionOffset: {x: 0, y: 1, z: 0}
+  FadeSpeed: 1
+  ObjectsBlockingView: []
 --- !u!114 &9101689328735284347
 MonoBehaviour:
   m_ObjectHideFlags: 0

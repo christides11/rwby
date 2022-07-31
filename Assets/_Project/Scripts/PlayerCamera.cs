@@ -2,7 +2,6 @@ using HnSF.Fighters;
 using UnityEngine;
 using Fusion;
 using rwby;
-using ThirdPersonCameraWithLockOn;
 using Cinemachine;
 using Rewired;
 using HnSF.Combat;
@@ -25,7 +24,6 @@ namespace rwby
         [SerializeField] private FighterManager followTarget;
         private GameObject LockOnTarget;
         private ITargetable lockOnTargetable;
-        Rewired.Player p = null;
 
         [Header("References")]
         [SerializeField] private Camera cam;
@@ -50,10 +48,19 @@ namespace rwby
         void Awake()
         {
             instance = this;
-            currentCameraState = CameraState.THIRDPERSON;
             p = ReInput.players.GetPlayer(0);
-            virtualStateDrivenCamera = GameObject.Instantiate(GameManager.singleton.settings.playerVirtualCameraPrefab, transform.position, Quaternion.identity);
-            
+            currentCameraState = CameraState.THIRDPERSON;
+        }
+        
+        private ClientManager clientManager;
+        private int playerID;
+        private Rewired.Player p;
+        [SerializeField] private ProfileDefinition currentProfile;
+        private PlayerControllerType currentControllerType;
+        public void Initialize(ClientManager clientManager, int playerID)
+        {
+            virtualStateDrivenCamera = Runner.InstantiateInRunnerScene(GameManager.singleton.settings.playerVirtualCameraPrefab, transform.position, Quaternion.identity);
+
             virtualCameraAnimator = virtualStateDrivenCamera.GetComponent<Animator>();
             inputProvider = virtualStateDrivenCamera.GetComponentsInChildren<CinemachineInputProvider>();
             virtualCameras = virtualStateDrivenCamera.GetComponentsInChildren<CinemachineVirtualCamera>();
@@ -65,6 +72,97 @@ namespace rwby
                 virtualCameraPOV[i] = virtualCameras[i].GetCinemachineComponent<CinemachinePOV>();
                 virtualCameraShake[i] = virtualCameras[i].GetComponent<CinemachineShake>();
             } 
+            
+            this.clientManager = clientManager;
+            this.playerID = playerID;
+            p = ReInput.players.GetPlayer(playerID);
+            SetProfile(GameManager.singleton.profilesManager.GetProfile(clientManager.profiles[playerID]));
+            //currentControllerType = GameManager.singleton.localPlayerManager.GetPlayerControllerType(playerID);
+            OnControllerTypeChanged(playerID, GameManager.singleton.localPlayerManager.GetPlayerControllerType(playerID));
+            GameManager.singleton.localPlayerManager.OnPlayerControllerTypeChanged += OnControllerTypeChanged;
+        }
+
+        private void OnControllerTypeChanged(int playerid, PlayerControllerType controllertype)
+        {
+            if (playerid != playerID) return;
+            currentControllerType = controllertype;
+            switch (currentControllerType)
+            {
+                case PlayerControllerType.GAMEPAD:
+                    foreach (var vcam in virtualCameras)
+                    {
+                        CinemachinePOV pov = vcam.GetCinemachineComponent<CinemachinePOV>();
+                        if (!pov) return;
+                        pov.m_HorizontalAxis.m_SpeedMode = AxisState.SpeedMode.MaxSpeed;
+                        pov.m_HorizontalAxis.m_MaxSpeed = 300;
+                        pov.m_HorizontalAxis.m_AccelTime = 0.1f;
+                        pov.m_HorizontalAxis.m_DecelTime = 0.1f;
+                        pov.m_VerticalAxis.m_SpeedMode = AxisState.SpeedMode.MaxSpeed;
+                        pov.m_VerticalAxis.m_MaxSpeed = 300;
+                        pov.m_VerticalAxis.m_AccelTime = 0.1f;
+                        pov.m_VerticalAxis.m_DecelTime = 0.1f;
+                    }
+                    break;
+                case PlayerControllerType.MOUSE_AND_KEYBOARD:
+                    foreach (var vcam in virtualCameras)
+                    {
+                        CinemachinePOV pov = vcam.GetCinemachineComponent<CinemachinePOV>();
+                        if (!pov) return;
+                        pov.m_HorizontalAxis.m_SpeedMode = AxisState.SpeedMode.InputValueGain;
+                        pov.m_HorizontalAxis.m_MaxSpeed = 1.0f;
+                        pov.m_HorizontalAxis.m_AccelTime = 0;
+                        pov.m_HorizontalAxis.m_DecelTime = 0;
+                        pov.m_VerticalAxis.m_SpeedMode = AxisState.SpeedMode.InputValueGain;
+                        pov.m_VerticalAxis.m_MaxSpeed = 1.0f;
+                        pov.m_VerticalAxis.m_AccelTime = 0;
+                        pov.m_VerticalAxis.m_DecelTime = 0;
+                    }
+                    break;
+            }
+        }
+
+        private void SetProfile(ProfileDefinition profile)
+        {
+            currentProfile = profile;
+        }
+
+        private ProfileDefinition.CameraVariables GetCameraControls()
+        {
+            return currentControllerType == PlayerControllerType.GAMEPAD
+                ? currentProfile.controllerCam
+                : currentProfile.keyboardCam;
+        }
+
+        public virtual void Update()
+        {
+            if (p == null) return;
+            ProfileDefinition.CameraVariables cv = GetCameraControls();
+            
+            Vector2 stickInput = p.GetAxis2D(Action.Camera_X, Action.Camera_Y);
+            bool cameraSwitch = p.GetButtonDown(Action.Camera_Switch);
+
+            if (Mathf.Abs(stickInput.x) < cv.deadzoneHoz) stickInput.x = 0;
+            if (Mathf.Abs(stickInput.y) < cv.deadzoneVert) stickInput.y = 0;
+            stickInput.x *= currentCameraState == CameraState.LOCK_ON ? cv.speedLockOnHoz : cv.speedHoz;
+            stickInput.y *= currentCameraState == CameraState.LOCK_ON ? cv.speedLockOnVert : cv.speedVert;
+
+            for (int i = 0; i < inputProvider.Length; i++)
+            {
+                inputProvider[i].input = stickInput;
+            }
+            
+            if (cameraSwitch && currentCameraState == CameraState.LOCK_ON)
+            {
+                lockon2DMode = !lockon2DMode;
+                if (lockon2DMode)
+                {
+                    virtualCameraAnimator.Play("Target2D");
+                }
+                else
+                {
+                    virtualCameraAnimator.Play("Target");
+                }
+            }
         }
 
         public override void Render()
@@ -86,6 +184,14 @@ namespace rwby
             }
         }
 
+        public void SetLookAtTarget(FighterManager target)
+        {
+            virtualStateDrivenCamera.Follow = target.TargetOrigin;
+            virtualStateDrivenCamera.LookAt = target.TargetOrigin;
+            targetGroup.m_Targets[0].target = target.TargetOrigin;
+            followTarget = target;
+        }
+        
         private void HandleThirdPerson()
         {
             cinemachineBrain.ManualUpdate();
@@ -141,30 +247,6 @@ namespace rwby
             }
         }
 
-        public virtual void Update()
-        {
-            Vector2 stickInput = p.GetAxis2D(Action.Camera_X, Action.Camera_Y);
-            bool cameraSwitch = p.GetButtonDown(Action.Camera_Switch);
-            
-            for (int i = 0; i < inputProvider.Length; i++)
-            {
-                inputProvider[i].input = stickInput;
-            }
-            
-            if (cameraSwitch && currentCameraState == CameraState.LOCK_ON)
-            {
-                lockon2DMode = !lockon2DMode;
-                if (lockon2DMode)
-                {
-                    virtualCameraAnimator.Play("Target2D");
-                }
-                else
-                {
-                    virtualCameraAnimator.Play("Target");
-                }
-            }
-        }
-
         public void LookAt(Vector3 position)
         {
 
@@ -178,14 +260,6 @@ namespace rwby
         public void Reset()
         {
 
-        }
-
-        public void SetLookAtTarget(FighterManager target)
-        {
-            virtualStateDrivenCamera.Follow = target.TargetOrigin;
-            virtualStateDrivenCamera.LookAt = target.TargetOrigin;
-            targetGroup.m_Targets[0].target = target.TargetOrigin;
-            followTarget = target;
         }
 
         public void SetLockOnTarget(FighterManager entityTarget)

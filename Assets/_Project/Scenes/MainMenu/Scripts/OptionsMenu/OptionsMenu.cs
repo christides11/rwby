@@ -11,13 +11,15 @@ namespace rwby.ui.mainmenu
         public enum OptionsSubmenuType
         {
             GENERAL,
-            PROFILES
+            PROFILE_SELECTION,
+            PROFILE_CUSTOMIZATION
         }
         public Dictionary<int, MenuBase> menus = new Dictionary<int, MenuBase>();
         [SerializeField] private List<int> history = new List<int>();
         
         [SerializeField] private OptionsGeneralMenu generalMenu;
         [SerializeField] private OptionsProfilesMenu profiles;
+        [SerializeField] private OptionsProfileCustomizeMenu profileCustomization;
         [SerializeField] private GameObject defaultSelectedUIItem;
         
         private LocalPlayerManager localPlayerManager;
@@ -34,7 +36,8 @@ namespace rwby.ui.mainmenu
             menus.Clear();
             history.Clear();
             menus.Add((int)OptionsSubmenuType.GENERAL, generalMenu);
-            menus.Add((int)OptionsSubmenuType.PROFILES, profiles);
+            menus.Add((int)OptionsSubmenuType.PROFILE_SELECTION, profiles);
+            menus.Add((int)OptionsSubmenuType.PROFILE_CUSTOMIZATION, profileCustomization);
             generalMenu.Open(MenuDirection.FORWARDS, this);
             history.Add((int)OptionsSubmenuType.GENERAL);
         }
@@ -63,6 +66,11 @@ namespace rwby.ui.mainmenu
             if (history.Count == 0) return false;
             bool result = GetCurrentMenu().TryClose(MenuDirection.BACKWARDS);
             if(result) history.RemoveAt(history.Count-1);
+            if (history.Count == 0)
+            {
+                currentHandler.Back();
+                return true;
+            }
             GetCurrentMenu().Open(MenuDirection.BACKWARDS, this);
             return true;
         }

@@ -218,8 +218,9 @@ namespace rwby
             {
                 dist = Vector3.Distance(transform.position, CurrentTarget.transform.position);
             }
-            if ((dist <= lockonMaxDistance + 0.5f) 
-                && (inputManager.GetLockOn(out int bOffset).firstPress == false && (CurrentTarget != null && CurrentTarget.GetComponent<ITargetable>().Targetable == true)) ) return;
+            if (dist <= lockonMaxDistance + 0.5f && inputManager.GetLockOn(out int buttonOffset).isDown == true) return;
+            //if ((dist <= lockonMaxDistance + 0.5f) 
+            //    && (inputManager.GetLockOn(out int bOffset).isDown == false && (CurrentTarget != null && CurrentTarget.GetComponent<ITargetable>().Targetable == true)) ) return;
             CurrentTarget = null;
             HardTargeting = false;
         }

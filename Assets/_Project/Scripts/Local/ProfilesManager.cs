@@ -9,6 +9,7 @@ namespace rwby
 {
     public class ProfilesManager : MonoBehaviour
     {
+        public static string defaultProfileIdentifier = "Default";
         public delegate void ProfileAction(ProfilesManager profilesManager);
         public event ProfileAction onProfileAdded;
         public event ProfileAction onProfileRemoved;
@@ -17,6 +18,7 @@ namespace rwby
         [SerializeField] protected List<ProfileDefinition> profiles = new List<ProfileDefinition>();
         public ReadOnlyCollection<ProfileDefinition> Profiles => profiles.AsReadOnly();
         
+        
         public void Initialize()
         {
             if (!LoadProfiles())
@@ -24,13 +26,14 @@ namespace rwby
                 ProfileDefinition temp = new ProfileDefinition
                 {
                     undeletable = true,
-                    profileName = "Default"
+                    profileName = defaultProfileIdentifier
                 };
                 profiles.Add(temp);
                 ApplyControlsToProfile(0, 0, true);
                 SaveProfiles();
                 LoadProfiles();
             }
+            SaveProfiles();
         }
 
         public void SaveProfiles()
@@ -57,6 +60,15 @@ namespace rwby
         {
             profiles.RemoveAt(index);
             SaveProfiles();
+        }
+
+        public ProfileDefinition GetProfile(string name)
+        {
+            foreach(var p in profiles)
+            {
+                if (p.profileName.ToLower() == name.ToLower()) return p;
+            }
+            return new ProfileDefinition();
         }
         
         public void ApplyControlsToProfile(int player, int profileIndex, bool systemPlayer = false)

@@ -8,6 +8,9 @@ namespace rwby
     {
         public delegate void PlayerCountAction(LocalPlayerManager localPlayerManager, int previousPlayerCount, int currentPlayCount);
         public event PlayerCountAction OnPlayerCountChanged;
+
+        public delegate void PlayerControllerAction(int playerID, PlayerControllerType controllerType);
+        public event PlayerControllerAction OnPlayerControllerTypeChanged;
         
         public int maxLocalPlayers = 4;
         public LocalPlayerData systemPlayer;
@@ -147,6 +150,11 @@ namespace rwby
             localPlayers[playerID].rewiredPlayer.controllers.hasKeyboard = true;
             localPlayers[playerID].rewiredPlayer.controllers.hasMouse = true;
         }
+
+        public PlayerControllerType GetPlayerControllerType(int playerID)
+        {
+            return localPlayers[playerID].controllerType;
+        }
         
         private void OnPlayerActiveControllerChanged(Player player, Controller controller)
         {
@@ -161,6 +169,7 @@ namespace rwby
                     ? PlayerControllerType.MOUSE_AND_KEYBOARD
                     : PlayerControllerType.GAMEPAD;
             localPlayers[player.id] = temp;
+            OnPlayerControllerTypeChanged?.Invoke(player.id, temp.controllerType);
         }
         
         private void WhenSystemPlayerActiveControllerChanged(Player player, Controller controller)

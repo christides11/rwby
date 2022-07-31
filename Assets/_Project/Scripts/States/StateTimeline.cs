@@ -34,6 +34,7 @@ namespace rwby
 
         [Header("Conditions")]
         [FormerlySerializedAs("stateInputSequence")] public InputSequence inputSequence;
+        public bool inputSequenceAsHoldInputs;
         [SelectImplementation(typeof(IConditionVariables))] [SerializeField, SerializeReference]
         public IConditionVariables condition;
 

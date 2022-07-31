@@ -8,6 +8,12 @@ namespace rwby
 {
     public class Collbox : CustomHitbox
     {
+        public BoxCollider boxCollider;
 
+        public override void SetBoxSize(Vector3 offset, Vector3 boxExtents)
+        {
+            base.SetBoxSize(offset, boxExtents);
+            boxCollider.size = boxExtents * 2.0f;
+        }
     }
 }
