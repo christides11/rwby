@@ -87,31 +87,25 @@ namespace rwby
                 if (c.axis2DCount == 0) continue;
                 prev = c.GetAxis2DPrev(0);
                 axis = c.GetAxis2D(0);
-                
-                
-                if (Mathf.Abs(axis.x) < assignmentDeadzone)
+
+                if (axis.y > assignmentDeadzone && prev.y < axis.y)
                 {
-                    if (Mathf.Abs(prev.y) > assignmentDeadzone) continue;
-                    if (axis.y > assignmentDeadzone)
-                    {
-                        joystickElements[c].transform.SetParent(playerControllerGrids[0].ContentLayout.transform);
-                    }
-                    else if(axis.y < -assignmentDeadzone)
-                    {
-                        joystickElements[c].transform.SetParent(playerControllerGrids[2].ContentLayout.transform);
-                    }
+                    joystickElements[c].transform.SetParent(playerControllerGrids[0].ContentLayout.transform);
+                    continue;
+                }else if (axis.y < -assignmentDeadzone && prev.y > axis.y)
+                {
+                    joystickElements[c].transform.SetParent(playerControllerGrids[2].ContentLayout.transform);
+                    continue;
                 }
-                else
+                
+                if (axis.x > assignmentDeadzone && prev.x < axis.x)
                 {
-                    if (Mathf.Abs(prev.x) > assignmentDeadzone) continue;
-                    if (axis.x > assignmentDeadzone)
-                    {
-                        joystickElements[c].transform.SetParent(playerControllerGrids[1].ContentLayout.transform);
-                    }
-                    else if(axis.x < -assignmentDeadzone)
-                    {
-                        joystickElements[c].transform.SetParent(playerControllerGrids[3].ContentLayout.transform);
-                    }
+                    joystickElements[c].transform.SetParent(playerControllerGrids[1].ContentLayout.transform);
+                    continue;
+                }else if (axis.x < -assignmentDeadzone && prev.x > axis.x)
+                {
+                    joystickElements[c].transform.SetParent(playerControllerGrids[3].ContentLayout.transform);
+                    continue;
                 }
             }
         }

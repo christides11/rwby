@@ -475,10 +475,90 @@ namespace rwby
         public static void LogMessage(IFighterBase fighter, IStateVariables variables, HnSF.StateTimeline arg3, int arg4)
         {
             FighterManager fm = (FighterManager)fighter;
-            if (fm.HardTargeting) return;
             VarDebugLog vars = (VarDebugLog)variables;
             
             Debug.Log(vars.message);
+        }
+        
+        public static void FindWall(IFighterBase fighter, IStateVariables variables, HnSF.StateTimeline arg3, int arg4)
+        {
+            bool IsHitValid(FighterManager fm, VarFindWall vars, RaycastHit hitResult)
+            {
+                if (vars.checkForward && vars.checkBackward && vars.checkSide) return true;
+                float angle = Vector3.Angle(fm.transform.forward, hitResult.normal);
+                bool dirValid = vars.checkBackward && angle <= 60.0f;
+                if (vars.checkForward && angle >= 120.0f) dirValid = true;
+                if (vars.checkSide && angle > 60.0f
+                                   && angle < 120.0f) dirValid = true;
+                return dirValid;
+            }
+            
+            FighterManager fm = (FighterManager)fighter;
+            VarFindWall vars = (VarFindWall)variables;
+            
+            if(vars.clearWallIfNotFound) fm.ClearWall();
+            
+            Vector3 input = vars.inputSource == VarSetMovement.InputSource.stick ? fm.GetMovementVector(0) : fm.myTransform.forward;
+            if(vars.normalizeInputSource) input.Normalize();
+            if (input == Vector3.zero)
+            {
+                if (!vars.useRotationIfInputZero) return;
+                    input = fm.transform.forward;
+            }
+
+            for (int i = 0; i < fm.wallHitResults.Length; i++)
+            {
+                fm.wallHitResults[i] = new RaycastHit();
+            }
+            
+            var forward = fm.myTransform.forward;
+            var right = fm.myTransform.right;
+            fm.Runner.GetPhysicsScene().Raycast(fm.GetCenter(), forward, out fm.wallHitResults[0],
+                vars.maxDistance, fm.wallLayerMask, QueryTriggerInteraction.Ignore);
+            fm.Runner.GetPhysicsScene().Raycast(fm.GetCenter(), (forward + right).normalized, out fm.wallHitResults[1],
+                vars.maxDistance, fm.wallLayerMask, QueryTriggerInteraction.Ignore);
+            fm.Runner.GetPhysicsScene().Raycast(fm.GetCenter(), right, out fm.wallHitResults[2],
+                vars.maxDistance, fm.wallLayerMask, QueryTriggerInteraction.Ignore);
+            fm.Runner.GetPhysicsScene().Raycast(fm.GetCenter(), (-forward + right), out fm.wallHitResults[3],
+                vars.maxDistance, fm.wallLayerMask, QueryTriggerInteraction.Ignore);
+            fm.Runner.GetPhysicsScene().Raycast(fm.GetCenter(), -forward, out fm.wallHitResults[4],
+                vars.maxDistance, fm.wallLayerMask, QueryTriggerInteraction.Ignore);
+            fm.Runner.GetPhysicsScene().Raycast(fm.GetCenter(), (-forward + -right).normalized, out fm.wallHitResults[5],
+                vars.maxDistance, fm.wallLayerMask, QueryTriggerInteraction.Ignore);
+            fm.Runner.GetPhysicsScene().Raycast(fm.GetCenter(), -right, out fm.wallHitResults[6],
+                vars.maxDistance, fm.wallLayerMask, QueryTriggerInteraction.Ignore);
+            fm.Runner.GetPhysicsScene().Raycast(fm.GetCenter(), (forward + -right), out fm.wallHitResults[7],
+                vars.maxDistance, fm.wallLayerMask, QueryTriggerInteraction.Ignore);
+
+
+            float min = Mathf.Infinity;
+            int lowestIndex = -1;
+
+            for (int i = 1; i < fm.wallHitResults.Length; i++)
+            {
+                if (fm.wallHitResults[i].point == Vector3.zero) continue;
+                if (IsHitValid(fm, vars, fm.wallHitResults[i]) && fm.wallHitResults[i].distance < min)
+                {
+                    lowestIndex = i;
+                    min = fm.wallHitResults[i].distance;
+                }
+            }
+
+            if (lowestIndex == -1) return;
+
+            fm.AssignWall(fm.wallHitResults[lowestIndex]);
+        }
+        
+        public static void SnapToWall(IFighterBase fighter, IStateVariables variables, HnSF.StateTimeline arg3, int arg4)
+        {
+            FighterManager fm = (FighterManager)fighter;
+            VarSnapToWall vars = (VarSnapToWall)variables;
+
+            if (!fm.IsWallValid()) return;
+
+            Vector3 newPos = fm.cWallPoint + (fm.cWallNormal * fm.FPhysicsManager.ecbRadius) - (new Vector3(0, fm.FPhysicsManager.ecbOffset, 0));
+
+            fm.FPhysicsManager.kCC.Motor.SetPosition(newPos, false);
         }
     }
 }

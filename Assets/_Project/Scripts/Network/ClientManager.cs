@@ -146,10 +146,6 @@ namespace rwby
 				buttonCamera[j] = player.rewiredPlayer.GetAxis2D(Action.Camera_X, Action.Camera_Y);
 				buttonCameraForward[j] = player.camera ? player.camera.transform.forward : Vector3.forward;
 				buttonCameraRight[j] = player.camera ? player.camera.transform.right : Vector3.right;
-				if (player.rewiredPlayer.GetButton(Action.Jump)) buttonJump[j] = true;
-				if (player.rewiredPlayer.GetButton(Action.A)) buttonA[j] = true;
-				if (player.rewiredPlayer.GetButton(Action.B)) buttonB[j] = true;
-				if (player.rewiredPlayer.GetButton(Action.C)) buttonC[j] = true;
 				if (player.rewiredPlayer.GetButton(Action.Block)) buttonBlock[j] = true;
 				if (player.rewiredPlayer.GetButton(Action.Dash)) buttonDash[j] = true;
 				if (player.rewiredPlayer.GetButton(Action.Lock_On)) buttonLockOn[j] = true;
@@ -161,6 +157,21 @@ namespace rwby
 				if (player.rewiredPlayer.GetButton(Action.Extra2)) buttonExtra2[j] = true;
 				if (player.rewiredPlayer.GetButton(Action.Extra3)) buttonExtra3[j] = true;
 				if (player.rewiredPlayer.GetButton(Action.Extra4)) buttonExtra4[j] = true;
+
+				if (player.rewiredPlayer.GetButton(Action.Ability_Menu))
+				{
+					if (player.rewiredPlayer.GetButton(Action.Jump)) buttonAbility1[j] = true;
+					if (player.rewiredPlayer.GetButton(Action.A)) buttonAbility2[j] = true;
+					if (player.rewiredPlayer.GetButton(Action.B)) buttonAbility3[j] = true;
+					if (player.rewiredPlayer.GetButton(Action.C)) buttonAbility4[j] = true;
+				}
+				else
+				{
+					if (player.rewiredPlayer.GetButton(Action.Jump)) buttonJump[j] = true;
+					if (player.rewiredPlayer.GetButton(Action.A)) buttonA[j] = true;
+					if (player.rewiredPlayer.GetButton(Action.B)) buttonB[j] = true;
+					if (player.rewiredPlayer.GetButton(Action.C)) buttonC[j] = true;
+				}
 			}
 		}
 

@@ -26,6 +26,7 @@ MonoBehaviour:
   - rid: 2193520697185665052
   - rid: 2193520791838261259
   - rid: 2193520791838261261
+  - rid: 8688056136894513158
   stateGroundedGroup: 2
   stateType: 0
   maxUsesInString: -1
@@ -35,6 +36,7 @@ MonoBehaviour:
     executeInputs: []
     sequenceWindow: 8
     sequenceInputs: []
+  inputSequenceAsHoldInputs: 0
   condition:
     rid: -2
   hitboxInfo: []
@@ -51,6 +53,7 @@ MonoBehaviour:
         name: 
         id: 0
         parent: -1
+        children: 
         frameRanges:
         - {x: 0, y: 0}
         condition:
@@ -81,6 +84,7 @@ MonoBehaviour:
         name: 
         id: 1
         parent: -1
+        children: 
         frameRanges:
         - {x: 1, y: -1}
         condition:
@@ -153,6 +157,7 @@ MonoBehaviour:
         name: 
         id: 2
         parent: -1
+        children: 
         frameRanges:
         - {x: 2, y: -1}
         condition:
@@ -201,6 +206,7 @@ MonoBehaviour:
         name: 
         id: 3
         parent: -1
+        children: 
         frameRanges:
         - {x: 1, y: -1}
         condition:
@@ -223,6 +229,7 @@ MonoBehaviour:
         name: Aerial Interrupts
         id: 4
         parent: -1
+        children: 
         frameRanges:
         - {x: 1, y: -1}
         condition:
@@ -234,7 +241,23 @@ MonoBehaviour:
         name: Try JumpEnd
         id: 5
         parent: -1
-        frameRanges: []
+        children: 
+        frameRanges:
+        - {x: 1, y: -1}
         condition:
           rid: -2
         asset: {fileID: 11400000, guid: e3eaa1968ad0197499aa52999cb46489, type: 2}
+    - rid: 8688056136894513158
+      type: {class: VarModifyRotation, ns: rwby, asm: rwby.csharp}
+      data:
+        name: 
+        id: 6
+        parent: -1
+        children: 
+        frameRanges:
+        - {x: 0, y: 0}
+        condition:
+          rid: -2
+        modifyType: 1
+        rotateTowards: 0
+        eulerAngle: {x: 0, y: 0, z: 0}

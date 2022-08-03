@@ -71,6 +71,11 @@ namespace rwby
             kCC.Motor.SetPosition(newECBPosition);
         }
 
+        public Vector3 ECBCenter()
+        {
+            return transform.position + new Vector3(0, ecbOffset, 0);
+        }
+
         public void SetPosition(Vector3 position, bool bypassInterpolation = true)
         {
             kCC.Motor.SetPosition(position, bypassInterpolation);

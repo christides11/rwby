@@ -53,6 +53,8 @@ namespace rwby
         [Networked] public float CurrentFallMultiplier { get; set; } = 1.0f;
         [Networked, Capacity(10)] public NetworkArray<bool> attackEventInput { get; }
 
+        [Header("Debug")] public bool FRAMEBYFRAME = false;
+        
         [Header("References")]
         [NonSerialized] public NetworkManager networkManager;
         [SerializeField] protected FighterInputManager inputManager;
@@ -79,8 +81,15 @@ namespace rwby
         public float lockonMaxDistance = 20;
         public float lockonFudging = 0.1f;
 
-        [Header("Debug")] public bool FRAMEBYFRAME = false;
 
+        [Header("Walls")]
+        public LayerMask wallLayerMask;
+        [HideInInspector] public RaycastHit[] wallHitResults = new RaycastHit[8];
+
+        [Networked] public Vector3 cWallNormal { get; set; }
+        [Networked] public Vector3 cWallPoint { get; set; }
+        [Networked] public byte cWallSide { get; set; }
+        
         public virtual async UniTask<bool> OnFighterLoaded()
         {
             return true;
@@ -88,7 +97,6 @@ namespace rwby
 
         public virtual void Awake()
         {
-            //SessionManagerClassic = SessionManagerClassic.singleton;
             networkManager = NetworkManager.singleton;
             stateManager.movesets = fighterDefinition.GetMovesets();
             foreach (var moveset in stateManager.movesets)
@@ -114,13 +122,11 @@ namespace rwby
         public override void Render()
         {
             base.Render();
-            //visualTransform.localPosition = Vector3.zero;
             physicsManager.kCC.Motor.visualExtraOffset = Vector3.zero;
             if (FCombatManager.HitStop == 0 || FCombatManager.HitStun == 0) return;
             Vector3 dir = shakeDirs[currentShakeDirection].z * transform.forward
                           + shakeDirs[currentShakeDirection].x * transform.right;
             physicsManager.kCC.Motor.visualExtraOffset = dir * hitstopShakeDistance * hitstopDir;
-            //visualTransform.localPosition = dir * hitstopShakeDistance * hitstopDir;
         }
 
         public int val = 100;
@@ -306,9 +312,9 @@ namespace rwby
 
         public Vector3 GetCenter()
         {
-            return transform.position + Vector3.up;
+            return physicsManager.ECBCenter();
         }
-
+        
         public bool TryBlock()
         {
             if(InputManager.GetBlock(out int bOff).isDown == false)
@@ -326,141 +332,24 @@ namespace rwby
             return true;
         }
 
-        [Header("Walls")]
-        public LayerMask wallLayerMask;
-        public float wallCheckDistance = 0.7f;
-        public GameObject currentWall;
-        public float ceilingCheckDistance = 1.2f;
-        public RaycastHit wallRayHit;
-        public float wallRunDot = -0.9f;
-
-        public float sideWallDistance;
-        public int wallSide;
-        public float wallRunHozMultiplier = 1.0f;
-
-        public RaycastHit lastWallHit;
-
-        public virtual bool TryWallRun()
+        public virtual void ClearWall()
         {
-            if (InputManager.GetMovement(0).magnitude < InputConstants.movementDeadzone) return false;
-
-            RaycastHit rh = DetectWall(out wallSide);
-            if (rh.collider == null) return false;
-
-            float dotProduct = Vector3.Dot(rh.normal, GetMovementVector().normalized);
-            if (dotProduct < wallRunDot)
-            {
-                lastWallHit = rh;
-                FStateManager.ChangeState((int)FighterCmnStates.WALL_RUN_H);
-                return true;
-            }
-            return false;
+            cWallNormal = Vector3.zero;
+        }
+        
+        public virtual void AssignWall(RaycastHit hitResult)
+        {
+            cWallNormal = hitResult.normal;
+            cWallPoint = hitResult.point;
         }
 
-        RaycastHit forwardRay;
-        RaycastHit leftForwardRay;
-        RaycastHit rightForwardRay;
-        RaycastHit leftRay;
-        RaycastHit rightRay;
-        /// <summary>
-        /// Check if there's a wall in the movement direction we're pointing.
-        /// </summary>
-        /// <returns>The RaycastHit result.</returns>
-        public virtual RaycastHit DetectWall(out int wallDir, bool useCharacterForward = false)
+        public virtual bool IsWallValid()
         {
-            //Get stick direction.
-            Vector3 movement = GetMovementVector();
-            Vector3 translatedMovement = (useCharacterForward || movement.magnitude < InputConstants.movementDeadzone)
-                ? transform.forward
-                : GetMovementVector();
-            translatedMovement.y = 0;
-            Vector3 translatedLeft = Vector3.Cross(translatedMovement, Vector3.up);
-
-            Vector3 movementLeftForward = (translatedLeft + translatedMovement).normalized;
-            Vector3 movementRightForward = ((-translatedLeft) + translatedMovement).normalized;
-
-            //Physics.Raycast(transform.position + new Vector3(0, 1, 0),
-            //    translatedMovement.normalized, out forwardRay, wallCheckDistance, wallLayerMask);
-
-            //Debug.DrawRay(transform.position + new Vector3(0, 1, 0),
-            //    translatedMovement.normalized * wallCheckDistance, Color.red);
-
-            Physics.Raycast(transform.position + new Vector3(0, 1, 0),
-                movementLeftForward, out leftForwardRay, wallCheckDistance, wallLayerMask);
-
-            Physics.Raycast(transform.position + new Vector3(0, 1, 0),
-                translatedLeft.normalized, out leftRay, wallCheckDistance, wallLayerMask);
-
-            Physics.Raycast(transform.position + new Vector3(0, 1, 0),
-                movementRightForward, out rightForwardRay, wallCheckDistance, wallLayerMask);
-
-            Physics.Raycast(transform.position + new Vector3(0, 1, 0),
-                -translatedLeft.normalized, out rightRay, wallCheckDistance, wallLayerMask);
-
-            FixRaycastHit(ref forwardRay);
-            FixRaycastHit(ref leftRay);
-            FixRaycastHit(ref leftForwardRay);
-            FixRaycastHit(ref rightForwardRay);
-            FixRaycastHit(ref rightRay);
-
-            /*
-            if (forwardRay.collider != null
-                && forwardRay.distance <= leftForwardRay.distance
-                && forwardRay.distance <= rightForwardRay.distance
-                && forwardRay.distance <= leftRay.distance
-                && forwardRay.distance <= rightRay.distance)
-            {
-                wallDir = 1;
-                return forwardRay;
-            }
-            else*/ if (
-               leftForwardRay.collider != null
-               && leftForwardRay.distance <= forwardRay.distance
-               && leftForwardRay.distance <= leftRay.distance
-               && leftForwardRay.distance <= rightForwardRay.distance
-               && leftForwardRay.distance <= rightRay.distance)
-            {
-                wallDir = -1;
-                return leftForwardRay;
-            }
-            else if (
-               leftRay.collider != null
-               && leftRay.distance <= forwardRay.distance
-               && leftRay.distance <= leftForwardRay.distance
-               && leftRay.distance <= rightForwardRay.distance
-               && leftRay.distance <= rightRay.distance)
-            {
-                wallDir = -1;
-                return leftRay;
-            }
-            else if (
-                rightRay.collider != null
-                && rightRay.distance <= forwardRay.distance
-                && rightRay.distance <= leftForwardRay.distance
-                && rightRay.distance <= rightForwardRay.distance
-                && rightRay.distance <= leftRay.distance)
-            {
-                wallDir = 1;
-                return rightRay;
-            }
-            else
-            {
-                wallDir = 1;
-                return rightForwardRay;
-            }
-        }
-
-        private void FixRaycastHit(ref RaycastHit rh)
-        {
-            if (rh.collider == null)
-            {
-                rh.distance = Mathf.Infinity;
-            }
+            return cWallNormal != Vector3.zero;
         }
 
         public virtual void ResetVariablesOnGround()
         {
-            //StoredRun = false;
             CurrentAirDash = 0;
             CurrentJump = 0;
             FPhysicsManager.forceGravity = 0;

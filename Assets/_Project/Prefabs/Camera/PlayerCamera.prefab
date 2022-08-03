@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 3777466094522296228}
   - component: {fileID: 2559108704263925469}
   - component: {fileID: 2158316734981574143}
-  - component: {fileID: -5414921312063682898}
+  - component: {fileID: -5554495399990114630}
   - component: {fileID: 9101689328735284347}
   m_Layer: 0
   m_Name: PlayerCamera
@@ -147,7 +147,7 @@ MonoBehaviour:
   lockonMaxDistance: 20
   lockonFudging: 0.1
   currentCameraState: 0
-  blockingObject: {fileID: -5414921312063682898}
+  cutoutHandler: {fileID: -5554495399990114630}
   currentProfile:
     undeletable: 0
     version: 0
@@ -168,7 +168,7 @@ MonoBehaviour:
       speedVert: 0
       speedLockOnHoz: 0
       speedLockOnVert: 0
---- !u!114 &-5414921312063682898
+--- !u!114 &-5554495399990114630
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -177,19 +177,19 @@ MonoBehaviour:
   m_GameObject: {fileID: 1510336844590790844}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8f7a380e894d0704dbe2d16c19891afc, type: 3}
+  m_Script: {fileID: 11500000, guid: 62e28741fba984748b63c285009cf3be, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  LayerMask:
+  playerCamera: {fileID: 2158316734981574143}
+  camera: {fileID: 3857231048421817447}
+  wallMask:
     serializedVersion: 2
-    m_Bits: 8
-  Target: {fileID: 0}
-  Camera: {fileID: 3857231048421817447}
-  FadedAlpha: 0.33
-  RetainShadows: 1
-  TargetPositionOffset: {x: 0, y: 1, z: 0}
-  FadeSpeed: 1
-  ObjectsBlockingView: []
+    m_Bits: 2048
+  cutoutSize: 0.15
+  falloffSize: 0
+  cutoutCloseSpeed: 3
+  cutoutOpenSpeed: 2
+  targetOffset: {x: 0, y: 1, z: 0}
 --- !u!114 &9101689328735284347
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -270,11 +270,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_PositionMode: 1
   m_RotationMode: 0
-  m_UpdateMethod: 2
+  m_UpdateMethod: 0
   m_Targets:
   - target: {fileID: 0}
     weight: 1
     radius: 2
   - target: {fileID: 0}
-    weight: 0.6
-    radius: 2
+    weight: 0
+    radius: 0

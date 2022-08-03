@@ -19,7 +19,9 @@ MonoBehaviour:
   autoIncrement: 1
   autoLoop: 1
   autoLoopFrame: 2
-  data: []
+  data:
+  - rid: 8688056136894513153
+  - rid: 8688056136894513155
   stateGroundedGroup: 2
   stateType: 0
   maxUsesInString: -1
@@ -29,6 +31,7 @@ MonoBehaviour:
     executeInputs: []
     sequenceWindow: 8
     sequenceInputs: []
+  inputSequenceAsHoldInputs: 0
   condition:
     rid: -2
   hitboxInfo: []
@@ -39,3 +42,46 @@ MonoBehaviour:
     RefIds:
     - rid: -2
       type: {class: , ns: , asm: }
+    - rid: 8688056136894513153
+      type: {class: VarMultiplyMovement, ns: rwby, asm: rwby.csharp}
+      data:
+        name: 
+        id: 0
+        parent: -1
+        children: 
+        frameRanges:
+        - {x: 0, y: 0}
+        condition:
+          rid: -2
+        multiplier:
+          rid: 8688056136894513154
+    - rid: 8688056136894513154
+      type: {class: FighterBaseStatReferenceFloat, ns: rwby, asm: rwby.csharp}
+      data:
+        inverse: 0
+        statReference: 1
+        value: 0
+        variable: 20
+    - rid: 8688056136894513155
+      type: {class: VarAddMovement, ns: rwby, asm: rwby.csharp}
+      data:
+        name: 
+        id: 1
+        parent: -1
+        children: 
+        frameRanges:
+        - {x: 0, y: 0}
+        condition:
+          rid: -2
+        inputSource: 0
+        normalizeInputSource: 0
+        useRotationIfInputZero: 0
+        force:
+          rid: 8688056136894513156
+    - rid: 8688056136894513156
+      type: {class: FighterBaseStatReferenceFloat, ns: rwby, asm: rwby.csharp}
+      data:
+        inverse: 0
+        statReference: 1
+        value: 0
+        variable: 19

@@ -31,6 +31,7 @@ MonoBehaviour:
     executeInputs: []
     sequenceWindow: 8
     sequenceInputs: []
+  inputSequenceAsHoldInputs: 0
   condition:
     rid: -2
   hitboxInfo: []
@@ -49,13 +50,14 @@ MonoBehaviour:
         name: 
         id: 0
         parent: -1
+        children: 
         frameRanges:
         - {x: 0, y: 0}
         condition:
           rid: -2
         inputSource: 0
-        normalizeInputSource: 0
-        useRotationIfInputZero: 0
+        normalizeInputSource: 1
+        useRotationIfInputZero: 1
         force:
           rid: 2193520740721754113
     - rid: 2193520740721754113
@@ -71,6 +73,7 @@ MonoBehaviour:
         name: To Fall
         id: 1
         parent: -1
+        children: 
         frameRanges:
         - {x: -1, y: -1}
         condition:

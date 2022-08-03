@@ -22,6 +22,7 @@ MonoBehaviour:
   data:
   - rid: 2193520783924396044
   - rid: 2193520716547358736
+  - rid: 8688056136894513159
   stateGroundedGroup: 1
   stateType: 0
   maxUsesInString: -1
@@ -31,6 +32,7 @@ MonoBehaviour:
     executeInputs: []
     sequenceWindow: 8
     sequenceInputs: []
+  inputSequenceAsHoldInputs: 0
   condition:
     rid: -2
   hitboxInfo: []
@@ -47,13 +49,14 @@ MonoBehaviour:
         name: 
         id: 0
         parent: -1
+        children: 
         frameRanges:
         - {x: 0, y: 0}
         condition:
           rid: -2
         inputSource: 0
-        normalizeInputSource: 0
-        useRotationIfInputZero: 0
+        normalizeInputSource: 1
+        useRotationIfInputZero: 1
         force:
           rid: 2193520716547358737
     - rid: 2193520716547358737
@@ -69,6 +72,7 @@ MonoBehaviour:
         name: 
         id: 1
         parent: -1
+        children: 
         frameRanges:
         - {x: -1, y: -1}
         condition:
@@ -82,3 +86,17 @@ MonoBehaviour:
       type: {class: FighterCmnStateReference, ns: rwby, asm: rwby.csharp}
       data:
         state: 3
+    - rid: 8688056136894513159
+      type: {class: VarModifyRotation, ns: rwby, asm: rwby.csharp}
+      data:
+        name: 
+        id: 2
+        parent: -1
+        children: 
+        frameRanges:
+        - {x: 0, y: 0}
+        condition:
+          rid: -2
+        modifyType: 1
+        rotateTowards: 1
+        eulerAngle: {x: 0, y: 0, z: 0}

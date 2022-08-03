@@ -449,7 +449,7 @@ MonoBehaviour:
     m_Bits: 64
   lockonVisibilityLayerMask:
     serializedVersion: 2
-    m_Bits: 8
+    m_Bits: 2056
   lockonMaxDistance: 20
   lockonFudging: 0.1
   FRAMEBYFRAME: 0
@@ -465,7 +465,7 @@ MonoBehaviour:
   _currentShakeDirection: 0
   wallLayerMask:
     serializedVersion: 2
-    m_Bits: 8
+    m_Bits: 2056
   wallCheckDistance: 0.7
   currentWall: {fileID: 0}
   ceilingCheckDistance: 1.2
@@ -473,6 +473,8 @@ MonoBehaviour:
   sideWallDistance: 0
   wallSide: 0
   wallRunHozMultiplier: 1
+  _cWallNormal: {x: 0, y: 0, z: 0}
+  _cWallPoint: {x: 0, y: 0, z: 0}
   animationbankReferences:
   - modGUID:
       guid: 1d292c1f00000000
@@ -727,7 +729,7 @@ MonoBehaviour:
   MaxStableSlopeAngle: 60
   StableGroundLayers:
     serializedVersion: 2
-    m_Bits: 8
+    m_Bits: 2056
   DiscreteCollisionEvents: 0
   StepHandling: 1
   MaxStepHeight: 0.5

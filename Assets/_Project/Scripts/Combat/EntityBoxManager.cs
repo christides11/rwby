@@ -77,18 +77,22 @@ namespace rwby
             foreach (Hurtbox hb in hurtboxes)
             {
                 hRoot.SetHitboxActive(hb, false);
+                hb.SetBoxActiveState(false);
             }
             foreach (var hb in hitboxes)
             {
                 hRoot.SetHitboxActive(hb, false);
+                hb.SetBoxActiveState(false);
             }
             foreach(Collbox cb in collisionboxes)
             {
                 hRoot.SetHitboxActive(cb, false);
+                cb.SetBoxActiveState(false);
             }
             foreach (Throwablebox tb in throwableboxes)
             {
                 hRoot.SetHitboxActive(tb, false);
+                tb.SetBoxActiveState(false);
             }
         }
 
@@ -100,6 +104,7 @@ namespace rwby
             fusionHitbox.definition = definition;
             fusionHitbox.definitionIndex = definitionIndex;
             hRoot.SetHitboxActive(fusionHitbox, true);
+            fusionHitbox.SetBoxActiveState(true);
         }
 
         private CustomHitbox GetNextCustomHitbox(FighterBoxType boxType)

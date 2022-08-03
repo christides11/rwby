@@ -38,6 +38,8 @@ namespace rwby
             functions.Add(typeof(VarClearHitList), BaseStateFunctions.ClearHitList);
             functions.Add(typeof(VarFindSoftTarget), BaseStateFunctions.FindSoftTarget);
             functions.Add(typeof(VarDebugLog), BaseStateFunctions.LogMessage);
+            functions.Add(typeof(VarFindWall), BaseStateFunctions.FindWall);
+            functions.Add(typeof(VarSnapToWall), BaseStateFunctions.SnapToWall);
         }
     }
 }

@@ -24,7 +24,10 @@ MonoBehaviour:
   - rid: 2193520703102779404
   - rid: 2193520703102779397
   - rid: 2193520791838261256
+  - rid: 8688056157277782016
+  - rid: 8688056157277782017
   - rid: 2193520791838261262
+  - rid: 8688056157277782019
   stateGroundedGroup: 2
   stateType: 0
   maxUsesInString: -1
@@ -34,6 +37,7 @@ MonoBehaviour:
     executeInputs: []
     sequenceWindow: 8
     sequenceInputs: []
+  inputSequenceAsHoldInputs: 0
   condition:
     rid: -2
   hitboxInfo: []
@@ -50,6 +54,7 @@ MonoBehaviour:
         name: 
         id: 0
         parent: -1
+        children: 
         frameRanges:
         - {x: 2, y: -1}
         condition:
@@ -99,6 +104,7 @@ MonoBehaviour:
         name: 
         id: 1
         parent: -1
+        children: 
         frameRanges:
         - {x: 1, y: -1}
         condition:
@@ -171,6 +177,7 @@ MonoBehaviour:
         name: Extra Gravity
         id: 2
         parent: -1
+        children: 
         frameRanges:
         - {x: 5, y: -1}
         condition:
@@ -228,6 +235,7 @@ MonoBehaviour:
         name: Aerial Interrupts
         id: 4
         parent: -1
+        children: 
         frameRanges:
         - {x: 5, y: -1}
         condition:
@@ -239,8 +247,63 @@ MonoBehaviour:
         name: Try JumpEnd
         id: 5
         parent: -1
+        children: 
         frameRanges:
         - {x: 5, y: -1}
         condition:
           rid: -2
         asset: {fileID: 11400000, guid: e3eaa1968ad0197499aa52999cb46489, type: 2}
+    - rid: 8688056157277782016
+      type: {class: VarFindWall, ns: rwby, asm: rwby.csharp}
+      data:
+        name: 
+        id: 6
+        parent: -1
+        children: 
+        frameRanges:
+        - {x: 1, y: -1}
+        condition:
+          rid: -2
+        inputSource: 0
+        normalizeInputSource: 1
+        useRotationIfInputZero: 1
+        maxDistance: 1
+        checkForward: 1
+        checkBackward: 0
+        checkSide: 0
+        clearWallIfNotFound: 1
+    - rid: 8688056157277782017
+      type: {class: VarEmpty, ns: rwby, asm: rwby.csharp}
+      data:
+        name: Wall Valid
+        id: 7
+        parent: -1
+        children: 08000000
+        frameRanges:
+        - {x: 5, y: -1}
+        condition:
+          rid: 8688056157277782018
+    - rid: 8688056157277782018
+      type: {class: ConditionWallValid, ns: rwby, asm: rwby.csharp}
+      data:
+        inverse: 0
+    - rid: 8688056157277782019
+      type: {class: VarChangeState, ns: rwby, asm: rwby.csharp}
+      data:
+        name: Wall Cling
+        id: 8
+        parent: 7
+        children: 
+        frameRanges:
+        - {x: 5, y: -1}
+        condition:
+          rid: -2
+        checkInputSequence: 0
+        checkCondition: 0
+        stateMovesetID: -1
+        state:
+          rid: 8688056157277782020
+    - rid: 8688056157277782020
+      type: {class: FighterCmnStateReference, ns: rwby, asm: rwby.csharp}
+      data:
+        state: 38

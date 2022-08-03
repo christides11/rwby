@@ -41,5 +41,6 @@ namespace rwby
         HIT_AERIAL_FACE_DOWN = 35, // Ends with character facing downwards. Commonly used for tripping moves.
         HIT_AERIAL_LAUNCH = 36, // Ends with character facing downwards. Commonly used for DPs.
         HIT_AERIAL_SOMERSAULT = 37, // Character spins. 
+        WALL_CLING
     }
 }

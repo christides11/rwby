@@ -113,6 +113,10 @@ MonoBehaviour:
     state:
       rid: 2193520836063002635
     stateTimeline: {fileID: 11400000, guid: af4f54f525d7024449865368ef6bf43e, type: 2}
+  - name: Wall Cling
+    state:
+      rid: 8688056157277782026
+    stateTimeline: {fileID: 11400000, guid: 0f92ef91c43a9a84cbe086674096c63e, type: 2}
   fighterStats: {fileID: 11400000, guid: 9db018607e1c48c498ee3d8a7c4cefc3, type: 2}
   specials:
   - groundState:
@@ -242,3 +246,7 @@ MonoBehaviour:
       type: {class: RubyRoseStateReference, ns: rwby.core, asm: rwby.core}
       data:
         state: 60
+    - rid: 8688056157277782026
+      type: {class: FighterCmnStateReference, ns: rwby, asm: rwby.csharp}
+      data:
+        state: 38

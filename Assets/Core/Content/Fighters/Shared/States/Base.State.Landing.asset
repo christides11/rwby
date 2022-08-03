@@ -21,6 +21,7 @@ MonoBehaviour:
   autoLoopFrame: 1
   data:
   - rid: 2193520716547358720
+  - rid: 8688056136894513157
   - rid: 2193520716547358722
   stateGroundedGroup: 1
   stateType: 0
@@ -31,6 +32,7 @@ MonoBehaviour:
     executeInputs: []
     sequenceWindow: 8
     sequenceInputs: []
+  inputSequenceAsHoldInputs: 0
   condition:
     rid: -2
   hitboxInfo: []
@@ -47,6 +49,7 @@ MonoBehaviour:
         name: 
         id: 0
         parent: -1
+        children: 
         frameRanges:
         - {x: 1, y: -1}
         condition:
@@ -68,6 +71,7 @@ MonoBehaviour:
         name: To Idle
         id: 1
         parent: -1
+        children: 
         frameRanges:
         - {x: -1, y: -1}
         condition:
@@ -81,3 +85,15 @@ MonoBehaviour:
       type: {class: FighterCmnStateReference, ns: rwby, asm: rwby.csharp}
       data:
         state: 1
+    - rid: 8688056136894513157
+      type: {class: VarExternal, ns: rwby, asm: rwby.csharp}
+      data:
+        name: Try Walk/Run
+        id: 2
+        parent: -1
+        children: 
+        frameRanges:
+        - {x: -1, y: -1}
+        condition:
+          rid: -2
+        asset: {fileID: 11400000, guid: 124c79362d203b84da4165660d6a1f1a, type: 2}

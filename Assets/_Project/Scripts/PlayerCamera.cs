@@ -18,6 +18,10 @@ namespace rwby
         }
 
         public Camera Cam { get { return cam; } }
+        public Transform FollowTarget
+        {
+            get { return followTarget.visualTransform; }
+        }
 
         public static PlayerCamera instance;
 
@@ -45,6 +49,8 @@ namespace rwby
         public float lockonFudging = 0.1f;
         public CameraState currentCameraState = CameraState.THIRDPERSON;
 
+        [Header("Occulsion")] public CamHandleCutout cutoutHandler;
+        
         void Awake()
         {
             instance = this;
@@ -59,6 +65,7 @@ namespace rwby
         private PlayerControllerType currentControllerType;
         public void Initialize(ClientManager clientManager, int playerID)
         {
+            Runner.AddSimulationBehaviour(cutoutHandler, null);
             virtualStateDrivenCamera = Runner.InstantiateInRunnerScene(GameManager.singleton.settings.playerVirtualCameraPrefab, transform.position, Quaternion.identity);
 
             virtualCameraAnimator = virtualStateDrivenCamera.GetComponent<Animator>();
@@ -71,13 +78,18 @@ namespace rwby
             {
                 virtualCameraPOV[i] = virtualCameras[i].GetCinemachineComponent<CinemachinePOV>();
                 virtualCameraShake[i] = virtualCameras[i].GetComponent<CinemachineShake>();
-            } 
+            }
+
+            var t = virtualStateDrivenCamera.GetComponentsInChildren<FusionCinemachineCollider>();
+            foreach (var v in t)
+            {
+                v.runner = Runner;
+            }
             
             this.clientManager = clientManager;
             this.playerID = playerID;
             p = ReInput.players.GetPlayer(playerID);
             SetProfile(GameManager.singleton.profilesManager.GetProfile(clientManager.profiles[playerID]));
-            //currentControllerType = GameManager.singleton.localPlayerManager.GetPlayerControllerType(playerID);
             OnControllerTypeChanged(playerID, GameManager.singleton.localPlayerManager.GetPlayerControllerType(playerID));
             GameManager.singleton.localPlayerManager.OnPlayerControllerTypeChanged += OnControllerTypeChanged;
         }
@@ -186,9 +198,9 @@ namespace rwby
 
         public void SetLookAtTarget(FighterManager target)
         {
-            virtualStateDrivenCamera.Follow = target.TargetOrigin;
-            virtualStateDrivenCamera.LookAt = target.TargetOrigin;
             targetGroup.m_Targets[0].target = target.TargetOrigin;
+            virtualStateDrivenCamera.Follow = targetGroup.transform;
+            virtualStateDrivenCamera.LookAt = targetGroup.transform;
             followTarget = target;
         }
         
@@ -209,8 +221,8 @@ namespace rwby
             LockOnTarget = target;
             lockOnTargetable = target.GetComponent<ITargetable>();
             targetGroup.m_Targets[1].target = lockOnTargetable.TargetOrigin;
-            virtualStateDrivenCamera.Follow = targetGroup.transform;
-            virtualStateDrivenCamera.LookAt = targetGroup.transform;
+            targetGroup.m_Targets[1].weight = 0.6f;
+            targetGroup.m_Targets[1].radius = 2.0f;
             SetVirtualCameraInputs(0);
             virtualCameraAnimator.Play("Target");
             lockon2DMode = false;
@@ -231,8 +243,9 @@ namespace rwby
         private void TryLockoff()
         {
             if (followTarget.HardTargeting == true && followTarget.CurrentTarget != null) return;
-            virtualStateDrivenCamera.Follow = followTarget.TargetOrigin;
-            virtualStateDrivenCamera.LookAt = followTarget.TargetOrigin;
+            targetGroup.m_Targets[1].target = null;
+            targetGroup.m_Targets[1].weight = 0;
+            targetGroup.m_Targets[1].radius = 0;
             SetVirtualCameraInputs(1);
             virtualCameraAnimator.Play("Follow");
             currentCameraState = CameraState.THIRDPERSON;

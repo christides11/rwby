@@ -77,7 +77,7 @@ namespace rwby
                 
                 for (int b = 0; b < boxCollection.Collboxes.Length; b++)
                 {
-                    if (boxCollection.Collboxes[b].enabled == false) break;
+                    if (boxCollection.Collboxes[b].HitboxActive == false) break;
 
                     int numHit = 0;
                     

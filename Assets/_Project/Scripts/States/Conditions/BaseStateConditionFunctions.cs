@@ -141,5 +141,37 @@ namespace rwby
 
             return vars.inverse ? !f.HardTargeting : f.HardTargeting;
         }
+        
+        public static bool WallValid(IFighterBase fighter, IConditionVariables variables, HnSF.StateTimeline arg3, int arg4)
+        {
+            FighterManager f = fighter as FighterManager;
+            ConditionWallValid vars = (ConditionWallValid)variables;
+
+            bool result = f.cWallNormal == Vector3.zero ? false : true;
+            return vars.inverse ? !result : result;
+        }
+        
+        public static bool HoldingTowardsWall(IFighterBase fighter, IConditionVariables variables, HnSF.StateTimeline arg3, int arg4)
+        {
+            FighterManager f = fighter as FighterManager;
+            ConditionHoldingTowardsWall vars = (ConditionHoldingTowardsWall)variables;
+
+            bool result = false;
+            for (int i = 0; i < vars.buffer; i++)
+            {
+                Vector3 temp = f.GetMovementVector(i);
+                Vector3 tempNormal = f.cWallNormal;
+                tempNormal.y = 0;
+                tempNormal.Normalize();
+                if (temp == Vector3.zero) continue;
+                if (Vector3.Angle(temp, -tempNormal) < 80)
+                {
+                    result = true;
+                    break;
+                }
+            }
+            
+            return vars.inverse ? !result : result;
+        }
     }
 }
