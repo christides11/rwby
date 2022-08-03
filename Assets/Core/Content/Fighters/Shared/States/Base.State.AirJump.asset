@@ -27,6 +27,7 @@ MonoBehaviour:
   - rid: 2193520791838261259
   - rid: 2193520791838261261
   - rid: 8688056136894513158
+  - rid: 8688056195711238165
   stateGroundedGroup: 2
   stateType: 0
   maxUsesInString: -1
@@ -261,3 +262,15 @@ MonoBehaviour:
         modifyType: 1
         rotateTowards: 0
         eulerAngle: {x: 0, y: 0, z: 0}
+    - rid: 8688056195711238165
+      type: {class: VarExternal, ns: rwby, asm: rwby.csharp}
+      data:
+        name: Wall Interrupt
+        id: 7
+        parent: -1
+        children: 
+        frameRanges:
+        - {x: 1, y: -1}
+        condition:
+          rid: -2
+        asset: {fileID: 11400000, guid: dd12f38f1b643734aa58d2dab90b66b9, type: 2}

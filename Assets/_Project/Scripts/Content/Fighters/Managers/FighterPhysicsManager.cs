@@ -81,10 +81,10 @@ namespace rwby
             kCC.Motor.SetPosition(position, bypassInterpolation);
         }
 
-        public void SetRotation(Vector3 rot)
+        public void SetRotation(Vector3 rot, bool bypassInterpolation = true)
         {
             rotationDir = rot;
-            kCC.Motor.SetRotation(Quaternion.LookRotation(rotationDir), true);
+            kCC.Motor.SetRotation(Quaternion.LookRotation(rotationDir), bypassInterpolation);
         }
 
         public Vector3 GetOverallForce()

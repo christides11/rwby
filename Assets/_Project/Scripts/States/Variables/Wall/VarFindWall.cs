@@ -43,11 +43,9 @@ namespace rwby
         public VarSetMovement.InputSource inputSource;
         public bool normalizeInputSource;
         public bool useRotationIfInputZero;
-        public float maxDistance;
 
-        public bool checkForward;
-        public bool checkBackward;
-        public bool checkSide;
+        public float minAngle;
+        public float maxAngle;
 
         public bool clearWallIfNotFound;
     }

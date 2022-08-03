@@ -22,6 +22,7 @@ MonoBehaviour:
   data:
   - rid: 8688056157277782022
   - rid: 8688056157277782024
+  - rid: 8688056195711238149
   - rid: 8688056172856737792
   - rid: 8688056177854775296
   - rid: 8688056177854775299
@@ -189,3 +190,31 @@ MonoBehaviour:
         - {x: 0, y: 0}
         condition:
           rid: -2
+    - rid: 8688056195711238149
+      type: {class: VarChangeState, ns: rwby, asm: rwby.csharp}
+      data:
+        name: Try Wall Jump
+        id: 6
+        parent: -1
+        children: 
+        frameRanges:
+        - {x: 1, y: -1}
+        condition:
+          rid: 8688056195711238151
+        checkInputSequence: 0
+        checkCondition: 0
+        stateMovesetID: -1
+        state:
+          rid: 8688056195711238150
+    - rid: 8688056195711238150
+      type: {class: FighterCmnStateReference, ns: rwby, asm: rwby.csharp}
+      data:
+        state: 20
+    - rid: 8688056195711238151
+      type: {class: ConditionButton, ns: rwby, asm: rwby.csharp}
+      data:
+        inverse: 0
+        button: 0
+        buttonState: 1
+        offset: 0
+        buffer: 0

@@ -49,6 +49,7 @@ namespace rwby
         public InputSource inputSource;
         public bool normalizeInputSource;
         public bool useRotationIfInputZero;
+        public bool reverseInputSource;
         [SelectImplementation((typeof(FighterStatReferenceBase<float>)))] [SerializeReference]
         public FighterStatReferenceFloatBase force;
     }

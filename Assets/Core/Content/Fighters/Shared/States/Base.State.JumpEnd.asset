@@ -24,6 +24,7 @@ MonoBehaviour:
   - rid: 2193520703102779412
   - rid: 2193520703102779417
   - rid: 2193520791838261257
+  - rid: 8688056195711238164
   stateGroundedGroup: 2
   stateType: 0
   maxUsesInString: -1
@@ -33,6 +34,7 @@ MonoBehaviour:
     executeInputs: []
     sequenceWindow: 8
     sequenceInputs: []
+  inputSequenceAsHoldInputs: 0
   condition:
     rid: -2
   hitboxInfo: []
@@ -49,6 +51,7 @@ MonoBehaviour:
         name: 
         id: 0
         parent: -1
+        children: 
         frameRanges:
         - {x: 1, y: -1}
         condition:
@@ -98,6 +101,7 @@ MonoBehaviour:
         name: 
         id: 1
         parent: -1
+        children: 
         frameRanges:
         - {x: 1, y: -1}
         condition:
@@ -170,6 +174,7 @@ MonoBehaviour:
         name: Try Land
         id: 2
         parent: -1
+        children: 
         frameRanges:
         - {x: 1, y: -1}
         condition:
@@ -193,8 +198,21 @@ MonoBehaviour:
         name: Aerial Intterrupt
         id: 3
         parent: -1
+        children: 
         frameRanges:
         - {x: 1, y: -1}
         condition:
           rid: -2
         asset: {fileID: 11400000, guid: 60616eb90e93a5644a1f15ae2743f165, type: 2}
+    - rid: 8688056195711238164
+      type: {class: VarExternal, ns: rwby, asm: rwby.csharp}
+      data:
+        name: Wall Interrupts
+        id: 4
+        parent: -1
+        children: 
+        frameRanges:
+        - {x: 1, y: -1}
+        condition:
+          rid: -2
+        asset: {fileID: 11400000, guid: dd12f38f1b643734aa58d2dab90b66b9, type: 2}

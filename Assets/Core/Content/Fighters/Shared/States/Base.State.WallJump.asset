@@ -19,7 +19,10 @@ MonoBehaviour:
   autoIncrement: 1
   autoLoop: 1
   autoLoopFrame: 1
-  data: []
+  data:
+  - rid: 8688056195711238144
+  - rid: 8688056195711238146
+  - rid: 8688056195711238152
   stateGroundedGroup: 2
   stateType: 1
   maxUsesInString: -1
@@ -40,3 +43,68 @@ MonoBehaviour:
     RefIds:
     - rid: -2
       type: {class: , ns: , asm: }
+    - rid: 8688056195711238144
+      type: {class: VarSetMovement, ns: rwby, asm: rwby.csharp}
+      data:
+        name: 
+        id: 0
+        parent: -1
+        children: 
+        frameRanges:
+        - {x: 0, y: 0}
+        condition:
+          rid: -2
+        inputSource: 1
+        normalizeInputSource: 1
+        useRotationIfInputZero: 0
+        reverseInputSource: 1
+        force:
+          rid: 8688056195711238145
+    - rid: 8688056195711238145
+      type: {class: FighterBaseStatReferenceFloat, ns: rwby, asm: rwby.csharp}
+      data:
+        inverse: 0
+        statReference: 0
+        value: 10
+        variable: 0
+    - rid: 8688056195711238146
+      type: {class: VarChangeState, ns: rwby, asm: rwby.csharp}
+      data:
+        name: To Jump End
+        id: 1
+        parent: -1
+        children: 
+        frameRanges:
+        - {x: -1, y: -1}
+        condition:
+          rid: -2
+        checkInputSequence: 0
+        checkCondition: 0
+        stateMovesetID: -1
+        state:
+          rid: 8688056195711238147
+    - rid: 8688056195711238147
+      type: {class: FighterCmnStateReference, ns: rwby, asm: rwby.csharp}
+      data:
+        state: 26
+    - rid: 8688056195711238152
+      type: {class: VarModifyFallSpeed, ns: rwby, asm: rwby.csharp}
+      data:
+        name: 
+        id: 2
+        parent: -1
+        children: 
+        frameRanges:
+        - {x: 0, y: 0}
+        condition:
+          rid: -2
+        modifyType: 1
+        value:
+          rid: 8688056195711238153
+    - rid: 8688056195711238153
+      type: {class: FighterBaseStatReferenceFloat, ns: rwby, asm: rwby.csharp}
+      data:
+        inverse: 0
+        statReference: 0
+        value: 5
+        variable: 0

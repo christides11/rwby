@@ -87,6 +87,7 @@ namespace rwby
             Vector3 input = vars.inputSource == VarSetMovement.InputSource.stick ? f.GetMovementVector(0) : f.myTransform.forward;
             if(vars.normalizeInputSource) input.Normalize();
             if (vars.useRotationIfInputZero && input == Vector3.zero) input = f.myTransform.forward;
+            if (vars.reverseInputSource) input = -input;
             f.FPhysicsManager.forceMovement = input * vars.force.GetValue(f);
         }
         
@@ -238,7 +239,7 @@ namespace rwby
             }
             if (wantedDir.sqrMagnitude == 0) wantedDir = f.transform.forward;
             
-            f.SetVisualRotation(wantedDir);
+            f.SetRotation(wantedDir);
         }
         
         public static void RotateTowards(IFighterBase fighter, IStateVariables variables, HnSF.StateTimeline arg3, int arg4)
@@ -482,15 +483,10 @@ namespace rwby
         
         public static void FindWall(IFighterBase fighter, IStateVariables variables, HnSF.StateTimeline arg3, int arg4)
         {
-            bool IsHitValid(FighterManager fm, VarFindWall vars, RaycastHit hitResult)
+            bool IsHitValid(FighterManager fm, VarFindWall vars, RaycastHit hitResult, Vector3 inputAngle)
             {
-                if (vars.checkForward && vars.checkBackward && vars.checkSide) return true;
-                float angle = Vector3.Angle(fm.transform.forward, hitResult.normal);
-                bool dirValid = vars.checkBackward && angle <= 60.0f;
-                if (vars.checkForward && angle >= 120.0f) dirValid = true;
-                if (vars.checkSide && angle > 60.0f
-                                   && angle < 120.0f) dirValid = true;
-                return dirValid;
+                float angle = Vector3.SignedAngle(inputAngle, -hitResult.normal, Vector3.up);
+                return angle >= vars.minAngle && angle <= vars.maxAngle;
             }
             
             FighterManager fm = (FighterManager)fighter;
@@ -513,22 +509,23 @@ namespace rwby
             
             var forward = fm.myTransform.forward;
             var right = fm.myTransform.right;
+            var distance = fm.FPhysicsManager.ecbRadius + 0.2f;
             fm.Runner.GetPhysicsScene().Raycast(fm.GetCenter(), forward, out fm.wallHitResults[0],
-                vars.maxDistance, fm.wallLayerMask, QueryTriggerInteraction.Ignore);
+                distance, fm.wallLayerMask, QueryTriggerInteraction.Ignore);
             fm.Runner.GetPhysicsScene().Raycast(fm.GetCenter(), (forward + right).normalized, out fm.wallHitResults[1],
-                vars.maxDistance, fm.wallLayerMask, QueryTriggerInteraction.Ignore);
+                distance, fm.wallLayerMask, QueryTriggerInteraction.Ignore);
             fm.Runner.GetPhysicsScene().Raycast(fm.GetCenter(), right, out fm.wallHitResults[2],
-                vars.maxDistance, fm.wallLayerMask, QueryTriggerInteraction.Ignore);
+                distance, fm.wallLayerMask, QueryTriggerInteraction.Ignore);
             fm.Runner.GetPhysicsScene().Raycast(fm.GetCenter(), (-forward + right), out fm.wallHitResults[3],
-                vars.maxDistance, fm.wallLayerMask, QueryTriggerInteraction.Ignore);
+                distance, fm.wallLayerMask, QueryTriggerInteraction.Ignore);
             fm.Runner.GetPhysicsScene().Raycast(fm.GetCenter(), -forward, out fm.wallHitResults[4],
-                vars.maxDistance, fm.wallLayerMask, QueryTriggerInteraction.Ignore);
+                distance, fm.wallLayerMask, QueryTriggerInteraction.Ignore);
             fm.Runner.GetPhysicsScene().Raycast(fm.GetCenter(), (-forward + -right).normalized, out fm.wallHitResults[5],
-                vars.maxDistance, fm.wallLayerMask, QueryTriggerInteraction.Ignore);
+                distance, fm.wallLayerMask, QueryTriggerInteraction.Ignore);
             fm.Runner.GetPhysicsScene().Raycast(fm.GetCenter(), -right, out fm.wallHitResults[6],
-                vars.maxDistance, fm.wallLayerMask, QueryTriggerInteraction.Ignore);
+                distance, fm.wallLayerMask, QueryTriggerInteraction.Ignore);
             fm.Runner.GetPhysicsScene().Raycast(fm.GetCenter(), (forward + -right), out fm.wallHitResults[7],
-                vars.maxDistance, fm.wallLayerMask, QueryTriggerInteraction.Ignore);
+                distance, fm.wallLayerMask, QueryTriggerInteraction.Ignore);
 
 
             float min = Mathf.Infinity;
@@ -537,7 +534,7 @@ namespace rwby
             for (int i = 1; i < fm.wallHitResults.Length; i++)
             {
                 if (fm.wallHitResults[i].point == Vector3.zero) continue;
-                if (IsHitValid(fm, vars, fm.wallHitResults[i]) && fm.wallHitResults[i].distance < min)
+                if (IsHitValid(fm, vars, fm.wallHitResults[i], input) && fm.wallHitResults[i].distance < min)
                 {
                     lowestIndex = i;
                     min = fm.wallHitResults[i].distance;
@@ -558,7 +555,8 @@ namespace rwby
 
             Vector3 newPos = fm.cWallPoint + (fm.cWallNormal * fm.FPhysicsManager.ecbRadius) - (new Vector3(0, fm.FPhysicsManager.ecbOffset, 0));
 
-            fm.FPhysicsManager.kCC.Motor.SetPosition(newPos, false);
+            fm.FPhysicsManager.SetPosition(newPos, false);
+            fm.SetRotation(-fm.cWallNormal, false);
         }
     }
 }

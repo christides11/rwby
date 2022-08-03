@@ -418,12 +418,12 @@ namespace rwby
         public virtual void RotateTowards(Vector3 direction, float speed)
         {
             Vector3 newDir = Vector3.RotateTowards(transform.forward, direction, speed * Runner.DeltaTime, 0.0f);
-            transform.rotation = Quaternion.LookRotation(newDir);
+            physicsManager.kCC.Motor.SetRotation(Quaternion.LookRotation(newDir), false);
         }
 
-        public void SetVisualRotation(Vector3 direction)
+        public void SetRotation(Vector3 direction, bool bypassInterpolation = true)
         {
-            physicsManager.SetRotation(direction);
+            physicsManager.SetRotation(direction, bypassInterpolation);
         }
         
         public void SetTargetable(bool value)

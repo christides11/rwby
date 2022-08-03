@@ -117,6 +117,10 @@ MonoBehaviour:
     state:
       rid: 8688056157277782026
     stateTimeline: {fileID: 11400000, guid: 0f92ef91c43a9a84cbe086674096c63e, type: 2}
+  - name: Wall Jump
+    state:
+      rid: 8688056195711238148
+    stateTimeline: {fileID: 11400000, guid: e9a25c2b3e8f71941ad183b021ddbebf, type: 2}
   fighterStats: {fileID: 11400000, guid: 9db018607e1c48c498ee3d8a7c4cefc3, type: 2}
   specials:
   - groundState:
@@ -250,3 +254,7 @@ MonoBehaviour:
       type: {class: FighterCmnStateReference, ns: rwby, asm: rwby.csharp}
       data:
         state: 38
+    - rid: 8688056195711238148
+      type: {class: FighterCmnStateReference, ns: rwby, asm: rwby.csharp}
+      data:
+        state: 20
