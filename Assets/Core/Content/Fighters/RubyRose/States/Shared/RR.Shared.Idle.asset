@@ -25,6 +25,7 @@ MonoBehaviour:
   - rid: 2193520817874927618
   - rid: 2193520836063002646
   - rid: 2193520862594334720
+  - rid: 8688056201677897732
   stateGroundedGroup: 1
   stateType: 1
   maxUsesInString: -1
@@ -120,3 +121,23 @@ MonoBehaviour:
         boxExtents: {x: 0.5, y: 1, z: 0.5}
         radius: 0
         definitionIndex: 0
+    - rid: 8688056201677897732
+      type: {class: VarModifyAnimationSet, ns: rwby, asm: rwby.csharp}
+      data:
+        name: 
+        id: 6
+        parent: -1
+        children: 
+        frameRanges:
+        - {x: 0, y: 0}
+        condition:
+          rid: -2
+        modifyType: 1
+        wantedAnimations:
+        - animationbank:
+            modGUID:
+              guid: 1d292c1f00000000
+            contentType: 7
+            contentIdx: 0
+          animation: idle
+        fadeTime: 0

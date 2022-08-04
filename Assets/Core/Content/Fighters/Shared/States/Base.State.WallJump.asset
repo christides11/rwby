@@ -21,8 +21,10 @@ MonoBehaviour:
   autoLoopFrame: 1
   data:
   - rid: 8688056195711238144
+  - rid: 8688056195711238174
   - rid: 8688056195711238146
   - rid: 8688056195711238152
+  - rid: 8688056195711238167
   stateGroundedGroup: 2
   stateType: 1
   maxUsesInString: -1
@@ -102,6 +104,101 @@ MonoBehaviour:
         value:
           rid: 8688056195711238153
     - rid: 8688056195711238153
+      type: {class: FighterBaseStatReferenceFloat, ns: rwby, asm: rwby.csharp}
+      data:
+        inverse: 0
+        statReference: 0
+        value: 5
+        variable: 0
+    - rid: 8688056195711238167
+      type: {class: VarApplyMovement, ns: rwby, asm: rwby.csharp}
+      data:
+        name: 
+        id: 3
+        parent: -1
+        children: 
+        frameRanges:
+        - {x: 1, y: -1}
+        condition:
+          rid: -2
+        inputSource: 0
+        normalizeInputSource: 0
+        useRotationIfInputZero: 0
+        baseAccel:
+          rid: 8688056195711238168
+        movementAccel:
+          rid: 8688056195711238169
+        deceleration:
+          rid: 8688056195711238170
+        minSpeed:
+          rid: 8688056195711238171
+        maxSpeed:
+          rid: 8688056195711238172
+        accelerationFromDot:
+          rid: 8688056195711238173
+    - rid: 8688056195711238168
+      type: {class: FighterBaseStatReferenceFloat, ns: rwby, asm: rwby.csharp}
+      data:
+        inverse: 0
+        statReference: 1
+        value: 0
+        variable: 25
+    - rid: 8688056195711238169
+      type: {class: FighterBaseStatReferenceFloat, ns: rwby, asm: rwby.csharp}
+      data:
+        inverse: 0
+        statReference: 1
+        value: 0
+        variable: 26
+    - rid: 8688056195711238170
+      type: {class: FighterBaseStatReferenceFloat, ns: rwby, asm: rwby.csharp}
+      data:
+        inverse: 0
+        statReference: 1
+        value: 0
+        variable: 27
+    - rid: 8688056195711238171
+      type: {class: FighterStatReferenceFloatBase, ns: rwby, asm: rwby.csharp}
+      data:
+        inverse: 0
+        statReference: 0
+        value: 0
+    - rid: 8688056195711238172
+      type: {class: FighterBaseStatReferenceFloat, ns: rwby, asm: rwby.csharp}
+      data:
+        inverse: 0
+        statReference: 1
+        value: 0
+        variable: 24
+    - rid: 8688056195711238173
+      type: {class: FighterBaseStatReferenceAnimationCurve, ns: rwby, asm: rwby.csharp}
+      data:
+        inverse: 0
+        statReference: 1
+        value:
+          serializedVersion: 2
+          m_Curve: []
+          m_PreInfinity: 2
+          m_PostInfinity: 2
+          m_RotationOrder: 4
+        variable: 2
+    - rid: 8688056195711238174
+      type: {class: VarAddMovement, ns: rwby, asm: rwby.csharp}
+      data:
+        name: 
+        id: 4
+        parent: -1
+        children: 
+        frameRanges:
+        - {x: 0, y: 0}
+        condition:
+          rid: -2
+        inputSource: 0
+        normalizeInputSource: 0
+        useRotationIfInputZero: 0
+        force:
+          rid: 8688056195711238175
+    - rid: 8688056195711238175
       type: {class: FighterBaseStatReferenceFloat, ns: rwby, asm: rwby.csharp}
       data:
         inverse: 0

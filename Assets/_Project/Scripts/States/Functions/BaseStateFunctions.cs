@@ -144,6 +144,22 @@ namespace rwby
                     break;
             }
         }
+        
+        public static void ModifyJumpCount(IFighterBase fighter, IStateVariables variables, HnSF.StateTimeline arg3, int arg4)
+        {
+            FighterManager f = (FighterManager)fighter;
+            VarModifyJumpCount vars = (VarModifyJumpCount)variables;
+
+            switch (vars.modifyType)
+            {
+                case VarModifyType.ADD:
+                    f.CurrentJump += vars.value;
+                    break;
+                case VarModifyType.SET:
+                    f.CurrentJump = vars.value;
+                    break;
+            }
+        }
 
         public static void ModifyHitstun(IFighterBase fighter, IStateVariables variables, HnSF.StateTimeline arg3, int arg4)
         {

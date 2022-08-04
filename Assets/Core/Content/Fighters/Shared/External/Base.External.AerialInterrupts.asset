@@ -50,6 +50,7 @@ MonoBehaviour:
         name: Try AirDash
         id: 0
         parent: 0
+        children: 
         frameRanges: []
         condition:
           rid: 2193520791838261254
@@ -67,6 +68,7 @@ MonoBehaviour:
       data:
         conditions:
         - rid: 2193520791838261255
+        - rid: 8688056201677897730
     - rid: 2193520791838261255
       type: {class: ConditionButton, ns: rwby, asm: rwby.csharp}
       data:
@@ -81,6 +83,7 @@ MonoBehaviour:
         name: Try AirJump
         id: 0
         parent: 0
+        children: 
         frameRanges: []
         condition:
           rid: 2193520791838261248
@@ -93,3 +96,15 @@ MonoBehaviour:
       type: {class: FighterCmnStateReference, ns: rwby, asm: rwby.csharp}
       data:
         state: 8
+    - rid: 8688056201677897730
+      type: {class: ConditionCanAirDash, ns: rwby, asm: rwby.csharp}
+      data:
+        maxAirDashes:
+          rid: 8688056201677897731
+    - rid: 8688056201677897731
+      type: {class: FighterBaseStatReferenceInt, ns: rwby, asm: rwby.csharp}
+      data:
+        inverse: 0
+        statReference: 1
+        value: 0
+        variable: 4

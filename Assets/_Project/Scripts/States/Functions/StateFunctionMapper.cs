@@ -13,6 +13,7 @@ namespace rwby
             functions.Add(typeof(VarApplyMovement), BaseStateFunctions.ApplyMovement);
             functions.Add(typeof(VarSetFallSpeed), BaseStateFunctions.SetFallSpeed);
             functions.Add(typeof(VarModifyAirDashCount), BaseStateFunctions.ModifyAirDashCount);
+            functions.Add(typeof(VarModifyJumpCount), BaseStateFunctions.ModifyJumpCount);
             functions.Add(typeof(VarModifyHitstun), BaseStateFunctions.ModifyHitstun);
             functions.Add(typeof(VarSetECB), BaseStateFunctions.SetECB);
             functions.Add(typeof(VarSnapECB), BaseStateFunctions.SnapECB);

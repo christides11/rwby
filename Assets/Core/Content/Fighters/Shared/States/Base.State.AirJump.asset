@@ -28,6 +28,7 @@ MonoBehaviour:
   - rid: 2193520791838261261
   - rid: 8688056136894513158
   - rid: 8688056195711238165
+  - rid: 8688056201677897728
   stateGroundedGroup: 2
   stateType: 0
   maxUsesInString: -1
@@ -274,3 +275,16 @@ MonoBehaviour:
         condition:
           rid: -2
         asset: {fileID: 11400000, guid: dd12f38f1b643734aa58d2dab90b66b9, type: 2}
+    - rid: 8688056201677897728
+      type: {class: VarModifyJumpCount, ns: rwby, asm: rwby.csharp}
+      data:
+        name: 
+        id: 8
+        parent: -1
+        children: 
+        frameRanges:
+        - {x: 0, y: 0}
+        condition:
+          rid: -2
+        modifyType: 0
+        value: 1

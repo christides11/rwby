@@ -3,8 +3,8 @@ using UnityEngine;
 
 namespace rwby
 {
-    [StateVariable("Modify Air Dash")]
-    public struct VarModifyAirDashCount : IStateVariables
+    [StateVariable("Modify Jump Count")]
+    public struct VarModifyJumpCount : IStateVariables
     {
         public string name;
         public string Name
@@ -39,7 +39,7 @@ namespace rwby
         [SelectImplementation(typeof(IConditionVariables))] [SerializeField, SerializeReference]
         public IConditionVariables condition;
         public IConditionVariables Condition => condition;
-
+        
         public VarModifyType modifyType;
         public int value;
     }
