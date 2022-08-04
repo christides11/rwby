@@ -22,6 +22,7 @@ MonoBehaviour:
   data:
   - rid: 2193520669817307137
   - rid: 2193520691360038912
+  - rid: 8688056201677897733
   stateGroundedGroup: 2
   stateType: 0
   maxUsesInString: -1
@@ -76,3 +77,16 @@ MonoBehaviour:
         inverse: 0
         statReference: 0
         value: 0
+    - rid: 8688056201677897733
+      type: {class: VarModifyAirDashCount, ns: rwby, asm: rwby.csharp}
+      data:
+        name: 
+        id: 3
+        parent: -1
+        children: 
+        frameRanges:
+        - {x: 0, y: 0}
+        condition:
+          rid: -2
+        modifyType: 0
+        value: 1

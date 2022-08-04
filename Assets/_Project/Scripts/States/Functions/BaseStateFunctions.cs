@@ -5,6 +5,7 @@ using Fusion;
 using HnSF;
 using HnSF.Fighters;
 using UnityEngine;
+using UnityEngine.Profiling;
 
 namespace rwby
 {

@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Fusion;
 using Animancer;
+using UnityEngine.Profiling;
 
 namespace rwby
 {
@@ -9,7 +10,7 @@ namespace rwby
     [OrderAfter(typeof(FighterStateManager))]
     public class FighterAnimator : NetworkBehaviour
     {
-        [HideInInspector] public Dictionary<ModGUIDContentReference, int> bankMap = new Dictionary<ModGUIDContentReference, int>();
+        [HideInInspector] public Dictionary<ModObjectSetContentReference, int> bankMap = new Dictionary<ModObjectSetContentReference, int>();
         [HideInInspector] public List<IAnimationbankDefinition> banks = new List<IAnimationbankDefinition>();
         [SerializeField] private AnimancerComponent animancer;
         
@@ -253,10 +254,11 @@ namespace rwby
             animationSet = temp;
         }
 
-        public void RegisterBank(ModGUIDContentReference bank)
+        public void RegisterBank(ModObjectSetContentReference bank)
         {
             if (bankMap.ContainsKey(bank)) return;
-            banks.Add(ContentManager.singleton.GetContentDefinition<IAnimationbankDefinition>(bank));
+            banks.Add(ContentManager.singleton.GetContentDefinition<IAnimationbankDefinition>(
+                ContentManager.singleton.ConvertModContentGUIDReference(new ModContentGUIDReference(bank.modGUID, (int)ContentType.Animationbank, bank.contentGUID))));
             bankMap.Add(bank, banks.Count-1);
 
             for (int i = 0; i < banks[^1].Animations.Count; i++)

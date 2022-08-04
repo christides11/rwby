@@ -64,7 +64,7 @@ public class RRoseMan : FighterManager
                 }
             );
             
-            fighterAnimator.RegisterBank(animationbankRefs[i]);
+            fighterAnimator.RegisterBank(animationbankReferences[i]);
         }
         
         for (int i = 0; i < effectbankRefs.Length; i++)

@@ -3,7 +3,7 @@ namespace rwby
     [System.Serializable]
     public struct AnimationReference
     {
-        public ModGUIDContentReference animationbank;
+        public ModObjectSetContentReference animationbank;
         public string animation;
     }
 }
