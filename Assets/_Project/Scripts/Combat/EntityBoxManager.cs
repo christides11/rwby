@@ -146,13 +146,9 @@ namespace rwby
             {
                 case BoxShape.Rectangle:
                     fusionHitbox.SetBoxSize(offset, boxExtents);
-                    //fusionHitbox.Type = HitboxTypes.Box;
-                    //fusionHitbox.BoxExtents = boxExtents;
                     break;
                 case BoxShape.Circle:
                     fusionHitbox.SetSphereSize(offset, sphereRadius);
-                    //fusionHitbox.Type = HitboxTypes.Sphere;
-                    //fusionHitbox.SphereRadius = sphereRadius;
                     break;
             }
         }

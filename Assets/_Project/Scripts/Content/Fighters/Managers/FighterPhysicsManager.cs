@@ -16,6 +16,7 @@ namespace rwby
 
         [SerializeField] protected FighterManager manager;
         public FighterCC kCC;
+        public CapsuleCollider cc;
 
         protected Vector3 rotationDir;
 

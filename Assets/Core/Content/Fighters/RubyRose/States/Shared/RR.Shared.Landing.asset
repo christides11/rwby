@@ -19,7 +19,8 @@ MonoBehaviour:
   autoIncrement: 1
   autoLoop: 0
   autoLoopFrame: 1
-  data: []
+  data:
+  - rid: 8688056217396838402
   stateGroundedGroup: 1
   stateType: 0
   maxUsesInString: -1
@@ -40,3 +41,23 @@ MonoBehaviour:
     RefIds:
     - rid: -2
       type: {class: , ns: , asm: }
+    - rid: 8688056217396838402
+      type: {class: VarModifyAnimationSet, ns: rwby, asm: rwby.csharp}
+      data:
+        name: 
+        id: 0
+        parent: -1
+        children: 
+        frameRanges:
+        - {x: 0, y: 0}
+        condition:
+          rid: -2
+        modifyType: 1
+        wantedAnimations:
+        - animationbank:
+            modGUID:
+              guid: 1d292c1f00000000
+            contentGUID:
+              guid: 2c2c000000000000
+          animation: jumpsquat
+        fadeTime: 0

@@ -23,6 +23,8 @@ MonoBehaviour:
   - rid: 2193520836063002636
   - rid: 2193520836063002641
   - rid: 2193520836063002643
+  - rid: 8688056331001921553
+  - rid: 8688056335261499403
   stateGroundedGroup: 2
   stateType: 1
   maxUsesInString: -1
@@ -32,6 +34,7 @@ MonoBehaviour:
     executeInputs: []
     sequenceWindow: 8
     sequenceInputs: []
+  inputSequenceAsHoldInputs: 0
   condition:
     rid: -2
   hitboxInfo: []
@@ -135,3 +138,39 @@ MonoBehaviour:
       type: {class: FighterCmnStateReference, ns: rwby, asm: rwby.csharp}
       data:
         state: 30
+    - rid: 8688056331001921553
+      type: {class: VarCreateBox, ns: rwby, asm: rwby.csharp}
+      data:
+        name: Colbox
+        id: 3
+        parent: -1
+        children: 
+        frameRanges:
+        - {x: 0, y: -1}
+        condition:
+          rid: -2
+        boxType: 2
+        attachedTo: 0
+        shape: 0
+        offset: {x: 0, y: 1, z: 0}
+        boxExtents: {x: 0.5, y: 1, z: 0.5}
+        radius: 0
+        definitionIndex: 0
+    - rid: 8688056335261499403
+      type: {class: VarCreateBox, ns: rwby, asm: rwby.csharp}
+      data:
+        name: Hurtbox
+        id: 4
+        parent: -1
+        children: 
+        frameRanges:
+        - {x: 0, y: -1}
+        condition:
+          rid: -2
+        boxType: 0
+        attachedTo: 0
+        shape: 0
+        offset: {x: 0, y: 1, z: 0}
+        boxExtents: {x: 0.5, y: 1, z: 0.5}
+        radius: 0
+        definitionIndex: 0

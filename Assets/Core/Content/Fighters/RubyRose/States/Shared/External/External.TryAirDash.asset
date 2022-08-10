@@ -20,14 +20,18 @@ MonoBehaviour:
     - rid: 6951768367642443815
       type: {class: VarChangeState, ns: rwby, asm: rwby.csharp}
       data:
-        frameRanges:
-        - {x: -1, y: -1}
+        name: 
+        id: 0
+        parent: 0
+        children: 
+        frameRanges: []
         condition:
           rid: 6951768367642443817
+        checkInputSequence: 0
+        checkCondition: 0
         stateMovesetID: -1
         state:
           rid: 6951768367642443816
-        children: []
     - rid: 6951768367642443816
       type: {class: FighterCmnStateReference, ns: rwby, asm: rwby.csharp}
       data:
@@ -37,6 +41,7 @@ MonoBehaviour:
       data:
         conditions:
         - rid: 6951768367642443818
+        - rid: 8688056217396838406
     - rid: 6951768367642443818
       type: {class: ConditionButton, ns: rwby, asm: rwby.csharp}
       data:
@@ -45,3 +50,15 @@ MonoBehaviour:
         buttonState: 1
         offset: 0
         buffer: 0
+    - rid: 8688056217396838406
+      type: {class: ConditionCanAirDash, ns: rwby, asm: rwby.csharp}
+      data:
+        maxAirDashes:
+          rid: 8688056217396838407
+    - rid: 8688056217396838407
+      type: {class: FighterBaseStatReferenceInt, ns: rwby, asm: rwby.csharp}
+      data:
+        inverse: 0
+        statReference: 1
+        value: 0
+        variable: 4

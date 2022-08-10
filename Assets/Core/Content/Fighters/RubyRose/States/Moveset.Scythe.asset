@@ -121,6 +121,34 @@ MonoBehaviour:
     state:
       rid: 8688056195711238148
     stateTimeline: {fileID: 11400000, guid: e9a25c2b3e8f71941ad183b021ddbebf, type: 2}
+  - name: Teleport
+    state:
+      rid: 8688056241022304263
+    stateTimeline: {fileID: 11400000, guid: f52a279f7ab60764b804c7ed9a5cf1e9, type: 2}
+  - name: Ground Lay (Face Down)
+    state:
+      rid: 8688056309791326208
+    stateTimeline: {fileID: 11400000, guid: 263c1bd4e292ea94ebe6f6fbb4f71364, type: 2}
+  - name: Ground Lay (Face Up)
+    state:
+      rid: 8688056309791326209
+    stateTimeline: {fileID: 11400000, guid: 263c1bd4e292ea94ebe6f6fbb4f71364, type: 2}
+  - name: Neutral Tech
+    state:
+      rid: 8688056309791326210
+    stateTimeline: {fileID: 11400000, guid: dcf58a8731f62a0419c20f78d24f3961, type: 2}
+  - name: Air.5a
+    state:
+      rid: 8688056335261499396
+    stateTimeline: {fileID: 11400000, guid: f2e596e93bebbd94a8a9a65ef2a9e93d, type: 2}
+  - name: Air.5b
+    state:
+      rid: 8688056335261499404
+    stateTimeline: {fileID: 11400000, guid: 68fb7dcf37a1e734a80a9c04a6ea5aad, type: 2}
+  - name: Air.5c
+    state:
+      rid: 8688056335261499405
+    stateTimeline: {fileID: 11400000, guid: eda700fba0854744ba4e275f0db0fb7f, type: 2}
   fighterStats: {fileID: 11400000, guid: 9db018607e1c48c498ee3d8a7c4cefc3, type: 2}
   specials:
   - groundState:
@@ -258,3 +286,31 @@ MonoBehaviour:
       type: {class: FighterCmnStateReference, ns: rwby, asm: rwby.csharp}
       data:
         state: 20
+    - rid: 8688056241022304263
+      type: {class: RubyRoseStateReference, ns: rwby.core, asm: rwby.core}
+      data:
+        state: 67
+    - rid: 8688056309791326208
+      type: {class: FighterCmnStateReference, ns: rwby, asm: rwby.csharp}
+      data:
+        state: 29
+    - rid: 8688056309791326209
+      type: {class: FighterCmnStateReference, ns: rwby, asm: rwby.csharp}
+      data:
+        state: 22
+    - rid: 8688056309791326210
+      type: {class: FighterCmnStateReference, ns: rwby, asm: rwby.csharp}
+      data:
+        state: 24
+    - rid: 8688056335261499396
+      type: {class: RubyRoseStateReference, ns: rwby.core, asm: rwby.core}
+      data:
+        state: 55
+    - rid: 8688056335261499404
+      type: {class: RubyRoseStateReference, ns: rwby.core, asm: rwby.core}
+      data:
+        state: 56
+    - rid: 8688056335261499405
+      type: {class: RubyRoseStateReference, ns: rwby.core, asm: rwby.core}
+      data:
+        state: 57

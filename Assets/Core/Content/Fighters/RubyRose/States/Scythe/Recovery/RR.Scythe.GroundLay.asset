@@ -13,17 +13,14 @@ MonoBehaviour:
   m_Name: RR.Scythe.GroundLay
   m_EditorClassIdentifier: 
   stateName: Ground Lay
-  useBaseState: 0
-  baseState: {fileID: 0}
+  useBaseState: 1
+  baseState: {fileID: 11400000, guid: 2db2c07c5ff766a419a7249a03a85ae8, type: 2}
   totalFrames: 60
   autoIncrement: 1
   autoLoop: 0
   autoLoopFrame: 1
   data:
-  - rid: 220443324362784770
-  - rid: 220443324362784772
-  - rid: 220443324362784774
-  - rid: 220443324362784777
+  - rid: 8688056249043648523
   stateGroundedGroup: 2
   stateType: 0
   maxUsesInString: -1
@@ -33,6 +30,7 @@ MonoBehaviour:
     executeInputs: []
     sequenceWindow: 8
     sequenceInputs: []
+  inputSequenceAsHoldInputs: 0
   condition:
     rid: -2
   hitboxInfo: []
@@ -45,59 +43,42 @@ MonoBehaviour:
     RefIds:
     - rid: -2
       type: {class: , ns: , asm: }
-    - rid: 220443324362784770
-      type: {class: VarMultiplyMovement, ns: rwby, asm: rwby.csharp}
-      data:
-        frameRanges:
-        - {x: 0, y: 0}
-        condition:
-          rid: -2
-        multiplier:
-          rid: 220443324362784771
-        children: []
-    - rid: 220443324362784771
-      type: {class: FighterStatReferenceFloatBase, ns: rwby, asm: rwby.csharp}
-      data:
-        inverse: 0
-        statReference: 0
-        value: 0
-    - rid: 220443324362784772
+    - rid: 8688056249043648523
       type: {class: VarChangeState, ns: rwby, asm: rwby.csharp}
       data:
+        name: Try Neutral Tech
+        id: 1
+        parent: -1
+        children: 
         frameRanges:
-        - {x: 60, y: 60}
+        - {x: 24, y: 60}
         condition:
-          rid: -2
+          rid: 8688056249043648525
+        checkInputSequence: 0
+        checkCondition: 0
         stateMovesetID: -1
         state:
-          rid: 220443324362784773
-        children: []
-    - rid: 220443324362784773
+          rid: 8688056249043648524
+    - rid: 8688056249043648524
       type: {class: FighterCmnStateReference, ns: rwby, asm: rwby.csharp}
       data:
-        state: 25
-    - rid: 220443324362784774
-      type: {class: VarCreateBox, ns: rwby, asm: rwby.csharp}
+        state: 24
+    - rid: 8688056249043648525
+      type: {class: ConditionAnd, ns: rwby, asm: rwby.csharp}
       data:
-        frameRanges:
-        - {x: -1, y: -1}
-        condition:
-          rid: -2
-        boxType: 0
-        attachedTo: 0
-        shape: 0
-        offset: {x: 0, y: 0.25, z: 0}
-        boxExtents: {x: 1, y: 0.5, z: 1}
-        radius: 0
-        definitionIndex: 0
-        children: []
-    - rid: 220443324362784777
-      type: {class: VarModifyHitstun, ns: rwby, asm: rwby.csharp}
+        conditions:
+        - rid: 8688056249043648526
+        - rid: 8688056249043648527
+    - rid: 8688056249043648526
+      type: {class: ConditionButton, ns: rwby, asm: rwby.csharp}
       data:
-        frameRanges:
-        - {x: 0, y: 0}
-        condition:
-          rid: -2
-        modifyType: 1
-        value: 0
-        children: []
+        inverse: 0
+        button: 2
+        buttonState: 1
+        offset: 0
+        buffer: 0
+    - rid: 8688056249043648527
+      type: {class: ConditionMoveStickMagnitude, ns: rwby, asm: rwby.csharp}
+      data:
+        minValue: 0.1
+        maxValue: 2

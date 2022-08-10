@@ -20,7 +20,10 @@ MonoBehaviour:
   autoLoop: 1
   autoLoopFrame: 5
   data:
+  - rid: 8688056335261499392
   - rid: 2193520750553202689
+  - rid: 8688056217396838405
+  - rid: 8688056331001921556
   stateGroundedGroup: 2
   stateType: 0
   maxUsesInString: -1
@@ -30,6 +33,7 @@ MonoBehaviour:
     executeInputs: []
     sequenceWindow: 8
     sequenceInputs: []
+  inputSequenceAsHoldInputs: 0
   condition:
     rid: -2
   hitboxInfo: []
@@ -46,6 +50,7 @@ MonoBehaviour:
         name: Try JumpEnd
         id: 0
         parent: -1
+        children: 
         frameRanges:
         - {x: 5, y: -1}
         condition:
@@ -65,3 +70,53 @@ MonoBehaviour:
         absoluteValue: 0
         minValue: -100
         maxValue: 5
+    - rid: 8688056217396838405
+      type: {class: VarModifyAnimationSet, ns: rwby, asm: rwby.csharp}
+      data:
+        name: 
+        id: 1
+        parent: -1
+        children: 
+        frameRanges:
+        - {x: 0, y: 0}
+        condition:
+          rid: -2
+        modifyType: 1
+        wantedAnimations:
+        - animationbank:
+            modGUID:
+              guid: 1d292c1f00000000
+            contentGUID:
+              guid: 2c2c000000000000
+          animation: jump
+        fadeTime: 0
+    - rid: 8688056331001921556
+      type: {class: VarCreateBox, ns: rwby, asm: rwby.csharp}
+      data:
+        name: Colbox
+        id: 2
+        parent: -1
+        children: 
+        frameRanges:
+        - {x: 0, y: -1}
+        condition:
+          rid: -2
+        boxType: 2
+        attachedTo: 0
+        shape: 0
+        offset: {x: 0, y: 1, z: 0}
+        boxExtents: {x: 0.5, y: 1, z: 0.5}
+        radius: 0
+        definitionIndex: 0
+    - rid: 8688056335261499392
+      type: {class: VarExternal, ns: rwby, asm: rwby.csharp}
+      data:
+        name: Try Air Atks
+        id: 3
+        parent: -1
+        children: 
+        frameRanges:
+        - {x: 1, y: -1}
+        condition:
+          rid: -2
+        asset: {fileID: 11400000, guid: 852b081cfd9efbb449cca3171458f8cc, type: 2}

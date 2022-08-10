@@ -22,6 +22,9 @@ MonoBehaviour:
   data:
   - rid: 2193520740721754112
   - rid: 2193520783924396052
+  - rid: 8688056217396838408
+  - rid: 8688056331001921554
+  - rid: 8688056335261499402
   stateGroundedGroup: 2
   stateType: 1
   maxUsesInString: -1
@@ -58,6 +61,7 @@ MonoBehaviour:
         inputSource: 0
         normalizeInputSource: 1
         useRotationIfInputZero: 1
+        reverseInputSource: 0
         force:
           rid: 2193520740721754113
     - rid: 2193520740721754113
@@ -87,3 +91,45 @@ MonoBehaviour:
       type: {class: FighterCmnStateReference, ns: rwby, asm: rwby.csharp}
       data:
         state: 5
+    - rid: 8688056217396838408
+      type: {class: VarExternal, ns: rwby, asm: rwby.csharp}
+      data:
+        name: Try Airdash
+        id: 2
+        parent: -1
+        children: 
+        frameRanges:
+        - {x: 5, y: -1}
+        condition:
+          rid: -2
+        asset: {fileID: 11400000, guid: 280b115f7de70e2429fc1b2a1d4051f2, type: 2}
+    - rid: 8688056331001921554
+      type: {class: VarCreateBox, ns: rwby, asm: rwby.csharp}
+      data:
+        name: Colbox
+        id: 3
+        parent: -1
+        children: 
+        frameRanges:
+        - {x: 0, y: -1}
+        condition:
+          rid: -2
+        boxType: 2
+        attachedTo: 0
+        shape: 0
+        offset: {x: 0, y: 1, z: 0}
+        boxExtents: {x: 0.5, y: 1, z: 0.5}
+        radius: 0
+        definitionIndex: 0
+    - rid: 8688056335261499402
+      type: {class: VarExternal, ns: rwby, asm: rwby.csharp}
+      data:
+        name: Try Air Atk
+        id: 4
+        parent: -1
+        children: 
+        frameRanges:
+        - {x: 5, y: -1}
+        condition:
+          rid: -2
+        asset: {fileID: 11400000, guid: 852b081cfd9efbb449cca3171458f8cc, type: 2}

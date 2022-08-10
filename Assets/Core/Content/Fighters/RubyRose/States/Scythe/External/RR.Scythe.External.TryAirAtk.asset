@@ -13,23 +13,19 @@ MonoBehaviour:
   m_Name: RR.Scythe.External.TryAirAtk
   m_EditorClassIdentifier: 
   data:
-  - rid: 220443939427844102
   - rid: 6951768528003006472
   references:
     version: 2
     RefIds:
     - rid: -2
       type: {class: , ns: , asm: }
-    - rid: 220443939427844102
-      type: {class: VarTrySpecial, ns: rwby, asm: rwby.csharp}
-      data:
-        frameRanges: []
-        condition:
-          rid: -2
-        children: []
     - rid: 6951768528003006472
       type: {class: VarChangeStateList, ns: rwby, asm: rwby.csharp}
       data:
+        name: 
+        id: 0
+        parent: 0
+        children: 
         frameRanges: []
         condition:
           rid: -2
@@ -39,8 +35,21 @@ MonoBehaviour:
         - movesetID: -1
           state:
             rid: 6951768528003006473
-        children: []
+        - movesetID: -1
+          state:
+            rid: 8688056335261499406
+        - movesetID: -1
+          state:
+            rid: 8688056335261499407
     - rid: 6951768528003006473
       type: {class: RubyRoseStateReference, ns: rwby.core, asm: rwby.core}
       data:
         state: 55
+    - rid: 8688056335261499406
+      type: {class: RubyRoseStateReference, ns: rwby.core, asm: rwby.core}
+      data:
+        state: 56
+    - rid: 8688056335261499407
+      type: {class: RubyRoseStateReference, ns: rwby.core, asm: rwby.core}
+      data:
+        state: 57

@@ -1,0 +1,294 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7789f25d17401bc4b915ca6fcecf2a29, type: 3}
+  m_Name: RR.Scythe.Air.5a
+  m_EditorClassIdentifier: 
+  stateName: 5a (Aerial)
+  useBaseState: 0
+  baseState: {fileID: 0}
+  totalFrames: 28
+  autoIncrement: 1
+  autoLoop: 0
+  autoLoopFrame: 1
+  data:
+  - rid: 2193520813467238401
+  - rid: 2193520813467238403
+  - rid: 8688056217396838421
+  - rid: 8688056217396838433
+  - rid: 8688056335261499397
+  stateGroundedGroup: 2
+  stateType: 2
+  maxUsesInString: 1
+  allowBaseStateTransitions: 1
+  inputSequence:
+    executeWindow: 3
+    executeInputs:
+    - inputType: 0
+      buttonID: 2
+      stickDirection: {x: 0, y: 0}
+      directionDeviation: 0
+    sequenceWindow: 8
+    sequenceInputs: []
+  inputSequenceAsHoldInputs: 0
+  condition:
+    rid: -2
+  hitboxInfo:
+  - ID: 0
+    hitStateGroundedGroups: -1
+    groundGroup:
+      hitState: 30
+      groundBounces: 0
+      wallBounces: 0
+      groundBounceForcePercentage: 0
+      wallBounceForcePercentage: 0
+      hitKills: 0
+      hitForceType: 0
+      hitForceRelation: 0
+      autolink: 0
+      autolinkPercentage: 0
+      hitForce: {x: 0, y: 0, z: 9}
+      blockForce: {x: 0, y: 0, z: 0}
+      hitGravity: 0
+      pullPushCurve:
+        serializedVersion: 2
+        m_Curve:
+        - serializedVersion: 3
+          time: 0
+          value: 0
+          inSlope: 10
+          outSlope: 10
+          tangentMode: 34
+          weightedMode: 0
+          inWeight: 0
+          outWeight: 0.33333334
+        - serializedVersion: 3
+          time: 1
+          value: 10
+          inSlope: 10
+          outSlope: 10
+          tangentMode: 34
+          weightedMode: 0
+          inWeight: 0.33333334
+          outWeight: 0
+        m_PreInfinity: 2
+        m_PostInfinity: 2
+        m_RotationOrder: 4
+      pullPushMaxDistance: 10
+      attackerHitstop: 4
+      hitstop: 4
+      hitstun: 60
+      blockstun: 15
+    groundCounterHitGroup:
+      hitState: 0
+      groundBounces: 0
+      wallBounces: 0
+      groundBounceForcePercentage: 0
+      wallBounceForcePercentage: 0
+      hitKills: 0
+      hitForceType: 0
+      hitForceRelation: 0
+      autolink: 0
+      autolinkPercentage: 0
+      hitForce: {x: 0, y: 0, z: 0}
+      blockForce: {x: 0, y: 0, z: 0}
+      hitGravity: 0
+      pullPushCurve:
+        serializedVersion: 2
+        m_Curve: []
+        m_PreInfinity: 2
+        m_PostInfinity: 2
+        m_RotationOrder: 4
+      pullPushMaxDistance: 0
+      attackerHitstop: 0
+      hitstop: 0
+      hitstun: 0
+      blockstun: 0
+    aerialGroup:
+      hitState: 32
+      groundBounces: 0
+      wallBounces: 0
+      groundBounceForcePercentage: 0
+      wallBounceForcePercentage: 0
+      hitKills: 0
+      hitForceType: 0
+      hitForceRelation: 0
+      autolink: 0
+      autolinkPercentage: 0
+      hitForce: {x: 0, y: 1, z: 9}
+      blockForce: {x: 0, y: 0, z: 0}
+      hitGravity: 0
+      pullPushCurve:
+        serializedVersion: 2
+        m_Curve: []
+        m_PreInfinity: 2
+        m_PostInfinity: 2
+        m_RotationOrder: 4
+      pullPushMaxDistance: 0
+      attackerHitstop: 8
+      hitstop: 8
+      hitstun: 60
+      blockstun: 15
+    aerialCounterHitGroup:
+      hitState: 0
+      groundBounces: 0
+      wallBounces: 0
+      groundBounceForcePercentage: 0
+      wallBounceForcePercentage: 0
+      hitKills: 0
+      hitForceType: 0
+      hitForceRelation: 0
+      autolink: 0
+      autolinkPercentage: 0
+      hitForce: {x: 0, y: 0, z: 0}
+      blockForce: {x: 0, y: 0, z: 0}
+      hitGravity: 0
+      pullPushCurve:
+        serializedVersion: 2
+        m_Curve: []
+        m_PreInfinity: 2
+        m_PostInfinity: 2
+        m_RotationOrder: 4
+      pullPushMaxDistance: 0
+      attackerHitstop: 0
+      hitstop: 0
+      hitstun: 0
+      blockstun: 0
+  throwboxInfo: []
+  hurtboxInfo: []
+  references:
+    version: 2
+    RefIds:
+    - rid: -2
+      type: {class: , ns: , asm: }
+    - rid: 2193520813467238401
+      type: {class: VarChangeState, ns: rwby, asm: rwby.csharp}
+      data:
+        name: To Fall
+        id: 0
+        parent: -1
+        children: 
+        frameRanges:
+        - {x: -1, y: -1}
+        condition:
+          rid: -2
+        checkInputSequence: 0
+        checkCondition: 0
+        stateMovesetID: -1
+        state:
+          rid: 2193520813467238402
+    - rid: 2193520813467238402
+      type: {class: FighterCmnStateReference, ns: rwby, asm: rwby.csharp}
+      data:
+        state: 5
+    - rid: 2193520813467238403
+      type: {class: VarCreateBox, ns: rwby, asm: rwby.csharp}
+      data:
+        name: Hitbox
+        id: 1
+        parent: -1
+        children: 
+        frameRanges:
+        - {x: 8, y: 10}
+        condition:
+          rid: -2
+        boxType: 1
+        attachedTo: 0
+        shape: 0
+        offset: {x: 0, y: 1, z: 1}
+        boxExtents: {x: 1, y: 1, z: 1}
+        radius: 0
+        definitionIndex: 0
+    - rid: 8688056217396838421
+      type: {class: VarExternal, ns: rwby, asm: rwby.csharp}
+      data:
+        name: Try Air Atks
+        id: 3
+        parent: -1
+        children: 
+        frameRanges:
+        - {x: 11, y: -1}
+        condition:
+          rid: 8688056217396838422
+        asset: {fileID: 11400000, guid: 852b081cfd9efbb449cca3171458f8cc, type: 2}
+    - rid: 8688056217396838422
+      type: {class: ConditionHitCount, ns: rwby, asm: rwby.csharp}
+      data:
+        inverse: 0
+        hitCount: 1
+    - rid: 8688056217396838433
+      type: {class: VarCreateBox, ns: rwby, asm: rwby.csharp}
+      data:
+        name: Colbox
+        id: 4
+        parent: -1
+        children: 
+        frameRanges:
+        - {x: 0, y: -1}
+        condition:
+          rid: -2
+        boxType: 2
+        attachedTo: 0
+        shape: 0
+        offset: {x: 0, y: 1, z: 0}
+        boxExtents: {x: 0.5, y: 1, z: 0.5}
+        radius: 0
+        definitionIndex: 0
+    - rid: 8688056335261499397
+      type: {class: VarApplyGravity, ns: rwby, asm: rwby.csharp}
+      data:
+        name: 
+        id: 5
+        parent: -1
+        children: 
+        frameRanges:
+        - {x: 1, y: -1}
+        condition:
+          rid: -2
+        useValue: 0
+        value:
+          rid: -2
+        jumpHeight:
+          rid: 8688056335261499398
+        jumpTime:
+          rid: 8688056335261499399
+        multi:
+          rid: 8688056335261499400
+        maxFallSpeed:
+          rid: 8688056335261499401
+    - rid: 8688056335261499398
+      type: {class: FighterBaseStatReferenceFloat, ns: rwby, asm: rwby.csharp}
+      data:
+        inverse: 0
+        statReference: 1
+        value: 0
+        variable: 13
+    - rid: 8688056335261499399
+      type: {class: FighterBaseStatReferenceFloat, ns: rwby, asm: rwby.csharp}
+      data:
+        inverse: 0
+        statReference: 1
+        value: 0
+        variable: 12
+    - rid: 8688056335261499400
+      type: {class: FighterBaseStatReferenceFloat, ns: rwby, asm: rwby.csharp}
+      data:
+        inverse: 0
+        statReference: 0
+        value: 1
+        variable: 0
+    - rid: 8688056335261499401
+      type: {class: FighterBaseStatReferenceFloat, ns: rwby, asm: rwby.csharp}
+      data:
+        inverse: 0
+        statReference: 1
+        value: 0
+        variable: 23

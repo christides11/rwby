@@ -1,0 +1,322 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7789f25d17401bc4b915ca6fcecf2a29, type: 3}
+  m_Name: RR.Scythe.Grd.5b
+  m_EditorClassIdentifier: 
+  stateName: 5b
+  useBaseState: 0
+  baseState: {fileID: 0}
+  totalFrames: 30
+  autoIncrement: 1
+  autoLoop: 0
+  autoLoopFrame: 1
+  data:
+  - rid: 8688056309525512197
+  - rid: 8688056309525512192
+  - rid: 2193520832531922944
+  - rid: 8688056331001921548
+  - rid: 8688056331001921536
+  - rid: 8688056331001921541
+  - rid: 8688056331001921544
+  - rid: 8688056331001921545
+  stateGroundedGroup: 1
+  stateType: 2
+  maxUsesInString: 1
+  allowBaseStateTransitions: 1
+  inputSequence:
+    executeWindow: 3
+    executeInputs:
+    - inputType: 0
+      buttonID: 3
+      stickDirection: {x: 0, y: 0}
+      directionDeviation: 0
+    sequenceWindow: 8
+    sequenceInputs: []
+  inputSequenceAsHoldInputs: 0
+  condition:
+    rid: -2
+  hitboxInfo:
+  - ID: 0
+    hitStateGroundedGroups: -1
+    groundGroup:
+      hitState: 30
+      groundBounces: 0
+      wallBounces: 0
+      groundBounceForcePercentage: 0
+      wallBounceForcePercentage: 0
+      hitKills: 0
+      hitForceType: 0
+      hitForceRelation: 0
+      autolink: 0
+      autolinkPercentage: 0
+      hitForce: {x: 0, y: 0, z: 5}
+      blockForce: {x: 0, y: 0, z: 0}
+      hitGravity: 0
+      pullPushCurve:
+        serializedVersion: 2
+        m_Curve: []
+        m_PreInfinity: 2
+        m_PostInfinity: 2
+        m_RotationOrder: 4
+      pullPushMaxDistance: 0
+      attackerHitstop: 6
+      hitstop: 6
+      hitstun: 60
+      blockstun: 60
+    groundCounterHitGroup:
+      hitState: 0
+      groundBounces: 0
+      wallBounces: 0
+      groundBounceForcePercentage: 0
+      wallBounceForcePercentage: 0
+      hitKills: 0
+      hitForceType: 0
+      hitForceRelation: 0
+      autolink: 0
+      autolinkPercentage: 0
+      hitForce: {x: 0, y: 0, z: 0}
+      blockForce: {x: 0, y: 0, z: 0}
+      hitGravity: 0
+      pullPushCurve:
+        serializedVersion: 2
+        m_Curve: []
+        m_PreInfinity: 2
+        m_PostInfinity: 2
+        m_RotationOrder: 4
+      pullPushMaxDistance: 0
+      attackerHitstop: 0
+      hitstop: 0
+      hitstun: 0
+      blockstun: 0
+    aerialGroup:
+      hitState: 32
+      groundBounces: 0
+      wallBounces: 0
+      groundBounceForcePercentage: 0
+      wallBounceForcePercentage: 0
+      hitKills: 0
+      hitForceType: 0
+      hitForceRelation: 0
+      autolink: 0
+      autolinkPercentage: 0
+      hitForce: {x: 0, y: 0, z: 10}
+      blockForce: {x: 0, y: 0, z: 0}
+      hitGravity: 0
+      pullPushCurve:
+        serializedVersion: 2
+        m_Curve: []
+        m_PreInfinity: 2
+        m_PostInfinity: 2
+        m_RotationOrder: 4
+      pullPushMaxDistance: 0
+      attackerHitstop: 6
+      hitstop: 6
+      hitstun: 60
+      blockstun: 60
+    aerialCounterHitGroup:
+      hitState: 0
+      groundBounces: 0
+      wallBounces: 0
+      groundBounceForcePercentage: 0
+      wallBounceForcePercentage: 0
+      hitKills: 0
+      hitForceType: 0
+      hitForceRelation: 0
+      autolink: 0
+      autolinkPercentage: 0
+      hitForce: {x: 0, y: 0, z: 0}
+      blockForce: {x: 0, y: 0, z: 0}
+      hitGravity: 0
+      pullPushCurve:
+        serializedVersion: 2
+        m_Curve: []
+        m_PreInfinity: 2
+        m_PostInfinity: 2
+        m_RotationOrder: 4
+      pullPushMaxDistance: 0
+      attackerHitstop: 0
+      hitstop: 0
+      hitstun: 0
+      blockstun: 0
+  throwboxInfo: []
+  hurtboxInfo: []
+  references:
+    version: 2
+    RefIds:
+    - rid: -2
+      type: {class: , ns: , asm: }
+    - rid: 2193520832531922944
+      type: {class: VarChangeState, ns: rwby, asm: rwby.csharp}
+      data:
+        name: To Idle
+        id: 0
+        parent: -1
+        children: 
+        frameRanges:
+        - {x: -1, y: -1}
+        condition:
+          rid: -2
+        checkInputSequence: 0
+        checkCondition: 0
+        stateMovesetID: -1
+        state:
+          rid: 2193520832531922949
+    - rid: 2193520832531922949
+      type: {class: FighterCmnStateReference, ns: rwby, asm: rwby.csharp}
+      data:
+        state: 1
+    - rid: 8688056309525512192
+      type: {class: VarChangeState, ns: rwby, asm: rwby.csharp}
+      data:
+        name: Try Jump
+        id: 1
+        parent: -1
+        children: 
+        frameRanges:
+        - {x: 1, y: -1}
+        condition:
+          rid: 8688056309525512194
+        checkInputSequence: 0
+        checkCondition: 0
+        stateMovesetID: -1
+        state:
+          rid: 8688056309525512193
+    - rid: 8688056309525512193
+      type: {class: FighterCmnStateReference, ns: rwby, asm: rwby.csharp}
+      data:
+        state: 6
+    - rid: 8688056309525512194
+      type: {class: ConditionAnd, ns: rwby, asm: rwby.csharp}
+      data:
+        conditions:
+        - rid: 8688056309525512195
+        - rid: 8688056309525512196
+    - rid: 8688056309525512195
+      type: {class: ConditionButton, ns: rwby, asm: rwby.csharp}
+      data:
+        inverse: 0
+        button: 0
+        buttonState: 1
+        offset: 0
+        buffer: 0
+    - rid: 8688056309525512196
+      type: {class: ConditionHitCount, ns: rwby, asm: rwby.csharp}
+      data:
+        inverse: 0
+        hitCount: 1
+    - rid: 8688056309525512197
+      type: {class: VarCreateBox, ns: rwby, asm: rwby.csharp}
+      data:
+        name: 
+        id: 2
+        parent: -1
+        children: 
+        frameRanges:
+        - {x: 7, y: 9}
+        condition:
+          rid: -2
+        boxType: 1
+        attachedTo: 0
+        shape: 0
+        offset: {x: 0, y: 1, z: 1}
+        boxExtents: {x: 1, y: 1, z: 1}
+        radius: 0
+        definitionIndex: 0
+    - rid: 8688056331001921536
+      type: {class: VarExternal, ns: rwby, asm: rwby.csharp}
+      data:
+        name: Try Atk
+        id: 3
+        parent: -1
+        children: 
+        frameRanges:
+        - {x: 10, y: -1}
+        condition:
+          rid: 8688056331001921537
+        asset: {fileID: 11400000, guid: 38d47b53b1c6fa24580e163448503c28, type: 2}
+    - rid: 8688056331001921537
+      type: {class: ConditionHitCount, ns: rwby, asm: rwby.csharp}
+      data:
+        inverse: 0
+        hitCount: 1
+    - rid: 8688056331001921541
+      type: {class: VarCreateBox, ns: rwby, asm: rwby.csharp}
+      data:
+        name: Colbox
+        id: 4
+        parent: -1
+        children: 
+        frameRanges:
+        - {x: 0, y: -1}
+        condition:
+          rid: -2
+        boxType: 2
+        attachedTo: 0
+        shape: 0
+        offset: {x: 0, y: 1, z: 0}
+        boxExtents: {x: 0.5, y: 1, z: 0.5}
+        radius: 0
+        definitionIndex: 0
+    - rid: 8688056331001921544
+      type: {class: VarModifyAnimationSet, ns: rwby, asm: rwby.csharp}
+      data:
+        name: 
+        id: 5
+        parent: -1
+        children: 
+        frameRanges:
+        - {x: 0, y: 0}
+        condition:
+          rid: -2
+        modifyType: 1
+        wantedAnimations:
+        - animationbank:
+            modGUID:
+              guid: 1d292c1f00000000
+            contentGUID:
+              guid: 2c2c000000000000
+          animation: scythe.grd.b
+        fadeTime: 0
+    - rid: 8688056331001921545
+      type: {class: VarModifyAnimationFrame, ns: rwby, asm: rwby.csharp}
+      data:
+        name: 
+        id: 6
+        parent: -1
+        children: 
+        frameRanges:
+        - {x: 1, y: -1}
+        condition:
+          rid: -2
+        modifyType: 0
+        animations: 00000000
+        frame: 1
+    - rid: 8688056331001921548
+      type: {class: VarChangeState, ns: rwby, asm: rwby.csharp}
+      data:
+        name: Try 5bB
+        id: 7
+        parent: -1
+        children: 
+        frameRanges:
+        - {x: 10, y: -1}
+        condition:
+          rid: -2
+        checkInputSequence: 1
+        checkCondition: 0
+        stateMovesetID: -1
+        state:
+          rid: 8688056331001921549
+    - rid: 8688056331001921549
+      type: {class: RubyRoseStateReference, ns: rwby.core, asm: rwby.core}
+      data:
+        state: 52

@@ -6,12 +6,6 @@ namespace rwby
     [StateVariable("Movement/Set Movement")]
     public struct VarSetMovement : IStateVariables
     {
-        public enum InputSource
-        {
-            stick,
-            rotation
-        }
-        
         public string name;
         public string Name
         {
@@ -46,7 +40,7 @@ namespace rwby
         public IConditionVariables condition;
         public IConditionVariables Condition => condition;
 
-        public InputSource inputSource;
+        public VarInputSourceType inputSource;
         public bool normalizeInputSource;
         public bool useRotationIfInputZero;
         public bool reverseInputSource;

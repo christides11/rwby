@@ -10,9 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7789f25d17401bc4b915ca6fcecf2a29, type: 3}
-  m_Name: RR.Scythe.Grd.5a
+  m_Name: RR.Scythe.Grd.5c
   m_EditorClassIdentifier: 
-  stateName: 5a
+  stateName: 5c
   useBaseState: 0
   baseState: {fileID: 0}
   totalFrames: 30
@@ -23,15 +23,16 @@ MonoBehaviour:
   - rid: 2193520813467238401
   - rid: 2193520813467238403
   - rid: 2193520817874927616
+  - rid: 8688056331001921538
   stateGroundedGroup: 1
   stateType: 2
-  maxUsesInString: 2
+  maxUsesInString: 1
   allowBaseStateTransitions: 1
   inputSequence:
     executeWindow: 3
     executeInputs:
     - inputType: 0
-      buttonID: 2
+      buttonID: 6
       stickDirection: {x: 0, y: 0}
       directionDeviation: 0
     sequenceWindow: 8
@@ -121,7 +122,7 @@ MonoBehaviour:
       hitForceRelation: 0
       autolink: 0
       autolinkPercentage: 0
-      hitForce: {x: 0, y: 0, z: 10}
+      hitForce: {x: 0, y: 0, z: 5}
       blockForce: {x: 0, y: 0, z: 0}
       hitGravity: 0
       pullPushCurve:
@@ -201,7 +202,7 @@ MonoBehaviour:
         boxType: 1
         attachedTo: 0
         shape: 0
-        offset: {x: 0, y: 1, z: 0}
+        offset: {x: 0, y: 1, z: 1}
         boxExtents: {x: 1, y: 1, z: 1}
         radius: 0
         definitionIndex: 0
@@ -227,3 +228,20 @@ MonoBehaviour:
         statReference: 0
         value: 30
         variable: 0
+    - rid: 8688056331001921538
+      type: {class: VarExternal, ns: rwby, asm: rwby.csharp}
+      data:
+        name: Try Atk
+        id: 3
+        parent: -1
+        children: 
+        frameRanges:
+        - {x: 11, y: -1}
+        condition:
+          rid: 8688056331001921539
+        asset: {fileID: 11400000, guid: 38d47b53b1c6fa24580e163448503c28, type: 2}
+    - rid: 8688056331001921539
+      type: {class: ConditionHitCount, ns: rwby, asm: rwby.csharp}
+      data:
+        inverse: 0
+        hitCount: 1

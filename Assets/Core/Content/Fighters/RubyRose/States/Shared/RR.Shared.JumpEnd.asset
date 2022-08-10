@@ -20,6 +20,7 @@ MonoBehaviour:
   autoLoop: 0
   autoLoopFrame: 1
   data:
+  - rid: 8688056335261499393
   - rid: 2193520750553202692
   stateGroundedGroup: 2
   stateType: 0
@@ -30,6 +31,7 @@ MonoBehaviour:
     executeInputs: []
     sequenceWindow: 8
     sequenceInputs: []
+  inputSequenceAsHoldInputs: 0
   condition:
     rid: -2
   hitboxInfo: []
@@ -46,6 +48,7 @@ MonoBehaviour:
         name: Fall Transition
         id: 0
         parent: -1
+        children: 
         frameRanges:
         - {x: -1, y: -1}
         condition:
@@ -59,3 +62,15 @@ MonoBehaviour:
       type: {class: FighterCmnStateReference, ns: rwby, asm: rwby.csharp}
       data:
         state: 5
+    - rid: 8688056335261499393
+      type: {class: VarExternal, ns: rwby, asm: rwby.csharp}
+      data:
+        name: Try Air Atk
+        id: 1
+        parent: -1
+        children: 
+        frameRanges:
+        - {x: 1, y: -1}
+        condition:
+          rid: -2
+        asset: {fileID: 11400000, guid: 852b081cfd9efbb449cca3171458f8cc, type: 2}

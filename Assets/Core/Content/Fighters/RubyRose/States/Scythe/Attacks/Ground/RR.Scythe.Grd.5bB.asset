@@ -10,9 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7789f25d17401bc4b915ca6fcecf2a29, type: 3}
-  m_Name: RR.Scythe.Grd.5b
+  m_Name: RR.Scythe.Grd.5bB
   m_EditorClassIdentifier: 
-  stateName: 5b
+  stateName: 5bB
   useBaseState: 0
   baseState: {fileID: 0}
   totalFrames: 30
@@ -20,8 +20,13 @@ MonoBehaviour:
   autoLoop: 0
   autoLoopFrame: 1
   data:
-  - rid: 2193520832531922944
-  stateGroundedGroup: 1
+  - rid: 2193520832531922947
+  - rid: 8688056331001921550
+  - rid: 8688056331001921546
+  - rid: 8688056331001921547
+  - rid: 8688056331001921551
+  - rid: 8688056331001921552
+  stateGroundedGroup: 2
   stateType: 2
   maxUsesInString: 1
   allowBaseStateTransitions: 1
@@ -34,6 +39,7 @@ MonoBehaviour:
       directionDeviation: 0
     sequenceWindow: 8
     sequenceInputs: []
+  inputSequenceAsHoldInputs: 0
   condition:
     rid: -2
   hitboxInfo:
@@ -50,7 +56,7 @@ MonoBehaviour:
       hitForceRelation: 0
       autolink: 0
       autolinkPercentage: 0
-      hitForce: {x: 0, y: 0, z: 10}
+      hitForce: {x: 0, y: 10, z: 5}
       blockForce: {x: 0, y: 0, z: 0}
       hitGravity: 0
       pullPushCurve:
@@ -100,7 +106,7 @@ MonoBehaviour:
       hitForceRelation: 0
       autolink: 0
       autolinkPercentage: 0
-      hitForce: {x: 0, y: 0, z: 10}
+      hitForce: {x: 0, y: 0, z: 15}
       blockForce: {x: 0, y: 0, z: 0}
       hitGravity: 0
       pullPushCurve:
@@ -146,7 +152,7 @@ MonoBehaviour:
     RefIds:
     - rid: -2
       type: {class: , ns: , asm: }
-    - rid: 2193520832531922944
+    - rid: 2193520832531922947
       type: {class: VarChangeState, ns: rwby, asm: rwby.csharp}
       data:
         name: To Idle
@@ -161,8 +167,86 @@ MonoBehaviour:
         checkCondition: 0
         stateMovesetID: -1
         state:
-          rid: 2193520832531922949
-    - rid: 2193520832531922949
+          rid: 2193520832531922948
+    - rid: 2193520832531922948
       type: {class: FighterCmnStateReference, ns: rwby, asm: rwby.csharp}
       data:
         state: 1
+    - rid: 8688056331001921546
+      type: {class: VarModifyAnimationSet, ns: rwby, asm: rwby.csharp}
+      data:
+        name: 
+        id: 1
+        parent: -1
+        children: 
+        frameRanges:
+        - {x: 0, y: 0}
+        condition:
+          rid: -2
+        modifyType: 1
+        wantedAnimations:
+        - animationbank:
+            modGUID:
+              guid: 1d292c1f00000000
+            contentGUID:
+              guid: 2c2c000000000000
+          animation: scythe.grd.5bB
+        fadeTime: 0
+    - rid: 8688056331001921547
+      type: {class: VarModifyAnimationFrame, ns: rwby, asm: rwby.csharp}
+      data:
+        name: 
+        id: 2
+        parent: -1
+        children: 
+        frameRanges:
+        - {x: 1, y: -1}
+        condition:
+          rid: -2
+        modifyType: 0
+        animations: 00000000
+        frame: 1
+    - rid: 8688056331001921550
+      type: {class: VarCreateBox, ns: rwby, asm: rwby.csharp}
+      data:
+        name: Hitbox
+        id: 3
+        parent: -1
+        children: 
+        frameRanges:
+        - {x: 5, y: 8}
+        condition:
+          rid: -2
+        boxType: 1
+        attachedTo: 0
+        shape: 0
+        offset: {x: 0, y: 1, z: 1}
+        boxExtents: {x: 1, y: 1, z: 1}
+        radius: 0
+        definitionIndex: 0
+    - rid: 8688056331001921551
+      type: {class: VarSetECB, ns: rwby, asm: rwby.csharp}
+      data:
+        name: 
+        id: 4
+        parent: -1
+        children: 
+        frameRanges:
+        - {x: 0, y: 0}
+        condition:
+          rid: -2
+        ecbCenter: 1
+        ecbRadius: 0.3
+        ecbHeight: 1
+    - rid: 8688056331001921552
+      type: {class: VarExternal, ns: rwby, asm: rwby.csharp}
+      data:
+        name: Try Air Dash
+        id: 5
+        parent: -1
+        children: 
+        frameRanges:
+        - {x: 9, y: -1}
+        condition:
+          rid: -2
+        asset: {fileID: 11400000, guid: 280b115f7de70e2429fc1b2a1d4051f2, type: 2}

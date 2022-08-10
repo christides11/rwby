@@ -10,9 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7789f25d17401bc4b915ca6fcecf2a29, type: 3}
-  m_Name: RR.Scythe.Grd.5c
+  m_Name: RR.Scythe.Grd.5a
   m_EditorClassIdentifier: 
-  stateName: 5c
+  stateName: 5a
   useBaseState: 0
   baseState: {fileID: 0}
   totalFrames: 30
@@ -23,6 +23,10 @@ MonoBehaviour:
   - rid: 2193520813467238401
   - rid: 2193520813467238403
   - rid: 2193520817874927616
+  - rid: 8688056217396838421
+  - rid: 8688056217396838433
+  - rid: 8688056331001921542
+  - rid: 8688056331001921543
   stateGroundedGroup: 1
   stateType: 2
   maxUsesInString: 2
@@ -31,11 +35,12 @@ MonoBehaviour:
     executeWindow: 3
     executeInputs:
     - inputType: 0
-      buttonID: 6
+      buttonID: 2
       stickDirection: {x: 0, y: 0}
       directionDeviation: 0
     sequenceWindow: 8
     sequenceInputs: []
+  inputSequenceAsHoldInputs: 0
   condition:
     rid: -2
   hitboxInfo:
@@ -52,7 +57,7 @@ MonoBehaviour:
       hitForceRelation: 0
       autolink: 0
       autolinkPercentage: 0
-      hitForce: {x: 0, y: 0, z: 15}
+      hitForce: {x: 0, y: 0, z: 5}
       blockForce: {x: 0, y: 0, z: 0}
       hitGravity: 0
       pullPushCurve:
@@ -200,7 +205,7 @@ MonoBehaviour:
         boxType: 1
         attachedTo: 0
         shape: 0
-        offset: {x: 0, y: 1, z: 0}
+        offset: {x: 0, y: 1, z: 1}
         boxExtents: {x: 1, y: 1, z: 1}
         radius: 0
         definitionIndex: 0
@@ -226,3 +231,72 @@ MonoBehaviour:
         statReference: 0
         value: 30
         variable: 0
+    - rid: 8688056217396838421
+      type: {class: VarExternal, ns: rwby, asm: rwby.csharp}
+      data:
+        name: 
+        id: 3
+        parent: -1
+        children: 
+        frameRanges:
+        - {x: 11, y: -1}
+        condition:
+          rid: 8688056217396838422
+        asset: {fileID: 11400000, guid: 38d47b53b1c6fa24580e163448503c28, type: 2}
+    - rid: 8688056217396838422
+      type: {class: ConditionHitCount, ns: rwby, asm: rwby.csharp}
+      data:
+        inverse: 0
+        hitCount: 1
+    - rid: 8688056217396838433
+      type: {class: VarCreateBox, ns: rwby, asm: rwby.csharp}
+      data:
+        name: Colbox
+        id: 4
+        parent: -1
+        children: 
+        frameRanges:
+        - {x: 0, y: -1}
+        condition:
+          rid: -2
+        boxType: 2
+        attachedTo: 0
+        shape: 0
+        offset: {x: 0, y: 1, z: 0}
+        boxExtents: {x: 0.5, y: 1, z: 0.5}
+        radius: 0
+        definitionIndex: 0
+    - rid: 8688056331001921542
+      type: {class: VarModifyAnimationSet, ns: rwby, asm: rwby.csharp}
+      data:
+        name: 
+        id: 5
+        parent: -1
+        children: 
+        frameRanges:
+        - {x: 0, y: 0}
+        condition:
+          rid: -2
+        modifyType: 1
+        wantedAnimations:
+        - animationbank:
+            modGUID:
+              guid: 1d292c1f00000000
+            contentGUID:
+              guid: 2c2c000000000000
+          animation: scythe.grd.a
+        fadeTime: 0
+    - rid: 8688056331001921543
+      type: {class: VarModifyAnimationFrame, ns: rwby, asm: rwby.csharp}
+      data:
+        name: 
+        id: 6
+        parent: -1
+        children: 
+        frameRanges:
+        - {x: 1, y: -1}
+        condition:
+          rid: -2
+        modifyType: 0
+        animations: 00000000
+        frame: 1

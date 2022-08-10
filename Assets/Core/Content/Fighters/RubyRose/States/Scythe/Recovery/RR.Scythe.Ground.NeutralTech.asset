@@ -13,18 +13,13 @@ MonoBehaviour:
   m_Name: RR.Scythe.Ground.NeutralTech
   m_EditorClassIdentifier: 
   stateName: Neutral Tech
-  useBaseState: 0
-  baseState: {fileID: 0}
+  useBaseState: 1
+  baseState: {fileID: 11400000, guid: 6120c246de0477847a4a76fb8c583b11, type: 2}
   totalFrames: 30
   autoIncrement: 1
   autoLoop: 0
   autoLoopFrame: 1
-  data:
-  - rid: 220443324362784778
-  - rid: 220443324362784779
-  - rid: 220443324362784781
-  - rid: 220443324362784791
-  - rid: 220443324362784793
+  data: []
   stateGroundedGroup: 2
   stateType: 0
   maxUsesInString: -1
@@ -34,6 +29,7 @@ MonoBehaviour:
     executeInputs: []
     sequenceWindow: 8
     sequenceInputs: []
+  inputSequenceAsHoldInputs: 0
   condition:
     rid: -2
   hitboxInfo: []
@@ -44,118 +40,3 @@ MonoBehaviour:
     RefIds:
     - rid: -2
       type: {class: , ns: , asm: }
-    - rid: 220443324362784778
-      type: {class: VarModifyAnimationSet, ns: rwby, asm: rwby.csharp}
-      data:
-        frameRanges:
-        - {x: 0, y: 0}
-        condition:
-          rid: -2
-        modifyType: 1
-        wantedAnimations:
-        - animationbank:
-            modGUID:
-              guid: 1d292c1f00000000
-            contentType: 7
-            contentGUID:
-              guid: 2c2c000000000000
-          animation: fall
-        fadeTime: 0
-        children: []
-    - rid: 220443324362784779
-      type: {class: VarModifyFallSpeed, ns: rwby, asm: rwby.csharp}
-      data:
-        frameRanges:
-        - {x: 0, y: 0}
-        condition:
-          rid: -2
-        modifyType: 1
-        value:
-          rid: 220443324362784780
-        children: []
-    - rid: 220443324362784780
-      type: {class: FighterStatReferenceFloatBase, ns: rwby, asm: rwby.csharp}
-      data:
-        inverse: 0
-        statReference: 0
-        value: 10
-    - rid: 220443324362784781
-      type: {class: VarApplyGravity, ns: rwby, asm: rwby.csharp}
-      data:
-        frameRanges:
-        - {x: -1, y: -1}
-        condition:
-          rid: -2
-        useValue: 0
-        jumpHeight:
-          rid: 220443324362784782
-        jumpTime:
-          rid: 220443324362784783
-        value:
-          rid: 220443324362784789
-        gravityMultiplier:
-          rid: 220443324362784790
-        maxFallSpeed:
-          rid: 220443324362784788
-        children: []
-    - rid: 220443324362784782
-      type: {class: FighterBaseStatReferenceFloat, ns: rwby, asm: rwby.csharp}
-      data:
-        inverse: 0
-        statReference: 1
-        value: 0
-        variable: 13
-    - rid: 220443324362784783
-      type: {class: FighterBaseStatReferenceFloat, ns: rwby, asm: rwby.csharp}
-      data:
-        inverse: 0
-        statReference: 1
-        value: 0
-        variable: 12
-    - rid: 220443324362784788
-      type: {class: FighterBaseStatReferenceFloat, ns: rwby, asm: rwby.csharp}
-      data:
-        inverse: 0
-        statReference: 1
-        value: 0
-        variable: 23
-    - rid: 220443324362784789
-      type: {class: FighterBaseStatReferenceFloat, ns: rwby, asm: rwby.csharp}
-      data:
-        inverse: 0
-        statReference: 0
-        value: 0
-        variable: 0
-    - rid: 220443324362784790
-      type: {class: FighterBaseStatReferenceFloat, ns: rwby, asm: rwby.csharp}
-      data:
-        inverse: 0
-        statReference: 0
-        value: 1
-        variable: 0
-    - rid: 220443324362784791
-      type: {class: VarExternal, ns: rwby, asm: rwby.csharp}
-      data:
-        frameRanges:
-        - {x: 30, y: 30}
-        condition:
-          rid: 220443324362784792
-        asset: {fileID: 11400000, guid: c8d832c162e368d439cbe63210340e04, type: 2}
-        children: []
-    - rid: 220443324362784792
-      type: {class: ConditionIsGrounded, ns: rwby, asm: rwby.csharp}
-      data:
-        inverse: 0
-    - rid: 220443324362784793
-      type: {class: VarExternal, ns: rwby, asm: rwby.csharp}
-      data:
-        frameRanges:
-        - {x: 30, y: 30}
-        condition:
-          rid: 220443324362784794
-        asset: {fileID: 11400000, guid: 3e988135845709d4594e5628d0bf81cd, type: 2}
-        children: []
-    - rid: 220443324362784794
-      type: {class: ConditionIsGrounded, ns: rwby, asm: rwby.csharp}
-      data:
-        inverse: 1

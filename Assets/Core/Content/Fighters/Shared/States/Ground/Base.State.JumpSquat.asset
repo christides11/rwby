@@ -1,0 +1,95 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7789f25d17401bc4b915ca6fcecf2a29, type: 3}
+  m_Name: Base.State.JumpSquat
+  m_EditorClassIdentifier: 
+  stateName: Jump Squat
+  useBaseState: 0
+  baseState: {fileID: 0}
+  totalFrames: 5
+  autoIncrement: 1
+  autoLoop: 0
+  autoLoopFrame: 1
+  data:
+  - rid: 2193520703102779424
+  - rid: 2193520703102779427
+  stateGroundedGroup: 2
+  stateType: 0
+  maxUsesInString: -1
+  allowBaseStateTransitions: 1
+  inputSequence:
+    executeWindow: 3
+    executeInputs: []
+    sequenceWindow: 8
+    sequenceInputs: []
+  inputSequenceAsHoldInputs: 0
+  condition:
+    rid: -2
+  hitboxInfo: []
+  throwboxInfo: []
+  hurtboxInfo: []
+  references:
+    version: 2
+    RefIds:
+    - rid: -2
+      type: {class: , ns: , asm: }
+    - rid: 2193520703102779424
+      type: {class: VarApplyJumpForce, ns: rwby, asm: rwby.csharp}
+      data:
+        name: 
+        id: 0
+        parent: -1
+        children: 
+        frameRanges:
+        - {x: -2, y: -2}
+        condition:
+          rid: -2
+        useValue: 0
+        value: 0
+        maxJumpTime:
+          rid: 2193520703102779425
+        jumpHeight:
+          rid: 2193520703102779426
+    - rid: 2193520703102779425
+      type: {class: FighterBaseStatReferenceFloat, ns: rwby, asm: rwby.csharp}
+      data:
+        inverse: 0
+        statReference: 1
+        value: 0
+        variable: 12
+    - rid: 2193520703102779426
+      type: {class: FighterBaseStatReferenceFloat, ns: rwby, asm: rwby.csharp}
+      data:
+        inverse: 0
+        statReference: 1
+        value: 0
+        variable: 13
+    - rid: 2193520703102779427
+      type: {class: VarChangeState, ns: rwby, asm: rwby.csharp}
+      data:
+        name: 
+        id: 1
+        parent: -1
+        children: 
+        frameRanges:
+        - {x: -1, y: -1}
+        condition:
+          rid: -2
+        checkInputSequence: 0
+        checkCondition: 0
+        stateMovesetID: -1
+        state:
+          rid: 2193520703102779428
+    - rid: 2193520703102779428
+      type: {class: FighterCmnStateReference, ns: rwby, asm: rwby.csharp}
+      data:
+        state: 4

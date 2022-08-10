@@ -38,6 +38,7 @@ namespace rwby
         WALLRUN_gravity,
         HITSTUN_gravity,
         DASH_INIT_acceleration,
-        DASH_INIT_maxSpeed
+        DASH_INIT_maxSpeed,
+        TECH_ROLL_initSpeed
     }
 }

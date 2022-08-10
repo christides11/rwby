@@ -10,5 +10,10 @@ namespace rwby
     {
         public NetworkObject ownerNetworkObject;
         public HurtboxGroup hurtboxGroup;
+        
+        public virtual void SetBoxActiveState(bool state)
+        {
+            
+        }
     }
 }

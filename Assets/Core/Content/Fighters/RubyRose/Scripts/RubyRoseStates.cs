@@ -18,6 +18,8 @@ namespace rwby.core
         SCYTHE_GRD_8bB,
         SCYTHE_GRD_5c,
         SCYTHE_GRD_5cC,
-        SCYTHE_GRD_8c
+        SCYTHE_GRD_8c,
+        SHARED_TELEPORT_DOWN,
+        SCYTHE_AIR_8b
     }
 }

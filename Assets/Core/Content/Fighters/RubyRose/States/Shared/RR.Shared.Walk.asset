@@ -23,6 +23,10 @@ MonoBehaviour:
   - rid: 2193520817874927619
   - rid: 2193520817874927621
   - rid: 2193520879941976064
+  - rid: 8688056216264638483
+  - rid: 8688056216264638484
+  - rid: 8688056217003884544
+  - rid: 8688056217003884545
   stateGroundedGroup: 1
   stateType: 1
   maxUsesInString: -1
@@ -88,3 +92,65 @@ MonoBehaviour:
         boxExtents: {x: 0.5, y: 1, z: 0.5}
         radius: 0
         definitionIndex: 0
+    - rid: 8688056216264638483
+      type: {class: VarModifyAnimationSet, ns: rwby, asm: rwby.csharp}
+      data:
+        name: 
+        id: 3
+        parent: -1
+        children: 
+        frameRanges:
+        - {x: 0, y: 0}
+        condition:
+          rid: -2
+        modifyType: 1
+        wantedAnimations:
+        - animationbank:
+            modGUID:
+              guid: 1d292c1f00000000
+            contentGUID:
+              guid: 2c2c000000000000
+          animation: walk.f
+        fadeTime: 0
+    - rid: 8688056216264638484
+      type: {class: VarEmpty, ns: rwby, asm: rwby.csharp}
+      data:
+        name: Locked-On
+        id: 4
+        parent: -1
+        children: 
+        frameRanges: []
+        condition:
+          rid: 8688056216264638485
+    - rid: 8688056216264638485
+      type: {class: ConditionLockedOn, ns: rwby, asm: rwby.csharp}
+      data:
+        inverse: 0
+    - rid: 8688056217003884544
+      type: {class: VarEmpty, ns: rwby, asm: rwby.csharp}
+      data:
+        name: Not Locked-On
+        id: 5
+        parent: -1
+        children: 06000000
+        frameRanges: []
+        condition:
+          rid: 8688056217396838400
+    - rid: 8688056217003884545
+      type: {class: VarModifyAnimationFrame, ns: rwby, asm: rwby.csharp}
+      data:
+        name: Add Anim Frame
+        id: 6
+        parent: 5
+        children: 
+        frameRanges:
+        - {x: 1, y: -1}
+        condition:
+          rid: -2
+        modifyType: 0
+        animations: 00000000
+        frame: 1
+    - rid: 8688056217396838400
+      type: {class: ConditionLockedOn, ns: rwby, asm: rwby.csharp}
+      data:
+        inverse: 1

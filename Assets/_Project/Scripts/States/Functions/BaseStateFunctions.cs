@@ -85,7 +85,7 @@ namespace rwby
             FighterManager f = (FighterManager)fighter;
             VarSetMovement vars = (VarSetMovement)variables;
             
-            Vector3 input = vars.inputSource == VarSetMovement.InputSource.stick ? f.GetMovementVector(0) : f.myTransform.forward;
+            Vector3 input = vars.inputSource == VarInputSourceType.stick ? f.GetMovementVector(0) : f.myTransform.forward;
             if(vars.normalizeInputSource) input.Normalize();
             if (vars.useRotationIfInputZero && input == Vector3.zero) input = f.myTransform.forward;
             if (vars.reverseInputSource) input = -input;
@@ -97,7 +97,7 @@ namespace rwby
             FighterManager f = (FighterManager)fighter;
             VarAddMovement vars = (VarAddMovement)variables;
             
-            Vector3 input = vars.inputSource == VarSetMovement.InputSource.stick ? f.GetMovementVector(0) : f.myTransform.forward;
+            Vector3 input = vars.inputSource == VarInputSourceType.stick ? f.GetMovementVector(0) : f.myTransform.forward;
             if(vars.normalizeInputSource) input.Normalize();
             if (vars.useRotationIfInputZero && input == Vector3.zero) input = f.myTransform.forward;
             f.FPhysicsManager.forceMovement += input * vars.force.GetValue(f);
@@ -511,7 +511,7 @@ namespace rwby
             
             if(vars.clearWallIfNotFound) fm.ClearWall();
             
-            Vector3 input = vars.inputSource == VarSetMovement.InputSource.stick ? fm.GetMovementVector(0) : fm.myTransform.forward;
+            Vector3 input = vars.inputSource == VarInputSourceType.stick ? fm.GetMovementVector(0) : fm.myTransform.forward;
             if(vars.normalizeInputSource) input.Normalize();
             if (input == Vector3.zero)
             {
@@ -574,6 +574,52 @@ namespace rwby
 
             fm.FPhysicsManager.SetPosition(newPos, false);
             fm.SetRotation(-fm.cWallNormal, false);
+        }
+        
+        public static void ClampMovement(IFighterBase fighter, IStateVariables variables, HnSF.StateTimeline arg3, int arg4)
+        {
+            FighterManager fm = (FighterManager)fighter;
+            VarClampMovement vars = (VarClampMovement)variables;
+
+            fm.FPhysicsManager.forceMovement = Vector3.ClampMagnitude(fm.FPhysicsManager.forceMovement, vars.magnitude.GetValue(fm));
+        }
+        
+        public static void TeleportRaycast(IFighterBase fighter, IStateVariables variables, HnSF.StateTimeline arg3, int arg4)
+        {
+            FighterManager fm = (FighterManager)fighter;
+            VarTeleportRaycast vars = (VarTeleportRaycast)variables;
+
+            Vector3 dir = Vector3.zero;
+            switch (vars.raycastDirectionSource)
+            {
+                case VarInputSourceType.stick:
+                    break;
+                case VarInputSourceType.rotation:
+                    break;
+                case VarInputSourceType.custom:
+                    dir = fm.GetMovementVector(vars.direction.x, vars.direction.y);
+                    dir.y = vars.direction.y;
+                    break;
+            }
+            
+            Vector3 bottomPoint = fm.myTransform.position + fm.FPhysicsManager.cc.center + Vector3.up * -fm.FPhysicsManager.cc.height * 0.5F;
+            Vector3 topPoint = bottomPoint + Vector3.up * fm.FPhysicsManager.cc.height;
+
+            bool hit = fm.Runner.GetPhysicsScene().CapsuleCast(bottomPoint, topPoint, fm.FPhysicsManager.cc.radius * 0.9f, dir, out fm.wallHitResults[0], vars.distance, fm.wallLayerMask.value);
+
+            if (hit)
+            {
+                Vector3 newPos = fm.wallHitResults[0].point 
+                                 + (new Vector3(fm.wallHitResults[0].normal.x, 0, fm.wallHitResults[0].normal.z) * fm.FPhysicsManager.cc.radius)
+                                 - (new Vector3(0, fm.wallHitResults[0].normal.y, 0) * (bottomPoint - fm.myTransform.position).y );
+                fm.FPhysicsManager.SetPosition(newPos, vars.bypassInterpolation);
+            }
+            else
+            {
+                if (!vars.goToPosOnNoHit) return;
+                Vector3 newPos = fm.transform.position + (dir * vars.distance);
+                fm.FPhysicsManager.SetPosition(newPos, vars.bypassInterpolation);
+            }
         }
     }
 }

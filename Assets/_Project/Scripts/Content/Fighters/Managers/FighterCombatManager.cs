@@ -328,6 +328,12 @@ namespace rwby
             HitInfo.HitInfoGroup hitInfoGroup = groundedState ? (CounterhitState ? hitInfo.groundCounterHitGroup : hitInfo.groundGroup) 
                 : (CounterhitState ? hitInfo.aerialCounterHitGroup : hitInfo.aerialGroup);
             hitReaction.hitInfoGroup = hitInfoGroup;
+
+            if (hitInfoGroup.hitState == FighterCmnStates.NULL)
+            {
+                hitReaction.reaction = HitReactionType.HIT;
+                return hitReaction;
+            }
             
             if(BlockState != BlockStateType.NONE)
             {

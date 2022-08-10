@@ -41,6 +41,8 @@ namespace rwby
             functions.Add(typeof(VarDebugLog), BaseStateFunctions.LogMessage);
             functions.Add(typeof(VarFindWall), BaseStateFunctions.FindWall);
             functions.Add(typeof(VarSnapToWall), BaseStateFunctions.SnapToWall);
+            functions.Add(typeof(VarClampMovement), BaseStateFunctions.ClampMovement);
+            functions.Add(typeof(VarTeleportRaycast), BaseStateFunctions.TeleportRaycast);
         }
     }
 }

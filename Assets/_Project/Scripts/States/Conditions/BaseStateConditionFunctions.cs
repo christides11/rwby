@@ -182,5 +182,28 @@ namespace rwby
             
             return vars.inverse ? !result : result;
         }
+        
+        public static bool HitboxHitCount(IFighterBase fighter, IConditionVariables variables, HnSF.StateTimeline arg3, int arg4)
+        {
+            FighterManager f = fighter as FighterManager;
+            ConditionHitboxHitCount vars = (ConditionHitboxHitCount)variables;
+
+            bool result = f.FCombatManager.HitboxManager.hitboxGroupHitCounts[vars.hitboxIndex] >= vars.hitCount;
+            return vars.inverse ? !result : result;
+        }
+        
+        public static bool HitCount(IFighterBase fighter, IConditionVariables variables, HnSF.StateTimeline arg3, int arg4)
+        {
+            FighterManager f = fighter as FighterManager;
+            ConditionHitCount vars = (ConditionHitCount)variables;
+
+            int hitCount = 0;
+            for (int i = 0; i < f.FCombatManager.HitboxManager.hitboxGroupHitCounts.Length; i++)
+            {
+                hitCount += f.FCombatManager.HitboxManager.hitboxGroupHitCounts[i];
+                if (hitCount >= vars.hitCount) return true;
+            }
+            return false;
+        }
     }
 }

@@ -40,7 +40,7 @@ namespace rwby
         public IConditionVariables condition;
         public IConditionVariables Condition => condition;
 
-        public VarSetMovement.InputSource inputSource;
+        public VarInputSourceType inputSource;
         public bool normalizeInputSource;
         public bool useRotationIfInputZero;
         [SelectImplementation((typeof(FighterStatReferenceBase<float>)))] [SerializeReference]

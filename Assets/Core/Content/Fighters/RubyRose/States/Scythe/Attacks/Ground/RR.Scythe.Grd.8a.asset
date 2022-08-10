@@ -1,0 +1,480 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7789f25d17401bc4b915ca6fcecf2a29, type: 3}
+  m_Name: RR.Scythe.Grd.8a
+  m_EditorClassIdentifier: 
+  stateName: 8a
+  useBaseState: 0
+  baseState: {fileID: 0}
+  totalFrames: 80
+  autoIncrement: 1
+  autoLoop: 0
+  autoLoopFrame: 1
+  data:
+  - rid: 2193520817874927616
+  - rid: 2193520838792970259
+  - rid: 8688056217396838409
+  - rid: 8688056217396838427
+  - rid: 2193520813467238401
+  - rid: 8688056217396838420
+  - rid: 8688056217396838425
+  - rid: 8688056217396838430
+  - rid: 8688056217396838431
+  stateGroundedGroup: 1
+  stateType: 2
+  maxUsesInString: 1
+  allowBaseStateTransitions: 1
+  inputSequence:
+    executeWindow: 3
+    executeInputs:
+    - inputType: 0
+      buttonID: 2
+      stickDirection: {x: 0, y: 0}
+      directionDeviation: 0
+    - inputType: 1
+      buttonID: 2
+      stickDirection: {x: 0, y: 1}
+      directionDeviation: 0.85
+    sequenceWindow: 8
+    sequenceInputs:
+    - inputType: 0
+      buttonID: 5
+      stickDirection: {x: 0, y: 0}
+      directionDeviation: 0
+  inputSequenceAsHoldInputs: 1
+  condition:
+    rid: -2
+  hitboxInfo:
+  - ID: 0
+    hitStateGroundedGroups: -1
+    groundGroup:
+      hitState: 0
+      groundBounces: 0
+      wallBounces: 0
+      groundBounceForcePercentage: 0
+      wallBounceForcePercentage: 0
+      hitKills: 0
+      hitForceType: 0
+      hitForceRelation: 0
+      autolink: 0
+      autolinkPercentage: 0
+      hitForce: {x: 0, y: 0, z: 0}
+      blockForce: {x: 0, y: 0, z: 0}
+      hitGravity: 0
+      pullPushCurve:
+        serializedVersion: 2
+        m_Curve:
+        - serializedVersion: 3
+          time: 0
+          value: 0
+          inSlope: 10
+          outSlope: 10
+          tangentMode: 34
+          weightedMode: 0
+          inWeight: 0
+          outWeight: 0.33333334
+        - serializedVersion: 3
+          time: 1
+          value: 10
+          inSlope: 10
+          outSlope: 10
+          tangentMode: 34
+          weightedMode: 0
+          inWeight: 0.33333334
+          outWeight: 0
+        m_PreInfinity: 2
+        m_PostInfinity: 2
+        m_RotationOrder: 4
+      pullPushMaxDistance: 10
+      attackerHitstop: 0
+      hitstop: 0
+      hitstun: 0
+      blockstun: 0
+    groundCounterHitGroup:
+      hitState: 0
+      groundBounces: 0
+      wallBounces: 0
+      groundBounceForcePercentage: 0
+      wallBounceForcePercentage: 0
+      hitKills: 0
+      hitForceType: 0
+      hitForceRelation: 0
+      autolink: 0
+      autolinkPercentage: 0
+      hitForce: {x: 0, y: 0, z: 0}
+      blockForce: {x: 0, y: 0, z: 0}
+      hitGravity: 0
+      pullPushCurve:
+        serializedVersion: 2
+        m_Curve: []
+        m_PreInfinity: 2
+        m_PostInfinity: 2
+        m_RotationOrder: 4
+      pullPushMaxDistance: 0
+      attackerHitstop: 0
+      hitstop: 0
+      hitstun: 0
+      blockstun: 0
+    aerialGroup:
+      hitState: 0
+      groundBounces: 0
+      wallBounces: 0
+      groundBounceForcePercentage: 0
+      wallBounceForcePercentage: 0
+      hitKills: 0
+      hitForceType: 0
+      hitForceRelation: 0
+      autolink: 0
+      autolinkPercentage: 0
+      hitForce: {x: 0, y: 0, z: 10}
+      blockForce: {x: 0, y: 0, z: 0}
+      hitGravity: 0
+      pullPushCurve:
+        serializedVersion: 2
+        m_Curve: []
+        m_PreInfinity: 2
+        m_PostInfinity: 2
+        m_RotationOrder: 4
+      pullPushMaxDistance: 0
+      attackerHitstop: 0
+      hitstop: 0
+      hitstun: 0
+      blockstun: 0
+    aerialCounterHitGroup:
+      hitState: 0
+      groundBounces: 0
+      wallBounces: 0
+      groundBounceForcePercentage: 0
+      wallBounceForcePercentage: 0
+      hitKills: 0
+      hitForceType: 0
+      hitForceRelation: 0
+      autolink: 0
+      autolinkPercentage: 0
+      hitForce: {x: 0, y: 0, z: 0}
+      blockForce: {x: 0, y: 0, z: 0}
+      hitGravity: 0
+      pullPushCurve:
+        serializedVersion: 2
+        m_Curve: []
+        m_PreInfinity: 2
+        m_PostInfinity: 2
+        m_RotationOrder: 4
+      pullPushMaxDistance: 0
+      attackerHitstop: 0
+      hitstop: 0
+      hitstun: 0
+      blockstun: 0
+  - ID: 1
+    hitStateGroundedGroups: -1
+    groundGroup:
+      hitState: 30
+      groundBounces: 0
+      wallBounces: 0
+      groundBounceForcePercentage: 0
+      wallBounceForcePercentage: 0
+      hitKills: 0
+      hitForceType: 0
+      hitForceRelation: 0
+      autolink: 0
+      autolinkPercentage: 0
+      hitForce: {x: 0, y: 0, z: 5}
+      blockForce: {x: 0, y: 0, z: 0}
+      hitGravity: 0
+      pullPushCurve:
+        serializedVersion: 2
+        m_Curve:
+        - serializedVersion: 3
+          time: 0
+          value: 0
+          inSlope: 10
+          outSlope: 10
+          tangentMode: 34
+          weightedMode: 0
+          inWeight: 0
+          outWeight: 0.33333334
+        - serializedVersion: 3
+          time: 1
+          value: 10
+          inSlope: 10
+          outSlope: 10
+          tangentMode: 34
+          weightedMode: 0
+          inWeight: 0.33333334
+          outWeight: 0
+        m_PreInfinity: 2
+        m_PostInfinity: 2
+        m_RotationOrder: 4
+      pullPushMaxDistance: 10
+      attackerHitstop: 0
+      hitstop: 0
+      hitstun: 0
+      blockstun: 0
+    groundCounterHitGroup:
+      hitState: 0
+      groundBounces: 0
+      wallBounces: 0
+      groundBounceForcePercentage: 0
+      wallBounceForcePercentage: 0
+      hitKills: 0
+      hitForceType: 0
+      hitForceRelation: 0
+      autolink: 0
+      autolinkPercentage: 0
+      hitForce: {x: 0, y: 0, z: 0}
+      blockForce: {x: 0, y: 0, z: 0}
+      hitGravity: 0
+      pullPushCurve:
+        serializedVersion: 2
+        m_Curve: []
+        m_PreInfinity: 2
+        m_PostInfinity: 2
+        m_RotationOrder: 4
+      pullPushMaxDistance: 0
+      attackerHitstop: 0
+      hitstop: 0
+      hitstun: 0
+      blockstun: 0
+    aerialGroup:
+      hitState: 32
+      groundBounces: 0
+      wallBounces: 0
+      groundBounceForcePercentage: 0
+      wallBounceForcePercentage: 0
+      hitKills: 0
+      hitForceType: 0
+      hitForceRelation: 0
+      autolink: 0
+      autolinkPercentage: 0
+      hitForce: {x: 0, y: 0, z: 5}
+      blockForce: {x: 0, y: 0, z: 0}
+      hitGravity: 0
+      pullPushCurve:
+        serializedVersion: 2
+        m_Curve: []
+        m_PreInfinity: 2
+        m_PostInfinity: 2
+        m_RotationOrder: 4
+      pullPushMaxDistance: 0
+      attackerHitstop: 0
+      hitstop: 0
+      hitstun: 0
+      blockstun: 0
+    aerialCounterHitGroup:
+      hitState: 0
+      groundBounces: 0
+      wallBounces: 0
+      groundBounceForcePercentage: 0
+      wallBounceForcePercentage: 0
+      hitKills: 0
+      hitForceType: 0
+      hitForceRelation: 0
+      autolink: 0
+      autolinkPercentage: 0
+      hitForce: {x: 0, y: 0, z: 0}
+      blockForce: {x: 0, y: 0, z: 0}
+      hitGravity: 0
+      pullPushCurve:
+        serializedVersion: 2
+        m_Curve: []
+        m_PreInfinity: 2
+        m_PostInfinity: 2
+        m_RotationOrder: 4
+      pullPushMaxDistance: 0
+      attackerHitstop: 0
+      hitstop: 0
+      hitstun: 0
+      blockstun: 0
+  throwboxInfo: []
+  hurtboxInfo: []
+  references:
+    version: 2
+    RefIds:
+    - rid: -2
+      type: {class: , ns: , asm: }
+    - rid: 2193520813467238401
+      type: {class: VarChangeState, ns: rwby, asm: rwby.csharp}
+      data:
+        name: To Idle
+        id: 0
+        parent: -1
+        children: 
+        frameRanges:
+        - {x: -1, y: -1}
+        condition:
+          rid: -2
+        checkInputSequence: 0
+        checkCondition: 0
+        stateMovesetID: -1
+        state:
+          rid: 2193520813467238402
+    - rid: 2193520813467238402
+      type: {class: FighterCmnStateReference, ns: rwby, asm: rwby.csharp}
+      data:
+        state: 1
+    - rid: 2193520817874927616
+      type: {class: VarApplyTraction, ns: rwby, asm: rwby.csharp}
+      data:
+        name: 
+        id: 2
+        parent: -1
+        children: 
+        frameRanges:
+        - {x: 10, y: -1}
+        condition:
+          rid: -2
+        traction:
+          rid: 2193520817874927617
+        applyMovement: 1
+        applyGravity: 0
+    - rid: 2193520817874927617
+      type: {class: FighterBaseStatReferenceFloat, ns: rwby, asm: rwby.csharp}
+      data:
+        inverse: 0
+        statReference: 0
+        value: 100
+        variable: 0
+    - rid: 2193520838792970259
+      type: {class: VarSetMovement, ns: rwby, asm: rwby.csharp}
+      data:
+        name: 
+        id: 3
+        parent: -1
+        children: 
+        frameRanges:
+        - {x: 2, y: 2}
+        condition:
+          rid: -2
+        inputSource: 1
+        normalizeInputSource: 1
+        useRotationIfInputZero: 0
+        reverseInputSource: 0
+        force:
+          rid: 2193520838792970260
+    - rid: 2193520838792970260
+      type: {class: FighterBaseStatReferenceFloat, ns: rwby, asm: rwby.csharp}
+      data:
+        inverse: 0
+        statReference: 0
+        value: 30
+        variable: 0
+    - rid: 8688056217396838409
+      type: {class: VarCreateBox, ns: rwby, asm: rwby.csharp}
+      data:
+        name: Detect
+        id: 4
+        parent: -1
+        children: 
+        frameRanges:
+        - {x: 1, y: 30}
+        condition:
+          rid: -2
+        boxType: 1
+        attachedTo: 0
+        shape: 0
+        offset: {x: 0, y: 1, z: 0.5}
+        boxExtents: {x: 1, y: 1, z: 1}
+        radius: 0
+        definitionIndex: 0
+    - rid: 8688056217396838420
+      type: {class: VarCreateBox, ns: rwby, asm: rwby.csharp}
+      data:
+        name: Colbox
+        id: 7
+        parent: -1
+        children: 
+        frameRanges:
+        - {x: 0, y: -1}
+        condition:
+          rid: -2
+        boxType: 2
+        attachedTo: 0
+        shape: 0
+        offset: {x: 0, y: 1, z: 0}
+        boxExtents: {x: 1, y: 1, z: 1}
+        radius: 0
+        definitionIndex: 0
+    - rid: 8688056217396838425
+      type: {class: VarClampMovement, ns: rwby, asm: rwby.csharp}
+      data:
+        name: 
+        id: 8
+        parent: -1
+        children: 
+        frameRanges:
+        - {x: 31, y: 31}
+        condition:
+          rid: -2
+        magnitude:
+          rid: 8688056217396838426
+    - rid: 8688056217396838426
+      type: {class: FighterBaseStatReferenceFloat, ns: rwby, asm: rwby.csharp}
+      data:
+        inverse: 0
+        statReference: 0
+        value: 10
+        variable: 0
+    - rid: 8688056217396838427
+      type: {class: VarModifyFrame, ns: rwby, asm: rwby.csharp}
+      data:
+        name: Skip to Attack
+        id: 9
+        frameRanges:
+        - {x: 1, y: 30}
+        condition:
+          rid: 8688056217396838429
+        modifyType: 1
+        value: 31
+        parent: -1
+        children: 
+    - rid: 8688056217396838429
+      type: {class: ConditionHitboxHitCount, ns: rwby, asm: rwby.csharp}
+      data:
+        inverse: 0
+        hitboxIndex: 0
+        hitCount: 1
+    - rid: 8688056217396838430
+      type: {class: VarCreateBox, ns: rwby, asm: rwby.csharp}
+      data:
+        name: Hitbox
+        id: 10
+        parent: -1
+        children: 
+        frameRanges:
+        - {x: 33, y: 36}
+        condition:
+          rid: -2
+        boxType: 1
+        attachedTo: 0
+        shape: 0
+        offset: {x: 0, y: 1, z: 0.5}
+        boxExtents: {x: 1, y: 0.5, z: 1}
+        radius: 0
+        definitionIndex: 1
+    - rid: 8688056217396838431
+      type: {class: VarExternal, ns: rwby, asm: rwby.csharp}
+      data:
+        name: Try Ground Atk
+        id: 11
+        parent: -1
+        children: 
+        frameRanges:
+        - {x: 37, y: -1}
+        condition:
+          rid: 8688056217396838432
+        asset: {fileID: 11400000, guid: 38d47b53b1c6fa24580e163448503c28, type: 2}
+    - rid: 8688056217396838432
+      type: {class: ConditionHitboxHitCount, ns: rwby, asm: rwby.csharp}
+      data:
+        inverse: 0
+        hitboxIndex: 1
+        hitCount: 1

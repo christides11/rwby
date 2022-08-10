@@ -97,7 +97,7 @@ MonoBehaviour:
   SphereRadius: 0
   BoxExtents: {x: 0, y: 0, z: 0}
   Offset: {x: 0, y: 0, z: 0}
-  Root: {fileID: 0}
+  Root: {fileID: 8828466035712802024}
   GizmosColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
   ownerNetworkObject: {fileID: 0}
   hurtboxGroup:
@@ -193,7 +193,7 @@ MonoBehaviour:
   SphereRadius: 0
   BoxExtents: {x: 0, y: 0, z: 0}
   Offset: {x: 0, y: 0, z: 0}
-  Root: {fileID: 0}
+  Root: {fileID: 8828466035712802024}
   GizmosColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
   ownerNetworkObject: {fileID: 0}
   hurtboxGroup:
@@ -255,7 +255,7 @@ MonoBehaviour:
   SphereRadius: 0
   BoxExtents: {x: 0, y: 0, z: 0}
   Offset: {x: 0, y: 0, z: 0}
-  Root: {fileID: 0}
+  Root: {fileID: 8828466035712802024}
   GizmosColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
   ownerNetworkObject: {fileID: 0}
   hurtboxGroup:
@@ -427,6 +427,7 @@ MonoBehaviour:
   _CurrentAirDash: 0
   _CurrentFallMultiplier: 1
   _attackEventInput: 
+  FRAMEBYFRAME: 0
   inputManager: {fileID: 728284172682202706}
   combatManager: {fileID: 7730901374118442406}
   stateManager: {fileID: 1457010570893242128}
@@ -452,7 +453,12 @@ MonoBehaviour:
     m_Bits: 2056
   lockonMaxDistance: 20
   lockonFudging: 0.1
-  FRAMEBYFRAME: 0
+  wallLayerMask:
+    serializedVersion: 2
+    m_Bits: 2056
+  _cWallNormal: {x: 0, y: 0, z: 0}
+  _cWallPoint: {x: 0, y: 0, z: 0}
+  _cWallSide: 0
   hitstopShakeDistance: 0.5
   hitstopDir: 1
   hitstopShakeFrames: 1
@@ -463,18 +469,6 @@ MonoBehaviour:
   - {x: 0.2, y: 0, z: 0}
   - {x: 0, y: 0, z: -0.2}
   _currentShakeDirection: 0
-  wallLayerMask:
-    serializedVersion: 2
-    m_Bits: 2056
-  wallCheckDistance: 0.7
-  currentWall: {fileID: 0}
-  ceilingCheckDistance: 1.2
-  wallRunDot: -0.5
-  sideWallDistance: 0
-  wallSide: 0
-  wallRunHozMultiplier: 1
-  _cWallNormal: {x: 0, y: 0, z: 0}
-  _cWallPoint: {x: 0, y: 0, z: 0}
   animationbankReferences:
   - modGUID:
       guid: 1d292c1f00000000
@@ -545,6 +539,7 @@ MonoBehaviour:
   _forceGravity: 0
   manager: {fileID: 3846760401122892541}
   kCC: {fileID: 1765053112054983048}
+  cc: {fileID: 2898563863352299436}
   _ecbOffset: 1
   _ecbRadius: 1
   _ecbHeight: 2
@@ -811,6 +806,18 @@ MonoBehaviour:
   - {fileID: 8259747679810312726}
   - {fileID: 2125624600665686307}
   - {fileID: 6545569087970796582}
+  - {fileID: 5944070340818351198}
+  - {fileID: 1021495217242408397}
+  - {fileID: 3917789965166799563}
+  - {fileID: 1338848799322075503}
+  - {fileID: 6560752337657104962}
+  - {fileID: 8566605417228217581}
+  - {fileID: 2054318867862546624}
+  - {fileID: 837826902600854180}
+  - {fileID: 4821869690169399070}
+  - {fileID: 3744774871141659929}
+  - {fileID: 5472063395598190173}
+  - {fileID: 7482169374773852577}
 --- !u!114 &4017428576835799020
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5774,7 +5781,7 @@ MonoBehaviour:
   SphereRadius: 0
   BoxExtents: {x: 0, y: 0, z: 0}
   Offset: {x: 0, y: 0, z: 0}
-  Root: {fileID: 0}
+  Root: {fileID: 8828466035712802024}
   GizmosColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
   ownerNetworkObject: {fileID: 0}
   hurtboxGroup:
@@ -5836,7 +5843,7 @@ MonoBehaviour:
   SphereRadius: 0
   BoxExtents: {x: 0, y: 0, z: 0}
   Offset: {x: 0, y: 0, z: 0}
-  Root: {fileID: 0}
+  Root: {fileID: 8828466035712802024}
   GizmosColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
   ownerNetworkObject: {fileID: 0}
   hurtboxGroup:
@@ -5898,7 +5905,7 @@ MonoBehaviour:
   SphereRadius: 0
   BoxExtents: {x: 0, y: 0, z: 0}
   Offset: {x: 0, y: 0, z: 0}
-  Root: {fileID: 0}
+  Root: {fileID: 8828466035712802024}
   GizmosColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
   ownerNetworkObject: {fileID: 0}
   hurtboxGroup:
@@ -5960,7 +5967,7 @@ MonoBehaviour:
   SphereRadius: 0
   BoxExtents: {x: 0, y: 0, z: 0}
   Offset: {x: 0, y: 0, z: 0}
-  Root: {fileID: 0}
+  Root: {fileID: 8828466035712802024}
   GizmosColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
   ownerNetworkObject: {fileID: 0}
   hurtboxGroup:
@@ -6122,7 +6129,7 @@ MonoBehaviour:
   SphereRadius: 0
   BoxExtents: {x: 0, y: 0, z: 0}
   Offset: {x: 0, y: 0, z: 0}
-  Root: {fileID: 0}
+  Root: {fileID: 8828466035712802024}
   GizmosColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
   ownerNetworkObject: {fileID: 0}
   hurtboxGroup:
@@ -6184,7 +6191,7 @@ MonoBehaviour:
   SphereRadius: 0
   BoxExtents: {x: 0, y: 0, z: 0}
   Offset: {x: 0, y: 0, z: 0}
-  Root: {fileID: 0}
+  Root: {fileID: 8828466035712802024}
   GizmosColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
   ownerNetworkObject: {fileID: 0}
   hurtboxGroup:
@@ -6246,7 +6253,7 @@ MonoBehaviour:
   SphereRadius: 0
   BoxExtents: {x: 0, y: 0, z: 0}
   Offset: {x: 0, y: 0, z: 0}
-  Root: {fileID: 0}
+  Root: {fileID: 8828466035712802024}
   GizmosColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
   ownerNetworkObject: {fileID: 0}
   hurtboxGroup:
@@ -6308,7 +6315,7 @@ MonoBehaviour:
   SphereRadius: 0
   BoxExtents: {x: 0, y: 0, z: 0}
   Offset: {x: 0, y: 0, z: 0}
-  Root: {fileID: 0}
+  Root: {fileID: 8828466035712802024}
   GizmosColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
   ownerNetworkObject: {fileID: 0}
   hurtboxGroup:
@@ -6370,7 +6377,7 @@ MonoBehaviour:
   SphereRadius: 0
   BoxExtents: {x: 0, y: 0, z: 0}
   Offset: {x: 0, y: 0, z: 0}
-  Root: {fileID: 0}
+  Root: {fileID: 8828466035712802024}
   GizmosColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
   ownerNetworkObject: {fileID: 0}
   hurtboxGroup:
@@ -6666,6 +6673,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5000631741507204238, guid: 78caef604aeeeae43bd73695fea76e2f, type: 3}
+      propertyPath: Root
+      value: 
+      objectReference: {fileID: 8828466035712802024}
     - target: {fileID: 5000631741507204239, guid: 78caef604aeeeae43bd73695fea76e2f, type: 3}
       propertyPath: m_Name
       value: Collbox 2
@@ -6902,6 +6913,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5000631741507204238, guid: 78caef604aeeeae43bd73695fea76e2f, type: 3}
+      propertyPath: Root
+      value: 
+      objectReference: {fileID: 8828466035712802024}
     - target: {fileID: 5000631741507204239, guid: 78caef604aeeeae43bd73695fea76e2f, type: 3}
       propertyPath: m_Name
       value: Collbox 1

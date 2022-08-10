@@ -19,6 +19,8 @@ namespace rwby
             functions.Add(typeof(ConditionLockedOn), BaseStateConditionFunctions.LockedOn);
             functions.Add(typeof(ConditionWallValid), BaseStateConditionFunctions.WallValid);
             functions.Add(typeof(ConditionHoldingTowardsWall), BaseStateConditionFunctions.HoldingTowardsWall);
+            functions.Add(typeof(ConditionHitboxHitCount), BaseStateConditionFunctions.HitboxHitCount);
+            functions.Add(typeof(ConditionHitCount), BaseStateConditionFunctions.HitCount);
         }
     }
 }

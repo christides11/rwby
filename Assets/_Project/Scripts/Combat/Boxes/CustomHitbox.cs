@@ -7,11 +7,6 @@ namespace rwby {
         public IBoxDefinitionCollection definition;
         public int definitionIndex;
 
-        public virtual void SetBoxActiveState(bool state)
-        {
-            
-        }
-        
         public virtual void SetBoxSize(Vector3 offset, Vector3 boxExtents)
         {
             Type = HitboxTypes.Box;
