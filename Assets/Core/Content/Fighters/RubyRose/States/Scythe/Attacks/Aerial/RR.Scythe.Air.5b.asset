@@ -22,7 +22,6 @@ MonoBehaviour:
   data:
   - rid: 2193520813467238401
   - rid: 2193520813467238403
-  - rid: 8688056217396838421
   - rid: 8688056217396838433
   - rid: 8688056335261499397
   - rid: 8688056335261499414
@@ -46,6 +45,10 @@ MonoBehaviour:
     rid: -2
   hitboxInfo:
   - ID: 0
+    groundedFoldoutGroup: 0
+    groundedCounterHitFoldoutGroup: 0
+    aerialFoldoutGroup: 0
+    aerialCounterHitFoldoutGroup: 0
     hitStateGroundedGroups: -1
     groundGroup:
       hitState: 30
@@ -210,23 +213,6 @@ MonoBehaviour:
         boxExtents: {x: 1, y: 1, z: 1}
         radius: 0
         definitionIndex: 0
-    - rid: 8688056217396838421
-      type: {class: VarExternal, ns: rwby, asm: rwby.csharp}
-      data:
-        name: Try Air Atks
-        id: 3
-        parent: -1
-        children: 
-        frameRanges:
-        - {x: 11, y: -1}
-        condition:
-          rid: 8688056217396838422
-        asset: {fileID: 11400000, guid: 852b081cfd9efbb449cca3171458f8cc, type: 2}
-    - rid: 8688056217396838422
-      type: {class: ConditionHitCount, ns: rwby, asm: rwby.csharp}
-      data:
-        inverse: 0
-        hitCount: 1
     - rid: 8688056217396838433
       type: {class: VarCreateBox, ns: rwby, asm: rwby.csharp}
       data:
@@ -318,7 +304,7 @@ MonoBehaviour:
         parent: 6
         children: 
         frameRanges:
-        - {x: 1, y: -1}
+        - {x: 8, y: -1}
         condition:
           rid: -2
         asset: {fileID: 11400000, guid: 852b081cfd9efbb449cca3171458f8cc, type: 2}
@@ -330,7 +316,7 @@ MonoBehaviour:
         parent: 6
         children: 
         frameRanges:
-        - {x: 1, y: -1}
+        - {x: 8, y: -1}
         condition:
           rid: -2
         checkInputSequence: 1

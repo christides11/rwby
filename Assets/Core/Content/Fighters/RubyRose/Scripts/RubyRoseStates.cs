@@ -20,6 +20,7 @@ namespace rwby.core
         SCYTHE_GRD_5cC,
         SCYTHE_GRD_8c,
         SHARED_TELEPORT_DOWN,
-        SCYTHE_AIR_8b
+        SCYTHE_AIR_8b,
+        SCYTHE_SPECIAL_Buzzsaw_Aerial_End
     }
 }

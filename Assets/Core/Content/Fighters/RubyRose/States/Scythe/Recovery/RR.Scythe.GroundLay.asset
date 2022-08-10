@@ -21,6 +21,8 @@ MonoBehaviour:
   autoLoopFrame: 1
   data:
   - rid: 8688056249043648523
+  - rid: 8688056342057058327
+  - rid: 8688056342057058329
   stateGroundedGroup: 2
   stateType: 0
   maxUsesInString: -1
@@ -82,3 +84,45 @@ MonoBehaviour:
       data:
         minValue: 0.1
         maxValue: 2
+    - rid: 8688056342057058327
+      type: {class: VarMultiplyMovement, ns: rwby, asm: rwby.csharp}
+      data:
+        name: 
+        id: 2
+        parent: -1
+        children: 
+        frameRanges:
+        - {x: 0, y: 0}
+        condition:
+          rid: -2
+        multiplier:
+          rid: 8688056342057058328
+    - rid: 8688056342057058328
+      type: {class: FighterBaseStatReferenceFloat, ns: rwby, asm: rwby.csharp}
+      data:
+        inverse: 0
+        statReference: 0
+        value: 0
+        variable: 0
+    - rid: 8688056342057058329
+      type: {class: VarApplyTraction, ns: rwby, asm: rwby.csharp}
+      data:
+        name: 
+        id: 3
+        parent: -1
+        children: 
+        frameRanges:
+        - {x: 1, y: -1}
+        condition:
+          rid: -2
+        traction:
+          rid: 8688056342057058330
+        applyMovement: 1
+        applyGravity: 0
+    - rid: 8688056342057058330
+      type: {class: FighterBaseStatReferenceFloat, ns: rwby, asm: rwby.csharp}
+      data:
+        inverse: 0
+        statReference: 1
+        value: 0
+        variable: 0

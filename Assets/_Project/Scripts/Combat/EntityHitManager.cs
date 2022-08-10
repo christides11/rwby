@@ -125,7 +125,7 @@ namespace rwby
             Vector3 hitPoint = hurtbox.transform.position;
             HitInfo hitInfo = hitbox.definition.HitboxInfo[hitbox.definitionIndex];
             HurtInfo hurtInfo;
-            
+
             hurtInfo = new HurtInfo(hitInfo, hurtbox.definitionIndex,
                 myTransform.position, myTransform.forward, myTransform.right,
                 Vector3.zero, hitPoint);

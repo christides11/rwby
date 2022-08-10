@@ -18,7 +18,7 @@ MonoBehaviour:
   totalFrames: 30
   autoIncrement: 1
   autoLoop: 0
-  autoLoopFrame: 1
+  autoLoopFrame: 2
   data:
   - rid: 8688056272189390853
   stateGroundedGroup: 2
@@ -49,9 +49,9 @@ MonoBehaviour:
         parent: -1
         children: 
         frameRanges:
-        - {x: 1, y: -1}
+        - {x: 2, y: -1}
         condition:
-          rid: 8688056272189390855
+          rid: 8688056342057058333
         checkInputSequence: 0
         checkCondition: 0
         stateMovesetID: -1
@@ -61,7 +61,7 @@ MonoBehaviour:
       type: {class: FighterCmnStateReference, ns: rwby, asm: rwby.csharp}
       data:
         state: 22
-    - rid: 8688056272189390855
+    - rid: 8688056342057058333
       type: {class: ConditionIsGrounded, ns: rwby, asm: rwby.csharp}
       data:
         inverse: 0

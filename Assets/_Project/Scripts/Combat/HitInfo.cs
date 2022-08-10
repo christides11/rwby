@@ -20,6 +20,7 @@ namespace rwby
 
             public HitboxForceType hitForceType;
             public HitboxForceRelation hitForceRelation;
+            public Vector3 hitForceRelationOffset;
             public bool autolink;
             public float autolinkPercentage;
             

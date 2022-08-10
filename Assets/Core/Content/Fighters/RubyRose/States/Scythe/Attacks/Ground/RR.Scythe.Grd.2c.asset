@@ -23,9 +23,11 @@ MonoBehaviour:
   - rid: 2193520813467238401
   - rid: 2193520813467238403
   - rid: 2193520817874927616
+  - rid: 8688056339992412162
+  - rid: 8688056339992412164
   stateGroundedGroup: 1
   stateType: 2
-  maxUsesInString: 2
+  maxUsesInString: 1
   allowBaseStateTransitions: 1
   inputSequence:
     executeWindow: 3
@@ -49,6 +51,10 @@ MonoBehaviour:
     rid: -2
   hitboxInfo:
   - ID: 0
+    groundedFoldoutGroup: 0
+    groundedCounterHitFoldoutGroup: 0
+    aerialFoldoutGroup: 0
+    aerialCounterHitFoldoutGroup: 0
     hitStateGroundedGroups: -1
     groundGroup:
       hitState: 30
@@ -59,9 +65,10 @@ MonoBehaviour:
       hitKills: 0
       hitForceType: 0
       hitForceRelation: 0
+      hitForceRelationOffset: {x: 0, y: 0, z: 0}
       autolink: 0
       autolinkPercentage: 0
-      hitForce: {x: 0, y: 0, z: 15}
+      hitForce: {x: 0, y: 10, z: 0}
       blockForce: {x: 0, y: 0, z: 0}
       hitGravity: 0
       pullPushCurve:
@@ -102,6 +109,7 @@ MonoBehaviour:
       hitKills: 0
       hitForceType: 0
       hitForceRelation: 0
+      hitForceRelationOffset: {x: 0, y: 0, z: 0}
       autolink: 0
       autolinkPercentage: 0
       hitForce: {x: 0, y: 0, z: 0}
@@ -127,9 +135,10 @@ MonoBehaviour:
       hitKills: 0
       hitForceType: 0
       hitForceRelation: 0
+      hitForceRelationOffset: {x: 0, y: 0, z: 0}
       autolink: 0
       autolinkPercentage: 0
-      hitForce: {x: 0, y: 0, z: 10}
+      hitForce: {x: 0, y: 15, z: 0}
       blockForce: {x: 0, y: 0, z: 0}
       hitGravity: 0
       pullPushCurve:
@@ -152,6 +161,7 @@ MonoBehaviour:
       hitKills: 0
       hitForceType: 0
       hitForceRelation: 0
+      hitForceRelationOffset: {x: 0, y: 0, z: 0}
       autolink: 0
       autolinkPercentage: 0
       hitForce: {x: 0, y: 0, z: 0}
@@ -235,3 +245,38 @@ MonoBehaviour:
         statReference: 0
         value: 30
         variable: 0
+    - rid: 8688056339992412162
+      type: {class: VarEmpty, ns: rwby, asm: rwby.csharp}
+      data:
+        name: On Hit
+        id: 3
+        parent: -1
+        children: 04000000
+        frameRanges: []
+        condition:
+          rid: 8688056339992412163
+    - rid: 8688056339992412163
+      type: {class: ConditionHitCount, ns: rwby, asm: rwby.csharp}
+      data:
+        inverse: 0
+        hitCount: 1
+    - rid: 8688056339992412164
+      type: {class: VarChangeState, ns: rwby, asm: rwby.csharp}
+      data:
+        name: Try Jump
+        id: 4
+        parent: 3
+        children: 
+        frameRanges:
+        - {x: 11, y: -1}
+        condition:
+          rid: -2
+        checkInputSequence: 1
+        checkCondition: 0
+        stateMovesetID: -1
+        state:
+          rid: 8688056339992412165
+    - rid: 8688056339992412165
+      type: {class: FighterCmnStateReference, ns: rwby, asm: rwby.csharp}
+      data:
+        state: 6

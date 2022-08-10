@@ -343,7 +343,7 @@ namespace rwby
                     SetHitStop(hitInfoGroup.hitstop);
                     BlockStun = hitInfoGroup.blockstun;
                     
-                    ApplyHitForces(hurtInfo, currentState, hitInfoGroup.hitForceType, hitInfoGroup.blockForce, hitInfoGroup.pullPushCurve, hitInfoGroup.pullPushMaxDistance);
+                    ApplyHitForces(hurtInfo, currentState, hitInfoGroup.hitForceType, hitInfoGroup.blockForce, hitInfoGroup.pullPushCurve, hitInfoGroup.pullPushMaxDistance, hitInfoGroup.hitForceRelationOffset);
                     return hitReaction;
                 }
             }
@@ -355,7 +355,7 @@ namespace rwby
             hitReaction.reaction = HitReactionType.HIT;
             SetHitStop(hitInfoGroup.hitstop);
             SetHitStun(hitInfoGroup.hitstun);
-            ApplyHitForces(hurtInfo, currentState, hitInfoGroup.hitForceType, hitInfoGroup.hitForce, hitInfoGroup.pullPushCurve, hitInfoGroup.pullPushMaxDistance);
+            ApplyHitForces(hurtInfo, currentState, hitInfoGroup.hitForceType, hitInfoGroup.hitForce, hitInfoGroup.pullPushCurve, hitInfoGroup.pullPushMaxDistance, hitInfoGroup.hitForceRelationOffset);
             
             WallBounces = hitInfoGroup.wallBounces;
             WallBounceForcePercentage = hitInfoGroup.wallBounceForcePercentage;
@@ -374,24 +374,14 @@ namespace rwby
             {
                 physicsManager.SetGrounded(false);
             }
-            
-            /*
-            switch (currentState.stateGroundedGroup)
-            {
-                case StateGroundedGroupType.GROUND:
-                    stateManager.ChangeState((int)hitInfoGroup.hitState);
-                    break;
-                case StateGroundedGroupType.AERIAL:
-                    stateManager.ChangeState(CounterhitState ? (int)hitInfo.aerialCounterHitState : (int)hitInfo.aerialHitState);
-                    break;
-            }*/
+
             stateManager.ChangeState((int)hitInfoGroup.hitState);
             manager.FCombatManager.Cleanup();
             return hitReaction;
         }
 
         protected void ApplyHitForces(HurtInfo hurtInfo, StateTimeline currentState, HitboxForceType forceType, Vector3 force = default, AnimationCurve pullPushCurve = default,
-            float pullPushMaxDistance = default)
+            float pullPushMaxDistance = default, Vector3 offset = default)
         {
             
             switch (forceType)
@@ -403,14 +393,13 @@ namespace rwby
                     break;
                 case HitboxForceType.PULL:
                     var position = manager.myTransform.position;
-                    Vector3 dir = (hurtInfo.center - (position + Vector3.up)).normalized;
-                    float t = Mathf.Clamp(Vector3.Distance(hurtInfo.center, (position + Vector3.up)), 0.0f, 1.0f);
+                    var centerPos = hurtInfo.center + (hurtInfo.right * offset.x) + (hurtInfo.forward * offset.z) + (Vector3.up * offset.y);
+                    
+                    Vector3 dir = (centerPos - (position + Vector3.up)).normalized;
+                    float t = Mathf.Clamp(Vector3.Distance(centerPos, (position + Vector3.up)), 0.0f, 1.0f);
                     dir *= pullPushCurve.Evaluate(t);
-
-                    //if (hitInfo.forceIncludeYForce)
-                    //{
+                    
                     physicsManager.forceGravity = dir.y;
-                    //}
                     dir.y = 0;
 
                     physicsManager.forceMovement = dir;

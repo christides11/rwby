@@ -22,9 +22,14 @@ MonoBehaviour:
   data:
   - rid: 2193520813467238401
   - rid: 2193520813467238403
+  - rid: 8688056339992412160
   - rid: 8688056217396838421
   - rid: 8688056217396838433
   - rid: 8688056335261499397
+  - rid: 8688056339992412169
+  - rid: 8688056339992412170
+  - rid: 8688056339992412172
+  - rid: 8688056339992412174
   stateGroundedGroup: 2
   stateType: 2
   maxUsesInString: 1
@@ -43,6 +48,10 @@ MonoBehaviour:
     rid: -2
   hitboxInfo:
   - ID: 0
+    groundedFoldoutGroup: 0
+    groundedCounterHitFoldoutGroup: 0
+    aerialFoldoutGroup: 0
+    aerialCounterHitFoldoutGroup: 0
     hitStateGroundedGroups: -1
     groundGroup:
       hitState: 30
@@ -123,7 +132,131 @@ MonoBehaviour:
       hitForceRelation: 0
       autolink: 0
       autolinkPercentage: 0
-      hitForce: {x: 0, y: 1, z: 9}
+      hitForce: {x: 0, y: 5, z: 0}
+      blockForce: {x: 0, y: 0, z: 0}
+      hitGravity: 0
+      pullPushCurve:
+        serializedVersion: 2
+        m_Curve: []
+        m_PreInfinity: 2
+        m_PostInfinity: 2
+        m_RotationOrder: 4
+      pullPushMaxDistance: 0
+      attackerHitstop: 8
+      hitstop: 8
+      hitstun: 60
+      blockstun: 15
+    aerialCounterHitGroup:
+      hitState: 0
+      groundBounces: 0
+      wallBounces: 0
+      groundBounceForcePercentage: 0
+      wallBounceForcePercentage: 0
+      hitKills: 0
+      hitForceType: 0
+      hitForceRelation: 0
+      autolink: 0
+      autolinkPercentage: 0
+      hitForce: {x: 0, y: 0, z: 0}
+      blockForce: {x: 0, y: 0, z: 0}
+      hitGravity: 0
+      pullPushCurve:
+        serializedVersion: 2
+        m_Curve: []
+        m_PreInfinity: 2
+        m_PostInfinity: 2
+        m_RotationOrder: 4
+      pullPushMaxDistance: 0
+      attackerHitstop: 0
+      hitstop: 0
+      hitstun: 0
+      blockstun: 0
+  - ID: 1
+    groundedFoldoutGroup: 0
+    groundedCounterHitFoldoutGroup: 0
+    aerialFoldoutGroup: 0
+    aerialCounterHitFoldoutGroup: 0
+    hitStateGroundedGroups: -1
+    groundGroup:
+      hitState: 30
+      groundBounces: 0
+      wallBounces: 0
+      groundBounceForcePercentage: 0
+      wallBounceForcePercentage: 0
+      hitKills: 0
+      hitForceType: 0
+      hitForceRelation: 0
+      autolink: 0
+      autolinkPercentage: 0
+      hitForce: {x: 0, y: 5, z: 10}
+      blockForce: {x: 0, y: 0, z: 0}
+      hitGravity: 0
+      pullPushCurve:
+        serializedVersion: 2
+        m_Curve:
+        - serializedVersion: 3
+          time: 0
+          value: 0
+          inSlope: 10
+          outSlope: 10
+          tangentMode: 34
+          weightedMode: 0
+          inWeight: 0
+          outWeight: 0.33333334
+        - serializedVersion: 3
+          time: 1
+          value: 10
+          inSlope: 10
+          outSlope: 10
+          tangentMode: 34
+          weightedMode: 0
+          inWeight: 0.33333334
+          outWeight: 0
+        m_PreInfinity: 2
+        m_PostInfinity: 2
+        m_RotationOrder: 4
+      pullPushMaxDistance: 10
+      attackerHitstop: 4
+      hitstop: 4
+      hitstun: 60
+      blockstun: 15
+    groundCounterHitGroup:
+      hitState: 0
+      groundBounces: 0
+      wallBounces: 0
+      groundBounceForcePercentage: 0
+      wallBounceForcePercentage: 0
+      hitKills: 0
+      hitForceType: 0
+      hitForceRelation: 0
+      autolink: 0
+      autolinkPercentage: 0
+      hitForce: {x: 0, y: 0, z: 0}
+      blockForce: {x: 0, y: 0, z: 0}
+      hitGravity: 0
+      pullPushCurve:
+        serializedVersion: 2
+        m_Curve: []
+        m_PreInfinity: 2
+        m_PostInfinity: 2
+        m_RotationOrder: 4
+      pullPushMaxDistance: 0
+      attackerHitstop: 0
+      hitstop: 0
+      hitstun: 0
+      blockstun: 0
+    aerialGroup:
+      hitState: 32
+      groundBounces: 0
+      wallBounces: 0
+      groundBounceForcePercentage: 0
+      wallBounceForcePercentage: 0
+      hitKills: 0
+      hitForceType: 0
+      hitForceRelation: 0
+      autolink: 0
+      autolinkPercentage: 0
+      hitForce: {x: 0, y: 5, z: 10}
       blockForce: {x: 0, y: 0, z: 0}
       hitGravity: 0
       pullPushCurve:
@@ -292,3 +425,92 @@ MonoBehaviour:
         statReference: 1
         value: 0
         variable: 23
+    - rid: 8688056339992412160
+      type: {class: VarCreateBox, ns: rwby, asm: rwby.csharp}
+      data:
+        name: Hitbox 2
+        id: 6
+        parent: -1
+        children: 
+        frameRanges:
+        - {x: 13, y: 15}
+        condition:
+          rid: -2
+        boxType: 1
+        attachedTo: 0
+        shape: 0
+        offset: {x: 0, y: 1, z: 1}
+        boxExtents: {x: 0.5, y: 1, z: 0.5}
+        radius: 0
+        definitionIndex: 1
+    - rid: 8688056339992412169
+      type: {class: VarEmpty, ns: rwby, asm: rwby.csharp}
+      data:
+        name: On Hit
+        id: 7
+        parent: -1
+        children: 0800000009000000
+        frameRanges: []
+        condition:
+          rid: 8688056339992412173
+    - rid: 8688056339992412170
+      type: {class: VarChangeState, ns: rwby, asm: rwby.csharp}
+      data:
+        name: Try Air Jump
+        id: 8
+        parent: 7
+        children: 
+        frameRanges:
+        - {x: 8, y: -1}
+        condition:
+          rid: -2
+        checkInputSequence: 1
+        checkCondition: 0
+        stateMovesetID: -1
+        state:
+          rid: 8688056339992412171
+    - rid: 8688056339992412171
+      type: {class: FighterCmnStateReference, ns: rwby, asm: rwby.csharp}
+      data:
+        state: 8
+    - rid: 8688056339992412172
+      type: {class: VarExternal, ns: rwby, asm: rwby.csharp}
+      data:
+        name: Try Air Atk
+        id: 9
+        parent: 7
+        children: 
+        frameRanges:
+        - {x: 8, y: -1}
+        condition:
+          rid: -2
+        asset: {fileID: 11400000, guid: 852b081cfd9efbb449cca3171458f8cc, type: 2}
+    - rid: 8688056339992412173
+      type: {class: ConditionHitCount, ns: rwby, asm: rwby.csharp}
+      data:
+        inverse: 0
+        hitCount: 1
+    - rid: 8688056339992412174
+      type: {class: VarChangeState, ns: rwby, asm: rwby.csharp}
+      data:
+        name: Try Land
+        id: 10
+        parent: -1
+        children: 
+        frameRanges:
+        - {x: 1, y: -1}
+        condition:
+          rid: 8688056339992412176
+        checkInputSequence: 0
+        checkCondition: 0
+        stateMovesetID: -1
+        state:
+          rid: 8688056339992412175
+    - rid: 8688056339992412175
+      type: {class: FighterCmnStateReference, ns: rwby, asm: rwby.csharp}
+      data:
+        state: 28
+    - rid: 8688056339992412176
+      type: {class: ConditionIsGrounded, ns: rwby, asm: rwby.csharp}
+      data:
+        inverse: 0

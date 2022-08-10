@@ -11,20 +11,25 @@ namespace rwby
         protected bool effectFoldoutGroup;
         protected bool forcesFoldoutGroup;
         protected bool stunFoldoutGroup;
-        
-        protected bool groundedFoldoutGroup;
-        protected bool groundedCounterHitFoldoutGroup;
-        protected bool aerialFoldoutGroup;
-        protected bool aerialCounterHitFoldoutGroup;
 
         public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
         {
-            return EditorGUIUtility.singleLineHeight * lines;
+            float lineValue = EditorGUIUtility.singleLineHeight;
+            float val = lineValue * 6;
+
+            int windowsOpen = 0;
+
+            if (property.FindPropertyRelative("groundedFoldoutGroup").boolValue) windowsOpen++;
+            if (property.FindPropertyRelative("groundedCounterHitFoldoutGroup").boolValue) windowsOpen++;
+            if (property.FindPropertyRelative("aerialFoldoutGroup").boolValue) windowsOpen++;
+            if (property.FindPropertyRelative("aerialCounterHitFoldoutGroup").boolValue) windowsOpen++;
+
+            val += lineValue * 16 * windowsOpen;
+            return val;
         }
 
         public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
         {
-            lines = 0;
             base.OnGUI(position, property, label);
         }
 
@@ -43,28 +48,28 @@ namespace rwby
             }
             EditorGUI.EndFoldoutHeaderGroup();
             
-            groundedCounterHitFoldoutGroup = EditorGUI.BeginFoldoutHeaderGroup(
+            property.FindPropertyRelative("groundedCounterHitFoldoutGroup").boolValue = EditorGUI.BeginFoldoutHeaderGroup(
                 new Rect(position.x, GetLineY(), position.width, lineHeight),
-                groundedCounterHitFoldoutGroup, new GUIContent("Ground (Counter)"));
-            if (groundedCounterHitFoldoutGroup)
+                property.FindPropertyRelative("groundedCounterHitFoldoutGroup").boolValue, new GUIContent("Ground (Counter)"));
+            if (property.FindPropertyRelative("groundedCounterHitFoldoutGroup").boolValue)
             {
                 DrawTopGroup(ref position, property.FindPropertyRelative("groundCounterHitGroup"));
             }
             EditorGUI.EndFoldoutHeaderGroup();
             
-            aerialFoldoutGroup = EditorGUI.BeginFoldoutHeaderGroup(
+            property.FindPropertyRelative("aerialFoldoutGroup").boolValue = EditorGUI.BeginFoldoutHeaderGroup(
                 new Rect(position.x, GetLineY(), position.width, lineHeight),
-                aerialFoldoutGroup, new GUIContent("Aerial"));
-            if (aerialFoldoutGroup)
+                property.FindPropertyRelative("aerialFoldoutGroup").boolValue, new GUIContent("Aerial"));
+            if (property.FindPropertyRelative("aerialFoldoutGroup").boolValue)
             {
                 DrawTopGroup(ref position, property.FindPropertyRelative("aerialGroup"));
             }
             EditorGUI.EndFoldoutHeaderGroup();
             
-            aerialCounterHitFoldoutGroup = EditorGUI.BeginFoldoutHeaderGroup(
+            property.FindPropertyRelative("aerialCounterHitFoldoutGroup").boolValue = EditorGUI.BeginFoldoutHeaderGroup(
                 new Rect(position.x, GetLineY(), position.width, lineHeight),
-                aerialCounterHitFoldoutGroup, new GUIContent("Aerial (Counter)"));
-            if (aerialCounterHitFoldoutGroup)
+                property.FindPropertyRelative("aerialCounterHitFoldoutGroup").boolValue, new GUIContent("Aerial (Counter)"));
+            if (property.FindPropertyRelative("aerialCounterHitFoldoutGroup").boolValue)
             {
                 DrawTopGroup(ref position, property.FindPropertyRelative("aerialCounterHitGroup"));
             }
@@ -120,6 +125,7 @@ namespace rwby
             EditorGUI.LabelField(new Rect(position.x, GetLineY(), position.width, lineHeight), "FORCES", EditorStyles.boldLabel);
             EditorGUI.PropertyField(new Rect(position.x, GetLineY(), position.width, lineHeight), property.FindPropertyRelative("hitForceType"));
             EditorGUI.PropertyField(new Rect(position.x, GetLineY(), position.width, lineHeight), property.FindPropertyRelative("hitForceRelation"));
+            EditorGUI.PropertyField(new Rect(position.x, GetLineY(), position.width, lineHeight), property.FindPropertyRelative("hitForceRelationOffset"), new GUIContent("Offset"));
             switch ((HitboxForceType)property.FindPropertyRelative("hitForceType").enumValueIndex)
             {
                 case HitboxForceType.SET:

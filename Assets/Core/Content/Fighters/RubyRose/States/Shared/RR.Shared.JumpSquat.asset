@@ -28,7 +28,11 @@ MonoBehaviour:
   allowBaseStateTransitions: 1
   inputSequence:
     executeWindow: 3
-    executeInputs: []
+    executeInputs:
+    - inputType: 0
+      buttonID: 0
+      stickDirection: {x: 0, y: 0}
+      directionDeviation: 0
     sequenceWindow: 8
     sequenceInputs: []
   inputSequenceAsHoldInputs: 0
