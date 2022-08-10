@@ -22,13 +22,18 @@ MonoBehaviour:
   data:
   - rid: 8688056136894513153
   - rid: 8688056136894513155
+  - rid: 8688056335261499408
   stateGroundedGroup: 2
   stateType: 0
   maxUsesInString: -1
   allowBaseStateTransitions: 1
   inputSequence:
     executeWindow: 3
-    executeInputs: []
+    executeInputs:
+    - inputType: 0
+      buttonID: 0
+      stickDirection: {x: 0, y: 0}
+      directionDeviation: 0
     sequenceWindow: 8
     sequenceInputs: []
   inputSequenceAsHoldInputs: 0
@@ -85,3 +90,15 @@ MonoBehaviour:
         statReference: 1
         value: 0
         variable: 19
+    - rid: 8688056335261499408
+      type: {class: VarExternal, ns: rwby, asm: rwby.csharp}
+      data:
+        name: Try Air Atk
+        id: 2
+        parent: -1
+        children: 
+        frameRanges:
+        - {x: 1, y: -1}
+        condition:
+          rid: -2
+        asset: {fileID: 11400000, guid: 852b081cfd9efbb449cca3171458f8cc, type: 2}

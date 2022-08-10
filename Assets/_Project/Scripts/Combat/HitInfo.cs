@@ -1,3 +1,4 @@
+using System;
 using HnSF.Combat;
 using NaughtyAttributes;
 using UnityEngine;
@@ -34,6 +35,11 @@ namespace rwby
             public int hitstun;
             public int blockstun;
         }
+        
+        [SerializeField] private bool groundedFoldoutGroup;
+        [SerializeField] private bool groundedCounterHitFoldoutGroup;
+        [SerializeField] private bool aerialFoldoutGroup;
+        [SerializeField] private bool aerialCounterHitFoldoutGroup;
 
         public StateGroundedGroupType hitStateGroundedGroups;
         public HitInfoGroup groundGroup;

@@ -25,6 +25,9 @@ MonoBehaviour:
   - rid: 8688056217396838421
   - rid: 8688056217396838433
   - rid: 8688056335261499397
+  - rid: 8688056335261499414
+  - rid: 8688056335261499416
+  - rid: 8688056335261499417
   stateGroundedGroup: 2
   stateType: 2
   maxUsesInString: 1
@@ -292,3 +295,50 @@ MonoBehaviour:
         statReference: 1
         value: 0
         variable: 23
+    - rid: 8688056335261499414
+      type: {class: VarEmpty, ns: rwby, asm: rwby.csharp}
+      data:
+        name: On Hit
+        id: 6
+        parent: -1
+        children: 0700000008000000
+        frameRanges: []
+        condition:
+          rid: 8688056335261499415
+    - rid: 8688056335261499415
+      type: {class: ConditionHitCount, ns: rwby, asm: rwby.csharp}
+      data:
+        inverse: 0
+        hitCount: 1
+    - rid: 8688056335261499416
+      type: {class: VarExternal, ns: rwby, asm: rwby.csharp}
+      data:
+        name: Ty Air Atk
+        id: 7
+        parent: 6
+        children: 
+        frameRanges:
+        - {x: 1, y: -1}
+        condition:
+          rid: -2
+        asset: {fileID: 11400000, guid: 852b081cfd9efbb449cca3171458f8cc, type: 2}
+    - rid: 8688056335261499417
+      type: {class: VarChangeState, ns: rwby, asm: rwby.csharp}
+      data:
+        name: Try Air Jump
+        id: 8
+        parent: 6
+        children: 
+        frameRanges:
+        - {x: 1, y: -1}
+        condition:
+          rid: -2
+        checkInputSequence: 1
+        checkCondition: 0
+        stateMovesetID: -1
+        state:
+          rid: 8688056335261499418
+    - rid: 8688056335261499418
+      type: {class: FighterCmnStateReference, ns: rwby, asm: rwby.csharp}
+      data:
+        state: 8

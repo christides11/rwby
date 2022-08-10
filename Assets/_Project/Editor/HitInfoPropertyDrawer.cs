@@ -11,20 +11,33 @@ namespace rwby
         protected bool effectFoldoutGroup;
         protected bool forcesFoldoutGroup;
         protected bool stunFoldoutGroup;
-
+        
         protected bool groundedFoldoutGroup;
         protected bool groundedCounterHitFoldoutGroup;
         protected bool aerialFoldoutGroup;
         protected bool aerialCounterHitFoldoutGroup;
+
+        public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
+        {
+            return EditorGUIUtility.singleLineHeight * lines;
+        }
+
+        public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
+        {
+            lines = 0;
+            base.OnGUI(position, property, label);
+        }
+
         public override void DrawProperty(ref Rect position, SerializedProperty property)
         {
             EditorGUI.PropertyField(new Rect(position.x, GetLineY(), position.width, lineHeight), property.FindPropertyRelative("ID"));
             EditorGUI.PropertyField(new Rect(position.x, GetLineY(), position.width, lineHeight), property.FindPropertyRelative("hitStateGroundedGroups"));
             
-            groundedFoldoutGroup = EditorGUI.BeginFoldoutHeaderGroup(
+            
+            property.FindPropertyRelative("groundedFoldoutGroup").boolValue = EditorGUI.BeginFoldoutHeaderGroup(
                 new Rect(position.x, GetLineY(), position.width, lineHeight),
-                groundedFoldoutGroup, new GUIContent("Ground"));
-            if (groundedFoldoutGroup)
+                property.FindPropertyRelative("groundedFoldoutGroup").boolValue, new GUIContent("Ground"));
+            if (property.FindPropertyRelative("groundedFoldoutGroup").boolValue)
             {
                 DrawTopGroup(ref position, property.FindPropertyRelative("groundGroup"));
             }
