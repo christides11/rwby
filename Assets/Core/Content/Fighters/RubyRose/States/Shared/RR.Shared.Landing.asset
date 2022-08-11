@@ -21,6 +21,7 @@ MonoBehaviour:
   autoLoopFrame: 1
   data:
   - rid: 8688056217396838402
+  - rid: 8688056360164655106
   stateGroundedGroup: 1
   stateType: 0
   maxUsesInString: -1
@@ -61,3 +62,17 @@ MonoBehaviour:
               guid: 2c2c000000000000
           animation: jumpsquat
         fadeTime: 0
+    - rid: 8688056360164655106
+      type: {class: VarSetECB, ns: rwby, asm: rwby.csharp}
+      data:
+        name: 
+        id: 1
+        parent: -1
+        children: 
+        frameRanges:
+        - {x: 0, y: 0}
+        condition:
+          rid: -2
+        ecbCenter: 0.825
+        ecbRadius: 0.3
+        ecbHeight: 1.65

@@ -10,30 +10,31 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7789f25d17401bc4b915ca6fcecf2a29, type: 3}
-  m_Name: RR.Scythe.Air.Buzzsaw.Land
+  m_Name: RR.Scythe.Grd.SniperStance_Enter
   m_EditorClassIdentifier: 
-  stateName: Buzzsaw Landing
+  stateName: Sniper Stance (Enter)
   useBaseState: 0
   baseState: {fileID: 0}
-  totalFrames: 15
+  totalFrames: 10
   autoIncrement: 1
   autoLoop: 0
   autoLoopFrame: 1
   data:
   - rid: 2193520813467238401
-  - rid: 2193520813467238403
-  - rid: 2193520817874927616
   - rid: 8688056217396838433
-  - rid: 8688056331001921542
-  - rid: 8688056331001921543
-  - rid: 8688056364881936412
+  - rid: 8688056360164655109
+  - rid: 8688056364881936410
   stateGroundedGroup: 1
   stateType: 2
   maxUsesInString: 1
   allowBaseStateTransitions: 1
   inputSequence:
     executeWindow: 3
-    executeInputs: []
+    executeInputs:
+    - inputType: 0
+      buttonID: 2
+      stickDirection: {x: 0, y: 0}
+      directionDeviation: 0
     sequenceWindow: 8
     sequenceInputs: []
   inputSequenceAsHoldInputs: 0
@@ -58,7 +59,7 @@ MonoBehaviour:
       hitForceRelationOffset: {x: 0, y: 0, z: 0}
       autolink: 0
       autolinkPercentage: 0
-      hitForce: {x: 0, y: 5, z: 15}
+      hitForce: {x: 0, y: 15, z: 0}
       blockForce: {x: 0, y: 0, z: 0}
       hitGravity: 0
       pullPushCurve:
@@ -128,7 +129,7 @@ MonoBehaviour:
       hitForceRelationOffset: {x: 0, y: 0, z: 0}
       autolink: 0
       autolinkPercentage: 0
-      hitForce: {x: 0, y: 5, z: 15}
+      hitForce: {x: 0, y: 15, z: 5}
       blockForce: {x: 0, y: 0, z: 0}
       hitGravity: 0
       pullPushCurve:
@@ -190,47 +191,7 @@ MonoBehaviour:
         checkCondition: 0
         stateMovesetID: -1
         state:
-          rid: 8688056364881936411
-    - rid: 2193520813467238403
-      type: {class: VarCreateBox, ns: rwby, asm: rwby.csharp}
-      data:
-        name: Hitbox
-        id: 1
-        parent: -1
-        children: 
-        frameRanges:
-        - {x: 1, y: 3}
-        condition:
-          rid: -2
-        boxType: 1
-        attachedTo: 0
-        shape: 0
-        offset: {x: 0, y: 1, z: 1}
-        boxExtents: {x: 1, y: 1, z: 1}
-        radius: 0
-        definitionIndex: 0
-    - rid: 2193520817874927616
-      type: {class: VarApplyTraction, ns: rwby, asm: rwby.csharp}
-      data:
-        name: 
-        id: 2
-        parent: -1
-        children: 
-        frameRanges:
-        - {x: 4, y: -1}
-        condition:
-          rid: -2
-        traction:
-          rid: 2193520817874927617
-        applyMovement: 1
-        applyGravity: 0
-    - rid: 2193520817874927617
-      type: {class: FighterBaseStatReferenceFloat, ns: rwby, asm: rwby.csharp}
-      data:
-        inverse: 0
-        statReference: 0
-        value: 30
-        variable: 0
+          rid: 8688056360164655111
     - rid: 8688056217396838433
       type: {class: VarCreateBox, ns: rwby, asm: rwby.csharp}
       data:
@@ -249,55 +210,47 @@ MonoBehaviour:
         boxExtents: {x: 0.5, y: 1, z: 0.5}
         radius: 0
         definitionIndex: 0
-    - rid: 8688056331001921542
-      type: {class: VarModifyAnimationSet, ns: rwby, asm: rwby.csharp}
-      data:
-        name: 
-        id: 5
-        parent: -1
-        children: 
-        frameRanges:
-        - {x: 0, y: 0}
-        condition:
-          rid: -2
-        modifyType: 1
-        wantedAnimations:
-        - animationbank:
-            modGUID:
-              guid: 1d292c1f00000000
-            contentGUID:
-              guid: 2c2c000000000000
-          animation: scythe.grd.a
-        fadeTime: 0
-    - rid: 8688056331001921543
-      type: {class: VarModifyAnimationFrame, ns: rwby, asm: rwby.csharp}
-      data:
-        name: 
-        id: 6
-        parent: -1
-        children: 
-        frameRanges:
-        - {x: 1, y: -1}
-        condition:
-          rid: -2
-        modifyType: 0
-        animations: 00000000
-        frame: 1
-    - rid: 8688056364881936411
-      type: {class: RubyRoseStateReference, ns: rwby.core, asm: rwby.core}
-      data:
-        state: 71
-    - rid: 8688056364881936412
-      type: {class: VarSetECB, ns: rwby, asm: rwby.csharp}
+    - rid: 8688056360164655109
+      type: {class: VarApplyTraction, ns: rwby, asm: rwby.csharp}
       data:
         name: 
         id: 7
         parent: -1
         children: 
         frameRanges:
-        - {x: 0, y: 0}
+        - {x: 1, y: -1}
         condition:
           rid: -2
-        ecbCenter: 0.825
-        ecbRadius: 0.3
-        ecbHeight: 1.65
+        traction:
+          rid: 8688056360164655110
+        applyMovement: 1
+        applyGravity: 0
+    - rid: 8688056360164655110
+      type: {class: FighterBaseStatReferenceFloat, ns: rwby, asm: rwby.csharp}
+      data:
+        inverse: 0
+        statReference: 1
+        value: 0
+        variable: 0
+    - rid: 8688056360164655111
+      type: {class: RubyRoseStateReference, ns: rwby.core, asm: rwby.core}
+      data:
+        state: 71
+    - rid: 8688056364881936410
+      type: {class: VarCreateBox, ns: rwby, asm: rwby.csharp}
+      data:
+        name: Hitbox
+        id: 8
+        parent: -1
+        children: 
+        frameRanges:
+        - {x: 7, y: 10}
+        condition:
+          rid: -2
+        boxType: 1
+        attachedTo: 0
+        shape: 0
+        offset: {x: 0, y: 1, z: 1}
+        boxExtents: {x: 1, y: 1, z: 1}
+        radius: 0
+        definitionIndex: 0

@@ -17,14 +17,15 @@ MonoBehaviour:
   baseState: {fileID: 11400000, guid: b327741d551d31c4185926fec1031b5e, type: 2}
   totalFrames: 15
   autoIncrement: 1
-  autoLoop: 1
+  autoLoop: 0
   autoLoopFrame: 1
   data:
   - rid: 2193520740721754112
-  - rid: 2193520783924396052
   - rid: 8688056217396838408
   - rid: 8688056331001921554
   - rid: 8688056335261499402
+  - rid: 2193520783924396052
+  - rid: 8688056360164655107
   stateGroundedGroup: 2
   stateType: 1
   maxUsesInString: -1
@@ -133,3 +134,23 @@ MonoBehaviour:
         condition:
           rid: -2
         asset: {fileID: 11400000, guid: 852b081cfd9efbb449cca3171458f8cc, type: 2}
+    - rid: 8688056360164655107
+      type: {class: VarChangeState, ns: rwby, asm: rwby.csharp}
+      data:
+        name: Try Air Jump
+        id: 5
+        parent: -1
+        children: 
+        frameRanges:
+        - {x: 5, y: -1}
+        condition:
+          rid: -2
+        checkInputSequence: 1
+        checkCondition: 0
+        stateMovesetID: -1
+        state:
+          rid: 8688056360164655108
+    - rid: 8688056360164655108
+      type: {class: FighterCmnStateReference, ns: rwby, asm: rwby.csharp}
+      data:
+        state: 8

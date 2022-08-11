@@ -21,6 +21,21 @@ namespace rwby.core
         SCYTHE_GRD_8c,
         SHARED_TELEPORT_DOWN,
         SCYTHE_AIR_8b,
-        SCYTHE_SPECIAL_Buzzsaw_Aerial_End
+        SCYTHE_SPECIAL_Buzzsaw_Aerial_End,
+        SCYTHE_SPECIAL_SniperStance_Grd_Enter,
+        SCYTHE_SPECIAL_SniperStance_Grd,
+        SCYTHE_SPECIAL_SniperStance_Grd_A,
+        SCYTHE_SPECIAL_SniperStance_Grd_B,
+        SCYTHE_SPECIAL_SniperStance_Grd_C,
+        SCYTHE_SPECIAL_SniperStance_Grd_J,
+        SCYTHE_SPECIAL_SniperStance_Grd_Exit,
+        SCYTHE_SPECIAL_SniperStance_Air_Enter,
+        SCYTHE_SPECIAL_SniperStance_Air,
+        SCYTHE_SPECIAL_SniperStance_Air_A,
+        SCYTHE_SPECIAL_SniperStance_Air_B,
+        SCYTHE_SPECIAL_SniperStance_Air_C,
+        SCYTHE_SPECIAL_SniperStance_Air_J,
+        SCYTHE_SPECIAL_SniperStance_Air_Exit,
+        
     }
 }

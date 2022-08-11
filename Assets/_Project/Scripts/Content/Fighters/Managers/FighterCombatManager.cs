@@ -43,7 +43,7 @@ namespace rwby
         public override void Spawned()
         {
             base.Spawned();
-            for (int i = 0; i < 4; i++)
+            for (int i = 0; i < 2; i++)
             {
                 assignedSpecials.Set(i, i + 1);
             }
