@@ -189,6 +189,22 @@ MonoBehaviour:
     state:
       rid: 8688056364881936403
     stateTimeline: {fileID: 11400000, guid: 650b77de1cadbb44c85a77d10efcac4b, type: 2}
+  - name: BuzzSaw (Grd) - A
+    state:
+      rid: 8688056377568657408
+    stateTimeline: {fileID: 11400000, guid: 6822955e386286a42a6312df9b7da207, type: 2}
+  - name: BuzzSaw (Grd) - B
+    state:
+      rid: 8688056377568657409
+    stateTimeline: {fileID: 11400000, guid: 7b7db9d405b221f41bcf8b246c10c634, type: 2}
+  - name: BuzzSaw (Grd) - C
+    state:
+      rid: 8688056377568657410
+    stateTimeline: {fileID: 11400000, guid: e758575aed3f9124cb1c06c8a078e804, type: 2}
+  - name: Hit Aerial Face Down
+    state:
+      rid: 8688056377568657443
+    stateTimeline: {fileID: 11400000, guid: aee25092ef518a6419f83dfa707f4bf7, type: 2}
   fighterStats: {fileID: 11400000, guid: 9db018607e1c48c498ee3d8a7c4cefc3, type: 2}
   specials:
   - groundState:
@@ -394,3 +410,19 @@ MonoBehaviour:
       type: {class: RubyRoseStateReference, ns: rwby.core, asm: rwby.core}
       data:
         state: 83
+    - rid: 8688056377568657408
+      type: {class: RubyRoseStateReference, ns: rwby.core, asm: rwby.core}
+      data:
+        state: 84
+    - rid: 8688056377568657409
+      type: {class: RubyRoseStateReference, ns: rwby.core, asm: rwby.core}
+      data:
+        state: 85
+    - rid: 8688056377568657410
+      type: {class: RubyRoseStateReference, ns: rwby.core, asm: rwby.core}
+      data:
+        state: 86
+    - rid: 8688056377568657443
+      type: {class: FighterCmnStateReference, ns: rwby, asm: rwby.csharp}
+      data:
+        state: 35

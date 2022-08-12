@@ -14,7 +14,8 @@ namespace rwby
         public CustomHitbox[] Hitboxes { get { return hitboxes; } }
         public Hurtbox[] Hurtboxes { get { return hurtboxes; } }
         public Collbox[] Collboxes { get { return collisionboxes; } }
-        
+
+        public FighterManager manager;
         public NetworkObject networkObject;
         public IHurtable hurtable;
         public HitboxRoot hRoot;
@@ -28,6 +29,7 @@ namespace rwby
 
         public virtual void Awake()
         {
+            manager = GetComponent<FighterManager>();
             settings = GameManager.singleton.settings;
             foreach (var hitbox in hitboxes)
             {
@@ -136,6 +138,7 @@ namespace rwby
                     }
                     break;
             }
+            Debug.LogError($"{gameObject.name} could not get a box of type {boxType} during state {manager.FStateManager.GetCurrentStateName()}.");
             return null;
         }
 

@@ -36,6 +36,8 @@ namespace rwby.core
         SCYTHE_SPECIAL_SniperStance_Air_C,
         SCYTHE_SPECIAL_SniperStance_Air_J,
         SCYTHE_SPECIAL_SniperStance_Air_Exit,
-        
+        SCYTHE_SPECIAL_Buzzsaw_Grd_A,
+        SCYTHE_SPECIAL_Buzzsaw_Grd_B,
+        SCYTHE_SPECIAL_Buzzsaw_Grd_C,
     }
 }

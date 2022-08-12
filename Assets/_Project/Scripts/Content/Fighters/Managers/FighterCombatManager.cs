@@ -55,28 +55,28 @@ namespace rwby
             var currentState = stateManager.GetState();
             if (assignedSpecials[0] != 0 && inputManager.GetAbility1(out bOff).firstPress)
             {
-                stateManager.MarkForStateChange(currentState.stateGroundedGroup == StateGroundedGroupType.GROUND
+                stateManager.MarkForStateChange(stateManager.CurrentGroundedState == StateGroundedGroupType.GROUND
                     ? stateManager.GetMoveset().specials[assignedSpecials[0] - 1].groundState.GetState()
                     : stateManager.GetMoveset().specials[assignedSpecials[0] - 1].aerialState.GetState());
                 return true;
             }
             if (assignedSpecials[1] != 0 && inputManager.GetAbility2(out bOff).firstPress)
             {
-                stateManager.MarkForStateChange(currentState.stateGroundedGroup == StateGroundedGroupType.GROUND
+                stateManager.MarkForStateChange(stateManager.CurrentGroundedState == StateGroundedGroupType.GROUND
                     ? stateManager.GetMoveset().specials[assignedSpecials[1] - 1].groundState.GetState()
                     : stateManager.GetMoveset().specials[assignedSpecials[1] - 1].aerialState.GetState());
                 return true;
             }
             if (assignedSpecials[2] != 0 && inputManager.GetAbility3(out bOff).firstPress)
             {
-                stateManager.MarkForStateChange(currentState.stateGroundedGroup == StateGroundedGroupType.GROUND
+                stateManager.MarkForStateChange(stateManager.CurrentGroundedState == StateGroundedGroupType.GROUND
                     ? stateManager.GetMoveset().specials[assignedSpecials[2] - 1].groundState.GetState()
                     : stateManager.GetMoveset().specials[assignedSpecials[2] - 1].aerialState.GetState());
                 return true;
             }
             if (assignedSpecials[3] != 0 && inputManager.GetAbility4(out bOff).firstPress)
             {
-                stateManager.MarkForStateChange(currentState.stateGroundedGroup == StateGroundedGroupType.GROUND
+                stateManager.MarkForStateChange(stateManager.CurrentGroundedState == StateGroundedGroupType.GROUND
                     ? stateManager.GetMoveset().specials[assignedSpecials[3] - 1].groundState.GetState()
                     : stateManager.GetMoveset().specials[assignedSpecials[3] - 1].aerialState.GetState());
                 return true;
@@ -322,9 +322,8 @@ namespace rwby
             hitReaction.reaction = HitReactionType.AVOIDED;
             
             var currentState = stateManager.GetState();
-            //if (!hitInfo.hitStateGroundedGroups.HasFlag(currentState.stateGroundedGroup)) return hitReaction;
             
-            bool groundedState = currentState.stateGroundedGroup == StateGroundedGroupType.GROUND;
+            bool groundedState = stateManager.CurrentGroundedState == StateGroundedGroupType.GROUND;
             HitInfo.HitInfoGroup hitInfoGroup = groundedState ? (CounterhitState ? hitInfo.groundCounterHitGroup : hitInfo.groundGroup) 
                 : (CounterhitState ? hitInfo.aerialCounterHitGroup : hitInfo.aerialGroup);
             hitReaction.hitInfoGroup = hitInfoGroup;

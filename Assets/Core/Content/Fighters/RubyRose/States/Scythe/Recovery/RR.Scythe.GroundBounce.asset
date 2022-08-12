@@ -23,8 +23,8 @@ MonoBehaviour:
   - rid: 220443324362784805
   - rid: 220443324362784808
   - rid: 220443324362784806
-  stateGroundedGroup: 2
-  stateType: 0
+  initialGroundedState: 2
+  stateType: 1
   maxUsesInString: -1
   allowBaseStateTransitions: 1
   inputSequence:
@@ -32,6 +32,7 @@ MonoBehaviour:
     executeInputs: []
     sequenceWindow: 8
     sequenceInputs: []
+  inputSequenceAsHoldInputs: 0
   condition:
     rid: -2
   hitboxInfo: []
@@ -45,22 +46,28 @@ MonoBehaviour:
     - rid: 220443324362784805
       type: {class: VarModifyHitstun, ns: rwby, asm: rwby.csharp}
       data:
+        name: 
+        id: 0
+        parent: 0
+        children: 
         frameRanges:
         - {x: -1, y: -1}
         condition:
           rid: -2
         modifyType: 0
         value: -1
-        children: []
     - rid: 220443324362784806
       type: {class: VarExternal, ns: rwby, asm: rwby.csharp}
       data:
+        name: 
+        id: 0
+        parent: 0
+        children: 
         frameRanges:
         - {x: -1, y: -1}
         condition:
           rid: 220443324362784807
         asset: {fileID: 11400000, guid: 3e988135845709d4594e5628d0bf81cd, type: 2}
-        children: []
     - rid: 220443324362784807
       type: {class: ConditionHitstunValue, ns: rwby, asm: rwby.csharp}
       data:
@@ -69,14 +76,19 @@ MonoBehaviour:
     - rid: 220443324362784808
       type: {class: VarChangeState, ns: rwby, asm: rwby.csharp}
       data:
+        name: 
+        id: 0
+        parent: 0
+        children: 
         frameRanges:
         - {x: 5, y: 30}
         condition:
           rid: 220443324362784810
+        checkInputSequence: 0
+        checkCondition: 0
         stateMovesetID: -1
         state:
           rid: 220443324362784809
-        children: []
     - rid: 220443324362784809
       type: {class: FighterCmnStateReference, ns: rwby, asm: rwby.csharp}
       data:

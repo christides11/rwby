@@ -26,7 +26,8 @@ namespace rwby
         [Networked] public NetworkBool markedForStateChange { get; set; } = false;
         [Networked] public int nextStateMoveset { get; set; } = -1;
         [Networked] public int nextState { get; set; } = 0;
-        
+        [Networked] public StateGroundedGroupType CurrentGroundedState { get; set; } = StateGroundedGroupType.AERIAL;
+
 
         [SerializeField] protected FighterManager manager;
         [SerializeField] protected FighterCombatManager combatManager;
@@ -121,7 +122,7 @@ namespace rwby
 
         private void HandleStateGroup(StateTimeline stateTimeline)
         {
-            switch (stateTimeline.stateGroundedGroup)
+            switch (stateTimeline.initialGroundedState)
             {
                 case StateGroundedGroupType.AERIAL:
                     break;
@@ -179,16 +180,18 @@ namespace rwby
             {
                 StateChanged(GetState(previousState) as rwby.StateTimeline, GetState());
             }
+            CurrentGroundedState = GetState().initialGroundedState;
             return true;
         }
         
         public void StateChanged(rwby.StateTimeline previousState, rwby.StateTimeline currentState)
         {
             combatManager.HitboxManager.Reset();
-            if (previousState.stateGroundedGroup != currentState.stateGroundedGroup)
+            
+            if (CurrentGroundedState != currentState.initialGroundedState)
             {
                 manager.FPhysicsManager.SnapECB();
-                if (previousState.stateGroundedGroup == StateGroundedGroupType.AERIAL)
+                if (CurrentGroundedState == StateGroundedGroupType.AERIAL)
                 {
                     manager.ResetVariablesOnGround();
                 }
@@ -198,7 +201,7 @@ namespace rwby
                 }
             }
 
-            if (currentState.stateType == StateType.MOVEMENT)
+            if (currentState.stateType is StateType.MOVEMENT or StateType.NONE)
             {
                 if(previousState.stateType != currentState.stateType) combatManager.ResetString();
             }else if (currentState.stateType == StateType.ATTACK)

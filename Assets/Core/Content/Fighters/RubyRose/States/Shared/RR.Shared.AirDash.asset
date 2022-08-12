@@ -26,13 +26,17 @@ MonoBehaviour:
   - rid: 8688056335261499402
   - rid: 2193520783924396052
   - rid: 8688056360164655107
-  stateGroundedGroup: 2
+  initialGroundedState: 2
   stateType: 1
   maxUsesInString: -1
   allowBaseStateTransitions: 1
   inputSequence:
     executeWindow: 3
-    executeInputs: []
+    executeInputs:
+    - inputType: 0
+      buttonID: 4
+      stickDirection: {x: 0, y: 0}
+      directionDeviation: 0
     sequenceWindow: 8
     sequenceInputs: []
   inputSequenceAsHoldInputs: 0

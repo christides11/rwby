@@ -26,7 +26,9 @@ MonoBehaviour:
   - rid: 8688056331001921547
   - rid: 8688056331001921551
   - rid: 8688056331001921552
-  stateGroundedGroup: 2
+  - rid: 8688056377568657424
+  - rid: 8688056377568657426
+  initialGroundedState: 2
   stateType: 2
   maxUsesInString: 1
   allowBaseStateTransitions: 1
@@ -44,6 +46,10 @@ MonoBehaviour:
     rid: -2
   hitboxInfo:
   - ID: 0
+    groundedFoldoutGroup: 0
+    groundedCounterHitFoldoutGroup: 0
+    aerialFoldoutGroup: 0
+    aerialCounterHitFoldoutGroup: 0
     hitStateGroundedGroups: -1
     groundGroup:
       hitState: 30
@@ -54,6 +60,7 @@ MonoBehaviour:
       hitKills: 0
       hitForceType: 0
       hitForceRelation: 0
+      hitForceRelationOffset: {x: 0, y: 0, z: 0}
       autolink: 0
       autolinkPercentage: 0
       hitForce: {x: 0, y: 10, z: 5}
@@ -79,6 +86,7 @@ MonoBehaviour:
       hitKills: 0
       hitForceType: 0
       hitForceRelation: 0
+      hitForceRelationOffset: {x: 0, y: 0, z: 0}
       autolink: 0
       autolinkPercentage: 0
       hitForce: {x: 0, y: 0, z: 0}
@@ -104,6 +112,7 @@ MonoBehaviour:
       hitKills: 0
       hitForceType: 0
       hitForceRelation: 0
+      hitForceRelationOffset: {x: 0, y: 0, z: 0}
       autolink: 0
       autolinkPercentage: 0
       hitForce: {x: 0, y: 0, z: 15}
@@ -129,6 +138,7 @@ MonoBehaviour:
       hitKills: 0
       hitForceType: 0
       hitForceRelation: 0
+      hitForceRelationOffset: {x: 0, y: 0, z: 0}
       autolink: 0
       autolinkPercentage: 0
       hitForce: {x: 0, y: 0, z: 0}
@@ -250,3 +260,30 @@ MonoBehaviour:
         condition:
           rid: -2
         asset: {fileID: 11400000, guid: 280b115f7de70e2429fc1b2a1d4051f2, type: 2}
+    - rid: 8688056377568657424
+      type: {class: VarEmpty, ns: rwby, asm: rwby.csharp}
+      data:
+        name: On Hit
+        id: 6
+        parent: -1
+        children: 07000000
+        frameRanges: []
+        condition:
+          rid: 8688056377568657425
+    - rid: 8688056377568657425
+      type: {class: ConditionHitCount, ns: rwby, asm: rwby.csharp}
+      data:
+        inverse: 0
+        hitCount: 1
+    - rid: 8688056377568657426
+      type: {class: VarExternal, ns: rwby, asm: rwby.csharp}
+      data:
+        name: Try Air Atk
+        id: 7
+        parent: 6
+        children: 
+        frameRanges:
+        - {x: 5, y: -1}
+        condition:
+          rid: -2
+        asset: {fileID: 11400000, guid: 852b081cfd9efbb449cca3171458f8cc, type: 2}

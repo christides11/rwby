@@ -21,14 +21,16 @@ MonoBehaviour:
   autoLoopFrame: 1
   data:
   - rid: 8688056342057058304
-  - rid: 8688056342057058321
   - rid: 8688056342057058310
   - rid: 8688056342057058309
   - rid: 8688056342057058320
   - rid: 8688056342057058306
   - rid: 8688056342057058318
   - rid: 8688056342057058323
-  stateGroundedGroup: 2
+  - rid: 8688056377568657431
+  - rid: 8688056377568657429
+  - rid: 8688056377568657427
+  initialGroundedState: 2
   stateType: 2
   maxUsesInString: 1
   allowBaseStateTransitions: 1
@@ -250,7 +252,7 @@ MonoBehaviour:
         attachedTo: 0
         shape: 0
         offset: {x: 0, y: 1, z: 0}
-        boxExtents: {x: 1, y: 1, z: 1}
+        boxExtents: {x: 1, y: 1.5, z: 1}
         radius: 0
         definitionIndex: 0
     - rid: 8688056342057058310
@@ -340,29 +342,6 @@ MonoBehaviour:
         condition:
           rid: -2
         frameDivider: 3
-    - rid: 8688056342057058321
-      type: {class: VarSetMovement, ns: rwby, asm: rwby.csharp}
-      data:
-        name: 
-        id: 6
-        parent: -1
-        children: 
-        frameRanges:
-        - {x: 0, y: 0}
-        condition:
-          rid: -2
-        inputSource: 1
-        normalizeInputSource: 1
-        useRotationIfInputZero: 0
-        reverseInputSource: 0
-        force:
-          rid: 8688056342057058322
-    - rid: 8688056342057058322
-      type: {class: FighterStatReferenceFloatBase, ns: rwby, asm: rwby.csharp}
-      data:
-        inverse: 0
-        statReference: 0
-        value: 8
     - rid: 8688056342057058323
       type: {class: VarCreateBox, ns: rwby, asm: rwby.csharp}
       data:
@@ -371,7 +350,7 @@ MonoBehaviour:
         parent: -1
         children: 
         frameRanges:
-        - {x: 0, y: -1}
+        - {x: 1, y: -1}
         condition:
           rid: -2
         boxType: 2
@@ -385,3 +364,60 @@ MonoBehaviour:
       type: {class: RubyRoseStateReference, ns: rwby.core, asm: rwby.core}
       data:
         state: 69
+    - rid: 8688056377568657427
+      type: {class: VarAddMovement, ns: rwby, asm: rwby.csharp}
+      data:
+        name: 
+        id: 8
+        parent: -1
+        children: 
+        frameRanges:
+        - {x: 0, y: 0}
+        condition:
+          rid: -2
+        inputSource: 1
+        normalizeInputSource: 1
+        useRotationIfInputZero: 0
+        force:
+          rid: 8688056377568657428
+    - rid: 8688056377568657428
+      type: {class: FighterBaseStatReferenceFloat, ns: rwby, asm: rwby.csharp}
+      data:
+        inverse: 0
+        statReference: 0
+        value: 11
+        variable: 0
+    - rid: 8688056377568657429
+      type: {class: VarClampMovement, ns: rwby, asm: rwby.csharp}
+      data:
+        name: 
+        id: 9
+        parent: -1
+        children: 
+        frameRanges:
+        - {x: 0, y: 0}
+        condition:
+          rid: -2
+        magnitude:
+          rid: 8688056377568657430
+    - rid: 8688056377568657430
+      type: {class: FighterBaseStatReferenceFloat, ns: rwby, asm: rwby.csharp}
+      data:
+        inverse: 0
+        statReference: 0
+        value: 7
+        variable: 0
+    - rid: 8688056377568657431
+      type: {class: VarModifyRotation, ns: rwby, asm: rwby.csharp}
+      data:
+        name: 
+        id: 10
+        parent: -1
+        children: 
+        frameRanges:
+        - {x: 0, y: 0}
+        condition:
+          rid: -2
+        modifyType: 1
+        rotateTowards: 0
+        eulerAngle: {x: 0, y: 0, z: 0}

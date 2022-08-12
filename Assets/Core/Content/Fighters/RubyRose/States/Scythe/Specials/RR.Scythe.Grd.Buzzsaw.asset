@@ -28,28 +28,19 @@ MonoBehaviour:
   - rid: 8688056217396838420
   - rid: 8688056217396838425
   - rid: 8688056217396838430
-  - rid: 8688056217396838431
-  stateGroundedGroup: 1
+  - rid: 8688056377568657411
+  - rid: 8688056377568657413
+  - rid: 8688056377568657416
+  - rid: 8688056377568657418
+  initialGroundedState: 1
   stateType: 2
   maxUsesInString: 1
   allowBaseStateTransitions: 1
   inputSequence:
     executeWindow: 3
-    executeInputs:
-    - inputType: 0
-      buttonID: 2
-      stickDirection: {x: 0, y: 0}
-      directionDeviation: 0
-    - inputType: 1
-      buttonID: 2
-      stickDirection: {x: 0, y: 1}
-      directionDeviation: 0.85
+    executeInputs: []
     sequenceWindow: 8
-    sequenceInputs:
-    - inputType: 0
-      buttonID: 5
-      stickDirection: {x: 0, y: 0}
-      directionDeviation: 0
+    sequenceInputs: []
   inputSequenceAsHoldInputs: 1
   condition:
     rid: -2
@@ -142,7 +133,7 @@ MonoBehaviour:
       hitForceRelationOffset: {x: 0, y: 0, z: 0}
       autolink: 0
       autolinkPercentage: 0
-      hitForce: {x: 0, y: 0, z: 10}
+      hitForce: {x: 0, y: 0, z: 0}
       blockForce: {x: 0, y: 0, z: 0}
       hitGravity: 0
       pullPushCurve:
@@ -185,7 +176,7 @@ MonoBehaviour:
   - ID: 1
     groundedFoldoutGroup: 0
     groundedCounterHitFoldoutGroup: 0
-    aerialFoldoutGroup: 0
+    aerialFoldoutGroup: 1
     aerialCounterHitFoldoutGroup: 0
     hitStateGroundedGroups: -1
     groundGroup:
@@ -228,10 +219,10 @@ MonoBehaviour:
         m_PostInfinity: 2
         m_RotationOrder: 4
       pullPushMaxDistance: 10
-      attackerHitstop: 0
-      hitstop: 0
-      hitstun: 0
-      blockstun: 0
+      attackerHitstop: 4
+      hitstop: 4
+      hitstun: 60
+      blockstun: 60
     groundCounterHitGroup:
       hitState: 0
       groundBounces: 0
@@ -280,10 +271,10 @@ MonoBehaviour:
         m_PostInfinity: 2
         m_RotationOrder: 4
       pullPushMaxDistance: 0
-      attackerHitstop: 0
-      hitstop: 0
-      hitstun: 0
-      blockstun: 0
+      attackerHitstop: 4
+      hitstop: 4
+      hitstun: 60
+      blockstun: 60
     aerialCounterHitGroup:
       hitState: 0
       groundBounces: 0
@@ -476,21 +467,78 @@ MonoBehaviour:
         boxExtents: {x: 1, y: 0.5, z: 1}
         radius: 0
         definitionIndex: 1
-    - rid: 8688056217396838431
-      type: {class: VarExternal, ns: rwby, asm: rwby.csharp}
+    - rid: 8688056377568657411
+      type: {class: VarEmpty, ns: rwby, asm: rwby.csharp}
       data:
-        name: Try Ground Atk
+        name: On Hit
         id: 11
         parent: -1
-        children: 
-        frameRanges:
-        - {x: 37, y: -1}
+        children: 0c0000000d0000000e000000
+        frameRanges: []
         condition:
-          rid: 8688056217396838432
-        asset: {fileID: 11400000, guid: 38d47b53b1c6fa24580e163448503c28, type: 2}
-    - rid: 8688056217396838432
-      type: {class: ConditionHitboxHitCount, ns: rwby, asm: rwby.csharp}
+          rid: 8688056377568657412
+    - rid: 8688056377568657412
+      type: {class: ConditionHitCount, ns: rwby, asm: rwby.csharp}
       data:
         inverse: 0
-        hitboxIndex: 1
         hitCount: 1
+    - rid: 8688056377568657413
+      type: {class: VarChangeState, ns: rwby, asm: rwby.csharp}
+      data:
+        name: A
+        id: 12
+        parent: 11
+        children: 
+        frameRanges:
+        - {x: 33, y: -1}
+        condition:
+          rid: -2
+        checkInputSequence: 1
+        checkCondition: 0
+        stateMovesetID: -1
+        state:
+          rid: 8688056377568657414
+    - rid: 8688056377568657414
+      type: {class: RubyRoseStateReference, ns: rwby.core, asm: rwby.core}
+      data:
+        state: 84
+    - rid: 8688056377568657416
+      type: {class: VarChangeState, ns: rwby, asm: rwby.csharp}
+      data:
+        name: B
+        id: 13
+        parent: 11
+        children: 
+        frameRanges:
+        - {x: 33, y: -1}
+        condition:
+          rid: -2
+        checkInputSequence: 1
+        checkCondition: 0
+        stateMovesetID: -1
+        state:
+          rid: 8688056377568657417
+    - rid: 8688056377568657417
+      type: {class: RubyRoseStateReference, ns: rwby.core, asm: rwby.core}
+      data:
+        state: 85
+    - rid: 8688056377568657418
+      type: {class: VarChangeState, ns: rwby, asm: rwby.csharp}
+      data:
+        name: C
+        id: 14
+        parent: 11
+        children: 
+        frameRanges:
+        - {x: 33, y: -1}
+        condition:
+          rid: -2
+        checkInputSequence: 1
+        checkCondition: 0
+        stateMovesetID: -1
+        state:
+          rid: 8688056377568657419
+    - rid: 8688056377568657419
+      type: {class: RubyRoseStateReference, ns: rwby.core, asm: rwby.core}
+      data:
+        state: 86

@@ -25,8 +25,8 @@ namespace rwby
             get { return hurtboxInfo; }
         }
 
-        [Header("State Info")]
-        public StateGroundedGroupType stateGroundedGroup;
+        [FormerlySerializedAs("stateGroundedGroup")] [Header("State Info")]
+        public StateGroundedGroupType initialGroundedState;
         public StateType stateType;
         [EnableIf("stateType", StateType.ATTACK)]
         public int maxUsesInString = -1;
