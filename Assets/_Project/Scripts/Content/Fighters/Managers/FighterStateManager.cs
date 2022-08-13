@@ -20,6 +20,8 @@ namespace rwby
         {
             get { return movesets.Length; }
         }
+
+        [Networked] public int CurrentMoveset { get; set; }
         [Networked(OnChanged = nameof(OnChangedState))] public int CurrentStateMoveset { get; set; }
         [Networked(OnChanged = nameof(OnChangedState))] public int CurrentState { get; set; }
         [Networked] public int CurrentStateFrame { get; set; } = 0;
@@ -44,7 +46,7 @@ namespace rwby
         {
             if (markedForStateChange)
             {
-                ChangeState(nextState, 0, 0, true);
+                ChangeState(nextState, nextStateMoveset, 0, true);
             }
 
             if (CurrentState == 0) return;
@@ -90,7 +92,7 @@ namespace rwby
             {
                 int frx = ConvertFrameRangeNumber((int)d.FrameRanges[j].x, totalFrames);
                 int fry = ConvertFrameRangeNumber((int)d.FrameRanges[j].y, totalFrames);
-                if (!(realFrame < frx) && !(realFrame > fry)) continue;
+                if (realFrame >= frx && realFrame <= fry) continue;
                 valid = false;
                 break;
             }
@@ -153,12 +155,15 @@ namespace rwby
             if (markedForStateChange) return;
             markedForStateChange = true;
             nextState = state;
+            nextStateMoveset = moveset;
         }
 
         public bool ChangeState(int state, int moveset = -1, int stateFrame = 0, bool callOnInterrupt = true)
         {
             markedForStateChange = false;
+            int previousStateMoveset = CurrentStateMoveset;
             int previousState = CurrentState;
+            
             if (callOnInterrupt && previousState != (int)FighterCmnStates.NULL)
             {
                 StateTimeline currentStateTimeline = GetState();
@@ -166,7 +171,7 @@ namespace rwby
                 ProcessState(currentStateTimeline, true);
             }
 
-            CurrentStateMoveset = moveset == -1 ? CurrentStateMoveset : moveset;
+            CurrentStateMoveset = moveset == -1 ? CurrentMoveset : moveset;
             CurrentState = state;
             CurrentStateFrame = stateFrame;
             if (CurrentStateFrame == 0)
@@ -178,7 +183,7 @@ namespace rwby
 
             if (previousState != (int)FighterCmnStates.NULL)
             {
-                StateChanged(GetState(previousState) as rwby.StateTimeline, GetState());
+                StateChanged(GetState(previousStateMoveset, previousState) as rwby.StateTimeline, GetState());
             }
             CurrentGroundedState = GetState().initialGroundedState;
             return true;
@@ -236,7 +241,7 @@ namespace rwby
 
         public void SetMoveset(int movesetIndex)
         {
-            CurrentStateMoveset = movesetIndex;
+            CurrentMoveset = movesetIndex;
         }
 
         public string GetCurrentStateName()

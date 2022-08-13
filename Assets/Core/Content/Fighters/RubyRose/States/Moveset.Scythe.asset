@@ -205,6 +205,10 @@ MonoBehaviour:
     state:
       rid: 8688056377568657443
     stateTimeline: {fileID: 11400000, guid: aee25092ef518a6419f83dfa707f4bf7, type: 2}
+  - name: To Gun Moveset
+    state:
+      rid: 8688056405345435665
+    stateTimeline: {fileID: 11400000, guid: 3e2de3c5a9a7bda41b6ed9ad3867584f, type: 2}
   fighterStats: {fileID: 11400000, guid: 9db018607e1c48c498ee3d8a7c4cefc3, type: 2}
   specials:
   - groundState:
@@ -426,3 +430,7 @@ MonoBehaviour:
       type: {class: FighterCmnStateReference, ns: rwby, asm: rwby.csharp}
       data:
         state: 35
+    - rid: 8688056405345435665
+      type: {class: RubyRoseStateReference, ns: rwby.core, asm: rwby.core}
+      data:
+        state: 87

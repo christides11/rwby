@@ -39,5 +39,6 @@ namespace rwby.core
         SCYTHE_SPECIAL_Buzzsaw_Grd_A,
         SCYTHE_SPECIAL_Buzzsaw_Grd_B,
         SCYTHE_SPECIAL_Buzzsaw_Grd_C,
+        SCYTHE_ToGunMode = 87
     }
 }

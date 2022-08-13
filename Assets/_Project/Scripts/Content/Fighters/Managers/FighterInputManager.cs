@@ -35,7 +35,8 @@ namespace rwby
         [Networked] protected ushort heldExtra2Time { get; set; }
         [Networked] protected ushort heldExtra3Time { get; set; }
         [Networked] protected ushort heldExtra4Time { get; set; }
-        
+
+        /*
         protected Vector2[] Movement = new Vector2[inputCapacity];
         protected Vector3[] CameraForward = new Vector3[inputCapacity];
         protected Vector3[] CameraRight = new Vector3[inputCapacity];
@@ -53,7 +54,7 @@ namespace rwby
         protected InputButtonData[] Extra1 = new InputButtonData[inputCapacity];
         protected InputButtonData[] Extra2 = new InputButtonData[inputCapacity];
         protected InputButtonData[] Extra3 = new InputButtonData[inputCapacity];
-        protected InputButtonData[] Extra4 = new InputButtonData[inputCapacity];
+        protected InputButtonData[] Extra4 = new InputButtonData[inputCapacity];*/
 
         public FighterManager manager;
 

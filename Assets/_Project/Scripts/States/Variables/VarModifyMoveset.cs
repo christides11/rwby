@@ -1,12 +1,10 @@
-
 using HnSF;
-using NaughtyAttributes;
 using UnityEngine;
 
 namespace rwby
 {
-    [StateVariable("Rotation/Modify Rotation")]
-    public struct VarModifyRotation : IStateVariables
+    [StateVariable("Modify Moveset")]
+    public struct VarModifyMoveset : IStateVariables
     {
         public string name;
         public string Name
@@ -41,11 +39,8 @@ namespace rwby
         [SelectImplementation(typeof(IConditionVariables))] [SerializeField, SerializeReference]
         public IConditionVariables condition;
         public IConditionVariables Condition => condition;
-
+        
         public VarModifyType modifyType;
-        public VarRotateTowardsType rotateTowards;
-        public bool useTargetWhenNoMovement;
-        [ShowIf("rotateTowards", VarRotateTowardsType.custom)][AllowNesting]
-        public Vector3 eulerAngle;
+        public int value;
     }
 }

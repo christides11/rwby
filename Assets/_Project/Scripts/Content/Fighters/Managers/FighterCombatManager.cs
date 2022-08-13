@@ -101,6 +101,7 @@ namespace rwby
 
         public virtual bool MovePossible(MovesetStateIdentifier movesetState, int maxUsesInString = 1)
         {
+            if (maxUsesInString == -1) return true;
             int counter = 0;
             for (int i = 0; i < movesUsedInString.Count; i++)
             {

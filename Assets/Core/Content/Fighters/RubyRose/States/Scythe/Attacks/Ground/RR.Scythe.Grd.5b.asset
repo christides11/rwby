@@ -28,7 +28,9 @@ MonoBehaviour:
   - rid: 8688056331001921541
   - rid: 8688056331001921544
   - rid: 8688056331001921545
-  stateGroundedGroup: 1
+  - rid: 8688056377568657446
+  - rid: 8688056377568657448
+  initialGroundedState: 1
   stateType: 2
   maxUsesInString: 1
   allowBaseStateTransitions: 1
@@ -46,6 +48,10 @@ MonoBehaviour:
     rid: -2
   hitboxInfo:
   - ID: 0
+    groundedFoldoutGroup: 1
+    groundedCounterHitFoldoutGroup: 0
+    aerialFoldoutGroup: 1
+    aerialCounterHitFoldoutGroup: 0
     hitStateGroundedGroups: -1
     groundGroup:
       hitState: 30
@@ -56,6 +62,7 @@ MonoBehaviour:
       hitKills: 0
       hitForceType: 0
       hitForceRelation: 0
+      hitForceRelationOffset: {x: 0, y: 0, z: 0}
       autolink: 0
       autolinkPercentage: 0
       hitForce: {x: 0, y: 0, z: 5}
@@ -81,6 +88,7 @@ MonoBehaviour:
       hitKills: 0
       hitForceType: 0
       hitForceRelation: 0
+      hitForceRelationOffset: {x: 0, y: 0, z: 0}
       autolink: 0
       autolinkPercentage: 0
       hitForce: {x: 0, y: 0, z: 0}
@@ -106,9 +114,10 @@ MonoBehaviour:
       hitKills: 0
       hitForceType: 0
       hitForceRelation: 0
+      hitForceRelationOffset: {x: 0, y: 0, z: 0}
       autolink: 0
       autolinkPercentage: 0
-      hitForce: {x: 0, y: 0, z: 10}
+      hitForce: {x: 0, y: 5, z: 5}
       blockForce: {x: 0, y: 0, z: 0}
       hitGravity: 0
       pullPushCurve:
@@ -131,6 +140,7 @@ MonoBehaviour:
       hitKills: 0
       hitForceType: 0
       hitForceRelation: 0
+      hitForceRelationOffset: {x: 0, y: 0, z: 0}
       autolink: 0
       autolinkPercentage: 0
       hitForce: {x: 0, y: 0, z: 0}
@@ -221,7 +231,7 @@ MonoBehaviour:
         parent: -1
         children: 
         frameRanges:
-        - {x: 7, y: 9}
+        - {x: 8, y: 10}
         condition:
           rid: -2
         boxType: 1
@@ -320,3 +330,48 @@ MonoBehaviour:
       type: {class: RubyRoseStateReference, ns: rwby.core, asm: rwby.core}
       data:
         state: 52
+    - rid: 8688056377568657446
+      type: {class: VarSetMovement, ns: rwby, asm: rwby.csharp}
+      data:
+        name: 
+        id: 8
+        parent: -1
+        children: 
+        frameRanges:
+        - {x: 0, y: 0}
+        condition:
+          rid: -2
+        inputSource: 1
+        normalizeInputSource: 0
+        useRotationIfInputZero: 0
+        reverseInputSource: 0
+        force:
+          rid: 8688056377568657447
+    - rid: 8688056377568657447
+      type: {class: FighterStatReferenceFloatBase, ns: rwby, asm: rwby.csharp}
+      data:
+        inverse: 0
+        statReference: 0
+        value: 6
+    - rid: 8688056377568657448
+      type: {class: VarApplyTraction, ns: rwby, asm: rwby.csharp}
+      data:
+        name: 
+        id: 9
+        parent: -1
+        children: 
+        frameRanges:
+        - {x: 2, y: -1}
+        condition:
+          rid: -2
+        traction:
+          rid: 8688056377568657449
+        applyMovement: 1
+        applyGravity: 0
+    - rid: 8688056377568657449
+      type: {class: FighterBaseStatReferenceFloat, ns: rwby, asm: rwby.csharp}
+      data:
+        inverse: 0
+        statReference: 0
+        value: 20
+        variable: 0

@@ -23,7 +23,7 @@ MonoBehaviour:
   - rid: 2193520669817307137
   - rid: 2193520691360038912
   - rid: 8688056201677897733
-  stateGroundedGroup: 2
+  initialGroundedState: 2
   stateType: 0
   maxUsesInString: -1
   allowBaseStateTransitions: 1
@@ -56,6 +56,7 @@ MonoBehaviour:
           rid: -2
         modifyType: 1
         rotateTowards: 0
+        useTargetWhenNoMovement: 1
         eulerAngle: {x: 0, y: 0, z: 0}
     - rid: 2193520691360038912
       type: {class: VarModifyFallSpeed, ns: rwby, asm: rwby.csharp}

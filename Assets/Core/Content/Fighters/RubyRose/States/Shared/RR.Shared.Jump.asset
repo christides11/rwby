@@ -20,10 +20,12 @@ MonoBehaviour:
   autoLoop: 1
   autoLoopFrame: 5
   data:
-  - rid: 8688056335261499392
-  - rid: 2193520750553202689
+  - rid: 8688056409313247234
+  - rid: 8688056409313247238
   - rid: 8688056217396838405
   - rid: 8688056331001921556
+  - rid: 2193520750553202689
+  - rid: 8688056409313247237
   initialGroundedState: 2
   stateType: 1
   maxUsesInString: -1
@@ -108,15 +110,43 @@ MonoBehaviour:
         boxExtents: {x: 0.5, y: 1, z: 0.5}
         radius: 0
         definitionIndex: 0
-    - rid: 8688056335261499392
+    - rid: 8688056409313247234
+      type: {class: VarEmpty, ns: rwby, asm: rwby.csharp}
+      data:
+        name: Scythe
+        id: 4
+        parent: -1
+        children: 05000000
+        frameRanges: []
+        condition:
+          rid: 8688056409313247235
+    - rid: 8688056409313247235
+      type: {class: ConditionMoveset, ns: rwby, asm: rwby.csharp}
+      data:
+        moveset: 0
+    - rid: 8688056409313247237
       type: {class: VarExternal, ns: rwby, asm: rwby.csharp}
       data:
         name: Try Air Atks
-        id: 3
-        parent: -1
+        id: 5
+        parent: 4
         children: 
         frameRanges:
         - {x: 1, y: -1}
         condition:
           rid: -2
         asset: {fileID: 11400000, guid: 852b081cfd9efbb449cca3171458f8cc, type: 2}
+    - rid: 8688056409313247238
+      type: {class: VarEmpty, ns: rwby, asm: rwby.csharp}
+      data:
+        name: Rifle
+        id: 6
+        parent: -1
+        children: 
+        frameRanges: []
+        condition:
+          rid: 8688056409313247239
+    - rid: 8688056409313247239
+      type: {class: ConditionMoveset, ns: rwby, asm: rwby.csharp}
+      data:
+        moveset: 1

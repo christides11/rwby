@@ -84,6 +84,6 @@ public class RRoseMan : FighterManager
     public override void Spawned()
     {
         base.Spawned();
-        FStateManager.ChangeState((int)FighterCmnStates.IDLE);
+        FStateManager.ChangeState((int)FighterCmnStates.IDLE, 0);
     }
 }

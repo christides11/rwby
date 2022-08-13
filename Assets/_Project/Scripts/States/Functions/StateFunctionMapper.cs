@@ -43,6 +43,7 @@ namespace rwby
             functions.Add(typeof(VarSnapToWall), BaseStateFunctions.SnapToWall);
             functions.Add(typeof(VarClampMovement), BaseStateFunctions.ClampMovement);
             functions.Add(typeof(VarTeleportRaycast), BaseStateFunctions.TeleportRaycast);
+            functions.Add(typeof(VarModifyMoveset), BaseStateFunctions.ModifyMoveset);
         }
     }
 }

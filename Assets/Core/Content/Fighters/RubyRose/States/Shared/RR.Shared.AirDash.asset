@@ -21,11 +21,12 @@ MonoBehaviour:
   autoLoopFrame: 1
   data:
   - rid: 2193520740721754112
-  - rid: 8688056217396838408
   - rid: 8688056331001921554
-  - rid: 8688056335261499402
-  - rid: 2193520783924396052
+  - rid: 8688056409313247247
+  - rid: 8688056217396838408
   - rid: 8688056360164655107
+  - rid: 2193520783924396052
+  - rid: 8688056409313247249
   initialGroundedState: 2
   stateType: 1
   maxUsesInString: -1
@@ -60,7 +61,7 @@ MonoBehaviour:
         parent: -1
         children: 
         frameRanges:
-        - {x: 0, y: 0}
+        - {x: 1, y: 1}
         condition:
           rid: -2
         inputSource: 0
@@ -116,7 +117,7 @@ MonoBehaviour:
         parent: -1
         children: 
         frameRanges:
-        - {x: 0, y: -1}
+        - {x: 1, y: -1}
         condition:
           rid: -2
         boxType: 2
@@ -126,18 +127,6 @@ MonoBehaviour:
         boxExtents: {x: 0.5, y: 1, z: 0.5}
         radius: 0
         definitionIndex: 0
-    - rid: 8688056335261499402
-      type: {class: VarExternal, ns: rwby, asm: rwby.csharp}
-      data:
-        name: Try Air Atk
-        id: 4
-        parent: -1
-        children: 
-        frameRanges:
-        - {x: 5, y: -1}
-        condition:
-          rid: -2
-        asset: {fileID: 11400000, guid: 852b081cfd9efbb449cca3171458f8cc, type: 2}
     - rid: 8688056360164655107
       type: {class: VarChangeState, ns: rwby, asm: rwby.csharp}
       data:
@@ -158,3 +147,29 @@ MonoBehaviour:
       type: {class: FighterCmnStateReference, ns: rwby, asm: rwby.csharp}
       data:
         state: 8
+    - rid: 8688056409313247247
+      type: {class: VarEmpty, ns: rwby, asm: rwby.csharp}
+      data:
+        name: Scythe
+        id: 6
+        parent: -1
+        children: 07000000
+        frameRanges: []
+        condition:
+          rid: 8688056409313247248
+    - rid: 8688056409313247248
+      type: {class: ConditionMoveset, ns: rwby, asm: rwby.csharp}
+      data:
+        moveset: 0
+    - rid: 8688056409313247249
+      type: {class: VarExternal, ns: rwby, asm: rwby.csharp}
+      data:
+        name: Try Air Atk
+        id: 7
+        parent: 6
+        children: 
+        frameRanges:
+        - {x: 5, y: -1}
+        condition:
+          rid: -2
+        asset: {fileID: 11400000, guid: 852b081cfd9efbb449cca3171458f8cc, type: 2}

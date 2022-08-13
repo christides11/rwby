@@ -27,7 +27,8 @@ MonoBehaviour:
   - rid: 8688056216264638484
   - rid: 8688056217003884544
   - rid: 8688056217003884545
-  stateGroundedGroup: 1
+  - rid: 8688056409313247232
+  initialGroundedState: 1
   stateType: 1
   maxUsesInString: -1
   allowBaseStateTransitions: 1
@@ -53,7 +54,7 @@ MonoBehaviour:
         name: Scythe
         id: 0
         parent: -1
-        children: 01000000
+        children: 0100000007000000
         frameRanges:
         - {x: 1, y: -1}
         condition:
@@ -154,3 +155,23 @@ MonoBehaviour:
       type: {class: ConditionLockedOn, ns: rwby, asm: rwby.csharp}
       data:
         inverse: 1
+    - rid: 8688056409313247232
+      type: {class: VarModifyAnimationSet, ns: rwby, asm: rwby.csharp}
+      data:
+        name: 
+        id: 7
+        parent: 0
+        children: 
+        frameRanges:
+        - {x: 0, y: 0}
+        condition:
+          rid: -2
+        modifyType: 1
+        wantedAnimations:
+        - animationbank:
+            modGUID:
+              guid: 1d292c1f00000000
+            contentGUID:
+              guid: 2c2c000000000000
+          animation: walk.f
+        fadeTime: 0

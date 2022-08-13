@@ -20,9 +20,10 @@ MonoBehaviour:
   autoLoop: 0
   autoLoopFrame: 1
   data:
-  - rid: 8688056335261499393
+  - rid: 8688056409313247240
   - rid: 2193520750553202692
   - rid: 8688056377568657435
+  - rid: 8688056409313247242
   initialGroundedState: 2
   stateType: 1
   maxUsesInString: -1
@@ -63,18 +64,6 @@ MonoBehaviour:
       type: {class: FighterCmnStateReference, ns: rwby, asm: rwby.csharp}
       data:
         state: 5
-    - rid: 8688056335261499393
-      type: {class: VarExternal, ns: rwby, asm: rwby.csharp}
-      data:
-        name: Try Air Atk
-        id: 1
-        parent: -1
-        children: 
-        frameRanges:
-        - {x: 1, y: -1}
-        condition:
-          rid: -2
-        asset: {fileID: 11400000, guid: 852b081cfd9efbb449cca3171458f8cc, type: 2}
     - rid: 8688056377568657435
       type: {class: VarCreateBox, ns: rwby, asm: rwby.csharp}
       data:
@@ -82,7 +71,8 @@ MonoBehaviour:
         id: 2
         parent: -1
         children: 
-        frameRanges: []
+        frameRanges:
+        - {x: 1, y: -1}
         condition:
           rid: -2
         boxType: 2
@@ -92,3 +82,29 @@ MonoBehaviour:
         boxExtents: {x: 0.5, y: 1, z: 0.5}
         radius: 0
         definitionIndex: 0
+    - rid: 8688056409313247240
+      type: {class: VarEmpty, ns: rwby, asm: rwby.csharp}
+      data:
+        name: Scythe
+        id: 3
+        parent: -1
+        children: 04000000
+        frameRanges: []
+        condition:
+          rid: 8688056409313247241
+    - rid: 8688056409313247241
+      type: {class: ConditionMoveset, ns: rwby, asm: rwby.csharp}
+      data:
+        moveset: 0
+    - rid: 8688056409313247242
+      type: {class: VarExternal, ns: rwby, asm: rwby.csharp}
+      data:
+        name: Try Air Atk
+        id: 4
+        parent: 3
+        children: 
+        frameRanges:
+        - {x: 1, y: -1}
+        condition:
+          rid: -2
+        asset: {fileID: 11400000, guid: 852b081cfd9efbb449cca3171458f8cc, type: 2}
