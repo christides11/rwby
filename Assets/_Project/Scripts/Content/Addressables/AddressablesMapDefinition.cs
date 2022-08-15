@@ -42,16 +42,10 @@ namespace rwby
         //TODO: Better addressables map scene loading.
         public override async UniTask<Scene> LoadScene(int sceneIndex, LoadSceneParameters parameters)
         {
-            sceneHandles[sceneIndex] = Addressables.LoadSceneAsync(sceneReferences[sceneIndex], parameters.loadSceneMode);
+            sceneHandles[sceneIndex] = Addressables.LoadSceneAsync(sceneReferences[sceneIndex], parameters);
             await sceneHandles[sceneIndex];
-            var loadedScene = sceneHandles[sceneIndex].Result.Scene;
-            var newScene = SceneManager.CreateScene($"{loadedScene.name}.copy", new CreateSceneParameters(parameters.localPhysicsMode));
-            foreach (var rootGameObject in loadedScene.GetRootGameObjects())
-            {
-                SceneManager.MoveGameObjectToScene(rootGameObject, newScene);
-            }
-            await SceneManager.UnloadSceneAsync(loadedScene);
-            return newScene;
+            Scene loadedScene = sceneHandles[sceneIndex].Result.Scene;
+            return loadedScene;
         }
 
         public override UniTask UnloadScene(int sceneIndex)
