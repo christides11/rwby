@@ -213,6 +213,10 @@ MonoBehaviour:
     state:
       rid: 8688056473731203075
     stateTimeline: {fileID: 11400000, guid: e8101fc0a6bbbda4692a0c948684a1af, type: 2}
+  - name: Sniper Stance (Air) - A
+    state:
+      rid: 8688056473731203108
+    stateTimeline: {fileID: 11400000, guid: 82c52000bbc8d6448869ea0c5368c44e, type: 2}
   fighterStats: {fileID: 11400000, guid: 9db018607e1c48c498ee3d8a7c4cefc3, type: 2}
   specials:
   - groundState:
@@ -442,3 +446,7 @@ MonoBehaviour:
       type: {class: FighterCmnStateReference, ns: rwby, asm: rwby.csharp}
       data:
         state: 39
+    - rid: 8688056473731203108
+      type: {class: RubyRoseStateReference, ns: rwby.core, asm: rwby.core}
+      data:
+        state: 79

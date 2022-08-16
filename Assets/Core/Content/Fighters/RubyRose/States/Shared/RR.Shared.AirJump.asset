@@ -20,6 +20,7 @@ MonoBehaviour:
   autoLoop: 1
   autoLoopFrame: 2
   data:
+  - rid: 8688056473731203102
   - rid: 8688056136894513153
   - rid: 8688056136894513155
   - rid: 8688056377568657436
@@ -57,7 +58,7 @@ MonoBehaviour:
         parent: -1
         children: 
         frameRanges:
-        - {x: 0, y: 0}
+        - {x: 1, y: 1}
         condition:
           rid: -2
         multiplier:
@@ -66,8 +67,8 @@ MonoBehaviour:
       type: {class: FighterBaseStatReferenceFloat, ns: rwby, asm: rwby.csharp}
       data:
         inverse: 0
-        statReference: 1
-        value: 0
+        statReference: 0
+        value: 0.85
         variable: 20
     - rid: 8688056136894513155
       type: {class: VarAddMovement, ns: rwby, asm: rwby.csharp}
@@ -77,7 +78,7 @@ MonoBehaviour:
         parent: -1
         children: 
         frameRanges:
-        - {x: 0, y: 0}
+        - {x: 1, y: 1}
         condition:
           rid: -2
         inputSource: 0
@@ -136,3 +137,23 @@ MonoBehaviour:
         condition:
           rid: -2
         asset: {fileID: 11400000, guid: 852b081cfd9efbb449cca3171458f8cc, type: 2}
+    - rid: 8688056473731203102
+      type: {class: VarClampMovement, ns: rwby, asm: rwby.csharp}
+      data:
+        name: 
+        id: 6
+        parent: -1
+        children: 
+        frameRanges:
+        - {x: 0, y: 0}
+        condition:
+          rid: -2
+        magnitude:
+          rid: 8688056473731203103
+    - rid: 8688056473731203103
+      type: {class: FighterBaseStatReferenceFloat, ns: rwby, asm: rwby.csharp}
+      data:
+        inverse: 0
+        statReference: 0
+        value: 7
+        variable: 0

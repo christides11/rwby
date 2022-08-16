@@ -20,7 +20,8 @@ MonoBehaviour:
   autoLoop: 0
   autoLoopFrame: 1
   data:
-  - rid: 2193520740721754112
+  - rid: 8688056473731203098
+  - rid: 8688056473731203100
   - rid: 8688056331001921554
   - rid: 8688056409313247247
   - rid: 8688056217396838408
@@ -53,30 +54,6 @@ MonoBehaviour:
     RefIds:
     - rid: -2
       type: {class: , ns: , asm: }
-    - rid: 2193520740721754112
-      type: {class: VarSetMovement, ns: rwby, asm: rwby.csharp}
-      data:
-        name: 
-        id: 0
-        parent: -1
-        children: 
-        frameRanges:
-        - {x: 1, y: 1}
-        condition:
-          rid: -2
-        inputSource: 0
-        normalizeInputSource: 1
-        useRotationIfInputZero: 1
-        reverseInputSource: 0
-        force:
-          rid: 2193520740721754113
-    - rid: 2193520740721754113
-      type: {class: FighterBaseStatReferenceFloat, ns: rwby, asm: rwby.csharp}
-      data:
-        inverse: 0
-        statReference: 0
-        value: 15
-        variable: 0
     - rid: 2193520783924396052
       type: {class: VarChangeState, ns: rwby, asm: rwby.csharp}
       data:
@@ -173,3 +150,45 @@ MonoBehaviour:
         condition:
           rid: -2
         asset: {fileID: 11400000, guid: 852b081cfd9efbb449cca3171458f8cc, type: 2}
+    - rid: 8688056473731203098
+      type: {class: VarClampMovement, ns: rwby, asm: rwby.csharp}
+      data:
+        name: 
+        id: 8
+        parent: -1
+        children: 
+        frameRanges:
+        - {x: 0, y: 0}
+        condition:
+          rid: -2
+        magnitude:
+          rid: 8688056473731203099
+    - rid: 8688056473731203099
+      type: {class: FighterStatReferenceFloatBase, ns: rwby, asm: rwby.csharp}
+      data:
+        inverse: 0
+        statReference: 0
+        value: 5
+    - rid: 8688056473731203100
+      type: {class: VarAddMovement, ns: rwby, asm: rwby.csharp}
+      data:
+        name: 
+        id: 9
+        parent: -1
+        children: 
+        frameRanges:
+        - {x: 1, y: 1}
+        condition:
+          rid: -2
+        inputSource: 0
+        normalizeInputSource: 1
+        useRotationIfInputZero: 1
+        force:
+          rid: 8688056473731203101
+    - rid: 8688056473731203101
+      type: {class: FighterBaseStatReferenceFloat, ns: rwby, asm: rwby.csharp}
+      data:
+        inverse: 0
+        statReference: 0
+        value: 25
+        variable: 0
