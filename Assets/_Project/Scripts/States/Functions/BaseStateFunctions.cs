@@ -127,9 +127,31 @@ namespace rwby
             FighterManager f = (FighterManager)fighter;
             VarApplyMovement vars = (VarApplyMovement)variables;
 
-            f.FPhysicsManager.forceMovement += f.FPhysicsManager.HandleMovement(vars.baseAccel.GetValue(f), vars.movementAccel.GetValue(f), 
+            float maxSpeed = vars.maxSpeed.GetValue(f);
+            if (vars.inputSource == VarInputSourceType.slope)
+            {
+                maxSpeed *= Mathf.Clamp((Mathf.Clamp(f.groundSlopeAngle, vars.slopeMinClamp, vars.slopeMaxClamp) / vars.slopeDivi) * vars.slopeMulti, 0, vars.slopeMultiMax);
+            }
+
+            Vector3 input = Vector3.zero;
+            switch (vars.inputSource)
+            {
+                case VarInputSourceType.stick:
+                    input = f.GetMovementVector();
+                    break;
+                case VarInputSourceType.rotation:
+                    input = f.myTransform.forward;
+                    break;
+                case VarInputSourceType.slope:
+                    input = f.groundSlopeDir;
+                    input.y = 0;
+                    input.Normalize();
+                    break;
+            }
+            
+            f.FPhysicsManager.forceMovement += f.FPhysicsManager.HandleMovement(input, vars.baseAccel.GetValue(f), vars.movementAccel.GetValue(f), 
                 vars.deceleration.GetValue(f), vars.minSpeed.GetValue(f), 
-                vars.maxSpeed.GetValue(f), vars.accelerationFromDot.GetValue(f));
+                maxSpeed, vars.accelerationFromDot.GetValue(f));
         }
 
         public static void ModifyAirDashCount(IFighterBase fighter, IStateVariables variables, HnSF.StateTimeline arg3, int arg4)

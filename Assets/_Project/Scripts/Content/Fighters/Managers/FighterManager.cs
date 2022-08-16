@@ -129,9 +129,12 @@ namespace rwby
             physicsManager.kCC.Motor.visualExtraOffset = dir * hitstopShakeDistance * hitstopDir;
         }
 
+        public float groundSlopeAngle;
+        public Vector3 groundSlopeDir;
         public int val = 100;
         public override void FixedUpdateNetwork()
         {
+            GetFloorAngle();
             inputManager.FeedInput();
             if (Runner.Simulation.IsResimulation && Runner.Simulation.IsFirstTick)
             {
@@ -172,7 +175,28 @@ namespace rwby
                 }
             }
         }
-        
+
+        private void GetFloorAngle()
+        {
+            groundSlopeAngle = 0;
+            groundSlopeDir = Vector3.zero;
+            // SPHERECAST
+            // "Casts a sphere along a ray and returns detailed information on what was hit."
+            if (Runner.GetPhysicsScene().SphereCast(myTransform.position + Vector3.up, 0.5f, Vector3.down, out wallHitResults[0], 1.5f, wallLayerMask))
+            {
+                // Angle of our slope (between these two vectors). 
+                // A hit normal is at a 90 degree angle from the surface that is collided with (at the point of collision).
+                // e.g. On a flat surface, both vectors are facing straight up, so the angle is 0.
+                groundSlopeAngle = Vector3.Angle(Vector3.up, wallHitResults[0].normal);
+
+                // Find the vector that represents our slope as well. 
+                //  temp: basically, finds vector moving across hit surface 
+                Vector3 temp = Vector3.Cross(wallHitResults[0].normal, Vector3.down);
+                //  Now use this vector and the hit normal, to find the other vector moving up and down the hit surface
+                groundSlopeDir = Vector3.Cross(temp, wallHitResults[0].normal); 
+            }
+        }
+
         public Vector3[] shakeDirs;
         [Networked] public sbyte currentShakeDirection { get; set; }
 

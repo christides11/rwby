@@ -209,6 +209,10 @@ MonoBehaviour:
     state:
       rid: 8688056405345435665
     stateTimeline: {fileID: 11400000, guid: 3e2de3c5a9a7bda41b6ed9ad3867584f, type: 2}
+  - name: Run Slide
+    state:
+      rid: 8688056473731203075
+    stateTimeline: {fileID: 11400000, guid: e8101fc0a6bbbda4692a0c948684a1af, type: 2}
   fighterStats: {fileID: 11400000, guid: 9db018607e1c48c498ee3d8a7c4cefc3, type: 2}
   specials:
   - groundState:
@@ -434,3 +438,7 @@ MonoBehaviour:
       type: {class: RubyRoseStateReference, ns: rwby.core, asm: rwby.core}
       data:
         state: 87
+    - rid: 8688056473731203075
+      type: {class: FighterCmnStateReference, ns: rwby, asm: rwby.csharp}
+      data:
+        state: 39

@@ -205,5 +205,43 @@ namespace rwby
             }
             return false;
         }
+        
+        public static bool FloorAngle(IFighterBase fighter, IConditionVariables variables, HnSF.StateTimeline arg3, int arg4)
+        {
+            FighterManager f = fighter as FighterManager;
+            ConditionFloorAngle vars = (ConditionFloorAngle)variables;
+
+            if (f.groundSlopeAngle >= vars.minAngle && f.groundSlopeAngle <= vars.maxAngle) return true;
+            return false;
+        }
+        
+        public static bool CompareSlopeDir(IFighterBase fighter, IConditionVariables variables, HnSF.StateTimeline arg3, int arg4)
+        {
+            FighterManager f = fighter as FighterManager;
+            ConditionCompareSlopeDir vars = (ConditionCompareSlopeDir)variables;
+
+            if (f.groundSlopeAngle == 0) return false;
+            
+            Vector3 dir = Vector3.zero;
+            switch (vars.inputSource)
+            {
+                case VarInputSourceType.stick:
+                    dir = f.GetMovementVector(0);
+                    break;
+                case VarInputSourceType.rotation:
+                    dir = f.transform.forward;
+                    break;
+            }
+            if (dir == Vector3.zero) dir = f.transform.forward;
+            dir.y = 0;
+            dir.Normalize();
+
+            var floorVector = f.groundSlopeDir;
+            floorVector.y = 0;
+            floorVector.Normalize();
+
+            if (Vector3.Angle(dir, floorVector) <= vars.maxAngle) return true;
+            return false;
+        }
     }
 }

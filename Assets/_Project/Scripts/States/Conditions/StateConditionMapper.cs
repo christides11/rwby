@@ -21,6 +21,8 @@ namespace rwby
             functions.Add(typeof(ConditionHoldingTowardsWall), BaseStateConditionFunctions.HoldingTowardsWall);
             functions.Add(typeof(ConditionHitboxHitCount), BaseStateConditionFunctions.HitboxHitCount);
             functions.Add(typeof(ConditionHitCount), BaseStateConditionFunctions.HitCount);
+            functions.Add(typeof(ConditionFloorAngle), BaseStateConditionFunctions.FloorAngle);
+            functions.Add(typeof(ConditionCompareSlopeDir), BaseStateConditionFunctions.CompareSlopeDir);
         }
     }
 }

@@ -76,10 +76,6 @@ namespace rwby
         List<Renderer> objectsToRemove = new List<Renderer>(5);
         private void CloseCutoutObjectsNoLongerHit()
         {
-            //cooldown += Time.deltaTime;
-            //if (cooldown < cutoutCooldown) return;
-            //cooldown = 0;
-
             foreach (var renderer in ObjectsBlockingView)
             {
                 bool objectisBeingHit = false;

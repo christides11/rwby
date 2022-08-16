@@ -4,6 +4,7 @@ namespace rwby
     {
         stick,
         rotation,
-        custom
+        custom,
+        slope
     }
 }

@@ -1,4 +1,5 @@
 using HnSF;
+using NaughtyAttributes;
 using UnityEngine;
 
 namespace rwby
@@ -56,5 +57,16 @@ namespace rwby
         public FighterStatReferenceFloatBase maxSpeed;
         [SelectImplementation((typeof(FighterStatReferenceBase<AnimationCurve>)))] [SerializeReference]
         public FighterStatReferenceAnimationCurveBase accelerationFromDot;
+
+        [ShowIf("inputSource", VarInputSourceType.slope)]
+        public float slopeMinClamp;
+        [ShowIf("inputSource", VarInputSourceType.slope)]
+        public float slopeMaxClamp;
+        [ShowIf("inputSource", VarInputSourceType.slope)]
+        public float slopeDivi;
+        [ShowIf("inputSource", VarInputSourceType.slope)]
+        public float slopeMulti;
+        [ShowIf("inputSource", VarInputSourceType.slope)]
+        public float slopeMultiMax;
     }
 }
