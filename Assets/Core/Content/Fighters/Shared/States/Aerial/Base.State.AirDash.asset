@@ -23,6 +23,8 @@ MonoBehaviour:
   - rid: 2193520669817307137
   - rid: 2193520691360038912
   - rid: 8688056201677897733
+  - rid: 8688056499935117315
+  - rid: 8688056499935117316
   initialGroundedState: 2
   stateType: 0
   maxUsesInString: -1
@@ -91,3 +93,38 @@ MonoBehaviour:
           rid: -2
         modifyType: 0
         value: 1
+    - rid: 8688056499935117315
+      type: {class: VarFindPole, ns: rwby, asm: rwby.csharp}
+      data:
+        name: 
+        id: 4
+        parent: -1
+        children: 
+        frameRanges:
+        - {x: 1, y: -1}
+        condition:
+          rid: -2
+    - rid: 8688056499935117316
+      type: {class: VarChangeState, ns: rwby, asm: rwby.csharp}
+      data:
+        name: Try Pole Spin
+        id: 5
+        parent: -1
+        children: 
+        frameRanges:
+        - {x: 1, y: -1}
+        condition:
+          rid: 8688056499935117317
+        checkInputSequence: 0
+        checkCondition: 0
+        stateMovesetID: -1
+        state:
+          rid: 8688056499935117318
+    - rid: 8688056499935117317
+      type: {class: ConditionPoleValid, ns: rwby, asm: rwby.csharp}
+      data:
+        inverse: 0
+    - rid: 8688056499935117318
+      type: {class: FighterCmnStateReference, ns: rwby, asm: rwby.csharp}
+      data:
+        state: 40

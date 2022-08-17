@@ -40,7 +40,9 @@ namespace rwby
             functions.Add(typeof(VarFindSoftTarget), BaseStateFunctions.FindSoftTarget);
             functions.Add(typeof(VarDebugLog), BaseStateFunctions.LogMessage);
             functions.Add(typeof(VarFindWall), BaseStateFunctions.FindWall);
+            functions.Add(typeof(VarFindPole), BaseStateFunctions.FindPole);
             functions.Add(typeof(VarSnapToWall), BaseStateFunctions.SnapToWall);
+            functions.Add(typeof(VarSnapToPole), BaseStateFunctions.SnapToPole);
             functions.Add(typeof(VarClampMovement), BaseStateFunctions.ClampMovement);
             functions.Add(typeof(VarTeleportRaycast), BaseStateFunctions.TeleportRaycast);
             functions.Add(typeof(VarModifyMoveset), BaseStateFunctions.ModifyMoveset);

@@ -217,6 +217,10 @@ MonoBehaviour:
     state:
       rid: 8688056473731203108
     stateTimeline: {fileID: 11400000, guid: 82c52000bbc8d6448869ea0c5368c44e, type: 2}
+  - name: Pole Spin
+    state:
+      rid: 8688056499935117314
+    stateTimeline: {fileID: 11400000, guid: b833a7f1bc4d71044894bc553dec3e40, type: 2}
   fighterStats: {fileID: 11400000, guid: 9db018607e1c48c498ee3d8a7c4cefc3, type: 2}
   specials:
   - groundState:
@@ -450,3 +454,7 @@ MonoBehaviour:
       type: {class: RubyRoseStateReference, ns: rwby.core, asm: rwby.core}
       data:
         state: 79
+    - rid: 8688056499935117314
+      type: {class: FighterCmnStateReference, ns: rwby, asm: rwby.csharp}
+      data:
+        state: 40

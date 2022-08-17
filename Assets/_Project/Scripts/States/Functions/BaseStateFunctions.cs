@@ -598,6 +598,27 @@ namespace rwby
             fm.AssignWall(fm.wallHitResults[lowestIndex]);
         }
         
+        public static void FindPole(IFighterBase fighter, IStateVariables variables, HnSF.StateTimeline arg3, int arg4)
+        {
+            FighterManager fm = (FighterManager)fighter;
+            VarFindPole vars = (VarFindPole)variables;
+            
+            Vector3 bottomPoint = fm.myTransform.position + fm.FPhysicsManager.cc.center + Vector3.up * -fm.FPhysicsManager.cc.height * 0.5F;
+            Vector3 topPoint = bottomPoint + Vector3.up * fm.FPhysicsManager.cc.height;
+
+            //bool hit = fm.Runner.GetPhysicsScene().CapsuleCast(bottomPoint, topPoint, fm.FPhysicsManager.cc.radius * 0.9f, dir, out fm.wallHitResults[0], vars.distance, fm.wallLayerMask.value);
+            int hits = fm.Runner.GetPhysicsScene().OverlapCapsule(bottomPoint, topPoint, fm.FPhysicsManager.cc.radius,
+                fm.colliderBuffer, fm.poleLayerMask, QueryTriggerInteraction.UseGlobal);
+
+            if (hits == 0)
+            {
+                fm.foundPole = null;
+                return;
+            }
+
+            fm.foundPole = fm.colliderBuffer[0].gameObject.GetComponent<Pole>();
+        }
+        
         public static void SnapToWall(IFighterBase fighter, IStateVariables variables, HnSF.StateTimeline arg3, int arg4)
         {
             FighterManager fm = (FighterManager)fighter;
@@ -609,6 +630,16 @@ namespace rwby
 
             fm.FPhysicsManager.SetPosition(newPos, false);
             fm.SetRotation(-fm.cWallNormal, false);
+        }
+        
+        public static void SnapToPole(IFighterBase fighter, IStateVariables variables, HnSF.StateTimeline arg3, int arg4)
+        {
+            FighterManager fm = (FighterManager)fighter;
+            VarSnapToPole vars = (VarSnapToPole)variables;
+
+            if (fm.foundPole == null) return;
+            fm.FPhysicsManager.SetPosition(fm.foundPole.GetNearestPoint(fm.transform.position), false);
+            fm.SetRotation(fm.foundPole.GetNearestFaceDirection(fm.transform.forward));
         }
         
         public static void ClampMovement(IFighterBase fighter, IStateVariables variables, HnSF.StateTimeline arg3, int arg4)

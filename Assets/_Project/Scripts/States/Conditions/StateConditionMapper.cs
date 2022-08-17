@@ -23,6 +23,7 @@ namespace rwby
             functions.Add(typeof(ConditionHitCount), BaseStateConditionFunctions.HitCount);
             functions.Add(typeof(ConditionFloorAngle), BaseStateConditionFunctions.FloorAngle);
             functions.Add(typeof(ConditionCompareSlopeDir), BaseStateConditionFunctions.CompareSlopeDir);
+            functions.Add(typeof(ConditionPoleValid), BaseStateConditionFunctions.PoleValid);
         }
     }
 }

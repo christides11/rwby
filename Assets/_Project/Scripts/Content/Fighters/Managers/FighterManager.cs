@@ -84,11 +84,16 @@ namespace rwby
 
         [Header("Walls")]
         public LayerMask wallLayerMask;
+        public LayerMask poleLayerMask;
         [HideInInspector] public RaycastHit[] wallHitResults = new RaycastHit[8];
 
         [Networked] public Vector3 cWallNormal { get; set; }
         [Networked] public Vector3 cWallPoint { get; set; }
         [Networked] public byte cWallSide { get; set; }
+
+        [HideInInspector] public Pole foundPole;
+        
+        [HideInInspector] public Collider[] colliderBuffer = new Collider[1];
         
         public virtual async UniTask<bool> OnFighterLoaded()
         {

@@ -243,5 +243,14 @@ namespace rwby
             if (Vector3.Angle(dir, floorVector) <= vars.maxAngle) return true;
             return false;
         }
+        
+        public static bool PoleValid(IFighterBase fighter, IConditionVariables variables, HnSF.StateTimeline arg3, int arg4)
+        {
+            FighterManager f = fighter as FighterManager;
+            ConditionPoleValid vars = (ConditionPoleValid)variables;
+
+            bool result = f.foundPole == null ? false : true;
+            return vars.inverse ? !result : result;
+        }
     }
 }

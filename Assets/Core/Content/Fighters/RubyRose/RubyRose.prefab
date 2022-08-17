@@ -456,12 +456,20 @@ MonoBehaviour:
   wallLayerMask:
     serializedVersion: 2
     m_Bits: 2056
+  poleLayerMask:
+    serializedVersion: 2
+    m_Bits: 4096
   _cWallNormal: {x: 0, y: 0, z: 0}
   _cWallPoint: {x: 0, y: 0, z: 0}
   _cWallSide: 0
+  foundPole: {fileID: 0}
+  colliderBuffer:
+  - {fileID: 0}
   hitstopShakeDistance: 0.5
   hitstopDir: 1
   hitstopShakeFrames: 1
+  groundSlopeAngle: 0
+  groundSlopeDir: {x: 0, y: 0, z: 0}
   val: 100
   shakeDirs:
   - {x: -0.2, y: 0, z: 0}
@@ -559,6 +567,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _interpolationDataSource: 0
+  manager: {fileID: 0}
   networkObject: {fileID: 2824089167830894127}
   hRoot: {fileID: 8828466035712802024}
   settings: {fileID: 11400000, guid: fa9f7c1fd91f42e4087fa739f9dd3614, type: 2}
@@ -631,6 +640,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _interpolationDataSource: 0
+  _CurrentMoveset: 0
   _CurrentStateMoveset: 0
   _CurrentState: 0
   _CurrentStateFrame: 0
