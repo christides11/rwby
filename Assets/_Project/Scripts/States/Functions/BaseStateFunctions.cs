@@ -605,8 +605,7 @@ namespace rwby
             
             Vector3 bottomPoint = fm.myTransform.position + fm.FPhysicsManager.cc.center + Vector3.up * -fm.FPhysicsManager.cc.height * 0.5F;
             Vector3 topPoint = bottomPoint + Vector3.up * fm.FPhysicsManager.cc.height;
-
-            //bool hit = fm.Runner.GetPhysicsScene().CapsuleCast(bottomPoint, topPoint, fm.FPhysicsManager.cc.radius * 0.9f, dir, out fm.wallHitResults[0], vars.distance, fm.wallLayerMask.value);
+            
             int hits = fm.Runner.GetPhysicsScene().OverlapCapsule(bottomPoint, topPoint, fm.FPhysicsManager.cc.radius,
                 fm.colliderBuffer, fm.poleLayerMask, QueryTriggerInteraction.UseGlobal);
 
@@ -640,6 +639,7 @@ namespace rwby
             if (fm.foundPole == null) return;
             fm.FPhysicsManager.SetPosition(fm.foundPole.GetNearestPoint(fm.transform.position), false);
             fm.SetRotation(fm.foundPole.GetNearestFaceDirection(fm.transform.forward));
+            fm.poleMagnitude = (fm.FPhysicsManager.forceMovement + new Vector3(0, fm.FPhysicsManager.forceGravity, 0)).magnitude;
         }
         
         public static void ClampMovement(IFighterBase fighter, IStateVariables variables, HnSF.StateTimeline arg3, int arg4)
@@ -694,6 +694,40 @@ namespace rwby
             VarModifyMoveset vars = (VarModifyMoveset)variables;
 
             fm.StateManager.SetMoveset(vars.modifyType == VarModifyType.SET ? vars.value : fm.StateManager.CurrentStateMoveset + vars.value);
+        }
+        
+        public static void ModifyPoleAngle(IFighterBase fighter, IStateVariables variables, HnSF.StateTimeline stateTimeline, int frame)
+        {
+            FighterManager fm = (FighterManager)fighter;
+            VarModifyPoleAngle vars = (VarModifyPoleAngle)variables;
+
+            switch (vars.modifyType)
+            {
+                case VarModifyType.ADD:
+                    fm.poleSpin += vars.value;
+                    Vector3 rotatedVector = Quaternion.Euler(fm.poleSpin, 0, 0) * Vector3.forward;
+                    Debug.DrawRay(fm.myTransform.position, (fm.myTransform.forward * rotatedVector.z) + (fm.myTransform.right * rotatedVector.x)  + (Vector3.up * rotatedVector.y), Color.red, fm.Runner.DeltaTime);
+                    break;
+                case VarModifyType.SET:
+                    
+                    break;
+            }
+        }
+        
+        public static void TransferPoleMomentum(IFighterBase fighter, IStateVariables variables, HnSF.StateTimeline stateTimeline, int frame)
+        {
+            FighterManager fm = (FighterManager)fighter;
+            VarTransferPoleMomentum vars = (VarTransferPoleMomentum)variables;
+
+            Vector3 rotatedVector = Quaternion.Euler(fm.poleSpin, 0, 0) * Vector3.forward;
+            rotatedVector *= fm.poleMagnitude;
+
+            fm.FPhysicsManager.forceGravity = rotatedVector.y;
+            rotatedVector.y = 0;
+            fm.FPhysicsManager.forceMovement = (fm.myTransform.forward * rotatedVector.z) + (fm.myTransform.right * rotatedVector.x);
+
+            fm.poleMagnitude = 0;
+            fm.poleSpin = 0;
         }
     }
 }

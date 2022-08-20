@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7789f25d17401bc4b915ca6fcecf2a29, type: 3}
   m_Name: Base.State.PoleSpin
   m_EditorClassIdentifier: 
-  stateName: Wall Cling
+  stateName: Pole Spin
   useBaseState: 0
   baseState: {fileID: 0}
   totalFrames: 10
@@ -20,10 +20,12 @@ MonoBehaviour:
   autoLoop: 1
   autoLoopFrame: 1
   data:
+  - rid: 8688056499935117312
   - rid: 8688056157277782022
   - rid: 8688056157277782024
-  - rid: 8688056499935117312
-  - rid: 8688056499935117313
+  - rid: 8688056566766108672
+  - rid: 8688056566766108674
+  - rid: 8688056566766108676
   initialGroundedState: 2
   stateType: 1
   maxUsesInString: -1
@@ -95,15 +97,47 @@ MonoBehaviour:
         - {x: 0, y: 0}
         condition:
           rid: -2
-    - rid: 8688056499935117313
-      type: {class: VarExternal, ns: rwby, asm: rwby.csharp}
+    - rid: 8688056566766108672
+      type: {class: VarTransferPoleMomentum, ns: rwby, asm: rwby.csharp}
       data:
-        name: Try External
-        id: 3
+        name: 
+        id: 4
+        parent: -1
+        children: 
+        frameRanges:
+        - {x: -2, y: -2}
+        condition:
+          rid: -2
+    - rid: 8688056566766108674
+      type: {class: VarChangeState, ns: rwby, asm: rwby.csharp}
+      data:
+        name: 
+        id: 5
         parent: -1
         children: 
         frameRanges:
         - {x: 1, y: -1}
         condition:
           rid: -2
-        asset: {fileID: 11400000, guid: 60616eb90e93a5644a1f15ae2743f165, type: 2}
+        checkInputSequence: 1
+        checkCondition: 0
+        stateMovesetID: -1
+        state:
+          rid: 8688056566766108675
+    - rid: 8688056566766108675
+      type: {class: FighterCmnStateReference, ns: rwby, asm: rwby.csharp}
+      data:
+        state: 41
+    - rid: 8688056566766108676
+      type: {class: VarModifyPoleAngle, ns: rwby, asm: rwby.csharp}
+      data:
+        name: 
+        id: 6
+        parent: -1
+        children: 
+        frameRanges:
+        - {x: 1, y: -1}
+        condition:
+          rid: -2
+        modifyType: 0
+        value: -5

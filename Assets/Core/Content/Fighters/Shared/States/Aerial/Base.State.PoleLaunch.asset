@@ -10,30 +10,31 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7789f25d17401bc4b915ca6fcecf2a29, type: 3}
-  m_Name: Base.State.Jump
+  m_Name: Base.State.PoleLaunch
   m_EditorClassIdentifier: 
-  stateName: Jump
+  stateName: Pole Launch
   useBaseState: 0
   baseState: {fileID: 0}
-  totalFrames: 10
+  totalFrames: 20
   autoIncrement: 1
   autoLoop: 1
-  autoLoopFrame: 5
+  autoLoopFrame: 10
   data:
   - rid: 2193520703102779392
-  - rid: 2193520703102779404
   - rid: 2193520703102779397
-  - rid: 8688056570279886859
   - rid: 2193520791838261256
   - rid: 2193520791838261262
-  - rid: 8688056195711238163
   initialGroundedState: 2
-  stateType: 0
+  stateType: 1
   maxUsesInString: -1
   allowBaseStateTransitions: 1
   inputSequence:
     executeWindow: 3
-    executeInputs: []
+    executeInputs:
+    - inputType: 0
+      buttonID: 0
+      stickDirection: {x: 0, y: 0}
+      directionDeviation: 0
     sequenceWindow: 8
     sequenceInputs: []
   inputSequenceAsHoldInputs: 0
@@ -146,7 +147,7 @@ MonoBehaviour:
       type: {class: FighterBaseStatReferenceFloat, ns: rwby, asm: rwby.csharp}
       data:
         inverse: 0
-        statReference: 1
+        statReference: 0
         value: 0
         variable: 27
     - rid: 2193520703102779401
@@ -160,8 +161,8 @@ MonoBehaviour:
       type: {class: FighterBaseStatReferenceFloat, ns: rwby, asm: rwby.csharp}
       data:
         inverse: 0
-        statReference: 1
-        value: 0
+        statReference: 0
+        value: 50
         variable: 24
     - rid: 2193520703102779403
       type: {class: FighterBaseStatReferenceAnimationCurve, ns: rwby, asm: rwby.csharp}
@@ -175,64 +176,6 @@ MonoBehaviour:
           m_PostInfinity: 2
           m_RotationOrder: 4
         variable: 2
-    - rid: 2193520703102779404
-      type: {class: VarApplyGravity, ns: rwby, asm: rwby.csharp}
-      data:
-        name: Extra Gravity
-        id: 2
-        parent: -1
-        children: 
-        frameRanges:
-        - {x: 5, y: -1}
-        condition:
-          rid: 2193520703102779405
-        useValue: 0
-        value:
-          rid: -2
-        jumpHeight:
-          rid: 2193520703102779407
-        jumpTime:
-          rid: 2193520703102779408
-        multi:
-          rid: 2193520703102779409
-        maxFallSpeed:
-          rid: 2193520703102779410
-    - rid: 2193520703102779405
-      type: {class: ConditionButton, ns: rwby, asm: rwby.csharp}
-      data:
-        inverse: 1
-        button: 0
-        buttonState: 0
-        offset: 0
-        buffer: 0
-    - rid: 2193520703102779407
-      type: {class: FighterBaseStatReferenceFloat, ns: rwby, asm: rwby.csharp}
-      data:
-        inverse: 0
-        statReference: 1
-        value: 0
-        variable: 13
-    - rid: 2193520703102779408
-      type: {class: FighterBaseStatReferenceFloat, ns: rwby, asm: rwby.csharp}
-      data:
-        inverse: 0
-        statReference: 1
-        value: 0
-        variable: 12
-    - rid: 2193520703102779409
-      type: {class: FighterBaseStatReferenceFloat, ns: rwby, asm: rwby.csharp}
-      data:
-        inverse: 0
-        statReference: 0
-        value: 0.2
-        variable: 0
-    - rid: 2193520703102779410
-      type: {class: FighterBaseStatReferenceFloat, ns: rwby, asm: rwby.csharp}
-      data:
-        inverse: 0
-        statReference: 1
-        value: 0
-        variable: 23
     - rid: 2193520791838261256
       type: {class: VarExternal, ns: rwby, asm: rwby.csharp}
       data:
@@ -253,31 +196,7 @@ MonoBehaviour:
         parent: -1
         children: 
         frameRanges:
-        - {x: 5, y: -1}
+        - {x: 10, y: -1}
         condition:
           rid: -2
         asset: {fileID: 11400000, guid: e3eaa1968ad0197499aa52999cb46489, type: 2}
-    - rid: 8688056195711238163
-      type: {class: VarExternal, ns: rwby, asm: rwby.csharp}
-      data:
-        name: Wall Interrupts
-        id: 6
-        parent: -1
-        children: 
-        frameRanges:
-        - {x: 5, y: 10}
-        condition:
-          rid: -2
-        asset: {fileID: 11400000, guid: dd12f38f1b643734aa58d2dab90b66b9, type: 2}
-    - rid: 8688056570279886859
-      type: {class: VarExternal, ns: rwby, asm: rwby.csharp}
-      data:
-        name: Try Pole Spin
-        id: 7
-        parent: -1
-        children: 
-        frameRanges:
-        - {x: 5, y: -1}
-        condition:
-          rid: -2
-        asset: {fileID: 11400000, guid: 7c662af6370ac74418d577009883926e, type: 2}

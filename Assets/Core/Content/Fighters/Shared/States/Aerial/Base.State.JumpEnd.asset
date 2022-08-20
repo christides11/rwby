@@ -23,9 +23,10 @@ MonoBehaviour:
   - rid: 2193520768546504705
   - rid: 2193520703102779412
   - rid: 2193520703102779417
+  - rid: 8688056570279886857
   - rid: 2193520791838261257
   - rid: 8688056195711238164
-  stateGroundedGroup: 2
+  initialGroundedState: 2
   stateType: 0
   maxUsesInString: -1
   allowBaseStateTransitions: 1
@@ -121,6 +122,11 @@ MonoBehaviour:
           rid: 2193520703102779422
         accelerationFromDot:
           rid: 2193520703102779423
+        slopeMinClamp: 0
+        slopeMaxClamp: 0
+        slopeDivi: 0
+        slopeMulti: 0
+        slopeMultiMax: 0
     - rid: 2193520703102779418
       type: {class: FighterBaseStatReferenceFloat, ns: rwby, asm: rwby.csharp}
       data:
@@ -216,3 +222,15 @@ MonoBehaviour:
         condition:
           rid: -2
         asset: {fileID: 11400000, guid: dd12f38f1b643734aa58d2dab90b66b9, type: 2}
+    - rid: 8688056570279886857
+      type: {class: VarExternal, ns: rwby, asm: rwby.csharp}
+      data:
+        name: Try Pole Spin
+        id: 5
+        parent: -1
+        children: 
+        frameRanges:
+        - {x: 1, y: -1}
+        condition:
+          rid: -2
+        asset: {fileID: 11400000, guid: 7c662af6370ac74418d577009883926e, type: 2}

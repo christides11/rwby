@@ -37,6 +37,8 @@ namespace rwby
         
         [NonSerialized] public StateFunctionMapper functionMapper = new StateFunctionMapper(); 
         [NonSerialized] public StateConditionMapper conditionMapper = new StateConditionMapper();
+
+        [HideInInspector] public int interruptedOnFrame = 0;
         
         public static void OnChangedState(Changed<FighterStateManager> changed){
             changed.Behaviour.OnStateChanged?.Invoke(changed.Behaviour);
@@ -167,6 +169,7 @@ namespace rwby
             if (callOnInterrupt && previousState != (int)FighterCmnStates.NULL)
             {
                 StateTimeline currentStateTimeline = GetState();
+                interruptedOnFrame = CurrentStateFrame;
                 SetFrame(currentStateTimeline.totalFrames+1);
                 ProcessState(currentStateTimeline, true);
             }

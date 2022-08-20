@@ -46,6 +46,8 @@ namespace rwby
             functions.Add(typeof(VarClampMovement), BaseStateFunctions.ClampMovement);
             functions.Add(typeof(VarTeleportRaycast), BaseStateFunctions.TeleportRaycast);
             functions.Add(typeof(VarModifyMoveset), BaseStateFunctions.ModifyMoveset);
+            functions.Add(typeof(VarModifyPoleAngle), BaseStateFunctions.ModifyPoleAngle);
+            functions.Add(typeof(VarTransferPoleMomentum), BaseStateFunctions.TransferPoleMomentum);
         }
     }
 }

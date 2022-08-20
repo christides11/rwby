@@ -29,6 +29,10 @@ MonoBehaviour:
     state:
       rid: 2193520747161583617
     stateTimeline: {fileID: 11400000, guid: 110994b9ad8df0f4a8d171638b78d334, type: 2}
+  - name: run slide
+    state:
+      rid: 8688056566766108677
+    stateTimeline: {fileID: 11400000, guid: e8101fc0a6bbbda4692a0c948684a1af, type: 2}
   - name: run brake
     state:
       rid: 2193520750553202698
@@ -101,6 +105,14 @@ MonoBehaviour:
     state:
       rid: 8688056377568657443
     stateTimeline: {fileID: 11400000, guid: aee25092ef518a6419f83dfa707f4bf7, type: 2}
+  - name: Pole Spin
+    state:
+      rid: 8688056566766108678
+    stateTimeline: {fileID: 11400000, guid: b833a7f1bc4d71044894bc553dec3e40, type: 2}
+  - name: Pole Launch
+    state:
+      rid: 8688056570279886856
+    stateTimeline: {fileID: 11400000, guid: fb1ab63132976ae4e8e47b0e5df08c26, type: 2}
   fighterStats: {fileID: 11400000, guid: 9db018607e1c48c498ee3d8a7c4cefc3, type: 2}
   specials: []
   references:
@@ -194,3 +206,15 @@ MonoBehaviour:
       type: {class: FighterCmnStateReference, ns: rwby, asm: rwby.csharp}
       data:
         state: 35
+    - rid: 8688056566766108677
+      type: {class: FighterCmnStateReference, ns: rwby, asm: rwby.csharp}
+      data:
+        state: 39
+    - rid: 8688056566766108678
+      type: {class: FighterCmnStateReference, ns: rwby, asm: rwby.csharp}
+      data:
+        state: 40
+    - rid: 8688056570279886856
+      type: {class: FighterCmnStateReference, ns: rwby, asm: rwby.csharp}
+      data:
+        state: 41

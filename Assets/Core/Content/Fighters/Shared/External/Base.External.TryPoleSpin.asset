@@ -1,0 +1,75 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d4d62b28b52db7d459dd2f283317c705, type: 3}
+  m_Name: Base.External.TryPoleSpin
+  m_EditorClassIdentifier: 
+  data:
+  - rid: 8688056570279886848
+  - rid: 8688056570279886850
+  references:
+    version: 2
+    RefIds:
+    - rid: 8688056570279886848
+      type: {class: VarFindPole, ns: rwby, asm: rwby.csharp}
+      data:
+        name: 
+        id: 0
+        parent: 0
+        children: 
+        frameRanges: []
+        condition:
+          rid: 8688056570279886849
+    - rid: 8688056570279886849
+      type: {class: ConditionButton, ns: rwby, asm: rwby.csharp}
+      data:
+        inverse: 0
+        button: 4
+        buttonState: 0
+        offset: 0
+        buffer: 0
+    - rid: 8688056570279886850
+      type: {class: VarChangeState, ns: rwby, asm: rwby.csharp}
+      data:
+        name: 
+        id: 0
+        parent: 0
+        children: 
+        frameRanges: []
+        condition:
+          rid: 8688056570279886851
+        checkInputSequence: 0
+        checkCondition: 0
+        stateMovesetID: -1
+        state:
+          rid: 8688056570279886854
+    - rid: 8688056570279886851
+      type: {class: ConditionAnd, ns: rwby, asm: rwby.csharp}
+      data:
+        conditions:
+        - rid: 8688056570279886852
+        - rid: 8688056570279886853
+    - rid: 8688056570279886852
+      type: {class: ConditionButton, ns: rwby, asm: rwby.csharp}
+      data:
+        inverse: 0
+        button: 4
+        buttonState: 0
+        offset: 0
+        buffer: 0
+    - rid: 8688056570279886853
+      type: {class: ConditionPoleValid, ns: rwby, asm: rwby.csharp}
+      data:
+        inverse: 0
+    - rid: 8688056570279886854
+      type: {class: FighterCmnStateReference, ns: rwby, asm: rwby.csharp}
+      data:
+        state: 40

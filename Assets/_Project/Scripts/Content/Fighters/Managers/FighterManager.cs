@@ -91,10 +91,12 @@ namespace rwby
         [Networked] public Vector3 cWallPoint { get; set; }
         [Networked] public byte cWallSide { get; set; }
 
+        [Header("Pole")]
         [HideInInspector] public Pole foundPole;
-        
         [HideInInspector] public Collider[] colliderBuffer = new Collider[1];
-        
+        [Networked] public float poleMagnitude { get; set; }
+        [Networked] public float poleSpin { get; set; }
+
         public virtual async UniTask<bool> OnFighterLoaded()
         {
             return true;
