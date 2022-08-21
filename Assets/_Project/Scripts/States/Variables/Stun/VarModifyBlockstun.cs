@@ -3,8 +3,8 @@ using UnityEngine;
 
 namespace rwby
 {
-    [StateVariable("Stun/Modify Hitstun")]
-    public struct VarModifyHitstun : IStateVariables
+    [StateVariable("Stun/Modify Blockstun")]
+    public struct VarModifyBlockstun : IStateVariables
     {
         public string name;
         public string Name

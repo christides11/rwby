@@ -3,8 +3,7 @@ using UnityEngine;
 
 namespace rwby
 {
-    [StateVariable("Stun/Modify Hitstun")]
-    public struct VarModifyHitstun : IStateVariables
+    public struct VarSetGuardState : IStateVariables
     {
         public string name;
         public string Name
@@ -40,7 +39,6 @@ namespace rwby
         public IConditionVariables condition;
         public IConditionVariables Condition => condition;
 
-        public VarModifyType modifyType;
-        public int value;
+        public BlockStateType state;
     }
 }

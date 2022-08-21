@@ -237,6 +237,14 @@ MonoBehaviour:
     state:
       rid: 8688056588631801864
     stateTimeline: {fileID: 11400000, guid: d15799520a265d54392654e705960304, type: 2}
+  - name: Block (Grd)
+    state:
+      rid: 8688056606344609808
+    stateTimeline: {fileID: 11400000, guid: c55bde52deab5c243a17278a40095af6, type: 2}
+  - name: Block (Air)
+    state:
+      rid: 8688056606344609809
+    stateTimeline: {fileID: 11400000, guid: b22186eff31200548b81693d393e9870, type: 2}
   fighterStats: {fileID: 11400000, guid: 9db018607e1c48c498ee3d8a7c4cefc3, type: 2}
   specials:
   - groundState:
@@ -490,3 +498,11 @@ MonoBehaviour:
       type: {class: FighterCmnStateReference, ns: rwby, asm: rwby.csharp}
       data:
         state: 44
+    - rid: 8688056606344609808
+      type: {class: FighterCmnStateReference, ns: rwby, asm: rwby.csharp}
+      data:
+        state: 15
+    - rid: 8688056606344609809
+      type: {class: FighterCmnStateReference, ns: rwby, asm: rwby.csharp}
+      data:
+        state: 17

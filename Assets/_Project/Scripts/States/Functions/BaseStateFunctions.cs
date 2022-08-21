@@ -764,5 +764,31 @@ namespace rwby
                 fm.throwees.Set(i, null);
             }
         }
+        
+        public static void ModifyBlockstun(IFighterBase fighter, IStateVariables variables, HnSF.StateTimeline stateTimeline, int frame)
+        {
+            FighterManager fm = (FighterManager)fighter;
+            VarModifyBlockstun vars = (VarModifyBlockstun)variables;
+
+            switch (vars.modifyType)
+            {
+                case VarModifyType.ADD:
+                    fm.FCombatManager.BlockStun += vars.value;
+                    break;
+                case VarModifyType.SET:
+                    fm.FCombatManager.BlockStun = vars.value;
+                    break;
+            }
+
+            fm.FCombatManager.BlockStun = Mathf.Clamp(fm.FCombatManager.BlockStun, 0, int.MaxValue);
+        }
+        
+        public static void SetGuardState(IFighterBase fighter, IStateVariables variables, HnSF.StateTimeline stateTimeline, int frame)
+        {
+            FighterManager fm = (FighterManager)fighter;
+            VarSetGuardState vars = (VarSetGuardState)variables;
+
+            fm.FCombatManager.BlockState = vars.state;
+        }
     }
 }

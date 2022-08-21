@@ -16,6 +16,7 @@ namespace rwby
             functions.Add(typeof(ConditionCanAirDash), BaseStateConditionFunctions.CanAirDash);
             functions.Add(typeof(ConditionMoveset), BaseStateConditionFunctions.Moveset);
             functions.Add(typeof(ConditionHitstunValue), BaseStateConditionFunctions.HitstunValue);
+            functions.Add(typeof(ConditionBlockstunValue), BaseStateConditionFunctions.BlockstunValue);
             functions.Add(typeof(ConditionLockedOn), BaseStateConditionFunctions.LockedOn);
             functions.Add(typeof(ConditionWallValid), BaseStateConditionFunctions.WallValid);
             functions.Add(typeof(ConditionHoldingTowardsWall), BaseStateConditionFunctions.HoldingTowardsWall);
