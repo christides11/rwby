@@ -33,14 +33,15 @@ namespace rwby
 
         public struct ThrowboxCombatPair
         {
-
+            public CustomHitbox attackerThrowbox;
+            public Throwablebox attackeeThrowablebox;
         }
 
         public static CombatPairFinder singleton;
 
         public List<NetworkObject> broadphaseObjects = new List<NetworkObject>();
 
-        // (Atacker, Atackee)
+        // (Attacker, Attackee)
         public Dictionary<(NetworkObject, NetworkObject), HitboxCombatPair> hitboxCombatPairs = new Dictionary<(NetworkObject, NetworkObject), HitboxCombatPair>();
         public Dictionary<(NetworkObject, NetworkObject), ThrowboxCombatPair> throwboxCombatPairs = new Dictionary<(NetworkObject, NetworkObject), ThrowboxCombatPair>();
         public Dictionary<(NetworkObject, NetworkObject), CollisionPair> collisionPairs = new Dictionary<(NetworkObject, NetworkObject), CollisionPair>();
@@ -227,7 +228,70 @@ namespace rwby
 
         private void ResolveGrabInteractions()
         {
+            for(int i = broadphaseObjects.Count-1; i >= 0; i--)
+            {
+                IBoxCollection boxCollection = broadphaseObjects[i].GetComponent<IBoxCollection>();
 
+                bool objHasThrowboxes = boxCollection.Throwboxes[0].HitboxActive == true;
+                if (objHasThrowboxes == false) continue;
+                
+                for (int a = 0; a < boxCollection.Throwboxes.Length; a++)
+                {
+                    if (boxCollection.Throwboxes[a].HitboxActive == false) break;
+                    
+                    int numHit = 0;
+                    switch (boxCollection.Throwboxes[a].Type)
+                    {
+                        case HitboxTypes.Box:
+                            numHit = Runner.LagCompensation.OverlapBox(boxCollection.Throwboxes[a].transform.position,
+                                boxCollection.Throwboxes[a].BoxExtents, boxCollection.Throwboxes[a].transform.rotation,
+                                new PlayerRef(), hitsList, throwboxLayermask);
+                            break;
+                        case HitboxTypes.Sphere:
+                            numHit = Runner.LagCompensation.OverlapSphere(boxCollection.Throwboxes[a].transform.position,
+                                boxCollection.Throwboxes[a].SphereRadius,
+                                new PlayerRef(), hitsList, throwboxLayermask);
+                            break;
+                    }
+
+                    for (int f = 0; f < numHit; f++)
+                    {
+                        Throwablebox h = hitsList[f].GameObject.GetComponent<Throwablebox>();
+                        if (h.HitboxActive == true && broadphaseObjects[i].GetComponent<IThrower>().IsThroweeValid(boxCollection.Hitboxes[a], h))
+                        {
+                            var tuple = (broadphaseObjects[i].GetBehaviour<NetworkObject>(), h.ownerNetworkObject);
+                            //TODO: Remove.
+                            if (throwboxCombatPairs.ContainsKey(tuple))
+                            {
+                                throwboxCombatPairs[tuple] = new ThrowboxCombatPair()
+                                {
+                                    attackerThrowbox = boxCollection.Throwboxes[a],
+                                    attackeeThrowablebox = h
+                                };
+                                /*
+                                if thro[tuple].attackerHitbox.definition.HitboxInfo[hitboxCombatPairs[tuple].attackerHitbox.definitionIndex].ID 
+                                    > boxCollection.Hitboxes[a].definition.HitboxInfo[boxCollection.Hitboxes[a].definitionIndex].ID)
+                                {
+                                    throwboxCombatPairs[tuple] = new ThrowboxCombatPair()
+                                    {
+                                        attackerThrowbox = boxCollection.Throwboxes[a],
+                                        attackeeThrowablebox = h
+                                    };
+                                }*/
+                            }
+                            else
+                            {
+                                throwboxCombatPairs.Add(tuple,
+                                    new ThrowboxCombatPair()
+                                    {
+                                        attackerThrowbox = boxCollection.Throwboxes[a],
+                                        attackeeThrowablebox = h
+                                    });
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
 }

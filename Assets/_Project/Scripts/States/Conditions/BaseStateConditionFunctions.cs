@@ -252,5 +252,12 @@ namespace rwby
             bool result = f.foundPole == null ? false : true;
             return vars.inverse ? !result : result;
         }
+        
+        public static bool HasThrowees(IFighterBase fighter, IConditionVariables variables, HnSF.StateTimeline arg3, int arg4)
+        {
+            FighterManager f = fighter as FighterManager;
+
+            return f.throwees[0] != null ? true : false;
+        }
     }
 }

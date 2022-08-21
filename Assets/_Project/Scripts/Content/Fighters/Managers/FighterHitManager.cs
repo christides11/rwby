@@ -129,5 +129,18 @@ namespace rwby
             }
             return hurtInfo;*/
         }
+
+        public override void ThrowerInitilization(NetworkObject throwee)
+        {
+            base.ThrowerInitilization(throwee);
+            manager.throwees.Set(0, throwee);
+        }
+
+        public override void ThroweeInitilization(NetworkObject thrower)
+        {
+            base.ThroweeInitilization(thrower);
+            manager.thrower = thrower;
+            manager.FStateManager.MarkForStateChange((int)FighterCmnStates.THROWN);
+        }
     }
 }

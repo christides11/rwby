@@ -256,7 +256,7 @@ MonoBehaviour:
   BoxExtents: {x: 0, y: 0, z: 0}
   Offset: {x: 0, y: 0, z: 0}
   Root: {fileID: 8828466035712802024}
-  GizmosColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
+  GizmosColor: {r: 0.015686274, g: 0.10006687, b: 1, a: 1}
   ownerNetworkObject: {fileID: 0}
   hurtboxGroup:
     ID: 0
@@ -465,6 +465,12 @@ MonoBehaviour:
   foundPole: {fileID: 0}
   colliderBuffer:
   - {fileID: 0}
+  _poleMagnitude: 0
+  _poleSpin: 0
+  _throweePosition: {x: 0, y: 0, z: 0}
+  _throweeRotation: {x: 0, y: 0, z: 0}
+  _thrower: {fileID: 0}
+  _throwees: []
   hitstopShakeDistance: 0.5
   hitstopDir: 1
   hitstopShakeFrames: 1
@@ -600,9 +606,6 @@ MonoBehaviour:
   - {fileID: 5944070340818351198}
   throwboxes:
   - {fileID: 7482169374773852577}
-  combatBoxBounds:
-    m_Center: {x: 0, y: 0, z: 0}
-    m_Extent: {x: 0, y: 0, z: 0}
 --- !u!114 &8629761033667016515
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -652,6 +655,7 @@ MonoBehaviour:
   manager: {fileID: 3846760401122892541}
   combatManager: {fileID: 7730901374118442406}
   movesets: []
+  interruptedOnFrame: 0
 --- !u!114 &2326289350170218266
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5852,7 +5856,7 @@ MonoBehaviour:
   BoxExtents: {x: 0, y: 0, z: 0}
   Offset: {x: 0, y: 0, z: 0}
   Root: {fileID: 8828466035712802024}
-  GizmosColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
+  GizmosColor: {r: 0.015686274, g: 0.8135933, b: 1, a: 1}
   ownerNetworkObject: {fileID: 0}
   hurtboxGroup:
     ID: 0

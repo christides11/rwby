@@ -5,5 +5,6 @@ namespace rwby
         public CustomHitbox[] Hitboxes { get; }
         public Hurtbox[] Hurtboxes { get; }
         public Collbox[] Collboxes { get; }
+        public CustomHitbox[] Throwboxes { get; }
     }
 }

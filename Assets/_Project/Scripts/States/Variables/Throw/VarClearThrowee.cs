@@ -3,8 +3,8 @@ using UnityEngine;
 
 namespace rwby
 {
-    [StateVariable("Gravity/Modify Fall Speed")]
-    public struct VarModifyFallSpeed : IStateVariables
+    [StateVariable("Throws/Clear Throwees")]
+    public struct VarClearThrowee : IStateVariables
     {
         public string name;
         public string Name
@@ -39,11 +39,5 @@ namespace rwby
         [SelectImplementation(typeof(IConditionVariables))] [SerializeField, SerializeReference]
         public IConditionVariables condition;
         public IConditionVariables Condition => condition;
-        
-        public VarTargetType targetType;
-        
-        public VarModifyType modifyType;
-        [SelectImplementation((typeof(FighterStatReferenceBase<float>)))] [SerializeReference]
-        public FighterStatReferenceFloatBase value;
     }
 }

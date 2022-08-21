@@ -14,6 +14,7 @@ namespace rwby
         public CustomHitbox[] Hitboxes { get { return hitboxes; } }
         public Hurtbox[] Hurtboxes { get { return hurtboxes; } }
         public Collbox[] Collboxes { get { return collisionboxes; } }
+        public CustomHitbox[] Throwboxes { get { return throwboxes; } }
 
         public FighterManager manager;
         public NetworkObject networkObject;
@@ -48,29 +49,14 @@ namespace rwby
             {
                 tb.ownerNetworkObject = networkObject;
             }
+            foreach (var thb in throwboxes)
+            {
+                thb.ownerNetworkObject = networkObject;
+            }
         }
-
-        public Bounds combatBoxBounds;
 
         public override void FixedUpdateNetwork()
         {
-            /*
-            combatBoxBounds = new Bounds(Vector3.zero, -Vector3.one);
-        
-            foreach(CustomHitbox hb in hitboxes)
-            {
-                switch (hb.Type)
-                {
-                    case HitboxTypes.Box:
-                        combatBoxBounds.Encapsulate(new Bounds(hb.transform.position, hb.BoxExtents));
-                        break;
-                    case HitboxTypes.Sphere:
-                        combatBoxBounds.Encapsulate(new Bounds(hb.transform.position, new Vector3(hb.SphereRadius, hb.SphereRadius, hb.SphereRadius)));
-                        break;
-                }
-            }
-
-            if (combatBoxBounds.size == -Vector3.one) return;*/
             CombatPairFinder.singleton.RegisterObject(Object);
         }
 
@@ -95,6 +81,11 @@ namespace rwby
             {
                 hRoot.SetHitboxActive(tb, false);
                 tb.SetBoxActiveState(false);
+            }
+            foreach (var thb in throwboxes)
+            {
+                hRoot.SetHitboxActive(thb, false);
+                thb.SetBoxActiveState(false);
             }
         }
 
@@ -135,6 +126,12 @@ namespace rwby
                     for (int i = 0; i < throwableboxes.Length; i++)
                     {
                         if (throwableboxes[i].HitboxActive == false) return throwableboxes[i];
+                    }
+                    break;
+                case FighterBoxType.Throwbox:
+                    for (int i = 0; i < throwboxes.Length; i++)
+                    {
+                        if (throwboxes[i].HitboxActive == false) return throwboxes[i];
                     }
                     break;
             }

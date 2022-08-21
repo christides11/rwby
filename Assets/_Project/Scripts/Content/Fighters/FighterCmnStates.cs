@@ -44,6 +44,9 @@ namespace rwby
         WALL_CLING,
         RUN_SLIDE,
         POLE_SPIN,
-        POLE_LAUNCH
+        POLE_LAUNCH,
+        THROWN,
+        THROW_ATTEMPT,
+        THROW
     }
 }

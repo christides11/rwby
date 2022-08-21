@@ -96,6 +96,12 @@ namespace rwby
         [HideInInspector] public Collider[] colliderBuffer = new Collider[1];
         [Networked] public float poleMagnitude { get; set; }
         [Networked] public float poleSpin { get; set; }
+        
+        // Throwing
+        [Networked] public Vector3 throweePosition { get; set; }
+        [Networked] public Vector3 throweeRotation { get; set; }
+        [Networked] public NetworkObject thrower { get; set; }
+        [Networked, Capacity(4)] public NetworkArray<NetworkObject> throwees => default;
 
         public virtual async UniTask<bool> OnFighterLoaded()
         {

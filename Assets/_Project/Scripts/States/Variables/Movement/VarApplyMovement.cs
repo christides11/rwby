@@ -68,5 +68,7 @@ namespace rwby
         public float slopeMulti;
         [ShowIf("inputSource", VarInputSourceType.slope)]
         public float slopeMultiMax;
+        [ShowIf("inputSource", VarInputSourceType.slope)]
+        public float slopeinputModi;
     }
 }

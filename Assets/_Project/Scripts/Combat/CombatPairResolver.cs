@@ -13,14 +13,36 @@ namespace rwby
         public CombatPairFinder pairFinder;
 
         private HashSet<(NetworkObject, NetworkObject)> resolvedPairs = new HashSet<(NetworkObject, NetworkObject)>();
-        
+        private HashSet<NetworkObject> receiversResolved = new HashSet<NetworkObject>();
+
         public float collisionSolvePercentage = 1.0f;
 
         public override void FixedUpdateNetwork()
         {
             CollisionPairResolver();
             HitboxPairResolver();
+            ThrowPairResolver();
             resolvedPairs.Clear();
+            receiversResolved.Clear();
+        }
+
+        private void ThrowPairResolver()
+        {
+            foreach (var pair in pairFinder.throwboxCombatPairs)
+            {
+                if(receiversResolved.Contains(pair.Key.Item2)) continue; // NetworkObject was already hit this frame by something.
+                //var oppositePairKey = (pair.Key.Item2, pair.Key.Item1);
+                //CombatPairFinder.ThrowboxCombatPair oppositePair = new CombatPairFinder.ThrowboxCombatPair() {  };
+                //if (pairFinder.throwboxCombatPairs.ContainsKey((pair.Key.Item2, pair.Key.Item1)))
+                //{
+                //    oppositePair = pairFinder.throwboxCombatPairs[(pair.Key.Item2, pair.Key.Item1)];
+                //}
+                
+                pair.Key.Item2.GetComponent<IThrowee>().ThroweeInitilization(pair.Key.Item1);
+                pair.Key.Item1.GetComponent<IThrower>().ThrowerInitilization(pair.Key.Item2);
+            }
+            
+            pairFinder.throwboxCombatPairs.Clear();
         }
 
         private void CollisionPairResolver()
@@ -50,6 +72,7 @@ namespace rwby
         {
             foreach (var pair in pairFinder.hitboxCombatPairs)
             {
+                if(receiversResolved.Contains(pair.Key.Item2)) continue; // NetworkObject was already hit this frame by something.
                 if (resolvedPairs.Contains((pair.Key.Item1, pair.Key.Item2))) continue;
                 var oppositePairKey = (pair.Key.Item2, pair.Key.Item1);
                 CombatPairFinder.HitboxCombatPair oppositePair = new CombatPairFinder.HitboxCombatPair() { result = CombatPairFinder.HitboxCombatResult.None };
@@ -73,6 +96,7 @@ namespace rwby
                     }
 
                     resolvedPairs.Add( (pair.Key.Item1, pair.Key.Item2) );
+                    receiversResolved.Add(pair.Key.Item2);
                     break;
                 }
 
@@ -84,23 +108,29 @@ namespace rwby
                     var objTwoHitInfo = pair.Key.Item2.GetComponent<IAttacker>().BuildHurtInfo(oppositePair.attackerHitbox, oppositePair.attackeeHurtbox);
                     pair.Key.Item1.GetComponent<IAttacker>().DoHit(pair.Value.attackerHitbox, pair.Value.attackeeHurtbox, objOneHitInfo);
                     pair.Key.Item2.GetComponent<IAttacker>().DoHit(oppositePair.attackerHitbox, oppositePair.attackeeHurtbox, objTwoHitInfo);
+                    receiversResolved.Add(pair.Key.Item1);
+                    receiversResolved.Add(pair.Key.Item2);
                 }
                 else if (pair.Value.result == CombatPairFinder.HitboxCombatResult.HitHurtbox)
                 {
                     Debug.Log("P1 Win.");
                     var objHitInfo = pair.Key.Item1.GetComponent<IAttacker>().BuildHurtInfo(pair.Value.attackerHitbox, pair.Value.attackeeHurtbox);
                     pair.Key.Item1.GetComponent<IAttacker>().DoHit(pair.Value.attackerHitbox, pair.Value.attackeeHurtbox, objHitInfo);
+                    receiversResolved.Add(pair.Key.Item2);
                 }
                 else if (oppositePair.result == CombatPairFinder.HitboxCombatResult.HitHurtbox)
                 {
                     Debug.Log("P2 Win.");
                     var objHitInfo = pair.Key.Item2.GetComponent<IAttacker>().BuildHurtInfo(oppositePair.attackerHitbox, oppositePair.attackeeHurtbox);
                     pair.Key.Item2.GetComponent<IAttacker>().DoHit(oppositePair.attackerHitbox, oppositePair.attackeeHurtbox, objHitInfo);
+                    receiversResolved.Add(pair.Key.Item1);
                 }
                 else
                 {
                     pair.Key.Item1.GetComponent<IAttacker>().DoClash(pair.Value.attackerHitbox, pair.Value.attackeeHitbox);
                     pair.Key.Item2.GetComponent<IAttacker>().DoClash(oppositePair.attackerHitbox, oppositePair.attackeeHitbox);
+                    receiversResolved.Add(pair.Key.Item1);
+                    receiversResolved.Add(pair.Key.Item2);
                 }
                 
                 resolvedPairs.Add(pair.Key);
@@ -108,7 +138,6 @@ namespace rwby
             }
 
             pairFinder.hitboxCombatPairs.Clear();
-            pairFinder.throwboxCombatPairs.Clear();
         }
     }
 }

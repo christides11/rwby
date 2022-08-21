@@ -48,6 +48,7 @@ namespace rwby
             functions.Add(typeof(VarModifyMoveset), BaseStateFunctions.ModifyMoveset);
             functions.Add(typeof(VarModifyPoleAngle), BaseStateFunctions.ModifyPoleAngle);
             functions.Add(typeof(VarTransferPoleMomentum), BaseStateFunctions.TransferPoleMomentum);
+            functions.Add(typeof(VarClearThrowee), BaseStateFunctions.ClearThrowee);
         }
     }
 }

@@ -4,6 +4,7 @@ namespace rwby {
         Hurtbox,
         Hitbox,
         Collisionbox,
-        Throwablebox
+        Throwablebox,
+        Throwbox
     }
 }

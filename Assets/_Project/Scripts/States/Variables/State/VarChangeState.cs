@@ -44,6 +44,8 @@ namespace rwby
         public bool checkInputSequence;
         public bool checkCondition;
 
+        public VarTargetType targetType;
+        
         public int stateMovesetID;
         [SelectImplementation(typeof(FighterStateReferenceBase))] [SerializeField, SerializeReference]
         public FighterStateReferenceBase state;

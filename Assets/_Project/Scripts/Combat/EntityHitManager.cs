@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace rwby
 {
-    public class EntityHitManager : NetworkBehaviour, IAttacker
+    public class EntityHitManager : NetworkBehaviour, IAttacker, IThrower, IThrowee
     {
         protected GameManager gameManager;
 
@@ -62,6 +62,31 @@ namespace rwby
             return true;
         }
 
+        public virtual bool IsThroweeValid(CustomHitbox attackerThrowbox, Throwablebox attackeeThrowablebox)
+        {
+            if (attackeeThrowablebox.ownerNetworkObject == Object) return false;
+            return true;
+        }
+
+        public virtual void ThrowerInitilization(NetworkObject throwee)
+        {
+            
+        }
+
+        public virtual void ThroweeInitilization(NetworkObject thrower)
+        {
+            
+        }
+
+        public virtual void SetThroweePosition(Vector3 position)
+        {
+            
+        }
+
+        public virtual void SetThroweeRotation(Vector3 rotation)
+        {
+            
+        }
         
         [Networked, Capacity(10)] public NetworkArray<int> hitboxGroupHitCounts { get; }
         [Networked, Capacity(10)] public NetworkArray<int> hitboxGroupBlockedCounts { get; }

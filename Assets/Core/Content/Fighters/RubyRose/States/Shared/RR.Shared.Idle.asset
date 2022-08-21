@@ -29,6 +29,7 @@ MonoBehaviour:
   - rid: 8688056216264638478
   - rid: 8688056216264638480
   - rid: 8688056216264638482
+  - rid: 8688056588631801874
   initialGroundedState: 1
   stateType: 1
   maxUsesInString: -1
@@ -42,7 +43,12 @@ MonoBehaviour:
   condition:
     rid: -2
   hitboxInfo: []
-  throwboxInfo: []
+  throwboxInfo:
+  - airOnly: 0
+    groundOnly: 1
+    damageOnGrab: 0
+    confirmState:
+      rid: -2
   hurtboxInfo:
   - hitInvincible: 0
     projectileInvincible: 0
@@ -71,7 +77,7 @@ MonoBehaviour:
         name: Scythe
         id: 2
         parent: -1
-        children: 0300000004000000
+        children: 03000000040000000a000000
         frameRanges:
         - {x: 1, y: -1}
         condition:
@@ -190,3 +196,20 @@ MonoBehaviour:
       type: {class: ConditionMoveset, ns: rwby, asm: rwby.csharp}
       data:
         moveset: 0
+    - rid: 8688056588631801874
+      type: {class: VarCreateBox, ns: rwby, asm: rwby.csharp}
+      data:
+        name: ThrowableBox
+        id: 10
+        parent: 2
+        children: 
+        frameRanges: []
+        condition:
+          rid: -2
+        boxType: 3
+        attachedTo: 0
+        shape: 0
+        offset: {x: 0, y: 1, z: 0}
+        boxExtents: {x: 0.5, y: 1, z: 0.5}
+        radius: 0
+        definitionIndex: 0

@@ -1,0 +1,57 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7789f25d17401bc4b915ca6fcecf2a29, type: 3}
+  m_Name: Base.State.Thrown
+  m_EditorClassIdentifier: 
+  stateName: Thrown
+  useBaseState: 0
+  baseState: {fileID: 0}
+  totalFrames: 10
+  autoIncrement: 0
+  autoLoop: 0
+  autoLoopFrame: 1
+  data:
+  - rid: 8688056588631801865
+  initialGroundedState: 1
+  stateType: 1
+  maxUsesInString: -1
+  allowBaseStateTransitions: 1
+  inputSequence:
+    executeWindow: 3
+    executeInputs: []
+    sequenceWindow: 8
+    sequenceInputs: []
+  inputSequenceAsHoldInputs: 0
+  condition:
+    rid: -2
+  hitboxInfo: []
+  throwboxInfo: []
+  hurtboxInfo: []
+  references:
+    version: 2
+    RefIds:
+    - rid: -2
+      type: {class: , ns: , asm: }
+    - rid: 8688056588631801865
+      type: {class: VarSetECB, ns: rwby, asm: rwby.csharp}
+      data:
+        name: 
+        id: 0
+        parent: -1
+        children: 
+        frameRanges:
+        - {x: 0, y: 0}
+        condition:
+          rid: -2
+        ecbCenter: 0
+        ecbRadius: 0
+        ecbHeight: 0

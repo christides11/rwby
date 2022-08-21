@@ -39,8 +39,16 @@ namespace rwby
             //if (!fm.FCombatManager.MovePossible(new MovesetStateIdentifier(movesetID, stateID), state.maxUsesInString)) return;
             if (vars.checkInputSequence && !fm.FCombatManager.CheckForInputSequence(state.inputSequence, holdInput: state.inputSequenceAsHoldInputs)) return;
             if (vars.checkCondition && !fm.FStateManager.TryCondition(state, state.condition, arg4)) return;
-            
-            fighter.StateManager.MarkForStateChange(vars.state.GetState(), vars.stateMovesetID);
+
+            switch (vars.targetType)
+            {
+                case VarTargetType.Self:
+                    fighter.StateManager.MarkForStateChange(vars.state.GetState(), vars.stateMovesetID);
+                    break;
+                case VarTargetType.Throwees:
+                    fm.throwees[0].GetBehaviour<FighterManager>().FStateManager.MarkForStateChange(vars.state.GetState(), vars.stateMovesetID);
+                    break;
+            }
         }
         
         public static void ChangeStateList(IFighterBase fighter, IStateVariables variables, HnSF.StateTimeline arg3, int arg4)
@@ -146,6 +154,7 @@ namespace rwby
                     input = f.groundSlopeDir;
                     input.y = 0;
                     input.Normalize();
+                    input += f.GetMovementVector() * vars.slopeinputModi;
                     break;
             }
             
@@ -423,10 +432,26 @@ namespace rwby
             switch (vars.modifyType)
             {
                 case VarModifyType.SET:
-                    f.FPhysicsManager.forceGravity = vars.value.GetValue(f);
+                    switch (vars.targetType)
+                    {
+                        case VarTargetType.Self:
+                            f.FPhysicsManager.forceGravity = vars.value.GetValue(f);
+                            break;
+                        case VarTargetType.Throwees:
+                            f.throwees[0].GetBehaviour<FighterManager>().FPhysicsManager.forceGravity = vars.value.GetValue(f);
+                            break;
+                    }
                     break;
                 case VarModifyType.ADD:
-                    f.FPhysicsManager.forceGravity += vars.value.GetValue(f);
+                    switch (vars.targetType)
+                    {
+                        case VarTargetType.Self:
+                            f.FPhysicsManager.forceGravity += vars.value.GetValue(f);
+                            break;
+                        case VarTargetType.Throwees:
+                            f.throwees[0].GetBehaviour<FighterManager>().FPhysicsManager.forceGravity += vars.value.GetValue(f);
+                            break;
+                    }
                     break;
             }
         }
@@ -728,6 +753,16 @@ namespace rwby
 
             fm.poleMagnitude = 0;
             fm.poleSpin = 0;
+        }
+        
+        public static void ClearThrowee(IFighterBase fighter, IStateVariables variables, HnSF.StateTimeline stateTimeline, int frame)
+        {
+            FighterManager fm = (FighterManager)fighter;
+
+            for (int i = 0; i < fm.throwees.Length; i++)
+            {
+                fm.throwees.Set(i, null);
+            }
         }
     }
 }

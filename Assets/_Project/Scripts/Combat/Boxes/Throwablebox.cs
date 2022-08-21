@@ -8,6 +8,6 @@ namespace rwby
 {
     public class Throwablebox : CustomHitbox
     {
-
+        
     }
 }
