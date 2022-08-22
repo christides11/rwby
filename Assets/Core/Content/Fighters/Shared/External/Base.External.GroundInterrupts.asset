@@ -15,6 +15,7 @@ MonoBehaviour:
   data:
   - rid: 6951768367642443808
   - rid: 6951768358483656704
+  - rid: 8688056606344609823
   references:
     version: 2
     RefIds:
@@ -30,6 +31,7 @@ MonoBehaviour:
           rid: 6951768358483656705
         checkInputSequence: 0
         checkCondition: 0
+        targetType: 0
         stateMovesetID: -1
         state:
           rid: 6951768358483656706
@@ -57,6 +59,7 @@ MonoBehaviour:
           rid: 6951768367642443809
         checkInputSequence: 0
         checkCondition: 0
+        targetType: 0
         stateMovesetID: -1
         state:
           rid: 6951768367642443810
@@ -68,3 +71,31 @@ MonoBehaviour:
       type: {class: FighterCmnStateReference, ns: rwby, asm: rwby.csharp}
       data:
         state: 5
+    - rid: 8688056606344609823
+      type: {class: VarChangeState, ns: rwby, asm: rwby.csharp}
+      data:
+        name: Try Block
+        id: 0
+        parent: 0
+        children: 
+        frameRanges: []
+        condition:
+          rid: 8688056606344609825
+        checkInputSequence: 0
+        checkCondition: 0
+        targetType: 0
+        stateMovesetID: -1
+        state:
+          rid: 8688056606344609824
+    - rid: 8688056606344609824
+      type: {class: FighterCmnStateReference, ns: rwby, asm: rwby.csharp}
+      data:
+        state: 15
+    - rid: 8688056606344609825
+      type: {class: ConditionButton, ns: rwby, asm: rwby.csharp}
+      data:
+        inverse: 0
+        button: 1
+        buttonState: 0
+        offset: 0
+        buffer: 0

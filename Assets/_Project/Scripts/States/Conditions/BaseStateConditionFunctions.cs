@@ -267,5 +267,17 @@ namespace rwby
 
             return f.throwees[0] != null ? true : false;
         }
+        
+        public static bool CompareInputDir(IFighterBase fighter, IConditionVariables variables, HnSF.StateTimeline arg3, int arg4)
+        {
+            FighterManager f = fighter as FighterManager;
+            ConditionCompareInputDir vars = (ConditionCompareInputDir)variables;
+
+            Vector3 angleA;
+            Vector3 angleB;
+            
+            return true;
+            //return f.throwees[0] != null ? true : false;
+        }
     }
 }

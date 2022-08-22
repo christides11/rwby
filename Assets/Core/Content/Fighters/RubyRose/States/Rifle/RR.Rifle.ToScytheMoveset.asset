@@ -1,0 +1,193 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7789f25d17401bc4b915ca6fcecf2a29, type: 3}
+  m_Name: RR.Rifle.ToScytheMoveset
+  m_EditorClassIdentifier: 
+  stateName: To Rifle Moveset
+  useBaseState: 0
+  baseState: {fileID: 0}
+  totalFrames: 15
+  autoIncrement: 1
+  autoLoop: 0
+  autoLoopFrame: 1
+  data:
+  - rid: 8688056405345435648
+  - rid: 8688056405345435652
+  - rid: 8688056405345435654
+  - rid: 8688056405345435656
+  - rid: 8688056405345435658
+  - rid: 8688056405345435659
+  - rid: 8688056405345435660
+  initialGroundedState: 1
+  stateType: 2
+  maxUsesInString: -1
+  allowBaseStateTransitions: 1
+  inputSequence:
+    executeWindow: 3
+    executeInputs:
+    - inputType: 0
+      buttonID: 10
+      stickDirection: {x: 0, y: 0}
+      directionDeviation: 0
+    sequenceWindow: 8
+    sequenceInputs: []
+  inputSequenceAsHoldInputs: 0
+  condition:
+    rid: 8688056405345435670
+  hitboxInfo: []
+  throwboxInfo: []
+  hurtboxInfo:
+  - hitInvincible: 0
+    projectileInvincible: 0
+  references:
+    version: 2
+    RefIds:
+    - rid: -2
+      type: {class: , ns: , asm: }
+    - rid: 8688056405345435648
+      type: {class: VarModifyMoveset, ns: rwby, asm: rwby.csharp}
+      data:
+        name: 
+        id: 0
+        parent: -1
+        children: 
+        frameRanges:
+        - {x: 1, y: 1}
+        condition:
+          rid: -2
+        modifyType: 1
+        value: 0
+    - rid: 8688056405345435652
+      type: {class: VarEmpty, ns: rwby, asm: rwby.csharp}
+      data:
+        name: Is Grounded
+        id: 3
+        parent: -1
+        children: 0400000006000000
+        frameRanges: []
+        condition:
+          rid: 8688056405345435653
+    - rid: 8688056405345435653
+      type: {class: ConditionIsGrounded, ns: rwby, asm: rwby.csharp}
+      data:
+        inverse: 0
+    - rid: 8688056405345435654
+      type: {class: VarApplyTraction, ns: rwby, asm: rwby.csharp}
+      data:
+        name: 
+        id: 4
+        parent: 3
+        children: 
+        frameRanges:
+        - {x: 1, y: -1}
+        condition:
+          rid: -2
+        traction:
+          rid: 8688056405345435655
+        applyMovement: 1
+        applyGravity: 0
+    - rid: 8688056405345435655
+      type: {class: FighterBaseStatReferenceFloat, ns: rwby, asm: rwby.csharp}
+      data:
+        inverse: 0
+        statReference: 1
+        value: 0
+        variable: 0
+    - rid: 8688056405345435656
+      type: {class: VarEmpty, ns: rwby, asm: rwby.csharp}
+      data:
+        name: Is Aerial
+        id: 5
+        parent: -1
+        children: 0800000007000000
+        frameRanges: []
+        condition:
+          rid: 8688056405345435657
+    - rid: 8688056405345435657
+      type: {class: ConditionIsGrounded, ns: rwby, asm: rwby.csharp}
+      data:
+        inverse: 1
+    - rid: 8688056405345435658
+      type: {class: VarExternal, ns: rwby, asm: rwby.csharp}
+      data:
+        name: Return to Grd State
+        id: 6
+        parent: 3
+        children: 
+        frameRanges:
+        - {x: -1, y: -1}
+        condition:
+          rid: -2
+        asset: {fileID: 11400000, guid: c8d832c162e368d439cbe63210340e04, type: 2}
+    - rid: 8688056405345435659
+      type: {class: VarExternal, ns: rwby, asm: rwby.csharp}
+      data:
+        name: Return to Aerial State
+        id: 7
+        parent: 5
+        children: 
+        frameRanges:
+        - {x: -1, y: -1}
+        condition:
+          rid: -2
+        asset: {fileID: 11400000, guid: 3e988135845709d4594e5628d0bf81cd, type: 2}
+    - rid: 8688056405345435660
+      type: {class: VarApplyGravity, ns: rwby, asm: rwby.csharp}
+      data:
+        name: 
+        id: 8
+        parent: 5
+        children: 
+        frameRanges:
+        - {x: 1, y: -1}
+        condition:
+          rid: -2
+        useValue: 0
+        value:
+          rid: -2
+        jumpHeight:
+          rid: 8688056405345435664
+        jumpTime:
+          rid: 8688056405345435663
+        multi:
+          rid: 8688056405345435662
+        maxFallSpeed:
+          rid: 8688056405345435661
+    - rid: 8688056405345435661
+      type: {class: FighterBaseStatReferenceFloat, ns: rwby, asm: rwby.csharp}
+      data:
+        inverse: 0
+        statReference: 1
+        value: 0
+        variable: 23
+    - rid: 8688056405345435662
+      type: {class: FighterStatReferenceFloatBase, ns: rwby, asm: rwby.csharp}
+      data:
+        inverse: 0
+        statReference: 0
+        value: 1
+    - rid: 8688056405345435663
+      type: {class: FighterBaseStatReferenceFloat, ns: rwby, asm: rwby.csharp}
+      data:
+        inverse: 0
+        statReference: 1
+        value: 0
+        variable: 12
+    - rid: 8688056405345435664
+      type: {class: FighterBaseStatReferenceFloat, ns: rwby, asm: rwby.csharp}
+      data:
+        inverse: 0
+        statReference: 1
+        value: 0
+        variable: 13
+    - rid: 8688056405345435670
+      type: {class: ConditionNone, ns: rwby, asm: rwby.csharp}

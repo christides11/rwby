@@ -24,12 +24,16 @@ MonoBehaviour:
   - rid: 2193520791838261265
   - rid: 2193520817874927618
   - rid: 2193520836063002646
+  - rid: 8688056606344609829
   - rid: 2193520862594334720
   - rid: 8688056201677897732
   - rid: 8688056216264638478
   - rid: 8688056216264638480
   - rid: 8688056216264638482
   - rid: 8688056588631801874
+  - rid: 8688056606344609831
+  - rid: 8688056606344609832
+  - rid: 8688056606344609833
   initialGroundedState: 1
   stateType: 1
   maxUsesInString: -1
@@ -204,6 +208,69 @@ MonoBehaviour:
         parent: 2
         children: 
         frameRanges: []
+        condition:
+          rid: -2
+        boxType: 3
+        attachedTo: 0
+        shape: 0
+        offset: {x: 0, y: 1, z: 0}
+        boxExtents: {x: 0.5, y: 1, z: 0.5}
+        radius: 0
+        definitionIndex: 0
+    - rid: 8688056606344609829
+      type: {class: VarEmpty, ns: rwby, asm: rwby.csharp}
+      data:
+        name: Rifle
+        id: 11
+        parent: -1
+        children: 0c0000000d0000000e000000
+        frameRanges:
+        - {x: 1, y: -1}
+        condition:
+          rid: 8688056606344609830
+    - rid: 8688056606344609830
+      type: {class: ConditionMoveset, ns: rwby, asm: rwby.csharp}
+      data:
+        moveset: 1
+    - rid: 8688056606344609831
+      type: {class: VarExternal, ns: rwby, asm: rwby.csharp}
+      data:
+        name: Try Ground Atk
+        id: 12
+        parent: 11
+        children: 
+        frameRanges:
+        - {x: 1, y: -1}
+        condition:
+          rid: -2
+        asset: {fileID: 11400000, guid: ba688ef34edd2d84ea6a5b2e1e2af06e, type: 2}
+    - rid: 8688056606344609832
+      type: {class: VarCreateBox, ns: rwby, asm: rwby.csharp}
+      data:
+        name: Hurtbox
+        id: 13
+        parent: 11
+        children: 
+        frameRanges:
+        - {x: 1, y: -1}
+        condition:
+          rid: -2
+        boxType: 0
+        attachedTo: 0
+        shape: 0
+        offset: {x: 0, y: 1, z: 0}
+        boxExtents: {x: 0.5, y: 1, z: 0.5}
+        radius: 0
+        definitionIndex: 0
+    - rid: 8688056606344609833
+      type: {class: VarCreateBox, ns: rwby, asm: rwby.csharp}
+      data:
+        name: ThrowableBox
+        id: 14
+        parent: 11
+        children: 
+        frameRanges:
+        - {x: 1, y: -1}
         condition:
           rid: -2
         boxType: 3

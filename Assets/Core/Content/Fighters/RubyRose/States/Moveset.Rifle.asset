@@ -117,6 +117,18 @@ MonoBehaviour:
     state:
       rid: 8688056588631801857
     stateTimeline: {fileID: 11400000, guid: 780939a754176894d87467306ba66d57, type: 2}
+  - name: To Scythe Moveset
+    state:
+      rid: 8688056606344609828
+    stateTimeline: {fileID: 11400000, guid: 0f575d9e8700cd648b388ae228dd3d6a, type: 2}
+  - name: Throw Attempt
+    state:
+      rid: 8688056606344609834
+    stateTimeline: {fileID: 11400000, guid: bc1267ed70ea1634c832dc992eaeda54, type: 2}
+  - name: Throw
+    state:
+      rid: 8688056606344609835
+    stateTimeline: {fileID: 11400000, guid: b59f3006542ecde43a119fc4639161e7, type: 2}
   fighterStats: {fileID: 11400000, guid: 9db018607e1c48c498ee3d8a7c4cefc3, type: 2}
   specials: []
   references:
@@ -226,3 +238,15 @@ MonoBehaviour:
       type: {class: FighterCmnStateReference, ns: rwby, asm: rwby.csharp}
       data:
         state: 42
+    - rid: 8688056606344609828
+      type: {class: RubyRoseStateReference, ns: rwby.core, asm: rwby.core}
+      data:
+        state: 87
+    - rid: 8688056606344609834
+      type: {class: FighterCmnStateReference, ns: rwby, asm: rwby.csharp}
+      data:
+        state: 43
+    - rid: 8688056606344609835
+      type: {class: FighterCmnStateReference, ns: rwby, asm: rwby.csharp}
+      data:
+        state: 44

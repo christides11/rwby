@@ -26,6 +26,7 @@ namespace rwby
             functions.Add(typeof(ConditionCompareSlopeDir), BaseStateConditionFunctions.CompareSlopeDir);
             functions.Add(typeof(ConditionPoleValid), BaseStateConditionFunctions.PoleValid);
             functions.Add(typeof(ConditionHasThrowees), BaseStateConditionFunctions.HasThrowees);
+            functions.Add(typeof(ConditionCompareInputDir), BaseStateConditionFunctions.CompareInputDir);
         }
     }
 }

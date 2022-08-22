@@ -15,10 +15,10 @@ MonoBehaviour:
   stateName: Block (Grd)
   useBaseState: 1
   baseState: {fileID: 11400000, guid: 0b1c9925430160c498818ef93969b52b, type: 2}
-  totalFrames: 60
+  totalFrames: 10
   autoIncrement: 1
   autoLoop: 1
-  autoLoopFrame: 1
+  autoLoopFrame: 5
   data:
   - rid: 2193520791838261265
   - rid: 8688056606344609792
@@ -28,6 +28,7 @@ MonoBehaviour:
   - rid: 8688056606344609794
   - rid: 8688056606344609799
   - rid: 8688056606344609801
+  - rid: 8688056606344609826
   initialGroundedState: 1
   stateType: 1
   maxUsesInString: -1
@@ -141,9 +142,9 @@ MonoBehaviour:
     - rid: 8688056606344609798
       type: {class: ConditionButton, ns: rwby, asm: rwby.csharp}
       data:
-        inverse: 0
+        inverse: 1
         button: 1
-        buttonState: 2
+        buttonState: 0
         offset: 0
         buffer: 0
     - rid: 8688056606344609799
@@ -154,7 +155,7 @@ MonoBehaviour:
         parent: 7
         children: 
         frameRanges:
-        - {x: 1, y: -1}
+        - {x: 5, y: -1}
         condition:
           rid: 8688056606344609800
         asset: {fileID: 11400000, guid: c8d832c162e368d439cbe63210340e04, type: 2}
@@ -170,7 +171,7 @@ MonoBehaviour:
         parent: 7
         children: 
         frameRanges:
-        - {x: 1, y: -1}
+        - {x: 5, y: -1}
         condition:
           rid: 8688056606344609802
         asset: {fileID: 11400000, guid: c8d832c162e368d439cbe63210340e04, type: 2}
@@ -186,7 +187,7 @@ MonoBehaviour:
         parent: -1
         children: 
         frameRanges:
-        - {x: 1, y: -1}
+        - {x: 5, y: -1}
         condition:
           rid: 8688056606344609805
         checkInputSequence: 1
@@ -204,3 +205,22 @@ MonoBehaviour:
       type: {class: FighterCmnStateReference, ns: rwby, asm: rwby.csharp}
       data:
         state: 6
+    - rid: 8688056606344609826
+      type: {class: VarClampMovement, ns: rwby, asm: rwby.csharp}
+      data:
+        name: 
+        id: 11
+        parent: -1
+        children: 
+        frameRanges:
+        - {x: 0, y: 0}
+        condition:
+          rid: -2
+        magnitude:
+          rid: 8688056606344609827
+    - rid: 8688056606344609827
+      type: {class: FighterStatReferenceFloatBase, ns: rwby, asm: rwby.csharp}
+      data:
+        inverse: 0
+        statReference: 0
+        value: 1
