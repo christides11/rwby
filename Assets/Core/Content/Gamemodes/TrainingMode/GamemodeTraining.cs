@@ -111,10 +111,11 @@ namespace rwby.core.training
             if (contentReference == (ModGUIDContentReference)Map) return true;
             return false;
         }
-
-        // TODO: Spawn player fighters.
-        List<List<GameObject>> spawnPoints = new List<List<GameObject>>();
-        List<int> spawnPointsCurr = new List<int>();
+        
+        List<List<GameObject>> startingPoints = new List<List<GameObject>>();
+        List<int> startingPointCurr = new List<int>();
+        private List<GameObject> respawnPoints = new List<GameObject>();
+        
         public override async UniTaskVoid StartGamemode()
         {
             Debug.Log("Attempting to start.");
@@ -151,21 +152,28 @@ namespace rwby.core.training
             await UniTask.WaitForEndOfFrame();
             sessionManager.SessionState = SessionGamemodeStateType.IN_GAMEMODE;
 
-            SpawnPointHolder[] spawnPointHolders = Runner.SimulationUnityScene.FindObjectsOfTypeInOrder<SpawnPointHolder>();
+            StartingPointGroup[] spawnPointGroups = Runner.SimulationUnityScene.FindObjectsOfTypeInOrder<StartingPointGroup>();
             
-            spawnPoints.Add(new List<GameObject>());
-            spawnPointsCurr.Add(0);
-            foreach (SpawnPointHolder sph in spawnPointHolders)
+            startingPoints.Add(new List<GameObject>());
+            startingPointCurr.Add(0);
+            foreach (StartingPointGroup sph in spawnPointGroups)
             {
-                if (sph.singleTeamOnly)
+                if (sph.forTeam)
                 {
-                    spawnPoints.Add(sph.spawnPoints);
-                    spawnPointsCurr.Add(0);
+                    startingPoints.Add(sph.points);
+                    startingPointCurr.Add(0);
                 }
                 else
                 {
-                    spawnPoints[0].AddRange(sph.spawnPoints);
+                    startingPoints[0].AddRange(sph.points);
                 }
+            }
+            
+            RespawnPointGroup[] respawnPointGroups = Runner.SimulationUnityScene.FindObjectsOfTypeInOrder<RespawnPointGroup>();
+
+            foreach (RespawnPointGroup rpg in respawnPointGroups)
+            {
+                respawnPoints.AddRange(rpg.points);
             }
 
             var clientDefinitions = sessionManager.ClientDefinitions;
@@ -201,7 +209,7 @@ namespace rwby.core.training
                             noClientPlayers.Set(playerID, playerTemp);
                             noClientDefinitions.Set(clientID, temp);
                         });
-                    spawnPointsCurr[clientPlayers[j].team]++;
+                    startingPointCurr[clientPlayers[j].team]++;
                     
                 }
             }
@@ -211,7 +219,7 @@ namespace rwby.core.training
 
         private Vector3 GetSpawnPosition(SessionGamemodePlayerDefinition clientPlayer)
         {
-            return spawnPoints[clientPlayer.team][spawnPointsCurr[clientPlayer.team] % spawnPoints[clientPlayer.team].Count].transform.position;
+            return startingPoints[clientPlayer.team][startingPointCurr[clientPlayer.team] % startingPoints[clientPlayer.team].Count].transform.position;
         }
 
         protected override async UniTask SetupClientPlayerCharacters(SessionGamemodeClientContainer clientInfo, int playerIndex)

@@ -29,6 +29,7 @@ MonoBehaviour:
   - rid: 8688056606344609799
   - rid: 8688056606344609801
   - rid: 8688056606344609826
+  - rid: 8688056606344609837
   initialGroundedState: 1
   stateType: 1
   maxUsesInString: -1
@@ -224,3 +225,24 @@ MonoBehaviour:
         inverse: 0
         statReference: 0
         value: 1
+    - rid: 8688056606344609837
+      type: {class: VarChangeState, ns: rwby, asm: rwby.csharp}
+      data:
+        name: Attempt Throw
+        id: 12
+        parent: -1
+        children: 
+        frameRanges:
+        - {x: 1, y: -1}
+        condition:
+          rid: -2
+        checkInputSequence: 1
+        checkCondition: 0
+        targetType: 0
+        stateMovesetID: -1
+        state:
+          rid: 8688056606344609838
+    - rid: 8688056606344609838
+      type: {class: FighterCmnStateReference, ns: rwby, asm: rwby.csharp}
+      data:
+        state: 43
