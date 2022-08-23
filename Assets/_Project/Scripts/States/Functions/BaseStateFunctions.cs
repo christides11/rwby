@@ -620,7 +620,7 @@ namespace rwby
 
             if (lowestIndex == -1) return;
 
-            fm.AssignWall(fm.wallHitResults[lowestIndex]);
+            fm.AssignWall(input, fm.wallHitResults[lowestIndex]);
         }
         
         public static void FindPole(IFighterBase fighter, IStateVariables variables, HnSF.StateTimeline arg3, int arg4)
@@ -653,7 +653,15 @@ namespace rwby
             Vector3 newPos = fm.cWallPoint + (fm.cWallNormal * fm.FPhysicsManager.ecbRadius) - (new Vector3(0, fm.FPhysicsManager.ecbOffset, 0));
 
             fm.FPhysicsManager.SetPosition(newPos, false);
-            fm.SetRotation(-fm.cWallNormal, false);
+            if (vars.useWallSide)
+            {
+                fm.SetRotation(Vector3.Cross(-fm.cWallNormal, Vector3.up) * fm.cWallSide, false);
+            }
+            else
+            {
+                fm.SetRotation(-fm.cWallNormal, false);
+            }
+            //fm.SetRotation(-fm.cWallNormal, false);
         }
         
         public static void SnapToPole(IFighterBase fighter, IStateVariables variables, HnSF.StateTimeline arg3, int arg4)

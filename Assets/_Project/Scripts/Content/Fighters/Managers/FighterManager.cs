@@ -89,7 +89,7 @@ namespace rwby
 
         [Networked] public Vector3 cWallNormal { get; set; }
         [Networked] public Vector3 cWallPoint { get; set; }
-        [Networked] public byte cWallSide { get; set; }
+        [Networked] public int cWallSide { get; set; }
 
         [Header("Pole")]
         [HideInInspector] public Pole foundPole;
@@ -374,10 +374,13 @@ namespace rwby
             cWallNormal = Vector3.zero;
         }
         
-        public virtual void AssignWall(RaycastHit hitResult)
+        public virtual void AssignWall(Vector3 inputAngle, RaycastHit hitResult)
         {
             cWallNormal = hitResult.normal;
             cWallPoint = hitResult.point;
+            if (cWallNormal == Vector3.zero) return;
+            float angle = Vector3.SignedAngle(inputAngle, -hitResult.normal, Vector3.up);
+            cWallSide = angle < 0 ? -1 : 1;
         }
 
         public virtual bool IsWallValid()

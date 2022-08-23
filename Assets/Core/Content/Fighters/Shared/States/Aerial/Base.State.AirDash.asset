@@ -24,6 +24,7 @@ MonoBehaviour:
   - rid: 2193520691360038912
   - rid: 8688056201677897733
   - rid: 8688056570279886855
+  - rid: 8688056635878539271
   initialGroundedState: 2
   stateType: 0
   maxUsesInString: -1
@@ -70,6 +71,7 @@ MonoBehaviour:
         - {x: 0, y: 0}
         condition:
           rid: -2
+        targetType: 0
         modifyType: 1
         value:
           rid: 2193520691360038913
@@ -104,3 +106,15 @@ MonoBehaviour:
         condition:
           rid: -2
         asset: {fileID: 11400000, guid: 7c662af6370ac74418d577009883926e, type: 2}
+    - rid: 8688056635878539271
+      type: {class: VarExternal, ns: rwby, asm: rwby.csharp}
+      data:
+        name: Try Wall
+        id: 5
+        parent: -1
+        children: 
+        frameRanges:
+        - {x: 1, y: -1}
+        condition:
+          rid: -2
+        asset: {fileID: 11400000, guid: dd12f38f1b643734aa58d2dab90b66b9, type: 2}
