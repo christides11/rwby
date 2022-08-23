@@ -40,7 +40,7 @@ namespace rwby
         [System.NonSerialized] public CinemachineVirtualCamera[] virtualCameras;
         [System.NonSerialized] public CinemachinePOV[] virtualCameraPOV;
         [System.NonSerialized] public CinemachineShake[] virtualCameraShake;
-        [System.NonSerialized] public CinemachineInputProvider[] inputProvider;
+        [System.NonSerialized] public CinemachineInputProvider[] inputProvider = new CinemachineInputProvider[0];
 
         [Header("Lock On")]
         public LayerMask lockonLayerMask;

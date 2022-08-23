@@ -189,7 +189,7 @@ namespace rwby
             else
             {
                 _sceneObjects = sceneObjects;
-                Runner.RegisterUniqueObjects(_sceneObjects.Values);
+                Runner.RegisterSceneObjects(_sceneObjects.Values);
                 Runner.InvokeSceneLoadDone();
                 if (Runner.LocalPlayer.IsValid)
                 {

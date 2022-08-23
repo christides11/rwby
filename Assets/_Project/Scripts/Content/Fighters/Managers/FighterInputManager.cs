@@ -36,26 +36,6 @@ namespace rwby
         [Networked] protected ushort heldExtra3Time { get; set; }
         [Networked] protected ushort heldExtra4Time { get; set; }
 
-        /*
-        protected Vector2[] Movement = new Vector2[inputCapacity];
-        protected Vector3[] CameraForward = new Vector3[inputCapacity];
-        protected Vector3[] CameraRight = new Vector3[inputCapacity];
-        protected InputButtonData[] A = new InputButtonData[inputCapacity];
-        protected InputButtonData[] B = new InputButtonData[inputCapacity];
-        protected InputButtonData[] C = new InputButtonData[inputCapacity];
-        protected InputButtonData[] Jump = new InputButtonData[inputCapacity];
-        protected InputButtonData[] Block = new InputButtonData[inputCapacity];
-        protected InputButtonData[] Dash = new InputButtonData[inputCapacity];
-        protected InputButtonData[] LockOn = new InputButtonData[inputCapacity];
-        protected InputButtonData[] Ability1 = new InputButtonData[inputCapacity];
-        protected InputButtonData[] Ability2 = new InputButtonData[inputCapacity];
-        protected InputButtonData[] Ability3 = new InputButtonData[inputCapacity];
-        protected InputButtonData[] Ability4 = new InputButtonData[inputCapacity];
-        protected InputButtonData[] Extra1 = new InputButtonData[inputCapacity];
-        protected InputButtonData[] Extra2 = new InputButtonData[inputCapacity];
-        protected InputButtonData[] Extra3 = new InputButtonData[inputCapacity];
-        protected InputButtonData[] Extra4 = new InputButtonData[inputCapacity];*/
-
         public FighterManager manager;
 
         [Networked] public NetworkObject inputProvider { get; set; }

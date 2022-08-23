@@ -46,7 +46,7 @@ namespace rwby
 
         public void Tick()
         {
-            if (markedForStateChange)
+            if (markedForStateChange && GameModeBase.singleton.CanTakeInput())
             {
                 ChangeState(nextState, nextStateMoveset, 0, true);
             }

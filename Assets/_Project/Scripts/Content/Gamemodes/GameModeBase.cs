@@ -100,6 +100,11 @@ namespace rwby
 
         }
 
+        public virtual bool CanTakeInput()
+        {
+            return GamemodeState == GameModeState.MATCH_IN_PROGRESS ? true : false;
+        }
+
         public override void Render()
         {
 

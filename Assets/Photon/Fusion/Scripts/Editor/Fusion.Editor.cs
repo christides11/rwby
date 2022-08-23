@@ -5002,6 +5002,8 @@ namespace Fusion.Editor {
 #region Assets/Photon/Fusion/Scripts/Editor/EditorRecompileHook.cs
 
 namespace Fusion.Editor {
+  using System;
+  using System.IO;
   using UnityEditor;
   using UnityEditor.Compilation;
   
@@ -5009,7 +5011,9 @@ namespace Fusion.Editor {
   public static class EditorRecompileHook {
     static EditorRecompileHook() {
       AssemblyReloadEvents.beforeAssemblyReload += ShutdownRunners;
+
       CompilationPipeline.compilationStarted    += _ => ShutdownRunners();
+      CompilationPipeline.compilationStarted    += _ => StoreConfigPath();
     }
 
     static void ShutdownRunners() {
@@ -5018,6 +5022,28 @@ namespace Fusion.Editor {
       while (runners.MoveNext()) {
         if (runners.Current) {
           runners.Current.Shutdown();
+        }
+      }
+    }
+
+    static void StoreConfigPath() {
+      const string ConfigPathCachePath = "Temp/FusionILWeaverConfigPath.txt";
+
+      var configPath = NetworkProjectConfigUtilities.GetGlobalConfigPath(false);
+      if (string.IsNullOrEmpty(configPath)) {
+        // delete
+        try {
+          File.Delete(ConfigPathCachePath);
+        } catch (FileNotFoundException) {
+          // ok
+        } catch (Exception ex) {
+          FusionEditorLog.ErrorConfig($"Error when clearing the config path file for the Weaver. Weaving results may be invalid: {ex}");
+        }
+      } else {
+        try {
+          System.IO.File.WriteAllText(ConfigPathCachePath, configPath);
+        } catch (Exception ex) {
+          FusionEditorLog.ErrorConfig($"Error when writing the config path file for the Weaver. Weaving results may be invalid: {ex}");
         }
       }
     }
@@ -6088,7 +6114,7 @@ namespace Fusion.Editor {
     internal const string DOCUMENTATION_TEXT = "Open the documentation.";
     internal const string DOCUMENTATION_HEADER = "Documentation";
     internal const string WELCOME_TEXT = "Thank you for installing Photon Fusion, " +
-      "and welcome to the Photon Fusion Beta.\n\n" +
+      "and welcome to the Photon Fusion.\n\n" +
       "Once you have set up your Fusion App Id, explore the sections on the left to get started. " +
       "More samples, tutorials, and documentation are being added regularly - so check back often.";
 
@@ -6434,6 +6460,7 @@ namespace Fusion.Editor {
         var cfg = NetworkProjectConfigImporter.LoadConfigFromFile(configPath);
 
         var hash = new Hash128();
+
         foreach (var key in cfg.AccuracyDefaults.coreKeys) {
           hash.Append(key);
         }
@@ -7532,8 +7559,14 @@ namespace Fusion.Editor {
 
           if (runner.IsServer && playerCount > 0) {
             foreach (var item in runner.ActivePlayers) {
+
+              // skip local player
+              if (runner.LocalPlayer == item) { continue; }
+
               Label("Player:PlayerId", item.PlayerId);
               Label("Player:ConnectionType", runner.GetPlayerConnectionType(item));
+              Label("Player:UserId", runner.GetPlayerUserId(item));
+              Label("Player:RTT", runner.GetPlayerRtt(item));
             }
           }
 
@@ -9773,6 +9806,11 @@ namespace Fusion.Editor {
     public static void LogConfig(string msg) {
       Debug.Log($"{ConfigPrefix} {msg}");
     }
+
+    public static void ErrorConfig(string msg) {
+      Debug.LogError($"{ConfigPrefix} {msg}");
+    }
+
 
     public static void LogInstaller(string msg) {
       Debug.Log($"{InstallerPrefix} {msg}");

@@ -148,7 +148,7 @@ namespace rwby.core.training
                 }
                 await UniTask.WaitForEndOfFrame();
             }
-
+            
             await UniTask.WaitForEndOfFrame();
             sessionManager.SessionState = SessionGamemodeStateType.IN_GAMEMODE;
 
@@ -174,6 +174,16 @@ namespace rwby.core.training
             foreach (RespawnPointGroup rpg in respawnPointGroups)
             {
                 respawnPoints.AddRange(rpg.points);
+            }
+            
+            MapHandler[] mapHandler = Runner.SimulationUnityScene.FindObjectsOfTypeInOrder<MapHandler>();
+
+            if (mapHandler.Length > 0)
+            {
+                for (int i = 0; i < mapHandler.Length; i++)
+                {
+                    await mapHandler[i].Initialize(this);
+                }
             }
 
             var clientDefinitions = sessionManager.ClientDefinitions;
@@ -215,6 +225,16 @@ namespace rwby.core.training
             }
 
             RPC_SetupClientPlayers();
+
+            GamemodeState = GameModeState.PRE_MATCH;
+
+            if (mapHandler.Length > 0)
+            {
+                for (int i = 0; i < mapHandler.Length; i++)
+                {
+                    await mapHandler[i].DoPreMatch(this);
+                }
+            }
         }
 
         private Vector3 GetSpawnPosition(SessionGamemodePlayerDefinition clientPlayer)

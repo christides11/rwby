@@ -576,13 +576,13 @@
         </member>
         <member name="F:Fusion.WarnIfAttribute.MsgProvider">
             <summary>
-            The name of any member which can be evaluted to a string value, which will be used as the source for the warning message text.
+            The name of any member which can be evaluated to a string value, which will be used as the source for the warning message text.
             If null (default), then <see cref="F:Fusion.WarnIfAttribute.Message"/> will be used instead.
             </summary>
         </member>
         <member name="F:Fusion.WarnIfAttribute.MsgTypeProvider">
             <summary>
-            The name of any member which can be evaluted to an int value, which will be used as the source for the MsgType value.
+            The name of any member which can be evaluated to an int value, which will be used as the source for the MsgType value.
             If null (default), then <see cref="F:Fusion.WarnIfAttribute.MsgType"/> will be used instead.
             0 = None, 1 = Info, 2 = Warning, 3 = Error
             </summary>
@@ -793,6 +793,14 @@
             <param name="actorID">ActorID of a Player inside the Room</param>
             <returns>Player UserID</returns>
         </member>
+        <member name="M:Fusion.CloudServices.TryGetActorIdByUniqueId(System.Int64,System.Int32@)">
+            <summary>
+            Try to get the ActorId associated with a specific Client Unique Id
+            </summary>
+            <param name="uniqueId">Client Unique Id to check</param>
+            <param name="actorId">ActorId associated with that Client Unique Id</param>
+            <returns>True if the ActorId can be found</returns>
+        </member>
         <member name="M:Fusion.CloudServices.OnInternalConnectionAttempt(System.Int32,System.Int32,System.Boolean@,Fusion.Sockets.NetAddress@)">
             <summary>
             Callback fire on every connection attempt with a remote Server.
@@ -903,6 +911,11 @@
         </member>
         <member name="M:Fusion.CloudServices.Service_SendHostMigrationSnapshots">
             <summary>
+            Host Snapshot Update Service
+            </summary>
+        </member>
+        <member name="M:Fusion.CloudServices.SendHostMigrationSnapshot">
+            <summary>
             Try to send Server Snapshot to Plugin 
             </summary>
         </member>
@@ -996,6 +1009,11 @@
             Local Reflexive Info. Stores private and public EndPoint of the local peer.
             </summary>
         </member>
+        <member name="P:Fusion.CloudServicesMetadata.UniqueId">
+            <summary>
+            Stores the local peer Unique Id
+            </summary>
+        </member>
         <member name="F:Fusion.CloudServicesMetadata.ScheduledRequests">
             <summary>
             Stores requests sent by the plugin
@@ -1004,6 +1022,11 @@
         <member name="F:Fusion.CloudServicesMetadata.LastDisconnectMsg">
             <summary>
             Last Disconnect Msg Received from the Plugin
+            </summary>
+        </member>
+        <member name="F:Fusion.CloudServicesMetadata.UniqueIdToReflexiveInfoTable">
+            <summary>
+            Mapping between Actor UniqueId and its ReflexiveInfo
             </summary>
         </member>
         <member name="T:Fusion.ScheduledRequests">
@@ -5849,7 +5872,7 @@
         </member>
         <member name="F:Fusion.NetworkObject.AoiPositionSource">
             <summary>
-            Specifies the <see cref="T:Fusion.NetworkAreaOfInterestBehaviour"/> component to used to determine this players position for Area Of Interest checks.
+            Specifies the <see cref="T:Fusion.NetworkAreaOfInterestBehaviour"/> component used to determine this players position for Area Of Interest checks.
             If left null, will use the first found root/child instance of <see cref="T:Fusion.NetworkAreaOfInterestBehaviour"/> on the Object.
             </summary>
         </member>
@@ -6664,6 +6687,11 @@
             ToString() implementation.
             </summary>
         </member>
+        <member name="P:Fusion.NetworkProjectConfig.FusionVersionInfo">
+            <summary>
+            Get the version information for the Fusion.Runntime.dll.
+            </summary>
+        </member>
         <member name="M:Fusion.NetworkProjectConfig.Serialize(Fusion.NetworkProjectConfig)">
             <summary>
             Serialize a <see cref="T:Fusion.NetworkProjectConfig"/> into a JSON string.
@@ -6681,11 +6709,6 @@
         <member name="M:Fusion.NetworkProjectConfig.SerializeMinimal(Fusion.NetworkProjectConfig)">
             <summary>
             Remove unnecessary data from serialized version of <see cref="T:Fusion.NetworkProjectConfig"/>.
-            </summary>
-        </member>
-        <member name="P:Fusion.NetworkProjectConfig.FusionVersionInfo">
-            <summary>
-            Get the version information for the Fusion.Runntime.dll.
             </summary>
         </member>
         <member name="M:Fusion.NetworkProjectConfig.ConvertPhysicsMode(Fusion.NetworkProjectConfig.PhysicsEngines)">
@@ -6983,7 +7006,7 @@
             </summary>
             <param name="player">Player to disconnect</param>
         </member>
-        <member name="M:Fusion.NetworkRunner.Connect(Fusion.Sockets.NetAddress,System.Byte[])">
+        <member name="M:Fusion.NetworkRunner.Connect(Fusion.Sockets.NetAddress,System.Byte[],System.Byte[])">
             <summary>
             Connect this <see cref="T:Fusion.NetworkRunner"/> as a client to a Server.
             </summary>
@@ -7021,16 +7044,22 @@
         </member>
         <member name="M:Fusion.NetworkRunner.GetPlayerActorId(Fusion.PlayerRef)">
             <summary>
-            Gets Player's Actor Number (ID). Only usable in shared mode. 
+            Gets Player's Actor Number (ID).
+            
+            If used in Shared Mode, every client can get this information.
+            If used in Client Server Mode, only the Server is able to get this information.
             </summary>
             <param name="player">PlayerRef to get the Actor Number (ID)</param>
             <returns>Actor Number associated with the PlayerRef, otherwise null.</returns>
         </member>
         <member name="M:Fusion.NetworkRunner.GetPlayerUserId(Fusion.PlayerRef)">
             <summary>
-            Gets Player's UserID. Only usable in shared mode.
+            Gets Player's UserID.
+            
+            If used in Shared Mode, every client can get this information.
+            If used in Client Server Mode, only the Server is able to get this information.
             </summary>
-            <param name="player">PlayerRef to get the UserID</param>
+            <param name="player">PlayerRef to get the UserID. If no PlayerRef is passed, the UserID of the local client is returned instead.</param>
             <returns>UserID if valid player found, otherwise null.</returns>
         </member>
         <member name="M:Fusion.NetworkRunner.SetPlayerObject(Fusion.PlayerRef,Fusion.NetworkObject)">
@@ -7199,6 +7228,14 @@
             <typeparam name="T"></typeparam>
             <param name="id"></param>
             <returns>Returns the found component. Null if the <see cref="T:Fusion.NetworkObject"/> cannot be found, or if T cannot be found on the GameObject.</returns>
+        </member>
+        <member name="M:Fusion.NetworkRunner.SetSimulationState(Fusion.NetworkObject,System.Boolean)">
+            <summary>
+            Sets the simulation state for this object, if it takes part in the NetworkFixedUpdate, etc.
+            </summary>
+            <param name="obj">the object to change state for</param>
+            <param name="simulate">true if it should be simulated, false if otherwise</param>
+            <returns>true if the state of the object changed, false otherwise</returns>
         </member>
         <member name="M:Fusion.NetworkRunner.Exists(Fusion.NetworkObject)">
             <summary>
@@ -7392,6 +7429,12 @@
             <summary>
             if this instance is a resume (host migration)
             </summary>
+        </member>
+        <member name="M:Fusion.NetworkRunner.PushHostMigrationSnapshot">
+            <summary>
+            Compute and send a Host Migration Snapshot to the Photon Cloud
+            </summary>
+            <returns>Task with the result of the operation. True if it was successful, false otherwise.</returns>
         </member>
         <member name="M:Fusion.NetworkRunner.GetResumeSnapshotNetworkObjects">
             <summary>
@@ -8489,6 +8532,13 @@
             <param name="player">Player to check for the NetAddress</param>
             <returns>NetAddress of a specific player</returns>
         </member>
+        <member name="M:Fusion.Simulation.GetPlayerUniqueId(Fusion.PlayerRef)">
+            <summary>
+            Return the UniqueId as a long from a specific Player
+            </summary>
+            <param name="player">Player to check for the UniqueId</param>
+            <returns>UniqueId of a specific Player</returns>
+        </member>
         <member name="M:Fusion.Simulation.Update(System.Double)">
             <summary>
             Forwards the Simulation based on the Delta Time
@@ -8663,11 +8713,6 @@
             Selects if Object Interest should be used when running in <see cref="F:Fusion.SimulationConfig.StateReplicationModes.EventualConsistency"/> mode.
             When enabled, clients will only receive updates for objects which they have interest in. 
             How interest is determined for each <see cref="T:Fusion.NetworkObject"/> is based on its <see cref="F:Fusion.NetworkObject.ObjectInterest"/> mode setting.
-            </summary>
-        </member>
-        <member name="F:Fusion.SimulationConfig.SimulationCulling">
-            <summary>
-            Uses area of interest queries to cull execution of Fixed Update Network for objects outside of any players area of interest.
             </summary>
         </member>
         <member name="P:Fusion.SimulationConfig.InputTotalWordCount">

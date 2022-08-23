@@ -47,6 +47,14 @@
             <param name="cancellationToken">ellationToken used to stop the Action</param>
             <returns>Async Task based on the Action</returns>
         </member>
+        <member name="M:Fusion.Async.TaskManager.Delay(System.Int32,System.Threading.CancellationToken)">
+            <summary>
+            Custom Task Delay method as Task.Delay is not supported by WebGL Builds
+            </summary>
+            <param name="delay">Delay in milliseconds to wait</param>
+            <param name="token">Cancelation Token used to stop the Delay</param>
+            <returns>Awaitable Task</returns>
+        </member>
         <member name="T:Fusion.Collections.SynchronizedQueue`1">
             <summary>
             Queue that usese Sync locks for each operations

@@ -4523,10 +4523,12 @@
         <member name="M:Fusion.SessionProperty.Convert(System.Object)">
             <summary>
             Convert a particular object into a <see cref="T:Fusion.SessionProperty"/>.
-            If the object type is not supported, null will be returned.
+            Check the object type support using <see cref="M:Fusion.SessionProperty.Support(System.Object)"/>.
+            If the object type is not supported, <see cref="T:System.ArgumentException"/> will be thrown.
             </summary>
             <param name="obj">Object reference to be converted</param>
             <returns>Instance of a <see cref="T:Fusion.SessionProperty"/> if type is supported, null otherwise</returns>
+            <exception cref="T:System.ArgumentException">If the object type passed as argument is not supported</exception>
         </member>
     </members>
 </doc>
