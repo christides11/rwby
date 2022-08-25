@@ -23,8 +23,8 @@ MonoBehaviour:
   - rid: 8688056272189390852
   - rid: 8688056272189390850
   - rid: 8688056272189390848
-  stateGroundedGroup: 1
-  stateType: 0
+  initialGroundedState: 1
+  stateType: 4
   maxUsesInString: -1
   allowBaseStateTransitions: 1
   inputSequence:
@@ -56,6 +56,7 @@ MonoBehaviour:
           rid: -2
         checkInputSequence: 0
         checkCondition: 0
+        targetType: 0
         stateMovesetID: -1
         state:
           rid: 8688056272189390849
@@ -100,4 +101,5 @@ MonoBehaviour:
           rid: -2
         modifyType: 1
         rotateTowards: 0
+        useTargetWhenNoMovement: 0
         eulerAngle: {x: 0, y: 0, z: 0}

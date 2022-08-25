@@ -8,6 +8,7 @@ namespace rwby
     {
         NONE = 0,
         MOVEMENT = 1 << 0,
-        ATTACK = 1 << 1
+        ATTACK = 1 << 1,
+        RECOVERY = 1 << 2
     }
 }

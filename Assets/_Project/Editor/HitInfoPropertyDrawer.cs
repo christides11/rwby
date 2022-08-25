@@ -15,16 +15,14 @@ namespace rwby
         public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
         {
             float lineValue = EditorGUIUtility.singleLineHeight;
-            float val = lineValue * 6;
+            float val = lineValue * 4;
 
             int windowsOpen = 0;
 
             if (property.FindPropertyRelative("groundedFoldoutGroup").boolValue) windowsOpen++;
             if (property.FindPropertyRelative("groundedCounterHitFoldoutGroup").boolValue) windowsOpen++;
-            if (property.FindPropertyRelative("aerialFoldoutGroup").boolValue) windowsOpen++;
-            if (property.FindPropertyRelative("aerialCounterHitFoldoutGroup").boolValue) windowsOpen++;
 
-            val += lineValue * 16 * windowsOpen;
+            val += lineValue * 20 * windowsOpen;
             return val;
         }
 
@@ -41,80 +39,30 @@ namespace rwby
             
             property.FindPropertyRelative("groundedFoldoutGroup").boolValue = EditorGUI.BeginFoldoutHeaderGroup(
                 new Rect(position.x, GetLineY(), position.width, lineHeight),
-                property.FindPropertyRelative("groundedFoldoutGroup").boolValue, new GUIContent("Ground"));
+                property.FindPropertyRelative("groundedFoldoutGroup").boolValue, new GUIContent("Hit"));
             if (property.FindPropertyRelative("groundedFoldoutGroup").boolValue)
             {
-                DrawTopGroup(ref position, property.FindPropertyRelative("groundGroup"));
+                DrawTopGroup(ref position, property.FindPropertyRelative("hit"));
             }
             EditorGUI.EndFoldoutHeaderGroup();
+            
             
             property.FindPropertyRelative("groundedCounterHitFoldoutGroup").boolValue = EditorGUI.BeginFoldoutHeaderGroup(
                 new Rect(position.x, GetLineY(), position.width, lineHeight),
-                property.FindPropertyRelative("groundedCounterHitFoldoutGroup").boolValue, new GUIContent("Ground (Counter)"));
+                property.FindPropertyRelative("groundedCounterHitFoldoutGroup").boolValue, new GUIContent("Counter Hit"));
             if (property.FindPropertyRelative("groundedCounterHitFoldoutGroup").boolValue)
             {
-                DrawTopGroup(ref position, property.FindPropertyRelative("groundCounterHitGroup"));
+                DrawTopGroup(ref position, property.FindPropertyRelative("counterhit"));
             }
             EditorGUI.EndFoldoutHeaderGroup();
-            
-            property.FindPropertyRelative("aerialFoldoutGroup").boolValue = EditorGUI.BeginFoldoutHeaderGroup(
-                new Rect(position.x, GetLineY(), position.width, lineHeight),
-                property.FindPropertyRelative("aerialFoldoutGroup").boolValue, new GUIContent("Aerial"));
-            if (property.FindPropertyRelative("aerialFoldoutGroup").boolValue)
-            {
-                DrawTopGroup(ref position, property.FindPropertyRelative("aerialGroup"));
-            }
-            EditorGUI.EndFoldoutHeaderGroup();
-            
-            property.FindPropertyRelative("aerialCounterHitFoldoutGroup").boolValue = EditorGUI.BeginFoldoutHeaderGroup(
-                new Rect(position.x, GetLineY(), position.width, lineHeight),
-                property.FindPropertyRelative("aerialCounterHitFoldoutGroup").boolValue, new GUIContent("Aerial (Counter)"));
-            if (property.FindPropertyRelative("aerialCounterHitFoldoutGroup").boolValue)
-            {
-                DrawTopGroup(ref position, property.FindPropertyRelative("aerialCounterHitGroup"));
-            }
-            EditorGUI.EndFoldoutHeaderGroup();
-            
-            /*
-            // FORCES //
-            forcesFoldoutGroup = EditorGUI.BeginFoldoutHeaderGroup(new Rect(position.x,GetLineY(), position.width, lineHeight),
-                forcesFoldoutGroup, new GUIContent("Forces"));
-            if (forcesFoldoutGroup)
-            {
-                EditorGUI.indentLevel++;
-                DrawForcesGroup(position, property);
-                EditorGUI.indentLevel--;
-            }
-            EditorGUI.EndFoldoutHeaderGroup();
-            
-            // STUN //
-            stunFoldoutGroup = EditorGUI.BeginFoldoutHeaderGroup(new Rect(position.x,GetLineY(), position.width, lineHeight),
-                stunFoldoutGroup, new GUIContent("Stun"));
-            if (stunFoldoutGroup)
-            {
-                EditorGUI.indentLevel++;
-                DrawStunGroup(position, property);
-                EditorGUI.indentLevel--;
-            }
-            EditorGUI.EndFoldoutHeaderGroup();
-            
-            // EFFECT //
-            effectFoldoutGroup = EditorGUI.BeginFoldoutHeaderGroup(new Rect(position.x,GetLineY(), position.width, lineHeight),
-                effectFoldoutGroup, new GUIContent("Effect"));
-            if (effectFoldoutGroup)
-            {
-                EditorGUI.indentLevel++;
-                DrawEffectGroup(position, property);
-                EditorGUI.indentLevel--;
-            }*/
-            
         }
 
         private void DrawTopGroup(ref Rect position, SerializedProperty property)
         {
             EditorGUI.LabelField(new Rect(position.x, GetLineY(), position.width, lineHeight), "GENERAL", EditorStyles.boldLabel);
-            EditorGUI.PropertyField(new Rect(position.x, GetLineY(), position.width, lineHeight), property.FindPropertyRelative("hitKills"));
-            EditorGUI.PropertyField(new Rect(position.x, GetLineY(), position.width, lineHeight), property.FindPropertyRelative("hitState"));
+            EditorGUI.PropertyField(new Rect(position.x, GetLineY(), position.width, lineHeight), property.FindPropertyRelative("noKill"));
+            EditorGUI.PropertyField(new Rect(position.x, GetLineY(), position.width, lineHeight), property.FindPropertyRelative("groundHitState"));
+            EditorGUI.PropertyField(new Rect(position.x, GetLineY(), position.width, lineHeight), property.FindPropertyRelative("airHitState"));
             EditorGUI.PropertyField(new Rect(position.x, GetLineY(), position.width, lineHeight), property.FindPropertyRelative("groundBounces"));
             if(property.FindPropertyRelative("groundBounces").intValue > 0)
                 EditorGUI.PropertyField(new Rect(position.x, GetLineY(), position.width, lineHeight), property.FindPropertyRelative("groundBounceForcePercentage"));
@@ -130,9 +78,9 @@ namespace rwby
             {
                 case HitboxForceType.SET:
                     EditorGUI.PropertyField(new Rect(position.x, GetLineY(), position.width, lineHeight),
-                        property.FindPropertyRelative("hitForce"));
+                        property.FindPropertyRelative("groundHitForce"));
                     EditorGUI.PropertyField(new Rect(position.x, GetLineY(), position.width, lineHeight),
-                        property.FindPropertyRelative("hitGravity"));
+                        property.FindPropertyRelative("aerialHitForce"));
                     break;
                 case HitboxForceType.PULL:
                     EditorGUI.PropertyField(new Rect(position.x, GetLineY(), position.width, lineHeight),
@@ -152,7 +100,10 @@ namespace rwby
             EditorGUI.PropertyField(new Rect(position.x, GetLineY(), position.width, lineHeight), property.FindPropertyRelative("attackerHitstop"));
             EditorGUI.PropertyField(new Rect(position.x, GetLineY(), position.width, lineHeight), property.FindPropertyRelative("hitstop"));
             EditorGUI.PropertyField(new Rect(position.x, GetLineY(), position.width, lineHeight), property.FindPropertyRelative("hitstun"));
+            EditorGUI.PropertyField(new Rect(position.x, GetLineY(), position.width, lineHeight), property.FindPropertyRelative("untech"));
             EditorGUI.PropertyField(new Rect(position.x, GetLineY(), position.width, lineHeight), property.FindPropertyRelative("blockstun"));
+            EditorGUI.PropertyField(new Rect(position.x, GetLineY(), position.width, lineHeight), property.FindPropertyRelative("initialProration"));
+            EditorGUI.PropertyField(new Rect(position.x, GetLineY(), position.width, lineHeight), property.FindPropertyRelative("forcedProration"));
         }
 
         protected override void DrawGeneralGroup(ref Rect position, SerializedProperty property)

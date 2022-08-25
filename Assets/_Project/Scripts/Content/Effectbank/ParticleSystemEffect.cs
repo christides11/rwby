@@ -15,7 +15,7 @@ namespace rwby
         private AudioPlayMode predictedPlayMode;
         public AudioPlayMode playMode
         {
-            get => Object.IsPredictedSpawn ? predictedPlayMode : networkedPlayMode;
+            get => Object.is ? predictedPlayMode : networkedPlayMode;
             set
             {
                 if (Object.IsPredictedSpawn)

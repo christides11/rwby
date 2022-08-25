@@ -74,6 +74,7 @@ namespace rwby
         public Transform visualTransform;
         public Transform myTransform;
         [SerializeReference] public IContentLoad[] contentLoaders = new IContentLoad[0];
+        public GameObject shieldVisual;
 
         [Header("Lock On")]
         public LayerMask lockonLayerMask;
@@ -126,6 +127,7 @@ namespace rwby
             combatManager.Cleanup();
             stateManager.SetMoveset(0);
             statManager.SetupStats((stateManager.movesets[0] as Moveset).fighterStats);
+            combatManager.Aura = fighterDefinition.Aura;
         }
 
         public float hitstopShakeDistance = 0.5f;
@@ -135,6 +137,7 @@ namespace rwby
         public override void Render()
         {
             base.Render();
+            shieldVisual.SetActive(combatManager.BlockState != BlockStateType.NONE);
             physicsManager.kCC.Motor.visualExtraOffset = Vector3.zero;
             if (FCombatManager.HitStop == 0 || FCombatManager.HitStun == 0) return;
             Vector3 dir = shakeDirs[currentShakeDirection].z * transform.forward
@@ -175,6 +178,7 @@ namespace rwby
                 FPhysicsManager.CheckIfGrounded();
                 FStateManager.Tick();
                 FPhysicsManager.Tick();
+                FCombatManager.Tick();
             }
             else
             {

@@ -21,6 +21,9 @@ MonoBehaviour:
   autoLoopFrame: 5
   data:
   - rid: 8688056605814030341
+  - rid: 8688056682080894977
+  - rid: 8688056682080894978
+  auraRequirement: 0
   initialGroundedState: 2
   stateType: 1
   maxUsesInString: -1
@@ -90,3 +93,27 @@ MonoBehaviour:
         statReference: 1
         value: 0
         variable: 23
+    - rid: 8688056682080894977
+      type: {class: VarSetBlockState, ns: rwby, asm: rwby.csharp}
+      data:
+        name: 
+        id: 1
+        parent: -1
+        children: 
+        frameRanges:
+        - {x: 0, y: 0}
+        condition:
+          rid: -2
+        state: 1
+    - rid: 8688056682080894978
+      type: {class: VarSetBlockState, ns: rwby, asm: rwby.csharp}
+      data:
+        name: 
+        id: 2
+        parent: -1
+        children: 
+        frameRanges:
+        - {x: -2, y: -2}
+        condition:
+          rid: -2
+        state: 0

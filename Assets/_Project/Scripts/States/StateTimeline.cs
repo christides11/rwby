@@ -25,6 +25,8 @@ namespace rwby
             get { return hurtboxInfo; }
         }
 
+        public int auraRequirement;
+        
         [FormerlySerializedAs("stateGroundedGroup")] [Header("State Info")]
         public StateGroundedGroupType initialGroundedState;
         public StateType stateType;

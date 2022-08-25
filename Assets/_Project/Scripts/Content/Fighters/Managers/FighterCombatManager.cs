@@ -19,6 +19,11 @@ namespace rwby
         [Networked] public NetworkBool Charging { get; set; }
         [Networked] public int CurrentChargeLevel { get; set; }
         [Networked] public int CurrentChargeLevelCharge { get; set; }
+        [Networked] public int ComboCounter { get; set; }
+        [Networked] public int ComboTime { get; set; }
+        [Networked] public float Proration { get; set; } = 1.0f;
+        [Networked(OnChanged = nameof(OnChangedAura))] public int Aura { get; set; }
+        public int AuraRegenDelay { get; set; }
         public FighterHitManager HitboxManager { get { return hitboxManager; } }
 
         [SerializeField] protected HealthManager healthManager;
@@ -40,12 +45,50 @@ namespace rwby
 
         [Networked, Capacity(4)] public NetworkArray<int> assignedSpecials => default;
 
+        public delegate void BehaviourDelegate(FighterCombatManager combatManager);
+
+        public event BehaviourDelegate OnAuraIncreased;
+        public event BehaviourDelegate OnAuraDecreased;
+        
+        public static void OnChangedAura(Changed<FighterCombatManager> changed)
+        {
+            changed.LoadOld();
+            int oldHealth = changed.Behaviour.Aura;
+            changed.LoadNew();
+            if (changed.Behaviour.Aura > oldHealth)
+            {
+                changed.Behaviour.OnAuraIncreased?.Invoke(changed.Behaviour);
+            }
+
+            if (changed.Behaviour.Aura < oldHealth)
+            {
+                changed.Behaviour.OnAuraDecreased?.Invoke(changed.Behaviour);
+            }
+        }
+        
         public override void Spawned()
         {
             base.Spawned();
             for (int i = 0; i < 2; i++)
             {
                 assignedSpecials.Set(i, i + 1);
+            }
+        }
+
+        public virtual void Tick()
+        {
+            if (stateManager.CurrentStateType == StateType.RECOVERY)
+            {
+                ComboTime++;
+            }
+
+            if (AuraRegenDelay == 0)
+            {
+                AddAura(manager.fighterDefinition.AuraGainPerFrame);
+            }
+            else
+            {
+                AuraRegenDelay--;
             }
         }
 
@@ -134,6 +177,23 @@ namespace rwby
         public virtual void AddHitStun(int value)
         {
             HitStun += value;
+        }
+
+        public virtual void ResetProration()
+        {
+            Proration = 1.0f;
+        }
+
+        public virtual void AddAura(int value)
+        {
+            Aura += value;
+            Aura = Mathf.Clamp(Aura, 0, manager.fighterDefinition.Aura);
+        }
+
+        public virtual void SetAura(int value)
+        {
+            Aura = value;
+            Aura = Mathf.Clamp(Aura, 0, manager.fighterDefinition.Aura);
         }
 
         public void Cleanup()
@@ -324,12 +384,11 @@ namespace rwby
             
             var currentState = stateManager.GetState();
             
-            bool groundedState = stateManager.CurrentGroundedState == StateGroundedGroupType.GROUND;
-            HitInfo.HitInfoGroup hitInfoGroup = groundedState ? (CounterhitState ? hitInfo.groundCounterHitGroup : hitInfo.groundGroup) 
-                : (CounterhitState ? hitInfo.aerialCounterHitGroup : hitInfo.aerialGroup);
+            bool isGrounded = stateManager.CurrentGroundedState == StateGroundedGroupType.GROUND;
+            HitInfo.HitInfoGroup hitInfoGroup = CounterhitState ? hitInfo.counterhit : hitInfo.hit;
             hitReaction.hitInfoGroup = hitInfoGroup;
 
-            if (hitInfoGroup.hitState == FighterCmnStates.NULL)
+            if (hitInfoGroup.groundHitState == FighterCmnStates.NULL)
             {
                 hitReaction.reaction = HitReactionType.HIT;
                 return hitReaction;
@@ -343,7 +402,7 @@ namespace rwby
                     SetHitStop(hitInfoGroup.hitstop);
                     BlockStun = hitInfoGroup.blockstun;
                     
-                    ApplyHitForces(hurtInfo, currentState, hitInfoGroup.hitForceType, hitInfoGroup.blockForce, hitInfoGroup.pullPushCurve, hitInfoGroup.pullPushMaxDistance, hitInfoGroup.hitForceRelationOffset);
+                    ApplyHitForces(hurtInfo, currentState, hitInfoGroup.hitForceType, isGrounded ? hitInfoGroup.groundHitForce : hitInfoGroup.aerialHitForce, hitInfoGroup.pullPushCurve, hitInfoGroup.pullPushMaxDistance, hitInfoGroup.hitForceRelationOffset);
                     return hitReaction;
                 }
             }
@@ -354,8 +413,8 @@ namespace rwby
             // Got hit, apply stun, damage, and forces.
             hitReaction.reaction = HitReactionType.HIT;
             SetHitStop(hitInfoGroup.hitstop);
-            SetHitStun(hitInfoGroup.hitstun);
-            ApplyHitForces(hurtInfo, currentState, hitInfoGroup.hitForceType, hitInfoGroup.hitForce, hitInfoGroup.pullPushCurve, hitInfoGroup.pullPushMaxDistance, hitInfoGroup.hitForceRelationOffset);
+            SetHitStun(isGrounded ? hitInfoGroup.hitstun : hitInfoGroup.untech);
+            ApplyHitForces(hurtInfo, currentState, hitInfoGroup.hitForceType, isGrounded ?  hitInfoGroup.groundHitForce : hitInfoGroup.aerialHitForce, hitInfoGroup.pullPushCurve, hitInfoGroup.pullPushMaxDistance, hitInfoGroup.hitForceRelationOffset);
             
             WallBounces = hitInfoGroup.wallBounces;
             WallBounceForcePercentage = hitInfoGroup.wallBounceForcePercentage;
@@ -375,8 +434,19 @@ namespace rwby
                 physicsManager.SetGrounded(false);
             }
 
-            stateManager.ChangeState((int)hitInfoGroup.hitState);
+            stateManager.ChangeState(isGrounded ? (int)hitInfoGroup.groundHitState : (int)hitInfoGroup.airHitState);
             manager.FCombatManager.Cleanup();
+            ComboCounter++;
+
+            if (ComboCounter == 1)
+            {
+                ResetProration();
+                Proration = hitInfoGroup.initialProration;
+            }
+            else
+            {
+                if (Proration > hitInfoGroup.forcedProration) Proration = hitInfoGroup.forcedProration;
+            }
             return hitReaction;
         }
 

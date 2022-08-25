@@ -2,6 +2,7 @@ using System;
 using HnSF.Combat;
 using NaughtyAttributes;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace rwby
 {
@@ -11,12 +12,13 @@ namespace rwby
         [System.Serializable]
         public struct HitInfoGroup
         {
-            public FighterCmnStates hitState;
+            [FormerlySerializedAs("hitState")] public FighterCmnStates groundHitState;
+            public FighterCmnStates airHitState;
             public int groundBounces;
             public int wallBounces;
             public float groundBounceForcePercentage;
             public float wallBounceForcePercentage;
-            public bool hitKills;
+            public bool noKill;
 
             public HitboxForceType hitForceType;
             public HitboxForceRelation hitForceRelation;
@@ -25,9 +27,8 @@ namespace rwby
             public float autolinkPercentage;
             
             // FORCES
-            public Vector3 hitForce;
-            public Vector3 blockForce;
-            public float hitGravity;
+            [FormerlySerializedAs("hitForce")] public Vector3 groundHitForce;
+            public Vector3 aerialHitForce;
             public AnimationCurve pullPushCurve;
             public float pullPushMaxDistance;
             
@@ -35,18 +36,20 @@ namespace rwby
             public int hitstop;
             public int hitstun;
             public int blockstun;
+            public int untech;
+
+            public int initialProration;
+            public int forcedProration;
+
+            public int damage;
         }
         
         [SerializeField] private bool groundedFoldoutGroup;
         [SerializeField] private bool groundedCounterHitFoldoutGroup;
-        [SerializeField] private bool aerialFoldoutGroup;
-        [SerializeField] private bool aerialCounterHitFoldoutGroup;
 
         public StateGroundedGroupType hitStateGroundedGroups;
-        public HitInfoGroup groundGroup;
-        public HitInfoGroup groundCounterHitGroup;
-        public HitInfoGroup aerialGroup;
-        public HitInfoGroup aerialCounterHitGroup;
+        [FormerlySerializedAs("groundGroup")] public HitInfoGroup hit;
+        public HitInfoGroup counterhit;
 
         public HitInfo() : base()
         {

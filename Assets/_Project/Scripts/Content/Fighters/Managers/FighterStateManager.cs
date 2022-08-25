@@ -29,6 +29,7 @@ namespace rwby
         [Networked] public int nextStateMoveset { get; set; } = -1;
         [Networked] public int nextState { get; set; } = 0;
         [Networked] public StateGroundedGroupType CurrentGroundedState { get; set; } = StateGroundedGroupType.AERIAL;
+        [Networked] public StateType CurrentStateType { get; set; } = StateType.NONE;
 
 
         [SerializeField] protected FighterManager manager;
@@ -168,10 +169,10 @@ namespace rwby
             
             if (callOnInterrupt && previousState != (int)FighterCmnStates.NULL)
             {
-                StateTimeline currentStateTimeline = GetState();
+                StateTimeline previousStateTimeline = GetState();
                 interruptedOnFrame = CurrentStateFrame;
-                SetFrame(currentStateTimeline.totalFrames+1);
-                ProcessState(currentStateTimeline, true);
+                SetFrame(previousStateTimeline.totalFrames+1);
+                ProcessState(previousStateTimeline, true);
             }
 
             CurrentStateMoveset = moveset == -1 ? CurrentMoveset : moveset;
@@ -184,11 +185,13 @@ namespace rwby
                 SetFrame(1);
             }
 
+            var currentStateTimeline = GetState();
             if (previousState != (int)FighterCmnStates.NULL)
             {
-                StateChanged(GetState(previousStateMoveset, previousState) as rwby.StateTimeline, GetState());
+                StateChanged(GetState(previousStateMoveset, previousState) as rwby.StateTimeline, currentStateTimeline);
             }
-            CurrentGroundedState = GetState().initialGroundedState;
+            CurrentGroundedState = currentStateTimeline.initialGroundedState;
+            CurrentStateType = currentStateTimeline.stateType;
             return true;
         }
         
@@ -211,7 +214,12 @@ namespace rwby
 
             if (currentState.stateType is StateType.MOVEMENT or StateType.NONE)
             {
-                if(previousState.stateType != currentState.stateType) combatManager.ResetString();
+                if (previousState.stateType != currentState.stateType)
+                {
+                    combatManager.ResetString();
+                    combatManager.ComboTime = 0;
+                    combatManager.ComboCounter = 0;
+                }
             }else if (currentState.stateType == StateType.ATTACK)
             {
                 if (currentState.maxUsesInString != -1)

@@ -51,6 +51,8 @@ namespace rwby
             functions.Add(typeof(VarClearThrowee), BaseStateFunctions.ClearThrowee);
             functions.Add(typeof(VarModifyBlockstun), BaseStateFunctions.ModifyBlockstun);
             functions.Add(typeof(VarSetGuardState), BaseStateFunctions.SetGuardState);
+            functions.Add(typeof(VarModifyAura), BaseStateFunctions.ModifyAura);
+            functions.Add(typeof(VarSetBlockState), BaseStateFunctions.SetBlockState);
         }
     }
 }

@@ -13,6 +13,15 @@ namespace rwby
         public override string Description { get { return description; } }
         public override bool Selectable { get { return selectable; } }
         public override int Health { get { return health; } }
+        public override int Aura
+        {
+            get { return aura; }
+        }
+
+        public override int AuraGainPerFrame
+        {
+            get { return auraGainPerFrame; }
+        }
 
         [SerializeField] private string fighterName;
         [SerializeField] [TextArea] private string description;
@@ -20,6 +29,8 @@ namespace rwby
         [SerializeField] private AssetReferenceT<Moveset>[] movesetReferences;
         [SerializeField] private bool selectable = true;
         [SerializeField] private int health;
+        [SerializeField] private int aura;
+        [SerializeField] private int auraGainPerFrame;
 
         [NonSerialized] private AsyncOperationHandle<Moveset>[] movesetHandles;
         [NonSerialized] private AsyncOperationHandle<GameObject> fighterHandle;

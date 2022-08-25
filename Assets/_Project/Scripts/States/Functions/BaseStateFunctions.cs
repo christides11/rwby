@@ -37,6 +37,7 @@ namespace rwby
             StateTimeline state = (StateTimeline)(fm.FStateManager.GetState(movesetID, stateID));
 
             //if (!fm.FCombatManager.MovePossible(new MovesetStateIdentifier(movesetID, stateID), state.maxUsesInString)) return;
+            if (fm.FCombatManager.Aura < state.auraRequirement) return;
             if (vars.checkInputSequence && !fm.FCombatManager.CheckForInputSequence(state.inputSequence, holdInput: state.inputSequenceAsHoldInputs)) return;
             if (vars.checkCondition && !fm.FStateManager.TryCondition(state, state.condition, arg4)) return;
 
@@ -795,6 +796,30 @@ namespace rwby
         {
             FighterManager fm = (FighterManager)fighter;
             VarSetGuardState vars = (VarSetGuardState)variables;
+
+            fm.FCombatManager.BlockState = vars.state;
+        }
+        
+        public static void ModifyAura(IFighterBase fighter, IStateVariables variables, HnSF.StateTimeline stateTimeline, int frame)
+        {
+            FighterManager fm = (FighterManager)fighter;
+            VarModifyAura vars = (VarModifyAura)variables;
+
+            switch (vars.modifyType)
+            {
+                case VarModifyType.ADD:
+                    fm.FCombatManager.AddAura(vars.value.GetValue(fm));
+                    break;
+                case VarModifyType.SET:
+                    fm.FCombatManager.SetAura(vars.value.GetValue(fm));
+                    break;
+            }
+        }
+        
+        public static void SetBlockState(IFighterBase fighter, IStateVariables variables, HnSF.StateTimeline stateTimeline, int frame)
+        {
+            FighterManager fm = (FighterManager)fighter;
+            VarSetBlockState vars = (VarSetBlockState)variables;
 
             fm.FCombatManager.BlockState = vars.state;
         }
