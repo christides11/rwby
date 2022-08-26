@@ -14,6 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   data:
   - rid: 8688056195711238156
+  - rid: 8688056704561053699
   - rid: 8688056195711238154
   - rid: 8688056195711238160
   references:
@@ -33,6 +34,7 @@ MonoBehaviour:
           rid: 8688056195711238155
         checkInputSequence: 0
         checkCondition: 0
+        targetType: 0
         stateMovesetID: -1
         state:
           rid: 8688056195711238157
@@ -55,8 +57,11 @@ MonoBehaviour:
         inputSource: 0
         normalizeInputSource: 1
         useRotationIfInputZero: 0
-        minAngle: -45
-        maxAngle: 45
+        minAngle: -75
+        maxAngle: 75
+        raycastCount: 8
+        startAngleOffset: 0
+        angleBasedOnWallDir: 0
         clearWallIfNotFound: 1
     - rid: 8688056195711238157
       type: {class: FighterCmnStateReference, ns: rwby, asm: rwby.csharp}
@@ -86,6 +91,7 @@ MonoBehaviour:
           rid: 8688056195711238161
         checkInputSequence: 0
         checkCondition: 0
+        targetType: 0
         stateMovesetID: -1
         state:
           rid: 8688056195711238162
@@ -97,3 +103,49 @@ MonoBehaviour:
       type: {class: FighterCmnStateReference, ns: rwby, asm: rwby.csharp}
       data:
         state: 38
+    - rid: 8688056704561053699
+      type: {class: VarChangeState, ns: rwby, asm: rwby.csharp}
+      data:
+        name: Try Wall Run V
+        id: 0
+        parent: 0
+        children: 
+        frameRanges: []
+        condition:
+          rid: 8688056704561053701
+        checkInputSequence: 0
+        checkCondition: 0
+        targetType: 0
+        stateMovesetID: -1
+        state:
+          rid: 8688056704561053700
+    - rid: 8688056704561053700
+      type: {class: FighterCmnStateReference, ns: rwby, asm: rwby.csharp}
+      data:
+        state: 18
+    - rid: 8688056704561053701
+      type: {class: ConditionAnd, ns: rwby, asm: rwby.csharp}
+      data:
+        conditions:
+        - rid: 8688056704561053702
+        - rid: 8688056704561053703
+        - rid: 8688056704561053704
+    - rid: 8688056704561053702
+      type: {class: ConditionButton, ns: rwby, asm: rwby.csharp}
+      data:
+        inverse: 0
+        button: 4
+        buttonState: 0
+        offset: 0
+        buffer: 0
+    - rid: 8688056704561053703
+      type: {class: ConditionWallValid, ns: rwby, asm: rwby.csharp}
+      data:
+        inverse: 0
+    - rid: 8688056704561053704
+      type: {class: ConditionWallAngle, ns: rwby, asm: rwby.csharp}
+      data:
+        inputSource: 1
+        inverse: 0
+        minAngle: -20
+        maxAngle: 20

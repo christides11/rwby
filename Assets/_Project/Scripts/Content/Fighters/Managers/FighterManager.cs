@@ -1,9 +1,7 @@
 using Cysharp.Threading.Tasks;
-using Fusion;    
-using HnSF.Combat;
+using Fusion;
 using HnSF.Fighters;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -50,8 +48,6 @@ namespace rwby
         [Networked] public NetworkBool StoredRun { get; set; }
         [Networked] public int CurrentJump { get; set; }
         [Networked] public int CurrentAirDash { get; set; }
-        [Networked] public float CurrentFallMultiplier { get; set; } = 1.0f;
-        [Networked, Capacity(10)] public NetworkArray<bool> attackEventInput { get; }
 
         [Header("Debug")] public bool FRAMEBYFRAME = false;
         
@@ -70,7 +66,6 @@ namespace rwby
         public FighterEffector fighterEffector;
         public FighterAnimator fighterAnimator;
         [SerializeField] protected Transform targetOrigin;
-        public ParticleSystemEffect guardEffect;
         public Transform visualTransform;
         public Transform myTransform;
         [SerializeReference] public IContentLoad[] contentLoaders = new IContentLoad[0];
@@ -81,7 +76,7 @@ namespace rwby
         public LayerMask lockonVisibilityLayerMask;
         public float lockonMaxDistance = 20;
         public float lockonFudging = 0.1f;
-
+        private Collider[] lockonResultList = new Collider[10];
 
         [Header("Walls")]
         public LayerMask wallLayerMask;
@@ -99,8 +94,6 @@ namespace rwby
         [Networked] public float poleSpin { get; set; }
         
         // Throwing
-        [Networked] public Vector3 throweePosition { get; set; }
-        [Networked] public Vector3 throweeRotation { get; set; }
         [Networked] public NetworkObject thrower { get; set; }
         [Networked, Capacity(4)] public NetworkArray<NetworkObject> throwees => default;
 
@@ -130,10 +123,13 @@ namespace rwby
             combatManager.Aura = fighterDefinition.Aura;
         }
 
+        [Header("Hitstop")]
         public float hitstopShakeDistance = 0.5f;
         public int hitstopDir = 1;
         public int hitstopShakeFrames = 1;
-
+        public Vector3[] shakeDirs;
+        [Networked] public sbyte currentShakeDirection { get; set; }
+        
         public override void Render()
         {
             base.Render();
@@ -147,7 +143,6 @@ namespace rwby
 
         public float groundSlopeAngle;
         public Vector3 groundSlopeDir;
-        public int val = 100;
         public override void FixedUpdateNetwork()
         {
             GetFloorAngle();
@@ -214,9 +209,6 @@ namespace rwby
             }
         }
 
-        public Vector3[] shakeDirs;
-        [Networked] public sbyte currentShakeDirection { get; set; }
-
         protected void HitstopShake()
         {
             // Shake during hitstop.
@@ -281,8 +273,7 @@ namespace rwby
                 CurrentTarget = target.GetComponent<NetworkObject>();
             }
         }
-
-        private Collider[] lockonResultList = new Collider[10];
+        
         public GameObject GetLockonTarget(float maxDistance)
         {
             int hitCount = Runner.GetPhysicsScene().OverlapSphere(GetCenter(), maxDistance, lockonResultList, 
@@ -356,23 +347,6 @@ namespace rwby
             return physicsManager.ECBCenter();
         }
         
-        public bool TryBlock()
-        {
-            if(InputManager.GetBlock(out int bOff).isDown == false)
-            {
-                return false;
-            }
-            if (FPhysicsManager.IsGroundedNetworked)
-            {
-                FStateManager.ChangeState((int)FighterCmnStates.BLOCK_HIGH);
-            }
-            else
-            {
-                FStateManager.ChangeState((int)FighterCmnStates.BLOCK_AIR);
-            }
-            return true;
-        }
-
         public virtual void ClearWall()
         {
             cWallNormal = Vector3.zero;

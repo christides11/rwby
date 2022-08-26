@@ -10,9 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7789f25d17401bc4b915ca6fcecf2a29, type: 3}
-  m_Name: Base.State.WallRun_H
+  m_Name: Base.State.WallRun_V
   m_EditorClassIdentifier: 
-  stateName: Wall Run H
+  stateName: Wall Run V
   useBaseState: 0
   baseState: {fileID: 0}
   totalFrames: 10
@@ -22,12 +22,11 @@ MonoBehaviour:
   data:
   - rid: 8688056157277782022
   - rid: 8688056157277782024
+  - rid: 8688056704561053696
   - rid: 8688056195711238149
   - rid: 8688056177854775296
-  - rid: 8688056635878539272
   - rid: 8688056635878539267
   - rid: 8688056177854775303
-  - rid: 8688056699280162816
   - rid: 8688056635878539266
   - rid: 8688056635878539269
   auraRequirement: 0
@@ -128,7 +127,7 @@ MonoBehaviour:
         - {x: 0, y: 0}
         condition:
           rid: 8688056635878539265
-        useWallSide: 1
+        useWallSide: 0
     - rid: 8688056195711238149
       type: {class: VarChangeState, ns: rwby, asm: rwby.csharp}
       data:
@@ -191,7 +190,7 @@ MonoBehaviour:
         maxAngle: 180
         raycastCount: 1
         startAngleOffset: 0
-        angleBasedOnWallDir: 1
+        angleBasedOnWallDir: 0
         clearWallIfNotFound: 1
     - rid: 8688056635878539268
       type: {class: ConditionWallValid, ns: rwby, asm: rwby.csharp}
@@ -218,42 +217,24 @@ MonoBehaviour:
       type: {class: FighterCmnStateReference, ns: rwby, asm: rwby.csharp}
       data:
         state: 5
-    - rid: 8688056635878539272
-      type: {class: VarSetMovement, ns: rwby, asm: rwby.csharp}
+    - rid: 8688056704561053696
+      type: {class: VarModifyFallSpeed, ns: rwby, asm: rwby.csharp}
       data:
         name: 
-        id: 10
+        id: 12
         parent: -1
         children: 
         frameRanges:
         - {x: 1, y: -1}
         condition:
           rid: -2
-        inputSource: 1
-        normalizeInputSource: 1
-        useRotationIfInputZero: 0
-        reverseInputSource: 0
-        force:
-          rid: 8688056635878539273
-    - rid: 8688056635878539273
-      type: {class: FighterBaseStatReferenceFloat, ns: rwby, asm: rwby.csharp}
+        targetType: 0
+        modifyType: 1
+        value:
+          rid: 8688056704561053697
+    - rid: 8688056704561053697
+      type: {class: FighterStatReferenceFloatBase, ns: rwby, asm: rwby.csharp}
       data:
         inverse: 0
-        statReference: 1
-        value: 0
-        variable: 32
-    - rid: 8688056699280162816
-      type: {class: VarModifyRotation, ns: rwby, asm: rwby.csharp}
-      data:
-        name: 
-        id: 11
-        parent: -1
-        children: 
-        frameRanges:
-        - {x: 1, y: -1}
-        condition:
-          rid: -2
-        modifyType: 1
-        rotateTowards: 4
-        useTargetWhenNoMovement: 0
-        eulerAngle: {x: 0, y: 0, z: 0}
+        statReference: 0
+        value: 15

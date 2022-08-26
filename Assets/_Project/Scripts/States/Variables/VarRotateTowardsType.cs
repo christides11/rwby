@@ -6,6 +6,7 @@ namespace rwby
         stick,
         movement,
         target,
-        custom
+        custom,
+        wallDir
     }
 }

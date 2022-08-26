@@ -273,11 +273,72 @@ namespace rwby
             FighterManager f = fighter as FighterManager;
             ConditionCompareInputDir vars = (ConditionCompareInputDir)variables;
 
-            Vector3 angleA;
-            Vector3 angleB;
+            Vector3 angleA = Vector3.forward;
+            Vector3 angleB = Vector3.forward;
+
+            switch (vars.inputSourceA)
+            {
+                case VarInputSourceType.stick:
+                    angleA = f.GetMovementVector();
+                    break;
+                case VarInputSourceType.slope:
+                    angleA = f.groundSlopeDir;
+                    angleA.y = 0;
+                    angleA.Normalize();
+                    break;
+                case VarInputSourceType.rotation:
+                    angleA = f.myTransform.forward;
+                    break;
+            }
             
-            return true;
-            //return f.throwees[0] != null ? true : false;
+            switch (vars.inputSourceB)
+            {
+                case VarInputSourceType.stick:
+                    angleB = f.GetMovementVector();
+                    break;
+                case VarInputSourceType.slope:
+                    angleB = f.groundSlopeDir;
+                    angleB.y = 0;
+                    angleB.Normalize();
+                    break;
+                case VarInputSourceType.rotation:
+                    angleB = f.myTransform.forward;
+                    break;
+            }
+
+            var angle = Vector3.SignedAngle(angleA, angleB, Vector3.up);
+            if (angle >= vars.minAngle && angle <= vars.maxAngle) return true;
+            return false;
+        }
+        
+        public static bool WallAngle(IFighterBase fighter, IConditionVariables variables, HnSF.StateTimeline arg3, int arg4)
+        {
+            FighterManager f = fighter as FighterManager;
+            if (f.cWallNormal == Vector3.zero) return false;
+            ConditionWallAngle vars = (ConditionWallAngle)variables;
+
+            Vector3 input = Vector3.zero;
+
+            switch (vars.inputSource)
+            {
+                case VarInputSourceType.stick:
+                    input = f.GetMovementVector();
+                    break;
+                case VarInputSourceType.slope:
+                    input = f.groundSlopeDir;
+                    input.y = 0;
+                    input.Normalize();
+                    break;
+                case VarInputSourceType.rotation:
+                    input = f.myTransform.forward;
+                    break;
+            }
+
+            if (input == Vector3.zero) return false;
+            
+            var angle = Vector3.SignedAngle(input, -f.cWallNormal, Vector3.up);
+            if (angle >= vars.minAngle && angle <= vars.maxAngle) return true;
+            return false;
         }
     }
 }

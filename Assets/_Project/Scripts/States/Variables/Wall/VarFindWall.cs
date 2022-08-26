@@ -47,6 +47,10 @@ namespace rwby
         public float minAngle;
         public float maxAngle;
 
+        public int raycastCount;
+        public float startAngleOffset;
+        public bool angleBasedOnWallDir;
+
         public bool clearWallIfNotFound;
     }
 }

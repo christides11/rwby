@@ -1,8 +1,4 @@
 using Fusion;
-using Fusion.Sockets;
-using Rewired;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace rwby

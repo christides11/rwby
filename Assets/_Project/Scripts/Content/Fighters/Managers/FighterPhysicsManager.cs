@@ -124,38 +124,6 @@ namespace rwby
             forceGravity = Mathf.MoveTowards(forceGravity, 0, friction * Runner.DeltaTime);
         }
 
-        public virtual float GetFrictionValue(float value, float traction)
-        {
-            return Mathf.MoveTowards(value, 0, traction * Runner.DeltaTime) - value;
-        }
-        
-        /// <summary>
-        /// Applies friction on the given value based on the traction given.
-        /// </summary>
-        /// <param name="value">The value to apply traction to.</param>
-        /// <param name="traction">The traction to apply.</param>
-        /// <returns>The new value with the traction applied.</returns>
-        protected virtual float ApplyFriction(float value, float traction)
-        {
-            if (value > 0)
-            {
-                value -= traction;
-                if (value < 0)
-                {
-                    value = 0;
-                }
-            }
-            else if (value < 0)
-            {
-                value += traction;
-                if (value > 0)
-                {
-                    value = 0;
-                }
-            }
-            return value;
-        }
-
         public virtual Vector3 HandleMovement(float baseAccel, float movementAccel, float deceleration, float minSpeed, float maxSpeed, AnimationCurve accelFromDot)
         {
             return HandleMovement(manager.GetMovementVector(), baseAccel, movementAccel, deceleration, minSpeed, maxSpeed, accelFromDot);

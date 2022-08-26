@@ -1,11 +1,8 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using Fusion;
 using HnSF.Combat;
 using HnSF.Fighters;
 using HnSF.Input;
-using System;
 using HnSF;
 
 namespace rwby
