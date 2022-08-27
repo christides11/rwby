@@ -77,7 +77,7 @@ public class RRoseMan : FighterManager
                 }
             );
             
-            fighterEffector.RegisterBank(effectbankRefs[i]);
+            fighterEffector.RegisterBank(effectbankReferences[i]);
         }
     }
 

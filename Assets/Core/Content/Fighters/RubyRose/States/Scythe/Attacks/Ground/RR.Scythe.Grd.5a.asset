@@ -27,6 +27,10 @@ MonoBehaviour:
   - rid: 8688056217396838433
   - rid: 8688056331001921542
   - rid: 8688056331001921543
+  - rid: 8688056738971123712
+  - rid: 8688056738971123713
+  - rid: 8688056738971123715
+  auraRequirement: 0
   initialGroundedState: 1
   stateType: 2
   maxUsesInString: 1
@@ -263,3 +267,51 @@ MonoBehaviour:
         modifyType: 0
         animations: 00000000
         frame: 1
+    - rid: 8688056738971123712
+      type: {class: VarModifyEffectSet, ns: rwby, asm: rwby.csharp}
+      data:
+        name: 
+        id: 7
+        parent: -1
+        children: 
+        frameRanges:
+        - {x: 1, y: 1}
+        condition:
+          rid: -2
+        modifyType: 0
+        wantedEffects:
+        - effectbank:
+            modGUID:
+              guid: 1d292c1f00000000
+            contentGUID:
+              guid: 21261c0000000000
+          effect: slash
+          parented: 1
+          offset: {x: 0, y: 1, z: 0}
+          rotation: {x: 0, y: 0, z: 180}
+          scale: {x: 1, y: 0.2, z: 1}
+    - rid: 8688056738971123713
+      type: {class: VarModifyEffectFrame, ns: rwby, asm: rwby.csharp}
+      data:
+        name: 
+        id: 8
+        parent: -1
+        children: 
+        frameRanges:
+        - {x: 1, y: -1}
+        condition:
+          rid: -2
+        modifyType: 0
+        effects: 00000000
+        frame: 1
+    - rid: 8688056738971123715
+      type: {class: VarClearCurrentEffects, ns: rwby, asm: rwby.csharp}
+      data:
+        name: 
+        id: 9
+        parent: -1
+        children: 
+        frameRanges:
+        - {x: -2, y: -2}
+        condition:
+          rid: -2

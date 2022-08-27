@@ -53,6 +53,7 @@ namespace rwby
             functions.Add(typeof(VarSetGuardState), BaseStateFunctions.SetGuardState);
             functions.Add(typeof(VarModifyAura), BaseStateFunctions.ModifyAura);
             functions.Add(typeof(VarSetBlockState), BaseStateFunctions.SetBlockState);
+            functions.Add(typeof(VarClearCurrentEffects), BaseStateFunctions.ClearCurrentEffects);
         }
     }
 }

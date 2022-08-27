@@ -198,6 +198,7 @@ namespace rwby
         public void StateChanged(rwby.StateTimeline previousState, rwby.StateTimeline currentState)
         {
             combatManager.HitboxManager.Reset();
+            manager.fighterEffector.ClearCurrentEffects();
             
             if (CurrentGroundedState != currentState.initialGroundedState)
             {

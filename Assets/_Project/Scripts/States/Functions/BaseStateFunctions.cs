@@ -819,5 +819,13 @@ namespace rwby
 
             fm.FCombatManager.BlockState = vars.state;
         }
+        
+        public static void ClearCurrentEffects(IFighterBase fighter, IStateVariables variables, HnSF.StateTimeline stateTimeline, int frame)
+        {
+            FighterManager fm = (FighterManager)fighter;
+
+            fm.fighterEffector.ClearCurrentEffects(true);
+            //fm.FCombatManager.BlockState = vars.state;
+        }
     }
 }

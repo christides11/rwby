@@ -9,16 +9,19 @@ namespace rwby
     [OrderAfter(typeof(FighterStateManager))]
     public class FighterEffector : NetworkBehaviour
     {
-        [HideInInspector] public Dictionary<ModGUIDContentReference, int> bankMap = new Dictionary<ModGUIDContentReference, int>();
+        [HideInInspector] public Dictionary<ModObjectSetContentReference, int> bankMap = new Dictionary<ModObjectSetContentReference, int>();
         [HideInInspector] public List<IEffectbankDefinition> banks = new List<IEffectbankDefinition>();
 
         [Networked, Capacity(10)] public FighterEffectsRoot effects { get; set; }
+        [Networked] public int effectBufferPos { get; set; } = 0;
+        [Networked, Capacity(10)] public NetworkLinkedList<int> currentEffectIndex => default;
+
         private bool dirty;
 
         private FighterEffectsRoot currentEffectsRepresentation;
 
         public BaseEffect[] effectObjects = new BaseEffect[10];
-
+        
         private void Awake()
         {
             dirty = true;
@@ -26,16 +29,15 @@ namespace rwby
 
         public void SetEffects(EffectReference[] wantedEffects)
         {
-            ClearEffects();
             AddEffects(wantedEffects);
         }
 
         public void AddEffects(EffectReference[] wantedEffects)
         {
+            var temp = effects;
             for (int i = 0; i < wantedEffects.Length; i++)
             {
-                var temp = effects;
-                temp.effects.Set(i, new FighterEffectNode()
+                temp.effects.Set(effectBufferPos % 10, new FighterEffectNode()
                 {
                     bank = bankMap[wantedEffects[i].effectbank]+1,
                     effect = banks[bankMap[wantedEffects[i].effectbank]].EffectMap[wantedEffects[i].effect]+1,
@@ -45,8 +47,26 @@ namespace rwby
                     rot = wantedEffects[i].rotation,
                     scale = wantedEffects[i].scale
                 });
+
+                currentEffectIndex.Add(effectBufferPos);
+                effectBufferPos++;
+            }
+            effects = temp;
+            dirty = true;
+        }
+
+        public void ClearCurrentEffects(bool removeEffects = false)
+        {
+            if (removeEffects)
+            {
+                var temp = effects;
+                for (int i = 0; i < currentEffectIndex.Count; i++)
+                {
+                    temp.effects.Set((currentEffectIndex[i] % 10), new FighterEffectNode());
+                }
                 effects = temp;
             }
+            currentEffectIndex.Clear();
             dirty = true;
         }
 
@@ -67,10 +87,11 @@ namespace rwby
         {
             for (int i = 0; i < effectToModify.Length; i++)
             {
+                if (effectToModify[i] >= currentEffectIndex.Count) return;
                 var temp = effects;
-                var t = temp.effects[effectToModify[i]];
+                var t = temp.effects[currentEffectIndex[effectToModify[i]] % 10];
                 t.frame += frame;
-                temp.effects.Set(effectToModify[i], t);
+                temp.effects.Set(currentEffectIndex[effectToModify[i]] % 10, t);
                 effects = temp;
             }
             dirty = true;
@@ -178,10 +199,11 @@ namespace rwby
             return banks[bankMap[animation.effectbank]].GetEffect(animation.effect).effect;
         }
         
-        public void RegisterBank(ModGUIDContentReference bank)
+        public void RegisterBank(ModObjectSetContentReference bank)
         {
             if (bankMap.ContainsKey(bank)) return;
-            banks.Add(ContentManager.singleton.GetContentDefinition<IEffectbankDefinition>(bank));
+            banks.Add(ContentManager.singleton.GetContentDefinition<IEffectbankDefinition>(
+                ContentManager.singleton.ConvertModContentGUIDReference(new ModContentGUIDReference(bank.modGUID, (int)ContentType.Effectbank, bank.contentGUID))));
             bankMap.Add(bank, banks.Count-1);
         }
     }
