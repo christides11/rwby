@@ -13,7 +13,7 @@ namespace rwby
         public delegate void EmptyAction(TrainingCPUHandler cpuHandler);
         public event EmptyAction OnCPUListUpdated;
     
-        [Networked(OnChanged = nameof(CpuListUpdated)), Capacity(4)] public NetworkLinkedList<TrainingCPUReference> cpus { get; }
+        [Networked(OnChanged = nameof(CpuListUpdated)), Capacity(4)] public NetworkArray<TrainingCPUReference> cpus { get; }
 
         public GamemodeTraining gamemode;
         
@@ -27,7 +27,7 @@ namespace rwby
         {
             if (Object.HasStateAuthority == false) return;
             
-            for(int i = 0; i < cpus.Count; i++)
+            for(int i = 0; i < cpus.Length; i++)
             {
                 ModGUIDContentReference contentReference = cpus[i].characterReference;
                 if(contentReference.IsValid() && cpus[i].objectId.IsValid == false)
@@ -56,6 +56,11 @@ namespace rwby
                         });
                 }
             }
+        }
+
+        public override void FixedUpdateNetwork()
+        {
+            base.FixedUpdateNetwork();
         }
 
         public NetworkPlayerInputData GetInput(int inputIndex)

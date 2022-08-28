@@ -385,7 +385,8 @@ namespace rwby
             HitInfo.HitInfoGroup hitInfoGroup = CounterhitState ? hitInfo.counterhit : hitInfo.hit;
             hitReaction.hitInfoGroup = hitInfoGroup;
 
-            if (hitInfoGroup.groundHitState == FighterCmnStates.NULL)
+            if (isGrounded && hitInfoGroup.groundHitState == FighterCmnStates.NULL
+                || !isGrounded && hitInfoGroup.airHitState == FighterCmnStates.NULL)
             {
                 hitReaction.reaction = HitReactionType.HIT;
                 return hitReaction;

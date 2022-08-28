@@ -1,8 +1,3 @@
-using Rewired.Integration.UnityUI;
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using TMPro;
 using UnityEngine;
 
 namespace rwby.core.training
@@ -13,7 +8,6 @@ namespace rwby.core.training
 
         public Transform cpusParent;
         public GameObject cpuEntryItem;
-        public GameObject cpuAddItem;
 
         public void Open()
         {
@@ -28,7 +22,6 @@ namespace rwby.core.training
             gameObject.SetActive(false);
             return true;
         }
-
         private void SetupCPUs(TrainingCPUHandler cpuHandler)
         {
             foreach(Transform child in cpusParent)
@@ -36,34 +29,22 @@ namespace rwby.core.training
                 Destroy(child.gameObject);
             }
 
-            for(int i = 0; i < gamemodeTraining.cpuHandler.cpus.Count; i++)
+            for (int i = 0; i < 4; i++)
             {
                 int tempi = i;
-                GameObject cpuEntryObject = GameObject.Instantiate(cpuEntryItem, cpusParent, false);
-                PlayerPointerEventTrigger[] eventTriggers = cpuEntryObject.GetComponentsInChildren<PlayerPointerEventTrigger>();
-                eventTriggers[0].OnPointerClickEvent.AddListener((a) => { RemoveCPU(tempi); });
-                eventTriggers[1].OnPointerClickEvent.AddListener((a) => { SetCPUReference(tempi); });
-                TextMeshProUGUI[] textMeshes = cpuEntryObject.GetComponentsInChildren<TextMeshProUGUI>();
-                textMeshes[1].text = gamemodeTraining.cpuHandler.cpus[i].characterReference.IsValid()
-                    ? gamemodeTraining.cpuHandler.cpus[i].characterReference.ToString()
-                    : "";
+                TrainingUIcpuItem cpuObj = GameObject.Instantiate(cpuEntryItem, cpusParent, false).GetComponent<TrainingUIcpuItem>();
+                cpuObj.Init();
+                cpuObj.removeButton.OnPointerClickEvent.AddListener((a) => { RemoveCPU(tempi); });
+                cpuObj.characterButton.OnPointerClickEvent.AddListener((a) => { OpenFighterPicker(tempi); });
             }
-
-            GameObject cpuAddObject = GameObject.Instantiate(cpuAddItem, cpusParent, false);
-            cpuAddObject.GetComponentInChildren<PlayerPointerEventTrigger>().OnPointerClickEvent.AddListener(AddCPU);
-        }
-
-        private void AddCPU(PlayerPointerEventData pointerEventData)
-        {
-            gamemodeTraining.cpuHandler.cpus.Add(new TrainingCPUReference());
         }
 
         private void RemoveCPU(int index)
         {
-
+            
         }
-
-        private void SetCPUReference(int index)
+        
+        private void OpenFighterPicker(int index)
         {
             int tempIndex = index;
             _ = ContentSelect.singleton.OpenMenu(0, (int)ContentType.Fighter, (a, b) =>
