@@ -199,6 +199,7 @@ namespace rwby
         {
             combatManager.HitboxManager.Reset();
             manager.fighterEffector.ClearCurrentEffects();
+            manager.fighterSounder.ClearCurrentSounds();
             
             if (CurrentGroundedState != currentState.initialGroundedState)
             {

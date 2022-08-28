@@ -65,6 +65,7 @@ namespace rwby
         [SerializeField] protected SoundbankContainer soundbankContainer;
         public FighterEffector fighterEffector;
         public FighterAnimator fighterAnimator;
+        public FighterSounder fighterSounder;
         [SerializeField] protected Transform targetOrigin;
         public Transform visualTransform;
         public Transform myTransform;

@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace rwby
 {
-    [CreateAssetMenu(fileName = "AddressablesMapDefinition", menuName = "rwby/Content/Addressables/SoundbankDefinition")]
+    [CreateAssetMenu(fileName = "SoundbankDefinition", menuName = "rwby/Content/Addressables/SoundbankDefinition")]
     public class AddressablesSoundbankDefinition : ISoundbankDefinition
     {
         public override string Name { get { return soundbankName; } }
@@ -16,21 +16,21 @@ namespace rwby
 
         [NonSerialized] public Dictionary<string, int> soundMap = new Dictionary<string, int>();
 
-        public override async UniTask<bool> Load()
+        private void OnValidate()
         {
-            if (soundMap.Count > 0) return true;
-            for(int i = 0; i < sounds.Count; i++)
+            for (int i = 0; i < sounds.Count; i++)
             {
                 sounds[i].index = i;
-                soundMap.Add(sounds[i].Name, i);
             }
-            return true;
         }
 
-        public override bool Unload()
+        private void OnEnable()
         {
             soundMap.Clear();
-            return true;
+            for (int i = 0; i < sounds.Count; i++)
+            {
+                soundMap.Add(sounds[i].Name, i);
+            }
         }
     }
 }

@@ -20,11 +20,11 @@ MonoBehaviour:
   contentParsers:
   - rid: 0
   - rid: 1
-  - rid: 3
   - rid: 4
   - rid: 5
   - rid: 6951768504145281024
   - rid: 8688056446738497553
+  - rid: 8688056740327194628
   references:
     version: 2
     RefIds:
@@ -56,25 +56,6 @@ MonoBehaviour:
             guid: 2c2c000000000000
           asset:
             m_AssetGUID: f0f374ed69303bf499b21d67a399ece3
-            m_SubObjectName: 
-            m_SubObjectType: 
-            m_EditorAssetChanged: 0
-    - rid: 3
-      type: {class: AddressablesSoundbankParser, ns: rwby, asm: rwby.csharp}
-      data:
-        name: Generic Parser
-        references:
-        - identifier:
-            guid: 21261c0000000000
-          asset:
-            m_AssetGUID: 095716b7fbc40fb4393678c18ce49208
-            m_SubObjectName: 
-            m_SubObjectType: 
-            m_EditorAssetChanged: 0
-        - identifier:
-            guid: 2c2c000000000000
-          asset:
-            m_AssetGUID: 29d1a35becec4cd46891bf1974f6b9f3
             m_SubObjectName: 
             m_SubObjectType: 
             m_EditorAssetChanged: 0
@@ -133,3 +114,15 @@ MonoBehaviour:
             m_SubObjectName: 
             m_SubObjectType: 
             m_EditorAssetChanged: 0
+    - rid: 8688056740327194628
+      type: {class: AddressablesSoundbankParser, ns: rwby, asm: rwby.csharp}
+      data:
+        name: Soundbanks
+        references:
+        - identifier:
+            guid: 1d27280000000000
+          asset:
+            m_AssetGUID: 095716b7fbc40fb4393678c18ce49208
+            m_SubObjectName: 
+            m_SubObjectType: 
+            m_EditorAssetChanged: 1

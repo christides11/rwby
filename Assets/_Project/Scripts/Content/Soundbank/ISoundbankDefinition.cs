@@ -15,6 +15,11 @@ namespace rwby
             throw new System.NotImplementedException();
         }
 
+        public virtual SoundbankSoundEntry GetEffect(string effect)
+        {
+            return Sounds[SoundMap[effect]];
+        }
+        
         public override bool Unload()
         {
             throw new System.NotImplementedException();

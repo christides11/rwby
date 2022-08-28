@@ -6,9 +6,11 @@ public class RRoseMan : FighterManager
 {
     public ModObjectSetContentReference[] animationbankReferences;
     public ModObjectSetContentReference[] effectbankReferences;
+    public ModObjectSetContentReference[] soundbankReferences;
 
     private ModGUIDContentReference[] animationbankRefs;
     private ModGUIDContentReference[] effectbankRefs;
+    private ModGUIDContentReference[] soundbankRefs;
     
     public override async UniTask<bool> OnFighterLoaded()
     {
@@ -43,6 +45,22 @@ public class RRoseMan : FighterManager
                 return false;
             }
         }
+        
+        for (int i = 0; i < soundbankReferences.Length; i++)
+        {
+            bool soundbankLoadResult = await ContentManager.singleton.LoadContentDefinition(ContentManager.singleton.ConvertModContentGUIDReference(new ModContentGUIDReference()
+                {
+                    contentGUID = soundbankReferences[i].contentGUID,
+                    contentType = (int)ContentType.Soundbank,
+                    modGUID = soundbankReferences[i].modGUID
+                }
+            ));
+            if (soundbankLoadResult == false)
+            {
+                Debug.LogError("Error loading soundbanks.");
+                return false;
+            }
+        }
 
         return true;
     }
@@ -53,6 +71,7 @@ public class RRoseMan : FighterManager
         
         animationbankRefs = new ModGUIDContentReference[animationbankReferences.Length];
         effectbankRefs = new ModGUIDContentReference[effectbankReferences.Length];
+        soundbankRefs = new ModGUIDContentReference[soundbankReferences.Length];
         
         for (int i = 0; i < animationbankRefs.Length; i++)
         {
@@ -78,6 +97,19 @@ public class RRoseMan : FighterManager
             );
             
             fighterEffector.RegisterBank(effectbankReferences[i]);
+        }
+        
+        for (int i = 0; i < soundbankRefs.Length; i++)
+        {
+            soundbankRefs[i] = ContentManager.singleton.ConvertModContentGUIDReference(new ModContentGUIDReference()
+                {
+                    contentGUID = soundbankReferences[i].contentGUID,
+                    contentType = (int)ContentType.Soundbank,
+                    modGUID = soundbankReferences[i].modGUID
+                }
+            );
+            
+            fighterSounder.RegisterBank(soundbankReferences[i]);
         }
     }
 
