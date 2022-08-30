@@ -12,6 +12,7 @@ namespace rwby
         [System.Serializable]
         public struct HitInfoGroup
         {
+            
             [FormerlySerializedAs("hitState")] public FighterCmnStates groundHitState;
             public FighterCmnStates airHitState;
             public int groundBounces;
@@ -42,6 +43,9 @@ namespace rwby
             public int forcedProration;
 
             public int damage;
+
+            public ModObjectSetContentReference hitEffectbank;
+            public string hitEffect;
         }
         
         [SerializeField] private bool groundedFoldoutGroup;

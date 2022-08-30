@@ -13,6 +13,7 @@ namespace rwby
         [HideInInspector] public List<IEffectbankDefinition> banks = new List<IEffectbankDefinition>();
 
         [Networked, Capacity(10)] public FighterEffectsRoot effects { get; set; }
+        [Networked, Capacity(10)] public NetworkArray<NetworkBool> autoIncrementEffect => default;
         [Networked] public int effectBufferPos { get; set; } = 0;
         [Networked, Capacity(10)] public NetworkLinkedList<int> currentEffectIndex => default;
 
@@ -47,6 +48,7 @@ namespace rwby
                     rot = wantedEffects[i].rotation,
                     scale = wantedEffects[i].scale
                 });
+                autoIncrementEffect.Set((effectBufferPos % 10), wantedEffects[i].autoIncrement);
 
                 currentEffectIndex.Add(effectBufferPos);
                 effectBufferPos++;
@@ -125,6 +127,19 @@ namespace rwby
 
         public override void FixedUpdateNetwork()
         {
+            for (int i = 0; i < 10; i++)
+            {
+                if (autoIncrementEffect[i])
+                {
+                    var temp = effects;
+                    var t = temp.effects[i];
+                    t.frame += 1;
+                    temp.effects.Set(i, t);
+                    effects = temp;
+                    dirty = true;
+                }
+            }
+            
             if (Runner.IsResimulation)
             {
                 if (Runner.IsLastTick && !AreEffectsUpToDate())

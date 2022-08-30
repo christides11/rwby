@@ -1,3 +1,4 @@
+using System;
 using Fusion;
 using System.Collections;
 using System.Collections.Generic;
@@ -8,39 +9,26 @@ namespace rwby
 {
     public class ParticleSystemEffect : BaseEffect
     {
-        /*
+        
         [SerializeField] protected ParticleSystem[] particleSystems;
 
-        [Networked] public AudioPlayMode networkedPlayMode { get; set; }
-        private AudioPlayMode predictedPlayMode;
-        public AudioPlayMode playMode
+        private void Awake()
         {
-            get => Object.is ? predictedPlayMode : networkedPlayMode;
-            set
-            {
-                if (Object.IsPredictedSpawn)
-                    predictedPlayMode = value;
-                else
-                    networkedPlayMode = value;
-            }
+            
         }
 
-        [Networked] public int networkedStartTick { get; set; }
-        private int predictedStartTick;
-        public int startTick
+        public override void SetFrame(float time)
         {
-            get => Object.IsPredictedSpawn ? predictedStartTick : networkedStartTick;
-            set
+            base.SetFrame(time);
+            for (int i = 0; i < particleSystems.Length; i++)
             {
-                if (Object.IsPredictedSpawn)
-                    predictedStartTick = value;
-                else
-                    networkedStartTick = value;
+                particleSystems[i].Simulate(time, true, true);
+                //particleSystems[i].time = time;
+                //particleSystems[i].Pause(true);
             }
         }
-
-        bool autoDelete = false;
-
+        
+        /*
         public override void PlayEffect(bool restart = true, bool autoDelete = true)
         {
             this.autoDelete = autoDelete;

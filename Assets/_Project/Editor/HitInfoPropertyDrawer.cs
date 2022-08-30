@@ -21,8 +21,12 @@ namespace rwby
 
             if (property.FindPropertyRelative("groundedFoldoutGroup").boolValue) windowsOpen++;
             if (property.FindPropertyRelative("groundedCounterHitFoldoutGroup").boolValue) windowsOpen++;
+            
+            if (property.FindPropertyRelative("hit").FindPropertyRelative("hitEffectbank").isExpanded) val += lineValue * 2;
+            if (property.FindPropertyRelative("counterhit").FindPropertyRelative("hitEffectbank").isExpanded) val += lineValue * 2;
+            //val += lineValue * 9;
 
-            val += lineValue * 20 * windowsOpen;
+            val += lineValue * 23 * windowsOpen;
             return val;
         }
 
@@ -104,6 +108,15 @@ namespace rwby
             EditorGUI.PropertyField(new Rect(position.x, GetLineY(), position.width, lineHeight), property.FindPropertyRelative("blockstun"));
             EditorGUI.PropertyField(new Rect(position.x, GetLineY(), position.width, lineHeight), property.FindPropertyRelative("initialProration"));
             EditorGUI.PropertyField(new Rect(position.x, GetLineY(), position.width, lineHeight), property.FindPropertyRelative("forcedProration"));
+            
+            EditorGUI.LabelField(new Rect(position.x, GetLineY(), position.width, lineHeight), "EFFECTS", EditorStyles.boldLabel);
+            EditorGUI.PropertyField(new Rect(position.x, GetLineY(), position.width, lineHeight), property.FindPropertyRelative("hitEffectbank"), true);
+            if (property.FindPropertyRelative("hitEffectbank").isExpanded)
+            {
+                GetLineY();
+                GetLineY();
+            }
+            EditorGUI.PropertyField(new Rect(position.x, GetLineY(), position.width, lineHeight), property.FindPropertyRelative("hitEffect"), true);
         }
 
         protected override void DrawGeneralGroup(ref Rect position, SerializedProperty property)

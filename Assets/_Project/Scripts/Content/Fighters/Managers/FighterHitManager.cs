@@ -55,6 +55,19 @@ namespace rwby
         {
             base.HandleHitReaction(hitbox, enemyHurtbox, hurtInfo, hi, hitReaction);
             combatManager.SetHitStop(hitReaction.hitInfoGroup.attackerHitstop);
+            if (!string.IsNullOrEmpty(hitReaction.hitInfoGroup.hitEffect))
+            {
+                manager.fighterEffector.AddEffects(new []{ new EffectReference()
+                {
+                    effect = hitReaction.hitInfoGroup.hitEffect,
+                    effectbank = hitReaction.hitInfoGroup.hitEffectbank,
+                    offset = enemyHurtbox.Position,
+                    parented = false,
+                    rotation = manager.myTransform.eulerAngles,
+                    scale = new Vector3(1, 1, 1),
+                    autoIncrement = true
+                } });
+            }
             /*
             if (string.IsNullOrEmpty(hi.effectbankName) == false)
             {

@@ -1,12 +1,13 @@
 using System;
+using UnityEngine;
 
 namespace rwby
 {
     [System.Serializable]
     public struct ModObjectSetContentReference : IEquatable<ModObjectSetContentReference>
     {
-        public ContentGUID modGUID;
-        public ContentGUID contentGUID;
+        [SerializeField] public ContentGUID modGUID;
+        [SerializeField] public ContentGUID contentGUID;
 
         public ModObjectSetContentReference(ContentGUID modGUID, ContentGUID contentGUID)
         {
@@ -19,7 +20,7 @@ namespace rwby
             this.modGUID = new ContentGUID(modGUID);
             this.contentGUID = new ContentGUID(contentGUID);
         }
-
+        
         public override string ToString()
         {
             return $"{modGUID.ToString()}:?:{contentGUID}";
