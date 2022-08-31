@@ -340,5 +340,14 @@ namespace rwby
             if (angle >= vars.minAngle && angle <= vars.maxAngle) return true;
             return false;
         }
+        
+        public static bool ChargeLevel(IFighterBase fighter, IConditionVariables variables, HnSF.StateTimeline arg3, int arg4)
+        {
+            FighterManager f = fighter as FighterManager;
+            ConditionChargeLevel vars = (ConditionChargeLevel)variables;
+
+            return f.FCombatManager.CurrentChargeLevel >= vars.minLevel &&
+                   f.FCombatManager.CurrentChargeLevel <= vars.maxLevel;
+        }
     }
 }
