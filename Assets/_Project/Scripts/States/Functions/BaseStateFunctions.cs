@@ -234,7 +234,7 @@ namespace rwby
             switch (vars.modifyType)
             {
                 case VarModifyType.ADD:
-                    f.StateManager.IncrementFrame(vars.value);
+                    f.FStateManager.IncrementFrame(vars.value);
                     break;
                 case VarModifyType.SET:
                     f.StateManager.SetFrame(vars.value);
@@ -833,6 +833,23 @@ namespace rwby
             VarModifySoundSet vars = (VarModifySoundSet)variables;
             
             fm.fighterSounder.AddSFXs(vars.sounds);
+        }
+        
+        public static void IncrementChargeLevel(IFighterBase fighter, IStateVariables variables, HnSF.StateTimeline stateTimeline, int frame)
+        {
+            FighterManager fm = (FighterManager)fighter;
+            VarIncrementChargeLevel vars = (VarIncrementChargeLevel)variables;
+            
+            bool fResult = false;
+            var b = fm.InputManager.GetButton((int)vars.button, 0, 0);
+            if (!b.isDown
+                || fm.FCombatManager.CurrentChargeLevel == vars.maxLevel)
+            {
+                fm.FStateManager.IncrementFrame(amt: 1);
+                return;
+            }
+            
+            fm.FCombatManager.IncrementChargeLevelCharge(vars.chargePerLevel);
         }
     }
 }

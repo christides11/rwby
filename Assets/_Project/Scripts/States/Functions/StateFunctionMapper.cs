@@ -55,6 +55,7 @@ namespace rwby
             functions.Add(typeof(VarSetBlockState), BaseStateFunctions.SetBlockState);
             functions.Add(typeof(VarClearCurrentEffects), BaseStateFunctions.ClearCurrentEffects);
             functions.Add(typeof(VarModifySoundSet), BaseStateFunctions.ModifySoundSet);
+            functions.Add(typeof(VarIncrementChargeLevel), BaseStateFunctions.IncrementChargeLevel);
         }
     }
 }

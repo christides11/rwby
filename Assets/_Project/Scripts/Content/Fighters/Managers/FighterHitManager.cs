@@ -68,17 +68,20 @@ namespace rwby
                     autoIncrement = true
                 } });
             }
-            /*
-            if (string.IsNullOrEmpty(hi.effectbankName) == false)
+
+            if (!string.IsNullOrEmpty(hitReaction.hitInfoGroup.hitSound))
             {
-                BaseEffect be = manager.EffectbankContainer.CreateEffect(enemyHurtbox.transform.position,
-                    transform.rotation, hi.effectbankName, hi.effectName);
-                be.PlayEffect();
+                manager.fighterSounder.AddSFXs(new []{ new SoundReference()
+                {
+                    soundbank = hitReaction.hitInfoGroup.hitSoundbank,
+                    sound = hitReaction.hitInfoGroup.hitSound,
+                    maxDist = 20,
+                    minDist = 5,
+                    offset = enemyHurtbox.Position,
+                    parented = false,
+                    volume = 1.0f
+                }});
             }
-            if (string.IsNullOrEmpty(hi.hitSoundbankName) == false)
-            {
-                manager.SoundbankContainer.PlaySound(hi.hitSoundbankName, hi.hitSoundName);
-            }*/
             // TODO: Better way of handling camera shake on hit/block/etc.
             /*
             if (Runner.IsResimulation == false && Object.HasInputAuthority == true)

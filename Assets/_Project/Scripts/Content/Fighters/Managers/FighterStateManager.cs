@@ -90,14 +90,16 @@ namespace rwby
         
         public void ProcessStateVariables(StateTimeline state, IStateVariables d, int realFrame, int totalFrames, bool onInterrupt)
         {
-            var valid = true;
+            var valid = d.FrameRanges.Length == 0 ? true : false;
             for (int j = 0; j < d.FrameRanges.Length; j++)
             {
                 int frx = ConvertFrameRangeNumber((int)d.FrameRanges[j].x, totalFrames);
                 int fry = ConvertFrameRangeNumber((int)d.FrameRanges[j].y, totalFrames);
-                if (realFrame >= frx && realFrame <= fry) continue;
-                valid = false;
-                break;
+                if (realFrame >= frx && realFrame <= fry)
+                {
+                    valid = true;
+                    break;
+                }
             }
 
             if (!valid) return;
@@ -197,6 +199,7 @@ namespace rwby
         
         public void StateChanged(rwby.StateTimeline previousState, rwby.StateTimeline currentState)
         {
+            combatManager.ResetCharge();
             combatManager.HitboxManager.Reset();
             manager.fighterEffector.ClearCurrentEffects();
             manager.fighterSounder.ClearCurrentSounds();

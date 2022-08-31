@@ -129,6 +129,12 @@ namespace rwby
             movesUsedInString.Clear();
         }
 
+        public virtual void ResetCharge()
+        {
+            SetChargeLevel(0);
+            SetChargeLevelCharge(0);
+        }
+
         public virtual void AddMoveToString()
         {
             movesUsedInString.Add(new MovesetStateIdentifier(){ movesetIdentifier = stateManager.CurrentStateMoveset, stateIdentifier = stateManager.CurrentState });
@@ -326,6 +332,11 @@ namespace rwby
         public virtual void IncrementChargeLevelCharge(int maxCharge)
         {
             CurrentChargeLevelCharge++;
+            if (CurrentChargeLevelCharge >= maxCharge)
+            {
+                SetChargeLevel(CurrentChargeLevel+1);
+                CurrentChargeLevelCharge = 0;
+            }
         }
 
         public LockonDirType stickDirectionCheck;

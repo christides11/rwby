@@ -46,6 +46,8 @@ namespace rwby
 
             public ModObjectSetContentReference hitEffectbank;
             public string hitEffect;
+            public ModObjectSetContentReference hitSoundbank;
+            public string hitSound;
         }
         
         [SerializeField] private bool groundedFoldoutGroup;
