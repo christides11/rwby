@@ -354,7 +354,7 @@ MonoBehaviour:
   m_MinSize: {x: 300, y: 200}
   m_MaxSize: {x: 24288, y: 16192}
   vertical: 0
-  controlID: 78
+  controlID: 39
 --- !u!114 &16
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -379,7 +379,7 @@ MonoBehaviour:
   m_MinSize: {x: 200, y: 200}
   m_MaxSize: {x: 16192, y: 16192}
   vertical: 1
-  controlID: 79
+  controlID: 40
 --- !u!114 &17
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -404,7 +404,7 @@ MonoBehaviour:
   m_MinSize: {x: 200, y: 100}
   m_MaxSize: {x: 16192, y: 8096}
   vertical: 0
-  controlID: 80
+  controlID: 41
 --- !u!114 &18
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -441,7 +441,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 1
   m_Script: {fileID: 12006, guid: 0000000000000000e000000000000000, type: 0}
-  m_Name: GameView
+  m_Name: SceneView
   m_EditorClassIdentifier: 
   m_Children: []
   m_Position:
@@ -452,7 +452,7 @@ MonoBehaviour:
     height: 800
   m_MinSize: {x: 202, y: 221}
   m_MaxSize: {x: 4002, y: 4021}
-  m_ActualView: {fileID: 28}
+  m_ActualView: {fileID: 27}
   m_Panes:
   - {fileID: 27}
   - {fileID: 28}
@@ -460,8 +460,8 @@ MonoBehaviour:
   - {fileID: 30}
   - {fileID: 31}
   - {fileID: 22}
-  m_Selected: 1
-  m_LastSelected: 0
+  m_Selected: 0
+  m_LastSelected: 1
 --- !u!114 &20
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -4258,36 +4258,36 @@ MonoBehaviour:
     m_SkipHidden: 0
     m_SearchArea: 1
     m_Folders:
-    - Assets/_Project/Scripts/Content/Fighters/Managers
+    - Assets/Core/Content/Fighters/RubyRose/States/Scythe/Attacks/Ground
     m_Globs: []
     m_OriginalText: 
   m_ViewMode: 1
   m_StartGridSize: 16
   m_LastFolders:
-  - Assets/_Project/Scripts/Content/Fighters/Managers
+  - Assets/Core/Content/Fighters/RubyRose/States/Scythe/Attacks/Ground
   m_LastFoldersGridSize: 16
   m_LastProjectPath: C:\Projects\Unity\rwby
   m_LockTracker:
     m_IsLocked: 0
   m_FolderTreeState:
-    scrollPos: {x: 0, y: 399}
-    m_SelectedIDs: 2c320100
-    m_LastClickedID: 78380
-    m_ExpandedIDs: 000000004c9700004e97000050970000529700005497000056970000589700005a9700005c9700005e97000060970000629700006497000066970000689700006a9700006c9700006e97000070970000729700007497000076970000789700007a9700007c9700007e97000080970000829700008497000086970000a69700002e32010000ca9a3b
+    scrollPos: {x: 0, y: 774}
+    m_SelectedIDs: 06980000
+    m_LastClickedID: 38918
+    m_ExpandedIDs: 000000004a9700004c9700004e97000050970000529700005497000056970000589700005a9700005c9700005e97000060970000629700006497000066970000689700006a9700006c9700006e970000729700007497000076970000789700007a9700007c9700007e97000080970000b09700003898000000ca9a3b
     m_RenameOverlay:
       m_UserAcceptedRename: 0
-      m_Name: 
-      m_OriginalName: 
+      m_Name: Fighters
+      m_OriginalName: Fighters
       m_EditFieldRect:
         serializedVersion: 2
         x: 0
         y: 0
         width: 0
         height: 0
-      m_UserData: 0
+      m_UserData: 38778
       m_IsWaitingForDelay: 0
       m_IsRenaming: 0
-      m_OriginalEventType: 11
+      m_OriginalEventType: 0
       m_IsRenamingFilename: 1
       m_ClientGUIView: {fileID: 20}
     m_SearchString: 
@@ -4301,7 +4301,7 @@ MonoBehaviour:
     scrollPos: {x: 0, y: 0}
     m_SelectedIDs: 
     m_LastClickedID: 0
-    m_ExpandedIDs: 000000004c9700004e97000050970000529700005497000056970000589700005a9700005c9700005e97000060970000629700006497000066970000689700006a9700006c9700006e97000070970000729700007497000076970000789700007a9700007c9700007e97000080970000829700008497000086970000
+    m_ExpandedIDs: 000000004a9700004c9700004e97000050970000529700005497000056970000589700005a9700005c9700005e97000060970000629700006497000066970000689700006a9700006c9700006e97000070970000729700007497000076970000789700007a9700007c9700007e970000809700008297000084970000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -4340,10 +4340,10 @@ MonoBehaviour:
         y: 0
         width: 0
         height: 0
-      m_UserData: 39040
+      m_UserData: 39456
       m_IsWaitingForDelay: 0
       m_IsRenaming: 0
-      m_OriginalEventType: 0
+      m_OriginalEventType: 4
       m_IsRenamingFilename: 1
       m_ClientGUIView: {fileID: 20}
     m_CreateAssetUtility:
@@ -4390,7 +4390,7 @@ MonoBehaviour:
       scrollPos: {x: 0, y: 0}
       m_SelectedIDs: 
       m_LastClickedID: 0
-      m_ExpandedIDs: 1287fcff06a3fdff76dbfeff1221ffffc661ffffccabfffffafaffff
+      m_ExpandedIDs: ead1fffffafaffff
       m_RenameOverlay:
         m_UserAcceptedRename: 0
         m_Name: 
@@ -4639,9 +4639,9 @@ MonoBehaviour:
   m_PlayAudio: 0
   m_AudioPlay: 0
   m_Position:
-    m_Target: {x: 4.194996, y: -4.92922, z: 15.882973}
+    m_Target: {x: 6.043339, y: -14.039222, z: -12.260335}
     speed: 2
-    m_Value: {x: 4.194996, y: -4.92922, z: 15.882973}
+    m_Value: {x: 6.043339, y: -14.039222, z: -12.260335}
   m_RenderMode: 0
   m_CameraMode:
     drawMode: 0
@@ -4688,9 +4688,9 @@ MonoBehaviour:
     m_GridAxis: 1
     m_gridOpacity: 0.5
   m_Rotation:
-    m_Target: {x: -0.14966644, y: -0.16797349, z: 0.025261516, w: -0.97386587}
+    m_Target: {x: -0.13945462, y: -0.8571757, z: 0.39123353, w: -0.30398756}
     speed: 2
-    m_Value: {x: -0.1496913, y: -0.16800138, z: 0.02526571, w: -0.9740276}
+    m_Value: {x: -0.13947764, y: -0.8573172, z: 0.39129812, w: -0.30403775}
   m_Size:
     m_Target: 10
     speed: 2
@@ -4752,7 +4752,7 @@ MonoBehaviour:
   m_SerializedViewValues:
   - C:\Projects\Unity\rwby\Library\PlayModeViewStates\fc4745106b222a847bef0a5c1f7dbfbc
   m_PlayModeViewName: GameView
-  m_ShowGizmos: 0
+  m_ShowGizmos: 1
   m_TargetDisplay: 0
   m_ClearColor: {r: 0, g: 0, b: 0, a: 0}
   m_TargetSize: {x: 2560, y: 1440}
@@ -4762,7 +4762,7 @@ MonoBehaviour:
   m_EnterPlayModeBehavior: 0
   m_UseMipMap: 0
   m_VSyncEnabled: 0
-  m_Gizmos: 0
+  m_Gizmos: 1
   m_Stats: 0
   m_SelectedSizes: 05000000000000000000000000000000000000000000000000000000000000000000000000000000
   m_ZoomArea:
@@ -4782,7 +4782,7 @@ MonoBehaviour:
     m_HSlider: 0
     m_VSlider: 0
     m_IgnoreScrollWheelUntilClicked: 0
-    m_EnableMouseInput: 1
+    m_EnableMouseInput: 0
     m_EnableSliderZoomHorizontal: 0
     m_EnableSliderZoomVertical: 0
     m_UniformScale: 1

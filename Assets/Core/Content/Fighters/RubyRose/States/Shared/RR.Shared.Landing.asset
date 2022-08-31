@@ -22,6 +22,8 @@ MonoBehaviour:
   data:
   - rid: 8688056217396838402
   - rid: 8688056360164655106
+  - rid: 8688056817054646273
+  auraRequirement: 0
   initialGroundedState: 1
   stateType: 1
   maxUsesInString: -1
@@ -76,3 +78,21 @@ MonoBehaviour:
         ecbCenter: 0.825
         ecbRadius: 0.3
         ecbHeight: 1.65
+    - rid: 8688056817054646273
+      type: {class: VarCreateBox, ns: rwby, asm: rwby.csharp}
+      data:
+        name: colbox
+        id: 2
+        parent: -1
+        children: 
+        frameRanges:
+        - {x: 1, y: -1}
+        condition:
+          rid: -2
+        boxType: 2
+        attachedTo: 0
+        shape: 0
+        offset: {x: 0, y: 1, z: 0}
+        boxExtents: {x: 0.5, y: 1, z: 0.5}
+        radius: 0
+        definitionIndex: 0
