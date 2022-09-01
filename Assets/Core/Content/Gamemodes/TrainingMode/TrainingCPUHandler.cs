@@ -14,6 +14,7 @@ namespace rwby
         public event EmptyAction OnCPUListUpdated;
     
         [Networked(OnChanged = nameof(CpuListUpdated)), Capacity(4)] public NetworkArray<TrainingCPUReference> cpus { get; }
+        [Networked(OnChanged = nameof(CpuSettingsUpdated)), Capacity(4)] public NetworkArray<TrainingCPUSettingsDefinition> cpuSettings { get; }
 
         public GamemodeTraining gamemode;
         
@@ -21,6 +22,11 @@ namespace rwby
         {
             changed.Behaviour.OnCPUListUpdated?.Invoke(changed.Behaviour);
             _ = changed.Behaviour.CheckCPUList();
+        }
+        
+        private static void CpuSettingsUpdated(Changed<TrainingCPUHandler> changed)
+        {
+            
         }
 
         private async UniTask CheckCPUList()

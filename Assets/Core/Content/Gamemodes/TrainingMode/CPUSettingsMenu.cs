@@ -33,7 +33,7 @@ namespace rwby.core.training
             {
                 int tempi = i;
                 TrainingUIcpuItem cpuObj = GameObject.Instantiate(cpuEntryItem, cpusParent, false).GetComponent<TrainingUIcpuItem>();
-                cpuObj.Init();
+                cpuObj.Init(cpuHandler, i);
                 cpuObj.removeButton.OnPointerClickEvent.AddListener((a) => { RemoveCPU(tempi); });
                 cpuObj.characterButton.OnPointerClickEvent.AddListener((a) => { OpenFighterPicker(tempi); });
             }

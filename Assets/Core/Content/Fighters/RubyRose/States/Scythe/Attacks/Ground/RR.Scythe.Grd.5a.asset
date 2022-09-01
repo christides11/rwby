@@ -23,7 +23,6 @@ MonoBehaviour:
   - rid: 2193520813467238401
   - rid: 2193520813467238403
   - rid: 2193520817874927616
-  - rid: 8688056217396838421
   - rid: 8688056217396838433
   - rid: 8688056331001921542
   - rid: 8688056331001921543
@@ -33,10 +32,13 @@ MonoBehaviour:
   - rid: 8688056740327194626
   - rid: 8688056807901888512
   - rid: 8688056807901888513
+  - rid: 8688056833868562432
+  - rid: 8688056833868562434
   auraRequirement: 0
   initialGroundedState: 1
   stateType: 2
   maxUsesInString: 1
+  selfChainable: 3
   allowBaseStateTransitions: 1
   inputSequence:
     executeWindow: 3
@@ -69,7 +71,7 @@ MonoBehaviour:
       autolink: 0
       autolinkPercentage: 0
       groundHitForce: {x: 0, y: 0, z: 5}
-      aerialHitForce: {x: 0, y: 0, z: 5}
+      aerialHitForce: {x: 0, y: 3, z: 2}
       pullPushCurve:
         serializedVersion: 2
         m_Curve:
@@ -97,9 +99,9 @@ MonoBehaviour:
       pullPushMaxDistance: 10
       attackerHitstop: 4
       hitstop: 4
-      hitstun: 12
+      hitstun: 60
       blockstun: 9
-      untech: 12
+      untech: 60
       initialProration: 1
       forcedProration: 1
       damage: 0
@@ -225,23 +227,6 @@ MonoBehaviour:
         statReference: 0
         value: 30
         variable: 0
-    - rid: 8688056217396838421
-      type: {class: VarExternal, ns: rwby, asm: rwby.csharp}
-      data:
-        name: 
-        id: 3
-        parent: -1
-        children: 
-        frameRanges:
-        - {x: 11, y: -1}
-        condition:
-          rid: 8688056217396838422
-        asset: {fileID: 11400000, guid: 38d47b53b1c6fa24580e163448503c28, type: 2}
-    - rid: 8688056217396838422
-      type: {class: ConditionHitCount, ns: rwby, asm: rwby.csharp}
-      data:
-        inverse: 0
-        hitCount: 1
     - rid: 8688056217396838433
       type: {class: VarCreateBox, ns: rwby, asm: rwby.csharp}
       data:
@@ -396,3 +381,30 @@ MonoBehaviour:
         value: 1
         parent: -1
         children: 
+    - rid: 8688056833868562432
+      type: {class: VarEmpty, ns: rwby, asm: rwby.csharp}
+      data:
+        name: On Hit
+        id: 13
+        parent: -1
+        children: 0e000000
+        frameRanges: []
+        condition:
+          rid: 8688056833868562433
+    - rid: 8688056833868562433
+      type: {class: ConditionHitCount, ns: rwby, asm: rwby.csharp}
+      data:
+        inverse: 0
+        hitCount: 1
+    - rid: 8688056833868562434
+      type: {class: VarExternal, ns: rwby, asm: rwby.csharp}
+      data:
+        name: Try Grd Atk
+        id: 14
+        parent: 13
+        children: 
+        frameRanges:
+        - {x: 7, y: -1}
+        condition:
+          rid: -2
+        asset: {fileID: 11400000, guid: 38d47b53b1c6fa24580e163448503c28, type: 2}

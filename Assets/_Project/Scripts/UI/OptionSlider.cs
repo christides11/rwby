@@ -6,6 +6,9 @@ namespace rwby.ui
 {
     public class OptionSlider : rwby.ui.Selectable
     {
+        public delegate void EmptyAction(int value);
+        public event EmptyAction OnValueChanged;
+        
         public TextMeshProUGUI text;
         public RectTransform filledBar;
 
@@ -69,6 +72,8 @@ namespace rwby.ui
             Vector2 aPos = filledBar.anchoredPosition;
             aPos.x = temp.x * currentOption;
             filledBar.anchoredPosition = aPos;
+            
+            OnValueChanged?.Invoke(currentOption);
         }
     }
 }
