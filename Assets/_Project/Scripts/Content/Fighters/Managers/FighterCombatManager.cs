@@ -145,8 +145,27 @@ namespace rwby
             movesUsedInString.Add(new MovesetStateIdentifier(){ movesetIdentifier = currentStateMovement, stateIdentifier = currentState});
         }
 
-        public virtual bool MovePossible(MovesetStateIdentifier movesetState, int maxUsesInString = 1)
+        public virtual bool MovePossible(MovesetStateIdentifier movesetState, int maxUsesInString = 1, int selfChainable = 0)
         {
+            if (selfChainable > 0)
+            {
+                int c = 0;
+                for (int i = movesUsedInString.Count - 1; i >= 0; i--)
+                {
+                    if (movesUsedInString[i].movesetIdentifier == movesetState.movesetIdentifier
+                        && movesUsedInString[i].stateIdentifier == movesetState.stateIdentifier)
+                    {
+                        c++;
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
+
+                if (c >= 1) return true;
+            }
+                
             if (maxUsesInString == -1) return true;
             int counter = 0;
             for (int i = 0; i < movesUsedInString.Count; i++)

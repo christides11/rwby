@@ -66,7 +66,7 @@ namespace rwby
                 int stateID = vars.states[i].state.GetState();
                 StateTimeline state = (StateTimeline)(fm.FStateManager.GetState(movesetID, stateID));
 
-                if (!fm.FCombatManager.MovePossible(new MovesetStateIdentifier(movesetID, stateID), state.maxUsesInString)) continue;
+                if (!fm.FCombatManager.MovePossible(new MovesetStateIdentifier(movesetID, stateID), state.maxUsesInString, state.selfChainable)) continue;
                 if (vars.checkInputSequence && !fm.FCombatManager.CheckForInputSequence(state.inputSequence, holdInput: state.inputSequenceAsHoldInputs)) continue;
                 if (vars.checkCondition && !fm.FStateManager.TryCondition(state, state.condition, arg4)) continue;
 
