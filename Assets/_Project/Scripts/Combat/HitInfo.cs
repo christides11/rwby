@@ -32,6 +32,7 @@ namespace rwby
             public Vector3 aerialHitForce;
             public AnimationCurve pullPushCurve;
             public float pullPushMaxDistance;
+            public bool blockLift;
             
             public int attackerHitstop;
             public int hitstop;

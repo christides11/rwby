@@ -82,12 +82,6 @@ namespace rwby
                     volume = 1.0f
                 }});
             }
-            // TODO: Better way of handling camera shake on hit/block/etc.
-            /*
-            if (Runner.IsResimulation == false && Object.HasInputAuthority == true)
-            {
-                PlayerCamera.instance.ShakeCamera(hi.shakeValue, hi.hitstop * Runner.DeltaTime);
-            }*/
         }
 
         public override void HandleBlockReaction(CustomHitbox hitbox, Hurtbox enemyHurtbox, HurtInfo hurtInfo,
@@ -95,14 +89,6 @@ namespace rwby
         {
             base.HandleBlockReaction(hitbox, enemyHurtbox, hurtInfo, hi, hitReaction);
             combatManager.SetHitStop(hitReaction.hitInfoGroup.attackerHitstop);
-            /*BaseEffect bb = manager.EffectbankContainer.CreateEffect(enemyHurtbox.transform.position,
-                    transform.rotation * Quaternion.Euler(0, 180, 0), "global", "shieldhit1");
-            bb.PlayEffect(true, false);
-           
-            if (string.IsNullOrEmpty(hi.blockSoundbankName) == false)
-            {
-                manager.SoundbankContainer.PlaySound(hi.blockSoundbankName, hi.blockSoundName);
-            }*/
         }
 
         public override void DoClash(CustomHitbox hitbox, CustomHitbox enemyHitbox)

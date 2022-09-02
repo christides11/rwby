@@ -136,7 +136,7 @@ namespace rwby
             base.Render();
             shieldVisual.SetActive(combatManager.BlockState != BlockStateType.NONE);
             physicsManager.kCC.Motor.visualExtraOffset = Vector3.zero;
-            if (FCombatManager.HitStop == 0 || FCombatManager.HitStun == 0) return;
+            if (FCombatManager.HitStop == 0 || (FCombatManager.HitStun == 0 && FCombatManager.BlockStun == 0) ) return;
             Vector3 dir = shakeDirs[currentShakeDirection].z * transform.forward
                           + shakeDirs[currentShakeDirection].x * transform.right;
             physicsManager.kCC.Motor.visualExtraOffset = dir * hitstopShakeDistance * hitstopDir;

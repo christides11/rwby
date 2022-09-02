@@ -422,6 +422,8 @@ namespace rwby
                 return hitReaction;
             }
             
+            SetHitStop(hitInfoGroup.hitstop);
+            
             if(BlockState != BlockStateType.NONE)
             {
                 if(Vector3.Angle(transform.forward, hurtInfo.forward) > 90)
@@ -429,8 +431,11 @@ namespace rwby
                     hitReaction.reaction = HitReactionType.BLOCKED;
                     SetHitStop(hitInfoGroup.hitstop);
                     BlockStun = hitInfoGroup.blockstun;
+
+                    Vector3 hForce = isGrounded ? hitInfoGroup.groundHitForce : hitInfoGroup.aerialHitForce;
+                    if (!hitInfoGroup.blockLift) hForce.y = 0;
                     
-                    ApplyHitForces(hurtInfo, currentState, hitInfoGroup.hitForceType, isGrounded ? hitInfoGroup.groundHitForce : hitInfoGroup.aerialHitForce, hitInfoGroup.pullPushCurve, hitInfoGroup.pullPushMaxDistance, hitInfoGroup.hitForceRelationOffset);
+                    ApplyHitForces(hurtInfo, currentState, hitInfoGroup.hitForceType, hForce, hitInfoGroup.pullPushCurve, hitInfoGroup.pullPushMaxDistance, hitInfoGroup.hitForceRelationOffset);
                     return hitReaction;
                 }
             }
@@ -440,7 +445,6 @@ namespace rwby
             
             // Got hit, apply stun, damage, and forces.
             hitReaction.reaction = HitReactionType.HIT;
-            SetHitStop(hitInfoGroup.hitstop);
             SetHitStun(isGrounded ? hitInfoGroup.hitstun : hitInfoGroup.untech);
             ApplyHitForces(hurtInfo, currentState, hitInfoGroup.hitForceType, isGrounded ?  hitInfoGroup.groundHitForce : hitInfoGroup.aerialHitForce, hitInfoGroup.pullPushCurve, hitInfoGroup.pullPushMaxDistance, hitInfoGroup.hitForceRelationOffset);
             

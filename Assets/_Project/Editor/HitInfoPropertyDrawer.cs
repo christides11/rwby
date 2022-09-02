@@ -28,7 +28,7 @@ namespace rwby
             if (property.FindPropertyRelative("counterhit").FindPropertyRelative("hitSoundbank").isExpanded) val += lineValue * 2;
             //val += lineValue * 9;
 
-            val += lineValue * 25 * windowsOpen;
+            val += lineValue * 26 * windowsOpen;
             return val;
         }
 
@@ -101,6 +101,7 @@ namespace rwby
                         property.FindPropertyRelative("pullPushMaxDistance"));
                     break;
             }
+            EditorGUI.PropertyField(new Rect(position.x, GetLineY(), position.width, lineHeight), property.FindPropertyRelative("blockLift"));
             
             EditorGUI.LabelField(new Rect(position.x, GetLineY(), position.width, lineHeight), "STUN", EditorStyles.boldLabel);
             EditorGUI.PropertyField(new Rect(position.x, GetLineY(), position.width, lineHeight), property.FindPropertyRelative("attackerHitstop"));
