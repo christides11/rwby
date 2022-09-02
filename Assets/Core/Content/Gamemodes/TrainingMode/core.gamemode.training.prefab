@@ -1258,6 +1258,7 @@ GameObject:
   - component: {fileID: 8481148300307289351}
   - component: {fileID: 7242675761754256610}
   - component: {fileID: 1780266029459074878}
+  - component: {fileID: 5554109083959563155}
   m_Layer: 0
   m_Name: core.gamemode.training
   m_TagString: Untagged
@@ -1305,6 +1306,7 @@ MonoBehaviour:
   NetworkedBehaviours:
   - {fileID: -7702582740311327608}
   - {fileID: 1780266029459074878}
+  - {fileID: 5554109083959563155}
   SimulationBehaviours:
   - {fileID: 8481148300307289351}
   - {fileID: 7242675761754256610}
@@ -1394,7 +1396,24 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _interpolationDataSource: 0
+  _cpuSettings: []
   gamemode: {fileID: -7702582740311327608}
+--- !u!114 &5554109083959563155
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7011653979242441911}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 927c5adb6017fe442b22fbd436ed2dee, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _interpolationDataSource: 0
+  gamemode: {fileID: -7702582740311327608}
+  cpuHandlerCore: {fileID: 1780266029459074878}
+  combatPairFinder: {fileID: 8481148300307289351}
 --- !u!1 &7125645665737823022
 GameObject:
   m_ObjectHideFlags: 0
