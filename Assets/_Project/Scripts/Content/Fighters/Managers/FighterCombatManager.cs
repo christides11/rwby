@@ -163,7 +163,7 @@ namespace rwby
                     }
                 }
 
-                if (c >= 1) return true;
+                if (c >= 1 && c < selfChainable) return true;
             }
                 
             if (maxUsesInString == -1) return true;
@@ -466,18 +466,20 @@ namespace rwby
                 physicsManager.SetGrounded(false);
             }
 
+            manager.HealthManager.ModifyHealth((int)-(hitInfoGroup.damage * Proration));
+            Debug.Log($"{hitInfoGroup.damage * Proration} dmg (P: {Proration})");
+            
             stateManager.ChangeState(isGrounded ? (int)hitInfoGroup.groundHitState : (int)hitInfoGroup.airHitState);
             manager.FCombatManager.Cleanup();
             ComboCounter++;
 
             if (ComboCounter == 1)
             {
-                ResetProration();
-                Proration = hitInfoGroup.initialProration;
+                Proration = (1.0f - hitInfoGroup.initialProration) * 0.60f;
             }
             else
             {
-                if (Proration > hitInfoGroup.forcedProration) Proration = hitInfoGroup.forcedProration;
+                Proration *= (1.0f - hitInfoGroup.comboProration);
             }
             return hitReaction;
         }

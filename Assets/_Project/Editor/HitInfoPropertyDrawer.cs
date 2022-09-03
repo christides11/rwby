@@ -30,7 +30,7 @@ namespace rwby
             if (property.FindPropertyRelative("counterhit").FindPropertyRelative("hitSoundbank").isExpanded) val += lineValue * 2;
             //val += lineValue * 9;
 
-            val += lineValue * 28 * windowsOpen;
+            val += lineValue * 29 * windowsOpen;
             return val;
         }
 
@@ -68,6 +68,7 @@ namespace rwby
         private void DrawTopGroup(ref Rect position, SerializedProperty property)
         {
             EditorGUI.LabelField(new Rect(position.x, GetLineY(), position.width, lineHeight), "GENERAL", EditorStyles.boldLabel);
+            EditorGUI.PropertyField(new Rect(position.x, GetLineY(), position.width, lineHeight), property.FindPropertyRelative("damage"));
             EditorGUI.PropertyField(new Rect(position.x, GetLineY(), position.width, lineHeight), property.FindPropertyRelative("noKill"));
             EditorGUI.PropertyField(new Rect(position.x, GetLineY(), position.width, lineHeight), property.FindPropertyRelative("groundHitState"));
             EditorGUI.PropertyField(new Rect(position.x, GetLineY(), position.width, lineHeight), property.FindPropertyRelative("airHitState"));
@@ -112,7 +113,7 @@ namespace rwby
             EditorGUI.PropertyField(new Rect(position.x, GetLineY(), position.width, lineHeight), property.FindPropertyRelative("untech"));
             EditorGUI.PropertyField(new Rect(position.x, GetLineY(), position.width, lineHeight), property.FindPropertyRelative("blockstun"));
             EditorGUI.PropertyField(new Rect(position.x, GetLineY(), position.width, lineHeight), property.FindPropertyRelative("initialProration"));
-            EditorGUI.PropertyField(new Rect(position.x, GetLineY(), position.width, lineHeight), property.FindPropertyRelative("forcedProration"));
+            EditorGUI.PropertyField(new Rect(position.x, GetLineY(), position.width, lineHeight), property.FindPropertyRelative("comboProration"));
             
             EditorGUI.LabelField(new Rect(position.x, GetLineY(), position.width, lineHeight), "EFFECTS", EditorStyles.boldLabel);
             EditorGUI.PropertyField(new Rect(position.x, GetLineY(), position.width, lineHeight), property.FindPropertyRelative("hitEffectbank"), true);

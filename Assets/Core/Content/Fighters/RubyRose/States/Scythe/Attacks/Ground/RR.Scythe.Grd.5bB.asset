@@ -32,6 +32,7 @@ MonoBehaviour:
   initialGroundedState: 2
   stateType: 2
   maxUsesInString: 1
+  selfChainable: 0
   allowBaseStateTransitions: 1
   inputSequence:
     executeWindow: 3
@@ -72,20 +73,27 @@ MonoBehaviour:
         m_PostInfinity: 2
         m_RotationOrder: 4
       pullPushMaxDistance: 0
+      blockLift: 0
       attackerHitstop: 6
       hitstop: 6
       hitstun: 60
       blockstun: 60
       untech: 60
       initialProration: 0
-      forcedProration: 0
-      damage: 0
+      comboProration: 0
+      damage: 300
       hitEffectbank:
         modGUID:
           guid: 
         contentGUID:
           guid: 
       hitEffect: 
+      blockEffectbank:
+        modGUID:
+          guid: 
+        contentGUID:
+          guid: 
+      blockEffect: 
       hitSoundbank:
         modGUID:
           guid: 
@@ -114,13 +122,14 @@ MonoBehaviour:
         m_PostInfinity: 2
         m_RotationOrder: 4
       pullPushMaxDistance: 0
+      blockLift: 0
       attackerHitstop: 0
       hitstop: 0
       hitstun: 0
       blockstun: 0
       untech: 0
       initialProration: 0
-      forcedProration: 0
+      comboProration: 0
       damage: 0
       hitEffectbank:
         modGUID:
@@ -128,6 +137,12 @@ MonoBehaviour:
         contentGUID:
           guid: 
       hitEffect: 
+      blockEffectbank:
+        modGUID:
+          guid: 
+        contentGUID:
+          guid: 
+      blockEffect: 
       hitSoundbank:
         modGUID:
           guid: 

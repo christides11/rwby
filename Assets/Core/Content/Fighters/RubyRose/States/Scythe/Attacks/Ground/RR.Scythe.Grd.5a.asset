@@ -103,9 +103,9 @@ MonoBehaviour:
       hitstun: 60
       blockstun: 9
       untech: 60
-      initialProration: 1
-      forcedProration: 1
-      damage: 0
+      initialProration: 0
+      comboProration: 0.2
+      damage: 300
       hitEffectbank:
         modGUID:
           guid: 1d292c1f00000000
@@ -153,7 +153,7 @@ MonoBehaviour:
       blockstun: 9
       untech: 12
       initialProration: 1
-      forcedProration: 1
+      comboProration: 0
       damage: 0
       hitEffectbank:
         modGUID:
@@ -318,6 +318,8 @@ MonoBehaviour:
           rotation: {x: 0, y: 0, z: 180}
           scale: {x: 1, y: 0.2, z: 1}
           autoIncrement: 0
+        doNotAddToSet: 0
+        OffsetStartAtFighter: 0
     - rid: 8688056738971123713
       type: {class: VarModifyEffectFrame, ns: rwby, asm: rwby.csharp}
       data:

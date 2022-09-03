@@ -40,8 +40,8 @@ namespace rwby
             public int blockstun;
             public int untech;
 
-            public int initialProration;
-            public int forcedProration;
+            public float initialProration;
+            public float comboProration;
 
             public int damage;
 
