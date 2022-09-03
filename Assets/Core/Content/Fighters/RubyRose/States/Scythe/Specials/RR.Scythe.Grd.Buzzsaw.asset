@@ -36,6 +36,7 @@ MonoBehaviour:
   initialGroundedState: 1
   stateType: 2
   maxUsesInString: 1
+  selfChainable: 0
   allowBaseStateTransitions: 1
   inputSequence:
     executeWindow: 3
@@ -90,6 +91,7 @@ MonoBehaviour:
         m_PostInfinity: 2
         m_RotationOrder: 4
       pullPushMaxDistance: 10
+      blockLift: 0
       attackerHitstop: 0
       hitstop: 0
       hitstun: 0
@@ -132,6 +134,7 @@ MonoBehaviour:
         m_PostInfinity: 2
         m_RotationOrder: 4
       pullPushMaxDistance: 0
+      blockLift: 0
       attackerHitstop: 0
       hitstop: 0
       hitstun: 0
@@ -196,6 +199,7 @@ MonoBehaviour:
         m_PostInfinity: 2
         m_RotationOrder: 4
       pullPushMaxDistance: 10
+      blockLift: 0
       attackerHitstop: 4
       hitstop: 4
       hitstun: 60
@@ -238,6 +242,7 @@ MonoBehaviour:
         m_PostInfinity: 2
         m_RotationOrder: 4
       pullPushMaxDistance: 0
+      blockLift: 0
       attackerHitstop: 0
       hitstop: 0
       hitstun: 0
@@ -398,7 +403,7 @@ MonoBehaviour:
         condition:
           rid: 8688056217396838429
         modifyType: 1
-        value: 31
+        value: 30
         parent: -1
         children: 
     - rid: 8688056217396838429

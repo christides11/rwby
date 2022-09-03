@@ -43,5 +43,7 @@ namespace rwby
 
         public VarModifyType modifyType;
         public EffectReference[] wantedEffects;
+        public bool doNotAddToSet;
+        public bool OffsetStartAtFighter;
     }
 }

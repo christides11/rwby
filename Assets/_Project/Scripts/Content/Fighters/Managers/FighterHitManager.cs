@@ -89,6 +89,19 @@ namespace rwby
         {
             base.HandleBlockReaction(hitbox, enemyHurtbox, hurtInfo, hi, hitReaction);
             combatManager.SetHitStop(hitReaction.hitInfoGroup.attackerHitstop);
+            if (!string.IsNullOrEmpty(hitReaction.hitInfoGroup.blockEffect))
+            {
+                manager.fighterEffector.AddEffects(new []{ new EffectReference()
+                {
+                    effect = hitReaction.hitInfoGroup.blockEffect,
+                    effectbank = hitReaction.hitInfoGroup.blockEffectbank,
+                    offset = enemyHurtbox.Position,
+                    parented = false,
+                    rotation = enemyHurtbox.ownerNetworkObject.gameObject.transform.eulerAngles,
+                    scale = new Vector3(1, 1, 1),
+                    autoIncrement = true
+                } });
+            }
         }
 
         public override void DoClash(CustomHitbox hitbox, CustomHitbox enemyHitbox)

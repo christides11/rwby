@@ -33,7 +33,7 @@ namespace rwby
             AddEffects(wantedEffects);
         }
 
-        public void AddEffects(EffectReference[] wantedEffects)
+        public void AddEffects(EffectReference[] wantedEffects, Vector3 posBase = default, bool addToEffectSet = true)
         {
             var temp = effects;
             for (int i = 0; i < wantedEffects.Length; i++)
@@ -44,13 +44,13 @@ namespace rwby
                     effect = banks[bankMap[wantedEffects[i].effectbank]].EffectMap[wantedEffects[i].effect]+1,
                     frame = 0,
                     parented = wantedEffects[i].parented,
-                    pos = wantedEffects[i].offset,
+                    pos = posBase + wantedEffects[i].offset,
                     rot = wantedEffects[i].rotation,
                     scale = wantedEffects[i].scale
                 });
                 autoIncrementEffect.Set((effectBufferPos % 10), wantedEffects[i].autoIncrement);
 
-                currentEffectIndex.Add(effectBufferPos);
+                if(addToEffectSet) currentEffectIndex.Add(effectBufferPos);
                 effectBufferPos++;
             }
             effects = temp;

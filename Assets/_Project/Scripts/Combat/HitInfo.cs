@@ -47,6 +47,8 @@ namespace rwby
 
             public ModObjectSetContentReference hitEffectbank;
             public string hitEffect;
+            public ModObjectSetContentReference blockEffectbank;
+            public string blockEffect;
             public ModObjectSetContentReference hitSoundbank;
             public string hitSound;
         }

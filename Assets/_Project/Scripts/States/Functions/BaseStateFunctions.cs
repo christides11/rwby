@@ -6,6 +6,7 @@ using HnSF;
 using HnSF.Fighters;
 using UnityEngine;
 using UnityEngine.Profiling;
+using UnityEngine.UIElements;
 
 namespace rwby
 {
@@ -467,13 +468,15 @@ namespace rwby
             FighterManager f = (FighterManager)fighter;
             VarModifyEffectSet vars = (VarModifyEffectSet)variables;
 
+            Vector3 pBase = Vector3.zero;
+            if (vars.OffsetStartAtFighter) pBase = f.myTransform.position;
             switch (vars.modifyType)
             {
                 case VarModifyType.SET:
                     f.fighterEffector.SetEffects(vars.wantedEffects);
                     break;
                 case VarModifyType.ADD:
-                    f.fighterEffector.AddEffects(vars.wantedEffects);
+                    f.fighterEffector.AddEffects(vars.wantedEffects, pBase, !vars.doNotAddToSet);
                     break;
             }
         }

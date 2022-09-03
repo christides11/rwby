@@ -23,10 +23,12 @@ MonoBehaviour:
   - rid: 8688056217396838402
   - rid: 8688056360164655106
   - rid: 8688056817054646273
+  - rid: 7270848366746009601
   auraRequirement: 0
   initialGroundedState: 1
   stateType: 1
   maxUsesInString: -1
+  selfChainable: 0
   allowBaseStateTransitions: 1
   inputSequence:
     executeWindow: 3
@@ -44,6 +46,32 @@ MonoBehaviour:
     RefIds:
     - rid: -2
       type: {class: , ns: , asm: }
+    - rid: 7270848366746009601
+      type: {class: VarModifyEffectSet, ns: rwby, asm: rwby.csharp}
+      data:
+        name: Dust
+        id: 3
+        parent: -1
+        children: 
+        frameRanges:
+        - {x: 1, y: 1}
+        condition:
+          rid: -2
+        modifyType: 0
+        wantedEffects:
+        - effectbank:
+            modGUID:
+              guid: 1d292c1f00000000
+            contentGUID:
+              guid: 1d27280000000000
+          effect: dust2
+          parented: 0
+          offset: {x: 0, y: 0, z: 0}
+          rotation: {x: 0, y: 0, z: 0}
+          scale: {x: 1, y: 1, z: 1}
+          autoIncrement: 1
+        doNotAddToSet: 0
+        OffsetStartAtFighter: 1
     - rid: 8688056217396838402
       type: {class: VarModifyAnimationSet, ns: rwby, asm: rwby.csharp}
       data:

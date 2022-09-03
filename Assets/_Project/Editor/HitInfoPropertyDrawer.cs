@@ -24,11 +24,13 @@ namespace rwby
             
             if (property.FindPropertyRelative("hit").FindPropertyRelative("hitEffectbank").isExpanded) val += lineValue * 2;
             if (property.FindPropertyRelative("counterhit").FindPropertyRelative("hitEffectbank").isExpanded) val += lineValue * 2;
+            if (property.FindPropertyRelative("hit").FindPropertyRelative("blockEffectbank").isExpanded) val += lineValue * 2;
+            if (property.FindPropertyRelative("counterhit").FindPropertyRelative("blockEffectbank").isExpanded) val += lineValue * 2;
             if (property.FindPropertyRelative("hit").FindPropertyRelative("hitSoundbank").isExpanded) val += lineValue * 2;
             if (property.FindPropertyRelative("counterhit").FindPropertyRelative("hitSoundbank").isExpanded) val += lineValue * 2;
             //val += lineValue * 9;
 
-            val += lineValue * 26 * windowsOpen;
+            val += lineValue * 28 * windowsOpen;
             return val;
         }
 
@@ -120,6 +122,13 @@ namespace rwby
                 GetLineY();
             }
             EditorGUI.PropertyField(new Rect(position.x, GetLineY(), position.width, lineHeight), property.FindPropertyRelative("hitEffect"), true);
+            EditorGUI.PropertyField(new Rect(position.x, GetLineY(), position.width, lineHeight), property.FindPropertyRelative("blockEffectbank"), true);
+            if (property.FindPropertyRelative("blockEffectbank").isExpanded)
+            {
+                GetLineY();
+                GetLineY();
+            }
+            EditorGUI.PropertyField(new Rect(position.x, GetLineY(), position.width, lineHeight), property.FindPropertyRelative("blockEffect"), true);
             EditorGUI.PropertyField(new Rect(position.x, GetLineY(), position.width, lineHeight), property.FindPropertyRelative("hitSoundbank"), true);
             if (property.FindPropertyRelative("hitSoundbank").isExpanded)
             {

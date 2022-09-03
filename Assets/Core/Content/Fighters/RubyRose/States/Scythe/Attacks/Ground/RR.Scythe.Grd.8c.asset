@@ -30,6 +30,7 @@ MonoBehaviour:
   initialGroundedState: 1
   stateType: 2
   maxUsesInString: 1
+  selfChainable: 0
   allowBaseStateTransitions: 1
   inputSequence:
     executeWindow: 3
@@ -96,6 +97,7 @@ MonoBehaviour:
         m_PostInfinity: 2
         m_RotationOrder: 4
       pullPushMaxDistance: 10
+      blockLift: 0
       attackerHitstop: 4
       hitstop: 4
       hitstun: 60
@@ -138,6 +140,7 @@ MonoBehaviour:
         m_PostInfinity: 2
         m_RotationOrder: 4
       pullPushMaxDistance: 0
+      blockLift: 0
       attackerHitstop: 0
       hitstop: 0
       hitstun: 0
@@ -200,7 +203,7 @@ MonoBehaviour:
         boxType: 1
         attachedTo: 0
         shape: 0
-        offset: {x: 0, y: 1, z: 0.5}
+        offset: {x: 0, y: 1, z: 1}
         boxExtents: {x: 1, y: 1, z: 1}
         radius: 0
         definitionIndex: 0
