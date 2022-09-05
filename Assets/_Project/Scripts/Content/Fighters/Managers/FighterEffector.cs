@@ -169,11 +169,17 @@ namespace rwby
                 
                 if (currentEffectsRepresentation.effects[i] != effects.effects[i])
                 {
-                    if(effectObjects[i]) Destroy(effectObjects[i].gameObject);
                     var e = GetEffect(effects.effects[i]);
-                    effectObjects[i] = effects.effects[i].parented ?
-                        GameObject.Instantiate(e, transform, false)
-                        : GameObject.Instantiate(e, effects.effects[i].pos, Quaternion.identity);
+                    if (effectObjects[i] && (effectObjects[i].bank != effects.effects[i].bank ||
+                                             effectObjects[i].effect != effects.effects[i].effect)
+                        || effectObjects[i] == null)
+                    {
+                        if(effectObjects[i]) Destroy(effectObjects[i].gameObject);
+                        effectObjects[i] = GameObject.Instantiate(e, transform, false);
+                        effectObjects[i].bank = effects.effects[i].bank;
+                        effectObjects[i].effect = effects.effects[i].effect;
+                    }
+                    effectObjects[i].transform.SetParent(effects.effects[i].parented ? transform : null, false);
                     effectObjects[i].transform.localPosition = effects.effects[i].pos;
                     effectObjects[i].transform.localRotation = Quaternion.Euler(effects.effects[i].rot);
                     effectObjects[i].transform.localScale = effects.effects[i].scale;

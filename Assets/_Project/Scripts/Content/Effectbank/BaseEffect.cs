@@ -4,6 +4,9 @@ namespace rwby
 {
     public class BaseEffect : MonoBehaviour
     {
+        [HideInInspector] public int bank;
+        [HideInInspector] public int effect;
+        
         public virtual void PlayEffect(bool restart = true, bool autoDelete = true)
         {
 

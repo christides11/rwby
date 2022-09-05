@@ -42,24 +42,24 @@ namespace rwby
 
         [Networked, Capacity(4)] public NetworkArray<int> assignedSpecials => default;
 
-        public delegate void BehaviourDelegate(FighterCombatManager combatManager);
+        public delegate void AuraDelegate(FighterCombatManager combatManager, int maxAura);
 
-        public event BehaviourDelegate OnAuraIncreased;
-        public event BehaviourDelegate OnAuraDecreased;
+        public event AuraDelegate OnAuraIncreased;
+        public event AuraDelegate OnAuraDecreased;
         
         public static void OnChangedAura(Changed<FighterCombatManager> changed)
         {
             changed.LoadOld();
-            int oldHealth = changed.Behaviour.Aura;
+            int oldAura = changed.Behaviour.Aura;
             changed.LoadNew();
-            if (changed.Behaviour.Aura > oldHealth)
+            if (changed.Behaviour.Aura > oldAura)
             {
-                changed.Behaviour.OnAuraIncreased?.Invoke(changed.Behaviour);
+                changed.Behaviour.OnAuraIncreased?.Invoke(changed.Behaviour, changed.Behaviour.manager.fighterDefinition.Aura);
             }
 
-            if (changed.Behaviour.Aura < oldHealth)
+            if (changed.Behaviour.Aura < oldAura)
             {
-                changed.Behaviour.OnAuraDecreased?.Invoke(changed.Behaviour);
+                changed.Behaviour.OnAuraDecreased?.Invoke(changed.Behaviour, changed.Behaviour.manager.fighterDefinition.Aura);
             }
         }
         

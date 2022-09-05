@@ -26,7 +26,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6519590980463446452}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0.1, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -109,7 +109,7 @@ ParticleSystem:
   moveWithTransform: 0
   moveWithCustomTransform: {fileID: 0}
   scalingMode: 1
-  randomSeed: 1
+  randomSeed: -148773610
   InitialModule:
     serializedVersion: 3
     enabled: 1
@@ -286,7 +286,7 @@ ParticleSystem:
       serializedVersion: 2
       minMaxState: 3
       scalar: 0.3
-      minScalar: 0.05
+      minScalar: 0.1
       maxCurve:
         serializedVersion: 2
         m_Curve:
@@ -744,7 +744,7 @@ ParticleSystem:
     m_TextureColorAffectsParticles: 1
     m_TextureAlphaAffectsParticles: 1
     m_TextureBilinearFiltering: 0
-    randomDirectionAmount: 0
+    randomDirectionAmount: 1
     sphericalDirectionAmount: 1
     randomPositionAmount: 0
     radius:
@@ -1043,17 +1043,26 @@ ParticleSystem:
         - serializedVersion: 3
           time: 0
           value: 0.32128906
-          inSlope: 0.67871094
-          outSlope: 0.67871094
-          tangentMode: 34
+          inSlope: 3.2291682
+          outSlope: 3.2291682
+          tangentMode: 0
           weightedMode: 0
           inWeight: 0
+          outWeight: 0.09357527
+        - serializedVersion: 3
+          time: 0.1674397
+          value: 0.76535714
+          inSlope: 0.67871094
+          outSlope: 0.67871094
+          tangentMode: 136
+          weightedMode: 0
+          inWeight: 0.33333334
           outWeight: 0.33333334
         - serializedVersion: 3
           time: 1
           value: 1
-          inSlope: 0.67871094
-          outSlope: 0.67871094
+          inSlope: 0.28183287
+          outSlope: 0.28183287
           tangentMode: 34
           weightedMode: 0
           inWeight: 0.33333334
@@ -1193,11 +1202,11 @@ ParticleSystem:
         m_RotationOrder: 4
     separateAxes: 0
   RotationModule:
-    enabled: 1
+    enabled: 0
     x:
       serializedVersion: 2
-      minMaxState: 3
-      scalar: 0
+      minMaxState: 0
+      scalar: -6.283185
       minScalar: 0
       maxCurve:
         serializedVersion: 2
@@ -1249,9 +1258,9 @@ ParticleSystem:
         m_RotationOrder: 4
     y:
       serializedVersion: 2
-      minMaxState: 3
-      scalar: -0.7853981
-      minScalar: 0.7853981
+      minMaxState: 0
+      scalar: 0
+      minScalar: 0
       maxCurve:
         serializedVersion: 2
         m_Curve:
@@ -1302,7 +1311,7 @@ ParticleSystem:
         m_RotationOrder: 4
     curve:
       serializedVersion: 2
-      minMaxState: 3
+      minMaxState: 0
       scalar: 0
       minScalar: 0
       maxCurve:
@@ -1380,8 +1389,8 @@ ParticleSystem:
         ctime6: 0
         ctime7: 0
         atime0: 578
-        atime1: 21781
-        atime2: 65535
+        atime1: 6361
+        atime2: 64186
         atime3: 65535
         atime4: 0
         atime5: 0
@@ -2738,7 +2747,7 @@ ParticleSystem:
         m_PostInfinity: 2
         m_RotationOrder: 4
   NoiseModule:
-    enabled: 0
+    enabled: 1
     strength:
       serializedVersion: 2
       minMaxState: 0
@@ -2908,7 +2917,7 @@ ParticleSystem:
     scrollSpeed:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 0
+      scalar: 1
       minScalar: 0
       maxCurve:
         serializedVersion: 2
@@ -3174,7 +3183,7 @@ ParticleSystem:
     rotationAmount:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 0
+      scalar: 1
       minScalar: 0
       maxCurve:
         serializedVersion: 2
@@ -3227,7 +3236,7 @@ ParticleSystem:
     sizeAmount:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 0
+      scalar: 0.5
       minScalar: 0
       maxCurve:
         serializedVersion: 2
@@ -4861,7 +4870,7 @@ ParticleSystemRenderer:
   m_FreeformStretching: 0
   m_RotateWithStretchDirection: 1
   m_VertexStreams: 00010304
-  m_Mesh: {fileID: -4186984101550192739, guid: 18b620f8625f2b346baae0a902a54884, type: 3}
+  m_Mesh: {fileID: 2009311882732388820, guid: 800d1662b44160249ab1f4b2b4f0cb70, type: 3}
   m_Mesh1: {fileID: 0}
   m_Mesh2: {fileID: 0}
   m_Mesh3: {fileID: 0}
@@ -5012,8 +5021,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   childEffects:
-  - {fileID: 5275167458909255887}
   - {fileID: 4683491595445656564}
+  - {fileID: 5275167458909255887}
 --- !u!114 &1693362391
 MonoBehaviour:
   m_ObjectHideFlags: 0
