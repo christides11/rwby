@@ -525,11 +525,11 @@ namespace rwby
             
             var predictionKey = new NetworkObjectPredictionKey {Byte0 = (byte) fm.Runner.Simulation.Tick, Byte1 = (byte)fm.Object.InputAuthority.PlayerId};
             
-            fm.Runner.Spawn(vars.projectile, pos, Quaternion.Euler(fm.myTransform.eulerAngles + vars.rotation), fm.Object.InputAuthority,
+            fm.Runner.Spawn(vars.BaseProjectile, pos, Quaternion.Euler(fm.myTransform.eulerAngles + vars.rotation), fm.Object.InputAuthority,
                 (a, b) =>
                 {
-                    b.GetComponent<ProjectileBase>().owner = fm.Object;
-                    b.GetComponent<ProjectileBase>().team = fm.FCombatManager.Team;
+                    b.GetComponent<BaseProjectile>().owner = fm.Object;
+                    b.GetComponent<BaseProjectile>().team = fm.FCombatManager.Team;
                 }, 
                 predictionKey);
         }

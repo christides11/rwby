@@ -40,7 +40,7 @@ namespace rwby
         public IConditionVariables condition;
         public IConditionVariables Condition => condition;
 
-        public ProjectileBase projectile;
+        public BaseProjectile BaseProjectile;
         public Vector3 positionOffset;
         public Vector3 rotation;
         public Vector3 scale;

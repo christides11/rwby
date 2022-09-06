@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace rwby
 {
-    public class CRProjectile : ProjectileBase
+    public class CRBaseProjectile : BaseProjectile
     {
         [Networked] public TickTimer timer { get; set; }
         public int ticksToExist = 200;

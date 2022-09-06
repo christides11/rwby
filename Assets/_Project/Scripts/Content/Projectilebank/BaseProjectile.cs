@@ -1,11 +1,15 @@
+using System;
 using Fusion;
 using HnSF.Combat;
 using UnityEngine;
 
 namespace rwby
 {
-    public class ProjectileBase : NetworkBehaviour, IBoxDefinitionCollection, IAttacker, IHurtable
+    public class BaseProjectile : NetworkBehaviour, IBoxDefinitionCollection, IAttacker, IHurtable
     {
+        [NonSerialized] public int bank;
+        [NonSerialized] public int projectile;
+        
         [Networked, Capacity(5)] public NetworkLinkedList<IDGroupCollisionInfo> hitObjects => default;
         [Networked] public NetworkObject owner { get; set; }
         [Networked] public int team { get; set; }
