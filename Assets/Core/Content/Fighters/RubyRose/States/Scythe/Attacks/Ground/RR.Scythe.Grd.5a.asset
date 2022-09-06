@@ -35,6 +35,7 @@ MonoBehaviour:
   - rid: 8688056833868562432
   - rid: 8688056833868562434
   - rid: 7270848428946489353
+  - rid: 7270848445966188545
   auraRequirement: 0
   initialGroundedState: 1
   stateType: 2
@@ -128,6 +129,9 @@ MonoBehaviour:
       hitCameraShakeStrength: 1
       blockCameraShakeStrength: 1
       cameraShakeLength: 4
+      ignoreProration: 0
+      ignoreHitstunScaling: 0
+      ignorePushbackScaling: 0
     counterhit:
       groundHitState: 30
       airHitState: 32
@@ -180,6 +184,9 @@ MonoBehaviour:
       hitCameraShakeStrength: 0
       blockCameraShakeStrength: 0
       cameraShakeLength: 0
+      ignoreProration: 0
+      ignoreHitstunScaling: 0
+      ignorePushbackScaling: 0
   throwboxInfo: []
   hurtboxInfo: []
   references:
@@ -270,6 +277,29 @@ MonoBehaviour:
         inverse: 0
         statReference: 0
         value: 60
+    - rid: 7270848445966188545
+      type: {class: VarCreateProjectile, ns: rwby, asm: rwby.csharp}
+      data:
+        name: 
+        id: 16
+        parent: -1
+        children: 
+        frameRanges:
+        - {x: 5, y: 5}
+        condition:
+          rid: -2
+        def:
+          projectilebank:
+            modGUID:
+              guid: 1d292c1f00000000
+            contentGUID:
+              guid: 2c2c000000000000
+          projectile: cr
+          parented: 0
+          offset: {x: 0, y: 0, z: 0}
+          rotation: {x: 0, y: 0, z: 0}
+          scale: {x: 1, y: 1, z: 1}
+          overrideMode: 1
     - rid: 8688056217396838433
       type: {class: VarCreateBox, ns: rwby, asm: rwby.csharp}
       data:

@@ -66,6 +66,7 @@ namespace rwby
         public FighterEffector fighterEffector;
         public FighterAnimator fighterAnimator;
         public FighterSounder fighterSounder;
+        public FighterProjectileManager projectileManager;
         [SerializeField] protected Transform targetOrigin;
         public Transform visualTransform;
         public Transform myTransform;

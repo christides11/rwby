@@ -232,7 +232,7 @@ namespace rwby
             {
                 IBoxCollection boxCollection = broadphaseObjects[i].GetComponent<IBoxCollection>();
 
-                bool objHasThrowboxes = boxCollection.Throwboxes[0].HitboxActive == true;
+                bool objHasThrowboxes = boxCollection.Throwboxes.Length > 0 && boxCollection.Throwboxes[0].HitboxActive == true;
                 if (objHasThrowboxes == false) continue;
                 
                 for (int a = 0; a < boxCollection.Throwboxes.Length; a++)

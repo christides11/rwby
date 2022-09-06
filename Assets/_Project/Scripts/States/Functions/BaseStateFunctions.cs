@@ -518,20 +518,7 @@ namespace rwby
             FighterManager fm = (FighterManager)fighter;
             VarCreateProjectile vars = (VarCreateProjectile)variables;
 
-            var pos = fm.myTransform.position;
-            pos += fm.myTransform.forward * vars.positionOffset.z;
-            pos += fm.myTransform.right * vars.positionOffset.x;
-            pos += fm.myTransform.up * vars.positionOffset.y;
-            
-            var predictionKey = new NetworkObjectPredictionKey {Byte0 = (byte) fm.Runner.Simulation.Tick, Byte1 = (byte)fm.Object.InputAuthority.PlayerId};
-            
-            fm.Runner.Spawn(vars.BaseProjectile, pos, Quaternion.Euler(fm.myTransform.eulerAngles + vars.rotation), fm.Object.InputAuthority,
-                (a, b) =>
-                {
-                    b.GetComponent<BaseProjectile>().owner = fm.Object;
-                    b.GetComponent<BaseProjectile>().team = fm.FCombatManager.Team;
-                }, 
-                predictionKey);
+            fm.projectileManager.CreateProjectile(vars.def, fm.myTransform.position);
         }
         
         public static void ClearHitList(IFighterBase fighter, IStateVariables variables, HnSF.StateTimeline arg3, int arg4)

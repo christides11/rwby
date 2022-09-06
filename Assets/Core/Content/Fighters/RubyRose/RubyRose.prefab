@@ -296,6 +296,7 @@ GameObject:
   - component: {fileID: 4017428576835799020}
   - component: {fileID: 6390373237626046470}
   - component: {fileID: -7876643753530837430}
+  - component: {fileID: 7571584989760676080}
   m_Layer: 6
   m_Name: RubyRose
   m_TagString: Player
@@ -383,6 +384,7 @@ MonoBehaviour:
   - {fileID: 4017428576835799020}
   - {fileID: 6390373237626046470}
   - {fileID: -7876643753530837430}
+  - {fileID: 7571584989760676080}
   SimulationBehaviours: []
 --- !u!114 &728284172682202706
 MonoBehaviour:
@@ -440,6 +442,7 @@ MonoBehaviour:
   fighterEffector: {fileID: 6390373237626046470}
   fighterAnimator: {fileID: 4017428576835799020}
   fighterSounder: {fileID: -7876643753530837430}
+  projectileManager: {fileID: 7571584989760676080}
   targetOrigin: {fileID: 4535680941175032872}
   visualTransform: {fileID: 7954403120791412188}
   myTransform: {fileID: 4702031847467705068}
@@ -497,6 +500,11 @@ MonoBehaviour:
       guid: 1d292c1f00000000
     contentGUID:
       guid: 1d27280000000000
+  projectilebankReferences:
+  - modGUID:
+      guid: 1d292c1f00000000
+    contentGUID:
+      guid: 2c2c000000000000
   references:
     version: 2
     RefIds: []
@@ -945,6 +953,34 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   audioSourceGOPrefab: {fileID: 5334101577290352513, guid: 4f7ed8383350df04fae09ad41b2409ac, type: 3}
+--- !u!114 &7571584989760676080
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3009557721057671630}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 39add2f2cdcea0f40836d82ec1f8c5e0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _interpolationDataSource: 0
+  banks: []
+  _projectiles:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  _overrideMode: 00000000000000000000000000000000000000000000000000000000000000000000000000000000
+  _latestProjectileIndex: 0
+  manager: {fileID: 3846760401122892541}
 --- !u!1 &3783412658040432495
 GameObject:
   m_ObjectHideFlags: 0
