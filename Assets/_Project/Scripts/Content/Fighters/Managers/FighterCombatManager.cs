@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using Fusion;
 using HnSF.Combat;
@@ -9,6 +10,20 @@ namespace rwby
 {
     public class FighterCombatManager : NetworkBehaviour, IHurtable, IFighterCombatManager, ITeamable
     {
+        [System.Serializable]
+        public class IntIntMap
+        {
+            public int item1;
+            public int item2;
+        }
+
+        [System.Serializable]
+        public class IntFloatMap
+        {
+            public int item1;
+            public float item2;
+        }
+        
         [Networked] public BlockStateType BlockState { get; set; }
         [Networked] public int HitStun { get; set; }
         [Networked] public int HitStop { get; set; }
@@ -17,7 +32,7 @@ namespace rwby
         [Networked] public int CurrentChargeLevel { get; set; }
         [Networked] public int CurrentChargeLevelCharge { get; set; }
         [Networked] public int ComboCounter { get; set; }
-        [Networked] public int ComboTime { get; set; }
+        [Networked] public int ComboStartTick { get; set; }
         [Networked] public float Proration { get; set; } = 1.0f;
         [Networked(OnChanged = nameof(OnChangedAura))] public int Aura { get; set; }
         public int AuraRegenDelay { get; set; }
@@ -42,24 +57,28 @@ namespace rwby
 
         [Networked, Capacity(4)] public NetworkArray<int> assignedSpecials => default;
 
-        public delegate void BehaviourDelegate(FighterCombatManager combatManager);
+        public IntIntMap[] hitstunDecayMap = new IntIntMap[4];
+        public IntFloatMap[] pushbackScalingMap = new IntFloatMap[4];
+        public IntFloatMap[] gravityScalingMap = new IntFloatMap[4];
 
-        public event BehaviourDelegate OnAuraIncreased;
-        public event BehaviourDelegate OnAuraDecreased;
+        public delegate void AuraDelegate(FighterCombatManager combatManager, int maxAura);
+
+        public event AuraDelegate OnAuraIncreased;
+        public event AuraDelegate OnAuraDecreased;
         
         public static void OnChangedAura(Changed<FighterCombatManager> changed)
         {
             changed.LoadOld();
-            int oldHealth = changed.Behaviour.Aura;
+            int oldAura = changed.Behaviour.Aura;
             changed.LoadNew();
-            if (changed.Behaviour.Aura > oldHealth)
+            if (changed.Behaviour.Aura > oldAura)
             {
-                changed.Behaviour.OnAuraIncreased?.Invoke(changed.Behaviour);
+                changed.Behaviour.OnAuraIncreased?.Invoke(changed.Behaviour, changed.Behaviour.manager.fighterDefinition.Aura);
             }
 
-            if (changed.Behaviour.Aura < oldHealth)
+            if (changed.Behaviour.Aura < oldAura)
             {
-                changed.Behaviour.OnAuraDecreased?.Invoke(changed.Behaviour);
+                changed.Behaviour.OnAuraDecreased?.Invoke(changed.Behaviour, changed.Behaviour.manager.fighterDefinition.Aura);
             }
         }
         
@@ -74,11 +93,6 @@ namespace rwby
 
         public virtual void Tick()
         {
-            if (stateManager.CurrentStateType == StateType.RECOVERY)
-            {
-                ComboTime++;
-            }
-
             if (AuraRegenDelay == 0)
             {
                 AddAura(manager.fighterDefinition.AuraGainPerFrame);
@@ -145,8 +159,27 @@ namespace rwby
             movesUsedInString.Add(new MovesetStateIdentifier(){ movesetIdentifier = currentStateMovement, stateIdentifier = currentState});
         }
 
-        public virtual bool MovePossible(MovesetStateIdentifier movesetState, int maxUsesInString = 1)
+        public virtual bool MovePossible(MovesetStateIdentifier movesetState, int maxUsesInString = 1, int selfChainable = 0)
         {
+            if (selfChainable > 0)
+            {
+                int c = 0;
+                for (int i = movesUsedInString.Count - 1; i >= 0; i--)
+                {
+                    if (movesUsedInString[i].movesetIdentifier == movesetState.movesetIdentifier
+                        && movesUsedInString[i].stateIdentifier == movesetState.stateIdentifier)
+                    {
+                        c++;
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
+
+                if (c >= 1 && c < selfChainable) return true;
+            }
+                
             if (maxUsesInString == -1) return true;
             int counter = 0;
             for (int i = 0; i < movesUsedInString.Count; i++)
@@ -403,6 +436,8 @@ namespace rwby
                 return hitReaction;
             }
             
+            SetHitStop(hitInfoGroup.hitstop);
+            
             if(BlockState != BlockStateType.NONE)
             {
                 if(Vector3.Angle(transform.forward, hurtInfo.forward) > 90)
@@ -410,20 +445,32 @@ namespace rwby
                     hitReaction.reaction = HitReactionType.BLOCKED;
                     SetHitStop(hitInfoGroup.hitstop);
                     BlockStun = hitInfoGroup.blockstun;
+
+                    Vector3 hForce = isGrounded ? hitInfoGroup.groundHitForce : hitInfoGroup.aerialHitForce;
+                    if (!hitInfoGroup.blockLift) hForce.y = 0;
                     
-                    ApplyHitForces(hurtInfo, currentState, hitInfoGroup.hitForceType, isGrounded ? hitInfoGroup.groundHitForce : hitInfoGroup.aerialHitForce, hitInfoGroup.pullPushCurve, hitInfoGroup.pullPushMaxDistance, hitInfoGroup.hitForceRelationOffset);
+                    ApplyHitForces(hurtInfo, currentState, hitInfoGroup.hitForceType, hForce, hitInfoGroup.pullPushCurve, hitInfoGroup.pullPushMaxDistance, hitInfoGroup.hitForceRelationOffset, true);
+                    manager.shakeDefinition = new CmaeraShakeDefinition()
+                    {
+                        shakeStrength = hitInfoGroup.blockCameraShakeStrength,
+                        startFrame = Runner.Tick,
+                        endFrame = Runner.Tick + hitInfoGroup.cameraShakeLength
+                    };
                     return hitReaction;
                 }
             }
+
+            if (ComboCounter == 0) ComboStartTick = Runner.Tick;
             
             hurtboxHitCount.Set(hurtInfo.hurtboxHit, hurtboxHitCount[hurtInfo.hurtboxHit] + 1);
             manager.FPhysicsManager.SetRotation((hurtInfo.forward * -1).normalized);
             
             // Got hit, apply stun, damage, and forces.
             hitReaction.reaction = HitReactionType.HIT;
-            SetHitStop(hitInfoGroup.hitstop);
-            SetHitStun(isGrounded ? hitInfoGroup.hitstun : hitInfoGroup.untech);
-            ApplyHitForces(hurtInfo, currentState, hitInfoGroup.hitForceType, isGrounded ?  hitInfoGroup.groundHitForce : hitInfoGroup.aerialHitForce, hitInfoGroup.pullPushCurve, hitInfoGroup.pullPushMaxDistance, hitInfoGroup.hitForceRelationOffset);
+            int initHitstunValue = isGrounded ? hitInfoGroup.hitstun : hitInfoGroup.untech;
+            SetHitStun(hitInfoGroup.ignoreHitstunScaling ? initHitstunValue : ApplyHitstunScaling(initHitstunValue));
+            ApplyHitForces(hurtInfo, currentState, hitInfoGroup.hitForceType, isGrounded ?  hitInfoGroup.groundHitForce : hitInfoGroup.aerialHitForce, hitInfoGroup.pullPushCurve, hitInfoGroup.pullPushMaxDistance, hitInfoGroup.hitForceRelationOffset,
+                hitInfoGroup.ignorePushbackScaling);
             
             WallBounces = hitInfoGroup.wallBounces;
             WallBounceForcePercentage = hitInfoGroup.wallBounceForcePercentage;
@@ -443,24 +490,62 @@ namespace rwby
                 physicsManager.SetGrounded(false);
             }
 
+            manager.HealthManager.ModifyHealth((int)-(hitInfoGroup.damage * (hitInfoGroup.ignoreProration ? 1.0f : Proration)));
+
             stateManager.ChangeState(isGrounded ? (int)hitInfoGroup.groundHitState : (int)hitInfoGroup.airHitState);
             manager.FCombatManager.Cleanup();
             ComboCounter++;
 
             if (ComboCounter == 1)
             {
-                ResetProration();
-                Proration = hitInfoGroup.initialProration;
+                Proration = (1.0f - hitInfoGroup.initialProration) * 0.60f;
             }
             else
             {
-                if (Proration > hitInfoGroup.forcedProration) Proration = hitInfoGroup.forcedProration;
+                Proration *= (1.0f - hitInfoGroup.comboProration);
             }
+            
+            manager.shakeDefinition = new CmaeraShakeDefinition()
+            {
+                shakeStrength = hitInfoGroup.hitCameraShakeStrength,
+                startFrame = Runner.Tick,
+                endFrame = Runner.Tick + hitInfoGroup.cameraShakeLength
+            };
             return hitReaction;
         }
 
+        
+        public virtual int ApplyHitstunScaling(int hitstunAmt)
+        {
+            int comboTime = Runner.Tick - ComboStartTick;
+            if (comboTime < hitstunDecayMap[0].item1) return hitstunAmt;
+            for (int i = hitstunDecayMap.Length - 1; i >= 0; i--)
+            {
+                if (comboTime > hitstunDecayMap[i].item1)
+                {
+                    if (i == hitstunDecayMap.Length - 1) return 1;
+                    return Mathf.Clamp(hitstunAmt - hitstunDecayMap[i].item2, 0, Int32.MaxValue);
+                }
+            }
+            return hitstunAmt;
+        }
+
+        public virtual Vector3 ApplyPushbackScaling(Vector3 pushback)
+        {
+            int comboTime = Runner.Tick - ComboStartTick;
+            if (comboTime < pushbackScalingMap[0].item1) return pushback;
+            for (int i = pushbackScalingMap.Length - 1; i >= 0; i--)
+            {
+                if (comboTime > pushbackScalingMap[i].item1)
+                {
+                    return pushback * pushbackScalingMap[i].item2;
+                }
+            }
+            return pushback;
+        }
+
         protected void ApplyHitForces(HurtInfo hurtInfo, StateTimeline currentState, HitboxForceType forceType, Vector3 force = default, AnimationCurve pullPushCurve = default,
-            float pullPushMaxDistance = default, Vector3 offset = default)
+            float pullPushMaxDistance = default, Vector3 offset = default, bool ignorePushbackScaling = false)
         {
             
             switch (forceType)
@@ -468,7 +553,7 @@ namespace rwby
                 case HitboxForceType.SET:
                     Vector3 forces = (force.x * hurtInfo.right) + (force.z * hurtInfo.forward);
                     physicsManager.forceGravity = force.y;
-                    physicsManager.forceMovement = forces;
+                    physicsManager.forceMovement = ignorePushbackScaling ? forces : ApplyPushbackScaling(forces);
                     break;
                 case HitboxForceType.PULL:
                     var position = manager.myTransform.position;

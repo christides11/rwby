@@ -276,10 +276,8 @@ namespace rwby.core.training
             
             var debugInfo = GameObject.Instantiate(HUDElementbank.GetHUDElement("debug"), playerHUD.transform, false);
             playerHUD.AddHUDElement(debugInfo.GetComponent<HUDElement>());
-            var healthbar = GameObject.Instantiate(HUDElementbank.GetHUDElement("healthbar"), playerHUD.transform, false);
-            playerHUD.AddHUDElement(healthbar.GetComponent<HUDElement>());
-            var aurabar = GameObject.Instantiate(HUDElementbank.GetHUDElement("aurabar"), playerHUD.transform, false);
-            playerHUD.AddHUDElement(aurabar.GetComponent<HUDElement>());
+            var pHUD = GameObject.Instantiate(HUDElementbank.GetHUDElement("phud"), playerHUD.transform, false);
+            playerHUD.AddHUDElement(pHUD.GetComponent<HUDElement>());
         }
     }
 }

@@ -222,7 +222,8 @@ namespace rwby
                 if (previousState.stateType != currentState.stateType)
                 {
                     combatManager.ResetString();
-                    combatManager.ComboTime = 0;
+                    combatManager.ResetProration();
+                    combatManager.ComboStartTick = 0;
                     combatManager.ComboCounter = 0;
                 }
             }else if (currentState.stateType == StateType.ATTACK)

@@ -7,10 +7,12 @@ public class RRoseMan : FighterManager
     public ModObjectSetContentReference[] animationbankReferences;
     public ModObjectSetContentReference[] effectbankReferences;
     public ModObjectSetContentReference[] soundbankReferences;
+    public ModObjectSetContentReference[] projectilebankReferences;
 
     private ModGUIDContentReference[] animationbankRefs;
     private ModGUIDContentReference[] effectbankRefs;
     private ModGUIDContentReference[] soundbankRefs;
+    private ModGUIDContentReference[] projectilebankRefs;
     
     public override async UniTask<bool> OnFighterLoaded()
     {
@@ -61,6 +63,22 @@ public class RRoseMan : FighterManager
                 return false;
             }
         }
+        
+        for (int i = 0; i < projectilebankReferences.Length; i++)
+        {
+            bool projectilebankLoadResult = await ContentManager.singleton.LoadContentDefinition(ContentManager.singleton.ConvertModContentGUIDReference(new ModContentGUIDReference()
+                {
+                    contentGUID = projectilebankReferences[i].contentGUID,
+                    contentType = (int)ContentType.Projectilebank,
+                    modGUID = projectilebankReferences[i].modGUID
+                }
+            ));
+            if (projectilebankLoadResult == false)
+            {
+                Debug.LogError("Error loading projectilebanks.");
+                return false;
+            }
+        }
 
         return true;
     }
@@ -72,6 +90,7 @@ public class RRoseMan : FighterManager
         animationbankRefs = new ModGUIDContentReference[animationbankReferences.Length];
         effectbankRefs = new ModGUIDContentReference[effectbankReferences.Length];
         soundbankRefs = new ModGUIDContentReference[soundbankReferences.Length];
+        projectilebankRefs = new ModGUIDContentReference[projectilebankReferences.Length];
         
         for (int i = 0; i < animationbankRefs.Length; i++)
         {
@@ -110,6 +129,19 @@ public class RRoseMan : FighterManager
             );
             
             fighterSounder.RegisterBank(soundbankReferences[i]);
+        }
+        
+        for (int i = 0; i < projectilebankRefs.Length; i++)
+        {
+            projectilebankRefs[i] = ContentManager.singleton.ConvertModContentGUIDReference(new ModContentGUIDReference()
+                {
+                    contentGUID = projectilebankReferences[i].contentGUID,
+                    contentType = (int)ContentType.Projectilebank,
+                    modGUID = projectilebankReferences[i].modGUID
+                }
+            );
+            
+            projectileManager.RegisterBank(projectilebankReferences[i]);
         }
     }
 

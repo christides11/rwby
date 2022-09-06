@@ -32,6 +32,7 @@ namespace rwby
             public Vector3 aerialHitForce;
             public AnimationCurve pullPushCurve;
             public float pullPushMaxDistance;
+            public bool blockLift;
             
             public int attackerHitstop;
             public int hitstop;
@@ -39,15 +40,25 @@ namespace rwby
             public int blockstun;
             public int untech;
 
-            public int initialProration;
-            public int forcedProration;
+            public float initialProration;
+            public float comboProration;
 
             public int damage;
 
             public ModObjectSetContentReference hitEffectbank;
             public string hitEffect;
+            public ModObjectSetContentReference blockEffectbank;
+            public string blockEffect;
             public ModObjectSetContentReference hitSoundbank;
             public string hitSound;
+
+            public CameraShakeStrength hitCameraShakeStrength;
+            public CameraShakeStrength blockCameraShakeStrength;
+            public int cameraShakeLength;
+
+            public bool ignoreProration;
+            public bool ignoreHitstunScaling;
+            public bool ignorePushbackScaling;
         }
         
         [SerializeField] private bool groundedFoldoutGroup;

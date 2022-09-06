@@ -29,6 +29,7 @@ MonoBehaviour:
   initialGroundedState: 1
   stateType: 4
   maxUsesInString: -1
+  selfChainable: 0
   allowBaseStateTransitions: 1
   inputSequence:
     executeWindow: 3
@@ -120,7 +121,7 @@ MonoBehaviour:
         parent: -1
         children: 
         frameRanges:
-        - {x: 0, y: -1}
+        - {x: 1, y: -1}
         condition:
           rid: -2
         boxType: 0
@@ -138,7 +139,7 @@ MonoBehaviour:
         parent: -1
         children: 
         frameRanges:
-        - {x: 0, y: -1}
+        - {x: 1, y: -1}
         condition:
           rid: -2
         boxType: 2

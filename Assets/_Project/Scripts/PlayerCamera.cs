@@ -177,10 +177,48 @@ namespace rwby
             }
         }
 
+        public float lowStrength;
+        public float mediumStrength;
+        public float highStrength;
         public override void Render()
         {
             base.Render();
             CamUpdate();
+
+            if (followTarget)
+            {
+                if (followTarget.shakeDefinition.shakeStrength == CameraShakeStrength.None
+                    || Runner.Tick > followTarget.shakeDefinition.endFrame)
+                {
+                    foreach (var cs in virtualCameraShake)
+                    {
+                        cs.Reset();
+                    }
+                    return;
+                }
+
+                switch (followTarget.shakeDefinition.shakeStrength)
+                {
+                    case CameraShakeStrength.Low:
+                        foreach (var cs in virtualCameraShake)
+                        {
+                            cs.ShakeCamera(lowStrength, (float)(Runner.Tick-followTarget.shakeDefinition.startFrame) / (float)(followTarget.shakeDefinition.endFrame-followTarget.shakeDefinition.startFrame) );
+                        }
+                        break;
+                    case CameraShakeStrength.Medium:
+                        foreach (var cs in virtualCameraShake)
+                        {
+                            cs.ShakeCamera(mediumStrength, (float)(Runner.Tick-followTarget.shakeDefinition.startFrame) / (float)(followTarget.shakeDefinition.endFrame-followTarget.shakeDefinition.startFrame) );
+                        }
+                        break;
+                    case CameraShakeStrength.High:
+                        foreach (var cs in virtualCameraShake)
+                        {
+                            cs.ShakeCamera(highStrength, (float)(Runner.Tick-followTarget.shakeDefinition.startFrame) / (float)(followTarget.shakeDefinition.endFrame-followTarget.shakeDefinition.startFrame) );
+                        }
+                        break;
+                }
+            }
         }
 
         public virtual void CamUpdate()

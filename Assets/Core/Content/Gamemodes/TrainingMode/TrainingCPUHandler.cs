@@ -5,22 +5,31 @@ using Fusion;
 using rwby.core.training;
 using UnityEngine;
 
-namespace rwby
+namespace rwby.core.training
 {
-    [OrderAfter(typeof(GamemodeTraining))]
+    [OrderAfter(typeof(ClientManager))]
+    [OrderBefore(typeof(FighterInputManager))]
     public class TrainingCPUHandler : NetworkBehaviour, IInputProvider
     {
         public delegate void EmptyAction(TrainingCPUHandler cpuHandler);
         public event EmptyAction OnCPUListUpdated;
     
         [Networked(OnChanged = nameof(CpuListUpdated)), Capacity(4)] public NetworkArray<TrainingCPUReference> cpus { get; }
+        [Networked(OnChanged = nameof(CpuSettingsUpdated)), Capacity(4)] public NetworkArray<TrainingCPUSettingsDefinition> cpuSettings { get; }
 
-        public GamemodeTraining gamemode;
+        public NetworkPlayerInputData[] testData = new NetworkPlayerInputData[4];
         
+        public GamemodeTraining gamemode;
+
         private static void CpuListUpdated(Changed<TrainingCPUHandler> changed)
         {
             changed.Behaviour.OnCPUListUpdated?.Invoke(changed.Behaviour);
             _ = changed.Behaviour.CheckCPUList();
+        }
+        
+        private static void CpuSettingsUpdated(Changed<TrainingCPUHandler> changed)
+        {
+            
         }
 
         private async UniTask CheckCPUList()
@@ -48,6 +57,8 @@ namespace rwby
                             var fManager = b.GetBehaviour<FighterManager>();
                             b.GetBehaviour<FighterCombatManager>().Team = 0;
                             _ = b.GetBehaviour<FighterManager>().OnFighterLoaded();
+                            b.GetBehaviour<FighterInputManager>().inputProvider = Object;
+                            b.GetBehaviour<FighterInputManager>().inputEnabled = true;
                             fManager.HealthManager.Health = fManager.fighterDefinition.Health;
                             var list = cpus;
                             TrainingCPUReference temp = list[indexTemp];
@@ -61,11 +72,35 @@ namespace rwby
         public override void FixedUpdateNetwork()
         {
             base.FixedUpdateNetwork();
-        }
+            
+            for (int i = 0; i < cpus.Length; i++)
+            {
+                NetworkPlayerInputData id = new NetworkPlayerInputData();
+                if (!cpus[i].objectId.IsValid)
+                {
+                    testData[i] = id;
+                    continue;
+                }
 
+                if (cpuSettings[i].behaviour == 0)
+                {
+                    switch (cpuSettings[i].block)
+                    {
+                        case 0:
+                            break;
+                        case 4:
+                            id.buttons.Set(PlayerInputType.BLOCK, true);
+                            break;
+                    }
+                }
+
+                testData[i] = id;
+            }
+        }
+        
         public NetworkPlayerInputData GetInput(int inputIndex)
         {
-            return new NetworkPlayerInputData();
+            return testData[inputIndex];
         }
     }
 }

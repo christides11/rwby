@@ -6,6 +6,7 @@ using HnSF;
 using HnSF.Fighters;
 using UnityEngine;
 using UnityEngine.Profiling;
+using UnityEngine.UIElements;
 
 namespace rwby
 {
@@ -66,7 +67,7 @@ namespace rwby
                 int stateID = vars.states[i].state.GetState();
                 StateTimeline state = (StateTimeline)(fm.FStateManager.GetState(movesetID, stateID));
 
-                if (!fm.FCombatManager.MovePossible(new MovesetStateIdentifier(movesetID, stateID), state.maxUsesInString)) continue;
+                if (!fm.FCombatManager.MovePossible(new MovesetStateIdentifier(movesetID, stateID), state.maxUsesInString, state.selfChainable)) continue;
                 if (vars.checkInputSequence && !fm.FCombatManager.CheckForInputSequence(state.inputSequence, holdInput: state.inputSequenceAsHoldInputs)) continue;
                 if (vars.checkCondition && !fm.FStateManager.TryCondition(state, state.condition, arg4)) continue;
 
@@ -467,13 +468,15 @@ namespace rwby
             FighterManager f = (FighterManager)fighter;
             VarModifyEffectSet vars = (VarModifyEffectSet)variables;
 
+            Vector3 pBase = Vector3.zero;
+            if (vars.OffsetStartAtFighter) pBase = f.myTransform.position;
             switch (vars.modifyType)
             {
                 case VarModifyType.SET:
                     f.fighterEffector.SetEffects(vars.wantedEffects);
                     break;
                 case VarModifyType.ADD:
-                    f.fighterEffector.AddEffects(vars.wantedEffects);
+                    f.fighterEffector.AddEffects(vars.wantedEffects, pBase, !vars.doNotAddToSet);
                     break;
             }
         }
@@ -515,20 +518,7 @@ namespace rwby
             FighterManager fm = (FighterManager)fighter;
             VarCreateProjectile vars = (VarCreateProjectile)variables;
 
-            var pos = fm.myTransform.position;
-            pos += fm.myTransform.forward * vars.positionOffset.z;
-            pos += fm.myTransform.right * vars.positionOffset.x;
-            pos += fm.myTransform.up * vars.positionOffset.y;
-            
-            var predictionKey = new NetworkObjectPredictionKey {Byte0 = (byte) fm.Runner.Simulation.Tick, Byte1 = (byte)fm.Object.InputAuthority.PlayerId};
-            
-            fm.Runner.Spawn(vars.projectile, pos, Quaternion.Euler(fm.myTransform.eulerAngles + vars.rotation), fm.Object.InputAuthority,
-                (a, b) =>
-                {
-                    b.GetComponent<ProjectileBase>().owner = fm.Object;
-                    b.GetComponent<ProjectileBase>().team = fm.FCombatManager.Team;
-                }, 
-                predictionKey);
+            fm.projectileManager.CreateProjectile(vars.def, fm.myTransform.position);
         }
         
         public static void ClearHitList(IFighterBase fighter, IStateVariables variables, HnSF.StateTimeline arg3, int arg4)

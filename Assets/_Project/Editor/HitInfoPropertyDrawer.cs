@@ -24,11 +24,13 @@ namespace rwby
             
             if (property.FindPropertyRelative("hit").FindPropertyRelative("hitEffectbank").isExpanded) val += lineValue * 2;
             if (property.FindPropertyRelative("counterhit").FindPropertyRelative("hitEffectbank").isExpanded) val += lineValue * 2;
+            if (property.FindPropertyRelative("hit").FindPropertyRelative("blockEffectbank").isExpanded) val += lineValue * 2;
+            if (property.FindPropertyRelative("counterhit").FindPropertyRelative("blockEffectbank").isExpanded) val += lineValue * 2;
             if (property.FindPropertyRelative("hit").FindPropertyRelative("hitSoundbank").isExpanded) val += lineValue * 2;
             if (property.FindPropertyRelative("counterhit").FindPropertyRelative("hitSoundbank").isExpanded) val += lineValue * 2;
             //val += lineValue * 9;
 
-            val += lineValue * 25 * windowsOpen;
+            val += lineValue * 34 * windowsOpen;
             return val;
         }
 
@@ -66,6 +68,8 @@ namespace rwby
         private void DrawTopGroup(ref Rect position, SerializedProperty property)
         {
             EditorGUI.LabelField(new Rect(position.x, GetLineY(), position.width, lineHeight), "GENERAL", EditorStyles.boldLabel);
+            EditorGUI.PropertyField(new Rect(position.x, GetLineY(), position.width, lineHeight), property.FindPropertyRelative("damage"));
+            EditorGUI.PropertyField(new Rect(position.x, GetLineY(), position.width, lineHeight), property.FindPropertyRelative("ignoreProration"));
             EditorGUI.PropertyField(new Rect(position.x, GetLineY(), position.width, lineHeight), property.FindPropertyRelative("noKill"));
             EditorGUI.PropertyField(new Rect(position.x, GetLineY(), position.width, lineHeight), property.FindPropertyRelative("groundHitState"));
             EditorGUI.PropertyField(new Rect(position.x, GetLineY(), position.width, lineHeight), property.FindPropertyRelative("airHitState"));
@@ -101,15 +105,17 @@ namespace rwby
                         property.FindPropertyRelative("pullPushMaxDistance"));
                     break;
             }
+            EditorGUI.PropertyField(new Rect(position.x, GetLineY(), position.width, lineHeight), property.FindPropertyRelative("blockLift"));
             
             EditorGUI.LabelField(new Rect(position.x, GetLineY(), position.width, lineHeight), "STUN", EditorStyles.boldLabel);
             EditorGUI.PropertyField(new Rect(position.x, GetLineY(), position.width, lineHeight), property.FindPropertyRelative("attackerHitstop"));
             EditorGUI.PropertyField(new Rect(position.x, GetLineY(), position.width, lineHeight), property.FindPropertyRelative("hitstop"));
             EditorGUI.PropertyField(new Rect(position.x, GetLineY(), position.width, lineHeight), property.FindPropertyRelative("hitstun"));
+            EditorGUI.PropertyField(new Rect(position.x, GetLineY(), position.width, lineHeight), property.FindPropertyRelative("ignoreHitstunScaling"));
             EditorGUI.PropertyField(new Rect(position.x, GetLineY(), position.width, lineHeight), property.FindPropertyRelative("untech"));
             EditorGUI.PropertyField(new Rect(position.x, GetLineY(), position.width, lineHeight), property.FindPropertyRelative("blockstun"));
             EditorGUI.PropertyField(new Rect(position.x, GetLineY(), position.width, lineHeight), property.FindPropertyRelative("initialProration"));
-            EditorGUI.PropertyField(new Rect(position.x, GetLineY(), position.width, lineHeight), property.FindPropertyRelative("forcedProration"));
+            EditorGUI.PropertyField(new Rect(position.x, GetLineY(), position.width, lineHeight), property.FindPropertyRelative("comboProration"));
             
             EditorGUI.LabelField(new Rect(position.x, GetLineY(), position.width, lineHeight), "EFFECTS", EditorStyles.boldLabel);
             EditorGUI.PropertyField(new Rect(position.x, GetLineY(), position.width, lineHeight), property.FindPropertyRelative("hitEffectbank"), true);
@@ -119,6 +125,13 @@ namespace rwby
                 GetLineY();
             }
             EditorGUI.PropertyField(new Rect(position.x, GetLineY(), position.width, lineHeight), property.FindPropertyRelative("hitEffect"), true);
+            EditorGUI.PropertyField(new Rect(position.x, GetLineY(), position.width, lineHeight), property.FindPropertyRelative("blockEffectbank"), true);
+            if (property.FindPropertyRelative("blockEffectbank").isExpanded)
+            {
+                GetLineY();
+                GetLineY();
+            }
+            EditorGUI.PropertyField(new Rect(position.x, GetLineY(), position.width, lineHeight), property.FindPropertyRelative("blockEffect"), true);
             EditorGUI.PropertyField(new Rect(position.x, GetLineY(), position.width, lineHeight), property.FindPropertyRelative("hitSoundbank"), true);
             if (property.FindPropertyRelative("hitSoundbank").isExpanded)
             {
@@ -126,6 +139,9 @@ namespace rwby
                 GetLineY();
             }
             EditorGUI.PropertyField(new Rect(position.x, GetLineY(), position.width, lineHeight), property.FindPropertyRelative("hitSound"), true);
+            EditorGUI.PropertyField(new Rect(position.x, GetLineY(), position.width, lineHeight), property.FindPropertyRelative("cameraShakeLength"), true);
+            EditorGUI.PropertyField(new Rect(position.x, GetLineY(), position.width, lineHeight), property.FindPropertyRelative("hitCameraShakeStrength"), true);
+            EditorGUI.PropertyField(new Rect(position.x, GetLineY(), position.width, lineHeight), property.FindPropertyRelative("blockCameraShakeStrength"), true);
         }
 
         protected override void DrawGeneralGroup(ref Rect position, SerializedProperty property)

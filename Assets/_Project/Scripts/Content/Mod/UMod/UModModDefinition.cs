@@ -7,13 +7,12 @@ namespace rwby
     [CreateAssetMenu(fileName = "UModModDefinition", menuName = "Mahou/Content/UMod/ModDefinition")]
     public class UModModDefinition : ScriptableObject, IModDefinition
     {
+        public string Description { get { return description; } }
         public ContentGUID ModGUID { get { return guid; } }
         public string ModID {
             get { return guid.ToString(); }
         }
-        public string Description { get { return description; } }
         public Dictionary<int, IContentParser> ContentParsers { get { return contentParserDictionary; } }
-
         [field: SerializeField] public ModCompatibilityLevel CompatibilityLevel { get; } = ModCompatibilityLevel.OnlyIfContentSelected;
         [field: SerializeField] public ModVersionStrictness VersionStrictness { get; } = ModVersionStrictness.NeedSameVersion;
         

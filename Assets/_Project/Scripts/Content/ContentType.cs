@@ -10,6 +10,7 @@ namespace rwby
         Soundbank,
         Effectbank,
         Animationbank,
-        HUDElementbank
+        HUDElementbank,
+        Projectilebank
     }
 }

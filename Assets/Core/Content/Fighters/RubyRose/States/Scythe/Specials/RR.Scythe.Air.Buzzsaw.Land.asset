@@ -32,6 +32,7 @@ MonoBehaviour:
   initialGroundedState: 1
   stateType: 2
   maxUsesInString: 1
+  selfChainable: 0
   allowBaseStateTransitions: 1
   inputSequence:
     executeWindow: 3
@@ -86,13 +87,14 @@ MonoBehaviour:
         m_PostInfinity: 2
         m_RotationOrder: 4
       pullPushMaxDistance: 10
+      blockLift: 0
       attackerHitstop: 8
       hitstop: 8
       hitstun: 60
       blockstun: 15
       untech: 60
       initialProration: 0
-      forcedProration: 0
+      comboProration: 0
       damage: 0
       hitEffectbank:
         modGUID:
@@ -100,12 +102,21 @@ MonoBehaviour:
         contentGUID:
           guid: 
       hitEffect: 
+      blockEffectbank:
+        modGUID:
+          guid: 
+        contentGUID:
+          guid: 
+      blockEffect: 
       hitSoundbank:
         modGUID:
           guid: 
         contentGUID:
           guid: 
       hitSound: 
+      hitCameraShakeStrength: 2
+      blockCameraShakeStrength: 2
+      cameraShakeLength: 8
     counterhit:
       groundHitState: 0
       airHitState: 0
@@ -128,13 +139,14 @@ MonoBehaviour:
         m_PostInfinity: 2
         m_RotationOrder: 4
       pullPushMaxDistance: 0
+      blockLift: 0
       attackerHitstop: 0
       hitstop: 0
       hitstun: 0
       blockstun: 0
       untech: 0
       initialProration: 0
-      forcedProration: 0
+      comboProration: 0
       damage: 0
       hitEffectbank:
         modGUID:
@@ -142,12 +154,21 @@ MonoBehaviour:
         contentGUID:
           guid: 
       hitEffect: 
+      blockEffectbank:
+        modGUID:
+          guid: 
+        contentGUID:
+          guid: 
+      blockEffect: 
       hitSoundbank:
         modGUID:
           guid: 
         contentGUID:
           guid: 
       hitSound: 
+      hitCameraShakeStrength: 0
+      blockCameraShakeStrength: 0
+      cameraShakeLength: 0
   throwboxInfo: []
   hurtboxInfo: []
   references:

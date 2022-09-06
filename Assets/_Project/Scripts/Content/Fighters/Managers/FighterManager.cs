@@ -66,6 +66,7 @@ namespace rwby
         public FighterEffector fighterEffector;
         public FighterAnimator fighterAnimator;
         public FighterSounder fighterSounder;
+        public FighterProjectileManager projectileManager;
         [SerializeField] protected Transform targetOrigin;
         public Transform visualTransform;
         public Transform myTransform;
@@ -97,6 +98,8 @@ namespace rwby
         // Throwing
         [Networked] public NetworkObject thrower { get; set; }
         [Networked, Capacity(4)] public NetworkArray<NetworkObject> throwees => default;
+
+        [Networked] public CmaeraShakeDefinition shakeDefinition { get; set; }
 
         public virtual async UniTask<bool> OnFighterLoaded()
         {
@@ -136,7 +139,7 @@ namespace rwby
             base.Render();
             shieldVisual.SetActive(combatManager.BlockState != BlockStateType.NONE);
             physicsManager.kCC.Motor.visualExtraOffset = Vector3.zero;
-            if (FCombatManager.HitStop == 0 || FCombatManager.HitStun == 0) return;
+            if (FCombatManager.HitStop == 0 || (FCombatManager.HitStun == 0 && FCombatManager.BlockStun == 0) ) return;
             Vector3 dir = shakeDirs[currentShakeDirection].z * transform.forward
                           + shakeDirs[currentShakeDirection].x * transform.right;
             physicsManager.kCC.Motor.visualExtraOffset = dir * hitstopShakeDistance * hitstopDir;
@@ -144,6 +147,9 @@ namespace rwby
 
         public float groundSlopeAngle;
         public Vector3 groundSlopeDir;
+
+        public CameraShakeStrength testStrength;
+        public int testShakeLength;
         public override void FixedUpdateNetwork()
         {
             GetFloorAngle();
@@ -164,7 +170,6 @@ namespace rwby
             HitstopShake();
             HandleLockon();
 
-            
             if (FCombatManager.HitStop == 0)
             {
                 if (FCombatManager.BlockStun > 0)

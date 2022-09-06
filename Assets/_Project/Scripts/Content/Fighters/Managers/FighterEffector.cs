@@ -33,7 +33,7 @@ namespace rwby
             AddEffects(wantedEffects);
         }
 
-        public void AddEffects(EffectReference[] wantedEffects)
+        public void AddEffects(EffectReference[] wantedEffects, Vector3 posBase = default, bool addToEffectSet = true)
         {
             var temp = effects;
             for (int i = 0; i < wantedEffects.Length; i++)
@@ -44,13 +44,13 @@ namespace rwby
                     effect = banks[bankMap[wantedEffects[i].effectbank]].EffectMap[wantedEffects[i].effect]+1,
                     frame = 0,
                     parented = wantedEffects[i].parented,
-                    pos = wantedEffects[i].offset,
+                    pos = posBase + wantedEffects[i].offset,
                     rot = wantedEffects[i].rotation,
                     scale = wantedEffects[i].scale
                 });
                 autoIncrementEffect.Set((effectBufferPos % 10), wantedEffects[i].autoIncrement);
 
-                currentEffectIndex.Add(effectBufferPos);
+                if(addToEffectSet) currentEffectIndex.Add(effectBufferPos);
                 effectBufferPos++;
             }
             effects = temp;
@@ -169,11 +169,17 @@ namespace rwby
                 
                 if (currentEffectsRepresentation.effects[i] != effects.effects[i])
                 {
-                    if(effectObjects[i]) Destroy(effectObjects[i].gameObject);
                     var e = GetEffect(effects.effects[i]);
-                    effectObjects[i] = effects.effects[i].parented ?
-                        GameObject.Instantiate(e, transform, false)
-                        : GameObject.Instantiate(e, effects.effects[i].pos, Quaternion.identity);
+                    if (effectObjects[i] && (effectObjects[i].bank != effects.effects[i].bank ||
+                                             effectObjects[i].effect != effects.effects[i].effect)
+                        || effectObjects[i] == null)
+                    {
+                        if(effectObjects[i]) Destroy(effectObjects[i].gameObject);
+                        effectObjects[i] = GameObject.Instantiate(e, transform, false);
+                        effectObjects[i].bank = effects.effects[i].bank;
+                        effectObjects[i].effect = effects.effects[i].effect;
+                    }
+                    effectObjects[i].transform.SetParent(effects.effects[i].parented ? transform : null, false);
                     effectObjects[i].transform.localPosition = effects.effects[i].pos;
                     effectObjects[i].transform.localRotation = Quaternion.Euler(effects.effects[i].rot);
                     effectObjects[i].transform.localScale = effects.effects[i].scale;

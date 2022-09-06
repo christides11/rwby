@@ -23,9 +23,12 @@ MonoBehaviour:
   - rid: 8688056409313247243
   - rid: 8688056331001921555
   - rid: 8688056409313247245
+  - rid: 8688056833868562435
+  auraRequirement: 0
   initialGroundedState: 2
   stateType: 1
   maxUsesInString: -1
+  selfChainable: 0
   allowBaseStateTransitions: 1
   inputSequence:
     executeWindow: 3
@@ -37,7 +40,9 @@ MonoBehaviour:
     rid: -2
   hitboxInfo: []
   throwboxInfo: []
-  hurtboxInfo: []
+  hurtboxInfo:
+  - hitInvincible: 0
+    projectileInvincible: 0
   references:
     version: 2
     RefIds:
@@ -87,3 +92,21 @@ MonoBehaviour:
         condition:
           rid: -2
         asset: {fileID: 11400000, guid: 852b081cfd9efbb449cca3171458f8cc, type: 2}
+    - rid: 8688056833868562435
+      type: {class: VarCreateBox, ns: rwby, asm: rwby.csharp}
+      data:
+        name: Hurtbox
+        id: 4
+        parent: -1
+        children: 
+        frameRanges:
+        - {x: 1, y: -1}
+        condition:
+          rid: -2
+        boxType: 0
+        attachedTo: 0
+        shape: 0
+        offset: {x: 0, y: 1, z: 0}
+        boxExtents: {x: 0.4, y: 1, z: 0.4}
+        radius: 0
+        definitionIndex: 0
