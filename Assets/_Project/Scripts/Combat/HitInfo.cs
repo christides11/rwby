@@ -51,6 +51,14 @@ namespace rwby
             public string blockEffect;
             public ModObjectSetContentReference hitSoundbank;
             public string hitSound;
+
+            public CameraShakeStrength hitCameraShakeStrength;
+            public CameraShakeStrength blockCameraShakeStrength;
+            public int cameraShakeLength;
+
+            public bool ignoreProration;
+            public bool ignoreHitstunScaling;
+            public bool ignorePushbackScaling;
         }
         
         [SerializeField] private bool groundedFoldoutGroup;

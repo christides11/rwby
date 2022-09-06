@@ -116,8 +116,8 @@ ParticleSystem:
     startLifetime:
       serializedVersion: 2
       minMaxState: 3
-      scalar: 0.5
-      minScalar: 0.4
+      scalar: 0.4
+      minScalar: 0.3
       maxCurve:
         serializedVersion: 2
         m_Curve:
@@ -285,8 +285,8 @@ ParticleSystem:
     startSize:
       serializedVersion: 2
       minMaxState: 3
-      scalar: 0.3
-      minScalar: 0.1
+      scalar: 0.4
+      minScalar: 0.3
       maxCurve:
         serializedVersion: 2
         m_Curve:
@@ -1364,7 +1364,7 @@ ParticleSystem:
         m_RotationOrder: 4
     separateAxes: 1
   ColorModule:
-    enabled: 1
+    enabled: 0
     gradient:
       serializedVersion: 2
       minMaxState: 1
@@ -4923,6 +4923,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5bdac099d79bbee458d75c45af9cfc8f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  bank: 0
+  effect: 0
   animancer: {fileID: 1693362391}
   clip: {fileID: 7400000, guid: 91df28a80d2a2994abf1e099c22afe3f, type: 2}
 --- !u!1 &8215432541463543336
@@ -4969,6 +4971,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b1b5d4ab8b0e47a438b92b147fe43a48, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  bank: 0
+  effect: 0
   particleSystems:
   - {fileID: 3692550686476827763}
 --- !u!1 &9004856356674258695
@@ -5020,6 +5024,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 618f023f1e0fe7844b5a6e7241a82784, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  bank: 0
+  effect: 0
   childEffects:
   - {fileID: 4683491595445656564}
   - {fileID: 5275167458909255887}

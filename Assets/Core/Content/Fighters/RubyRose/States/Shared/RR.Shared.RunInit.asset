@@ -19,16 +19,23 @@ MonoBehaviour:
   autoIncrement: 1
   autoLoop: 1
   autoLoopFrame: 1
-  data: []
-  stateGroundedGroup: 1
+  data:
+  - rid: 7270848428946489345
+  - rid: 7270848428946489348
+  - rid: 7270848428946489351
+  - rid: 7270848428946489352
+  auraRequirement: 0
+  initialGroundedState: 1
   stateType: 1
   maxUsesInString: -1
+  selfChainable: 0
   allowBaseStateTransitions: 1
   inputSequence:
     executeWindow: 3
     executeInputs: []
     sequenceWindow: 8
     sequenceInputs: []
+  inputSequenceAsHoldInputs: 0
   condition:
     rid: -2
   hitboxInfo: []
@@ -39,3 +46,55 @@ MonoBehaviour:
     RefIds:
     - rid: -2
       type: {class: , ns: , asm: }
+    - rid: 7270848428946489345
+      type: {class: VarEmpty, ns: rwby, asm: rwby.csharp}
+      data:
+        name: Scythe
+        id: 0
+        parent: -1
+        children: 02000000
+        frameRanges: []
+        condition:
+          rid: 7270848428946489346
+    - rid: 7270848428946489346
+      type: {class: ConditionMoveset, ns: rwby, asm: rwby.csharp}
+      data:
+        moveset: 0
+    - rid: 7270848428946489348
+      type: {class: VarEmpty, ns: rwby, asm: rwby.csharp}
+      data:
+        name: Rifle
+        id: 1
+        parent: -1
+        children: 03000000
+        frameRanges: []
+        condition:
+          rid: 7270848428946489349
+    - rid: 7270848428946489349
+      type: {class: ConditionMoveset, ns: rwby, asm: rwby.csharp}
+      data:
+        moveset: 1
+    - rid: 7270848428946489351
+      type: {class: VarExternal, ns: rwby, asm: rwby.csharp}
+      data:
+        name: Try Grd Atk
+        id: 2
+        parent: 0
+        children: 
+        frameRanges:
+        - {x: 5, y: -1}
+        condition:
+          rid: -2
+        asset: {fileID: 11400000, guid: 38d47b53b1c6fa24580e163448503c28, type: 2}
+    - rid: 7270848428946489352
+      type: {class: VarExternal, ns: rwby, asm: rwby.csharp}
+      data:
+        name: Try Grd Atk
+        id: 3
+        parent: 1
+        children: 
+        frameRanges:
+        - {x: 5, y: -1}
+        condition:
+          rid: -2
+        asset: {fileID: 11400000, guid: ba688ef34edd2d84ea6a5b2e1e2af06e, type: 2}

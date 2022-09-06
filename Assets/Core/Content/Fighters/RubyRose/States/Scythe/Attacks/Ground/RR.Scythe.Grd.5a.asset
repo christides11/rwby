@@ -34,6 +34,7 @@ MonoBehaviour:
   - rid: 8688056807901888513
   - rid: 8688056833868562432
   - rid: 8688056833868562434
+  - rid: 7270848428946489353
   auraRequirement: 0
   initialGroundedState: 1
   stateType: 2
@@ -124,6 +125,9 @@ MonoBehaviour:
         contentGUID:
           guid: 
       hitSound: 
+      hitCameraShakeStrength: 1
+      blockCameraShakeStrength: 1
+      cameraShakeLength: 4
     counterhit:
       groundHitState: 30
       airHitState: 32
@@ -173,6 +177,9 @@ MonoBehaviour:
         contentGUID:
           guid: 
       hitSound: 
+      hitCameraShakeStrength: 0
+      blockCameraShakeStrength: 0
+      cameraShakeLength: 0
   throwboxInfo: []
   hurtboxInfo: []
   references:
@@ -241,6 +248,28 @@ MonoBehaviour:
         statReference: 0
         value: 30
         variable: 0
+    - rid: 7270848428946489353
+      type: {class: VarRotateTowards, ns: rwby, asm: rwby.csharp}
+      data:
+        name: 
+        id: 15
+        parent: -1
+        children: 
+        frameRanges:
+        - {x: 1, y: 3}
+        condition:
+          rid: -2
+        rotateTowards: 0
+        eulerAngle: {x: 0, y: 0, z: 0}
+        rotateTowardsTarget: 1
+        rotationSpeed:
+          rid: 7270848428946489354
+    - rid: 7270848428946489354
+      type: {class: FighterStatReferenceFloatBase, ns: rwby, asm: rwby.csharp}
+      data:
+        inverse: 0
+        statReference: 0
+        value: 60
     - rid: 8688056217396838433
       type: {class: VarCreateBox, ns: rwby, asm: rwby.csharp}
       data:

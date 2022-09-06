@@ -104,7 +104,7 @@ MonoBehaviour:
       blockstun: 15
       untech: 60
       initialProration: 0
-      forcedProration: 0
+      comboProration: 0
       damage: 0
       hitEffectbank:
         modGUID:
@@ -112,12 +112,21 @@ MonoBehaviour:
         contentGUID:
           guid: 
       hitEffect: 
+      blockEffectbank:
+        modGUID:
+          guid: 
+        contentGUID:
+          guid: 
+      blockEffect: 
       hitSoundbank:
         modGUID:
           guid: 
         contentGUID:
           guid: 
       hitSound: 
+      hitCameraShakeStrength: 1
+      blockCameraShakeStrength: 1
+      cameraShakeLength: 4
     counterhit:
       groundHitState: 0
       airHitState: 0
@@ -147,7 +156,7 @@ MonoBehaviour:
       blockstun: 0
       untech: 0
       initialProration: 0
-      forcedProration: 0
+      comboProration: 0
       damage: 0
       hitEffectbank:
         modGUID:
@@ -155,12 +164,21 @@ MonoBehaviour:
         contentGUID:
           guid: 
       hitEffect: 
+      blockEffectbank:
+        modGUID:
+          guid: 
+        contentGUID:
+          guid: 
+      blockEffect: 
       hitSoundbank:
         modGUID:
           guid: 
         contentGUID:
           guid: 
       hitSound: 
+      hitCameraShakeStrength: 0
+      blockCameraShakeStrength: 0
+      cameraShakeLength: 0
   throwboxInfo: []
   hurtboxInfo: []
   references:

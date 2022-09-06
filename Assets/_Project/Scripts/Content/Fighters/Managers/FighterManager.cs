@@ -98,6 +98,8 @@ namespace rwby
         [Networked] public NetworkObject thrower { get; set; }
         [Networked, Capacity(4)] public NetworkArray<NetworkObject> throwees => default;
 
+        [Networked] public CmaeraShakeDefinition shakeDefinition { get; set; }
+
         public virtual async UniTask<bool> OnFighterLoaded()
         {
             return true;
@@ -144,6 +146,9 @@ namespace rwby
 
         public float groundSlopeAngle;
         public Vector3 groundSlopeDir;
+
+        public CameraShakeStrength testStrength;
+        public int testShakeLength;
         public override void FixedUpdateNetwork()
         {
             GetFloorAngle();
@@ -164,7 +169,6 @@ namespace rwby
             HitstopShake();
             HandleLockon();
 
-            
             if (FCombatManager.HitStop == 0)
             {
                 if (FCombatManager.BlockStun > 0)

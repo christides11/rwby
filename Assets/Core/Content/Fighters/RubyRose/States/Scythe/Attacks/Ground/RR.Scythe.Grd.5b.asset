@@ -78,9 +78,9 @@ MonoBehaviour:
       blockLift: 0
       attackerHitstop: 4
       hitstop: 4
-      hitstun: 12
+      hitstun: 20
       blockstun: 9
-      untech: 12
+      untech: 20
       initialProration: 0
       comboProration: 0.15
       damage: 300
@@ -102,6 +102,9 @@ MonoBehaviour:
         contentGUID:
           guid: 
       hitSound: 
+      hitCameraShakeStrength: 1
+      blockCameraShakeStrength: 1
+      cameraShakeLength: 4
     counterhit:
       groundHitState: 30
       airHitState: 32
@@ -151,6 +154,9 @@ MonoBehaviour:
         contentGUID:
           guid: 
       hitSound: 
+      hitCameraShakeStrength: 0
+      blockCameraShakeStrength: 0
+      cameraShakeLength: 0
   throwboxInfo: []
   hurtboxInfo: []
   references:

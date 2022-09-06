@@ -82,6 +82,13 @@ namespace rwby
                     volume = 1.0f
                 }});
             }
+            
+            manager.shakeDefinition = new CmaeraShakeDefinition()
+            {
+                shakeStrength = hitReaction.hitInfoGroup.hitCameraShakeStrength,
+                startFrame = Runner.Tick,
+                endFrame = Runner.Tick + hitReaction.hitInfoGroup.cameraShakeLength
+            };
         }
 
         public override void HandleBlockReaction(CustomHitbox hitbox, Hurtbox enemyHurtbox, HurtInfo hurtInfo,
@@ -102,6 +109,13 @@ namespace rwby
                     autoIncrement = true
                 } });
             }
+            
+            manager.shakeDefinition = new CmaeraShakeDefinition()
+            {
+                shakeStrength = hitReaction.hitInfoGroup.hitCameraShakeStrength,
+                startFrame = Runner.Tick,
+                endFrame = Runner.Tick + hitReaction.hitInfoGroup.cameraShakeLength
+            };
         }
 
         public override void DoClash(CustomHitbox hitbox, CustomHitbox enemyHitbox)

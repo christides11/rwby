@@ -223,7 +223,7 @@ namespace rwby
                 {
                     combatManager.ResetString();
                     combatManager.ResetProration();
-                    combatManager.ComboTime = 0;
+                    combatManager.ComboStartTick = 0;
                     combatManager.ComboCounter = 0;
                 }
             }else if (currentState.stateType == StateType.ATTACK)
