@@ -519,6 +519,27 @@ namespace rwby
             VarCreateProjectile vars = (VarCreateProjectile)variables;
 
             fm.projectileManager.CreateProjectile(vars.def, fm.myTransform.position);
+            var p = fm.projectileManager.GetLatestProjectile();
+
+            Vector3 f = fm.myTransform.forward * vars.force.z
+                        + fm.myTransform.right * vars.force.x
+                        + fm.myTransform.up * vars.force.y;
+            if ((vars.pointTowardsLockonTargetXZ || vars.pointTowardsLockonTargetY) && fm.CurrentTarget != null)
+            {
+                Vector3 dir = (fm.CurrentTarget.transform.position - fm.myTransform.position).normalized;
+                
+                if (vars.pointTowardsLockonTargetXZ)
+                {
+                    // TODO: x force
+                    f.x = 0;
+                    f.z = 0;
+                    var dirNoY = dir;
+                    if(!vars.pointTowardsLockonTargetY) dirNoY.y = 0;
+                    f += dirNoY * vars.force.z;
+                }
+                // TODO: Set rotation
+            }
+            p.force = f;
         }
         
         public static void ClearHitList(IFighterBase fighter, IStateVariables variables, HnSF.StateTimeline arg3, int arg4)

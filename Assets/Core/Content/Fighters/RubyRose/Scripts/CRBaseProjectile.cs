@@ -32,8 +32,8 @@ namespace rwby
                 Runner.Despawn(Object, true);
                 return;
             }
-            //boxManager.AddBox(box.boxType, box.attachedTo, box.shape, box.offset, box.boxExtents, box.radius,
-            //    box.definitionIndex, this);
+            boxManager.AddBox(box.boxType, box.attachedTo, box.shape, box.offset, box.boxExtents, box.radius,
+                box.definitionIndex, this);
         }
     }
 }

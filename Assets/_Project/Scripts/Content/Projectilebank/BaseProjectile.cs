@@ -13,6 +13,7 @@ namespace rwby
         [Networked, Capacity(5)] public NetworkLinkedList<IDGroupCollisionInfo> hitObjects => default;
         [Networked] public NetworkObject owner { get; set; }
         [Networked] public int team { get; set; }
+        [Networked] public Vector3 force { get; set; }
 
         public HitInfo[] HitboxInfo
         {
@@ -38,6 +39,12 @@ namespace rwby
         {
             base.FixedUpdateNetwork();
             boxManager.ResetAllBoxes();
+            Move();
+        }
+
+        public virtual void Move()
+        {
+            transform.position += force * Runner.DeltaTime;
         }
 
         public bool IsHitHurtboxValid(CustomHitbox atackerHitbox, Hurtbox h)

@@ -31,6 +31,7 @@ namespace rwby
 
             int bank = bankMap[projectileCreateDefinition.projectilebank];
             int projectileInx = banks[bank].ProjectileMap[projectileCreateDefinition.projectile] + 1;
+            Vector3 s = projectileCreateDefinition.scale;
             
             Vector3 spawnPos = posBase +
                                (projectileCreateDefinition.offset.x * transform.right)
@@ -42,21 +43,27 @@ namespace rwby
             var projectileObj = Runner.Spawn<BaseProjectile>(GetProjectile(projectileCreateDefinition.projectilebank, projectileCreateDefinition.projectile), spawnPos, Quaternion.Euler(spawnRot),
                 Object.InputAuthority, predictionKey: predictionKey, onBeforeSpawned: (runner, o) =>
                 {
-                    InitializeProjectile(runner, o, bank, projectileInx); 
+                    InitializeProjectile(runner, o, bank, projectileInx, s); 
                 });
 
             projectiles.Set(latestProjectileIndex, projectileObj);
         }
 
-        private void InitializeProjectile(NetworkRunner runner, NetworkObject networkObject, int bank, int projectileInx)
+        private void InitializeProjectile(NetworkRunner runner, NetworkObject networkObject, int bank, int projectileInx, Vector3 scale)
         {
             BaseProjectile bp = networkObject.GetBehaviour<BaseProjectile>();
             bp.bank = bank;
             bp.projectile = projectileInx;
             bp.owner = Object;
             bp.team = manager.FCombatManager.Team;
+            bp.transform.localScale = scale;
         }
 
+        public BaseProjectile GetLatestProjectile()
+        {
+            return projectiles[latestProjectileIndex];
+        }
+        
         public override void FixedUpdateNetwork()
         {
             base.FixedUpdateNetwork();

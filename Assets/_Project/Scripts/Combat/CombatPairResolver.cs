@@ -1,9 +1,6 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Fusion;
-using HnSF.Combat;
-using System.Linq;
 
 namespace rwby
 {
@@ -30,13 +27,7 @@ namespace rwby
         {
             foreach (var pair in pairFinder.throwboxCombatPairs)
             {
-                if(receiversResolved.Contains(pair.Key.Item2)) continue; // NetworkObject was already hit this frame by something.
-                //var oppositePairKey = (pair.Key.Item2, pair.Key.Item1);
-                //CombatPairFinder.ThrowboxCombatPair oppositePair = new CombatPairFinder.ThrowboxCombatPair() {  };
-                //if (pairFinder.throwboxCombatPairs.ContainsKey((pair.Key.Item2, pair.Key.Item1)))
-                //{
-                //    oppositePair = pairFinder.throwboxCombatPairs[(pair.Key.Item2, pair.Key.Item1)];
-                //}
+                if(receiversResolved.Contains(pair.Key.Item2)) continue;
                 
                 pair.Key.Item2.GetComponent<IThrowee>().ThroweeInitilization(pair.Key.Item1);
                 pair.Key.Item1.GetComponent<IThrower>().ThrowerInitilization(pair.Key.Item2);

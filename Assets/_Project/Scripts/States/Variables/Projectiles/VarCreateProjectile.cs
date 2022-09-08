@@ -41,5 +41,9 @@ namespace rwby
         public IConditionVariables Condition => condition;
 
         public CreateProjectileDefinition def;
+
+        public Vector3 force;
+        public bool pointTowardsLockonTargetXZ;
+        public bool pointTowardsLockonTargetY;
     }
 }

@@ -44,6 +44,7 @@ namespace rwby
             public float comboProration;
 
             public int damage;
+            public int chipDamage;
 
             public ModObjectSetContentReference hitEffectbank;
             public string hitEffect;
