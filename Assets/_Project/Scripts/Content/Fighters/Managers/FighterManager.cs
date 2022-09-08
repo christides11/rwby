@@ -100,6 +100,7 @@ namespace rwby
         [Networked, Capacity(4)] public NetworkArray<NetworkObject> throwees => default;
 
         [Networked] public CmaeraShakeDefinition shakeDefinition { get; set; }
+        [Networked] public int cameraMode { get; set; }
 
         public virtual async UniTask<bool> OnFighterLoaded()
         {
