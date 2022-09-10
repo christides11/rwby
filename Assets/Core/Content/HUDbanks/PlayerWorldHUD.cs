@@ -10,12 +10,14 @@ using UnityEngine.UI.Extensions;
 
 namespace rwby
 {
-    public class PlayerHUDElement : HUDElement
+    public class PlayerWorldHUD : MonoBehaviour
     {
+        [HideInInspector] public FighterManager fighter;
         public Image healthBarBack;
         public Image healthBarFront;
-        public Image auraBarFront;
-        
+        public Image aurabar;
+        public Image hitstunbar;
+
         [ReadOnly] public int healthValue;
         [ReadOnly] public int maxHealthValue;
         [ReadOnly] public float lerpTime = 0.0f;
@@ -24,15 +26,21 @@ namespace rwby
         public float chipSpeed = 1.0f;
         public float chipDelay = 0.1f;
         
-        public override void InitializeElement(BaseHUD parentHUD)
+        public virtual void Setup(FighterManager fighter)
         {
-            parentHUD.playerFighter.HealthManager.OnHealthDecreased += HealthDecreased;
-            parentHUD.playerFighter.HealthManager.OnHealthIncreased += HealthIncreased;
-            parentHUD.playerFighter.FCombatManager.OnAuraDecreased += AuraDecreased;
-            parentHUD.playerFighter.FCombatManager.OnAuraIncreased += AuraIncreased;
-            healthValue = parentHUD.playerFighter.HealthManager.Health;
-            maxHealthValue = parentHUD.playerFighter.fighterDefinition.Health;
-            lerpTime = -chipDelay;
+            this.fighter = fighter;
+            fighter.HealthManager.OnHealthDecreased += HealthDecreased;
+            fighter.HealthManager.OnHealthIncreased += HealthIncreased;
+            fighter.FCombatManager.OnAuraDecreased += AuraDecreased;
+            fighter.FCombatManager.OnAuraIncreased += AuraIncreased;
+            healthValue = fighter.HealthManager.Health;
+            maxHealthValue = fighter.fighterDefinition.Health;
+        }
+        
+        public virtual void UpdateHUD()
+        {
+            UpdateHealthbar();
+            UpdateAurabar();
         }
         
         private void HealthIncreased(HealthManager healthmanager)
@@ -58,13 +66,7 @@ namespace rwby
             auraValue = combatManager.Aura;
             maxAuraValue = maxAura;
         }
-
-        public override void UpdateElement(BaseHUD parentHUD)
-        {
-            UpdateHealthbar();
-            UpdateAurabar();
-        }
-
+        
         private void UpdateHealthbar()
         {
             float fillF = healthBarFront.fillAmount;
@@ -93,7 +95,7 @@ namespace rwby
 
         private void UpdateAurabar()
         {
-            auraBarFront.fillAmount = (float)auraValue / (float)maxAuraValue;
+            aurabar.fillAmount = (float)auraValue / (float)maxAuraValue;
         }
     }
 }

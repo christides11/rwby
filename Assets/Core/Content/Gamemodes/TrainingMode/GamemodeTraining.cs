@@ -254,6 +254,7 @@ namespace rwby.core.training
 
         public async UniTask TransitionToMatch()
         {
+            /*
             IHUDElementbankDefinition HUDElementbank = GameManager.singleton.contentManager.GetContentDefinition<IHUDElementbankDefinition>(hudBankContentReference);
 
             foreach (var p in GameManager.singleton.localPlayerManager.localPlayers)
@@ -264,7 +265,7 @@ namespace rwby.core.training
             }
 
             int startFrame = Runner.Tick + (60 * 2);
-            await UniTask.WaitUntil(() => Runner.Tick >= startFrame);
+            await UniTask.WaitUntil(() => Runner.Tick >= startFrame);*/
             GameModeBase.singleton.GamemodeState = GameModeState.MATCH_IN_PROGRESS;
         }
 
@@ -333,6 +334,8 @@ namespace rwby.core.training
             baseHUD.AddHUDElement(debugInfo.GetComponent<HUDElement>());
             var pHUD = GameObject.Instantiate(HUDElementbank.GetHUDElement("phud"), baseHUD.transform, false);
             baseHUD.AddHUDElement(pHUD.GetComponent<HUDElement>());
+            var worldHUD = GameObject.Instantiate(HUDElementbank.GetHUDElement("worldhud"), baseHUD.transform, false);
+            baseHUD.AddHUDElement(worldHUD.GetComponent<HUDElement>());
 
             foreach (var hbank in fm.fighterDefinition.huds)
             {
