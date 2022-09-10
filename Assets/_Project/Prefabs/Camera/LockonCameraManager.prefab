@@ -130,9 +130,11 @@ GameObject:
   m_Component:
   - component: {fileID: 8412908615955326336}
   - component: {fileID: 1447641996468724921}
+  - component: {fileID: 6137094780267583734}
   - component: {fileID: 5769742830577336205}
+  - component: {fileID: -3747625735395349637}
   m_Layer: 0
-  m_Name: PlayerVirtualCamera
+  m_Name: LockonCameraManager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -197,6 +199,10 @@ MonoBehaviour:
     m_VirtualCamera: {fileID: 9195571207067664808}
     m_ActivateAfter: 0
     m_MinDuration: 0
+  - m_FullHash: 1865307977
+    m_VirtualCamera: {fileID: 0}
+    m_ActivateAfter: 0
+    m_MinDuration: 0
   m_DefaultBlend:
     m_Style: 1
     m_Time: 0.5
@@ -214,6 +220,33 @@ MonoBehaviour:
     m_ParentHash: 756556552
   - m_Hash: -577968692
     m_ParentHash: 756556552
+  - m_Hash: 1865307977
+    m_ParentHash: 756556552
+--- !u!114 &6137094780267583734
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 739280215172345484}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 82e62c82b3be64042ac529dee964cc2f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_ShowImage: 1
+  m_Image: {fileID: 2800000, guid: a42f993e2d480604d9e9af0d65125891, type: 3}
+  m_Aspect: 2
+  m_Alpha: 0
+  m_Center: {x: 0, y: 0}
+  m_Rotation: {x: 0, y: 0, z: 0}
+  m_Scale: {x: 1, y: 1}
+  m_SyncScale: 1
+  m_MuteCamera: 0
+  m_SplitView: 0
+  m_RenderMode: 0
+  m_SortingOrder: 0
+  m_PlaneDistance: 100
 --- !u!95 &5769742830577336205
 Animator:
   serializedVersion: 4
@@ -234,6 +267,53 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!114 &-3747625735395349637
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 739280215172345484}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 75c736e21d0452d4cb05dff60d808abb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  id: 0
+  cam: {fileID: 0}
+  active: 0
+  currentCameraState: 0
+  targetGroup: {fileID: 266714514109184971}
+  virtualStateDrivenCamera: {fileID: 1447641996468724921}
+  virtualCameraAnimator: {fileID: 5769742830577336205}
+  virtualCameras:
+  - {fileID: 4726134681789520758}
+  - {fileID: 6397899412466257497}
+  - {fileID: 9195571207067664808}
+  inputProvider:
+  - {fileID: 1118175827707240841}
+  - {fileID: 1910354587247426349}
+  - {fileID: 2448118380062591044}
+  currentProfile:
+    undeletable: 0
+    version: 0
+    profileName: 
+    behaviours: []
+    joystickMaps: []
+    controllerCam:
+      deadzoneHoz: 0
+      deadzoneVert: 0
+      speedHoz: 0
+      speedVert: 0
+      speedLockOnHoz: 0
+      speedLockOnVert: 0
+    keyboardCam:
+      deadzoneHoz: 0
+      deadzoneVert: 0
+      speedHoz: 0
+      speedVert: 0
+      speedLockOnHoz: 0
+      speedLockOnVert: 0
 --- !u!1 &1067469446411079918
 GameObject:
   m_ObjectHideFlags: 0
@@ -273,7 +353,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1067469446411079918}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e5eb80d8e62d9d145bb50fb783c0f731, type: 3}
   m_Name: 
@@ -281,7 +361,13 @@ MonoBehaviour:
   m_PositionMode: 0
   m_RotationMode: 0
   m_UpdateMethod: 2
-  m_Targets: []
+  m_Targets:
+  - target: {fileID: 0}
+    weight: 1
+    radius: 2
+  - target: {fileID: 0}
+    weight: 0
+    radius: 0
 --- !u!1 &1171121745655039720
 GameObject:
   m_ObjectHideFlags: 0
@@ -382,7 +468,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   virtualCamera: {fileID: 4726134681789520758}
-  shakeIntensity: 0
   shakeCurve:
     serializedVersion: 2
     m_Curve:
@@ -538,7 +623,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   virtualCamera: {fileID: 6397899412466257497}
-  shakeIntensity: 0
   shakeCurve:
     serializedVersion: 2
     m_Curve:
@@ -694,7 +778,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   virtualCamera: {fileID: 9195571207067664808}
-  shakeIntensity: 0
   shakeCurve:
     serializedVersion: 2
     m_Curve:

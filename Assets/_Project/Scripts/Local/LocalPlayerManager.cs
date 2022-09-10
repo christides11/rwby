@@ -32,6 +32,13 @@ namespace rwby
             return localPlayers[playerID];
         }
 
+        public void SetPlayerCameraHandler(int playerID, CameraSwitcher handler)
+        {
+            var temp = localPlayers[playerID];
+            temp.cameraHandler = handler;
+            localPlayers[playerID] = temp;
+        }
+        
         public void SetPlayerCamera(int playerID, Camera camera)
         {
             var temp = localPlayers[playerID];

@@ -33,7 +33,6 @@ MonoBehaviour:
   - rid: 8688056833868562432
   - rid: 8688056833868562434
   - rid: 7270848428946489353
-  - rid: 7270848456140259328
   auraRequirement: 0
   initialGroundedState: 1
   stateType: 2
@@ -277,32 +276,6 @@ MonoBehaviour:
         inverse: 0
         statReference: 0
         value: 60
-    - rid: 7270848456140259328
-      type: {class: VarCreateProjectile, ns: rwby, asm: rwby.csharp}
-      data:
-        name: 
-        id: 16
-        parent: -1
-        children: 
-        frameRanges:
-        - {x: 6, y: 6}
-        condition:
-          rid: -2
-        def:
-          projectilebank:
-            modGUID:
-              guid: 1d292c1f00000000
-            contentGUID:
-              guid: 2c2c000000000000
-          projectile: bullet
-          parented: 0
-          offset: {x: 0, y: 1, z: 2}
-          rotation: {x: 0, y: 0, z: 0}
-          scale: {x: 2, y: 2, z: 3}
-          overrideMode: 0
-        force: {x: 0, y: 0, z: 100}
-        pointTowardsLockonTargetXZ: 1
-        pointTowardsLockonTargetY: 1
     - rid: 8688056217396838433
       type: {class: VarCreateBox, ns: rwby, asm: rwby.csharp}
       data:

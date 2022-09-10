@@ -10,6 +10,7 @@ namespace rwby
         public Canvas canvas;
         public ClientManager client;
         public int playerIndex;
+        public CameraSwitcher cameraSwitcher;
         public FighterManager playerFighter;
 
         public List<HUDElement> hudElements = new List<HUDElement>();

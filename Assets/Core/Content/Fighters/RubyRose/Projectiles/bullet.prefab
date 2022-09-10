@@ -140,12 +140,13 @@ MonoBehaviour:
   _interpolationDataSource: 0
   _owner: {fileID: 0}
   _team: 0
+  _force: {x: 0, y: 0, z: 0}
   boxManager: {fileID: 1766105025849364533}
   hitboxInfo:
   - ID: 0
-    groundedFoldoutGroup: 1
+    groundedFoldoutGroup: 0
     groundedCounterHitFoldoutGroup: 0
-    hitStateGroundedGroups: 0
+    hitStateGroundedGroups: -1
     hit:
       groundHitState: 30
       airHitState: 32
@@ -260,7 +261,6 @@ MonoBehaviour:
       ignorePushbackScaling: 0
   throwboxInfo: []
   hurtboxInfo: []
-  force: {x: 0, y: 0, z: 0}
   references:
     version: 2
     RefIds: []

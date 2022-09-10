@@ -8,6 +8,7 @@ namespace rwby
         public bool isValid;
         public PlayerControllerType controllerType;
         public Rewired.Player rewiredPlayer;
+        public CameraSwitcher cameraHandler;
         public Camera camera;
     }
 }

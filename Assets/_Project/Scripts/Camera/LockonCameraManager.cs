@@ -1,77 +1,51 @@
-using HnSF.Fighters;
-using UnityEngine;
-using Fusion;
-using rwby;
+using System;
+using System.Collections;
+using System.Collections.Generic;
 using Cinemachine;
+using Fusion;
 using Rewired;
-using HnSF.Combat;
+using UnityEngine;
 
 namespace rwby
 {
     [OrderBefore(typeof(FighterInputManager), typeof(FighterManager))]
-    public class PlayerCamera : SimulationBehaviour
+    public class LockonCameraManager : BaseCameraManager
     {
-        /*
         public enum CameraState
         {
             THIRDPERSON,
             LOCK_ON
         }
-
-        public Camera Cam { get { return cam; } }
-        public Transform FollowTarget
-        {
-            get { return followTarget.visualTransform; }
-        }
-
-        public static PlayerCamera instance;
-
-        [SerializeField] private FighterManager followTarget;
-        private GameObject LockOnTarget;
-        private ITargetable lockOnTargetable;
-
-        [Header("References")]
-        [SerializeField] private Camera cam;
-
-        [Header("Cinemachine")]
-        public CinemachineBrain cinemachineBrain;
-        [System.NonSerialized] public CinemachineStateDrivenCamera virtualStateDrivenCamera;
-        [System.NonSerialized] public Animator virtualCameraAnimator;
-        public CinemachineTargetGroup targetGroup;
-        [System.NonSerialized] public CinemachineVirtualCamera[] virtualCameras;
-        [System.NonSerialized] public CinemachinePOV[] virtualCameraPOV;
-        [System.NonSerialized] public CinemachineShake[] virtualCameraShake;
-        [System.NonSerialized] public CinemachineInputProvider[] inputProvider = new CinemachineInputProvider[0];
-
-        [Header("Lock On")]
-        public LayerMask lockonLayerMask;
-        public LayerMask lockonVisibilityLayerMask;
-        public float lockonMaxDistance = 20;
-        public float lockonFudging = 0.1f;
+        
         public CameraState currentCameraState = CameraState.THIRDPERSON;
+        
+        [Header("Cinemachine")]
+        public CinemachineTargetGroup targetGroup;
+        public CinemachineStateDrivenCamera virtualStateDrivenCamera;
+        public Animator virtualCameraAnimator;
+        public CinemachineVirtualCamera[] virtualCameras;
+        public CinemachineInputProvider[] inputProvider = new CinemachineInputProvider[0];
+        [NonSerialized] public CinemachineBrain cinemachineBrain;
+        [NonSerialized] public CinemachinePOV[] virtualCameraPOV;
+        [NonSerialized] public CinemachineShake[] virtualCameraShake;
 
-        [Header("Occulsion")] public CamHandleCutout cutoutHandler;
-        
-        void Awake()
-        {
-            instance = this;
-            p = ReInput.players.GetPlayer(0);
-            currentCameraState = CameraState.THIRDPERSON;
-        }
-        
         private ClientManager clientManager;
         private int playerID;
         private Rewired.Player p;
         [SerializeField] private ProfileDefinition currentProfile;
         private PlayerControllerType currentControllerType;
-        public void Initialize(ClientManager clientManager, int playerID)
-        {
-            Runner.AddSimulationBehaviour(cutoutHandler, null);
-            //virtualStateDrivenCamera = Runner.InstantiateInRunnerScene(GameManager.singleton.settings.playerVirtualCameraPrefab, transform.position, Quaternion.identity);
+        private bool lockon2DMode = false;
 
-            virtualCameraAnimator = virtualStateDrivenCamera.GetComponent<Animator>();
-            inputProvider = virtualStateDrivenCamera.GetComponentsInChildren<CinemachineInputProvider>();
-            virtualCameras = virtualStateDrivenCamera.GetComponentsInChildren<CinemachineVirtualCamera>();
+        private CameraSwitcher switcher;
+
+        private FighterManager followTarget;
+        private GameObject LockOnTarget;
+        private ITargetable lockOnTargetable;
+        
+        public override void Initialize(CameraSwitcher switcher)
+        {
+            this.switcher = switcher;
+            cinemachineBrain = switcher.cam.GetComponent<CinemachineBrain>();
 
             virtualCameraPOV = new CinemachinePOV[virtualCameras.Length];
             virtualCameraShake = new CinemachineShake[virtualCameras.Length];
@@ -86,13 +60,24 @@ namespace rwby
             {
                 v.runner = Runner;
             }
-            
+        }
+        
+        public override void AssignControlTo(ClientManager clientManager, int playerID)
+        {
+            base.AssignControlTo(clientManager, playerID);
             this.clientManager = clientManager;
             this.playerID = playerID;
             p = ReInput.players.GetPlayer(playerID);
             SetProfile(GameManager.singleton.profilesManager.GetProfile(clientManager.profiles[playerID]));
             OnControllerTypeChanged(playerID, GameManager.singleton.localPlayerManager.GetPlayerControllerType(playerID));
+            GameManager.singleton.localPlayerManager.OnPlayerControllerTypeChanged -= OnControllerTypeChanged;
             GameManager.singleton.localPlayerManager.OnPlayerControllerTypeChanged += OnControllerTypeChanged;
+        }
+
+        public override void SetTarget(FighterManager fighterManager)
+        {
+            base.SetTarget(fighterManager);
+            SetLookAtTarget(fighterManager);
         }
 
         private void OnControllerTypeChanged(int playerid, PlayerControllerType controllertype)
@@ -146,8 +131,26 @@ namespace rwby
                 : currentProfile.keyboardCam;
         }
 
+        public override void Activate()
+        {
+            gameObject.SetActive(true);
+            currentCameraState = CameraState.THIRDPERSON;
+            virtualCameraAnimator.Play("Follow");
+            virtualStateDrivenCamera.Priority = 1;
+            base.Activate();
+        }
+
+        public override void Deactivate()
+        {
+            virtualCameraAnimator.Play("Disable");
+            virtualStateDrivenCamera.Priority = 0;
+            gameObject.SetActive(false);
+            base.Deactivate();
+        }
+
         public virtual void Update()
         {
+            if (!active) return;
             if (p == null) return;
             ProfileDefinition.CameraVariables cv = GetCameraControls();
             
@@ -177,49 +180,12 @@ namespace rwby
                 }
             }
         }
-
-        public float lowStrength;
-        public float mediumStrength;
-        public float highStrength;
+        
         public override void Render()
         {
+            if (!active) return;
             base.Render();
             CamUpdate();
-
-            if (followTarget)
-            {
-                if (followTarget.shakeDefinition.shakeStrength == CameraShakeStrength.None
-                    || Runner.Tick > followTarget.shakeDefinition.endFrame)
-                {
-                    foreach (var cs in virtualCameraShake)
-                    {
-                        cs.Reset();
-                    }
-                    return;
-                }
-
-                switch (followTarget.shakeDefinition.shakeStrength)
-                {
-                    case CameraShakeStrength.Low:
-                        foreach (var cs in virtualCameraShake)
-                        {
-                            cs.ShakeCamera(lowStrength, (float)(Runner.Tick-followTarget.shakeDefinition.startFrame) / (float)(followTarget.shakeDefinition.endFrame-followTarget.shakeDefinition.startFrame) );
-                        }
-                        break;
-                    case CameraShakeStrength.Medium:
-                        foreach (var cs in virtualCameraShake)
-                        {
-                            cs.ShakeCamera(mediumStrength, (float)(Runner.Tick-followTarget.shakeDefinition.startFrame) / (float)(followTarget.shakeDefinition.endFrame-followTarget.shakeDefinition.startFrame) );
-                        }
-                        break;
-                    case CameraShakeStrength.High:
-                        foreach (var cs in virtualCameraShake)
-                        {
-                            cs.ShakeCamera(highStrength, (float)(Runner.Tick-followTarget.shakeDefinition.startFrame) / (float)(followTarget.shakeDefinition.endFrame-followTarget.shakeDefinition.startFrame) );
-                        }
-                        break;
-                }
-            }
         }
 
         public virtual void CamUpdate()
@@ -227,28 +193,20 @@ namespace rwby
             switch (currentCameraState)
             {
                 case CameraState.THIRDPERSON:
-                    HandleThirdPerson();
+                    cinemachineBrain.ManualUpdate();
+                    TryLockOn();
                     break;
                 case CameraState.LOCK_ON:
-                    HandleLockOn();
+                    cinemachineBrain.ManualUpdate();
+                    Vector3 lookDir = (lockOnTargetable.TargetOrigin.position - followTarget.TargetOrigin.position).normalized;
+                    lookDir.y = 0;
+                    targetGroup.transform.rotation = Quaternion.LookRotation(lookDir);
+                    targetGroup.transform.rotation *= Quaternion.Euler(0, -90, 0);
+                    TryLockoff();
                     break;
             }
         }
-
-        public void SetLookAtTarget(FighterManager target)
-        {
-            targetGroup.m_Targets[0].target = target.TargetOrigin;
-            virtualStateDrivenCamera.Follow = targetGroup.transform;
-            virtualStateDrivenCamera.LookAt = targetGroup.transform;
-            followTarget = target;
-        }
         
-        private void HandleThirdPerson()
-        {
-            cinemachineBrain.ManualUpdate();
-            TryLockOn();
-        }
-
         private void TryLockOn()
         {
             if (!followTarget || followTarget.HardTargeting == false || followTarget.CurrentTarget == null) return;
@@ -267,18 +225,7 @@ namespace rwby
             lockon2DMode = false;
             currentCameraState = CameraState.LOCK_ON;
         }
-
-        bool lockon2DMode = false;
-        private void HandleLockOn()
-        {
-            cinemachineBrain.ManualUpdate();
-            Vector3 lookDir = (lockOnTargetable.TargetOrigin.position - followTarget.TargetOrigin.position).normalized;
-            lookDir.y = 0;
-            targetGroup.transform.rotation = Quaternion.LookRotation(lookDir);
-            targetGroup.transform.rotation *= Quaternion.Euler(0, -90, 0);
-            TryLockoff();
-        }
-
+        
         private void TryLockoff()
         {
             if (followTarget.HardTargeting == true && followTarget.CurrentTarget != null) return;
@@ -289,7 +236,7 @@ namespace rwby
             virtualCameraAnimator.Play("Follow");
             currentCameraState = CameraState.THIRDPERSON;
         }
-
+        
         private void SetVirtualCameraInputs(int currentIndex)
         {
             for(int i = 0; i < 2; i++)
@@ -297,6 +244,14 @@ namespace rwby
                 virtualCameraPOV[i].m_VerticalAxis = virtualCameraPOV[currentIndex].m_VerticalAxis;
                 virtualCameraPOV[i].m_HorizontalAxis = virtualCameraPOV[currentIndex].m_HorizontalAxis;
             }
-        }*/
+        }
+        
+        public void SetLookAtTarget(FighterManager target)
+        {
+            targetGroup.m_Targets[0].target = target.TargetOrigin;
+            virtualStateDrivenCamera.Follow = targetGroup.transform;
+            virtualStateDrivenCamera.LookAt = targetGroup.transform;
+            followTarget = target;
+        }
     }
 }

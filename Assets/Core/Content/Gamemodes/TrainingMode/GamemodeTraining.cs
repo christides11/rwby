@@ -235,38 +235,72 @@ namespace rwby.core.training
                     await mapHandler[i].DoPreMatch(this);
                 }
             }
+
+            RPC_TransitionToMatch();
+        }
+
+        [Rpc(RpcSources.InputAuthority | RpcSources.StateAuthority, RpcTargets.All, HostMode = RpcHostMode.SourceIsHostPlayer)]
+        private void RPC_TransitionToMatch()
+        {
+            CameraSwitcher[] cameraSwitchers = GameObject.FindObjectsOfType<CameraSwitcher>();
+            foreach (CameraSwitcher cs in cameraSwitchers)
+            {
+                cs.SwitchTo(0);
+            }
+            GameModeBase.singleton.GamemodeState = GameModeState.MATCH_IN_PROGRESS;
         }
 
         private Vector3 GetSpawnPosition(SessionGamemodePlayerDefinition clientPlayer)
         {
             return startingPoints[clientPlayer.team][startingPointCurr[clientPlayer.team] % startingPoints[clientPlayer.team].Count].transform.position;
         }
-
+        
         protected override async UniTask SetupClientPlayerCharacters(SessionGamemodeClientContainer clientInfo, int playerIndex)
         {
             ClientManager cm = Runner.GetPlayerObject(clientInfo.clientRef).GetBehaviour<ClientManager>();
             NetworkObject no = null;
-            PlayerCamera c = Runner.InstantiateInRunnerScene(GameManager.singleton.settings.playerCameraPrefab, Vector3.zero,
-                Quaternion.identity);
 
             await UniTask.WaitUntil(() => Runner.TryFindObject(clientInfo.players[playerIndex].characterNetworkObjects[0], out no));
-                
-            Runner.AddSimulationBehaviour(c, null);
-            c.Initialize(cm, playerIndex);
-            c.SetLookAtTarget(no.GetComponent<FighterManager>());
-            GameManager.singleton.localPlayerManager.SetPlayerCamera(playerIndex, c.Cam);
+
+            var dummyCamera = Runner.InstantiateInRunnerScene(GameManager.singleton.settings.dummyCamera, Vector3.up,
+                Quaternion.identity);
+            var cameraSwitcher = Runner.InstantiateInRunnerScene(GameManager.singleton.settings.cameraSwitcher,
+                Vector3.zero, Quaternion.identity);
+            var lockonCameraManager =
+                Runner.InstantiateInRunnerScene(GameManager.singleton.settings.lockonCameraManager, Vector3.zero,
+                    Quaternion.identity);
+            Runner.AddSimulationBehaviour(dummyCamera, null);
+            Runner.AddSimulationBehaviour(cameraSwitcher, null);
+            Runner.AddSimulationBehaviour(lockonCameraManager, null);
+
+            dummyCamera.Initialize();
+            cameraSwitcher.cam = dummyCamera;
+            cameraSwitcher.RegisterCamera(0, lockonCameraManager);
+            lockonCameraManager.Initialize(cameraSwitcher);
+            cameraSwitcher.SetTarget(no.GetComponent<FighterManager>());
+            cameraSwitcher.AssignControlTo(cm, playerIndex);
+            cameraSwitcher.Disable();
+            
+            GameManager.singleton.localPlayerManager.SetPlayerCameraHandler(playerIndex, cameraSwitcher);
+            GameManager.singleton.localPlayerManager.SetPlayerCamera(playerIndex, dummyCamera.camera);
         }
         
         protected override async UniTask SetupClientPlayerHUD(SessionGamemodeClientContainer clientInfo, int playerIndex)
         {
+            ClientManager cm = Runner.GetPlayerObject(clientInfo.clientRef).GetBehaviour<ClientManager>();
+            
             NetworkObject no = null;
             await UniTask.WaitUntil(() => Runner.TryFindObject(clientInfo.players[playerIndex].characterNetworkObjects[0], out no));
-            PlayerCamera c = GameManager.singleton.localPlayerManager.GetPlayer(playerIndex).camera.GetComponent<PlayerCamera>();
+            CameraSwitcher cameraHandler =
+                GameManager.singleton.localPlayerManager.GetPlayer(playerIndex).cameraHandler;
+            Camera c = GameManager.singleton.localPlayerManager.GetPlayer(playerIndex).camera;
             
-            BaseHUD playerHUD = GameObject.Instantiate(GameManager.singleton.settings.baseUI);
-            playerHUD.canvas.worldCamera = c.Cam;
-            playerHUD.playerFighter = no.GetComponent<FighterManager>();
-            Runner.AddSimulationBehaviour(playerHUD, null);
+            BaseHUD baseHUD = GameObject.Instantiate(GameManager.singleton.settings.baseUI);
+            baseHUD.SetClient(cm, playerIndex);
+            baseHUD.canvas.worldCamera = c;
+            baseHUD.playerFighter = no.GetComponent<FighterManager>();
+            baseHUD.cameraSwitcher = cameraHandler;
+            Runner.AddSimulationBehaviour(baseHUD, null);
             
             await GameManager.singleton.contentManager.LoadContentDefinition(hudBankContentReference);
             
@@ -274,10 +308,10 @@ namespace rwby.core.training
                 
             await HUDElementbank.Load();
             
-            var debugInfo = GameObject.Instantiate(HUDElementbank.GetHUDElement("debug"), playerHUD.transform, false);
-            playerHUD.AddHUDElement(debugInfo.GetComponent<HUDElement>());
-            var pHUD = GameObject.Instantiate(HUDElementbank.GetHUDElement("phud"), playerHUD.transform, false);
-            playerHUD.AddHUDElement(pHUD.GetComponent<HUDElement>());
+            var debugInfo = GameObject.Instantiate(HUDElementbank.GetHUDElement("debug"), baseHUD.transform, false);
+            baseHUD.AddHUDElement(debugInfo.GetComponent<HUDElement>());
+            var pHUD = GameObject.Instantiate(HUDElementbank.GetHUDElement("phud"), baseHUD.transform, false);
+            baseHUD.AddHUDElement(pHUD.GetComponent<HUDElement>());
         }
     }
 }

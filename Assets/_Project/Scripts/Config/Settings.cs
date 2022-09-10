@@ -9,10 +9,13 @@ namespace rwby
         public string bootLoaderSceneName = "Singletons";
         public string mainMenuSceneName = "MainMenu";
         public AddressablesModDefinition baseMod;
-        public PlayerCamera playerCameraPrefab;
-        public CinemachineStateDrivenCamera playerVirtualCameraPrefab;
         public Hurtbox hurtboxPrefab;
         public bool showHitboxes;
         public BaseHUD baseUI;
+
+        [Header("Camera")] 
+        public DummyCamera dummyCamera;
+        public CameraSwitcher cameraSwitcher;
+        public LockonCameraManager lockonCameraManager;
     }
 }

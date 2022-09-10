@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using Cysharp.Threading.Tasks;
 using Fusion;
 using Rewired;
@@ -12,9 +14,12 @@ namespace rwby
         public PlayableDirector playableDirector;
         public PlayableAsset playable;
 
+        public Camera animatedCamera;
         public GameObject[] objsToDisable;
 
         public bool cutsceneSkip;
+
+        public HashSet<int> playersFinished = new HashSet<int>();
 
         private void Update()
         {
@@ -24,6 +29,13 @@ namespace rwby
         public override async UniTask DoPreMatch(GameModeBase gamemode)
         {
             RPC_PlayIntroCutscene();
+            
+            while (playersFinished.Count < Runner.ActivePlayers.Count())
+            {
+                await UniTask.WaitForFixedUpdate();
+            }
+            
+            RPC_EndIntroCutscene();
         }
 
         [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
@@ -31,17 +43,29 @@ namespace rwby
         {
             _ = PlayIntroCutscene();
         }
+        
+        [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
+        public void RPC_EndIntroCutscene()
+        {
+            playableDirector.Stop();
+            foreach (var go in objsToDisable)
+            {
+                go.SetActive(false);
+            }
+        }
 
         public async UniTask PlayIntroCutscene()
         {
             playableDirector.Play(playable);
             
             await UniTask.WaitUntil(() => playableDirector.time >= playable.duration == true || cutsceneSkip);
-            foreach (var go in objsToDisable)
-            {
-                go.SetActive(false);
-            }
-            GameModeBase.singleton.GamemodeState = GameModeState.MATCH_IN_PROGRESS;
+            RPC_ReportCutsceneFinished();
+        }
+        
+        [Rpc(RpcSources.All, RpcTargets.InputAuthority | RpcTargets.StateAuthority, HostMode = RpcHostMode.SourceIsHostPlayer)]
+        public void RPC_ReportCutsceneFinished(RpcInfo info = default)
+        {
+            playersFinished.Add(info.Source.PlayerId);
         }
     }
 }

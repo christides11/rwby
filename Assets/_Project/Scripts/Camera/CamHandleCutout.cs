@@ -6,10 +6,9 @@ using UnityEngine;
 
 namespace rwby
 {
-    [OrderAfter(typeof(PlayerCamera))]
+    [OrderAfter(typeof(BaseCameraManager))]
     public class CamHandleCutout : SimulationBehaviour
     {
-        [SerializeField] private PlayerCamera playerCamera;
         [SerializeField] private Camera camera;
         [SerializeField] private LayerMask wallMask;
 
@@ -26,23 +25,28 @@ namespace rwby
         private Dictionary<Renderer, Coroutine> RunningCoroutines = new Dictionary<Renderer, Coroutine>();
         private List<Renderer> ObjectsBlockingView = new List<Renderer>();
 
-        //[SerializeField] private float cutoutCooldown = 0.0f;
-        //private float cooldown;
-        
+        public bool InUse = false;
+        public Vector3 cutoffPosition;
+
         private void Awake()
         {
             propBlock = new MaterialPropertyBlock();
         }
-        
+
+        private void Update()
+        {
+            
+        }
+
         public override void Render()
         {
             base.Render();
-            if (!playerCamera.FollowTarget) return;
+            if (!InUse) return;
 
-            Vector2 cutoutPos = camera.WorldToViewportPoint(playerCamera.FollowTarget.position + targetOffset);
+            Vector2 cutoutPos = camera.WorldToViewportPoint(cutoffPosition + targetOffset);
             cutoutPos.y /= (Screen.width / Screen.height);
 
-            Vector3 offset = (playerCamera.FollowTarget.position + targetOffset) - transform.position;
+            Vector3 offset = (cutoffPosition + targetOffset) - transform.position;
             int hitCount = Runner.GetPhysicsScene().Raycast(transform.position, offset, hitObjects, offset.magnitude, wallMask, QueryTriggerInteraction.Ignore);
 
             for (int i = 0; i < hitCount; i++)
