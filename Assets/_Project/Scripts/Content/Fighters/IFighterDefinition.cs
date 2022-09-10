@@ -9,6 +9,7 @@ namespace rwby
         public virtual int Health { get; }
         public virtual int Aura { get; }
         public virtual int AuraGainPerFrame { get; }
+        public virtual ModObjectItemReference[] huds { get; }
 
         public abstract GameObject GetFighter();
         public abstract string GetFighterGUID();

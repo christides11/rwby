@@ -23,10 +23,16 @@ namespace rwby
             get { return auraGainPerFrame; }
         }
 
+        public override ModObjectItemReference[] huds
+        {
+            get { return hudContentReferences; }
+        }
+
         [SerializeField] private string fighterName;
         [SerializeField] [TextArea] private string description;
         [SerializeField] private AssetReferenceT<GameObject> fighterReference;
         [SerializeField] private AssetReferenceT<Moveset>[] movesetReferences;
+        [SerializeField] private ModObjectItemReference[] hudContentReferences = Array.Empty<ModObjectItemReference>();
         [SerializeField] private bool selectable = true;
         [SerializeField] private int health;
         [SerializeField] private int aura;

@@ -64,7 +64,7 @@ namespace rwby
         {
             if (!modLoader.TryGetLoadedMod(contentReference.modGUID, out LoadedModDefinition mod))
             {
-                Debug.Log($"Get Failure.{contentReference.modGUID.ToString()}.");
+                Debug.Log($"Load Failure. {contentReference.modGUID.ToString()}.");
                 return false;
             }
             if (!mod.definition.ContentParsers.TryGetValue(contentReference.contentType, out IContentParser parser)) return false;

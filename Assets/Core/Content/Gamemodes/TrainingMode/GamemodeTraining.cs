@@ -237,6 +237,7 @@ namespace rwby.core.training
             }
 
             RPC_TransitionToMatch();
+
         }
 
         [Rpc(RpcSources.InputAuthority | RpcSources.StateAuthority, RpcTargets.All, HostMode = RpcHostMode.SourceIsHostPlayer)]
@@ -247,6 +248,23 @@ namespace rwby.core.training
             {
                 cs.SwitchTo(0);
             }
+
+            _ = TransitionToMatch();
+        }
+
+        public async UniTask TransitionToMatch()
+        {
+            IHUDElementbankDefinition HUDElementbank = GameManager.singleton.contentManager.GetContentDefinition<IHUDElementbankDefinition>(hudBankContentReference);
+
+            foreach (var p in GameManager.singleton.localPlayerManager.localPlayers)
+            {
+                var baseHUD = p.hud;
+                var introElement = GameObject.Instantiate(HUDElementbank.GetHUDElement("intro"), baseHUD.transform, false);
+                baseHUD.AddHUDElement(introElement.GetComponent<HUDElement>());
+            }
+
+            int startFrame = Runner.Tick + (60 * 2);
+            await UniTask.WaitUntil(() => Runner.Tick >= startFrame);
             GameModeBase.singleton.GamemodeState = GameModeState.MATCH_IN_PROGRESS;
         }
 
@@ -291,6 +309,7 @@ namespace rwby.core.training
             
             NetworkObject no = null;
             await UniTask.WaitUntil(() => Runner.TryFindObject(clientInfo.players[playerIndex].characterNetworkObjects[0], out no));
+            FighterManager fm = no.GetComponent<FighterManager>();
             CameraSwitcher cameraHandler =
                 GameManager.singleton.localPlayerManager.GetPlayer(playerIndex).cameraHandler;
             Camera c = GameManager.singleton.localPlayerManager.GetPlayer(playerIndex).camera;
@@ -298,9 +317,11 @@ namespace rwby.core.training
             BaseHUD baseHUD = GameObject.Instantiate(GameManager.singleton.settings.baseUI);
             baseHUD.SetClient(cm, playerIndex);
             baseHUD.canvas.worldCamera = c;
-            baseHUD.playerFighter = no.GetComponent<FighterManager>();
+            baseHUD.playerFighter = fm;
             baseHUD.cameraSwitcher = cameraHandler;
             Runner.AddSimulationBehaviour(baseHUD, null);
+            
+            GameManager.singleton.localPlayerManager.SetPlayerHUD(playerIndex, baseHUD);
             
             await GameManager.singleton.contentManager.LoadContentDefinition(hudBankContentReference);
             
@@ -312,6 +333,28 @@ namespace rwby.core.training
             baseHUD.AddHUDElement(debugInfo.GetComponent<HUDElement>());
             var pHUD = GameObject.Instantiate(HUDElementbank.GetHUDElement("phud"), baseHUD.transform, false);
             baseHUD.AddHUDElement(pHUD.GetComponent<HUDElement>());
+
+            foreach (var hbank in fm.fighterDefinition.huds)
+            {
+                var convertedRef = new ModContentGUIDReference()
+                {
+                    contentGUID = hbank.contentReference.contentGUID,
+                    contentType = (int)ContentType.HUDElementbank,
+                    modGUID = hbank.contentReference.modGUID
+                };
+                var lResult = await GameManager.singleton.contentManager.LoadContentDefinition(GameManager.singleton.contentManager.ConvertModContentGUIDReference(convertedRef));
+
+                if (!lResult)
+                {
+                    Debug.LogError("Error loading HUDbank.");
+                    continue;
+                }
+                
+                var hebank = GameManager.singleton.contentManager.GetContentDefinition<IHUDElementbankDefinition>(GameManager.singleton.contentManager.ConvertModContentGUIDReference(convertedRef));
+                
+                var hEle = GameObject.Instantiate(hebank.GetHUDElement(hbank.item), baseHUD.transform, false);
+                baseHUD.AddHUDElement(pHUD.GetComponent<HUDElement>());
+            }
         }
     }
 }

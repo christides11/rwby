@@ -32,6 +32,13 @@ namespace rwby
             return localPlayers[playerID];
         }
 
+        public void SetPlayerHUD(int playerID, BaseHUD baseHUD)
+        {
+            var temp = localPlayers[playerID];
+            temp.hud = baseHUD;
+            localPlayers[playerID] = temp;
+        }
+        
         public void SetPlayerCameraHandler(int playerID, CameraSwitcher handler)
         {
             var temp = localPlayers[playerID];
