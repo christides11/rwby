@@ -449,6 +449,7 @@ namespace rwby
                     Vector3 hForce = isGrounded ? hitInfoGroup.groundHitForce : hitInfoGroup.aerialHitForce;
                     if (!hitInfoGroup.blockLift) hForce.y = 0;
                     
+                    manager.HealthManager.ModifyHealth((int)-(hitInfoGroup.chipDamage));
                     ApplyHitForces(hurtInfo, currentState, hitInfoGroup.hitForceType, hForce, hitInfoGroup.pullPushCurve, hitInfoGroup.pullPushMaxDistance, hitInfoGroup.hitForceRelationOffset, true);
                     manager.shakeDefinition = new CmaeraShakeDefinition()
                     {

@@ -98,7 +98,8 @@ MonoBehaviour:
       untech: 20
       initialProration: 0
       comboProration: 0
-      damage: 0
+      damage: 20
+      chipDamage: 0
       hitEffectbank:
         modGUID:
           guid: 
@@ -120,6 +121,9 @@ MonoBehaviour:
       hitCameraShakeStrength: 0
       blockCameraShakeStrength: 0
       cameraShakeLength: 0
+      ignoreProration: 0
+      ignoreHitstunScaling: 0
+      ignorePushbackScaling: 0
     counterhit:
       groundHitState: 0
       airHitState: 0
@@ -151,6 +155,7 @@ MonoBehaviour:
       initialProration: 0
       comboProration: 0
       damage: 0
+      chipDamage: 0
       hitEffectbank:
         modGUID:
           guid: 
@@ -172,6 +177,9 @@ MonoBehaviour:
       hitCameraShakeStrength: 0
       blockCameraShakeStrength: 0
       cameraShakeLength: 0
+      ignoreProration: 0
+      ignoreHitstunScaling: 0
+      ignorePushbackScaling: 0
   throwboxInfo: []
   hurtboxInfo: []
   references:
