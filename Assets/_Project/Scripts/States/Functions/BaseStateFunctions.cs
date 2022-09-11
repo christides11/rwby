@@ -521,6 +521,16 @@ namespace rwby
             fm.projectileManager.CreateProjectile(vars.def, fm.myTransform.position);
             var p = fm.projectileManager.GetLatestProjectile();
 
+            if (vars.useCameraForward)
+            {
+                Vector3 aimPos = (fm.InputManager.GetCameraPosition() + (fm.InputManager.GetCameraForward() * 100));
+                Vector3 cf = (aimPos - fm.myTransform.position).normalized;
+                cf *= vars.force.z;
+                p.force = cf;
+                p.transform.LookAt(aimPos);
+                return;
+            }
+            
             Vector3 f = fm.myTransform.forward * vars.force.z
                         + fm.myTransform.right * vars.force.x
                         + fm.myTransform.up * vars.force.y;
@@ -854,11 +864,13 @@ namespace rwby
             bool fResult = false;
             var b = fm.InputManager.GetButton((int)vars.button, 0, 0);
             if (!b.isDown
-                || fm.FCombatManager.CurrentChargeLevel == vars.maxLevel)
+                || (fm.FCombatManager.CurrentChargeLevel == vars.maxLevel && !vars.canHold))
             {
                 fm.FStateManager.IncrementFrame(amt: 1);
                 return;
             }
+
+            if (fm.CombatManager.CurrentChargeLevel == vars.maxLevel) return;
             
             fm.FCombatManager.IncrementChargeLevelCharge(vars.chargePerLevel);
         }

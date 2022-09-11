@@ -10,23 +10,24 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7789f25d17401bc4b915ca6fcecf2a29, type: 3}
-  m_Name: RR.Scythe.Grd.SniperStance
+  m_Name: RR.Scythe.Grd.SniperStance.A
   m_EditorClassIdentifier: 
-  stateName: Sniper Stance
+  stateName: Sniper Stance A
   useBaseState: 0
   baseState: {fileID: 0}
   totalFrames: 10
-  autoIncrement: 1
+  autoIncrement: 0
   autoLoop: 0
   autoLoopFrame: 1
   data:
   - rid: 8688056217396838433
   - rid: 8688056360164655109
-  - rid: 8688056360164655119
-  - rid: 8688056364881936404
-  - rid: 7270848563102089221
   - rid: 7270848560384180227
   - rid: 7270848560384180228
+  - rid: 7270848563102089218
+  - rid: 7270848563102089216
+  - rid: 7270848563102089217
+  - rid: 7270848563102089220
   auraRequirement: 0
   initialGroundedState: 1
   stateType: 2
@@ -213,27 +214,84 @@ MonoBehaviour:
           rid: -2
         modifyType: 1
         value: 0
-    - rid: 7270848563102089221
-      type: {class: VarChangeState, ns: rwby, asm: rwby.csharp}
+    - rid: 7270848563102089216
+      type: {class: VarIncrementChargeLevel, ns: rwby, asm: rwby.csharp}
       data:
-        name: Try Shoot (A)
+        name: 
         id: 12
         parent: -1
         children: 
         frameRanges:
-        - {x: 1, y: -1}
+        - {x: 5, y: 5}
         condition:
           rid: -2
-        checkInputSequence: 1
+        increment: 1
+        chargePerLevel: 30
+        maxLevel: 1
+        button: 0
+        canHold: 1
+    - rid: 7270848563102089217
+      type: {class: VarModifyFrame, ns: rwby, asm: rwby.csharp}
+      data:
+        name: 
+        id: 13
+        frameRanges:
+        - {x: 1, y: 4}
+        - {x: 6, y: -1}
+        condition:
+          rid: -2
+        modifyType: 0
+        value: 0
+        parent: -1
+        children: 
+    - rid: 7270848563102089218
+      type: {class: VarChangeState, ns: rwby, asm: rwby.csharp}
+      data:
+        name: 
+        id: 14
+        parent: -1
+        children: 
+        frameRanges:
+        - {x: -1, y: -1}
+        condition:
+          rid: -2
+        checkInputSequence: 0
         checkCondition: 0
         targetType: 0
         stateMovesetID: -1
         state:
-          rid: 7270848563102089222
-    - rid: 7270848563102089222
+          rid: 7270848563102089219
+    - rid: 7270848563102089219
       type: {class: RubyRoseStateReference, ns: rwby.core, asm: rwby.core}
       data:
-        state: 72
+        state: 71
+    - rid: 7270848563102089220
+      type: {class: VarCreateProjectile, ns: rwby, asm: rwby.csharp}
+      data:
+        name: 
+        id: 15
+        parent: -1
+        children: 
+        frameRanges:
+        - {x: 6, y: 6}
+        condition:
+          rid: -2
+        def:
+          projectilebank:
+            modGUID:
+              guid: 1d292c1f00000000
+            contentGUID:
+              guid: 2c2c000000000000
+          projectile: bullet
+          parented: 0
+          offset: {x: 0, y: 0, z: 1}
+          rotation: {x: 0, y: 0, z: 0}
+          scale: {x: 1, y: 1, z: 1}
+          overrideMode: 0
+        force: {x: 0, y: 0, z: 30}
+        pointTowardsLockonTargetXZ: 0
+        pointTowardsLockonTargetY: 0
+        useCameraForward: 1
     - rid: 8688056217396838433
       type: {class: VarCreateBox, ns: rwby, asm: rwby.csharp}
       data:
@@ -242,7 +300,7 @@ MonoBehaviour:
         parent: -1
         children: 
         frameRanges:
-        - {x: 0, y: -1}
+        - {x: 1, y: -1}
         condition:
           rid: -2
         boxType: 2
@@ -274,57 +332,3 @@ MonoBehaviour:
         statReference: 1
         value: 0
         variable: 0
-    - rid: 8688056360164655119
-      type: {class: VarChangeState, ns: rwby, asm: rwby.csharp}
-      data:
-        name: To Air Stance
-        id: 8
-        parent: -1
-        children: 
-        frameRanges:
-        - {x: 1, y: -1}
-        condition:
-          rid: 8688056360164655121
-        checkInputSequence: 0
-        checkCondition: 0
-        targetType: 0
-        stateMovesetID: -1
-        state:
-          rid: 8688056360164655120
-    - rid: 8688056360164655120
-      type: {class: RubyRoseStateReference, ns: rwby.core, asm: rwby.core}
-      data:
-        state: 78
-    - rid: 8688056360164655121
-      type: {class: ConditionIsGrounded, ns: rwby, asm: rwby.csharp}
-      data:
-        inverse: 1
-    - rid: 8688056364881936404
-      type: {class: VarChangeState, ns: rwby, asm: rwby.csharp}
-      data:
-        name: Try Cancel Stance (C)
-        id: 9
-        parent: -1
-        children: 
-        frameRanges:
-        - {x: 1, y: -1}
-        condition:
-          rid: 8688056364881936406
-        checkInputSequence: 0
-        checkCondition: 0
-        targetType: 0
-        stateMovesetID: -1
-        state:
-          rid: 8688056364881936405
-    - rid: 8688056364881936405
-      type: {class: RubyRoseStateReference, ns: rwby.core, asm: rwby.core}
-      data:
-        state: 76
-    - rid: 8688056364881936406
-      type: {class: ConditionButton, ns: rwby, asm: rwby.csharp}
-      data:
-        inverse: 0
-        button: 6
-        buttonState: 1
-        offset: 0
-        buffer: 0

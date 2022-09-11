@@ -15,6 +15,7 @@ namespace rwby
         [Networked, Accuracy("Default"), Capacity(40)] protected NetworkArray<Vector2> movement => default;
         [Networked, Accuracy("Default"), Capacity(40)] protected NetworkArray<Vector3> cameraForward => default;
         [Networked, Accuracy("Default"), Capacity(40)] protected NetworkArray<Vector3> cameraRight => default;
+        [Networked, Accuracy("Default"), Capacity(40)] protected NetworkArray<Vector3> cameraPos => default;
         [Networked, Capacity(40)] protected NetworkArray<NetworkButtons> buttons => default;
         [Networked] protected ushort heldATime { get; set; }
         [Networked] protected ushort heldBTime { get; set; }
@@ -51,6 +52,7 @@ namespace rwby
             movement.Set(frame % inputCapacity, input.movement.sqrMagnitude > 1 ? input.movement.normalized : input.movement);
             cameraForward.Set(frame % inputCapacity, input.forward);
             cameraRight.Set(frame % inputCapacity, input.right);
+            cameraPos.Set(frame % inputCapacity, input.camPos);
             buttons.Set(frame % inputCapacity, input.buttons);
         }
 
@@ -67,6 +69,11 @@ namespace rwby
         public virtual Vector3 GetCameraRight(int startOffset = 0)
         {
             return cameraRight[(Runner.Simulation.Tick - startOffset) % inputCapacity];
+        }
+
+        public virtual Vector3 GetCameraPosition(int startOffset = 0)
+        {
+            return cameraPos[(Runner.Simulation.Tick - startOffset) % inputCapacity];
         }
 
         public virtual InputButtonData GetA(out int buttonOffset, int startOffset = 0, int bufferFrames = 0)

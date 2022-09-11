@@ -16,5 +16,6 @@ namespace rwby
 		public Vector2 movement;
 		public Vector3 forward;
 		public Vector3 right;
+		public Vector3 camPos;
     }
 }

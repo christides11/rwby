@@ -104,6 +104,7 @@ namespace rwby
 		Vector2[] buttonCamera = new Vector2[8];
 		Vector3[] buttonCameraForward = new Vector3[8];
 		Vector3[] buttonCameraRight = new Vector3[8];
+		Vector3[] buttonCameraPos = new Vector3[8];
 		bool[] buttonJump = new bool[4];
 		bool[] buttonA = new bool[4];
 		bool[] buttonB = new bool[4];
@@ -146,6 +147,7 @@ namespace rwby
 				buttonCamera[j] = player.rewiredPlayer.GetAxis2D(Action.Camera_X, Action.Camera_Y);
 				buttonCameraForward[j] = player.camera ? player.camera.transform.forward : Vector3.forward;
 				buttonCameraRight[j] = player.camera ? player.camera.transform.right : Vector3.right;
+				buttonCameraPos[j] = player.camera ? player.camera.transform.position : Vector3.up;
 				if (player.rewiredPlayer.GetButton(Action.Block)) buttonBlock[j] = true;
 				if (player.rewiredPlayer.GetButton(Action.Dash)) buttonDash[j] = true;
 				if (player.rewiredPlayer.GetButton(Action.Lock_On)) buttonLockOn[j] = true;
@@ -224,6 +226,7 @@ namespace rwby
 				playerInput.movement = buttonMovement[i];
 				playerInput.forward = buttonCameraForward[i];
 				playerInput.right = buttonCameraRight[i];
+				playerInput.camPos = buttonCameraPos[i];
 				playerInput.buttons.Set(PlayerInputType.JUMP, buttonJump[i]);
 				playerInput.buttons.Set(PlayerInputType.A, buttonA[i]);
 				playerInput.buttons.Set(PlayerInputType.B, buttonB[i]);

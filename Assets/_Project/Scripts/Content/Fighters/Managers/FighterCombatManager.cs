@@ -149,6 +149,7 @@ namespace rwby
             SetChargeLevelCharge(0);
         }
 
+        //TODO: Figure out what to do when queue in filled.
         public virtual void AddMoveToString()
         {
             movesUsedInString.Add(new MovesetStateIdentifier(){ movesetIdentifier = stateManager.CurrentStateMoveset, stateIdentifier = stateManager.CurrentState });
