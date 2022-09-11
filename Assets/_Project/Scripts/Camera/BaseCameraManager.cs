@@ -2,16 +2,17 @@ using System.Collections;
 using System.Collections.Generic;
 using Cinemachine;
 using Fusion;
+using NaughtyAttributes;
 using UnityEngine;
 
 namespace rwby
 {
+    [OrderBefore(typeof(FighterInputManager), typeof(FighterManager))]
     public class BaseCameraManager : SimulationBehaviour
     {
-        public int id;
-        public DummyCamera cam;
-
-        public bool active;
+        [ReadOnly] public int id;
+        [ReadOnly] public DummyCamera cam;
+        [ReadOnly] public bool active;
 
         public virtual void Initialize(CameraSwitcher switcher)
         {

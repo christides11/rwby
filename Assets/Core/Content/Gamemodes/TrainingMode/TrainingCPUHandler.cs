@@ -9,7 +9,7 @@ namespace rwby.core.training
 {
     [OrderAfter(typeof(ClientManager))]
     [OrderBefore(typeof(FighterInputManager))]
-    public class TrainingCPUHandler : NetworkBehaviour, IInputProvider
+    public class TrainingCPUHandler : NetworkBehaviour, IInputProvider, IFighterCallbacks
     {
         public delegate void EmptyAction(TrainingCPUHandler cpuHandler);
         public event EmptyAction OnCPUListUpdated;
@@ -59,6 +59,7 @@ namespace rwby.core.training
                             _ = b.GetBehaviour<FighterManager>().OnFighterLoaded();
                             b.GetBehaviour<FighterInputManager>().inputProvider = Object;
                             b.GetBehaviour<FighterInputManager>().inputEnabled = true;
+                            b.GetBehaviour<FighterManager>().callbacks = this;
                             fManager.HealthManager.Health = fManager.fighterDefinition.Health;
                             var list = cpus;
                             TrainingCPUReference temp = list[indexTemp];
@@ -101,6 +102,11 @@ namespace rwby.core.training
         public NetworkPlayerInputData GetInput(int inputIndex)
         {
             return testData[inputIndex];
+        }
+
+        public void FighterHealthChanged(FighterManager fm)
+        {
+            if(fm.HealthManager.Health <= 0) fm.HealthManager.SetHealth(fm.fighterDefinition.Health);
         }
     }
 }

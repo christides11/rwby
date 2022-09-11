@@ -30,7 +30,12 @@ namespace rwby
             }
         }
 
-        public void ModifyHealth(int amt)
+        public virtual void SetHealth(int amt)
+        {
+            Health = amt;
+        }
+        
+        public virtual void ModifyHealth(int amt)
         {
             Health += amt;
         }

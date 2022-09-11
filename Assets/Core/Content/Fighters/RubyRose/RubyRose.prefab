@@ -424,6 +424,7 @@ MonoBehaviour:
   _CurrentTarget: {fileID: 0}
   _Visible:
     _value: 0
+  _callbacks: {fileID: 0}
   _StoredRun:
     _value: 0
   _CurrentJump: 0
@@ -472,6 +473,7 @@ MonoBehaviour:
   _poleSpin: 0
   _thrower: {fileID: 0}
   _throwees: []
+  _cameraMode: 0
   hitstopShakeDistance: 0.5
   hitstopDir: 1
   hitstopShakeFrames: 1
@@ -709,11 +711,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 3009557721057671630}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 486a2ab5f4c180e4db022a6dff48a97e, type: 3}
+  m_Script: {fileID: 11500000, guid: fe163bcf7320c51469bb258398a13ccd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   _interpolationDataSource: 0
   _Health: 0
+  manager: {fileID: 3846760401122892541}
 --- !u!114 &7571525903815252237
 MonoBehaviour:
   m_ObjectHideFlags: 0

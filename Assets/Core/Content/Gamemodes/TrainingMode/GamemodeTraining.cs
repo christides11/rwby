@@ -21,6 +21,7 @@ namespace rwby.core.training
         
         [FormerlySerializedAs("hudBankReference")] [FormerlySerializedAs("testReference")] public ModGUIDContentReference hudBankContentReference;
 
+        public TrainingPlayerHandler playerHandler;
         public TrainingCPUHandler cpuHandler;
 
         public override void Awake()
@@ -213,6 +214,7 @@ namespace rwby.core.training
                             b.GetBehaviour<FighterInputManager>().inputProvider = cm;
                             b.GetBehaviour<FighterInputManager>().inputSourceIndex = (byte)playerID;
                             b.GetBehaviour<FighterInputManager>().inputEnabled = true;
+                            b.GetBehaviour<FighterManager>().callbacks = playerHandler;
                             fManager.HealthManager.Health = fManager.fighterDefinition.Health;
                             var list = playerTemp.characterNetworkObjects;
                             list.Set(0, b.Id);

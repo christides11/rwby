@@ -28,7 +28,7 @@ namespace rwby
         public FighterStateManager FStateManager { get { return stateManager; } }
         public FighterStatManager StatManager { get { return statManager; } }
         public FighterPhysicsManager FPhysicsManager { get { return physicsManager; } }
-        public HealthManager HealthManager{ get { return healthManager; } }
+        public FighterHealthManager HealthManager{ get { return healthManager; } }
         public FighterBoxManager BoxManager { get { return boxManager; } }
         public SoundbankContainer SoundbankContainer { get { return soundbankContainer; } }
         public Transform TargetOrigin { get { return targetOrigin; } }
@@ -36,22 +36,23 @@ namespace rwby
         {
             get { return GetLoadedContentList(); }
         }
-
+        
         [Networked] public bool TargetableNetworked { get; set; }
         public bool Targetable { get { return TargetableNetworked; } }
 
         [Networked] public NetworkBool HardTargeting { get; set; }
         [Networked] public NetworkObject CurrentTarget { get; set; }
         [Networked] public NetworkBool Visible { get; set; }
-
+        [Networked] public NetworkBehaviour callbacks { get; set; }
+        
         // Stats
         [Networked] public NetworkBool StoredRun { get; set; }
         [Networked] public int CurrentJump { get; set; }
         [Networked] public int CurrentAirDash { get; set; }
 
         [Header("Debug")] public bool FRAMEBYFRAME = false;
-        
-        [Header("References")]
+
+        [Header("References")] 
         [NonSerialized] public NetworkManager networkManager;
         [SerializeField] protected FighterInputManager inputManager;
         [SerializeField] protected FighterCombatManager combatManager;
@@ -59,7 +60,7 @@ namespace rwby
         [SerializeField] protected FighterPhysicsManager physicsManager;
         [SerializeField] protected FighterBoxManager boxManager;
         [SerializeField] protected FighterStatManager statManager;
-        [SerializeField] protected HealthManager healthManager;
+        [SerializeField] protected FighterHealthManager healthManager;
         public IFighterDefinition fighterDefinition;
         [SerializeField] protected CapsuleCollider capsuleCollider;
         [SerializeField] protected SoundbankContainer soundbankContainer;

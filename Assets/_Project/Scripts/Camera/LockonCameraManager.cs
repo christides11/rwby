@@ -8,7 +8,7 @@ using UnityEngine;
 
 namespace rwby
 {
-    [OrderBefore(typeof(FighterInputManager), typeof(FighterManager))]
+    //[OrderBefore(typeof(FighterInputManager), typeof(FighterManager))]
     public class LockonCameraManager : BaseCameraManager
     {
         public enum CameraState
