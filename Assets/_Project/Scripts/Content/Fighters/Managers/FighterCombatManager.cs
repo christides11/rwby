@@ -545,16 +545,30 @@ namespace rwby
             }
             return pushback;
         }
+        
+        public virtual float ApplyGravityScaling(float gravity)
+        {
+            int comboTime = Runner.Tick - ComboStartTick;
+            if (comboTime < gravityScalingMap[0].item1) return gravity;
+            for (int i = gravityScalingMap.Length - 1; i >= 0; i--)
+            {
+                if (comboTime > gravityScalingMap[i].item1)
+                {
+                    return gravity * gravityScalingMap[i].item2;
+                }
+            }
+            return gravity;
+        }
 
         protected void ApplyHitForces(HurtInfo hurtInfo, StateTimeline currentState, HitboxForceType forceType, Vector3 force = default, AnimationCurve pullPushCurve = default,
-            float pullPushMaxDistance = default, Vector3 offset = default, bool ignorePushbackScaling = false)
+            float pullPushMaxDistance = default, Vector3 offset = default, bool ignorePushbackScaling = false, bool ignoreGravityScaling = false)
         {
             
             switch (forceType)
             {
                 case HitboxForceType.SET:
                     Vector3 forces = (force.x * hurtInfo.right) + (force.z * hurtInfo.forward);
-                    physicsManager.forceGravity = force.y;
+                    physicsManager.forceGravity = ignoreGravityScaling ? force.y : ApplyGravityScaling(force.y);
                     physicsManager.forceMovement = ignorePushbackScaling ? forces : ApplyPushbackScaling(forces);
                     break;
                 case HitboxForceType.PULL:

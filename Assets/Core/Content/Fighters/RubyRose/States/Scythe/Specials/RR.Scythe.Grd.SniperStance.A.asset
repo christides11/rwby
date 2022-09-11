@@ -228,7 +228,7 @@ MonoBehaviour:
         increment: 1
         chargePerLevel: 30
         maxLevel: 1
-        button: 0
+        button: 2
         canHold: 1
     - rid: 7270848563102089217
       type: {class: VarModifyFrame, ns: rwby, asm: rwby.csharp}
@@ -241,7 +241,7 @@ MonoBehaviour:
         condition:
           rid: -2
         modifyType: 0
-        value: 0
+        value: 1
         parent: -1
         children: 
     - rid: 7270848563102089218
@@ -284,7 +284,7 @@ MonoBehaviour:
               guid: 2c2c000000000000
           projectile: bullet
           parented: 0
-          offset: {x: 0, y: 0, z: 1}
+          offset: {x: 0, y: 1, z: 1}
           rotation: {x: 0, y: 0, z: 0}
           scale: {x: 1, y: 1, z: 1}
           overrideMode: 0

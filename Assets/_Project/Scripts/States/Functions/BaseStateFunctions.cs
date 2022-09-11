@@ -547,7 +547,7 @@ namespace rwby
                     if(!vars.pointTowardsLockonTargetY) dirNoY.y = 0;
                     f += dirNoY * vars.force.z;
                 }
-                // TODO: Set rotation
+                p.transform.LookAt(fm.CurrentTarget.transform.position);
             }
             p.force = f;
         }
