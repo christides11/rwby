@@ -101,7 +101,15 @@ namespace rwby
         [Networked, Capacity(4)] public NetworkArray<NetworkObject> throwees => default;
 
         [Networked] public CmaeraShakeDefinition shakeDefinition { get; set; }
-        [Networked] public int cameraMode { get; set; }
+        [Networked(OnChanged = nameof(OnChangedCameraMode))] public int cameraMode { get; set; }
+
+        public delegate void EmptyDelegate(FighterManager fighterManager);
+        public event EmptyDelegate OnCameraModeChanged;
+        
+        public static void OnChangedCameraMode(Changed<FighterManager> changed)
+        {
+            changed.Behaviour.OnCameraModeChanged?.Invoke(changed.Behaviour);
+        }
 
         public virtual async UniTask<bool> OnFighterLoaded()
         {
@@ -166,6 +174,7 @@ namespace rwby
                 FPhysicsManager.Freeze();
                 return;
             }
+
             boxManager.ResetAllBoxes();
             visualTransform.gameObject.SetActive(Visible);
 

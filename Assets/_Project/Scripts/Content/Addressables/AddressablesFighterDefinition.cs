@@ -27,12 +27,15 @@ namespace rwby
         {
             get { return hudContentReferences; }
         }
+        
+        public override CameraDef[] cameras => cams;
 
         [SerializeField] private string fighterName;
         [SerializeField] [TextArea] private string description;
         [SerializeField] private AssetReferenceT<GameObject> fighterReference;
         [SerializeField] private AssetReferenceT<Moveset>[] movesetReferences;
         [SerializeField] private ModObjectItemReference[] hudContentReferences = Array.Empty<ModObjectItemReference>();
+        [SerializeField] private CameraDef[] cams = Array.Empty<CameraDef>();
         [SerializeField] private bool selectable = true;
         [SerializeField] private int health;
         [SerializeField] private int aura;

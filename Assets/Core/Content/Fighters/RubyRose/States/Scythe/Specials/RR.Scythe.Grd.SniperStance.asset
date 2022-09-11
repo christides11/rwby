@@ -24,9 +24,13 @@ MonoBehaviour:
   - rid: 8688056360164655109
   - rid: 8688056360164655119
   - rid: 8688056364881936404
-  stateGroundedGroup: 1
+  - rid: 7270848560384180227
+  - rid: 7270848560384180228
+  auraRequirement: 0
+  initialGroundedState: 1
   stateType: 2
   maxUsesInString: 1
+  selfChainable: 0
   allowBaseStateTransitions: 1
   inputSequence:
     executeWindow: 3
@@ -44,24 +48,22 @@ MonoBehaviour:
   - ID: 0
     groundedFoldoutGroup: 0
     groundedCounterHitFoldoutGroup: 0
-    aerialFoldoutGroup: 0
-    aerialCounterHitFoldoutGroup: 0
     hitStateGroundedGroups: -1
-    groundGroup:
-      hitState: 30
+    hit:
+      groundHitState: 30
+      airHitState: 0
       groundBounces: 0
       wallBounces: 0
       groundBounceForcePercentage: 0
       wallBounceForcePercentage: 0
-      hitKills: 0
+      noKill: 0
       hitForceType: 0
       hitForceRelation: 0
       hitForceRelationOffset: {x: 0, y: 0, z: 0}
       autolink: 0
       autolinkPercentage: 0
-      hitForce: {x: 0, y: 0, z: 5}
-      blockForce: {x: 0, y: 0, z: 0}
-      hitGravity: 0
+      groundHitForce: {x: 0, y: 0, z: 5}
+      aerialHitForce: {x: 0, y: 0, z: 0}
       pullPushCurve:
         serializedVersion: 2
         m_Curve:
@@ -87,25 +89,55 @@ MonoBehaviour:
         m_PostInfinity: 2
         m_RotationOrder: 4
       pullPushMaxDistance: 10
+      blockLift: 0
       attackerHitstop: 4
       hitstop: 4
       hitstun: 60
       blockstun: 15
-    groundCounterHitGroup:
-      hitState: 0
+      untech: 0
+      initialProration: 0
+      comboProration: 0
+      damage: 0
+      chipDamage: 0
+      hitEffectbank:
+        modGUID:
+          guid: 
+        contentGUID:
+          guid: 
+      hitEffect: 
+      blockEffectbank:
+        modGUID:
+          guid: 
+        contentGUID:
+          guid: 
+      blockEffect: 
+      hitSoundbank:
+        modGUID:
+          guid: 
+        contentGUID:
+          guid: 
+      hitSound: 
+      hitCameraShakeStrength: 0
+      blockCameraShakeStrength: 0
+      cameraShakeLength: 0
+      ignoreProration: 0
+      ignoreHitstunScaling: 0
+      ignorePushbackScaling: 0
+    counterhit:
+      groundHitState: 0
+      airHitState: 0
       groundBounces: 0
       wallBounces: 0
       groundBounceForcePercentage: 0
       wallBounceForcePercentage: 0
-      hitKills: 0
+      noKill: 0
       hitForceType: 0
       hitForceRelation: 0
       hitForceRelationOffset: {x: 0, y: 0, z: 0}
       autolink: 0
       autolinkPercentage: 0
-      hitForce: {x: 0, y: 0, z: 0}
-      blockForce: {x: 0, y: 0, z: 0}
-      hitGravity: 0
+      groundHitForce: {x: 0, y: 0, z: 0}
+      aerialHitForce: {x: 0, y: 0, z: 0}
       pullPushCurve:
         serializedVersion: 2
         m_Curve: []
@@ -113,62 +145,40 @@ MonoBehaviour:
         m_PostInfinity: 2
         m_RotationOrder: 4
       pullPushMaxDistance: 0
+      blockLift: 0
       attackerHitstop: 0
       hitstop: 0
       hitstun: 0
       blockstun: 0
-    aerialGroup:
-      hitState: 32
-      groundBounces: 0
-      wallBounces: 0
-      groundBounceForcePercentage: 0
-      wallBounceForcePercentage: 0
-      hitKills: 0
-      hitForceType: 0
-      hitForceRelation: 0
-      hitForceRelationOffset: {x: 0, y: 0, z: 0}
-      autolink: 0
-      autolinkPercentage: 0
-      hitForce: {x: 0, y: 0, z: 10}
-      blockForce: {x: 0, y: 0, z: 0}
-      hitGravity: 0
-      pullPushCurve:
-        serializedVersion: 2
-        m_Curve: []
-        m_PreInfinity: 2
-        m_PostInfinity: 2
-        m_RotationOrder: 4
-      pullPushMaxDistance: 0
-      attackerHitstop: 8
-      hitstop: 8
-      hitstun: 60
-      blockstun: 15
-    aerialCounterHitGroup:
-      hitState: 0
-      groundBounces: 0
-      wallBounces: 0
-      groundBounceForcePercentage: 0
-      wallBounceForcePercentage: 0
-      hitKills: 0
-      hitForceType: 0
-      hitForceRelation: 0
-      hitForceRelationOffset: {x: 0, y: 0, z: 0}
-      autolink: 0
-      autolinkPercentage: 0
-      hitForce: {x: 0, y: 0, z: 0}
-      blockForce: {x: 0, y: 0, z: 0}
-      hitGravity: 0
-      pullPushCurve:
-        serializedVersion: 2
-        m_Curve: []
-        m_PreInfinity: 2
-        m_PostInfinity: 2
-        m_RotationOrder: 4
-      pullPushMaxDistance: 0
-      attackerHitstop: 0
-      hitstop: 0
-      hitstun: 0
-      blockstun: 0
+      untech: 0
+      initialProration: 0
+      comboProration: 0
+      damage: 0
+      chipDamage: 0
+      hitEffectbank:
+        modGUID:
+          guid: 
+        contentGUID:
+          guid: 
+      hitEffect: 
+      blockEffectbank:
+        modGUID:
+          guid: 
+        contentGUID:
+          guid: 
+      blockEffect: 
+      hitSoundbank:
+        modGUID:
+          guid: 
+        contentGUID:
+          guid: 
+      hitSound: 
+      hitCameraShakeStrength: 0
+      blockCameraShakeStrength: 0
+      cameraShakeLength: 0
+      ignoreProration: 0
+      ignoreHitstunScaling: 0
+      ignorePushbackScaling: 0
   throwboxInfo: []
   hurtboxInfo: []
   references:
@@ -176,6 +186,32 @@ MonoBehaviour:
     RefIds:
     - rid: -2
       type: {class: , ns: , asm: }
+    - rid: 7270848560384180227
+      type: {class: VarModifyCameraMode, ns: rwby, asm: rwby.csharp}
+      data:
+        name: 
+        id: 10
+        parent: -1
+        children: 
+        frameRanges:
+        - {x: 0, y: 0}
+        condition:
+          rid: -2
+        modifyType: 1
+        value: 1
+    - rid: 7270848560384180228
+      type: {class: VarModifyCameraMode, ns: rwby, asm: rwby.csharp}
+      data:
+        name: 
+        id: 11
+        parent: -1
+        children: 
+        frameRanges:
+        - {x: -2, y: -2}
+        condition:
+          rid: -2
+        modifyType: 1
+        value: 0
     - rid: 8688056217396838433
       type: {class: VarCreateBox, ns: rwby, asm: rwby.csharp}
       data:
@@ -229,6 +265,7 @@ MonoBehaviour:
           rid: 8688056360164655121
         checkInputSequence: 0
         checkCondition: 0
+        targetType: 0
         stateMovesetID: -1
         state:
           rid: 8688056360164655120
@@ -253,6 +290,7 @@ MonoBehaviour:
           rid: 8688056364881936406
         checkInputSequence: 0
         checkCondition: 0
+        targetType: 0
         stateMovesetID: -1
         state:
           rid: 8688056364881936405

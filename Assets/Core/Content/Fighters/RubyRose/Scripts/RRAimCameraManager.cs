@@ -18,12 +18,14 @@ namespace rwby.core
 
         private CameraSwitcher switcher;
         private FighterManager followTarget;
+
+        public int aimRange = 45;
         
         public override void Initialize(CameraSwitcher switcher)
         {
             this.switcher = switcher;
             cinemachineBrain = switcher.cam.GetComponent<CinemachineBrain>();
-            
+
             virtualCameraPOV = virtualCamera.GetCinemachineComponent<CinemachinePOV>();
             virtualCameraShake = virtualCamera.GetComponent<CinemachineShake>();
 
@@ -36,22 +38,33 @@ namespace rwby.core
 
         public override void Activate()
         {
+            virtualCameraPOV.m_HorizontalAxis.m_Wrap = false;
+            virtualCameraPOV.m_HorizontalAxis.m_MinValue = followTarget.transform.eulerAngles.y - aimRange;
+            virtualCameraPOV.m_HorizontalAxis.m_MaxValue = followTarget.transform.eulerAngles.y + aimRange;
+            virtualCameraPOV.m_HorizontalAxis.Value = followTarget.transform.eulerAngles.y;
+            gameObject.SetActive(true);
             base.Activate();
         }
 
         public override void Deactivate()
         {
+            gameObject.SetActive(false);
             base.Deactivate();
         }
 
         public override void Render()
         {
+            if (!active) return;
             base.Render();
+            cinemachineBrain.ManualUpdate();
         }
 
         public virtual void Update()
         {
-            
+            if (!active) return;
+            Vector2 stickInput = switcher.cameraInputManager.GetCameraInput(false);
+
+            inputProvider.input = stickInput;
         }
 
         public override void AssignControlTo(ClientManager clientManager, int playerID)

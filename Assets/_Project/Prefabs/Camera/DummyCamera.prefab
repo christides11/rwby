@@ -140,8 +140,8 @@ MonoBehaviour:
   m_UpdateMethod: 3
   m_BlendUpdateMethod: 1
   m_DefaultBlend:
-    m_Style: 0
-    m_Time: 2
+    m_Style: 4
+    m_Time: 0.15
     m_CustomCurve:
       serializedVersion: 2
       m_Curve: []
@@ -167,7 +167,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 62e28741fba984748b63c285009cf3be, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerCamera: {fileID: 2158316734981574143, guid: 3f87fd8091977f747949ff5e5d571e69, type: 3}
   camera: {fileID: 8270140622770351423}
   wallMask:
     serializedVersion: 2
@@ -177,6 +176,8 @@ MonoBehaviour:
   cutoutCloseSpeed: 3
   cutoutOpenSpeed: 2
   targetOffset: {x: 0, y: 1, z: 0}
+  InUse: 0
+  cutoffPosition: {x: 0, y: 0, z: 0}
 --- !u!114 &1831630852834277601
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -283,6 +283,7 @@ namespace rwby.core.training
 
             await UniTask.WaitUntil(() => Runner.TryFindObject(clientInfo.players[playerIndex].characterNetworkObjects[0], out no));
 
+            FighterManager fm = no.GetComponent<FighterManager>();
             var dummyCamera = Runner.InstantiateInRunnerScene(GameManager.singleton.settings.dummyCamera, Vector3.up,
                 Quaternion.identity);
             var cameraSwitcher = Runner.InstantiateInRunnerScene(GameManager.singleton.settings.cameraSwitcher,
@@ -298,9 +299,17 @@ namespace rwby.core.training
             cameraSwitcher.cam = dummyCamera;
             cameraSwitcher.RegisterCamera(0, lockonCameraManager);
             lockonCameraManager.Initialize(cameraSwitcher);
+            foreach (var c in fm.fighterDefinition.cameras)
+            {
+                var cc = Runner.InstantiateInRunnerScene(c.cam, Vector3.zero, Quaternion.identity);
+                Runner.AddSimulationBehaviour(cc);
+                cameraSwitcher.RegisterCamera(c.id, cc);
+                cc.Initialize(cameraSwitcher);
+            }
             cameraSwitcher.SetTarget(no.GetComponent<FighterManager>());
             cameraSwitcher.AssignControlTo(cm, playerIndex);
             cameraSwitcher.Disable();
+            fm.OnCameraModeChanged += cameraSwitcher.WhenCameraModeChanged;
             
             GameManager.singleton.localPlayerManager.SetPlayerCameraHandler(playerIndex, cameraSwitcher);
             GameManager.singleton.localPlayerManager.SetPlayerCamera(playerIndex, dummyCamera.camera);

@@ -862,5 +862,21 @@ namespace rwby
             
             fm.FCombatManager.IncrementChargeLevelCharge(vars.chargePerLevel);
         }
+        
+        public static void ModifyCameraMode(IFighterBase fighter, IStateVariables variables, HnSF.StateTimeline stateTimeline, int frame)
+        {
+            FighterManager fm = (FighterManager)fighter;
+            VarModifyCameraMode vars = (VarModifyCameraMode)variables;
+
+            switch (vars.modifyType)
+            {
+                case VarModifyType.ADD:
+                    fm.cameraMode += vars.value;
+                    break;
+                case VarModifyType.SET:
+                    fm.cameraMode = vars.value;
+                    break;
+            }
+        }
     }
 }

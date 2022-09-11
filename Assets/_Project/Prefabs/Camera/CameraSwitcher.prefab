@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6456112888593525652}
   - component: {fileID: 6456112888593525655}
+  - component: {fileID: -6958547907970411644}
   m_Layer: 0
   m_Name: CameraSwitcher
   m_TagString: Untagged
@@ -44,6 +45,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dc1add9986acc8c43ae1c2aa2be65c6a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  cameraInputManager: {fileID: -6958547907970411644}
   cam: {fileID: 0}
-  playerCameras: []
+  target: {fileID: 0}
   currentCamera: 0
+--- !u!114 &-6958547907970411644
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6456112888593525654}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 954ffbf8d866bfe4f8949f8c8c994e9d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

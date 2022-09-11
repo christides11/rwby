@@ -99,7 +99,8 @@ MonoBehaviour:
       untech: 60
       initialProration: 0
       comboProration: 0
-      damage: 0
+      damage: 9999
+      chipDamage: 0
       hitEffectbank:
         modGUID:
           guid: 
@@ -121,6 +122,9 @@ MonoBehaviour:
       hitCameraShakeStrength: 2
       blockCameraShakeStrength: 2
       cameraShakeLength: 8
+      ignoreProration: 0
+      ignoreHitstunScaling: 0
+      ignorePushbackScaling: 0
     counterhit:
       groundHitState: 0
       airHitState: 0
@@ -152,6 +156,7 @@ MonoBehaviour:
       initialProration: 0
       comboProration: 0
       damage: 0
+      chipDamage: 0
       hitEffectbank:
         modGUID:
           guid: 
@@ -173,6 +178,9 @@ MonoBehaviour:
       hitCameraShakeStrength: 0
       blockCameraShakeStrength: 0
       cameraShakeLength: 0
+      ignoreProration: 0
+      ignoreHitstunScaling: 0
+      ignorePushbackScaling: 0
   - ID: 0
     groundedFoldoutGroup: 1
     groundedCounterHitFoldoutGroup: 0
@@ -226,6 +234,7 @@ MonoBehaviour:
       initialProration: 0
       comboProration: 0
       damage: 0
+      chipDamage: 0
       hitEffectbank:
         modGUID:
           guid: 
@@ -247,6 +256,9 @@ MonoBehaviour:
       hitCameraShakeStrength: 3
       blockCameraShakeStrength: 3
       cameraShakeLength: 12
+      ignoreProration: 0
+      ignoreHitstunScaling: 0
+      ignorePushbackScaling: 0
     counterhit:
       groundHitState: 0
       airHitState: 0
@@ -278,6 +290,7 @@ MonoBehaviour:
       initialProration: 0
       comboProration: 0
       damage: 0
+      chipDamage: 0
       hitEffectbank:
         modGUID:
           guid: 
@@ -299,6 +312,9 @@ MonoBehaviour:
       hitCameraShakeStrength: 0
       blockCameraShakeStrength: 0
       cameraShakeLength: 0
+      ignoreProration: 0
+      ignoreHitstunScaling: 0
+      ignorePushbackScaling: 0
   throwboxInfo: []
   hurtboxInfo: []
   references:
