@@ -102,7 +102,7 @@ namespace rwby
 
         [Networked] public CmaeraShakeDefinition shakeDefinition { get; set; }
         [Networked(OnChanged = nameof(OnChangedCameraMode))] public int cameraMode { get; set; }
-
+        
         public delegate void EmptyDelegate(FighterManager fighterManager);
         public event EmptyDelegate OnCameraModeChanged;
         
@@ -162,6 +162,7 @@ namespace rwby
         public int testShakeLength;
         public override void FixedUpdateNetwork()
         {
+            combatManager.CounterhitState = false;
             GetFloorAngle();
             inputManager.FeedInput();
             if (Runner.Simulation.IsResimulation && Runner.Simulation.IsFirstTick)

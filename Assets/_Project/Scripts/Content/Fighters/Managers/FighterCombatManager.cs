@@ -49,7 +49,7 @@ namespace rwby
         [Networked, Capacity(20)] public NetworkLinkedList<MovesetStateIdentifier> movesUsedInString => default;
 
         [Networked] public int hitstopCounter { get; set; }
-        [Networked] public NetworkBool CounterhitState { get; set; }
+        public bool CounterhitState;
         [Networked] public int WallBounces { get; set; }
         [Networked] public float WallBounceForcePercentage { get; set; }
         [Networked] public int GroundBounces { get; set; }
@@ -428,6 +428,7 @@ namespace rwby
             
             bool isGrounded = stateManager.CurrentGroundedState == StateGroundedGroupType.GROUND;
             HitInfo.HitInfoGroup hitInfoGroup = CounterhitState ? hitInfo.counterhit : hitInfo.hit;
+            bool isFatalCounter = !isGrounded && CounterhitState;
             hitReaction.hitInfoGroup = hitInfoGroup;
 
             if (isGrounded && hitInfoGroup.groundHitState == FighterCmnStates.NULL
@@ -469,7 +470,7 @@ namespace rwby
             
             // Got hit, apply stun, damage, and forces.
             hitReaction.reaction = HitReactionType.HIT;
-            int initHitstunValue = isGrounded ? hitInfoGroup.hitstun : hitInfoGroup.untech;
+            int initHitstunValue = isGrounded ? hitInfoGroup.hitstun : (isFatalCounter ? 600 : hitInfoGroup.untech);
             SetHitStun(hitInfoGroup.ignoreHitstunScaling ? initHitstunValue : ApplyHitstunScaling(initHitstunValue));
             ApplyHitForces(hurtInfo, currentState, hitInfoGroup.hitForceType, isGrounded ?  hitInfoGroup.groundHitForce : hitInfoGroup.aerialHitForce, hitInfoGroup.pullPushCurve, hitInfoGroup.pullPushMaxDistance, hitInfoGroup.hitForceRelationOffset,
                 hitInfoGroup.ignorePushbackScaling);

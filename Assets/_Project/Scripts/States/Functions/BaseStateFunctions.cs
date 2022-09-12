@@ -890,5 +890,25 @@ namespace rwby
                     break;
             }
         }
+        
+        public static void ModifyAttackStringList(IFighterBase fighter, IStateVariables variables, HnSF.StateTimeline stateTimeline, int frame)
+        {
+            FighterManager fm = (FighterManager)fighter;
+            VarModifyAttackStringList vars = (VarModifyAttackStringList)variables;
+
+            switch (vars.actionType)
+            {
+                case VarModifyAttackStringList.StringListActionTypes.CLEAR:
+                    fm.FCombatManager.ResetString();
+                    break;
+            }
+        }
+        
+        public static void SetCounterhitState(IFighterBase fighter, IStateVariables variables, HnSF.StateTimeline stateTimeline, int frame)
+        {
+            FighterManager fm = (FighterManager)fighter;
+
+            fm.FCombatManager.CounterhitState = true;
+        }
     }
 }

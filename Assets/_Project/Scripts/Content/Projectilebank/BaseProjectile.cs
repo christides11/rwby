@@ -29,6 +29,8 @@ namespace rwby
         }
 
         public EntityBoxManager boxManager;
+
+        public VarCreateBox cb;
         
         [Header("BoxDefinitions")]
         [SerializeField] private HitInfo[] hitboxInfo;
@@ -39,6 +41,7 @@ namespace rwby
         {
             base.FixedUpdateNetwork();
             boxManager.ResetAllBoxes();
+            boxManager.AddBox(cb.boxType, cb.attachedTo, cb.shape, cb.offset, cb.boxExtents, cb.radius, cb.definitionIndex, this);
             Move();
         }
 
