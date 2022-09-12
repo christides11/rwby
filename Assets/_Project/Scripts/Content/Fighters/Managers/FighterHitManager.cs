@@ -121,6 +121,8 @@ namespace rwby
         public override void DoClash(CustomHitbox hitbox, CustomHitbox enemyHitbox)
         {
             base.DoClash(hitbox, enemyHitbox);
+            combatManager.ResetString();
+            combatManager.ClashState = true;
             combatManager.SetHitStop(17);
         }
 

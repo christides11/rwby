@@ -12,6 +12,9 @@ namespace rwby
         public FighterStats fighterStats;
 
         public SpecialDefinition[] specials;
+
+        public ExternalStateVariables clashCancelListGrd;
+        public ExternalStateVariables clashCancelListAir;
         
         public virtual void Initialize()
         {

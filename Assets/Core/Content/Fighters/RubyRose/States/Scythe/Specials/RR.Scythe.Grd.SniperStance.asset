@@ -25,6 +25,7 @@ MonoBehaviour:
   - rid: 8688056360164655119
   - rid: 8688056364881936404
   - rid: 7270848563102089221
+  - rid: 7270848570176831488
   auraRequirement: 0
   initialGroundedState: 1
   stateType: 2
@@ -206,6 +207,18 @@ MonoBehaviour:
       type: {class: RubyRoseStateReference, ns: rwby.core, asm: rwby.core}
       data:
         state: 72
+    - rid: 7270848570176831488
+      type: {class: VarModifyAttackStringList, ns: rwby, asm: rwby.csharp}
+      data:
+        name: 
+        id: 13
+        parent: -1
+        children: 
+        frameRanges:
+        - {x: 0, y: 0}
+        condition:
+          rid: -2
+        actionType: 1
     - rid: 8688056217396838433
       type: {class: VarCreateBox, ns: rwby, asm: rwby.csharp}
       data:

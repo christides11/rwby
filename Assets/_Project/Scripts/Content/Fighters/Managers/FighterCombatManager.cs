@@ -49,7 +49,6 @@ namespace rwby
         [Networked, Capacity(20)] public NetworkLinkedList<MovesetStateIdentifier> movesUsedInString => default;
 
         [Networked] public int hitstopCounter { get; set; }
-        public bool CounterhitState;
         [Networked] public int WallBounces { get; set; }
         [Networked] public float WallBounceForcePercentage { get; set; }
         [Networked] public int GroundBounces { get; set; }
@@ -57,6 +56,9 @@ namespace rwby
 
         [Networked, Capacity(4)] public NetworkArray<int> assignedSpecials => default;
 
+        [Networked] public bool ClashState { get; set; }
+        public bool CounterhitState;
+        
         public IntIntMap[] hitstunDecayMap = new IntIntMap[4];
         public IntFloatMap[] pushbackScalingMap = new IntFloatMap[4];
         public IntFloatMap[] gravityScalingMap = new IntFloatMap[4];

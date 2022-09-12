@@ -55,6 +55,27 @@ namespace rwby
             if (CurrentState == 0) return;
             var stateTimeline = GetState();
             ProcessState(stateTimeline, onInterrupt: false, autoIncrement: stateTimeline.autoIncrement, autoLoop: stateTimeline.autoLoop);
+            // TODO: Move to combat manager.
+            // Handles cancel list on clashing
+            if (manager.FCombatManager.ClashState)
+            {
+                var m = (rwby.Moveset)GetMoveset(CurrentMoveset);
+                switch (CurrentGroundedState)
+                {
+                    case StateGroundedGroupType.GROUND:
+                        foreach (var d in m.clashCancelListGrd.data)
+                        {
+                            ProcessStateVariables((rwby.StateTimeline)stateTimeline, d, CurrentStateFrame, stateTimeline.totalFrames, false);
+                        }
+                        break;
+                    case StateGroundedGroupType.AERIAL:
+                        foreach (var d in m.clashCancelListAir.data)
+                        {
+                            ProcessStateVariables((rwby.StateTimeline)stateTimeline, d, CurrentStateFrame, stateTimeline.totalFrames, false);
+                        }
+                        break;
+                }
+            }
             HandleStateGroup(stateTimeline);
         }
 
@@ -199,6 +220,7 @@ namespace rwby
         
         public void StateChanged(rwby.StateTimeline previousState, rwby.StateTimeline currentState)
         {
+            combatManager.ClashState = false;
             combatManager.ResetCharge();
             combatManager.HitboxManager.Reset();
             manager.fighterEffector.ClearCurrentEffects();
