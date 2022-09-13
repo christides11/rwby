@@ -20,6 +20,7 @@ namespace rwby
             public float groundBounceForcePercentage;
             public float wallBounceForcePercentage;
             public bool noKill;
+            public bool unblockable;
 
             public HitboxForceType hitForceType;
             public HitboxForceRelation hitForceRelation;

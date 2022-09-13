@@ -28,6 +28,7 @@ namespace rwby
         [Networked] public NetworkBool markedForStateChange { get; set; } = false;
         [Networked] public int nextStateMoveset { get; set; } = -1;
         [Networked] public int nextState { get; set; } = 0;
+        [Networked] public int nextStateFrame { get; set; } = 0;
         [Networked] public StateGroundedGroupType CurrentGroundedState { get; set; } = StateGroundedGroupType.AERIAL;
         [Networked] public StateType CurrentStateType { get; set; } = StateType.NONE;
 
@@ -176,12 +177,13 @@ namespace rwby
             return movesets[index];
         }
 
-        public void MarkForStateChange(int state, int moveset = -1)
+        public void MarkForStateChange(int state, int moveset = -1, int frame = 0)
         {
             if (markedForStateChange) return;
             markedForStateChange = true;
             nextState = state;
             nextStateMoveset = moveset;
+            nextStateFrame = frame;
         }
 
         public bool ChangeState(int state, int moveset = -1, int stateFrame = 0, bool callOnInterrupt = true)

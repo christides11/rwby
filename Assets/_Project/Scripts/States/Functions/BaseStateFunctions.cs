@@ -45,10 +45,10 @@ namespace rwby
             switch (vars.targetType)
             {
                 case VarTargetType.Self:
-                    fighter.StateManager.MarkForStateChange(vars.state.GetState(), vars.stateMovesetID);
+                    fighter.StateManager.MarkForStateChange(vars.state.GetState(), vars.stateMovesetID, vars.frame);
                     break;
                 case VarTargetType.Throwees:
-                    fm.throwees[0].GetBehaviour<FighterManager>().FStateManager.MarkForStateChange(vars.state.GetState(), vars.stateMovesetID);
+                    fm.throwees[0].GetBehaviour<FighterManager>().FStateManager.MarkForStateChange(vars.state.GetState(), vars.stateMovesetID, vars.frame);
                     break;
             }
         }

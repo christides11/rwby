@@ -49,5 +49,6 @@ namespace rwby
         public int stateMovesetID;
         [SelectImplementation(typeof(FighterStateReferenceBase))] [SerializeField, SerializeReference]
         public FighterStateReferenceBase state;
+        public int frame;
     }
 }

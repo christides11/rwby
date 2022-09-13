@@ -67,7 +67,9 @@ namespace rwby
 
         public event AuraDelegate OnAuraIncreased;
         public event AuraDelegate OnAuraDecreased;
-        
+
+        [Networked] public int LastSuccessfulBlockTick { get; set; }
+
         public static void OnChangedAura(Changed<FighterCombatManager> changed)
         {
             changed.LoadOld();
@@ -442,9 +444,9 @@ namespace rwby
             
             SetHitStop(hitInfoGroup.hitstop);
             
-            if(BlockState != BlockStateType.NONE)
+            if(!hitInfoGroup.unblockable && BlockState != BlockStateType.NONE)
             {
-                if(Vector3.Angle(transform.forward, hurtInfo.forward) > 90)
+                if((Runner.Tick - LastSuccessfulBlockTick) <= 7 || Vector3.Angle(transform.forward, hurtInfo.forward) > 90)
                 {
                     hitReaction.reaction = HitReactionType.BLOCKED;
                     SetHitStop(hitInfoGroup.hitstop);
@@ -461,6 +463,7 @@ namespace rwby
                         startFrame = Runner.Tick,
                         endFrame = Runner.Tick + hitInfoGroup.cameraShakeLength
                     };
+                    LastSuccessfulBlockTick = Runner.Tick;
                     return hitReaction;
                 }
             }
@@ -495,7 +498,9 @@ namespace rwby
                 physicsManager.SetGrounded(false);
             }
 
-            manager.HealthManager.ModifyHealth((int)-(hitInfoGroup.damage * (hitInfoGroup.ignoreProration ? 1.0f : Proration)));
+            int dmg = (int)-(hitInfoGroup.damage * (hitInfoGroup.ignoreProration ? 1.0f : Proration));
+            if (hitInfoGroup.damage > 0) dmg = Mathf.Clamp(dmg, 1, Int32.MaxValue);
+            manager.HealthManager.ModifyHealth(dmg);
 
             stateManager.ChangeState(isGrounded ? (int)hitInfoGroup.groundHitState : (int)hitInfoGroup.airHitState);
             manager.FCombatManager.Cleanup();
