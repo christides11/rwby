@@ -349,5 +349,14 @@ namespace rwby
             return f.FCombatManager.CurrentChargeLevel >= vars.minLevel &&
                    f.FCombatManager.CurrentChargeLevel <= vars.maxLevel;
         }
+        
+        public static bool CheckSuccessfulBlock(IFighterBase fighter, IConditionVariables variables, HnSF.StateTimeline arg3, int arg4)
+        {
+            FighterManager f = fighter as FighterManager;
+            ConditionCheckSuccessfulBlock vars = (ConditionCheckSuccessfulBlock)variables;
+
+            bool r =(f.Runner.Tick - f.FCombatManager.LastSuccessfulBlockTick) <= vars.checkDistance;
+            return vars.inverse ? !r : r;
+        }
     }
 }

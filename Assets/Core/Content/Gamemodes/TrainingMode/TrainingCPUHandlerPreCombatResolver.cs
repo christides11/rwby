@@ -22,9 +22,54 @@ namespace rwby.core.training
             {
                 if (!cpuHandlerCore.cpus[i].objectId.IsValid) continue;
 
-                if (cpuHandlerCore.cpuSettings[i].behaviour == 0 && cpuHandlerCore.cpuSettings[i].block == 1)
+                NetworkPlayerInputData id = cpuHandlerCore.testData[i];
+                
+                var temp = combatPairFinder.hitboxCombatPairs.Where(x =>
+                    x.Key.Item2.Id == cpuHandlerCore.cpus[i].objectId).ToArray();
+                
+                
+                FighterManager fm =
+                    Runner.TryGetNetworkedBehaviourFromNetworkedObjectRef<FighterManager>(cpuHandlerCore.cpus[i]
+                        .objectId);
+                
+                switch (cpuHandlerCore.cpuSettings[i].status)
                 {
-                    switch (cpuHandlerCore.cpuSettings[i].block)
+                    case (int)CPUActionStatus.Jumping:
+                    case (int)CPUActionStatus.Standing:
+                        switch (cpuHandlerCore.cpuSettings[i].guard)
+                        {
+                            case (int)CPUGuardStatus.Guard_All:
+                                if (temp.Length != 0)
+                                {
+                                    id.buttons.Set(PlayerInputType.BLOCK, true);
+                                }
+                                break;
+                        }
+
+                        switch (cpuHandlerCore.cpuSettings[i].guardDirection)
+                        {
+                            case (int)CpuEnabledStateStatus.Disabled:
+                                break;
+                            case (int)CpuEnabledStateStatus.Enabled:
+                                if (temp.Length != 0)
+                                {
+                                    id.forward = (temp[0].Key.Item1.transform.position - fm.transform.position).normalized;
+                                    id.right = Vector3.Cross(id.forward, Vector3.up);
+                                    id.camPos = fm.transform.position;
+                                    id.movement = new Vector2(0, 1.0f);
+                                }
+
+                                break;
+                        }
+                        break;
+                }
+
+                cpuHandlerCore.testData[i] = id;
+                
+                /*
+                if (cpuHandlerCore.cpuSettings[i].status == 0 && cpuHandlerCore.cpuSettings[i].guard == 1)
+                {
+                    switch (cpuHandlerCore.cpuSettings[i].guard)
                     {
                         case 0:
                             break;
@@ -39,13 +84,14 @@ namespace rwby.core.training
                     {
                         
                     }
-                }
+                }*/
 
                 /*
                 foreach (var valuePair in temp)
                 {
                     //combatPairFinder.hitboxCombatPairs.Remove(valuePair.Key);
                 }*/
+                fm.FighterUpdate();
             }
         }
     }

@@ -48,11 +48,6 @@ namespace rwby
 
         public void Tick()
         {
-            if (markedForStateChange && GameModeBase.singleton.CanTakeInput())
-            {
-                ChangeState(nextState, nextStateMoveset, 0, true);
-            }
-
             if (CurrentState == 0) return;
             var stateTimeline = GetState();
             ProcessState(stateTimeline, onInterrupt: false, autoIncrement: stateTimeline.autoIncrement, autoLoop: stateTimeline.autoLoop);
@@ -78,6 +73,11 @@ namespace rwby
                 }
             }
             HandleStateGroup(stateTimeline);
+            
+            if (markedForStateChange && GameModeBase.singleton.CanTakeInput())
+            {
+                ChangeState(nextState, nextStateMoveset, 0, true);
+            }
         }
 
         private void ProcessState(StateTimeline state, bool onInterrupt = false, bool autoIncrement = false, bool autoLoop = false)

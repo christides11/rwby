@@ -910,5 +910,14 @@ namespace rwby
 
             fm.FCombatManager.CounterhitState = true;
         }
+        
+        public static void SetPushblockState(IFighterBase fighter, IStateVariables variables, HnSF.StateTimeline stateTimeline, int frame)
+        {
+            FighterManager fm = (FighterManager)fighter;
+            VarSetPushblockState vars = (VarSetPushblockState)variables;
+
+            fm.FCombatManager.CurrentPushblockState = vars.pushblockState;
+            fm.FCombatManager.pushblockTimer = vars.length;
+        }
     }
 }

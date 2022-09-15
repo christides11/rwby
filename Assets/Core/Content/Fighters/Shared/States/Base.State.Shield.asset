@@ -10,20 +10,21 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7789f25d17401bc4b915ca6fcecf2a29, type: 3}
-  m_Name: Base.State.Grd.Guard
+  m_Name: Base.State.Shield
   m_EditorClassIdentifier: 
-  stateName: Guard (Grd)
-  useBaseState: 1
-  baseState: {fileID: 11400000, guid: 0d7a4f134d038234b9869e72d1c5b8e7, type: 2}
-  totalFrames: 10
-  autoIncrement: 1
+  stateName: Shield
+  useBaseState: 0
+  baseState: {fileID: 0}
+  totalFrames: 6
+  autoIncrement: 0
   autoLoop: 1
   autoLoopFrame: 5
   data:
-  - rid: 2193520697185665054
-  - rid: 8688056682080894976
-  - rid: 8688056682080894979
-  - rid: 7270848607039258637
+  - rid: 7270848607039258629
+  - rid: 7270848607039258624
+  - rid: 7270848607039258625
+  - rid: 7270848604663709696
+  - rid: 7270848604663709698
   auraRequirement: 0
   initialGroundedState: 1
   stateType: 1
@@ -46,63 +47,67 @@ MonoBehaviour:
     RefIds:
     - rid: -2
       type: {class: , ns: , asm: }
-    - rid: 2193520697185665054
-      type: {class: VarApplyTraction, ns: rwby, asm: rwby.csharp}
+    - rid: 7270848604663709696
+      type: {class: VarModifyFrame, ns: rwby, asm: rwby.csharp}
+      data:
+        name: 
+        id: 0
+        frameRanges:
+        - {x: 1, y: 1}
+        condition:
+          rid: 7270848604663709697
+        modifyType: 0
+        value: 1
+        parent: -1
+        children: 
+    - rid: 7270848604663709697
+      type: {class: ConditionButton, ns: rwby, asm: rwby.csharp}
+      data:
+        inverse: 1
+        button: 3
+        buttonState: 0
+        offset: 0
+        buffer: 0
+    - rid: 7270848604663709698
+      type: {class: VarModifyFrame, ns: rwby, asm: rwby.csharp}
+      data:
+        name: 
+        id: 1
+        frameRanges:
+        - {x: 2, y: -1}
+        condition:
+          rid: -2
+        modifyType: 0
+        value: 1
+        parent: -1
+        children: 
+    - rid: 7270848607039258624
+      type: {class: VarSetPushblockState, ns: rwby, asm: rwby.csharp}
       data:
         name: 
         id: 2
         parent: -1
         children: 
         frameRanges:
-        - {x: 1, y: -1}
+        - {x: 1, y: 1}
         condition:
           rid: -2
-        traction:
-          rid: 2193520697185665055
-        applyMovement: 1
-        applyGravity: 0
-    - rid: 2193520697185665055
-      type: {class: FighterBaseStatReferenceFloat, ns: rwby, asm: rwby.csharp}
-      data:
-        inverse: 0
-        statReference: 1
-        value: 0
-        variable: 0
-    - rid: 7270848607039258637
-      type: {class: VarChangeState, ns: rwby, asm: rwby.csharp}
-      data:
-        name: Try Shield
-        id: 5
-        parent: -1
-        children: 
-        frameRanges:
-        - {x: 1, y: -1}
-        condition:
-          rid: -2
-        checkInputSequence: 1
-        checkCondition: 0
-        targetType: 0
-        stateMovesetID: -1
-        state:
-          rid: 7270848607039258638
-        frame: 0
-    - rid: 7270848607039258638
-      type: {class: FighterCmnStateReference, ns: rwby, asm: rwby.csharp}
-      data:
-        state: 45
-    - rid: 8688056682080894976
-      type: {class: VarSetBlockState, ns: rwby, asm: rwby.csharp}
+        pushblockState: 1
+        length: 0
+    - rid: 7270848607039258625
+      type: {class: VarSetPushblockState, ns: rwby, asm: rwby.csharp}
       data:
         name: 
         id: 3
         parent: -1
         children: 
         frameRanges:
-        - {x: 0, y: 0}
+        - {x: 2, y: 2}
         condition:
           rid: -2
-        state: 2
-    - rid: 8688056682080894979
+        pushblockState: 0
+        length: 0
+    - rid: 7270848607039258629
       type: {class: VarSetBlockState, ns: rwby, asm: rwby.csharp}
       data:
         name: 
@@ -110,7 +115,7 @@ MonoBehaviour:
         parent: -1
         children: 
         frameRanges:
-        - {x: -2, y: -2}
+        - {x: 0, y: 1}
         condition:
           rid: -2
-        state: 0
+        state: 2

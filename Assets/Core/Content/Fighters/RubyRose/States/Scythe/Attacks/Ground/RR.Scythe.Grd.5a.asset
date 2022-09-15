@@ -64,6 +64,7 @@ MonoBehaviour:
       groundBounceForcePercentage: 0
       wallBounceForcePercentage: 0
       noKill: 0
+      unblockable: 0
       hitForceType: 0
       hitForceRelation: 0
       hitForceRelationOffset: {x: 0, y: 0, z: 0}
@@ -99,9 +100,9 @@ MonoBehaviour:
       blockLift: 0
       attackerHitstop: 4
       hitstop: 4
-      hitstun: 60
+      hitstun: 15
       blockstun: 9
-      untech: 60
+      untech: 15
       initialProration: 0
       comboProration: 0.2
       damage: 300
@@ -138,6 +139,7 @@ MonoBehaviour:
       groundBounceForcePercentage: 0
       wallBounceForcePercentage: 0
       noKill: 0
+      unblockable: 0
       hitForceType: 0
       hitForceRelation: 0
       hitForceRelationOffset: {x: 0, y: 0, z: 0}
@@ -210,6 +212,7 @@ MonoBehaviour:
         stateMovesetID: -1
         state:
           rid: 2193520813467238402
+        frame: 0
     - rid: 2193520813467238402
       type: {class: FighterCmnStateReference, ns: rwby, asm: rwby.csharp}
       data:

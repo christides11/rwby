@@ -59,6 +59,7 @@ namespace rwby
             functions.Add(typeof(VarModifyCameraMode), BaseStateFunctions.ModifyCameraMode);
             functions.Add(typeof(VarModifyAttackStringList), BaseStateFunctions.ModifyAttackStringList);
             functions.Add(typeof(VarSetCounterhitState), BaseStateFunctions.SetCounterhitState);
+            functions.Add(typeof(VarSetPushblockState), BaseStateFunctions.SetPushblockState);
         }
     }
 }

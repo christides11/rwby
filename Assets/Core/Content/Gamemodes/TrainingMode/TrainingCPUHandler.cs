@@ -39,7 +39,7 @@ namespace rwby.core.training
             for(int i = 0; i < cpus.Length; i++)
             {
                 ModGUIDContentReference contentReference = cpus[i].characterReference;
-                if(contentReference.IsValid() && cpus[i].objectId.IsValid == false)
+                if(contentReference.IsValid() && !cpus[i].objectId.IsValid)
                 {
                     List<PlayerRef> failedLoadPlayers = await gamemode.sessionManager.clientContentLoaderService.TellClientsToLoad<IFighterDefinition>(contentReference);
                     if (failedLoadPlayers == null)
@@ -60,6 +60,7 @@ namespace rwby.core.training
                             b.GetBehaviour<FighterInputManager>().inputProvider = Object;
                             b.GetBehaviour<FighterInputManager>().inputEnabled = true;
                             b.GetBehaviour<FighterManager>().callbacks = this;
+                            b.GetBehaviour<FighterManager>().DisableUpdate = true;
                             fManager.HealthManager.Health = fManager.fighterDefinition.Health;
                             var list = cpus;
                             TrainingCPUReference temp = list[indexTemp];
@@ -83,22 +84,30 @@ namespace rwby.core.training
                     continue;
                 }
 
-                if (cpuSettings[i].behaviour == 0)
+                switch (cpuSettings[i].status)
                 {
-                    switch (cpuSettings[i].block)
-                    {
-                        case 0:
-                            break;
-                        case 4:
-                            id.buttons.Set(PlayerInputType.BLOCK, true);
-                            break;
-                    }
+                    case (int)CPUActionStatus.Jumping:
+                    case (int)CPUActionStatus.Standing:
+                        HandleGuard(i, ref id);
+                        break;
+                    case (int)CPUActionStatus.CPU:
+                        break; 
                 }
-
+                
                 testData[i] = id;
             }
         }
-        
+
+        private void HandleGuard(int index, ref NetworkPlayerInputData inputData)
+        {
+            switch (cpuSettings[index].guard)
+            {
+                case (int)CPUGuardStatus.Hold_Guard:
+                    inputData.buttons.Set(PlayerInputType.BLOCK, true);
+                    break;
+            }
+        }
+
         public NetworkPlayerInputData GetInput(int inputIndex)
         {
             return testData[inputIndex];

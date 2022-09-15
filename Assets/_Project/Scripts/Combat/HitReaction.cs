@@ -8,5 +8,6 @@ namespace rwby
     {
         public HitReactionType reaction;
         public HitInfo.HitInfoGroup hitInfoGroup;
+        public Vector3 pushback;
     }
 }

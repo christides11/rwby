@@ -69,6 +69,8 @@ namespace rwby
         public event AuraDelegate OnAuraDecreased;
 
         [Networked] public int LastSuccessfulBlockTick { get; set; }
+        [Networked] public PushblockState CurrentPushblockState { get; set; } = PushblockState.NONE;
+        [Networked] public int pushblockTimer { get; set; } = 0;
 
         public static void OnChangedAura(Changed<FighterCombatManager> changed)
         {
@@ -455,6 +457,22 @@ namespace rwby
                     Vector3 hForce = isGrounded ? hitInfoGroup.groundHitForce : hitInfoGroup.aerialHitForce;
                     if (!hitInfoGroup.blockLift) hForce.y = 0;
                     
+                    switch (CurrentPushblockState)
+                    {
+                        case PushblockState.PERFECT:
+                            BlockStun = Mathf.Clamp(BlockStun-3, 0, int.MaxValue);
+                            break;
+                        case PushblockState.GUARD:
+                            if (pushblockTimer > 0)
+                            {
+                                Vector3 temp = manager.myTransform.position - hurtInfo.center;
+                                temp.y = 0;
+                                temp.Normalize();
+                                temp *= hForce.magnitude * 2.0f;
+                            }
+                            break;
+                    }
+                    
                     manager.HealthManager.ModifyHealth((int)-(hitInfoGroup.chipDamage));
                     ApplyHitForces(hurtInfo, currentState, hitInfoGroup.hitForceType, hForce, hitInfoGroup.pullPushCurve, hitInfoGroup.pullPushMaxDistance, hitInfoGroup.hitForceRelationOffset, true);
                     manager.shakeDefinition = new CmaeraShakeDefinition()
@@ -464,6 +482,7 @@ namespace rwby
                         endFrame = Runner.Tick + hitInfoGroup.cameraShakeLength
                     };
                     LastSuccessfulBlockTick = Runner.Tick;
+                    
                     return hitReaction;
                 }
             }
@@ -498,9 +517,9 @@ namespace rwby
                 physicsManager.SetGrounded(false);
             }
 
-            int dmg = (int)-(hitInfoGroup.damage * (hitInfoGroup.ignoreProration ? 1.0f : Proration));
+            int dmg = (int)(hitInfoGroup.damage * (hitInfoGroup.ignoreProration ? 1.0f : Proration));
             if (hitInfoGroup.damage > 0) dmg = Mathf.Clamp(dmg, 1, Int32.MaxValue);
-            manager.HealthManager.ModifyHealth(dmg);
+            manager.HealthManager.ModifyHealth(-dmg);
 
             stateManager.ChangeState(isGrounded ? (int)hitInfoGroup.groundHitState : (int)hitInfoGroup.airHitState);
             manager.FCombatManager.Cleanup();

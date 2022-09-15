@@ -47,6 +47,8 @@ namespace rwby
         POLE_LAUNCH,
         THROWN,
         THROW_ATTEMPT,
-        THROW
+        THROW,
+        SHIELD_GRD,
+        SHIELD_AIR
     }
 }

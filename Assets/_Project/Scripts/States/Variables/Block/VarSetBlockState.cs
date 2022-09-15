@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace rwby
 {
-    [StateVariable("Set Block State")]
+    [StateVariable("Block/Set Block State")]
     public struct VarSetBlockState : IStateVariables
     {
         public string name;

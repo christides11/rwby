@@ -50,7 +50,10 @@ namespace rwby
         [Networked] public int CurrentJump { get; set; }
         [Networked] public int CurrentAirDash { get; set; }
 
-        [Header("Debug")] public bool FRAMEBYFRAME = false;
+        [Header("Debug")] 
+        public bool FRAMEBYFRAME = false;
+
+        [Networked] public bool DisableUpdate { get; set; } = false;
 
         [Header("References")] 
         [NonSerialized] public NetworkManager networkManager;
@@ -161,6 +164,12 @@ namespace rwby
         public CameraShakeStrength testStrength;
         public int testShakeLength;
         public override void FixedUpdateNetwork()
+        {
+            if (DisableUpdate) return;
+            FighterUpdate();
+        }
+
+        public virtual void FighterUpdate()
         {
             combatManager.CounterhitState = false;
             GetFloorAngle();
