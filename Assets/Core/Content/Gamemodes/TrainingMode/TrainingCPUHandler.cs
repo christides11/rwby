@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
@@ -11,6 +12,13 @@ namespace rwby.core.training
     [OrderBefore(typeof(FighterInputManager))]
     public class TrainingCPUHandler : NetworkBehaviour, IInputProvider, IFighterCallbacks
     {
+        [System.Serializable]
+        public class AttackOptionDefinition
+        {
+            public string nickname;
+            public PlayerInputData[] inputs = Array.Empty<PlayerInputData>();
+        }
+        
         public delegate void EmptyAction(TrainingCPUHandler cpuHandler);
         public event EmptyAction OnCPUListUpdated;
     
@@ -21,6 +29,9 @@ namespace rwby.core.training
         
         public GamemodeTraining gamemode;
 
+        [Header("Settings")]
+        public AttackOptionDefinition[] defaultAttackOptions = Array.Empty<AttackOptionDefinition>();
+        
         private static void CpuListUpdated(Changed<TrainingCPUHandler> changed)
         {
             changed.Behaviour.OnCPUListUpdated?.Invoke(changed.Behaviour);

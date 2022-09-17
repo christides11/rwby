@@ -21,6 +21,12 @@ namespace rwby.core.training
         public OptionSlider aerialRecovery;
         public OptionSlider groundRecovery;
         
+        [Header("Counter-Attack")]
+        public OptionSlider afterBlock;
+        public OptionSlider afterHit;
+        public OptionSlider afterRecovery;
+        public OptionSlider afterThrowBreak;
+        
         [Header("Guages")]
         public OptionSlider lifeGuage;
         //
@@ -29,7 +35,7 @@ namespace rwby.core.training
 
         private TrainingCPUHandler cpuHandler;
         private int index = 0;
-        
+
         public void Init(TrainingCPUHandler cpuHandler, int index)
         {
             this.cpuHandler = cpuHandler;
@@ -53,6 +59,17 @@ namespace rwby.core.training
             shield.options = new[] { "Off", "On" };
             shield.SetOption(cpuHandler.cpuSettings[index].shield);
             shield.OnValueChanged += OnOptionChanged;
+            // RECOVERY
+            staggerRecovery.options = new[] { "Disabled", "Enabled" };
+            staggerRecovery.SetOption(cpuHandler.cpuSettings[index].staggerRecovery);
+            staggerRecovery.OnValueChanged += OnOptionChanged;
+            aerialRecovery.options = new[] { "Off", "In Place", "Forwards", "Backwards", "Left", "Right", "Random" };
+            aerialRecovery.SetOption(cpuHandler.cpuSettings[index].airRecovery);
+            aerialRecovery.OnValueChanged += OnOptionChanged;
+            groundRecovery.options = new[] { "Off", "In Place", "Forwards", "Backwards", "Left", "Right", "Random" };
+            groundRecovery.SetOption(cpuHandler.cpuSettings[index].groundRecovery);
+            groundRecovery.OnValueChanged += OnOptionChanged;
+            // COUNTER-ATTACK
         }
 
         private void OnOptionChanged(int value)
@@ -64,6 +81,8 @@ namespace rwby.core.training
             trainingCPUSettingsDefinition.techThrow = techThrow.currentOption;
             trainingCPUSettingsDefinition.counterHit = counterHit.currentOption;
             trainingCPUSettingsDefinition.shield = shield.currentOption;
+            trainingCPUSettingsDefinition.staggerRecovery = staggerRecovery.currentOption;
+            trainingCPUSettingsDefinition.staggerRecovery = staggerRecovery.currentOption;
             cpuHandler.cpuSettings.Set(index, trainingCPUSettingsDefinition);
         }
     }

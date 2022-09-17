@@ -1,4 +1,5 @@
 using Fusion;
+using rwby.core.training;
 
 namespace rwby
 {
@@ -22,5 +23,8 @@ namespace rwby
         // GUAGES
         public int lifeGuage;
         public int auraGuage;
+        
+        // RECORDING
+        
     }
 }

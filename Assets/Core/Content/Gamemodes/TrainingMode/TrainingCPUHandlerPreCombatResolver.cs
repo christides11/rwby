@@ -66,31 +66,6 @@ namespace rwby.core.training
 
                 cpuHandlerCore.testData[i] = id;
                 
-                /*
-                if (cpuHandlerCore.cpuSettings[i].status == 0 && cpuHandlerCore.cpuSettings[i].guard == 1)
-                {
-                    switch (cpuHandlerCore.cpuSettings[i].guard)
-                    {
-                        case 0:
-                            break;
-                        case 4:
-                            
-                            break;
-                    }
-                    var temp = combatPairFinder.hitboxCombatPairs.Where(x =>
-                        x.Key.Item2.Id == cpuHandlerCore.cpus[i].objectId).ToArray();
-
-                    if (temp.Length != 0)
-                    {
-                        
-                    }
-                }*/
-
-                /*
-                foreach (var valuePair in temp)
-                {
-                    //combatPairFinder.hitboxCombatPairs.Remove(valuePair.Key);
-                }*/
                 fm.FighterUpdate();
             }
         }

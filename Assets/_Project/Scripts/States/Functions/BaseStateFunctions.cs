@@ -916,8 +916,18 @@ namespace rwby
             FighterManager fm = (FighterManager)fighter;
             VarSetPushblockState vars = (VarSetPushblockState)variables;
 
-            fm.FCombatManager.CurrentPushblockState = vars.pushblockState;
-            fm.FCombatManager.pushblockTimer = vars.length;
+            switch (vars.pushblockState)
+            {
+                case PushblockState.PERFECT:
+                    fm.FCombatManager.CurrentPushblockState = PushblockState.PERFECT;
+                    break;
+                case PushblockState.GUARD:
+                    if (fm.FCombatManager.LastPushblockAttempt != 0 &&
+                        (fm.Runner.Tick - fm.FCombatManager.LastPushblockAttempt) < 30) return;
+                    fm.FCombatManager.CurrentPushblockState = PushblockState.GUARD;
+                    fm.FCombatManager.LastPushblockAttempt = fm.Runner.Tick;
+                    break;
+            }
         }
     }
 }

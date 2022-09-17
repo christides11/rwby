@@ -70,7 +70,7 @@ namespace rwby
 
         [Networked] public int LastSuccessfulBlockTick { get; set; }
         [Networked] public PushblockState CurrentPushblockState { get; set; } = PushblockState.NONE;
-        [Networked] public int pushblockTimer { get; set; } = 0;
+        [Networked] public int LastPushblockAttempt { get; set; } = 0;
 
         public static void OnChangedAura(Changed<FighterCombatManager> changed)
         {
@@ -423,6 +423,7 @@ namespace rwby
         
         [Networked, Capacity(10)] public NetworkArray<int> hurtboxHitCount { get; }
 
+        public float pushF = 2.0f;
         public HitReactionBase Hurt(HurtInfoBase hurtInfoBase)
         {
             HurtInfo hurtInfo = hurtInfoBase as HurtInfo;
@@ -463,12 +464,14 @@ namespace rwby
                             BlockStun = Mathf.Clamp(BlockStun-3, 0, int.MaxValue);
                             break;
                         case PushblockState.GUARD:
-                            if (pushblockTimer > 0)
+                            if ((Runner.Tick - LastPushblockAttempt) < 7)
                             {
                                 Vector3 temp = manager.myTransform.position - hurtInfo.center;
                                 temp.y = 0;
                                 temp.Normalize();
-                                temp *= hForce.magnitude * 2.0f;
+                                temp *= hForce.magnitude * pushF;
+                                CurrentPushblockState = PushblockState.NONE;
+                                LastPushblockAttempt = -1;
                             }
                             break;
                     }

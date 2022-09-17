@@ -23,6 +23,7 @@ namespace rwby
             public CustomHitbox attackerHitbox;
             public Hurtbox attackeeHurtbox;
             public CustomHitbox attackeeHitbox;
+            public bool unblockableProtection;
         }
 
         public struct CollisionPair
@@ -51,6 +52,8 @@ namespace rwby
         public LayerMask collboxLayermask;
         public LayerMask throwboxLayermask;
 
+        public Dictionary<NetworkObject, int> objectHitCount = new Dictionary<NetworkObject, int>();
+
         private void Awake()
         {
             singleton = this;
@@ -67,6 +70,7 @@ namespace rwby
             ResolveHitInteractions();
             ResolveGrabInteractions();
 
+            objectHitCount.Clear();
             broadphaseObjects.Clear();
         }
         
@@ -148,6 +152,7 @@ namespace rwby
                     for (int f = 0; f < numHit; f++)
                     {
                         Hurtbox h = hitsList[f].GameObject.GetComponent<Hurtbox>();
+                        // An object can only be hit by one source per frame.
                         if (h.HitboxActive == true && broadphaseObjects[i].GetComponent<IAttacker>().IsHitHurtboxValid(boxCollection.Hitboxes[a], h))
                         {
                             var tuple = (broadphaseObjects[i].GetBehaviour<NetworkObject>(), h.ownerNetworkObject);
@@ -166,6 +171,11 @@ namespace rwby
                             }
                             else
                             {
+                                if (objectHitCount.ContainsKey(h.ownerNetworkObject))
+                                {
+                                    
+                                    continue;
+                                }
                                 hitboxCombatPairs.Add(tuple,
                                     new HitboxCombatPair()
                                     {
@@ -173,6 +183,7 @@ namespace rwby
                                         attackerHitbox = boxCollection.Hitboxes[a],
                                         attackeeHurtbox = h
                                     });
+                                objectHitCount.Add(h.ownerNetworkObject, 0);
                             }
                         }
                     }

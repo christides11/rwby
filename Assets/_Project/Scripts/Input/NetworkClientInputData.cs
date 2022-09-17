@@ -18,4 +18,14 @@ namespace rwby
 		public Vector3 right;
 		public Vector3 camPos;
     }
+
+	[System.Serializable]
+	public struct PlayerInputData
+	{
+		public PlayerInputType buttons;
+		public Vector2 movement;
+		public Vector3 forward;
+		public Vector3 right;
+		public Vector3 camPos;
+	}
 }
