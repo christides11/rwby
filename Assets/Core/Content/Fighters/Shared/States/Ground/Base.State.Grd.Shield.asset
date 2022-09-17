@@ -57,7 +57,7 @@ MonoBehaviour:
         parent: -1
         children: 
         frameRanges:
-        - {x: 2, y: 2}
+        - {x: 1, y: 1}
         condition:
           rid: 7270848607039258632
         checkInputSequence: 0
@@ -74,7 +74,7 @@ MonoBehaviour:
     - rid: 7270848607039258632
       type: {class: ConditionCheckSuccessfulBlock, ns: rwby, asm: rwby.csharp}
       data:
-        checkDistance: 1
+        checkDistance: 20
         inverse: 0
     - rid: 7270848607039258633
       type: {class: VarChangeState, ns: rwby, asm: rwby.csharp}

@@ -1,0 +1,93 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7789f25d17401bc4b915ca6fcecf2a29, type: 3}
+  m_Name: RR.Shared.Grd.Shield
+  m_EditorClassIdentifier: 
+  stateName: Shield (Grd)
+  useBaseState: 1
+  baseState: {fileID: 11400000, guid: e57032e066a25b04388b51be4c43f751, type: 2}
+  totalFrames: 24
+  autoIncrement: 0
+  autoLoop: 0
+  autoLoopFrame: 1
+  data:
+  - rid: 7270848697680265216
+  - rid: 7270848697680265217
+  auraRequirement: 0
+  initialGroundedState: 1
+  stateType: 1
+  maxUsesInString: -1
+  selfChainable: 0
+  allowBaseStateTransitions: 1
+  inputSequence:
+    executeWindow: 3
+    executeInputs:
+    - inputType: 0
+      buttonID: 3
+      stickDirection: {x: 0, y: 0}
+      directionDeviation: 0
+    sequenceWindow: 8
+    sequenceInputs: []
+  inputSequenceAsHoldInputs: 0
+  condition:
+    rid: -2
+  hitboxInfo: []
+  throwboxInfo:
+  - airOnly: 0
+    groundOnly: 1
+    damageOnGrab: 0
+    confirmState:
+      rid: -2
+  hurtboxInfo:
+  - hitInvincible: 0
+    projectileInvincible: 0
+  references:
+    version: 2
+    RefIds:
+    - rid: -2
+      type: {class: , ns: , asm: }
+    - rid: 7270848697680265216
+      type: {class: VarCreateBox, ns: rwby, asm: rwby.csharp}
+      data:
+        name: Colbox
+        id: 0
+        parent: -1
+        children: 
+        frameRanges:
+        - {x: 1, y: -1}
+        condition:
+          rid: -2
+        boxType: 2
+        attachedTo: 0
+        shape: 0
+        offset: {x: 0, y: 1, z: 0}
+        boxExtents: {x: 1, y: 1, z: 1}
+        radius: 0
+        definitionIndex: 0
+    - rid: 7270848697680265217
+      type: {class: VarCreateBox, ns: rwby, asm: rwby.csharp}
+      data:
+        name: Hurtbox
+        id: 1
+        parent: -1
+        children: 
+        frameRanges:
+        - {x: 1, y: -1}
+        condition:
+          rid: -2
+        boxType: 0
+        attachedTo: 0
+        shape: 0
+        offset: {x: 0, y: 1, z: 0}
+        boxExtents: {x: 1, y: 1, z: 1}
+        radius: 0
+        definitionIndex: 0

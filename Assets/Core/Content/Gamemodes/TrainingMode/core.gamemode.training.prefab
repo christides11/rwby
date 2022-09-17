@@ -1399,28 +1399,70 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _interpolationDataSource: 0
   _cpuSettings: []
-  testData:
-  - movement: {x: 0, y: 0}
-    forward: {x: 0, y: 0, z: 0}
-    right: {x: 0, y: 0, z: 0}
-    camPos: {x: 0, y: 0, z: 0}
-  - movement: {x: 0, y: 0}
-    forward: {x: 0, y: 0, z: 0}
-    right: {x: 0, y: 0, z: 0}
-    camPos: {x: 0, y: 0, z: 0}
-  - movement: {x: 0, y: 0}
-    forward: {x: 0, y: 0, z: 0}
-    right: {x: 0, y: 0, z: 0}
-    camPos: {x: 0, y: 0, z: 0}
-  - movement: {x: 0, y: 0}
-    forward: {x: 0, y: 0, z: 0}
-    right: {x: 0, y: 0, z: 0}
-    camPos: {x: 0, y: 0, z: 0}
   gamemode: {fileID: -7702582740311327608}
   defaultAttackOptions:
   - nickname: fDash
     inputs:
+    - buttons: 16
+      movement: {x: 0, y: 1}
+      forward: {x: 0, y: 0, z: 0}
+      right: {x: 0, y: 0, z: 0}
+      camPos: {x: 0, y: 0, z: 0}
+    - buttons: 16
+      movement: {x: 0, y: 1}
+      forward: {x: 0, y: 0, z: 0}
+      right: {x: 0, y: 0, z: 0}
+      camPos: {x: 0, y: 0, z: 0}
+    - buttons: 16
+      movement: {x: 0, y: 1}
+      forward: {x: 0, y: 0, z: 0}
+      right: {x: 0, y: 0, z: 0}
+      camPos: {x: 0, y: 0, z: 0}
+  - nickname: bDash
+    inputs:
+    - buttons: 16
+      movement: {x: 0, y: -1}
+      forward: {x: 0, y: 0, z: 0}
+      right: {x: 0, y: 0, z: 0}
+      camPos: {x: 0, y: 0, z: 0}
+    - buttons: 16
+      movement: {x: 0, y: -1}
+      forward: {x: 0, y: 0, z: 0}
+      right: {x: 0, y: 0, z: 0}
+      camPos: {x: 0, y: 0, z: 0}
+    - buttons: 16
+      movement: {x: 0, y: -1}
+      forward: {x: 0, y: 0, z: 0}
+      right: {x: 0, y: 0, z: 0}
+      camPos: {x: 0, y: 0, z: 0}
+  - nickname: A
+    inputs:
+    - buttons: 4
+      movement: {x: 0, y: 0}
+      forward: {x: 0, y: 0, z: 0}
+      right: {x: 0, y: 0, z: 0}
+      camPos: {x: 0, y: 0, z: 0}
     - buttons: 0
+      movement: {x: 0, y: 0}
+      forward: {x: 0, y: 0, z: 0}
+      right: {x: 0, y: 0, z: 0}
+      camPos: {x: 0, y: 0, z: 0}
+    - buttons: 0
+      movement: {x: 0, y: 0}
+      forward: {x: 0, y: 0, z: 0}
+      right: {x: 0, y: 0, z: 0}
+      camPos: {x: 0, y: 0, z: 0}
+    - buttons: 0
+      movement: {x: 0, y: 0}
+      forward: {x: 0, y: 0, z: 0}
+      right: {x: 0, y: 0, z: 0}
+      camPos: {x: 0, y: 0, z: 0}
+    - buttons: 0
+      movement: {x: 0, y: 0}
+      forward: {x: 0, y: 0, z: 0}
+      right: {x: 0, y: 0, z: 0}
+      camPos: {x: 0, y: 0, z: 0}
+    - buttons: 4
       movement: {x: 0, y: 0}
       forward: {x: 0, y: 0, z: 0}
       right: {x: 0, y: 0, z: 0}

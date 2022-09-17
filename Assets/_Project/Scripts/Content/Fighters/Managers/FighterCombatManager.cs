@@ -484,6 +484,7 @@ namespace rwby
                         startFrame = Runner.Tick,
                         endFrame = Runner.Tick + hitInfoGroup.cameraShakeLength
                     };
+                    // TODO: Account for blockstun
                     LastSuccessfulBlockTick = Runner.Tick;
                     
                     return hitReaction;

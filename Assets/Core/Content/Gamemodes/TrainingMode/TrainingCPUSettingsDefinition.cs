@@ -24,7 +24,8 @@ namespace rwby
         public int lifeGuage;
         public int auraGuage;
         
-        // RECORDING
-        
+        // COUNTER-HIT
+        public int afterBlock;
+        public int afterHit;
     }
 }

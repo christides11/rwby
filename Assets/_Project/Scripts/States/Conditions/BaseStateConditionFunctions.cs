@@ -211,6 +211,15 @@ namespace rwby
                 hitCount += f.FCombatManager.HitboxManager.hitboxGroupHitCounts[i];
                 if (hitCount >= vars.hitCount) return true;
             }
+
+            if (vars.blockCounts)
+            {
+                for (int i = 0; i < f.FCombatManager.HitboxManager.hitboxGroupBlockedCounts.Length; i++)
+                {
+                    hitCount += f.FCombatManager.HitboxManager.hitboxGroupBlockedCounts[i];
+                    if (hitCount >= vars.hitCount) return true;
+                }
+            }
             return false;
         }
         

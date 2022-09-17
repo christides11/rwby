@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using rwby.ui;
 using UnityEngine;
 
@@ -70,6 +71,19 @@ namespace rwby.core.training
             groundRecovery.SetOption(cpuHandler.cpuSettings[index].groundRecovery);
             groundRecovery.OnValueChanged += OnOptionChanged;
             // COUNTER-ATTACK
+            List<string> aOpts = new List<string>();
+            aOpts.Add("None");
+            foreach (var a in cpuHandler.cpuAtkOptions[index])
+            {
+                aOpts.Add(a.nickname);
+            }
+            
+            afterBlock.options = aOpts.ToArray();
+            afterBlock.SetOption(cpuHandler.cpuSettings[index].afterBlock);
+            afterBlock.OnValueChanged += OnOptionChanged;
+            afterHit.options = aOpts.ToArray();
+            afterHit.SetOption(cpuHandler.cpuSettings[index].afterHit);
+            afterHit.OnValueChanged += OnOptionChanged;
         }
 
         private void OnOptionChanged(int value)
@@ -83,6 +97,9 @@ namespace rwby.core.training
             trainingCPUSettingsDefinition.shield = shield.currentOption;
             trainingCPUSettingsDefinition.staggerRecovery = staggerRecovery.currentOption;
             trainingCPUSettingsDefinition.staggerRecovery = staggerRecovery.currentOption;
+            // COUNTER-ATTACK
+            trainingCPUSettingsDefinition.afterBlock = afterBlock.currentOption;
+            trainingCPUSettingsDefinition.afterHit = afterHit.currentOption;
             cpuHandler.cpuSettings.Set(index, trainingCPUSettingsDefinition);
         }
     }

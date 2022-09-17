@@ -9,5 +9,6 @@ namespace rwby
 
         public bool inverse;
         public int hitCount;
+        public bool blockCounts;
     }
 }

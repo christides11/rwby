@@ -20,9 +20,9 @@ namespace rwby
     }
 
 	[System.Serializable]
-	public struct PlayerInputData
+	public struct PlayerInputDataFlagged
 	{
-		public PlayerInputType buttons;
+		public PlayerInputTypeFlags buttons;
 		public Vector2 movement;
 		public Vector3 forward;
 		public Vector3 right;

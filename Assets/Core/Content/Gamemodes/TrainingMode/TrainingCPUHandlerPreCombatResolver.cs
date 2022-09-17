@@ -22,7 +22,7 @@ namespace rwby.core.training
             {
                 if (!cpuHandlerCore.cpus[i].objectId.IsValid) continue;
 
-                NetworkPlayerInputData id = cpuHandlerCore.testData[i];
+                NetworkPlayerInputData id = cpuHandlerCore.testData[i][Runner.Tick % 10];
                 
                 var temp = combatPairFinder.hitboxCombatPairs.Where(x =>
                     x.Key.Item2.Id == cpuHandlerCore.cpus[i].objectId).ToArray();
@@ -64,7 +64,7 @@ namespace rwby.core.training
                         break;
                 }
 
-                cpuHandlerCore.testData[i] = id;
+                cpuHandlerCore.testData[i][Runner.Tick % 10] = id;
                 
                 fm.FighterUpdate();
             }

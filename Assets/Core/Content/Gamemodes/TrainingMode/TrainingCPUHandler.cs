@@ -16,7 +16,7 @@ namespace rwby.core.training
         public class AttackOptionDefinition
         {
             public string nickname;
-            public PlayerInputData[] inputs = Array.Empty<PlayerInputData>();
+            public PlayerInputDataFlagged[] inputs = Array.Empty<PlayerInputDataFlagged>();
         }
         
         public delegate void EmptyAction(TrainingCPUHandler cpuHandler);
@@ -25,13 +25,26 @@ namespace rwby.core.training
         [Networked(OnChanged = nameof(CpuListUpdated)), Capacity(4)] public NetworkArray<TrainingCPUReference> cpus { get; }
         [Networked(OnChanged = nameof(CpuSettingsUpdated)), Capacity(4)] public NetworkArray<TrainingCPUSettingsDefinition> cpuSettings { get; }
 
-        public NetworkPlayerInputData[] testData = new NetworkPlayerInputData[4];
+        public NetworkPlayerInputData[][] testData = new NetworkPlayerInputData[4][];
         
         public GamemodeTraining gamemode;
 
         [Header("Settings")]
         public AttackOptionDefinition[] defaultAttackOptions = Array.Empty<AttackOptionDefinition>();
-        
+
+        public List<AttackOptionDefinition>[] cpuAtkOptions = new List<AttackOptionDefinition>[4];
+
+        private void Awake()
+        {
+            for (int i = 0; i < testData.Length; i++)
+            {
+                testData[i] = new NetworkPlayerInputData[10];
+                
+                cpuAtkOptions[i] = new List<AttackOptionDefinition>();
+                cpuAtkOptions[i] = new List<AttackOptionDefinition>(defaultAttackOptions);
+            }
+        }
+
         private static void CpuListUpdated(Changed<TrainingCPUHandler> changed)
         {
             changed.Behaviour.OnCPUListUpdated?.Invoke(changed.Behaviour);
@@ -82,19 +95,25 @@ namespace rwby.core.training
             }
         }
 
+        public int disabledUntil = -1;
         public override void FixedUpdateNetwork()
         {
             base.FixedUpdateNetwork();
+
+            if (Runner.Tick <= disabledUntil) return;
             
             for (int i = 0; i < cpus.Length; i++)
             {
                 NetworkPlayerInputData id = new NetworkPlayerInputData();
                 if (!cpus[i].objectId.IsValid)
                 {
-                    testData[i] = id;
+                    testData[i][Runner.Tick % 10] = id;
                     continue;
                 }
 
+                FighterManager fm =
+                    Runner.TryGetNetworkedBehaviourFromNetworkedObjectRef<FighterManager>(cpus[i].objectId);
+                
                 switch (cpuSettings[i].status)
                 {
                     case (int)CPUActionStatus.Jumping:
@@ -104,8 +123,62 @@ namespace rwby.core.training
                     case (int)CPUActionStatus.CPU:
                         break; 
                 }
+
+                testData[i][Runner.Tick % 10] = id;
                 
-                testData[i] = id;
+                if (cpuSettings[i].afterHit != 0 && fm.FCombatManager.HitStun == 1)
+                {
+                    var opt = cpuAtkOptions[i][cpuSettings[i].afterHit - 1];
+                    
+                    for (int j = 0; j < opt.inputs.Length; j++)
+                    {
+                        var t = new NetworkPlayerInputData();
+
+                        if (opt.inputs[j].buttons.HasFlag(PlayerInputTypeFlags.A))
+                        {
+                            t.buttons.Set((int)PlayerInputType.A, true);
+                        }
+                        if (opt.inputs[j].buttons.HasFlag(PlayerInputTypeFlags.DASH))
+                        {
+                            t.buttons.Set((int)PlayerInputType.DASH, true);
+                        }
+
+                        t.movement = opt.inputs[j].movement;
+                        t.forward = fm.myTransform.forward;
+                        t.right = fm.myTransform.right;
+
+                        testData[i][(Runner.Tick + j) % 10] = t;
+                    }
+
+                    disabledUntil = Runner.Tick + opt.inputs.Length;
+                }
+
+                if (cpuSettings[i].afterBlock != 0 && fm.FCombatManager.BlockStun == 1)
+                {
+                    var opt = cpuAtkOptions[i][cpuSettings[i].afterBlock - 1];
+                    
+                    for (int j = 0; j < opt.inputs.Length; j++)
+                    {
+                        var t = new NetworkPlayerInputData();
+
+                        if (opt.inputs[j].buttons.HasFlag(PlayerInputTypeFlags.A))
+                        {
+                            t.buttons.Set((int)PlayerInputType.A, true);
+                        }
+                        if (opt.inputs[j].buttons.HasFlag(PlayerInputTypeFlags.DASH))
+                        {
+                            t.buttons.Set((int)PlayerInputType.DASH, true);
+                        }
+
+                        t.movement = opt.inputs[j].movement;
+                        t.forward = fm.myTransform.forward;
+                        t.right = fm.myTransform.right;
+
+                        testData[i][(Runner.Tick + j) % 10] = t;
+                    }
+
+                    disabledUntil = Runner.Tick + opt.inputs.Length;
+                }
             }
         }
 
@@ -121,7 +194,7 @@ namespace rwby.core.training
 
         public NetworkPlayerInputData GetInput(int inputIndex)
         {
-            return testData[inputIndex];
+            return testData[inputIndex][Runner.Tick % 10];
         }
 
         public void FighterHealthChanged(FighterManager fm)
