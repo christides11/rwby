@@ -138,6 +138,14 @@ namespace rwby.core.training
                         {
                             t.buttons.Set((int)PlayerInputType.A, true);
                         }
+                        if (opt.inputs[j].buttons.HasFlag(PlayerInputTypeFlags.B))
+                        {
+                            t.buttons.Set((int)PlayerInputType.B, true);
+                        }
+                        if (opt.inputs[j].buttons.HasFlag(PlayerInputTypeFlags.C))
+                        {
+                            t.buttons.Set((int)PlayerInputType.C, true);
+                        }
                         if (opt.inputs[j].buttons.HasFlag(PlayerInputTypeFlags.DASH))
                         {
                             t.buttons.Set((int)PlayerInputType.DASH, true);
@@ -150,7 +158,7 @@ namespace rwby.core.training
                         testData[i][(Runner.Tick + j) % 10] = t;
                     }
 
-                    disabledUntil = Runner.Tick + opt.inputs.Length;
+                    disabledUntil = Runner.Tick + opt.inputs.Length+1;
                 }
 
                 if (cpuSettings[i].afterBlock != 0 && fm.FCombatManager.BlockStun == 1)
@@ -165,6 +173,14 @@ namespace rwby.core.training
                         {
                             t.buttons.Set((int)PlayerInputType.A, true);
                         }
+                        if (opt.inputs[j].buttons.HasFlag(PlayerInputTypeFlags.B))
+                        {
+                            t.buttons.Set((int)PlayerInputType.B, true);
+                        }
+                        if (opt.inputs[j].buttons.HasFlag(PlayerInputTypeFlags.C))
+                        {
+                            t.buttons.Set((int)PlayerInputType.C, true);
+                        }
                         if (opt.inputs[j].buttons.HasFlag(PlayerInputTypeFlags.DASH))
                         {
                             t.buttons.Set((int)PlayerInputType.DASH, true);
@@ -177,7 +193,7 @@ namespace rwby.core.training
                         testData[i][(Runner.Tick + j) % 10] = t;
                     }
 
-                    disabledUntil = Runner.Tick + opt.inputs.Length;
+                    disabledUntil = Runner.Tick + opt.inputs.Length+1;
                 }
             }
         }

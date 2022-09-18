@@ -49,6 +49,9 @@ MonoBehaviour:
   cam: {fileID: 0}
   target: {fileID: 0}
   currentCamera: 0
+  lowStrength: 1
+  mediumStrength: 2
+  highStrength: 4
 --- !u!114 &-6958547907970411644
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -61,3 +64,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 954ffbf8d866bfe4f8949f8c8c994e9d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  currentProfile:
+    undeletable: 0
+    version: 0
+    profileName: 
+    behaviours: []
+    joystickMaps: []
+    controllerCam:
+      deadzoneHoz: 0
+      deadzoneVert: 0
+      speedHoz: 0
+      speedVert: 0
+      speedLockOnHoz: 0
+      speedLockOnVert: 0
+    keyboardCam:
+      deadzoneHoz: 0
+      deadzoneVert: 0
+      speedHoz: 0
+      speedVert: 0
+      speedLockOnHoz: 0
+      speedLockOnVert: 0

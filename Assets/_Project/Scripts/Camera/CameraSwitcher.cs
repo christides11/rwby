@@ -29,6 +29,53 @@ namespace rwby
             camHandler.Deactivate();
         }
 
+        public float lowStrength;
+        public float mediumStrength;
+        public float highStrength;
+        public override void Render()
+        {
+            base.Render();
+
+            if (target)
+            {
+                if (target.shakeDefinition.shakeStrength == CameraShakeStrength.None
+                    || Runner.Tick > target.shakeDefinition.endFrame)
+                {
+                    ResetCameraShake();
+                    return;
+                }
+
+                switch (target.shakeDefinition.shakeStrength)
+                {
+                    case CameraShakeStrength.Low:
+                        ShakeCamera(lowStrength, (float)(Runner.Tick-target.shakeDefinition.startFrame) / (float)(target.shakeDefinition.endFrame-target.shakeDefinition.startFrame));
+                        break;
+                    case CameraShakeStrength.Medium:
+                        ShakeCamera(mediumStrength, (float)(Runner.Tick-target.shakeDefinition.startFrame) / (float)(target.shakeDefinition.endFrame-target.shakeDefinition.startFrame));
+                        break;
+                    case CameraShakeStrength.High:
+                        ShakeCamera(highStrength, (float)(Runner.Tick-target.shakeDefinition.startFrame) / (float)(target.shakeDefinition.endFrame-target.shakeDefinition.startFrame));
+                        break;
+                }
+            }
+        }
+
+        public virtual void ResetCameraShake()
+        {
+            for (int i = 0; i < playerCameras.Count; i++)
+            {
+                playerCameras[i].StopShaking();
+            }
+        }
+
+        public virtual void ShakeCamera(float strength, float time)
+        {
+            for (int i = 0; i < playerCameras.Count; i++)
+            {
+                playerCameras[i].ShakeCamera(strength, time);
+            }
+        }
+
         public void Disable()
         {
             if (currentCamera == -1) return;

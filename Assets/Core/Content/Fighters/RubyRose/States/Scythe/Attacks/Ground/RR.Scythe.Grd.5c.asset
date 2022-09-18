@@ -24,6 +24,8 @@ MonoBehaviour:
   - rid: 2193520813467238403
   - rid: 2193520817874927616
   - rid: 8688056331001921538
+  - rid: 7270848718906589185
+  - rid: 7270848718906589186
   auraRequirement: 0
   initialGroundedState: 1
   stateType: 2
@@ -50,10 +52,10 @@ MonoBehaviour:
     hit:
       groundHitState: 30
       airHitState: 32
-      groundBounces: 0
-      wallBounces: 0
-      groundBounceForcePercentage: 0
-      wallBounceForcePercentage: 0
+      groundBounce: 0
+      wallBounce: 0
+      groundBounceForce: 0
+      wallBounceForce: 0
       noKill: 0
       unblockable: 0
       hitForceType: 0
@@ -125,10 +127,10 @@ MonoBehaviour:
     counterhit:
       groundHitState: 30
       airHitState: 32
-      groundBounces: 0
-      wallBounces: 0
-      groundBounceForcePercentage: 0
-      wallBounceForcePercentage: 0
+      groundBounce: 0
+      wallBounce: 0
+      groundBounceForce: 0
+      wallBounceForce: 0
       noKill: 0
       unblockable: 0
       hitForceType: 0
@@ -180,7 +182,9 @@ MonoBehaviour:
       ignoreHitstunScaling: 0
       ignorePushbackScaling: 0
   throwboxInfo: []
-  hurtboxInfo: []
+  hurtboxInfo:
+  - hitInvincible: 0
+    projectileInvincible: 0
   references:
     version: 2
     RefIds:
@@ -248,6 +252,35 @@ MonoBehaviour:
         statReference: 0
         value: 30
         variable: 0
+    - rid: 7270848718906589185
+      type: {class: VarSetCounterhitState, ns: rwby, asm: rwby.csharp}
+      data:
+        name: 
+        id: 4
+        parent: -1
+        children: 
+        frameRanges:
+        - {x: 1, y: 11}
+        condition:
+          rid: -2
+    - rid: 7270848718906589186
+      type: {class: VarCreateBox, ns: rwby, asm: rwby.csharp}
+      data:
+        name: Hurtbox
+        id: 5
+        parent: -1
+        children: 
+        frameRanges:
+        - {x: 1, y: -1}
+        condition:
+          rid: -2
+        boxType: 0
+        attachedTo: 0
+        shape: 0
+        offset: {x: 0, y: 1, z: 0}
+        boxExtents: {x: 0.5, y: 1, z: 0.5}
+        radius: 0
+        definitionIndex: 0
     - rid: 8688056331001921538
       type: {class: VarExternal, ns: rwby, asm: rwby.csharp}
       data:

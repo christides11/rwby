@@ -33,6 +33,16 @@ namespace rwby
         {
             
         }
+
+        public virtual void ShakeCamera(float strength, float time)
+        {
+            
+        }
+
+        public virtual void StopShaking()
+        {
+            
+        }
         
         public virtual void Deactivate()
         {

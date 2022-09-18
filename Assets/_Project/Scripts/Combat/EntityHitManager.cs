@@ -114,6 +114,9 @@ namespace rwby
                 case HitReactionType.AVOIDED:
                     HandleAvoidReaction(hitbox, enemyHurtbox, hurtInfo, hi, reaction);
                     break;
+                default:
+                    Debug.LogError("No valid hit reaction returned.");
+                    break;
             }
         }
 

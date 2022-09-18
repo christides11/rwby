@@ -68,10 +68,7 @@ namespace rwby
             this.clientManager = clientManager;
             this.playerID = playerID;
             p = ReInput.players.GetPlayer(playerID);
-            //SetProfile(GameManager.singleton.profilesManager.GetProfile(clientManager.profiles[playerID]));
             OnControllerTypeChanged(playerID, GameManager.singleton.localPlayerManager.GetPlayerControllerType(playerID));
-            //GameManager.singleton.localPlayerManager.OnPlayerControllerTypeChanged -= OnControllerTypeChanged;
-            //GameManager.singleton.localPlayerManager.OnPlayerControllerTypeChanged += OnControllerTypeChanged;
         }
         
         public override void SetTarget(FighterManager fighterManager)
@@ -119,19 +116,6 @@ namespace rwby
             }
         }
 
-        /*
-        private void SetProfile(ProfileDefinition profile)
-        {
-            currentProfile = profile;
-        }
-
-        private ProfileDefinition.CameraVariables GetCameraControls()
-        {
-            return currentControllerType == PlayerControllerType.GAMEPAD
-                ? currentProfile.controllerCam
-                : currentProfile.keyboardCam;
-        }*/
-
         public override void Activate()
         {
             gameObject.SetActive(true);
@@ -157,12 +141,6 @@ namespace rwby
 
             Vector2 stickInput = switcher.cameraInputManager.GetCameraInput(currentCameraState == CameraState.LOCK_ON);
             bool cameraSwitch = p.GetButtonDown(Action.Camera_Switch);
-
-            /*
-            if (Mathf.Abs(stickInput.x) < cv.deadzoneHoz) stickInput.x = 0;
-            if (Mathf.Abs(stickInput.y) < cv.deadzoneVert) stickInput.y = 0;
-            stickInput.x *= currentCameraState == CameraState.LOCK_ON ? cv.speedLockOnHoz : cv.speedHoz;
-            stickInput.y *= currentCameraState == CameraState.LOCK_ON ? cv.speedLockOnVert : cv.speedVert;*/
 
             for (int i = 0; i < inputProvider.Length; i++)
             {
@@ -254,6 +232,22 @@ namespace rwby
             virtualStateDrivenCamera.Follow = targetGroup.transform;
             virtualStateDrivenCamera.LookAt = targetGroup.transform;
             followTarget = target;
+        }
+
+        public override void ShakeCamera(float strength, float time)
+        {
+            foreach (var vcs in virtualCameraShake)
+            {
+                vcs.ShakeCamera(strength, time);
+            }
+        }
+
+        public override void StopShaking()
+        {
+            foreach (var vcs in virtualCameraShake)
+            {
+                vcs.Reset();
+            }
         }
     }
 }
