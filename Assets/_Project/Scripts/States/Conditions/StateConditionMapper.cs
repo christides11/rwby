@@ -32,6 +32,8 @@ namespace rwby
             functions.Add(typeof(ConditionCheckSuccessfulBlock), BaseStateConditionFunctions.CheckSuccessfulBlock);
             functions.Add(typeof(ConditionCanGroundBounce), BaseStateConditionFunctions.CanGroundBounce);
             functions.Add(typeof(ConditionCanWallBounce), BaseStateConditionFunctions.CanWallBounce);
+            functions.Add(typeof(ConditionWhiteboardIntIntComparison), BaseStateConditionFunctions.WhiteboardIntIntComparison);
+            functions.Add(typeof(ConditionWhiteboardBoolean), BaseStateConditionFunctions.WhiteboardBoolean);
         }
     }
 }

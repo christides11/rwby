@@ -28,6 +28,7 @@ MonoBehaviour:
   - rid: 8688056817054646279
   - rid: 8688056377568657422
   - rid: 8688056817054646277
+  - rid: 7270848718906589188
   auraRequirement: 0
   initialGroundedState: 1
   stateType: 2
@@ -54,11 +55,12 @@ MonoBehaviour:
     hit:
       groundHitState: 30
       airHitState: 32
-      groundBounces: 0
-      wallBounces: 0
-      groundBounceForcePercentage: 0
-      wallBounceForcePercentage: 0
+      groundBounce: 0
+      wallBounce: 0
+      groundBounceForce: 0
+      wallBounceForce: 0
       noKill: 0
+      unblockable: 0
       hitForceType: 0
       hitForceRelation: 0
       hitForceRelationOffset: {x: 0, y: 0, z: 0}
@@ -128,11 +130,12 @@ MonoBehaviour:
     counterhit:
       groundHitState: 0
       airHitState: 0
-      groundBounces: 0
-      wallBounces: 0
-      groundBounceForcePercentage: 0
-      wallBounceForcePercentage: 0
+      groundBounce: 0
+      wallBounce: 0
+      groundBounceForce: 0
+      wallBounceForce: 0
       noKill: 0
+      unblockable: 0
       hitForceType: 0
       hitForceRelation: 0
       hitForceRelationOffset: {x: 0, y: 0, z: 0}
@@ -188,11 +191,12 @@ MonoBehaviour:
     hit:
       groundHitState: 30
       airHitState: 32
-      groundBounces: 0
-      wallBounces: 0
-      groundBounceForcePercentage: 0
-      wallBounceForcePercentage: 0
+      groundBounce: 0
+      wallBounce: 0
+      groundBounceForce: 0
+      wallBounceForce: 0
       noKill: 0
+      unblockable: 0
       hitForceType: 0
       hitForceRelation: 0
       hitForceRelationOffset: {x: 0, y: 0, z: 0}
@@ -262,11 +266,12 @@ MonoBehaviour:
     counterhit:
       groundHitState: 0
       airHitState: 0
-      groundBounces: 0
-      wallBounces: 0
-      groundBounceForcePercentage: 0
-      wallBounceForcePercentage: 0
+      groundBounce: 0
+      wallBounce: 0
+      groundBounceForce: 0
+      wallBounceForce: 0
       noKill: 0
+      unblockable: 0
       hitForceType: 0
       hitForceRelation: 0
       hitForceRelationOffset: {x: 0, y: 0, z: 0}
@@ -339,6 +344,7 @@ MonoBehaviour:
         stateMovesetID: -1
         state:
           rid: 2193520813467238402
+        frame: 0
     - rid: 2193520813467238402
       type: {class: FighterCmnStateReference, ns: rwby, asm: rwby.csharp}
       data:
@@ -365,6 +371,22 @@ MonoBehaviour:
         statReference: 1
         value: 1000
         variable: 0
+    - rid: 7270848718906589188
+      type: {class: VarEmpty, ns: rwby, asm: rwby.csharp}
+      data:
+        name: On Hit
+        id: 10
+        parent: -1
+        children: 
+        frameRanges: []
+        condition:
+          rid: 7270848718906589189
+    - rid: 7270848718906589189
+      type: {class: ConditionHitOrBlockCount, ns: rwby, asm: rwby.csharp}
+      data:
+        inverse: 0
+        hitCount: 1
+        hitOrBlock: 1
     - rid: 8688056217396838416
       type: {class: VarCreateBox, ns: rwby, asm: rwby.csharp}
       data:
@@ -453,6 +475,7 @@ MonoBehaviour:
         chargePerLevel: 30
         maxLevel: 1
         button: 6
+        canHold: 0
     - rid: 8688056817054646278
       type: {class: ConditionChargeLevel, ns: rwby, asm: rwby.csharp}
       data:

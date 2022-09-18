@@ -391,5 +391,47 @@ namespace rwby
             bool r = f.FCombatManager.GroundBounce == true && f.FCombatManager.CurrentGroundBounces < 2;
             return vars.inverse ? !r : r;
         }
+        
+        public static bool WhiteboardIntIntComparison(IFighterBase fighter, IConditionVariables variables, HnSF.StateTimeline arg3,
+            int arg4)
+        {
+            FighterManager f = fighter as FighterManager;
+            ConditionWhiteboardIntIntComparison vars = (ConditionWhiteboardIntIntComparison)variables;
+
+            int a = f.fighterWhiteboard.Ints[vars.valueAIndex];
+            int b = f.fighterWhiteboard.Ints[vars.valueBIndex];
+
+            switch (vars.comparison)
+            {
+                case ConditionWhiteboardIntIntComparison.ComparisonTypes.LESS_THAN:
+                    if (a < b) return true;
+                    break;
+                case ConditionWhiteboardIntIntComparison.ComparisonTypes.LESS_THAN_OR_EQUAL:
+                    if (a <= b) return true;
+                    break;
+                case ConditionWhiteboardIntIntComparison.ComparisonTypes.EQUAL:
+                    if (a == b) return true;
+                    break;
+                case ConditionWhiteboardIntIntComparison.ComparisonTypes.GREATER_THAN:
+                    if (a > b) return true;
+                    break;
+                case ConditionWhiteboardIntIntComparison.ComparisonTypes.GREATER_THAN_OR_EQUAL:
+                    if (a >= b) return true;
+                    break;
+                default:
+                    return false;
+            }
+            return false;
+        }
+        
+        public static bool WhiteboardBoolean(IFighterBase fighter, IConditionVariables variables, HnSF.StateTimeline arg3,
+            int arg4)
+        {
+            FighterManager f = fighter as FighterManager;
+            ConditionWhiteboardBoolean vars = (ConditionWhiteboardBoolean)variables;
+
+            bool r = f.fighterWhiteboard.Ints[vars.valueIndex] != 0;
+            return vars.inverse ? !r : r;
+        }
     }
 }

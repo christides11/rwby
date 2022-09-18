@@ -148,6 +148,9 @@ public class RRoseMan : FighterManager
     public override void Spawned()
     {
         base.Spawned();
+        fighterWhiteboard.UpdateInt(0, 16); // Max bullets
+        fighterWhiteboard.UpdateInt(1, fighterWhiteboard.Ints[0]); // Current Bullets
+        fighterWhiteboard.UpdateInt(2, 1); // Has Weapon
         FStateManager.ChangeState((int)FighterCmnStates.IDLE, 0);
     }
 }

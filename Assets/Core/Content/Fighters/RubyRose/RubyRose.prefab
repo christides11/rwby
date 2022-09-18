@@ -297,6 +297,7 @@ GameObject:
   - component: {fileID: 6390373237626046470}
   - component: {fileID: -7876643753530837430}
   - component: {fileID: 7571584989760676080}
+  - component: {fileID: -6033534292445977296}
   m_Layer: 6
   m_Name: RubyRose
   m_TagString: Player
@@ -385,6 +386,7 @@ MonoBehaviour:
   - {fileID: 6390373237626046470}
   - {fileID: -7876643753530837430}
   - {fileID: 7571584989760676080}
+  - {fileID: -6033534292445977296}
   SimulationBehaviours: []
 --- !u!114 &728284172682202706
 MonoBehaviour:
@@ -430,6 +432,7 @@ MonoBehaviour:
   _CurrentJump: 0
   _CurrentAirDash: 0
   FRAMEBYFRAME: 0
+  _DisableUpdate: 0
   inputManager: {fileID: 728284172682202706}
   combatManager: {fileID: 7730901374118442406}
   stateManager: {fileID: 1457010570893242128}
@@ -443,6 +446,7 @@ MonoBehaviour:
   fighterEffector: {fileID: 6390373237626046470}
   fighterAnimator: {fileID: 4017428576835799020}
   fighterSounder: {fileID: -7876643753530837430}
+  fighterWhiteboard: {fileID: -6033534292445977296}
   projectileManager: {fileID: 7571584989760676080}
   targetOrigin: {fileID: 4535680941175032872}
   visualTransform: {fileID: 7954403120791412188}
@@ -543,13 +547,15 @@ MonoBehaviour:
   stateManager: {fileID: 1457010570893242128}
   _Team: 0
   _hitstopCounter: 0
-  _CounterhitState:
-    _value: 0
-  _WallBounces: 0
-  _WallBounceForcePercentage: 0
-  _GroundBounces: 0
-  _GroundBounceForcePercentage: 0
+  _WallBounce: 0
+  _WallBounceForce: 0
+  _GroundBounce: 0
+  _GroundBounceForce: 0
+  _CurrentWallBounces: 0
+  _CurrentGroundBounces: 0
   _assignedSpecials: 
+  _ClashState: 0
+  CounterhitState: 0
   hitstunDecayMap:
   - item1: 180
     item2: 2
@@ -577,8 +583,12 @@ MonoBehaviour:
     item2: 0.5
   - item1: 600
     item2: 0.2
+  _LastSuccessfulBlockTick: 0
+  _CurrentPushblockState: 0
+  _LastPushblockAttempt: 0
   stickDirectionCheck: 1
   _hurtboxHitCount: 
+  pushF: 2
 --- !u!114 &8508573390081789594
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -696,6 +706,7 @@ MonoBehaviour:
     _value: 0
   _nextStateMoveset: 0
   _nextState: 0
+  _nextStateFrame: 0
   _CurrentGroundedState: 2
   _CurrentStateType: 0
   manager: {fileID: 3846760401122892541}
@@ -984,6 +995,26 @@ MonoBehaviour:
   _overrideMode: 00000000000000000000000000000000000000000000000000000000000000000000000000000000
   _latestProjectileIndex: 0
   manager: {fileID: 3846760401122892541}
+--- !u!114 &-6033534292445977296
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3009557721057671630}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ece40e7ea895b414cadb52756f08108e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _interpolationDataSource: 0
+  _Ints: 0000000000000000000000000000000000000000
+  _Floats:
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
 --- !u!1 &3783412658040432495
 GameObject:
   m_ObjectHideFlags: 0

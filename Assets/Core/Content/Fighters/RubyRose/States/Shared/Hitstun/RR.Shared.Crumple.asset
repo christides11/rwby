@@ -23,6 +23,8 @@ MonoBehaviour:
   - rid: 7270848697680265248
   - rid: 7270848697680265249
   - rid: 7270848697680265254
+  - rid: 7270848718906589190
+  - rid: 7270848718906589192
   auraRequirement: 0
   initialGroundedState: 1
   stateType: 8
@@ -51,7 +53,7 @@ MonoBehaviour:
         name: Scythe
         id: 0
         parent: -1
-        children: 
+        children: 04000000
         frameRanges: []
         condition:
           rid: -2
@@ -61,7 +63,7 @@ MonoBehaviour:
         name: Rifle
         id: 1
         parent: -1
-        children: 
+        children: 03000000
         frameRanges: []
         condition:
           rid: -2
@@ -72,7 +74,8 @@ MonoBehaviour:
         id: 2
         parent: -1
         children: 
-        frameRanges: []
+        frameRanges:
+        - {x: 1, y: -1}
         condition:
           rid: -2
         boxType: 0
@@ -82,3 +85,37 @@ MonoBehaviour:
         boxExtents: {x: 0.5, y: 1, z: 0.5}
         radius: 0
         definitionIndex: 0
+    - rid: 7270848718906589190
+      type: {class: VarExternal, ns: rwby, asm: rwby.csharp}
+      data:
+        name: Return to Idle
+        id: 3
+        parent: 1
+        children: 
+        frameRanges:
+        - {x: 1, y: 29}
+        condition:
+          rid: 7270848718906589191
+        asset: {fileID: 11400000, guid: c8d832c162e368d439cbe63210340e04, type: 2}
+    - rid: 7270848718906589191
+      type: {class: ConditionHitstunValue, ns: rwby, asm: rwby.csharp}
+      data:
+        minValue: 0
+        maxValue: 0
+    - rid: 7270848718906589192
+      type: {class: VarExternal, ns: rwby, asm: rwby.csharp}
+      data:
+        name: Return to Idle
+        id: 4
+        parent: 0
+        children: 
+        frameRanges:
+        - {x: 1, y: 29}
+        condition:
+          rid: 7270848718906589193
+        asset: {fileID: 11400000, guid: 5269f0aeb5faad94eb0261b24ba47332, type: 2}
+    - rid: 7270848718906589193
+      type: {class: ConditionHitstunValue, ns: rwby, asm: rwby.csharp}
+      data:
+        minValue: 0
+        maxValue: 0
