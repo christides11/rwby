@@ -3,8 +3,8 @@ using UnityEngine;
 
 namespace rwby
 {
-    [StateVariable("Stun/Modify Hitstun")]
-    public struct VarModifyHitstun : IStateVariables
+    [StateVariable("Stun/Consume Wall Bounce")]
+    public struct VarConsumeWallBounce : IStateVariables
     {
         public string name;
         public string Name
@@ -39,9 +39,5 @@ namespace rwby
         [SelectImplementation(typeof(IConditionVariables))] [SerializeField, SerializeReference]
         public IConditionVariables condition;
         public IConditionVariables Condition => condition;
-
-        public VarModifyType modifyType;
-        public int value;
-        public bool applyScaling;
     }
 }

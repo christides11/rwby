@@ -205,10 +205,10 @@ namespace rwby
             switch (vars.modifyType)
             {
                 case VarModifyType.ADD:
-                    f.FCombatManager.AddHitStun(vars.value);
+                    f.FCombatManager.AddHitStun(vars.applyScaling ? f.FCombatManager.ApplyHitstunScaling(vars.value) : vars.value);
                     break;
                 case VarModifyType.SET:
-                    f.FCombatManager.SetHitStun(vars.value);
+                    f.FCombatManager.SetHitStun(vars.applyScaling ? f.FCombatManager.ApplyHitstunScaling(vars.value) : vars.value);
                     break;
             }
         }
@@ -928,6 +928,30 @@ namespace rwby
                     fm.FCombatManager.LastPushblockAttempt = fm.Runner.Tick;
                     break;
             }
+        }
+        
+        public static void ConsumeWallBounce(IFighterBase fighter, IStateVariables variables, HnSF.StateTimeline stateTimeline, int frame)
+        {
+            FighterManager fm = (FighterManager)fighter;
+            VarConsumeWallBounce vars = (VarConsumeWallBounce)variables;
+
+            fm.FCombatManager.CurrentWallBounces++;
+            fm.FCombatManager.WallBounce = false;
+            var f = fm.cWallNormal * fm.FCombatManager.WallBounceForce;
+            fm.FPhysicsManager.forceGravity = f.y;
+            f.y = 0;
+            fm.FPhysicsManager.forceMovement = f;
+        }
+        
+        public static void ConsumeGroundBounce(IFighterBase fighter, IStateVariables variables, HnSF.StateTimeline stateTimeline, int frame)
+        {
+            FighterManager fm = (FighterManager)fighter;
+            VarConsumeGroundBounce vars = (VarConsumeGroundBounce)variables;
+
+            fm.FCombatManager.CurrentGroundBounces++;
+            fm.FCombatManager.GroundBounce = false;
+            fm.FPhysicsManager.forceGravity = fm.FCombatManager.GroundBounceForce;
+            fm.FPhysicsManager.forceMovement = Vector3.zero;
         }
     }
 }

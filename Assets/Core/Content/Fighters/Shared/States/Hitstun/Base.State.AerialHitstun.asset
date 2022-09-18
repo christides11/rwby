@@ -10,20 +10,21 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7789f25d17401bc4b915ca6fcecf2a29, type: 3}
-  m_Name: Base.State.InHitstun
+  m_Name: Base.State.AerialHitstun
   m_EditorClassIdentifier: 
-  stateName: 
-  useBaseState: 0
-  baseState: {fileID: 0}
-  totalFrames: 10
+  stateName: Aerial Hitstun
+  useBaseState: 1
+  baseState: {fileID: 11400000, guid: 91c2ce98c14b28e41a2c485be0a1bf7d, type: 2}
+  totalFrames: 30
   autoIncrement: 1
-  autoLoop: 1
+  autoLoop: 0
   autoLoopFrame: 1
-  data:
-  - rid: 2193520836063002624
-  initialGroundedState: 0
-  stateType: 4
+  data: []
+  auraRequirement: 0
+  initialGroundedState: 2
+  stateType: 8
   maxUsesInString: -1
+  selfChainable: 0
   allowBaseStateTransitions: 1
   inputSequence:
     executeWindow: 3
@@ -41,21 +42,3 @@ MonoBehaviour:
     RefIds:
     - rid: -2
       type: {class: , ns: , asm: }
-    - rid: 2193520836063002624
-      type: {class: VarModifyHitstun, ns: rwby, asm: rwby.csharp}
-      data:
-        name: 
-        id: 0
-        parent: -1
-        children: 
-        frameRanges:
-        - {x: 1, y: -1}
-        condition:
-          rid: 2193520836063002625
-        modifyType: 0
-        value: -1
-    - rid: 2193520836063002625
-      type: {class: ConditionHitstunValue, ns: rwby, asm: rwby.csharp}
-      data:
-        minValue: 1
-        maxValue: 2147483647

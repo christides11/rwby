@@ -15,10 +15,10 @@ namespace rwby
             
             [FormerlySerializedAs("hitState")] public FighterCmnStates groundHitState;
             public FighterCmnStates airHitState;
-            public int groundBounces;
-            public int wallBounces;
-            public float groundBounceForcePercentage;
-            public float wallBounceForcePercentage;
+            public bool groundBounce;
+            public bool wallBounce;
+            public float groundBounceForce;
+            public float wallBounceForce;
             public bool noKill;
             public bool unblockable;
 

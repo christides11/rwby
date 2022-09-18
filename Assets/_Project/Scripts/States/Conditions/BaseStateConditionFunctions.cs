@@ -203,16 +203,19 @@ namespace rwby
         public static bool HitCount(IFighterBase fighter, IConditionVariables variables, HnSF.StateTimeline arg3, int arg4)
         {
             FighterManager f = fighter as FighterManager;
-            ConditionHitCount vars = (ConditionHitCount)variables;
+            ConditionHitOrBlockCount vars = (ConditionHitOrBlockCount)variables;
 
             int hitCount = 0;
-            for (int i = 0; i < f.FCombatManager.HitboxManager.hitboxGroupHitCounts.Length; i++)
+            if (vars.hitOrBlock.HasFlag(ConditionHitOrBlockCount.HitOrBlockEnum.Hit))
             {
-                hitCount += f.FCombatManager.HitboxManager.hitboxGroupHitCounts[i];
-                if (hitCount >= vars.hitCount) return true;
+                for (int i = 0; i < f.FCombatManager.HitboxManager.hitboxGroupHitCounts.Length; i++)
+                {
+                    hitCount += f.FCombatManager.HitboxManager.hitboxGroupHitCounts[i];
+                    if (hitCount >= vars.hitCount) return true;
+                }
             }
 
-            if (vars.blockCounts)
+            if (vars.hitOrBlock.HasFlag(ConditionHitOrBlockCount.HitOrBlockEnum.Block))
             {
                 for (int i = 0; i < f.FCombatManager.HitboxManager.hitboxGroupBlockedCounts.Length; i++)
                 {
@@ -220,6 +223,7 @@ namespace rwby
                     if (hitCount >= vars.hitCount) return true;
                 }
             }
+
             return false;
         }
         
@@ -365,6 +369,26 @@ namespace rwby
             ConditionCheckSuccessfulBlock vars = (ConditionCheckSuccessfulBlock)variables;
 
             bool r =(f.Runner.Tick - f.FCombatManager.LastSuccessfulBlockTick) <= vars.checkDistance;
+            return vars.inverse ? !r : r;
+        }
+        
+        public static bool CanWallBounce(IFighterBase fighter, IConditionVariables variables, HnSF.StateTimeline arg3,
+            int arg4)
+        {
+            FighterManager f = fighter as FighterManager;
+            ConditionCanWallBounce vars = (ConditionCanWallBounce)variables;
+
+            bool r = f.FCombatManager.WallBounce && f.FCombatManager.CurrentWallBounces < 2;
+            return vars.inverse ? !r : r;
+        }
+        
+        public static bool CanGroundBounce(IFighterBase fighter, IConditionVariables variables, HnSF.StateTimeline arg3,
+            int arg4)
+        {
+            FighterManager f = fighter as FighterManager;
+            ConditionCanGroundBounce vars = (ConditionCanGroundBounce)variables;
+
+            bool r = f.FCombatManager.GroundBounce == true && f.FCombatManager.CurrentGroundBounces < 2;
             return vars.inverse ? !r : r;
         }
     }

@@ -21,7 +21,7 @@ namespace rwby
             functions.Add(typeof(ConditionWallValid), BaseStateConditionFunctions.WallValid);
             functions.Add(typeof(ConditionHoldingTowardsWall), BaseStateConditionFunctions.HoldingTowardsWall);
             functions.Add(typeof(ConditionHitboxHitCount), BaseStateConditionFunctions.HitboxHitCount);
-            functions.Add(typeof(ConditionHitCount), BaseStateConditionFunctions.HitCount);
+            functions.Add(typeof(ConditionHitOrBlockCount), BaseStateConditionFunctions.HitCount);
             functions.Add(typeof(ConditionFloorAngle), BaseStateConditionFunctions.FloorAngle);
             functions.Add(typeof(ConditionCompareSlopeDir), BaseStateConditionFunctions.CompareSlopeDir);
             functions.Add(typeof(ConditionPoleValid), BaseStateConditionFunctions.PoleValid);
@@ -30,6 +30,8 @@ namespace rwby
             functions.Add(typeof(ConditionWallAngle), BaseStateConditionFunctions.WallAngle);
             functions.Add(typeof(ConditionChargeLevel), BaseStateConditionFunctions.ChargeLevel);
             functions.Add(typeof(ConditionCheckSuccessfulBlock), BaseStateConditionFunctions.CheckSuccessfulBlock);
+            functions.Add(typeof(ConditionCanGroundBounce), BaseStateConditionFunctions.CanGroundBounce);
+            functions.Add(typeof(ConditionCanWallBounce), BaseStateConditionFunctions.CanWallBounce);
         }
     }
 }

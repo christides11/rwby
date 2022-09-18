@@ -10,20 +10,23 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7789f25d17401bc4b915ca6fcecf2a29, type: 3}
-  m_Name: Base.State.HitAerialFaceDown
+  m_Name: Base.State.HitAerialFaceUp
   m_EditorClassIdentifier: 
-  stateName: Hit Aerial Face Down
+  stateName: Hit Aerial Face Up
   useBaseState: 1
   baseState: {fileID: 11400000, guid: da375c2c1e9149e458db1552d1065b8f, type: 2}
   totalFrames: 30
   autoIncrement: 1
   autoLoop: 0
-  autoLoopFrame: 1
+  autoLoopFrame: 2
   data:
+  - rid: 7270848697680265237
   - rid: 8688056272189390853
+  auraRequirement: 0
   initialGroundedState: 2
-  stateType: 4
+  stateType: 8
   maxUsesInString: -1
+  selfChainable: 0
   allowBaseStateTransitions: 1
   inputSequence:
     executeWindow: 3
@@ -41,28 +44,65 @@ MonoBehaviour:
     RefIds:
     - rid: -2
       type: {class: , ns: , asm: }
+    - rid: 7270848697680265237
+      type: {class: VarChangeState, ns: rwby, asm: rwby.csharp}
+      data:
+        name: To Ground Bounce
+        id: 1
+        parent: -1
+        children: 
+        frameRanges:
+        - {x: 2, y: -1}
+        condition:
+          rid: 7270848697680265239
+        checkInputSequence: 0
+        checkCondition: 0
+        targetType: 0
+        stateMovesetID: -1
+        state:
+          rid: 7270848697680265238
+        frame: 0
+    - rid: 7270848697680265238
+      type: {class: FighterCmnStateReference, ns: rwby, asm: rwby.csharp}
+      data:
+        state: 14
+    - rid: 7270848697680265239
+      type: {class: ConditionAnd, ns: rwby, asm: rwby.csharp}
+      data:
+        conditions:
+        - rid: 7270848697680265243
+        - rid: 7270848697680265240
+    - rid: 7270848697680265240
+      type: {class: ConditionIsGrounded, ns: rwby, asm: rwby.csharp}
+      data:
+        inverse: 0
+    - rid: 7270848697680265243
+      type: {class: ConditionCanGroundBounce, ns: rwby, asm: rwby.csharp}
+      data:
+        inverse: 0
     - rid: 8688056272189390853
       type: {class: VarChangeState, ns: rwby, asm: rwby.csharp}
       data:
-        name: To Ground Lay Face Down
+        name: To Ground Lay Face Up
         id: 0
         parent: -1
         children: 
         frameRanges:
-        - {x: 1, y: -1}
+        - {x: 2, y: -1}
         condition:
-          rid: 8688056272189390855
+          rid: 8688056342057058333
         checkInputSequence: 0
         checkCondition: 0
         targetType: 0
         stateMovesetID: -1
         state:
           rid: 8688056272189390854
+        frame: 0
     - rid: 8688056272189390854
       type: {class: FighterCmnStateReference, ns: rwby, asm: rwby.csharp}
       data:
-        state: 29
-    - rid: 8688056272189390855
+        state: 22
+    - rid: 8688056342057058333
       type: {class: ConditionIsGrounded, ns: rwby, asm: rwby.csharp}
       data:
         inverse: 0

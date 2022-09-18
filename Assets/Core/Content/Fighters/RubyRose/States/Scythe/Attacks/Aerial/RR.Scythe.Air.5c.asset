@@ -51,17 +51,18 @@ MonoBehaviour:
     rid: -2
   hitboxInfo:
   - ID: 0
-    groundedFoldoutGroup: 1
+    groundedFoldoutGroup: 0
     groundedCounterHitFoldoutGroup: 0
     hitStateGroundedGroups: -1
     hit:
       groundHitState: 30
-      airHitState: 32
-      groundBounces: 0
-      wallBounces: 0
-      groundBounceForcePercentage: 0
-      wallBounceForcePercentage: 0
+      airHitState: 34
+      groundBounce: 0
+      wallBounce: 0
+      groundBounceForce: 0
+      wallBounceForce: 0
       noKill: 0
+      unblockable: 0
       hitForceType: 0
       hitForceRelation: 0
       hitForceRelationOffset: {x: 0, y: 0, z: 0}
@@ -131,11 +132,12 @@ MonoBehaviour:
     counterhit:
       groundHitState: 30
       airHitState: 32
-      groundBounces: 0
-      wallBounces: 0
-      groundBounceForcePercentage: 0
-      wallBounceForcePercentage: 0
+      groundBounce: 0
+      wallBounce: 0
+      groundBounceForce: 0
+      wallBounceForce: 0
       noKill: 0
+      unblockable: 0
       hitForceType: 0
       hitForceRelation: 0
       hitForceRelationOffset: {x: 0, y: 0, z: 0}
@@ -190,19 +192,20 @@ MonoBehaviour:
     hitStateGroundedGroups: -1
     hit:
       groundHitState: 30
-      airHitState: 32
-      groundBounces: 0
-      wallBounces: 0
-      groundBounceForcePercentage: 0
-      wallBounceForcePercentage: 0
+      airHitState: 34
+      groundBounce: 1
+      wallBounce: 0
+      groundBounceForce: 8
+      wallBounceForce: 0
       noKill: 0
+      unblockable: 0
       hitForceType: 0
       hitForceRelation: 0
       hitForceRelationOffset: {x: 0, y: 0, z: 0}
       autolink: 0
       autolinkPercentage: 0
       groundHitForce: {x: 0, y: 5, z: 10}
-      aerialHitForce: {x: 0, y: 0, z: 5}
+      aerialHitForce: {x: 0, y: -30, z: 0}
       pullPushCurve:
         serializedVersion: 2
         m_Curve:
@@ -256,8 +259,8 @@ MonoBehaviour:
         contentGUID:
           guid: 
       hitSound: 
-      hitCameraShakeStrength: 0
-      blockCameraShakeStrength: 0
+      hitCameraShakeStrength: 1
+      blockCameraShakeStrength: 1
       cameraShakeLength: 0
       ignoreProration: 0
       ignoreHitstunScaling: 0
@@ -265,11 +268,12 @@ MonoBehaviour:
     counterhit:
       groundHitState: 0
       airHitState: 0
-      groundBounces: 0
-      wallBounces: 0
-      groundBounceForcePercentage: 0
-      wallBounceForcePercentage: 0
+      groundBounce: 0
+      wallBounce: 0
+      groundBounceForce: 0
+      wallBounceForce: 0
       noKill: 0
+      unblockable: 0
       hitForceType: 0
       hitForceRelation: 0
       hitForceRelationOffset: {x: 0, y: 0, z: 0}
@@ -342,6 +346,7 @@ MonoBehaviour:
         stateMovesetID: -1
         state:
           rid: 2193520813467238402
+        frame: 0
     - rid: 2193520813467238402
       type: {class: FighterCmnStateReference, ns: rwby, asm: rwby.csharp}
       data:
@@ -377,10 +382,11 @@ MonoBehaviour:
           rid: 8688056217396838422
         asset: {fileID: 11400000, guid: 852b081cfd9efbb449cca3171458f8cc, type: 2}
     - rid: 8688056217396838422
-      type: {class: ConditionHitCount, ns: rwby, asm: rwby.csharp}
+      type: {class: ConditionHitOrBlockCount, ns: rwby, asm: rwby.csharp}
       data:
         inverse: 0
         hitCount: 1
+        hitOrBlock: 0
     - rid: 8688056217396838433
       type: {class: VarCreateBox, ns: rwby, asm: rwby.csharp}
       data:
@@ -494,6 +500,7 @@ MonoBehaviour:
         stateMovesetID: -1
         state:
           rid: 8688056339992412171
+        frame: 0
     - rid: 8688056339992412171
       type: {class: FighterCmnStateReference, ns: rwby, asm: rwby.csharp}
       data:
@@ -511,10 +518,11 @@ MonoBehaviour:
           rid: -2
         asset: {fileID: 11400000, guid: 852b081cfd9efbb449cca3171458f8cc, type: 2}
     - rid: 8688056339992412173
-      type: {class: ConditionHitCount, ns: rwby, asm: rwby.csharp}
+      type: {class: ConditionHitOrBlockCount, ns: rwby, asm: rwby.csharp}
       data:
         inverse: 0
         hitCount: 1
+        hitOrBlock: -1
     - rid: 8688056339992412174
       type: {class: VarChangeState, ns: rwby, asm: rwby.csharp}
       data:
@@ -532,6 +540,7 @@ MonoBehaviour:
         stateMovesetID: -1
         state:
           rid: 8688056339992412175
+        frame: 0
     - rid: 8688056339992412175
       type: {class: FighterCmnStateReference, ns: rwby, asm: rwby.csharp}
       data:
@@ -557,6 +566,7 @@ MonoBehaviour:
         stateMovesetID: -1
         state:
           rid: 8688056377568657434
+        frame: 0
     - rid: 8688056377568657434
       type: {class: FighterCmnStateReference, ns: rwby, asm: rwby.csharp}
       data:

@@ -1,14 +1,13 @@
 using HnSF;
+using UnityEngine;
 
 namespace rwby
 {
     [System.Serializable]
-    public struct ConditionHitCount : IConditionVariables
+    public struct ConditionCanWallBounce : IConditionVariables
     {
         public int FunctionMap => (int)BaseStateConditionEnum.NONE;
 
         public bool inverse;
-        public int hitCount;
-        public bool blockCounts;
     }
 }

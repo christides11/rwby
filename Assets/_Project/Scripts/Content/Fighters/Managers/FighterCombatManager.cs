@@ -49,10 +49,13 @@ namespace rwby
         [Networked, Capacity(20)] public NetworkLinkedList<MovesetStateIdentifier> movesUsedInString => default;
 
         [Networked] public int hitstopCounter { get; set; }
-        [Networked] public int WallBounces { get; set; }
-        [Networked] public float WallBounceForcePercentage { get; set; }
-        [Networked] public int GroundBounces { get; set; }
-        [Networked] public float GroundBounceForcePercentage { get; set; }
+        [Networked] public bool WallBounce { get; set; }
+        [Networked] public float WallBounceForce { get; set; }
+        [Networked] public bool GroundBounce { get; set; }
+        [Networked] public float GroundBounceForce { get; set; }
+
+        [Networked] public int CurrentWallBounces { get; set; } = 0;
+        [Networked] public int CurrentGroundBounces { get; set; } = 0;
 
         [Networked, Capacity(4)] public NetworkArray<int> assignedSpecials => default;
 
@@ -503,10 +506,10 @@ namespace rwby
             ApplyHitForces(hurtInfo, currentState, hitInfoGroup.hitForceType, isGrounded ?  hitInfoGroup.groundHitForce : hitInfoGroup.aerialHitForce, hitInfoGroup.pullPushCurve, hitInfoGroup.pullPushMaxDistance, hitInfoGroup.hitForceRelationOffset,
                 hitInfoGroup.ignorePushbackScaling);
             
-            WallBounces = hitInfoGroup.wallBounces;
-            WallBounceForcePercentage = hitInfoGroup.wallBounceForcePercentage;
-            GroundBounces = hitInfoGroup.groundBounces;
-            GroundBounceForcePercentage = hitInfoGroup.groundBounceForcePercentage;
+            WallBounce = hitInfoGroup.wallBounce;
+            WallBounceForce = hitInfoGroup.wallBounceForce;
+            GroundBounce = hitInfoGroup.groundBounce;
+            GroundBounceForce = hitInfoGroup.groundBounceForce;
 
             if (hitInfoGroup.autolink)
             {

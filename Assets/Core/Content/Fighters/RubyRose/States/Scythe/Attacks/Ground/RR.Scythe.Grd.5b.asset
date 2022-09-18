@@ -197,11 +197,11 @@ MonoBehaviour:
       data:
         state: 1
     - rid: 7270848697680265218
-      type: {class: ConditionHitCount, ns: rwby, asm: rwby.csharp}
+      type: {class: ConditionHitOrBlockCount, ns: rwby, asm: rwby.csharp}
       data:
         inverse: 0
         hitCount: 1
-        blockCounts: 1
+        hitOrBlock: -1
     - rid: 8688056309525512192
       type: {class: VarChangeState, ns: rwby, asm: rwby.csharp}
       data:
@@ -239,11 +239,11 @@ MonoBehaviour:
         offset: 0
         buffer: 0
     - rid: 8688056309525512196
-      type: {class: ConditionHitCount, ns: rwby, asm: rwby.csharp}
+      type: {class: ConditionHitOrBlockCount, ns: rwby, asm: rwby.csharp}
       data:
         inverse: 0
         hitCount: 1
-        blockCounts: 0
+        hitOrBlock: 0
     - rid: 8688056309525512197
       type: {class: VarCreateBox, ns: rwby, asm: rwby.csharp}
       data:
@@ -275,11 +275,11 @@ MonoBehaviour:
           rid: 8688056331001921537
         asset: {fileID: 11400000, guid: 38d47b53b1c6fa24580e163448503c28, type: 2}
     - rid: 8688056331001921537
-      type: {class: ConditionHitCount, ns: rwby, asm: rwby.csharp}
+      type: {class: ConditionHitOrBlockCount, ns: rwby, asm: rwby.csharp}
       data:
         inverse: 0
         hitCount: 1
-        blockCounts: 1
+        hitOrBlock: -1
     - rid: 8688056331001921541
       type: {class: VarCreateBox, ns: rwby, asm: rwby.csharp}
       data:

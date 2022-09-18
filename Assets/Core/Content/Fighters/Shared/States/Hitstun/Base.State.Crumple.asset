@@ -10,9 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7789f25d17401bc4b915ca6fcecf2a29, type: 3}
-  m_Name: RR.Scythe.GroundBounce
+  m_Name: Base.State.Crumple
   m_EditorClassIdentifier: 
-  stateName: Ground Bounce
+  stateName: Crumple
   useBaseState: 0
   baseState: {fileID: 0}
   totalFrames: 30
@@ -20,12 +20,15 @@ MonoBehaviour:
   autoLoop: 0
   autoLoopFrame: 1
   data:
-  - rid: 220443324362784805
-  - rid: 220443324362784808
-  - rid: 220443324362784806
-  initialGroundedState: 2
-  stateType: 4
+  - rid: 8688056272189390848
+  - rid: 7270848697680265246
+  - rid: 7270848697680265250
+  - rid: 7270848697680265252
+  auraRequirement: 0
+  initialGroundedState: 1
+  stateType: 8
   maxUsesInString: -1
+  selfChainable: 0
   allowBaseStateTransitions: 1
   inputSequence:
     executeWindow: 3
@@ -43,58 +46,77 @@ MonoBehaviour:
     RefIds:
     - rid: -2
       type: {class: , ns: , asm: }
-    - rid: 220443324362784805
+    - rid: 7270848697680265246
+      type: {class: VarModifyHitstun, ns: rwby, asm: rwby.csharp}
+      data:
+        name: Set Hitstun
+        id: 1
+        parent: -1
+        children: 
+        frameRanges:
+        - {x: 0, y: 0}
+        condition:
+          rid: -2
+        modifyType: 1
+        value: 40
+        applyScaling: 1
+    - rid: 7270848697680265250
       type: {class: VarModifyHitstun, ns: rwby, asm: rwby.csharp}
       data:
         name: 
+        id: 2
+        parent: -1
+        children: 
+        frameRanges:
+        - {x: 1, y: -1}
+        condition:
+          rid: 7270848697680265251
+        modifyType: 0
+        value: -1
+        applyScaling: 0
+    - rid: 7270848697680265251
+      type: {class: ConditionHitstunValue, ns: rwby, asm: rwby.csharp}
+      data:
+        minValue: 1
+        maxValue: 2147483647
+    - rid: 7270848697680265252
+      type: {class: VarMultiplyMovement, ns: rwby, asm: rwby.csharp}
+      data:
+        name: Zero Movement
+        id: 3
+        parent: -1
+        children: 
+        frameRanges:
+        - {x: 0, y: 0}
+        condition:
+          rid: -2
+        multiplier:
+          rid: 7270848697680265253
+    - rid: 7270848697680265253
+      type: {class: FighterStatReferenceFloatBase, ns: rwby, asm: rwby.csharp}
+      data:
+        inverse: 0
+        statReference: 0
+        value: 0
+    - rid: 8688056272189390848
+      type: {class: VarChangeState, ns: rwby, asm: rwby.csharp}
+      data:
+        name: To Ground Lay Face Down
         id: 0
-        parent: 0
+        parent: -1
         children: 
         frameRanges:
         - {x: -1, y: -1}
         condition:
           rid: -2
-        modifyType: 0
-        value: -1
-    - rid: 220443324362784806
-      type: {class: VarExternal, ns: rwby, asm: rwby.csharp}
-      data:
-        name: 
-        id: 0
-        parent: 0
-        children: 
-        frameRanges:
-        - {x: -1, y: -1}
-        condition:
-          rid: 220443324362784807
-        asset: {fileID: 11400000, guid: 3e988135845709d4594e5628d0bf81cd, type: 2}
-    - rid: 220443324362784807
-      type: {class: ConditionHitstunValue, ns: rwby, asm: rwby.csharp}
-      data:
-        minValue: 0
-        maxValue: 0
-    - rid: 220443324362784808
-      type: {class: VarChangeState, ns: rwby, asm: rwby.csharp}
-      data:
-        name: 
-        id: 0
-        parent: 0
-        children: 
-        frameRanges:
-        - {x: 5, y: 30}
-        condition:
-          rid: 220443324362784810
         checkInputSequence: 0
         checkCondition: 0
         targetType: 0
         stateMovesetID: -1
         state:
-          rid: 220443324362784809
-    - rid: 220443324362784809
+          rid: 8688056272189390849
+        frame: 0
+    - rid: 8688056272189390849
       type: {class: FighterCmnStateReference, ns: rwby, asm: rwby.csharp}
       data:
-        state: 22
-    - rid: 220443324362784810
-      type: {class: ConditionIsGrounded, ns: rwby, asm: rwby.csharp}
-      data:
-        inverse: 0
+        state: 29

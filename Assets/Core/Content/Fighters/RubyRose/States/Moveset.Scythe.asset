@@ -261,6 +261,14 @@ MonoBehaviour:
     state:
       rid: 7270848607039258636
     stateTimeline: {fileID: 11400000, guid: 5a8e6732426f4c540b1739094196a5d3, type: 2}
+  - name: Ground Bounce
+    state:
+      rid: 7270848697680265236
+    stateTimeline: {fileID: 11400000, guid: d561887228325ff4cb033896d5356f9e, type: 2}
+  - name: Crumple
+    state:
+      rid: 7270848697680265247
+    stateTimeline: {fileID: 11400000, guid: 563e45b88eb11b04489e1d0ceada5fad, type: 2}
   fighterStats: {fileID: 11400000, guid: 9db018607e1c48c498ee3d8a7c4cefc3, type: 2}
   specials:
   - groundState:
@@ -400,6 +408,14 @@ MonoBehaviour:
       type: {class: FighterCmnStateReference, ns: rwby, asm: rwby.csharp}
       data:
         state: 45
+    - rid: 7270848697680265236
+      type: {class: FighterCmnStateReference, ns: rwby, asm: rwby.csharp}
+      data:
+        state: 14
+    - rid: 7270848697680265247
+      type: {class: FighterCmnStateReference, ns: rwby, asm: rwby.csharp}
+      data:
+        state: 11
     - rid: 8688056157277782026
       type: {class: FighterCmnStateReference, ns: rwby, asm: rwby.csharp}
       data:

@@ -55,6 +55,7 @@ MonoBehaviour:
       groundBounceForcePercentage: 0
       wallBounceForcePercentage: 0
       noKill: 0
+      unblockable: 0
       hitForceType: 0
       hitForceRelation: 0
       hitForceRelationOffset: {x: 0, y: 0, z: 0}
@@ -96,6 +97,7 @@ MonoBehaviour:
       initialProration: 0
       comboProration: 0.1
       damage: 900
+      chipDamage: 0
       hitEffectbank:
         modGUID:
           guid: 
@@ -117,6 +119,9 @@ MonoBehaviour:
       hitCameraShakeStrength: 1
       blockCameraShakeStrength: 1
       cameraShakeLength: 4
+      ignoreProration: 0
+      ignoreHitstunScaling: 0
+      ignorePushbackScaling: 0
     counterhit:
       groundHitState: 30
       airHitState: 32
@@ -125,6 +130,7 @@ MonoBehaviour:
       groundBounceForcePercentage: 0
       wallBounceForcePercentage: 0
       noKill: 0
+      unblockable: 0
       hitForceType: 0
       hitForceRelation: 0
       hitForceRelationOffset: {x: 0, y: 0, z: 0}
@@ -148,6 +154,7 @@ MonoBehaviour:
       initialProration: 0
       comboProration: 0
       damage: 0
+      chipDamage: 0
       hitEffectbank:
         modGUID:
           guid: 
@@ -169,6 +176,9 @@ MonoBehaviour:
       hitCameraShakeStrength: 0
       blockCameraShakeStrength: 0
       cameraShakeLength: 0
+      ignoreProration: 0
+      ignoreHitstunScaling: 0
+      ignorePushbackScaling: 0
   throwboxInfo: []
   hurtboxInfo: []
   references:
@@ -193,6 +203,7 @@ MonoBehaviour:
         stateMovesetID: -1
         state:
           rid: 2193520813467238402
+        frame: 0
     - rid: 2193520813467238402
       type: {class: FighterCmnStateReference, ns: rwby, asm: rwby.csharp}
       data:
@@ -250,7 +261,8 @@ MonoBehaviour:
           rid: 8688056331001921539
         asset: {fileID: 11400000, guid: 38d47b53b1c6fa24580e163448503c28, type: 2}
     - rid: 8688056331001921539
-      type: {class: ConditionHitCount, ns: rwby, asm: rwby.csharp}
+      type: {class: ConditionHitOrBlockCount, ns: rwby, asm: rwby.csharp}
       data:
         inverse: 0
         hitCount: 1
+        hitOrBlock: -1

@@ -249,6 +249,8 @@ namespace rwby
                     combatManager.ResetProration();
                     combatManager.ComboStartTick = 0;
                     combatManager.ComboCounter = 0;
+                    combatManager.CurrentGroundBounces = 0;
+                    combatManager.CurrentWallBounces = 0;
                 }
             }else if (currentState.stateType == StateType.ATTACK)
             {

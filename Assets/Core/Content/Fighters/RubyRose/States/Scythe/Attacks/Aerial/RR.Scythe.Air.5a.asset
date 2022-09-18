@@ -54,11 +54,12 @@ MonoBehaviour:
     hit:
       groundHitState: 30
       airHitState: 32
-      groundBounces: 0
-      wallBounces: 0
-      groundBounceForcePercentage: 0
-      wallBounceForcePercentage: 0
+      groundBounce: 0
+      wallBounce: 0
+      groundBounceForce: 0
+      wallBounceForce: 0
       noKill: 0
+      unblockable: 0
       hitForceType: 0
       hitForceRelation: 0
       hitForceRelationOffset: {x: 0, y: 0, z: 5}
@@ -128,11 +129,12 @@ MonoBehaviour:
     counterhit:
       groundHitState: 30
       airHitState: 32
-      groundBounces: 0
-      wallBounces: 0
-      groundBounceForcePercentage: 0
-      wallBounceForcePercentage: 0
+      groundBounce: 0
+      wallBounce: 0
+      groundBounceForce: 0
+      wallBounceForce: 0
       noKill: 0
+      unblockable: 0
       hitForceType: 0
       hitForceRelation: 0
       hitForceRelationOffset: {x: 0, y: 0, z: 0}
@@ -205,6 +207,7 @@ MonoBehaviour:
         stateMovesetID: -1
         state:
           rid: 2193520813467238402
+        frame: 0
     - rid: 2193520813467238402
       type: {class: FighterCmnStateReference, ns: rwby, asm: rwby.csharp}
       data:
@@ -298,7 +301,7 @@ MonoBehaviour:
     - rid: 8688056335261499409
       type: {class: VarEmpty, ns: rwby, asm: rwby.csharp}
       data:
-        name: On Hit
+        name: On Hit or Block
         id: 6
         parent: -1
         children: 0700000008000000
@@ -306,10 +309,11 @@ MonoBehaviour:
         condition:
           rid: 8688056335261499410
     - rid: 8688056335261499410
-      type: {class: ConditionHitCount, ns: rwby, asm: rwby.csharp}
+      type: {class: ConditionHitOrBlockCount, ns: rwby, asm: rwby.csharp}
       data:
         inverse: 0
         hitCount: 1
+        hitOrBlock: -1
     - rid: 8688056335261499411
       type: {class: VarExternal, ns: rwby, asm: rwby.csharp}
       data:
@@ -339,6 +343,7 @@ MonoBehaviour:
         stateMovesetID: -1
         state:
           rid: 8688056335261499413
+        frame: 0
     - rid: 8688056335261499413
       type: {class: FighterCmnStateReference, ns: rwby, asm: rwby.csharp}
       data:
@@ -360,6 +365,7 @@ MonoBehaviour:
         stateMovesetID: -1
         state:
           rid: 8688056339992412168
+        frame: 0
     - rid: 8688056339992412167
       type: {class: ConditionIsGrounded, ns: rwby, asm: rwby.csharp}
       data:
