@@ -479,7 +479,7 @@ namespace rwby
                     }
                     
                     manager.HealthManager.ModifyHealth((int)-(hitInfoGroup.chipDamage));
-                    ApplyHitForces(hurtInfo, currentState, hitInfoGroup.hitForceType, hForce, hitInfoGroup.pullPushCurve, hitInfoGroup.pullPushMaxDistance, hitInfoGroup.hitForceRelationOffset, true);
+                    ApplyHitForces(hurtInfo, currentState, hitInfoGroup.hitForceType, hForce, hitInfoGroup.pullPushMultiplier, hitInfoGroup.pullPushMaxDistance, hitInfoGroup.hitForceRelationOffset, true);
                     manager.shakeDefinition = new CmaeraShakeDefinition()
                     {
                         shakeStrength = hitInfoGroup.blockCameraShakeStrength,
@@ -502,7 +502,7 @@ namespace rwby
             hitReaction.reaction = HitReactionType.HIT;
             int initHitstunValue = isGrounded ? hitInfoGroup.hitstun : hitInfoGroup.untech;
             SetHitStun(hitInfoGroup.ignoreHitstunScaling ? initHitstunValue : ApplyHitstunScaling(initHitstunValue));
-            ApplyHitForces(hurtInfo, currentState, hitInfoGroup.hitForceType, isGrounded ?  hitInfoGroup.groundHitForce : hitInfoGroup.aerialHitForce, hitInfoGroup.pullPushCurve, hitInfoGroup.pullPushMaxDistance, hitInfoGroup.hitForceRelationOffset,
+            ApplyHitForces(hurtInfo, currentState, hitInfoGroup.hitForceType, isGrounded ?  hitInfoGroup.groundHitForce : hitInfoGroup.aerialHitForce, hitInfoGroup.pullPushMultiplier, hitInfoGroup.pullPushMaxDistance, hitInfoGroup.hitForceRelationOffset,
                 hitInfoGroup.ignorePushbackScaling);
             
             WallBounce = hitInfoGroup.wallBounce;
@@ -593,7 +593,7 @@ namespace rwby
             return gravity;
         }
 
-        protected void ApplyHitForces(HurtInfo hurtInfo, StateTimeline currentState, HitboxForceType forceType, Vector3 force = default, AnimationCurve pullPushCurve = default,
+        protected void ApplyHitForces(HurtInfo hurtInfo, StateTimeline currentState, HitboxForceType forceType, Vector3 force = default, float pullPushMulti = default,
             float pullPushMaxDistance = default, Vector3 offset = default, bool ignorePushbackScaling = false, bool ignoreGravityScaling = false)
         {
             
@@ -607,17 +607,23 @@ namespace rwby
                 case HitboxForceType.PULL:
                     var position = manager.myTransform.position;
                     var centerPos = hurtInfo.center + (hurtInfo.right * offset.x) + (hurtInfo.forward * offset.z) + (Vector3.up * offset.y);
-                    
-                    Vector3 dir = (centerPos - (position + Vector3.up)).normalized;
-                    float t = Mathf.Clamp(Vector3.Distance(centerPos, (position + Vector3.up)), 0.0f, 1.0f);
-                    dir *= pullPushCurve.Evaluate(t);
-                    
-                    physicsManager.forceGravity = dir.y;
-                    dir.y = 0;
 
-                    physicsManager.forceMovement = dir;
+                    var pF = (Vector3.MoveTowards(position, centerPos, pullPushMaxDistance) - position) * pullPushMulti;
+                    pF *= pullPushMulti;
+
+                    physicsManager.forceGravity = pF.y;
+                    pF.y = 0;
+                    physicsManager.forceMovement = pF;
                     break;
                 case HitboxForceType.PUSH:
+                    var pPush = manager.myTransform.position;
+                    var centerPosPush = hurtInfo.center + (hurtInfo.right * offset.x) + (hurtInfo.forward * offset.z) + (Vector3.up * offset.y);
+                    
+                    var forcePush = (pPush - Vector3.MoveTowards(pPush, centerPosPush, pullPushMaxDistance)) * pullPushMulti;
+
+                    physicsManager.forceGravity = forcePush.y;
+                    forcePush.y = 0;
+                    physicsManager.forceMovement = forcePush;
                     break;
             }
         }

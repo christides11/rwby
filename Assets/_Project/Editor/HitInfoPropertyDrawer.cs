@@ -29,7 +29,7 @@ namespace rwby
             if (property.FindPropertyRelative("hit").FindPropertyRelative("hitSoundbank").isExpanded) val += lineValue * 2;
             if (property.FindPropertyRelative("counterhit").FindPropertyRelative("hitSoundbank").isExpanded) val += lineValue * 2;
             
-            val += lineValue * 36 * windowsOpen;
+            val += lineValue * 38 * windowsOpen;
             return val;
         }
 
@@ -95,18 +95,21 @@ namespace rwby
                     break;
                 case HitboxForceType.PULL:
                     EditorGUI.PropertyField(new Rect(position.x, GetLineY(), position.width, lineHeight),
-                        property.FindPropertyRelative("pullPushCurve"));
+                        property.FindPropertyRelative("pullPushMultiplier"));
                     EditorGUI.PropertyField(new Rect(position.x, GetLineY(), position.width, lineHeight),
                         property.FindPropertyRelative("pullPushMaxDistance"));
                     break;
                 case HitboxForceType.PUSH:
                     EditorGUI.PropertyField(new Rect(position.x, GetLineY(), position.width, lineHeight),
-                        property.FindPropertyRelative("pullPushCurve"));
+                        property.FindPropertyRelative("pullPushMultiplier"));
                     EditorGUI.PropertyField(new Rect(position.x, GetLineY(), position.width, lineHeight),
                         property.FindPropertyRelative("pullPushMaxDistance"));
                     break;
             }
             EditorGUI.PropertyField(new Rect(position.x, GetLineY(), position.width, lineHeight), property.FindPropertyRelative("blockLift"));
+            EditorGUI.PropertyField(new Rect(position.x, GetLineY(), position.width, lineHeight), property.FindPropertyRelative("autolink"));
+            EditorGUI.PropertyField(new Rect(position.x, GetLineY(), position.width, lineHeight), property.FindPropertyRelative("autolinkPercentage"));
+            
             
             EditorGUI.LabelField(new Rect(position.x, GetLineY(), position.width, lineHeight), "STUN", EditorStyles.boldLabel);
             EditorGUI.PropertyField(new Rect(position.x, GetLineY(), position.width, lineHeight), property.FindPropertyRelative("attackerHitstop"));

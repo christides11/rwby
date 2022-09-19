@@ -31,7 +31,7 @@ namespace rwby
             // FORCES
             [FormerlySerializedAs("hitForce")] public Vector3 groundHitForce;
             public Vector3 aerialHitForce;
-            public AnimationCurve pullPushCurve;
+            public float pullPushMultiplier;
             public float pullPushMaxDistance;
             public bool blockLift;
             
