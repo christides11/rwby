@@ -605,18 +605,17 @@ namespace rwby
                     physicsManager.forceMovement = ignorePushbackScaling ? forces : ApplyPushbackScaling(forces);
                     break;
                 case HitboxForceType.PULL:
-                    var position = manager.myTransform.position;
+                    var position = manager.GetCenter();
                     var centerPos = hurtInfo.center + (hurtInfo.right * offset.x) + (hurtInfo.forward * offset.z) + (Vector3.up * offset.y);
 
                     var pF = (Vector3.MoveTowards(position, centerPos, pullPushMaxDistance) - position) * pullPushMulti;
-                    pF *= pullPushMulti;
 
                     physicsManager.forceGravity = pF.y;
                     pF.y = 0;
                     physicsManager.forceMovement = pF;
                     break;
                 case HitboxForceType.PUSH:
-                    var pPush = manager.myTransform.position;
+                    var pPush = manager.GetCenter();
                     var centerPosPush = hurtInfo.center + (hurtInfo.right * offset.x) + (hurtInfo.forward * offset.z) + (Vector3.up * offset.y);
                     
                     var forcePush = (pPush - Vector3.MoveTowards(pPush, centerPosPush, pullPushMaxDistance)) * pullPushMulti;

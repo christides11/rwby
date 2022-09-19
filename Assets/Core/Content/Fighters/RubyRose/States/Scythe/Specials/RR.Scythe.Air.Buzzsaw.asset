@@ -31,6 +31,9 @@ MonoBehaviour:
   - rid: 8688056377568657429
   - rid: 8688056377568657427
   - rid: 8688056655325691905
+  - rid: 7270848729635094528
+  - rid: 7270848729635094530
+  - rid: 7270848729635094541
   auraRequirement: 0
   initialGroundedState: 2
   stateType: 2
@@ -61,16 +64,16 @@ MonoBehaviour:
       unblockable: 0
       hitForceType: 2
       hitForceRelation: 0
-      hitForceRelationOffset: {x: 0, y: 1.2, z: 1}
+      hitForceRelationOffset: {x: 0, y: 0, z: 1}
       autolink: 0
       autolinkPercentage: 1
       groundHitForce: {x: 0, y: 0, z: 0}
       aerialHitForce: {x: 0, y: 0, z: 0}
-      pullPushMultiplier: 1
+      pullPushMultiplier: 10
       pullPushMaxDistance: 5
       blockLift: 0
-      attackerHitstop: 1
-      hitstop: 1
+      attackerHitstop: 0
+      hitstop: 0
       hitstun: 20
       blockstun: 20
       untech: 20
@@ -161,6 +164,46 @@ MonoBehaviour:
     RefIds:
     - rid: -2
       type: {class: , ns: , asm: }
+    - rid: 7270848729635094528
+      type: {class: VarEmpty, ns: rwby, asm: rwby.csharp}
+      data:
+        name: On Hit
+        id: 12
+        parent: -1
+        children: 0d0000000e000000
+        frameRanges: []
+        condition:
+          rid: 7270848729635094529
+    - rid: 7270848729635094529
+      type: {class: ConditionHitOrBlockCount, ns: rwby, asm: rwby.csharp}
+      data:
+        inverse: 0
+        hitCount: 1
+        hitOrBlock: 1
+    - rid: 7270848729635094530
+      type: {class: VarExternal, ns: rwby, asm: rwby.csharp}
+      data:
+        name: Try Atk
+        id: 13
+        parent: 12
+        children: 
+        frameRanges:
+        - {x: 5, y: -1}
+        condition:
+          rid: -2
+        asset: {fileID: 11400000, guid: 852b081cfd9efbb449cca3171458f8cc, type: 2}
+    - rid: 7270848729635094541
+      type: {class: VarExternal, ns: rwby, asm: rwby.csharp}
+      data:
+        name: Try Air State
+        id: 14
+        parent: 12
+        children: 
+        frameRanges:
+        - {x: 5, y: -1}
+        condition:
+          rid: -2
+        asset: {fileID: 11400000, guid: e3543988f17bcfe4c80b20a6e4e51546, type: 2}
     - rid: 8688056342057058304
       type: {class: VarModifyFallSpeed, ns: rwby, asm: rwby.csharp}
       data:

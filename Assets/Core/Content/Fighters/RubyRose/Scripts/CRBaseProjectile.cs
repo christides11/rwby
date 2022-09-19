@@ -18,7 +18,8 @@ namespace rwby
 
         public AnimationCurve moveTowardsCurve;
         public float moveTowardsForce;
-        
+
+        public int clearPer = 2;
         private void Awake()
         {
             boxManager.hurtable = this;
@@ -49,7 +50,7 @@ namespace rwby
             var mF = Vector3.MoveTowards(transform.position, fm.GetCenter(), moveTowardsForce) - transform.position;
 
             force += (mF/Runner.DeltaTime) * moveTowardsCurve.Evaluate(t);
-            if (cExistTick % 3 == 0)
+            if (cExistTick % clearPer == 0)
             {
                 Reset();
             }

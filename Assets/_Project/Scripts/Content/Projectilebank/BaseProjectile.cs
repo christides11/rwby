@@ -83,10 +83,9 @@ namespace rwby
         public HurtInfo BuildHurtInfo(CustomHitbox hitbox, Hurtbox hurtbox)
         {
             Vector3 hitPoint = hurtbox.transform.position;
-            HitInfo hitInfo = hitbox.definition.HitboxInfo[hitbox.definitionIndex];
-            HurtInfo hurtInfo;
-            
-            hurtInfo = new HurtInfo(hitInfo, hurtbox.definitionIndex,
+            HitInfo hitInfo = this.HitboxInfo[hitbox.definitionIndex];
+
+            var hurtInfo = new HurtInfo(hitInfo, hurtbox.definitionIndex,
                 transform.position, transform.forward, transform.right,
                 force * Runner.DeltaTime, hitPoint);
             return hurtInfo;
@@ -97,7 +96,7 @@ namespace rwby
             hitObjects.Add(new IDGroupCollisionInfo()
             {
                 collisionType = IDGroupCollisionType.Hurtbox,
-                hitByIDGroup = hitbox.definition.HitboxInfo[hitbox.definitionIndex].ID,
+                hitByIDGroup = this.HitboxInfo[hitbox.definitionIndex].ID,
                 hitIHurtableNetID = enemyHurtbox.ownerNetworkObject.Id
             });
 
@@ -142,7 +141,7 @@ namespace rwby
             hitObjects.Add(new IDGroupCollisionInfo()
             {
                 collisionType = IDGroupCollisionType.Hitbox,
-                hitByIDGroup = hitbox.definition.HitboxInfo[hitbox.definitionIndex].ID,
+                hitByIDGroup = this.HitboxInfo[hitbox.definitionIndex].ID,
                 hitIHurtableNetID = enemyHitbox.ownerNetworkObject.Id
             });
             

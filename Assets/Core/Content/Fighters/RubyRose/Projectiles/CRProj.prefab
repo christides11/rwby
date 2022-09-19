@@ -175,7 +175,7 @@ MonoBehaviour:
     attachedTo: 0
     shape: 0
     offset: {x: 0, y: 0, z: 0}
-    boxExtents: {x: 0.5, y: 0.5, z: 0.5}
+    boxExtents: {x: 1, y: 1, z: 1}
     radius: 0
     definitionIndex: 0
   hitboxInfo:
@@ -196,34 +196,11 @@ MonoBehaviour:
       hitForceRelation: 0
       hitForceRelationOffset: {x: 0, y: 0, z: 0}
       autolink: 0
-      autolinkPercentage: 0
+      autolinkPercentage: 1
       groundHitForce: {x: 0, y: 10, z: 0}
       aerialHitForce: {x: 0, y: 10, z: 5}
-      pullPushCurve:
-        serializedVersion: 2
-        m_Curve:
-        - serializedVersion: 3
-          time: 0
-          value: 0
-          inSlope: 1
-          outSlope: 1
-          tangentMode: 34
-          weightedMode: 0
-          inWeight: 0
-          outWeight: 0
-        - serializedVersion: 3
-          time: 1
-          value: 1
-          inSlope: 1
-          outSlope: 1
-          tangentMode: 34
-          weightedMode: 0
-          inWeight: 0
-          outWeight: 0
-        m_PreInfinity: 2
-        m_PostInfinity: 2
-        m_RotationOrder: 0
-      pullPushMaxDistance: 10
+      pullPushMultiplier: 10
+      pullPushMaxDistance: 100
       blockLift: 0
       attackerHitstop: 2
       hitstop: 2
@@ -232,7 +209,7 @@ MonoBehaviour:
       untech: 25
       initialProration: 0
       comboProration: 0
-      damage: 20
+      damage: 10
       chipDamage: 5
       hitEffectbank:
         modGUID:
@@ -274,12 +251,7 @@ MonoBehaviour:
       autolinkPercentage: 0
       groundHitForce: {x: 0, y: 0, z: 0}
       aerialHitForce: {x: 0, y: 0, z: 0}
-      pullPushCurve:
-        serializedVersion: 2
-        m_Curve: []
-        m_PreInfinity: 2
-        m_PostInfinity: 2
-        m_RotationOrder: 4
+      pullPushMultiplier: 0
       pullPushMaxDistance: 0
       blockLift: 0
       attackerHitstop: 0
@@ -332,27 +304,27 @@ MonoBehaviour:
       inWeight: 0
       outWeight: 0.055894308
     - serializedVersion: 3
-      time: 0.55
+      time: 0.3
       value: 1
       inSlope: 0
-      outSlope: 0
-      tangentMode: 0
+      outSlope: -3.7404168
+      tangentMode: 1
       weightedMode: 0
       inWeight: 0.33333334
-      outWeight: 0.33333334
+      outWeight: 0.04233641
     - serializedVersion: 3
       time: 1
       value: 0
-      inSlope: -1.8089293
-      outSlope: -1.8089293
+      inSlope: -0.7906098
+      outSlope: -0.7906098
       tangentMode: 0
       weightedMode: 0
-      inWeight: 0.033536613
+      inWeight: 0.072447404
       outWeight: 0
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  fMoveForce: 20
+  fMoveForce: 10
   moveTowardsCurve:
     serializedVersion: 2
     m_Curve:
@@ -366,7 +338,7 @@ MonoBehaviour:
       inWeight: 0
       outWeight: 0
     - serializedVersion: 3
-      time: 0.4
+      time: 0.3
       value: 0
       inSlope: 0
       outSlope: 8.388087
@@ -396,6 +368,7 @@ MonoBehaviour:
     m_PostInfinity: 2
     m_RotationOrder: 4
   moveTowardsForce: 1
+  clearPer: 2
   references:
     version: 2
     RefIds:

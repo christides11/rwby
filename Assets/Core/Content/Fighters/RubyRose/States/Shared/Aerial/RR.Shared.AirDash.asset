@@ -28,10 +28,12 @@ MonoBehaviour:
   - rid: 8688056360164655107
   - rid: 2193520783924396052
   - rid: 8688056409313247249
+  - rid: 7270848729635094542
   auraRequirement: 0
   initialGroundedState: 2
   stateType: 1
   maxUsesInString: -1
+  selfChainable: 0
   allowBaseStateTransitions: 1
   inputSequence:
     executeWindow: 3
@@ -72,10 +74,30 @@ MonoBehaviour:
         stateMovesetID: -1
         state:
           rid: 2193520783924396053
+        frame: 0
     - rid: 2193520783924396053
       type: {class: FighterCmnStateReference, ns: rwby, asm: rwby.csharp}
       data:
         state: 5
+    - rid: 7270848729635094542
+      type: {class: VarClampMovement, ns: rwby, asm: rwby.csharp}
+      data:
+        name: 
+        id: 10
+        parent: -1
+        children: 
+        frameRanges:
+        - {x: -2, y: -2}
+        condition:
+          rid: -2
+        magnitude:
+          rid: 7270848729635094543
+    - rid: 7270848729635094543
+      type: {class: FighterStatReferenceFloatBase, ns: rwby, asm: rwby.csharp}
+      data:
+        inverse: 0
+        statReference: 0
+        value: 10
     - rid: 8688056217396838408
       type: {class: VarExternal, ns: rwby, asm: rwby.csharp}
       data:
@@ -123,6 +145,7 @@ MonoBehaviour:
         stateMovesetID: -1
         state:
           rid: 8688056360164655108
+        frame: 0
     - rid: 8688056360164655108
       type: {class: FighterCmnStateReference, ns: rwby, asm: rwby.csharp}
       data:
