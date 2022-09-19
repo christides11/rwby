@@ -269,6 +269,10 @@ MonoBehaviour:
     state:
       rid: 7270848697680265247
     stateTimeline: {fileID: 11400000, guid: 563e45b88eb11b04489e1d0ceada5fad, type: 2}
+  - name: Scythe Throw
+    state:
+      rid: 7270848718906589199
+    stateTimeline: {fileID: 11400000, guid: 8d8ca9ae2fd9543488915f8d04520d17, type: 2}
   fighterStats: {fileID: 11400000, guid: 9db018607e1c48c498ee3d8a7c4cefc3, type: 2}
   specials:
   - groundState:
@@ -279,6 +283,10 @@ MonoBehaviour:
       rid: 5282967595019141120
     aerialState:
       rid: 5282967595019141121
+  - groundState:
+      rid: 7270848718906589197
+    aerialState:
+      rid: 7270848718906589198
   clashCancelListGrd: {fileID: 11400000, guid: 38d47b53b1c6fa24580e163448503c28, type: 2}
   clashCancelListAir: {fileID: 11400000, guid: 852b081cfd9efbb449cca3171458f8cc, type: 2}
   references:
@@ -416,6 +424,18 @@ MonoBehaviour:
       type: {class: FighterCmnStateReference, ns: rwby, asm: rwby.csharp}
       data:
         state: 11
+    - rid: 7270848718906589197
+      type: {class: RubyRoseStateReference, ns: rwby.core, asm: rwby.core}
+      data:
+        state: 60
+    - rid: 7270848718906589198
+      type: {class: RubyRoseStateReference, ns: rwby.core, asm: rwby.core}
+      data:
+        state: 60
+    - rid: 7270848718906589199
+      type: {class: RubyRoseStateReference, ns: rwby.core, asm: rwby.core}
+      data:
+        state: 60
     - rid: 8688056157277782026
       type: {class: FighterCmnStateReference, ns: rwby, asm: rwby.csharp}
       data:

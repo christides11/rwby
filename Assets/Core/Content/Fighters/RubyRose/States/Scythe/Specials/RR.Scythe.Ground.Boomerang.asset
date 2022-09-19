@@ -20,13 +20,14 @@ MonoBehaviour:
   autoLoop: 0
   autoLoopFrame: 1
   data:
-  - rid: 6951768528003006470
-  - rid: 220443896379604999
-  - rid: 220443896379604994
-  - rid: 220443981228539904
-  stateGroundedGroup: 1
+  - rid: 7270848718906589194
+  - rid: 7270848718906589196
+  - rid: 7270848718906589200
+  auraRequirement: 0
+  initialGroundedState: 1
   stateType: 2
   maxUsesInString: 1
+  selfChainable: 0
   allowBaseStateTransitions: 1
   inputSequence:
     executeWindow: 3
@@ -37,76 +38,77 @@ MonoBehaviour:
       directionDeviation: 0
     sequenceWindow: 8
     sequenceInputs: []
+  inputSequenceAsHoldInputs: 0
   condition:
     rid: -2
   hitboxInfo: []
   throwboxInfo: []
-  hurtboxInfo: []
+  hurtboxInfo:
+  - hitInvincible: 0
+    projectileInvincible: 0
   references:
     version: 2
     RefIds:
     - rid: -2
       type: {class: , ns: , asm: }
-    - rid: 220443896379604994
+    - rid: 7270848718906589194
       type: {class: VarApplyTraction, ns: rwby, asm: rwby.csharp}
       data:
+        name: 
+        id: 0
+        parent: -1
+        children: 
         frameRanges:
-        - {x: -1, y: -1}
+        - {x: 1, y: -1}
         condition:
           rid: -2
         traction:
-          rid: 220443896379604995
+          rid: 7270848718906589195
         applyMovement: 1
         applyGravity: 0
-        children: []
-    - rid: 220443896379604995
+    - rid: 7270848718906589195
       type: {class: FighterBaseStatReferenceFloat, ns: rwby, asm: rwby.csharp}
       data:
         inverse: 0
         statReference: 1
-        value: 30
+        value: 0
         variable: 0
-    - rid: 220443896379604999
-      type: {class: VarCreateBox, ns: rwby, asm: rwby.csharp}
-      data:
-        frameRanges:
-        - {x: 10, y: 15}
-        condition:
-          rid: -2
-        boxType: 0
-        attachedTo: 0
-        shape: 0
-        offset: {x: -0.5, y: 1, z: 0}
-        boxExtents: {x: 0.6, y: 1, z: 1.4}
-        radius: 0
-        definitionIndex: 0
-        children: []
-    - rid: 220443981228539904
+    - rid: 7270848718906589196
       type: {class: VarCreateProjectile, ns: rwby, asm: rwby.csharp}
       data:
+        name: 
+        id: 1
+        parent: -1
+        children: 
         frameRanges:
-        - {x: 10, y: 10}
+        - {x: 5, y: 5}
         condition:
           rid: -2
-        projectile: {fileID: -5177203071095684643, guid: 7a96b6312271bac4cab471609abf3ef0, type: 3}
-        positionOffset: {x: 0, y: 1, z: 1}
-        rotation: {x: 0, y: 0, z: 0}
-        scale: {x: 1, y: 1, z: 1}
-        children: []
-    - rid: 6951768528003006470
-      type: {class: VarChangeState, ns: rwby, asm: rwby.csharp}
+        def:
+          projectilebank:
+            modGUID:
+              guid: 1d292c1f00000000
+            contentGUID:
+              guid: 2c2c000000000000
+          projectile: cr
+          parented: 0
+          offset: {x: 0, y: 1, z: 0.5}
+          rotation: {x: 0, y: 0, z: 0}
+          scale: {x: 1, y: 1, z: 1}
+          overrideMode: 1
+        force: {x: 0, y: 0, z: 0}
+        pointTowardsLockonTargetXZ: 0
+        pointTowardsLockonTargetY: 0
+        useCameraForward: 0
+    - rid: 7270848718906589200
+      type: {class: VarExternal, ns: rwby, asm: rwby.csharp}
       data:
+        name: To Idle
+        id: 2
+        parent: -1
+        children: 
         frameRanges:
-        - {x: 30, y: 30}
+        - {x: -1, y: -1}
         condition:
           rid: -2
-        checkInputSequence: 0
-        checkCondition: 0
-        stateMovesetID: -1
-        state:
-          rid: 6951768528003006471
-        children: []
-    - rid: 6951768528003006471
-      type: {class: FighterCmnStateReference, ns: rwby, asm: rwby.csharp}
-      data:
-        state: 1
+        asset: {fileID: 11400000, guid: c8d832c162e368d439cbe63210340e04, type: 2}

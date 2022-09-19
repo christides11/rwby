@@ -105,7 +105,6 @@ namespace rwby
 
             HitInfo hi = hurtInfo.hitInfo as HitInfo;
             
-            /*
             switch (reaction.reaction)
             {
                 case HitReactionType.HIT:
@@ -117,7 +116,25 @@ namespace rwby
                 case HitReactionType.AVOIDED:
                     HandleAvoidReaction(hitbox, enemyHurtbox, hurtInfo, hi, reaction);
                     break;
-            }*/
+            }
+        }
+        
+        public virtual void HandleHitReaction(CustomHitbox hitbox, Hurtbox enemyHurtbox, HurtInfo hurtInfo, HitInfo hi,
+            HitReaction hitReaction)
+        {
+            //hitboxGroupHitCounts.Set(hitbox.definitionIndex, hitboxGroupHitCounts[hitbox.definitionIndex] + 1);
+        }
+
+        public virtual void HandleBlockReaction(CustomHitbox hitbox, Hurtbox enemyHurtbox, HurtInfo hurtInfo,
+            HitInfo hi, HitReaction hitReaction)
+        {
+            //hitboxGroupBlockedCounts.Set(hitbox.definitionIndex, hitboxGroupBlockedCounts[hitbox.definitionIndex] + 1);
+        }
+        
+        public virtual void HandleAvoidReaction(CustomHitbox hitbox, Hurtbox enemyHurtbox, HurtInfo hurtInfo,
+            HitInfo hi, HitReaction hitReaction)
+        {
+            
         }
 
         public void DoClash(CustomHitbox hitbox, CustomHitbox enemyHitbox)
@@ -130,6 +147,16 @@ namespace rwby
             });
             
             //TODO: Clashing.
+        }
+        
+        public virtual void Reset()
+        {
+            hitObjects.Clear();
+            /*for (int i = 0; i < hitboxGroupHitCounts.Length; i++)
+            {
+                hitboxGroupHitCounts.Set(i, 0);
+                hitboxGroupBlockedCounts.Set(i, 0);
+            }*/
         }
 
         public int GetTeam()
