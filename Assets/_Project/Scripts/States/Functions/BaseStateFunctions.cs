@@ -953,5 +953,28 @@ namespace rwby
             fm.FPhysicsManager.forceGravity = fm.FCombatManager.GroundBounceForce;
             fm.FPhysicsManager.forceMovement = Vector3.zero;
         }
+        
+        public static void MoveTowardsMagnitude(IFighterBase fighter, IStateVariables variables, HnSF.StateTimeline stateTimeline, int frame)
+        {
+            FighterManager fm = (FighterManager)fighter;
+            VarMoveTowardsMagnitude vars = (VarMoveTowardsMagnitude)variables;
+
+            Vector3 m = fm.FPhysicsManager.GetOverallForce();
+            if (vars.applyGravity && vars.applyMovement)
+            {
+                m = fm.FPhysicsManager.GetOverallForce();
+            }else if (vars.applyGravity)
+            {
+                m = new Vector3(0, fm.FPhysicsManager.forceGravity, 0);
+            }
+            else
+            {
+                m = fm.FPhysicsManager.forceMovement;
+            }
+            m = Vector3.MoveTowards(m, m.normalized * vars.force.GetValue(fm), vars.distance.GetValue(fm));
+            if(vars.applyGravity) fm.FPhysicsManager.forceGravity = m.y;
+            m.y = 0;
+            if(vars.applyMovement) fm.FPhysicsManager.forceMovement = m;
+        }
     }
 }

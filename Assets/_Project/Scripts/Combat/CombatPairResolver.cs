@@ -52,8 +52,8 @@ namespace rwby
                 {
                     direction.y = 0;
                     direction.Normalize();
-                    pair.Key.Item1.GetComponent<FighterPhysicsManager>().kCC.Motor.SetPosition(pair.Key.Item1.transform.position + (direction * (distance/2.0f) * collisionSolvePercentage), false);
-                    pair.Key.Item2.GetComponent<FighterPhysicsManager>().kCC.Motor.SetPosition(pair.Key.Item2.transform.position - (direction * (distance/2.0f) * collisionSolvePercentage), false);
+                    pair.Key.Item1.GetComponent<FighterPhysicsManager>().kCC.Motor.MoveCharacter(pair.Key.Item1.transform.position + (direction * (distance/2.0f) * collisionSolvePercentage));
+                    pair.Key.Item2.GetComponent<FighterPhysicsManager>().kCC.Motor.MoveCharacter(pair.Key.Item2.transform.position - (direction * (distance/2.0f) * collisionSolvePercentage));
                 }
             }
             pairFinder.collisionPairs.Clear();

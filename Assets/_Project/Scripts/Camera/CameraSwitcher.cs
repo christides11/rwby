@@ -85,9 +85,12 @@ namespace rwby
 
         public void SwitchTo(int id)
         {
+            Vector2 lookDir = Vector2.zero;
+            if (currentCamera != -1) lookDir = playerCameras[currentCamera].GetLookDirection();
             if(currentCamera != -1) playerCameras[currentCamera].Deactivate();
             currentCamera = id;
             if(currentCamera != -1) playerCameras[currentCamera].Activate();
+            if(currentCamera != -1) playerCameras[currentCamera].SetLookDirection(lookDir);
         }
 
         public virtual void AssignControlTo(ClientManager clientManager, int playerID)

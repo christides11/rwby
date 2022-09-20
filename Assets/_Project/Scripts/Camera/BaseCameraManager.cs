@@ -39,6 +39,16 @@ namespace rwby
             
         }
 
+        public virtual Vector2 GetLookDirection()
+        {
+            return Vector2.zero;
+        }
+
+        public virtual void SetLookDirection(Vector2 lookDir)
+        {
+            
+        }
+
         public virtual void StopShaking()
         {
             

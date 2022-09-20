@@ -62,6 +62,7 @@ namespace rwby
             functions.Add(typeof(VarSetPushblockState), BaseStateFunctions.SetPushblockState);
             functions.Add(typeof(VarConsumeGroundBounce), BaseStateFunctions.ConsumeGroundBounce);
             functions.Add(typeof(VarConsumeWallBounce), BaseStateFunctions.ConsumeWallBounce);
+            functions.Add(typeof(VarMoveTowardsMagnitude), BaseStateFunctions.MoveTowardsMagnitude);
         }
     }
 }

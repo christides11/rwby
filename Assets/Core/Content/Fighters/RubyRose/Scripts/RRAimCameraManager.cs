@@ -42,6 +42,7 @@ namespace rwby.core
             virtualCameraPOV.m_HorizontalAxis.m_MinValue = followTarget.transform.eulerAngles.y - aimRange;
             virtualCameraPOV.m_HorizontalAxis.m_MaxValue = followTarget.transform.eulerAngles.y + aimRange;
             virtualCameraPOV.m_HorizontalAxis.Value = followTarget.transform.eulerAngles.y;
+            virtualCameraPOV.m_VerticalAxis.Value = 0;
             gameObject.SetActive(true);
             base.Activate();
         }
@@ -79,7 +80,17 @@ namespace rwby.core
             virtualCamera.LookAt = fighterManager.transform;
             followTarget = fighterManager;
         }
-        
-        
+
+        public override void SetLookDirection(Vector2 lookDir)
+        {
+            base.SetLookDirection(lookDir);
+            //virtualCameraPOV.m_HorizontalAxis.Value = lookDir.x;
+            //virtualCameraPOV.m_VerticalAxis.Value = lookDir.y;
+        }
+
+        public override Vector2 GetLookDirection()
+        {
+            return new Vector2(virtualCameraPOV.m_HorizontalAxis.Value, virtualCameraPOV.m_VerticalAxis.Value);
+        }
     }
 }

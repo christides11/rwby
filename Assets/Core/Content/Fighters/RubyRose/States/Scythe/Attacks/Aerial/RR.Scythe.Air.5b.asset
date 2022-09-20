@@ -27,6 +27,7 @@ MonoBehaviour:
   - rid: 8688056335261499414
   - rid: 8688056335261499416
   - rid: 8688056335261499417
+  - rid: 7270848763132117007
   auraRequirement: 0
   initialGroundedState: 2
   stateType: 2
@@ -64,32 +65,9 @@ MonoBehaviour:
       hitForceRelationOffset: {x: 0, y: 0, z: 0}
       autolink: 0
       autolinkPercentage: 0
-      groundHitForce: {x: 0, y: 0, z: 9}
+      groundHitForce: {x: 0, y: 0, z: 8}
       aerialHitForce: {x: 0, y: 4, z: 0}
-      pullPushCurve:
-        serializedVersion: 2
-        m_Curve:
-        - serializedVersion: 3
-          time: 0
-          value: 0
-          inSlope: 10
-          outSlope: 10
-          tangentMode: 34
-          weightedMode: 0
-          inWeight: 0
-          outWeight: 0.33333334
-        - serializedVersion: 3
-          time: 1
-          value: 10
-          inSlope: 10
-          outSlope: 10
-          tangentMode: 34
-          weightedMode: 0
-          inWeight: 0.33333334
-          outWeight: 0
-        m_PreInfinity: 2
-        m_PostInfinity: 2
-        m_RotationOrder: 4
+      pullPushMultiplier: 0
       pullPushMaxDistance: 10
       blockLift: 0
       attackerHitstop: 4
@@ -141,12 +119,7 @@ MonoBehaviour:
       autolinkPercentage: 0
       groundHitForce: {x: 0, y: 0, z: 0}
       aerialHitForce: {x: 0, y: 0, z: 0}
-      pullPushCurve:
-        serializedVersion: 2
-        m_Curve: []
-        m_PreInfinity: 2
-        m_PostInfinity: 2
-        m_RotationOrder: 4
+      pullPushMultiplier: 0
       pullPushMaxDistance: 0
       blockLift: 0
       attackerHitstop: 0
@@ -229,6 +202,22 @@ MonoBehaviour:
         boxExtents: {x: 1, y: 1, z: 1}
         radius: 0
         definitionIndex: 0
+    - rid: 7270848763132117007
+      type: {class: VarExternal, ns: rwby, asm: rwby.csharp}
+      data:
+        name: To Grd
+        id: 9
+        parent: -1
+        children: 
+        frameRanges:
+        - {x: 1, y: -1}
+        condition:
+          rid: 7270848763132117008
+        asset: {fileID: 11400000, guid: c8d832c162e368d439cbe63210340e04, type: 2}
+    - rid: 7270848763132117008
+      type: {class: ConditionIsGrounded, ns: rwby, asm: rwby.csharp}
+      data:
+        inverse: 0
     - rid: 8688056217396838433
       type: {class: VarCreateBox, ns: rwby, asm: rwby.csharp}
       data:

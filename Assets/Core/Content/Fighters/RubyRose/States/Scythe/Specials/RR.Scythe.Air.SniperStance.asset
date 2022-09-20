@@ -23,11 +23,14 @@ MonoBehaviour:
   - rid: 8688056217396838433
   - rid: 8688056360164655116
   - rid: 8688056364881936397
+  - rid: 7270848763132117011
   - rid: 8688056473731203109
   - rid: 8688056364881936407
+  auraRequirement: 0
   initialGroundedState: 2
   stateType: 2
   maxUsesInString: 1
+  selfChainable: 0
   allowBaseStateTransitions: 1
   inputSequence:
     executeWindow: 3
@@ -45,131 +48,111 @@ MonoBehaviour:
   - ID: 0
     groundedFoldoutGroup: 0
     groundedCounterHitFoldoutGroup: 0
-    aerialFoldoutGroup: 0
-    aerialCounterHitFoldoutGroup: 0
     hitStateGroundedGroups: -1
-    groundGroup:
-      hitState: 30
-      groundBounces: 0
-      wallBounces: 0
-      groundBounceForcePercentage: 0
-      wallBounceForcePercentage: 0
-      hitKills: 0
+    hit:
+      groundHitState: 30
+      airHitState: 0
+      groundBounce: 0
+      wallBounce: 0
+      groundBounceForce: 0
+      wallBounceForce: 0
+      noKill: 0
+      unblockable: 0
       hitForceType: 0
       hitForceRelation: 0
       hitForceRelationOffset: {x: 0, y: 0, z: 0}
       autolink: 0
       autolinkPercentage: 0
-      hitForce: {x: 0, y: 0, z: 5}
-      blockForce: {x: 0, y: 0, z: 0}
-      hitGravity: 0
-      pullPushCurve:
-        serializedVersion: 2
-        m_Curve:
-        - serializedVersion: 3
-          time: 0
-          value: 0
-          inSlope: 10
-          outSlope: 10
-          tangentMode: 34
-          weightedMode: 0
-          inWeight: 0
-          outWeight: 0.33333334
-        - serializedVersion: 3
-          time: 1
-          value: 10
-          inSlope: 10
-          outSlope: 10
-          tangentMode: 34
-          weightedMode: 0
-          inWeight: 0.33333334
-          outWeight: 0
-        m_PreInfinity: 2
-        m_PostInfinity: 2
-        m_RotationOrder: 4
+      groundHitForce: {x: 0, y: 0, z: 5}
+      aerialHitForce: {x: 0, y: 0, z: 0}
+      pullPushMultiplier: 0
       pullPushMaxDistance: 10
+      blockLift: 0
       attackerHitstop: 4
       hitstop: 4
       hitstun: 60
       blockstun: 15
-    groundCounterHitGroup:
-      hitState: 0
-      groundBounces: 0
-      wallBounces: 0
-      groundBounceForcePercentage: 0
-      wallBounceForcePercentage: 0
-      hitKills: 0
+      untech: 0
+      initialProration: 0
+      comboProration: 0
+      damage: 0
+      chipDamage: 0
+      hitEffectbank:
+        modGUID:
+          guid: 
+        contentGUID:
+          guid: 
+      hitEffect: 
+      blockEffectbank:
+        modGUID:
+          guid: 
+        contentGUID:
+          guid: 
+      blockEffect: 
+      hitSoundbank:
+        modGUID:
+          guid: 
+        contentGUID:
+          guid: 
+      hitSound: 
+      hitCameraShakeStrength: 0
+      blockCameraShakeStrength: 0
+      cameraShakeLength: 0
+      ignoreProration: 0
+      ignoreHitstunScaling: 0
+      ignorePushbackScaling: 0
+    counterhit:
+      groundHitState: 0
+      airHitState: 0
+      groundBounce: 0
+      wallBounce: 0
+      groundBounceForce: 0
+      wallBounceForce: 0
+      noKill: 0
+      unblockable: 0
       hitForceType: 0
       hitForceRelation: 0
       hitForceRelationOffset: {x: 0, y: 0, z: 0}
       autolink: 0
       autolinkPercentage: 0
-      hitForce: {x: 0, y: 0, z: 0}
-      blockForce: {x: 0, y: 0, z: 0}
-      hitGravity: 0
-      pullPushCurve:
-        serializedVersion: 2
-        m_Curve: []
-        m_PreInfinity: 2
-        m_PostInfinity: 2
-        m_RotationOrder: 4
+      groundHitForce: {x: 0, y: 0, z: 0}
+      aerialHitForce: {x: 0, y: 0, z: 0}
+      pullPushMultiplier: 0
       pullPushMaxDistance: 0
+      blockLift: 0
       attackerHitstop: 0
       hitstop: 0
       hitstun: 0
       blockstun: 0
-    aerialGroup:
-      hitState: 32
-      groundBounces: 0
-      wallBounces: 0
-      groundBounceForcePercentage: 0
-      wallBounceForcePercentage: 0
-      hitKills: 0
-      hitForceType: 0
-      hitForceRelation: 0
-      hitForceRelationOffset: {x: 0, y: 0, z: 0}
-      autolink: 0
-      autolinkPercentage: 0
-      hitForce: {x: 0, y: 0, z: 10}
-      blockForce: {x: 0, y: 0, z: 0}
-      hitGravity: 0
-      pullPushCurve:
-        serializedVersion: 2
-        m_Curve: []
-        m_PreInfinity: 2
-        m_PostInfinity: 2
-        m_RotationOrder: 4
-      pullPushMaxDistance: 0
-      attackerHitstop: 8
-      hitstop: 8
-      hitstun: 60
-      blockstun: 15
-    aerialCounterHitGroup:
-      hitState: 0
-      groundBounces: 0
-      wallBounces: 0
-      groundBounceForcePercentage: 0
-      wallBounceForcePercentage: 0
-      hitKills: 0
-      hitForceType: 0
-      hitForceRelation: 0
-      hitForceRelationOffset: {x: 0, y: 0, z: 0}
-      autolink: 0
-      autolinkPercentage: 0
-      hitForce: {x: 0, y: 0, z: 0}
-      blockForce: {x: 0, y: 0, z: 0}
-      hitGravity: 0
-      pullPushCurve:
-        serializedVersion: 2
-        m_Curve: []
-        m_PreInfinity: 2
-        m_PostInfinity: 2
-        m_RotationOrder: 4
-      pullPushMaxDistance: 0
-      attackerHitstop: 0
-      hitstop: 0
-      hitstun: 0
-      blockstun: 0
+      untech: 0
+      initialProration: 0
+      comboProration: 0
+      damage: 0
+      chipDamage: 0
+      hitEffectbank:
+        modGUID:
+          guid: 
+        contentGUID:
+          guid: 
+      hitEffect: 
+      blockEffectbank:
+        modGUID:
+          guid: 
+        contentGUID:
+          guid: 
+      blockEffect: 
+      hitSoundbank:
+        modGUID:
+          guid: 
+        contentGUID:
+          guid: 
+      hitSound: 
+      hitCameraShakeStrength: 0
+      blockCameraShakeStrength: 0
+      cameraShakeLength: 0
+      ignoreProration: 0
+      ignoreHitstunScaling: 0
+      ignorePushbackScaling: 0
   throwboxInfo: []
   hurtboxInfo: []
   references:
@@ -177,6 +160,28 @@ MonoBehaviour:
     RefIds:
     - rid: -2
       type: {class: , ns: , asm: }
+    - rid: 7270848763132117011
+      type: {class: VarChangeState, ns: rwby, asm: rwby.csharp}
+      data:
+        name: Try A
+        id: 12
+        parent: -1
+        children: 
+        frameRanges:
+        - {x: 1, y: -1}
+        condition:
+          rid: -2
+        checkInputSequence: 1
+        checkCondition: 0
+        targetType: 0
+        stateMovesetID: -1
+        state:
+          rid: 7270848763132117012
+        frame: 0
+    - rid: 7270848763132117012
+      type: {class: RubyRoseStateReference, ns: rwby.core, asm: rwby.core}
+      data:
+        state: 79
     - rid: 8688056217396838433
       type: {class: VarCreateBox, ns: rwby, asm: rwby.csharp}
       data:
@@ -208,9 +213,11 @@ MonoBehaviour:
           rid: 8688056360164655118
         checkInputSequence: 0
         checkCondition: 0
+        targetType: 0
         stateMovesetID: -1
         state:
           rid: 8688056360164655117
+        frame: 0
     - rid: 8688056360164655117
       type: {class: RubyRoseStateReference, ns: rwby.core, asm: rwby.core}
       data:
@@ -282,9 +289,11 @@ MonoBehaviour:
           rid: 8688056364881936409
         checkInputSequence: 0
         checkCondition: 0
+        targetType: 0
         stateMovesetID: -1
         state:
           rid: 8688056364881936408
+        frame: 0
     - rid: 8688056364881936408
       type: {class: RubyRoseStateReference, ns: rwby.core, asm: rwby.core}
       data:
@@ -300,7 +309,7 @@ MonoBehaviour:
     - rid: 8688056473731203109
       type: {class: VarChangeState, ns: rwby, asm: rwby.csharp}
       data:
-        name: Try A
+        name: Try J
         id: 11
         parent: -1
         children: 
@@ -310,9 +319,11 @@ MonoBehaviour:
           rid: -2
         checkInputSequence: 1
         checkCondition: 0
+        targetType: 0
         stateMovesetID: -1
         state:
           rid: 8688056473731203110
+        frame: 0
     - rid: 8688056473731203110
       type: {class: RubyRoseStateReference, ns: rwby.core, asm: rwby.core}
       data:

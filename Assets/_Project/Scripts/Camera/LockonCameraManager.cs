@@ -46,14 +46,19 @@ namespace rwby
         {
             this.switcher = switcher;
             cinemachineBrain = switcher.cam.GetComponent<CinemachineBrain>();
-
-            virtualCameraPOV = new CinemachinePOV[virtualCameras.Length];
+            
+            List<CinemachinePOV> povs = new List<CinemachinePOV>();
             virtualCameraShake = new CinemachineShake[virtualCameras.Length];
             for(int i = 0; i < virtualCameras.Length; i++)
             {
-                virtualCameraPOV[i] = virtualCameras[i].GetCinemachineComponent<CinemachinePOV>();
+                var p = virtualCameras[i].GetCinemachineComponent<CinemachinePOV>();
+                if (p != null)
+                {
+                    povs.Add(p);
+                }
                 virtualCameraShake[i] = virtualCameras[i].GetComponent<CinemachineShake>();
             }
+            virtualCameraPOV = povs.ToArray();
 
             var t = virtualStateDrivenCamera.GetComponentsInChildren<FusionCinemachineCollider>();
             foreach (var v in t)
@@ -247,6 +252,30 @@ namespace rwby
             foreach (var vcs in virtualCameraShake)
             {
                 vcs.Reset();
+            }
+        }
+
+        public override Vector2 GetLookDirection()
+        {
+            switch (currentCameraState)
+            {
+                case CameraState.THIRDPERSON:
+                    return new Vector2(virtualCameraPOV[0].m_HorizontalAxis.Value, virtualCameraPOV[0].m_VerticalAxis.Value);
+                    break;
+                case CameraState.LOCK_ON:
+                    return lockon2DMode == true ? new Vector2(virtualCameraPOV[1].m_HorizontalAxis.Value, virtualCameraPOV[1].m_VerticalAxis.Value)
+                        : new Vector2(virtualCameraPOV[1].m_HorizontalAxis.Value, virtualCameraPOV[1].m_VerticalAxis.Value);
+                    break;
+            }
+            return Vector2.zero;
+        }
+
+        public override void SetLookDirection(Vector2 lookDir)
+        {
+            foreach (var pov in virtualCameraPOV)
+            {
+                pov.m_HorizontalAxis.Value = lookDir.x;
+                pov.m_VerticalAxis.Value = lookDir.y;
             }
         }
     }
