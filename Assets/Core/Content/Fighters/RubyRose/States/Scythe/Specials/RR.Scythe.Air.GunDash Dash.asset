@@ -62,10 +62,11 @@ MonoBehaviour:
       hitForceType: 0
       hitForceRelation: 0
       hitForceRelationOffset: {x: 0, y: 0, z: 0}
-      autolink: 0
-      autolinkPercentage: 0
-      groundHitForce: {x: 0, y: -15, z: 5}
-      aerialHitForce: {x: 0, y: -15, z: 5}
+      autolink: 1
+      gravityAutolinkPercentage: 0.8
+      movementAutolinkPercentage: 0.4
+      groundHitForce: {x: 0, y: 0, z: 0}
+      aerialHitForce: {x: 0, y: 0, z: 0}
       pullPushMultiplier: 0
       pullPushMaxDistance: 10
       blockLift: 0
@@ -115,7 +116,8 @@ MonoBehaviour:
       hitForceRelation: 0
       hitForceRelationOffset: {x: 0, y: 0, z: 0}
       autolink: 0
-      autolinkPercentage: 0
+      gravityAutolinkPercentage: 0
+      movementAutolinkPercentage: 0
       groundHitForce: {x: 0, y: 0, z: 0}
       aerialHitForce: {x: 0, y: 0, z: 0}
       pullPushMultiplier: 0

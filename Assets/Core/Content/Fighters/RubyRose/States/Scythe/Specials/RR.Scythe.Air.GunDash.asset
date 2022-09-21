@@ -29,6 +29,8 @@ MonoBehaviour:
   - rid: 7270848763132117016
   - rid: 7270848763132117019
   - rid: 7270848770961047552
+  - rid: 7270848773193990144
+  - rid: 7270848773193990146
   auraRequirement: 0
   initialGroundedState: 2
   stateType: 2
@@ -64,10 +66,11 @@ MonoBehaviour:
       hitForceType: 0
       hitForceRelation: 0
       hitForceRelationOffset: {x: 0, y: 0, z: 0}
-      autolink: 0
-      autolinkPercentage: 0
-      groundHitForce: {x: 0, y: 10, z: 5}
-      aerialHitForce: {x: 0, y: 10, z: 5}
+      autolink: 1
+      gravityAutolinkPercentage: 0.8
+      movementAutolinkPercentage: 0.4
+      groundHitForce: {x: 0, y: 0, z: 0}
+      aerialHitForce: {x: 0, y: 0, z: 0}
       pullPushMultiplier: 0
       pullPushMaxDistance: 10
       blockLift: 0
@@ -117,7 +120,8 @@ MonoBehaviour:
       hitForceRelation: 0
       hitForceRelationOffset: {x: 0, y: 0, z: 0}
       autolink: 0
-      autolinkPercentage: 0
+      gravityAutolinkPercentage: 0
+      movementAutolinkPercentage: 0
       groundHitForce: {x: 0, y: 0, z: 0}
       aerialHitForce: {x: 0, y: 0, z: 0}
       pullPushMultiplier: 0
@@ -295,6 +299,34 @@ MonoBehaviour:
       type: {class: RubyRoseStateReference, ns: rwby.core, asm: rwby.core}
       data:
         state: 79
+    - rid: 7270848773193990144
+      type: {class: VarEmpty, ns: rwby, asm: rwby.csharp}
+      data:
+        name: On Hit
+        id: 15
+        parent: -1
+        children: 10000000
+        frameRanges: []
+        condition:
+          rid: 7270848773193990145
+    - rid: 7270848773193990145
+      type: {class: ConditionHitOrBlockCount, ns: rwby, asm: rwby.csharp}
+      data:
+        inverse: 0
+        hitCount: 1
+        hitOrBlock: 1
+    - rid: 7270848773193990146
+      type: {class: VarExternal, ns: rwby, asm: rwby.csharp}
+      data:
+        name: Try Atk
+        id: 16
+        parent: 15
+        children: 
+        frameRanges:
+        - {x: 1, y: -1}
+        condition:
+          rid: -2
+        asset: {fileID: 11400000, guid: 852b081cfd9efbb449cca3171458f8cc, type: 2}
     - rid: 8688056217396838416
       type: {class: VarCreateBox, ns: rwby, asm: rwby.csharp}
       data:
@@ -309,8 +341,8 @@ MonoBehaviour:
         boxType: 1
         attachedTo: 0
         shape: 0
-        offset: {x: 0, y: 1, z: 1}
-        boxExtents: {x: 1, y: 1, z: 1}
+        offset: {x: 0, y: 0.5, z: 0}
+        boxExtents: {x: 2, y: 2, z: 2}
         radius: 0
         definitionIndex: 0
     - rid: 8688056217396838419

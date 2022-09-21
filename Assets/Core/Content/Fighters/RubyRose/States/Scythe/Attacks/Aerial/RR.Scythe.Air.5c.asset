@@ -31,6 +31,7 @@ MonoBehaviour:
   - rid: 7270848763132117007
   - rid: 7270848763132117030
   - rid: 7270848763132117029
+  - rid: 7270848773193990147
   auraRequirement: 0
   initialGroundedState: 2
   stateType: 2
@@ -67,7 +68,8 @@ MonoBehaviour:
       hitForceRelation: 0
       hitForceRelationOffset: {x: 0, y: 0, z: 0}
       autolink: 0
-      autolinkPercentage: 0
+      gravityAutolinkPercentage: 0
+      movementAutolinkPercentage: 0
       groundHitForce: {x: 0, y: 0, z: 8}
       aerialHitForce: {x: 0, y: 3, z: 3}
       pullPushMultiplier: 0
@@ -119,7 +121,8 @@ MonoBehaviour:
       hitForceRelation: 0
       hitForceRelationOffset: {x: 0, y: 0, z: 0}
       autolink: 0
-      autolinkPercentage: 0
+      gravityAutolinkPercentage: 0
+      movementAutolinkPercentage: 0
       groundHitForce: {x: 0, y: -10, z: 0}
       aerialHitForce: {x: 0, y: -25, z: 0}
       pullPushMultiplier: 0
@@ -175,7 +178,8 @@ MonoBehaviour:
       hitForceRelation: 0
       hitForceRelationOffset: {x: 0, y: 0, z: 0}
       autolink: 0
-      autolinkPercentage: 0
+      gravityAutolinkPercentage: 0
+      movementAutolinkPercentage: 0
       groundHitForce: {x: 0, y: -10, z: 0}
       aerialHitForce: {x: 0, y: -30, z: 0}
       pullPushMultiplier: 0
@@ -227,7 +231,8 @@ MonoBehaviour:
       hitForceRelation: 0
       hitForceRelationOffset: {x: 0, y: 0, z: 0}
       autolink: 0
-      autolinkPercentage: 0
+      gravityAutolinkPercentage: 0
+      movementAutolinkPercentage: 0
       groundHitForce: {x: 0, y: -10, z: 0}
       aerialHitForce: {x: 0, y: -20, z: 0}
       pullPushMultiplier: 0
@@ -387,6 +392,28 @@ MonoBehaviour:
         maxLevel: 1
         button: 6
         canHold: 0
+    - rid: 7270848773193990147
+      type: {class: VarRotateTowards, ns: rwby, asm: rwby.csharp}
+      data:
+        name: 
+        id: 13
+        parent: -1
+        children: 
+        frameRanges:
+        - {x: 1, y: 3}
+        condition:
+          rid: -2
+        rotateTowards: 0
+        eulerAngle: {x: 0, y: 0, z: 0}
+        rotateTowardsTarget: 1
+        rotationSpeed:
+          rid: 7270848773193990148
+    - rid: 7270848773193990148
+      type: {class: FighterStatReferenceFloatBase, ns: rwby, asm: rwby.csharp}
+      data:
+        inverse: 0
+        statReference: 0
+        value: 70
     - rid: 8688056217396838433
       type: {class: VarCreateBox, ns: rwby, asm: rwby.csharp}
       data:

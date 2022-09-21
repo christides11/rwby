@@ -26,7 +26,8 @@ namespace rwby
             public HitboxForceRelation hitForceRelation;
             public Vector3 hitForceRelationOffset;
             public bool autolink;
-            public float autolinkPercentage;
+            public float gravityAutolinkPercentage;
+            public float movementAutolinkPercentage;
             
             // FORCES
             [FormerlySerializedAs("hitForce")] public Vector3 groundHitForce;

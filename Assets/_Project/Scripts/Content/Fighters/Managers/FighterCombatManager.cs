@@ -512,10 +512,10 @@ namespace rwby
 
             if (hitInfoGroup.autolink)
             {
-                Vector3 calcForce = hurtInfo.attackerVelocity * hitInfoGroup.autolinkPercentage;
-                physicsManager.forceGravity += calcForce.y;
+                Vector3 calcForce = hurtInfo.attackerVelocity;
+                physicsManager.forceGravity += calcForce.y * hitInfoGroup.gravityAutolinkPercentage;
                 calcForce.y = 0;
-                physicsManager.forceMovement += calcForce;
+                physicsManager.forceMovement += calcForce * hitInfoGroup.movementAutolinkPercentage;
             }
             
             if (physicsManager.forceGravity > 0)
