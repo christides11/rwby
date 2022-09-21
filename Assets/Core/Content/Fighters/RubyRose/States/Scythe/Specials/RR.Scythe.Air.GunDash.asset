@@ -31,6 +31,7 @@ MonoBehaviour:
   - rid: 7270848770961047552
   - rid: 7270848773193990144
   - rid: 7270848773193990146
+  - rid: 7270848773193990149
   auraRequirement: 0
   initialGroundedState: 2
   stateType: 2
@@ -67,7 +68,7 @@ MonoBehaviour:
       hitForceRelation: 0
       hitForceRelationOffset: {x: 0, y: 0, z: 0}
       autolink: 1
-      gravityAutolinkPercentage: 0.8
+      gravityAutolinkPercentage: 0.7
       movementAutolinkPercentage: 0.4
       groundHitForce: {x: 0, y: 0, z: 0}
       aerialHitForce: {x: 0, y: 0, z: 0}
@@ -327,6 +328,35 @@ MonoBehaviour:
         condition:
           rid: -2
         asset: {fileID: 11400000, guid: 852b081cfd9efbb449cca3171458f8cc, type: 2}
+    - rid: 7270848773193990149
+      type: {class: VarMoveTowardsMagnitude, ns: rwby, asm: rwby.csharp}
+      data:
+        name: 
+        id: 17
+        parent: -1
+        children: 
+        frameRanges:
+        - {x: -2, y: -2}
+        condition:
+          rid: -2
+        force:
+          rid: 7270848773193990150
+        distance:
+          rid: 7270848773193990151
+        applyMovement: 1
+        applyGravity: 1
+    - rid: 7270848773193990150
+      type: {class: FighterStatReferenceFloatBase, ns: rwby, asm: rwby.csharp}
+      data:
+        inverse: 0
+        statReference: 0
+        value: 5
+    - rid: 7270848773193990151
+      type: {class: FighterStatReferenceFloatBase, ns: rwby, asm: rwby.csharp}
+      data:
+        inverse: 0
+        statReference: 0
+        value: 100
     - rid: 8688056217396838416
       type: {class: VarCreateBox, ns: rwby, asm: rwby.csharp}
       data:
@@ -353,7 +383,7 @@ MonoBehaviour:
         parent: -1
         children: 
         frameRanges:
-        - {x: 1, y: -1}
+        - {x: 11, y: -1}
         condition:
           rid: -2
         boxType: 2

@@ -63,8 +63,8 @@ MonoBehaviour:
       hitForceRelation: 0
       hitForceRelationOffset: {x: 0, y: 0, z: 0}
       autolink: 1
-      gravityAutolinkPercentage: 0.8
-      movementAutolinkPercentage: 0.4
+      gravityAutolinkPercentage: 1
+      movementAutolinkPercentage: 1
       groundHitForce: {x: 0, y: 0, z: 0}
       aerialHitForce: {x: 0, y: 0, z: 0}
       pullPushMultiplier: 0
@@ -270,7 +270,7 @@ MonoBehaviour:
         parent: -1
         children: 
         frameRanges:
-        - {x: 1, y: -1}
+        - {x: 6, y: -1}
         condition:
           rid: -2
         boxType: 2
