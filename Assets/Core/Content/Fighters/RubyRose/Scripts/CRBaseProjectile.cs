@@ -20,6 +20,10 @@ namespace rwby
         public float moveTowardsForce;
 
         public int clearPer = 2;
+
+        public float destroyDistance;
+        public float destroyDistAfter = 0.5f;
+        
         private void Awake()
         {
             boxManager.hurtable = this;
@@ -36,6 +40,7 @@ namespace rwby
         {
             if (timer.Expired(Runner))
             {
+                boxManager.ResetAllBoxes();
                 Runner.Despawn(Object, true);
                 return;
             }
@@ -47,12 +52,21 @@ namespace rwby
             force = transform.forward * fMoveForce * forwardMoveCurve.Evaluate(t);
 
             var fm = owner.GetBehaviour<FighterManager>();
+            var fmCenter = fm.GetCenter();
             var mF = Vector3.MoveTowards(transform.position, fm.GetCenter(), moveTowardsForce) - transform.position;
 
             force += (mF/Runner.DeltaTime) * moveTowardsCurve.Evaluate(t);
             if (cExistTick % clearPer == 0)
             {
                 Reset();
+            }
+
+            if (t >= destroyDistAfter &&
+                Vector3.Distance(transform.position, fmCenter) <= destroyDistance)
+            {
+                boxManager.ResetAllBoxes();
+                Runner.Despawn(Object, true);
+                return;
             }
             base.FixedUpdateNetwork();
         }

@@ -199,7 +199,7 @@ MonoBehaviour:
       autolinkPercentage: 1
       groundHitForce: {x: 0, y: 10, z: 0}
       aerialHitForce: {x: 0, y: 10, z: 5}
-      pullPushMultiplier: 30
+      pullPushMultiplier: 1
       pullPushMaxDistance: 10
       blockLift: 0
       attackerHitstop: 2
@@ -368,7 +368,9 @@ MonoBehaviour:
     m_PostInfinity: 2
     m_RotationOrder: 4
   moveTowardsForce: 1
-  clearPer: 2
+  clearPer: 5
+  destroyDistance: 1
+  destroyDistAfter: 0.5
   references:
     version: 2
     RefIds:

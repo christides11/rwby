@@ -128,7 +128,9 @@ namespace rwby
 
         public override HurtInfo BuildHurtInfo(CustomHitbox hitbox, Hurtbox hurtbox)
         {
-            return base.BuildHurtInfo(hitbox, hurtbox);
+            HurtInfo hi = base.BuildHurtInfo(hitbox, hurtbox);
+            hi.attackerVelocity = manager.FPhysicsManager.GetOverallForce();
+            return hi;
             /*
             Vector3 hitPoint = hurtbox.transform.position;
             HitInfo hitInfo = hitbox.definition.HitboxInfo[hitbox.definitionIndex];

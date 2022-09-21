@@ -10,20 +10,23 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7789f25d17401bc4b915ca6fcecf2a29, type: 3}
-  m_Name: RR.Scythe.Air.SniperStance_Enter
+  m_Name: RR.Scythe.Air.GunDash Dash
   m_EditorClassIdentifier: 
-  stateName: Sniper Stance (Enter) (Air)
+  stateName: GunDash - Dash (Air)
   useBaseState: 0
   baseState: {fileID: 0}
-  totalFrames: 5
+  totalFrames: 20
   autoIncrement: 1
   autoLoop: 0
   autoLoopFrame: 1
   data:
+  - rid: 8688056217396838416
+  - rid: 8688056217396838419
   - rid: 2193520813467238401
-  - rid: 8688056217396838433
-  - rid: 8688056364881936392
-  - rid: 7270848763132117024
+  - rid: 8688056473731203111
+  - rid: 7270848763132117015
+  - rid: 7270848763132117013
+  - rid: 7270848763132117016
   auraRequirement: 0
   initialGroundedState: 2
   stateType: 2
@@ -34,7 +37,7 @@ MonoBehaviour:
     executeWindow: 3
     executeInputs:
     - inputType: 0
-      buttonID: 2
+      buttonID: 4
       stickDirection: {x: 0, y: 0}
       directionDeviation: 0
     sequenceWindow: 8
@@ -44,12 +47,12 @@ MonoBehaviour:
     rid: -2
   hitboxInfo:
   - ID: 0
-    groundedFoldoutGroup: 0
+    groundedFoldoutGroup: 1
     groundedCounterHitFoldoutGroup: 0
     hitStateGroundedGroups: -1
     hit:
-      groundHitState: 30
-      airHitState: 0
+      groundHitState: 34
+      airHitState: 34
       groundBounce: 0
       wallBounce: 0
       groundBounceForce: 0
@@ -61,20 +64,20 @@ MonoBehaviour:
       hitForceRelationOffset: {x: 0, y: 0, z: 0}
       autolink: 0
       autolinkPercentage: 0
-      groundHitForce: {x: 0, y: 0, z: 5}
-      aerialHitForce: {x: 0, y: 0, z: 0}
+      groundHitForce: {x: 0, y: -15, z: 5}
+      aerialHitForce: {x: 0, y: -15, z: 5}
       pullPushMultiplier: 0
       pullPushMaxDistance: 10
       blockLift: 0
       attackerHitstop: 4
       hitstop: 4
       hitstun: 60
-      blockstun: 15
+      blockstun: 8
       untech: 0
       initialProration: 0
       comboProration: 0
-      damage: 0
-      chipDamage: 0
+      damage: 100
+      chipDamage: 50
       hitEffectbank:
         modGUID:
           guid: 
@@ -93,15 +96,15 @@ MonoBehaviour:
         contentGUID:
           guid: 
       hitSound: 
-      hitCameraShakeStrength: 0
-      blockCameraShakeStrength: 0
-      cameraShakeLength: 0
+      hitCameraShakeStrength: 1
+      blockCameraShakeStrength: 1
+      cameraShakeLength: 4
       ignoreProration: 0
       ignoreHitstunScaling: 0
       ignorePushbackScaling: 0
     counterhit:
-      groundHitState: 0
-      airHitState: 0
+      groundHitState: 34
+      airHitState: 34
       groundBounce: 0
       wallBounce: 0
       groundBounceForce: 0
@@ -161,52 +164,111 @@ MonoBehaviour:
     - rid: 2193520813467238401
       type: {class: VarChangeState, ns: rwby, asm: rwby.csharp}
       data:
-        name: To Sniper Stance
+        name: To Landing
         id: 0
         parent: -1
         children: 
         frameRanges:
-        - {x: -1, y: -1}
+        - {x: 3, y: -1}
         condition:
-          rid: -2
+          rid: 8688056473731203104
         checkInputSequence: 0
         checkCondition: 0
         targetType: 0
         stateMovesetID: -1
         state:
-          rid: 8688056360164655111
+          rid: 2193520813467238402
         frame: 0
-    - rid: 7270848763132117024
-      type: {class: VarRotateTowards, ns: rwby, asm: rwby.csharp}
+    - rid: 2193520813467238402
+      type: {class: FighterCmnStateReference, ns: rwby, asm: rwby.csharp}
+      data:
+        state: 28
+    - rid: 7270848763132117013
+      type: {class: VarModifyFallSpeed, ns: rwby, asm: rwby.csharp}
       data:
         name: 
-        id: 6
+        id: 10
         parent: -1
         children: 
         frameRanges:
-        - {x: 1, y: -1}
+        - {x: 0, y: 0}
         condition:
           rid: -2
-        rotateTowards: 0
-        eulerAngle: {x: 0, y: 0, z: 0}
-        rotateTowardsTarget: 1
-        rotationSpeed:
-          rid: 7270848763132117025
-    - rid: 7270848763132117025
+        targetType: 0
+        modifyType: 1
+        value:
+          rid: 7270848763132117014
+    - rid: 7270848763132117014
       type: {class: FighterStatReferenceFloatBase, ns: rwby, asm: rwby.csharp}
       data:
         inverse: 0
         statReference: 0
-        value: 70
-    - rid: 8688056217396838433
-      type: {class: VarCreateBox, ns: rwby, asm: rwby.csharp}
+        value: -20
+    - rid: 7270848763132117015
+      type: {class: VarModifyRotation, ns: rwby, asm: rwby.csharp}
       data:
-        name: Colbox
-        id: 4
+        name: 
+        id: 11
         parent: -1
         children: 
         frameRanges:
-        - {x: 0, y: -1}
+        - {x: 0, y: 0}
+        condition:
+          rid: -2
+        modifyType: 1
+        rotateTowards: 0
+        useTargetWhenNoMovement: 0
+        eulerAngle: {x: 0, y: 0, z: 0}
+    - rid: 7270848763132117016
+      type: {class: VarSetMovement, ns: rwby, asm: rwby.csharp}
+      data:
+        name: 
+        id: 12
+        parent: -1
+        children: 
+        frameRanges:
+        - {x: 0, y: 0}
+        condition:
+          rid: -2
+        inputSource: 0
+        normalizeInputSource: 0
+        useRotationIfInputZero: 0
+        reverseInputSource: 0
+        force:
+          rid: 7270848763132117017
+    - rid: 7270848763132117017
+      type: {class: FighterStatReferenceFloatBase, ns: rwby, asm: rwby.csharp}
+      data:
+        inverse: 0
+        statReference: 0
+        value: 25
+    - rid: 8688056217396838416
+      type: {class: VarCreateBox, ns: rwby, asm: rwby.csharp}
+      data:
+        name: Hitbox
+        id: 3
+        parent: -1
+        children: 
+        frameRanges:
+        - {x: 1, y: 4}
+        condition:
+          rid: -2
+        boxType: 1
+        attachedTo: 0
+        shape: 0
+        offset: {x: 0, y: 1, z: 1}
+        boxExtents: {x: 1, y: 1, z: 1}
+        radius: 0
+        definitionIndex: 0
+    - rid: 8688056217396838419
+      type: {class: VarCreateBox, ns: rwby, asm: rwby.csharp}
+      data:
+        name: Collbox
+        id: 5
+        parent: -1
+        children: 
+        frameRanges:
+        - {x: 1, y: -1}
         condition:
           rid: -2
         boxType: 2
@@ -216,57 +278,19 @@ MonoBehaviour:
         boxExtents: {x: 0.5, y: 1, z: 0.5}
         radius: 0
         definitionIndex: 0
-    - rid: 8688056360164655111
-      type: {class: RubyRoseStateReference, ns: rwby.core, asm: rwby.core}
+    - rid: 8688056473731203104
+      type: {class: ConditionIsGrounded, ns: rwby, asm: rwby.csharp}
       data:
-        state: 71
-    - rid: 8688056364881936392
-      type: {class: VarApplyGravity, ns: rwby, asm: rwby.csharp}
+        inverse: 0
+    - rid: 8688056473731203111
+      type: {class: VarExternal, ns: rwby, asm: rwby.csharp}
       data:
-        name: 
-        id: 5
+        name: Return to Aerial State
+        id: 8
         parent: -1
         children: 
         frameRanges:
-        - {x: 1, y: -1}
+        - {x: -1, y: -1}
         condition:
           rid: -2
-        useValue: 0
-        value:
-          rid: -2
-        jumpHeight:
-          rid: 8688056364881936393
-        jumpTime:
-          rid: 8688056364881936394
-        multi:
-          rid: 8688056364881936395
-        maxFallSpeed:
-          rid: 8688056364881936396
-    - rid: 8688056364881936393
-      type: {class: FighterBaseStatReferenceFloat, ns: rwby, asm: rwby.csharp}
-      data:
-        inverse: 0
-        statReference: 1
-        value: 0
-        variable: 13
-    - rid: 8688056364881936394
-      type: {class: FighterBaseStatReferenceFloat, ns: rwby, asm: rwby.csharp}
-      data:
-        inverse: 0
-        statReference: 1
-        value: 0
-        variable: 12
-    - rid: 8688056364881936395
-      type: {class: FighterBaseStatReferenceFloat, ns: rwby, asm: rwby.csharp}
-      data:
-        inverse: 0
-        statReference: 0
-        value: 1
-        variable: 0
-    - rid: 8688056364881936396
-      type: {class: FighterBaseStatReferenceFloat, ns: rwby, asm: rwby.csharp}
-      data:
-        inverse: 0
-        statReference: 1
-        value: 0
-        variable: 23
+        asset: {fileID: 11400000, guid: 3e988135845709d4594e5628d0bf81cd, type: 2}

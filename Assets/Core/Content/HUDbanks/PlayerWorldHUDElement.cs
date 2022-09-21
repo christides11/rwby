@@ -93,7 +93,7 @@ namespace rwby
         private void AddTrackedObject(FighterManager fm)
         {
             PlayerWorldHUD pwhud = GameObject.Instantiate(worldHUDPrefab, fm.transform, false);
-            pwhud.transform.position = new Vector3(0, 2, 0);
+            pwhud.transform.localPosition = new Vector3(0, 2, 0);
             pwhud.Setup(fm);
             objectsTracked.Add(fm, pwhud);
         }

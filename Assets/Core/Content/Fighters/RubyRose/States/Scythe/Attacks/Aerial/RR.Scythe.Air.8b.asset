@@ -30,8 +30,8 @@ MonoBehaviour:
   - rid: 7270848763132116997
   - rid: 7270848763132116999
   - rid: 7270848763132117001
-  - rid: 7270848763132117003
-  - rid: 7270848763132117005
+  - rid: 7270848763132117031
+  - rid: 7270848763132117034
   auraRequirement: 0
   initialGroundedState: 2
   stateType: 2
@@ -105,9 +105,9 @@ MonoBehaviour:
         contentGUID:
           guid: 
       hitSound: 
-      hitCameraShakeStrength: 1
-      blockCameraShakeStrength: 1
-      cameraShakeLength: 4
+      hitCameraShakeStrength: 0
+      blockCameraShakeStrength: 0
+      cameraShakeLength: 0
       ignoreProration: 0
       ignoreHitstunScaling: 0
       ignorePushbackScaling: 0
@@ -290,11 +290,11 @@ MonoBehaviour:
         name: 
         id: 12
         frameRanges:
-        - {x: 7, y: 11}
+        - {x: 10, y: 11}
         condition:
           rid: 7270848763132117002
         modifyType: 1
-        value: 15
+        value: 21
         parent: -1
         children: 
     - rid: 7270848763132117002
@@ -303,48 +303,64 @@ MonoBehaviour:
         inverse: 0
         hitCount: 1
         hitOrBlock: 1
-    - rid: 7270848763132117003
-      type: {class: VarApplyTraction, ns: rwby, asm: rwby.csharp}
+    - rid: 7270848763132117031
+      type: {class: VarMoveTowardsMagnitude, ns: rwby, asm: rwby.csharp}
       data:
         name: 
         id: 13
         parent: -1
         children: 
         frameRanges:
-        - {x: 15, y: -1}
+        - {x: 7, y: 20}
         condition:
           rid: -2
-        traction:
-          rid: 7270848763132117004
+        force:
+          rid: 7270848763132117032
+        distance:
+          rid: 7270848763132117033
         applyMovement: 1
         applyGravity: 0
-    - rid: 7270848763132117004
+    - rid: 7270848763132117032
       type: {class: FighterStatReferenceFloatBase, ns: rwby, asm: rwby.csharp}
       data:
         inverse: 0
         statReference: 0
-        value: 60
-    - rid: 7270848763132117005
-      type: {class: VarApplyTraction, ns: rwby, asm: rwby.csharp}
+        value: 3
+    - rid: 7270848763132117033
+      type: {class: FighterStatReferenceFloatBase, ns: rwby, asm: rwby.csharp}
       data:
-        name: Gravity Traction
+        inverse: 0
+        statReference: 0
+        value: 2
+    - rid: 7270848763132117034
+      type: {class: VarMoveTowardsMagnitude, ns: rwby, asm: rwby.csharp}
+      data:
+        name: 
         id: 14
         parent: -1
         children: 
         frameRanges:
-        - {x: 15, y: -1}
+        - {x: 21, y: -1}
         condition:
           rid: -2
-        traction:
-          rid: 7270848763132117006
+        force:
+          rid: 7270848763132117035
+        distance:
+          rid: 7270848763132117036
         applyMovement: 0
-        applyGravity: 1
-    - rid: 7270848763132117006
+        applyGravity: 0
+    - rid: 7270848763132117035
       type: {class: FighterStatReferenceFloatBase, ns: rwby, asm: rwby.csharp}
       data:
         inverse: 0
         statReference: 0
-        value: 5
+        value: 2
+    - rid: 7270848763132117036
+      type: {class: FighterStatReferenceFloatBase, ns: rwby, asm: rwby.csharp}
+      data:
+        inverse: 0
+        statReference: 0
+        value: 4
     - rid: 8688056217396838433
       type: {class: VarCreateBox, ns: rwby, asm: rwby.csharp}
       data:
