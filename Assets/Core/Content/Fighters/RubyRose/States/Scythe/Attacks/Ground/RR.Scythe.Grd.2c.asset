@@ -25,6 +25,7 @@ MonoBehaviour:
   - rid: 2193520817874927616
   - rid: 8688056339992412162
   - rid: 8688056339992412164
+  - rid: 7270848809565159434
   auraRequirement: 0
   initialGroundedState: 1
   stateType: 2
@@ -71,8 +72,8 @@ MonoBehaviour:
       autolink: 0
       gravityAutolinkPercentage: 0
       movementAutolinkPercentage: 0
-      groundHitForce: {x: 0, y: 10, z: 0}
-      aerialHitForce: {x: 0, y: 10, z: 0}
+      groundHitForce: {x: 0, y: 13, z: 0}
+      aerialHitForce: {x: 0, y: 13, z: 0}
       pullPushMultiplier: 0
       pullPushMaxDistance: 10
       blockLift: 0
@@ -231,13 +232,25 @@ MonoBehaviour:
         statReference: 0
         value: 30
         variable: 0
+    - rid: 7270848809565159434
+      type: {class: VarExternal, ns: rwby, asm: rwby.csharp}
+      data:
+        name: Try Atk
+        id: 5
+        parent: 3
+        children: 
+        frameRanges:
+        - {x: 1, y: -1}
+        condition:
+          rid: -2
+        asset: {fileID: 11400000, guid: 38d47b53b1c6fa24580e163448503c28, type: 2}
     - rid: 8688056339992412162
       type: {class: VarEmpty, ns: rwby, asm: rwby.csharp}
       data:
         name: On Hit or Block
         id: 3
         parent: -1
-        children: 04000000
+        children: 0400000005000000
         frameRanges: []
         condition:
           rid: 8688056339992412163

@@ -281,6 +281,22 @@ MonoBehaviour:
     state:
       rid: 7270848763132117018
     stateTimeline: {fileID: 11400000, guid: 82c52000bbc8d6448869ea0c5368c44e, type: 2}
+  - name: Ready (Grd)
+    state:
+      rid: 7270848809565159427
+    stateTimeline: {fileID: 11400000, guid: c7d304f93d9d30c44b5641309b26cf8f, type: 2}
+  - name: Ready (Grd) - C
+    state:
+      rid: 7270848809565159428
+    stateTimeline: {fileID: 11400000, guid: 528655fdde19aa64a878d29d67139399, type: 2}
+  - name: Ready (Air)
+    state:
+      rid: 7270848816917512196
+    stateTimeline: {fileID: 11400000, guid: f2ae268f827ca16478bb5071e19453a8, type: 2}
+  - name: Ready (Grd) - B
+    state:
+      rid: 7270848842656382976
+    stateTimeline: {fileID: 11400000, guid: 954d7bb22f98d224c82d3faf80b3fdd6, type: 2}
   fighterStats: {fileID: 11400000, guid: 9db018607e1c48c498ee3d8a7c4cefc3, type: 2}
   specials:
   - groundState:
@@ -295,6 +311,10 @@ MonoBehaviour:
       rid: 7270848718906589197
     aerialState:
       rid: 7270848718906589198
+  - groundState:
+      rid: 7270848809565159429
+    aerialState:
+      rid: 7270848809565159430
   clashCancelListGrd: {fileID: 11400000, guid: 38d47b53b1c6fa24580e163448503c28, type: 2}
   clashCancelListAir: {fileID: 11400000, guid: 852b081cfd9efbb449cca3171458f8cc, type: 2}
   references:
@@ -452,6 +472,30 @@ MonoBehaviour:
       type: {class: RubyRoseStateReference, ns: rwby.core, asm: rwby.core}
       data:
         state: 82
+    - rid: 7270848809565159427
+      type: {class: RubyRoseStateReference, ns: rwby.core, asm: rwby.core}
+      data:
+        state: 88
+    - rid: 7270848809565159428
+      type: {class: RubyRoseStateReference, ns: rwby.core, asm: rwby.core}
+      data:
+        state: 91
+    - rid: 7270848809565159429
+      type: {class: RubyRoseStateReference, ns: rwby.core, asm: rwby.core}
+      data:
+        state: 88
+    - rid: 7270848809565159430
+      type: {class: RubyRoseStateReference, ns: rwby.core, asm: rwby.core}
+      data:
+        state: 92
+    - rid: 7270848816917512196
+      type: {class: RubyRoseStateReference, ns: rwby.core, asm: rwby.core}
+      data:
+        state: 92
+    - rid: 7270848842656382976
+      type: {class: RubyRoseStateReference, ns: rwby.core, asm: rwby.core}
+      data:
+        state: 90
     - rid: 8688056157277782026
       type: {class: FighterCmnStateReference, ns: rwby, asm: rwby.csharp}
       data:

@@ -60,31 +60,17 @@ MonoBehaviour:
         - {x: 2, y: -1}
         condition:
           rid: -2
-        useValue: 0
+        useValue: 1
         value:
-          rid: 7270848773193990152
+          rid: 7270848813903118336
         jumpHeight:
-          rid: 2193520836063002637
+          rid: -2
         jumpTime:
-          rid: 2193520836063002638
+          rid: -2
         multi:
           rid: 2193520836063002639
         maxFallSpeed:
           rid: 2193520836063002640
-    - rid: 2193520836063002637
-      type: {class: FighterBaseStatReferenceFloat, ns: rwby, asm: rwby.csharp}
-      data:
-        inverse: 0
-        statReference: 1
-        value: 0
-        variable: 13
-    - rid: 2193520836063002638
-      type: {class: FighterBaseStatReferenceFloat, ns: rwby, asm: rwby.csharp}
-      data:
-        inverse: 0
-        statReference: 1
-        value: 0
-        variable: 12
     - rid: 2193520836063002639
       type: {class: FighterBaseStatReferenceFloat, ns: rwby, asm: rwby.csharp}
       data:
@@ -142,12 +128,13 @@ MonoBehaviour:
       type: {class: FighterCmnStateReference, ns: rwby, asm: rwby.csharp}
       data:
         state: 30
-    - rid: 7270848773193990152
-      type: {class: FighterStatReferenceFloatBase, ns: rwby, asm: rwby.csharp}
+    - rid: 7270848813903118336
+      type: {class: FighterBaseStatReferenceFloat, ns: rwby, asm: rwby.csharp}
       data:
         inverse: 0
-        statReference: 0
-        value: 30
+        statReference: 1
+        value: 0
+        variable: 38
     - rid: 8688056331001921553
       type: {class: VarCreateBox, ns: rwby, asm: rwby.csharp}
       data:

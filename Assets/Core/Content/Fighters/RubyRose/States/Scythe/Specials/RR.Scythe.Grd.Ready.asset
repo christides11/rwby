@@ -10,23 +10,21 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7789f25d17401bc4b915ca6fcecf2a29, type: 3}
-  m_Name: RR.Scythe.Grd.SniperStance
+  m_Name: RR.Scythe.Grd.Ready
   m_EditorClassIdentifier: 
-  stateName: Sniper Stance
+  stateName: Ready
   useBaseState: 0
   baseState: {fileID: 0}
-  totalFrames: 10
+  totalFrames: 20
   autoIncrement: 1
   autoLoop: 0
   autoLoopFrame: 1
   data:
   - rid: 8688056217396838433
   - rid: 8688056360164655109
-  - rid: 8688056360164655119
-  - rid: 8688056364881936404
-  - rid: 7270848563102089221
-  - rid: 7270848793024135168
   - rid: 7270848570176831488
+  - rid: 7270848842656382979
+  - rid: 7270848809565159424
   auraRequirement: 0
   initialGroundedState: 1
   stateType: 2
@@ -163,28 +161,6 @@ MonoBehaviour:
     RefIds:
     - rid: -2
       type: {class: , ns: , asm: }
-    - rid: 7270848563102089221
-      type: {class: VarChangeState, ns: rwby, asm: rwby.csharp}
-      data:
-        name: Try Shoot (A)
-        id: 12
-        parent: -1
-        children: 
-        frameRanges:
-        - {x: 1, y: -1}
-        condition:
-          rid: -2
-        checkInputSequence: 1
-        checkCondition: 0
-        targetType: 0
-        stateMovesetID: -1
-        state:
-          rid: 7270848563102089222
-        frame: 0
-    - rid: 7270848563102089222
-      type: {class: RubyRoseStateReference, ns: rwby.core, asm: rwby.core}
-      data:
-        state: 72
     - rid: 7270848570176831488
       type: {class: VarModifyAttackStringList, ns: rwby, asm: rwby.csharp}
       data:
@@ -197,15 +173,15 @@ MonoBehaviour:
         condition:
           rid: -2
         actionType: 1
-    - rid: 7270848793024135168
+    - rid: 7270848809565159424
       type: {class: VarChangeState, ns: rwby, asm: rwby.csharp}
       data:
-        name: Try GunDash (J)
+        name: C
         id: 14
         parent: -1
         children: 
         frameRanges:
-        - {x: 1, y: -1}
+        - {x: 10, y: -1}
         condition:
           rid: -2
         checkInputSequence: 1
@@ -213,12 +189,34 @@ MonoBehaviour:
         targetType: 0
         stateMovesetID: -1
         state:
-          rid: 7270848793024135169
+          rid: 7270848809565159425
         frame: 0
-    - rid: 7270848793024135169
+    - rid: 7270848809565159425
       type: {class: RubyRoseStateReference, ns: rwby.core, asm: rwby.core}
       data:
-        state: 78
+        state: 91
+    - rid: 7270848842656382979
+      type: {class: VarChangeState, ns: rwby, asm: rwby.csharp}
+      data:
+        name: B
+        id: 15
+        parent: -1
+        children: 
+        frameRanges:
+        - {x: 10, y: -1}
+        condition:
+          rid: -2
+        checkInputSequence: 1
+        checkCondition: 0
+        targetType: 0
+        stateMovesetID: -1
+        state:
+          rid: 7270848842656382980
+        frame: 0
+    - rid: 7270848842656382980
+      type: {class: RubyRoseStateReference, ns: rwby.core, asm: rwby.core}
+      data:
+        state: 90
     - rid: 8688056217396838433
       type: {class: VarCreateBox, ns: rwby, asm: rwby.csharp}
       data:
@@ -227,7 +225,7 @@ MonoBehaviour:
         parent: -1
         children: 
         frameRanges:
-        - {x: 0, y: -1}
+        - {x: 1, y: -1}
         condition:
           rid: -2
         boxType: 2
@@ -259,59 +257,3 @@ MonoBehaviour:
         statReference: 1
         value: 0
         variable: 0
-    - rid: 8688056360164655119
-      type: {class: VarChangeState, ns: rwby, asm: rwby.csharp}
-      data:
-        name: To Air Stance
-        id: 8
-        parent: -1
-        children: 
-        frameRanges:
-        - {x: 1, y: -1}
-        condition:
-          rid: 8688056360164655121
-        checkInputSequence: 0
-        checkCondition: 0
-        targetType: 0
-        stateMovesetID: -1
-        state:
-          rid: 8688056360164655120
-        frame: 0
-    - rid: 8688056360164655120
-      type: {class: RubyRoseStateReference, ns: rwby.core, asm: rwby.core}
-      data:
-        state: 78
-    - rid: 8688056360164655121
-      type: {class: ConditionIsGrounded, ns: rwby, asm: rwby.csharp}
-      data:
-        inverse: 1
-    - rid: 8688056364881936404
-      type: {class: VarChangeState, ns: rwby, asm: rwby.csharp}
-      data:
-        name: Try Cancel Stance (C)
-        id: 9
-        parent: -1
-        children: 
-        frameRanges:
-        - {x: 1, y: -1}
-        condition:
-          rid: 8688056364881936406
-        checkInputSequence: 0
-        checkCondition: 0
-        targetType: 0
-        stateMovesetID: -1
-        state:
-          rid: 8688056364881936405
-        frame: 0
-    - rid: 8688056364881936405
-      type: {class: RubyRoseStateReference, ns: rwby.core, asm: rwby.core}
-      data:
-        state: 76
-    - rid: 8688056364881936406
-      type: {class: ConditionButton, ns: rwby, asm: rwby.csharp}
-      data:
-        inverse: 0
-        button: 6
-        buttonState: 1
-        offset: 0
-        buffer: 0

@@ -156,6 +156,7 @@ namespace rwby
             FighterManager f = fighter as FighterManager;
             ConditionLockedOn vars = (ConditionLockedOn)variables;
 
+            if (vars.requireTarget && f.CurrentTarget == null) return vars.inverse ? true : false;
             return vars.inverse ? !f.HardTargeting : f.HardTargeting;
         }
         

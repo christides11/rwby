@@ -8,5 +8,6 @@ namespace rwby
         public int FunctionMap => (int)BaseStateConditionEnum.NONE;
 
         public bool inverse;
+        public bool requireTarget;
     }
 }

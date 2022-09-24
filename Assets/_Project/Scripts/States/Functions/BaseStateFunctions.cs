@@ -129,7 +129,8 @@ namespace rwby
             VarApplyGravity vars = (VarApplyGravity)variables;
 
             float gravity = vars.useValue ? vars.value.GetValue(f) : (2 * vars.jumpHeight.GetValue(f)) / Mathf.Pow(vars.jumpTime.GetValue(f) / 2.0f, 2);
-            f.FPhysicsManager.HandleGravity(vars.maxFallSpeed.GetValue(f), gravity, vars.multi.GetValue(f));
+            gravity *= vars.multi.GetValue(f);
+            f.FPhysicsManager.HandleGravity(vars.maxFallSpeed.GetValue(f), gravity);
         }
         
         public static void ApplyMovement(IFighterBase fighter, IStateVariables variables, HnSF.StateTimeline arg3, int arg4)
@@ -706,35 +707,64 @@ namespace rwby
             FighterManager fm = (FighterManager)fighter;
             VarTeleportRaycast vars = (VarTeleportRaycast)variables;
 
+            if ((vars.startPoint == VarTeleportRaycast.StartPointTypes.Target || vars.raycastDirectionSource ==
+                    VarTeleportRaycast.RaycastDirSource.TARGET_VECTOR)
+                && fm.CurrentTarget == null)
+            {
+                return;
+            }
+            
             Vector3 dir = Vector3.zero;
             switch (vars.raycastDirectionSource)
             {
-                case VarInputSourceType.stick:
+                case VarTeleportRaycast.RaycastDirSource.STICK:
                     break;
-                case VarInputSourceType.rotation:
+                case VarTeleportRaycast.RaycastDirSource.ROTATION:
+                    dir = fm.myTransform.forward * vars.direction.z
+                          + fm.myTransform.right * vars.direction.x
+                          + fm.myTransform.up * vars.direction.y;
                     break;
-                case VarInputSourceType.custom:
+                case VarTeleportRaycast.RaycastDirSource.TARGET_VECTOR:
+                    var fr = (fm.CurrentTarget.transform.position - fm.myTransform.position);
+                    fr.y = 0;
+                    fr.Normalize();
+                    var rght = -Vector3.Cross(fr, Vector3.up);
+                    rght.Normalize();
+                    dir = fr * vars.direction.z 
+                          + rght * vars.direction.x 
+                          + Vector3.up * vars.direction.y;
+                    break;
+                case VarTeleportRaycast.RaycastDirSource.CUSTOM:
                     dir = fm.GetMovementVector(vars.direction.x, vars.direction.y);
                     dir.y = vars.direction.y;
                     break;
             }
+            dir.Normalize();
+
+            Vector3 startPos = fm.myTransform.position;
+            if (vars.startPoint == VarTeleportRaycast.StartPointTypes.Target)
+            {
+                startPos = fm.CurrentTarget.transform.position;
+            }
             
-            Vector3 bottomPoint = fm.myTransform.position + fm.FPhysicsManager.cc.center + Vector3.up * -fm.FPhysicsManager.cc.height * 0.5F;
+            Vector3 bottomPoint = startPos + fm.FPhysicsManager.cc.center + Vector3.up * -fm.FPhysicsManager.cc.height * 0.5F;
             Vector3 topPoint = bottomPoint + Vector3.up * fm.FPhysicsManager.cc.height;
 
             bool hit = fm.Runner.GetPhysicsScene().CapsuleCast(bottomPoint, topPoint, fm.FPhysicsManager.cc.radius * 0.9f, dir, out fm.wallHitResults[0], vars.distance, fm.wallLayerMask.value);
 
             if (hit)
             {
-                Vector3 newPos = fm.wallHitResults[0].point 
-                                 + (new Vector3(fm.wallHitResults[0].normal.x, 0, fm.wallHitResults[0].normal.z) * fm.FPhysicsManager.cc.radius)
-                                 - (new Vector3(0, fm.wallHitResults[0].normal.y, 0) * (bottomPoint - fm.myTransform.position).y );
-                fm.FPhysicsManager.SetPosition(newPos, vars.bypassInterpolation);
+                Vector3 newPos = fm.transform.position + fm.wallHitResults[0].distance * dir;
+                fm.FPhysicsManager.SetPosition(newPos);
+                //Vector3 newPos = fm.wallHitResults[0].point 
+                //                 + (new Vector3(fm.wallHitResults[0].normal.x, 0, fm.wallHitResults[0].normal.z) * fm.FPhysicsManager.cc.radius)
+                //                 - (new Vector3(0, fm.wallHitResults[0].normal.y, 0) * (bottomPoint - fm.myTransform.position).y );
+                //fm.FPhysicsManager.SetPosition(newPos, vars.bypassInterpolation);
             }
             else
             {
                 if (!vars.goToPosOnNoHit) return;
-                Vector3 newPos = fm.transform.position + (dir * vars.distance);
+                Vector3 newPos = startPos + (dir * vars.distance);
                 fm.FPhysicsManager.SetPosition(newPos, vars.bypassInterpolation);
             }
         }

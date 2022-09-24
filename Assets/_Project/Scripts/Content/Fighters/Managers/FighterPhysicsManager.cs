@@ -145,7 +145,7 @@ namespace rwby
             return Vector3.MoveTowards(forceMovement, goalVelocity, accel * Runner.DeltaTime) - forceMovement;
         }
 
-        public virtual void HandleGravity(float maxFallSpeed, float gravity, float gravityScale)
+        public virtual void HandleGravity(float maxFallSpeed, float gravity)
         {
             forceGravity = Mathf.MoveTowards(forceGravity, -maxFallSpeed, gravity * Runner.DeltaTime);
         }

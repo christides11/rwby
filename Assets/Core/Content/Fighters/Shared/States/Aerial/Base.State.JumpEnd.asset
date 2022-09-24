@@ -26,9 +26,11 @@ MonoBehaviour:
   - rid: 8688056570279886857
   - rid: 2193520791838261257
   - rid: 8688056195711238164
+  auraRequirement: 0
   initialGroundedState: 2
   stateType: 0
   maxUsesInString: -1
+  selfChainable: 0
   allowBaseStateTransitions: 1
   inputSequence:
     executeWindow: 3
@@ -87,7 +89,7 @@ MonoBehaviour:
       data:
         inverse: 0
         statReference: 0
-        value: 0.5
+        value: 0.8
         variable: 0
     - rid: 2193520703102779416
       type: {class: FighterBaseStatReferenceFloat, ns: rwby, asm: rwby.csharp}
@@ -127,6 +129,7 @@ MonoBehaviour:
         slopeDivi: 0
         slopeMulti: 0
         slopeMultiMax: 0
+        slopeinputModi: 0
     - rid: 2193520703102779418
       type: {class: FighterBaseStatReferenceFloat, ns: rwby, asm: rwby.csharp}
       data:
@@ -187,9 +190,11 @@ MonoBehaviour:
           rid: 2193520768546504707
         checkInputSequence: 0
         checkCondition: 0
+        targetType: 0
         stateMovesetID: -1
         state:
           rid: 2193520768546504706
+        frame: 0
     - rid: 2193520768546504706
       type: {class: FighterCmnStateReference, ns: rwby, asm: rwby.csharp}
       data:

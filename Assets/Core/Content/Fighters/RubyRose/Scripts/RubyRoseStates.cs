@@ -39,6 +39,11 @@ namespace rwby.core
         SCYTHE_SPECIAL_Buzzsaw_Grd_A = 84,
         SCYTHE_SPECIAL_Buzzsaw_Grd_B = 85,
         SCYTHE_SPECIAL_Buzzsaw_Grd_C = 86,
-        change_moveset = 87
+        change_moveset = 87,
+        SCYTHE_SPECIAL_Ready_Grd = 88,
+        SCYTHE_SPECIAL_Ready_Grd_A = 89,
+        SCYTHE_SPECIAL_Ready_Grd_B = 90,
+        SCYTHE_SPECIAL_Ready_Grd_C = 91,
+        SCYTHE_SPECIAL_Ready_Air = 92,
     }
 }

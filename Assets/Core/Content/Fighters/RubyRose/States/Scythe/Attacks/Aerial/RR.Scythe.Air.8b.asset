@@ -47,7 +47,7 @@ MonoBehaviour:
       directionDeviation: 0
     - inputType: 1
       buttonID: 3
-      stickDirection: {x: 1, y: 1}
+      stickDirection: {x: 0, y: 1}
       directionDeviation: 0.85
     sequenceWindow: 8
     sequenceInputs: []
@@ -72,7 +72,8 @@ MonoBehaviour:
       hitForceRelation: 0
       hitForceRelationOffset: {x: 0, y: 0, z: 0}
       autolink: 1
-      autolinkPercentage: 0.5
+      gravityAutolinkPercentage: 0
+      movementAutolinkPercentage: 0
       groundHitForce: {x: 0, y: 8, z: 0}
       aerialHitForce: {x: 0, y: 8, z: 0}
       pullPushMultiplier: 0
@@ -124,7 +125,8 @@ MonoBehaviour:
       hitForceRelation: 0
       hitForceRelationOffset: {x: 0, y: 0, z: 0}
       autolink: 0
-      autolinkPercentage: 0
+      gravityAutolinkPercentage: 0
+      movementAutolinkPercentage: 0
       groundHitForce: {x: 0, y: 8, z: 0}
       aerialHitForce: {x: 0, y: 8, z: 0}
       pullPushMultiplier: 0
