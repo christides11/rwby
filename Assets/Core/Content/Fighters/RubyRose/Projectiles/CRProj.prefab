@@ -184,7 +184,7 @@ MonoBehaviour:
     groundedCounterHitFoldoutGroup: 0
     hitStateGroundedGroups: -1
     hit:
-      groundHitState: 30
+      groundHitState: 32
       airHitState: 32
       groundBounce: 0
       wallBounce: 0
@@ -196,11 +196,12 @@ MonoBehaviour:
       hitForceRelation: 0
       hitForceRelationOffset: {x: 0, y: 0, z: 0}
       autolink: 1
-      autolinkPercentage: 1
+      gravityAutolinkPercentage: 0
+      movementAutolinkPercentage: 1
       groundHitForce: {x: 0, y: 10, z: 0}
       aerialHitForce: {x: 0, y: 10, z: 5}
       pullPushMultiplier: 1
-      pullPushMaxDistance: 10
+      pullPushMaxDistance: 1
       blockLift: 0
       attackerHitstop: 2
       hitstop: 2
@@ -248,7 +249,8 @@ MonoBehaviour:
       hitForceRelation: 0
       hitForceRelationOffset: {x: 0, y: 0, z: 0}
       autolink: 0
-      autolinkPercentage: 0
+      gravityAutolinkPercentage: 0
+      movementAutolinkPercentage: 0
       groundHitForce: {x: 0, y: 0, z: 0}
       aerialHitForce: {x: 0, y: 0, z: 0}
       pullPushMultiplier: 0

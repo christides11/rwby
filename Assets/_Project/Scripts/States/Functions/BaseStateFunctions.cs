@@ -754,8 +754,8 @@ namespace rwby
 
             if (hit)
             {
-                Vector3 newPos = fm.transform.position + fm.wallHitResults[0].distance * dir;
-                fm.FPhysicsManager.SetPosition(newPos);
+                Vector3 newPos = fm.transform.position + (fm.wallHitResults[0].distance+0.1f) * dir;
+                fm.FPhysicsManager.SetPosition(newPos, vars.bypassInterpolation);
                 //Vector3 newPos = fm.wallHitResults[0].point 
                 //                 + (new Vector3(fm.wallHitResults[0].normal.x, 0, fm.wallHitResults[0].normal.z) * fm.FPhysicsManager.cc.radius)
                 //                 - (new Vector3(0, fm.wallHitResults[0].normal.y, 0) * (bottomPoint - fm.myTransform.position).y );

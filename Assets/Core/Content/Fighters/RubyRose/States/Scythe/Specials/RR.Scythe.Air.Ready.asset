@@ -189,7 +189,7 @@ MonoBehaviour:
           rid: -2
         raycastDirectionSource: 3
         direction: {x: 0, y: -1, z: 0}
-        distance: 10
+        distance: 15
         goToPosOnNoHit: 1
         bypassInterpolation: 1
         startPoint: 0
@@ -223,7 +223,7 @@ MonoBehaviour:
         parent: -1
         children: 
         frameRanges:
-        - {x: 6, y: 6}
+        - {x: 1, y: 1}
         condition:
           rid: -2
         targetType: 0
@@ -235,7 +235,7 @@ MonoBehaviour:
       data:
         inverse: 0
         statReference: 0
-        value: 8
+        value: -0.5
         variable: 0
     - rid: 7270848813903118342
       type: {class: VarClampMovement, ns: rwby, asm: rwby.csharp}
@@ -255,7 +255,7 @@ MonoBehaviour:
       data:
         inverse: 0
         statReference: 0
-        value: 0.5
+        value: 0
     - rid: 7270848816917512192
       type: {class: ConditionIsGrounded, ns: rwby, asm: rwby.csharp}
       data:

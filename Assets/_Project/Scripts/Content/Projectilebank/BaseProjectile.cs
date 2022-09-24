@@ -87,7 +87,7 @@ namespace rwby
 
             var hurtInfo = new HurtInfo(hitInfo, hurtbox.definitionIndex,
                 transform.position, transform.forward, transform.right,
-                force * Runner.DeltaTime, hitPoint);
+                force, hitPoint);
             return hurtInfo;
         }
 
