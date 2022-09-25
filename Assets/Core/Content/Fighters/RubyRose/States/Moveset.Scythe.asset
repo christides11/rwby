@@ -297,6 +297,14 @@ MonoBehaviour:
     state:
       rid: 7270848842656382976
     stateTimeline: {fileID: 11400000, guid: 954d7bb22f98d224c82d3faf80b3fdd6, type: 2}
+  - name: 2c-held
+    state:
+      rid: 7270848857037078545
+    stateTimeline: {fileID: 11400000, guid: 9fae4250e6be70e498dfa6ae66458efe, type: 2}
+  - name: Wall Bounce
+    state:
+      rid: 7270848878803943434
+    stateTimeline: {fileID: 11400000, guid: 6bceb3d90cc33f245ac13395ff0a1888, type: 2}
   fighterStats: {fileID: 11400000, guid: 9db018607e1c48c498ee3d8a7c4cefc3, type: 2}
   specials:
   - groundState:
@@ -496,6 +504,14 @@ MonoBehaviour:
       type: {class: RubyRoseStateReference, ns: rwby.core, asm: rwby.core}
       data:
         state: 90
+    - rid: 7270848857037078545
+      type: {class: RubyRoseStateReference, ns: rwby.core, asm: rwby.core}
+      data:
+        state: 93
+    - rid: 7270848878803943434
+      type: {class: FighterCmnStateReference, ns: rwby, asm: rwby.csharp}
+      data:
+        state: 47
     - rid: 8688056157277782026
       type: {class: FighterCmnStateReference, ns: rwby, asm: rwby.csharp}
       data:

@@ -10,12 +10,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7789f25d17401bc4b915ca6fcecf2a29, type: 3}
-  m_Name: RR.Scythe.Grd.5cC
+  m_Name: RR.Rifle.Grd.5b
   m_EditorClassIdentifier: 
-  stateName: 5cC
+  stateName: 5b (Grd)
   useBaseState: 0
   baseState: {fileID: 0}
-  totalFrames: 30
+  totalFrames: 26
   autoIncrement: 1
   autoLoop: 0
   autoLoopFrame: 1
@@ -23,19 +23,19 @@ MonoBehaviour:
   - rid: 2193520813467238401
   - rid: 2193520813467238403
   - rid: 2193520817874927616
-  - rid: 7270848857037078531
-  - rid: 7270848857037078533
+  - rid: 8688056217396838433
+  - rid: 7270848877005897728
   auraRequirement: 0
   initialGroundedState: 1
   stateType: 2
   maxUsesInString: 1
-  selfChainable: 0
+  selfChainable: 3
   allowBaseStateTransitions: 1
   inputSequence:
     executeWindow: 3
     executeInputs:
     - inputType: 0
-      buttonID: 6
+      buttonID: 3
       stickDirection: {x: 0, y: 0}
       directionDeviation: 0
     sequenceWindow: 8
@@ -49,7 +49,7 @@ MonoBehaviour:
     groundedCounterHitFoldoutGroup: 0
     hitStateGroundedGroups: -1
     hit:
-      groundHitState: 32
+      groundHitState: 30
       airHitState: 32
       groundBounce: 0
       wallBounce: 0
@@ -63,8 +63,8 @@ MonoBehaviour:
       autolink: 0
       gravityAutolinkPercentage: 0
       movementAutolinkPercentage: 0
-      groundHitForce: {x: 0, y: 6, z: -5}
-      aerialHitForce: {x: 0, y: 4, z: -5}
+      groundHitForce: {x: 0, y: 0, z: 5}
+      aerialHitForce: {x: 0, y: 3, z: 0}
       pullPushMultiplier: 0
       pullPushMaxDistance: 10
       blockLift: 0
@@ -95,9 +95,9 @@ MonoBehaviour:
         contentGUID:
           guid: 
       hitSound: 
-      hitCameraShakeStrength: 1
-      blockCameraShakeStrength: 1
-      cameraShakeLength: 4
+      hitCameraShakeStrength: 0
+      blockCameraShakeStrength: 0
+      cameraShakeLength: 0
       ignoreProration: 0
       ignoreHitstunScaling: 0
       ignorePushbackScaling: 0
@@ -191,7 +191,7 @@ MonoBehaviour:
         parent: -1
         children: 
         frameRanges:
-        - {x: 5, y: 10}
+        - {x: 7, y: 9}
         condition:
           rid: -2
         boxType: 1
@@ -223,25 +223,23 @@ MonoBehaviour:
         statReference: 0
         value: 30
         variable: 0
-    - rid: 7270848857037078531
-      type: {class: VarExternal, ns: rwby, asm: rwby.csharp}
+    - rid: 7270848877005897728
+      type: {class: VarEmpty, ns: rwby, asm: rwby.csharp}
       data:
-        name: Try Atk
-        id: 3
+        name: On Hit or Block
+        id: 5
         parent: -1
         children: 
-        frameRanges:
-        - {x: 5, y: -1}
+        frameRanges: []
         condition:
-          rid: 7270848857037078532
-        asset: {fileID: 11400000, guid: 38d47b53b1c6fa24580e163448503c28, type: 2}
-    - rid: 7270848857037078532
+          rid: 7270848877005897729
+    - rid: 7270848877005897729
       type: {class: ConditionHitOrBlockCount, ns: rwby, asm: rwby.csharp}
       data:
         inverse: 0
         hitCount: 1
         hitOrBlock: -1
-    - rid: 7270848857037078533
+    - rid: 8688056217396838433
       type: {class: VarCreateBox, ns: rwby, asm: rwby.csharp}
       data:
         name: Colbox

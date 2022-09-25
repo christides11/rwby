@@ -43,6 +43,7 @@ namespace rwby
         public VarInputSourceType inputSource;
         public bool normalizeInputSource;
         public bool useRotationIfInputZero;
+        public float inputSourceOffset;
 
         public float minAngle;
         public float maxAngle;

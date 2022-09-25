@@ -607,6 +607,8 @@ namespace rwby
                     input = fm.transform.forward;
             }
 
+            input = Quaternion.Euler(0, vars.inputSourceOffset, 0) * input;
+
             for (int i = 0; i < fm.wallHitResults.Length; i++)
             {
                 fm.wallHitResults[i] = new RaycastHit();
@@ -624,6 +626,7 @@ namespace rwby
                               + fm.myTransform.forward * z;
                 fm.Runner.GetPhysicsScene().Raycast(fm.GetCenter(), dir.normalized, out fm.wallHitResults[i],
                     distance, fm.wallLayerMask, QueryTriggerInteraction.Ignore);
+                Debug.DrawRay(fm.GetCenter(), dir.normalized * distance, Color.red, 2f);
             }
 
             float min = Mathf.Infinity;

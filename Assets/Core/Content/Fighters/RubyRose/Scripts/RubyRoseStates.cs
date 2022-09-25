@@ -12,6 +12,7 @@ namespace rwby.core
         GRD_5c = 64,
         GRD_5cC = 65,
         GRD_2c = 54,
+        GRD_2c_held = 93,
         GRD_8c = 66,
         AIR_5a = 55,
         AIR_5b = 56,

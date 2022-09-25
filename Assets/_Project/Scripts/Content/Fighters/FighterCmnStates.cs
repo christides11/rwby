@@ -49,6 +49,7 @@ namespace rwby
         THROW_ATTEMPT,
         THROW,
         SHIELD_GRD,
-        SHIELD_AIR
+        SHIELD_AIR,
+        WALL_BOUNCE
     }
 }

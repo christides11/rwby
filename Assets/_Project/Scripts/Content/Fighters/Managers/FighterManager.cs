@@ -410,7 +410,7 @@ namespace rwby
         /// <returns>A direction vector based on the camera's forward.</returns>
         public virtual Vector3 GetMovementVector(int frame = 0)
         {
-            Vector2 movement = ExtDebug.DeadZoner(InputManager.GetMovement(frame), InputConstants.movementDeadzone);
+            Vector2 movement = InputManager.GetMovement(frame);
             if(movement == Vector2.zero)
             {
                 return Vector3.zero;

@@ -23,6 +23,8 @@ MonoBehaviour:
   - rid: 2193520813467238401
   - rid: 2193520813467238403
   - rid: 2193520817874927616
+  - rid: 7270848857037078534
+  - rid: 7270848857037078528
   - rid: 8688056331001921538
   - rid: 7270848718906589185
   - rid: 7270848718906589186
@@ -62,33 +64,11 @@ MonoBehaviour:
       hitForceRelation: 0
       hitForceRelationOffset: {x: 0, y: 0, z: 0}
       autolink: 0
-      autolinkPercentage: 0
+      gravityAutolinkPercentage: 0
+      movementAutolinkPercentage: 0
       groundHitForce: {x: 0, y: 0, z: 5}
-      aerialHitForce: {x: 0, y: 0, z: 0}
-      pullPushCurve:
-        serializedVersion: 2
-        m_Curve:
-        - serializedVersion: 3
-          time: 0
-          value: 0
-          inSlope: 10
-          outSlope: 10
-          tangentMode: 34
-          weightedMode: 0
-          inWeight: 0
-          outWeight: 0.33333334
-        - serializedVersion: 3
-          time: 1
-          value: 10
-          inSlope: 10
-          outSlope: 10
-          tangentMode: 34
-          weightedMode: 0
-          inWeight: 0.33333334
-          outWeight: 0
-        m_PreInfinity: 2
-        m_PostInfinity: 2
-        m_RotationOrder: 4
+      aerialHitForce: {x: 0, y: 3, z: 0}
+      pullPushMultiplier: 0
       pullPushMaxDistance: 10
       blockLift: 0
       attackerHitstop: 4
@@ -137,15 +117,11 @@ MonoBehaviour:
       hitForceRelation: 0
       hitForceRelationOffset: {x: 0, y: 0, z: 0}
       autolink: 0
-      autolinkPercentage: 0
+      gravityAutolinkPercentage: 0
+      movementAutolinkPercentage: 0
       groundHitForce: {x: 0, y: 0, z: 0}
       aerialHitForce: {x: 0, y: 0, z: 0}
-      pullPushCurve:
-        serializedVersion: 2
-        m_Curve: []
-        m_PreInfinity: 2
-        m_PostInfinity: 2
-        m_RotationOrder: 4
+      pullPushMultiplier: 0
       pullPushMaxDistance: 0
       blockLift: 0
       attackerHitstop: 0
@@ -281,6 +257,56 @@ MonoBehaviour:
         boxExtents: {x: 0.5, y: 1, z: 0.5}
         radius: 0
         definitionIndex: 0
+    - rid: 7270848857037078528
+      type: {class: VarChangeState, ns: rwby, asm: rwby.csharp}
+      data:
+        name: cC
+        id: 6
+        parent: -1
+        children: 
+        frameRanges:
+        - {x: 9, y: -1}
+        condition:
+          rid: -2
+        checkInputSequence: 1
+        checkCondition: 0
+        targetType: 0
+        stateMovesetID: -1
+        state:
+          rid: 7270848857037078529
+        frame: 0
+    - rid: 7270848857037078529
+      type: {class: RubyRoseStateReference, ns: rwby.core, asm: rwby.core}
+      data:
+        state: 65
+    - rid: 7270848857037078534
+      type: {class: VarChangeState, ns: rwby, asm: rwby.csharp}
+      data:
+        name: 2C
+        id: 7
+        parent: -1
+        children: 
+        frameRanges:
+        - {x: 9, y: -1}
+        condition:
+          rid: 7270848857037078536
+        checkInputSequence: 1
+        checkCondition: 0
+        targetType: 0
+        stateMovesetID: -1
+        state:
+          rid: 7270848857037078535
+        frame: 0
+    - rid: 7270848857037078535
+      type: {class: RubyRoseStateReference, ns: rwby.core, asm: rwby.core}
+      data:
+        state: 54
+    - rid: 7270848857037078536
+      type: {class: ConditionHitOrBlockCount, ns: rwby, asm: rwby.csharp}
+      data:
+        inverse: 0
+        hitCount: 1
+        hitOrBlock: -1
     - rid: 8688056331001921538
       type: {class: VarExternal, ns: rwby, asm: rwby.csharp}
       data:

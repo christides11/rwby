@@ -434,5 +434,21 @@ namespace rwby
             bool r = f.fighterWhiteboard.Ints[vars.valueIndex] != 0;
             return vars.inverse ? !r : r;
         }
+        
+        public static bool ButtonHeld(IFighterBase fighter, IConditionVariables variables, HnSF.StateTimeline arg3, int arg4)
+        {
+            FighterManager f = fighter as FighterManager;
+            ConditionButtonHeld vars = (ConditionButtonHeld)variables;
+            
+            bool fResult = true;
+
+            for (int i = 0; i < vars.holdTime; i++)
+            {
+                fResult = f.InputManager.GetButton((int)vars.button, vars.offset+i, 0).isDown;
+                if (!fResult) break;
+            }
+            
+            return vars.inverse ? !fResult : fResult;
+        }
     }
 }

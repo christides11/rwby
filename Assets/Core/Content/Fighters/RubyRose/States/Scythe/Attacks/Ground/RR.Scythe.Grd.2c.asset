@@ -26,6 +26,7 @@ MonoBehaviour:
   - rid: 8688056339992412162
   - rid: 8688056339992412164
   - rid: 7270848809565159434
+  - rid: 7270848857037078542
   auraRequirement: 0
   initialGroundedState: 1
   stateType: 2
@@ -200,7 +201,7 @@ MonoBehaviour:
         parent: -1
         children: 
         frameRanges:
-        - {x: 5, y: 10}
+        - {x: 6, y: 10}
         condition:
           rid: -2
         boxType: 1
@@ -244,6 +245,35 @@ MonoBehaviour:
         condition:
           rid: -2
         asset: {fileID: 11400000, guid: 38d47b53b1c6fa24580e163448503c28, type: 2}
+    - rid: 7270848857037078542
+      type: {class: VarChangeState, ns: rwby, asm: rwby.csharp}
+      data:
+        name: 
+        id: 6
+        parent: -1
+        children: 
+        frameRanges:
+        - {x: 5, y: 5}
+        condition:
+          rid: 7270848857037078552
+        checkInputSequence: 0
+        checkCondition: 0
+        targetType: 0
+        stateMovesetID: -1
+        state:
+          rid: 7270848857037078544
+        frame: 0
+    - rid: 7270848857037078544
+      type: {class: RubyRoseStateReference, ns: rwby.core, asm: rwby.core}
+      data:
+        state: 93
+    - rid: 7270848857037078552
+      type: {class: ConditionButtonHeld, ns: rwby, asm: rwby.csharp}
+      data:
+        inverse: 0
+        button: 6
+        offset: 0
+        holdTime: 5
     - rid: 8688056339992412162
       type: {class: VarEmpty, ns: rwby, asm: rwby.csharp}
       data:

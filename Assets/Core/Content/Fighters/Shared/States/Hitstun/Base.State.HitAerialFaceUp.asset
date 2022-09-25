@@ -20,6 +20,8 @@ MonoBehaviour:
   autoLoop: 0
   autoLoopFrame: 2
   data:
+  - rid: 7270848878803943435
+  - rid: 7270848878803943436
   - rid: 7270848697680265237
   - rid: 8688056272189390853
   auraRequirement: 0
@@ -80,6 +82,53 @@ MonoBehaviour:
       type: {class: ConditionCanGroundBounce, ns: rwby, asm: rwby.csharp}
       data:
         inverse: 0
+    - rid: 7270848878803943435
+      type: {class: VarFindWall, ns: rwby, asm: rwby.csharp}
+      data:
+        name: 
+        id: 2
+        parent: -1
+        children: 
+        frameRanges:
+        - {x: 2, y: -1}
+        condition:
+          rid: -2
+        inputSource: 1
+        normalizeInputSource: 0
+        useRotationIfInputZero: 0
+        inputSourceOffset: 180
+        minAngle: -25
+        maxAngle: 25
+        raycastCount: 1
+        startAngleOffset: 180
+        angleBasedOnWallDir: 0
+        clearWallIfNotFound: 1
+    - rid: 7270848878803943436
+      type: {class: VarChangeState, ns: rwby, asm: rwby.csharp}
+      data:
+        name: To Wall Bounce
+        id: 3
+        parent: -1
+        children: 
+        frameRanges:
+        - {x: 2, y: -1}
+        condition:
+          rid: 7270848878803943437
+        checkInputSequence: 0
+        checkCondition: 0
+        targetType: 0
+        stateMovesetID: -1
+        state:
+          rid: 7270848878803943438
+        frame: 0
+    - rid: 7270848878803943437
+      type: {class: ConditionWallValid, ns: rwby, asm: rwby.csharp}
+      data:
+        inverse: 0
+    - rid: 7270848878803943438
+      type: {class: FighterCmnStateReference, ns: rwby, asm: rwby.csharp}
+      data:
+        state: 47
     - rid: 8688056272189390853
       type: {class: VarChangeState, ns: rwby, asm: rwby.csharp}
       data:
