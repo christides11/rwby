@@ -1009,5 +1009,13 @@ namespace rwby
             m.y = 0;
             if(vars.applyMovement) fm.FPhysicsManager.forceMovement = m;
         }
+        
+        public static void SetGroundedState(IFighterBase fighter, IStateVariables variables, HnSF.StateTimeline stateTimeline, int frame)
+        {
+            FighterManager fm = (FighterManager)fighter;
+            VarSetGroundedState vars = (VarSetGroundedState)variables;
+
+            fm.FStateManager.CurrentGroundedState = vars.groundedGroup;
+        }
     }
 }

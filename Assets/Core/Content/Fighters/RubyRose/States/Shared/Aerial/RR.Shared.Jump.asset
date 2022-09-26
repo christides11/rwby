@@ -26,9 +26,12 @@ MonoBehaviour:
   - rid: 8688056331001921556
   - rid: 2193520750553202689
   - rid: 8688056409313247237
+  - rid: 7270848885102739461
+  auraRequirement: 0
   initialGroundedState: 2
   stateType: 1
   maxUsesInString: -1
+  selfChainable: 0
   allowBaseStateTransitions: 1
   inputSequence:
     executeWindow: 3
@@ -59,9 +62,11 @@ MonoBehaviour:
           rid: 2193520750553202691
         checkInputSequence: 0
         checkCondition: 0
+        targetType: 0
         stateMovesetID: -1
         state:
           rid: 2193520750553202690
+        frame: 0
     - rid: 2193520750553202690
       type: {class: FighterCmnStateReference, ns: rwby, asm: rwby.csharp}
       data:
@@ -72,6 +77,18 @@ MonoBehaviour:
         absoluteValue: 0
         minValue: -100
         maxValue: 5
+    - rid: 7270848885102739461
+      type: {class: VarExternal, ns: rwby, asm: rwby.csharp}
+      data:
+        name: Try Air Atks
+        id: 7
+        parent: 6
+        children: 
+        frameRanges:
+        - {x: 1, y: -1}
+        condition:
+          rid: -2
+        asset: {fileID: 11400000, guid: cc00d510ea2530d49bdc1b20fbaa26a5, type: 2}
     - rid: 8688056217396838405
       type: {class: VarModifyAnimationSet, ns: rwby, asm: rwby.csharp}
       data:
@@ -142,7 +159,7 @@ MonoBehaviour:
         name: Rifle
         id: 6
         parent: -1
-        children: 
+        children: 07000000
         frameRanges: []
         condition:
           rid: 8688056409313247239

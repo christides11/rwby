@@ -28,11 +28,12 @@ MonoBehaviour:
   - rid: 7270848877005897728
   - rid: 7270848878803943428
   - rid: 7270848878803943427
+  - rid: 7270848878803943441
   auraRequirement: 0
   initialGroundedState: 1
   stateType: 2
   maxUsesInString: 1
-  selfChainable: 3
+  selfChainable: 0
   allowBaseStateTransitions: 1
   inputSequence:
     executeWindow: 3
@@ -167,7 +168,7 @@ MonoBehaviour:
       groundBounce: 0
       wallBounce: 1
       groundBounceForce: 0
-      wallBounceForce: 20
+      wallBounceForce: 10
       noKill: 0
       unblockable: 0
       hitForceType: 0
@@ -342,7 +343,7 @@ MonoBehaviour:
         name: On Hit or Block
         id: 5
         parent: -1
-        children: 
+        children: 09000000
         frameRanges: []
         condition:
           rid: 7270848877005897729
@@ -410,6 +411,18 @@ MonoBehaviour:
         maxLevel: 1
         button: 6
         canHold: 0
+    - rid: 7270848878803943441
+      type: {class: VarExternal, ns: rwby, asm: rwby.csharp}
+      data:
+        name: Try Atk
+        id: 9
+        parent: 5
+        children: 
+        frameRanges:
+        - {x: 9, y: -1}
+        condition:
+          rid: -2
+        asset: {fileID: 11400000, guid: ba688ef34edd2d84ea6a5b2e1e2af06e, type: 2}
     - rid: 8688056217396838433
       type: {class: VarCreateBox, ns: rwby, asm: rwby.csharp}
       data:

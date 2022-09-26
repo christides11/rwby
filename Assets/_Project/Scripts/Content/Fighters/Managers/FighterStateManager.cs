@@ -191,7 +191,7 @@ namespace rwby
             markedForStateChange = false;
             int previousStateMoveset = CurrentStateMoveset;
             int previousState = CurrentState;
-            
+
             if (callOnInterrupt && previousState != (int)FighterCmnStates.NULL)
             {
                 StateTimeline previousStateTimeline = GetState();
@@ -199,28 +199,33 @@ namespace rwby
                 SetFrame(previousStateTimeline.totalFrames+1);
                 ProcessState(previousStateTimeline, true);
             }
-
+            
+            var previousGroundedState = CurrentGroundedState;
+            var previousStateType = CurrentStateType;
+            
             CurrentStateMoveset = moveset == -1 ? CurrentMoveset : moveset;
             CurrentState = state;
             CurrentStateFrame = stateFrame;
+            var currentStateTimeline = GetState();
+            CurrentGroundedState = currentStateTimeline.initialGroundedState;
+            CurrentStateType = currentStateTimeline.stateType;
             if (CurrentStateFrame == 0)
             {
                 SetFrame(0);
-                ProcessState(GetState());
+                ProcessState(currentStateTimeline);
                 SetFrame(1);
             }
-
-            var currentStateTimeline = GetState();
+            
             if (previousState != (int)FighterCmnStates.NULL)
             {
-                StateChanged(GetState(previousStateMoveset, previousState) as rwby.StateTimeline, currentStateTimeline);
+                StateChanged(previousGroundedState, previousStateType, 
+                    GetState(previousStateMoveset, previousState) as rwby.StateTimeline, currentStateTimeline);
             }
-            CurrentGroundedState = currentStateTimeline.initialGroundedState;
-            CurrentStateType = currentStateTimeline.stateType;
             return true;
         }
         
-        public void StateChanged(rwby.StateTimeline previousState, rwby.StateTimeline currentState)
+        public void StateChanged(StateGroundedGroupType previousGroundedGroup, StateType previousStateType,
+            rwby.StateTimeline previousState, rwby.StateTimeline currentState)
         {
             combatManager.ClashState = false;
             combatManager.ResetCharge();
@@ -228,10 +233,10 @@ namespace rwby
             manager.fighterEffector.ClearCurrentEffects();
             manager.fighterSounder.ClearCurrentSounds();
             
-            if (CurrentGroundedState != currentState.initialGroundedState)
+            if (CurrentGroundedState != previousGroundedGroup)
             {
                 manager.FPhysicsManager.SnapECB();
-                if (CurrentGroundedState == StateGroundedGroupType.AERIAL)
+                if (CurrentGroundedState == StateGroundedGroupType.GROUND)
                 {
                     manager.ResetVariablesOnGround();
                 }
@@ -241,9 +246,9 @@ namespace rwby
                 }
             }
 
-            if (currentState.stateType is StateType.MOVEMENT or StateType.NONE)
+            if (CurrentStateType is StateType.MOVEMENT or StateType.NONE)
             {
-                if (previousState.stateType != currentState.stateType)
+                if (previousStateType != CurrentStateType)
                 {
                     combatManager.ResetString();
                     combatManager.ResetProration();
@@ -252,7 +257,7 @@ namespace rwby
                     combatManager.CurrentGroundBounces = 0;
                     combatManager.CurrentWallBounces = 0;
                 }
-            }else if (currentState.stateType == StateType.ATTACK)
+            }else if (CurrentStateType == StateType.ATTACK)
             {
                 if (currentState.maxUsesInString != -1)
                 {
