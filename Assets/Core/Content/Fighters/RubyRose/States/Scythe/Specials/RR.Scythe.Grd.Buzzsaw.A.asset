@@ -53,42 +53,21 @@ MonoBehaviour:
     hit:
       groundHitState: 30
       airHitState: 32
-      groundBounces: 0
-      wallBounces: 0
-      groundBounceForcePercentage: 0
-      wallBounceForcePercentage: 0
+      groundBounce: 0
+      wallBounce: 0
+      groundBounceForce: 0
+      wallBounceForce: 0
       noKill: 0
+      unblockable: 0
       hitForceType: 0
       hitForceRelation: 0
       hitForceRelationOffset: {x: 0, y: 0, z: 0}
       autolink: 0
-      autolinkPercentage: 0
-      groundHitForce: {x: 0, y: 0, z: 8}
-      aerialHitForce: {x: 0, y: 5, z: 3}
-      pullPushCurve:
-        serializedVersion: 2
-        m_Curve:
-        - serializedVersion: 3
-          time: 0
-          value: 0
-          inSlope: 10
-          outSlope: 10
-          tangentMode: 34
-          weightedMode: 0
-          inWeight: 0
-          outWeight: 0.33333334
-        - serializedVersion: 3
-          time: 1
-          value: 10
-          inSlope: 10
-          outSlope: 10
-          tangentMode: 34
-          weightedMode: 0
-          inWeight: 0.33333334
-          outWeight: 0
-        m_PreInfinity: 2
-        m_PostInfinity: 2
-        m_RotationOrder: 4
+      gravityAutolinkPercentage: 0
+      movementAutolinkPercentage: 0
+      groundHitForce: {x: 0, y: 0, z: -7}
+      aerialHitForce: {x: 0, y: 5, z: -7}
+      pullPushMultiplier: 0
       pullPushMaxDistance: 10
       blockLift: 0
       attackerHitstop: 8
@@ -98,8 +77,8 @@ MonoBehaviour:
       untech: 0
       initialProration: 0
       comboProration: 0
-      damage: 0
-      chipDamage: 0
+      damage: 100
+      chipDamage: 50
       hitEffectbank:
         modGUID:
           guid: 
@@ -127,24 +106,21 @@ MonoBehaviour:
     counterhit:
       groundHitState: 0
       airHitState: 0
-      groundBounces: 0
-      wallBounces: 0
-      groundBounceForcePercentage: 0
-      wallBounceForcePercentage: 0
+      groundBounce: 0
+      wallBounce: 0
+      groundBounceForce: 0
+      wallBounceForce: 0
       noKill: 0
+      unblockable: 0
       hitForceType: 0
       hitForceRelation: 0
       hitForceRelationOffset: {x: 0, y: 0, z: 0}
       autolink: 0
-      autolinkPercentage: 0
+      gravityAutolinkPercentage: 0
+      movementAutolinkPercentage: 0
       groundHitForce: {x: 0, y: 0, z: 0}
       aerialHitForce: {x: 0, y: 0, z: 0}
-      pullPushCurve:
-        serializedVersion: 2
-        m_Curve: []
-        m_PreInfinity: 2
-        m_PostInfinity: 2
-        m_RotationOrder: 4
+      pullPushMultiplier: 0
       pullPushMaxDistance: 0
       blockLift: 0
       attackerHitstop: 0
@@ -204,6 +180,7 @@ MonoBehaviour:
         stateMovesetID: -1
         state:
           rid: 2193520813467238402
+        frame: 0
     - rid: 2193520813467238402
       type: {class: FighterCmnStateReference, ns: rwby, asm: rwby.csharp}
       data:
@@ -216,7 +193,7 @@ MonoBehaviour:
         parent: -1
         children: 
         frameRanges:
-        - {x: 3, y: -1}
+        - {x: 4, y: -1}
         condition:
           rid: -2
         traction:
@@ -317,7 +294,7 @@ MonoBehaviour:
         parent: -1
         children: 
         frameRanges:
-        - {x: 0, y: 0}
+        - {x: 3, y: 3}
         condition:
           rid: -2
         inputSource: 1
@@ -331,4 +308,4 @@ MonoBehaviour:
       data:
         inverse: 0
         statReference: 0
-        value: 5
+        value: -10

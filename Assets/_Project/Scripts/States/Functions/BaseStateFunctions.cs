@@ -626,7 +626,6 @@ namespace rwby
                               + fm.myTransform.forward * z;
                 fm.Runner.GetPhysicsScene().Raycast(fm.GetCenter(), dir.normalized, out fm.wallHitResults[i],
                     distance, fm.wallLayerMask, QueryTriggerInteraction.Ignore);
-                Debug.DrawRay(fm.GetCenter(), dir.normalized * distance, Color.red, 2f);
             }
 
             float min = Mathf.Infinity;

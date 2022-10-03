@@ -29,6 +29,8 @@ MonoBehaviour:
   - rid: 8688056217003884545
   - rid: 8688056409313247232
   - rid: 7270848366746009600
+  - rid: 7270848899719102477
+  - rid: 7270848899719102479
   auraRequirement: 0
   initialGroundedState: 1
   stateType: 1
@@ -93,7 +95,7 @@ MonoBehaviour:
         attachedTo: 0
         shape: 0
         offset: {x: 0, y: 1, z: 0}
-        boxExtents: {x: 0.5, y: 1, z: 0.5}
+        boxExtents: {x: 0.3, y: 1, z: 0.3}
         radius: 0
         definitionIndex: 0
     - rid: 7270848366746009600
@@ -125,6 +127,32 @@ MonoBehaviour:
           autoIncrement: 1
         doNotAddToSet: 1
         OffsetStartAtFighter: 1
+    - rid: 7270848899719102477
+      type: {class: VarEmpty, ns: rwby, asm: rwby.csharp}
+      data:
+        name: Rifle
+        id: 9
+        parent: -1
+        children: 0a000000
+        frameRanges: []
+        condition:
+          rid: 7270848899719102478
+    - rid: 7270848899719102478
+      type: {class: ConditionMoveset, ns: rwby, asm: rwby.csharp}
+      data:
+        moveset: 1
+    - rid: 7270848899719102479
+      type: {class: VarExternal, ns: rwby, asm: rwby.csharp}
+      data:
+        name: Try Ground Atk
+        id: 10
+        parent: 9
+        children: 
+        frameRanges:
+        - {x: 1, y: -1}
+        condition:
+          rid: -2
+        asset: {fileID: 11400000, guid: ba688ef34edd2d84ea6a5b2e1e2af06e, type: 2}
     - rid: 8688056216264638483
       type: {class: VarModifyAnimationSet, ns: rwby, asm: rwby.csharp}
       data:
@@ -159,6 +187,7 @@ MonoBehaviour:
       type: {class: ConditionLockedOn, ns: rwby, asm: rwby.csharp}
       data:
         inverse: 0
+        requireTarget: 0
     - rid: 8688056217003884544
       type: {class: VarEmpty, ns: rwby, asm: rwby.csharp}
       data:
@@ -187,6 +216,7 @@ MonoBehaviour:
       type: {class: ConditionLockedOn, ns: rwby, asm: rwby.csharp}
       data:
         inverse: 1
+        requireTarget: 0
     - rid: 8688056409313247232
       type: {class: VarModifyAnimationSet, ns: rwby, asm: rwby.csharp}
       data:

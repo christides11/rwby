@@ -29,6 +29,8 @@ MonoBehaviour:
   - rid: 2193520783924396052
   - rid: 8688056409313247249
   - rid: 7270848729635094542
+  - rid: 7270848899719102488
+  - rid: 7270848899719102490
   auraRequirement: 0
   initialGroundedState: 2
   stateType: 1
@@ -98,6 +100,32 @@ MonoBehaviour:
         inverse: 0
         statReference: 0
         value: 10
+    - rid: 7270848899719102488
+      type: {class: VarEmpty, ns: rwby, asm: rwby.csharp}
+      data:
+        name: Rifle
+        id: 11
+        parent: -1
+        children: 0c000000
+        frameRanges: []
+        condition:
+          rid: 7270848899719102489
+    - rid: 7270848899719102489
+      type: {class: ConditionMoveset, ns: rwby, asm: rwby.csharp}
+      data:
+        moveset: 1
+    - rid: 7270848899719102490
+      type: {class: VarExternal, ns: rwby, asm: rwby.csharp}
+      data:
+        name: Try Air Atk
+        id: 12
+        parent: 11
+        children: 
+        frameRanges:
+        - {x: 1, y: -1}
+        condition:
+          rid: -2
+        asset: {fileID: 11400000, guid: cc00d510ea2530d49bdc1b20fbaa26a5, type: 2}
     - rid: 8688056217396838408
       type: {class: VarExternal, ns: rwby, asm: rwby.csharp}
       data:

@@ -608,8 +608,8 @@ namespace rwby
                     var position = manager.GetCenter();
                     var centerPos = hurtInfo.center + (hurtInfo.right * offset.x) + (hurtInfo.forward * offset.z) + (Vector3.up * offset.y);
 
-                    var pF = (Vector3.MoveTowards(position, centerPos, pullPushMaxDistance) - position) * pullPushMulti;
-
+                    float gIntensity = Vector3.Distance(position, centerPos) / pullPushMaxDistance;
+                    var pF = (centerPos - position) * gIntensity * pullPushMulti;
                     physicsManager.forceGravity = pF.y;
                     pF.y = 0;
                     physicsManager.forceMovement = pF;

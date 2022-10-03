@@ -25,6 +25,8 @@ MonoBehaviour:
   - rid: 2193520817874927616
   - rid: 8688056217396838433
   - rid: 7270848877005897728
+  - rid: 7270848899719102493
+  - rid: 7270848899719102508
   auraRequirement: 0
   initialGroundedState: 1
   stateType: 2
@@ -63,8 +65,8 @@ MonoBehaviour:
       autolink: 0
       gravityAutolinkPercentage: 0
       movementAutolinkPercentage: 0
-      groundHitForce: {x: 0, y: 0, z: 5}
-      aerialHitForce: {x: 0, y: 3, z: 0}
+      groundHitForce: {x: 0, y: 0, z: 3}
+      aerialHitForce: {x: 0, y: 4, z: 1}
       pullPushMultiplier: 0
       pullPushMaxDistance: 10
       blockLift: 0
@@ -79,10 +81,10 @@ MonoBehaviour:
       chipDamage: 50
       hitEffectbank:
         modGUID:
-          guid: 
+          guid: 1d292c1f00000000
         contentGUID:
-          guid: 
-      hitEffect: 
+          guid: 1d27280000000000
+      hitEffect: hit1
       blockEffectbank:
         modGUID:
           guid: 
@@ -209,7 +211,7 @@ MonoBehaviour:
         parent: -1
         children: 
         frameRanges:
-        - {x: 4, y: -1}
+        - {x: 1, y: -1}
         condition:
           rid: -2
         traction:
@@ -221,7 +223,7 @@ MonoBehaviour:
       data:
         inverse: 0
         statReference: 0
-        value: 30
+        value: 20
         variable: 0
     - rid: 7270848877005897728
       type: {class: VarEmpty, ns: rwby, asm: rwby.csharp}
@@ -229,7 +231,7 @@ MonoBehaviour:
         name: On Hit or Block
         id: 5
         parent: -1
-        children: 
+        children: 07000000
         frameRanges: []
         condition:
           rid: 7270848877005897729
@@ -239,6 +241,37 @@ MonoBehaviour:
         inverse: 0
         hitCount: 1
         hitOrBlock: -1
+    - rid: 7270848899719102493
+      type: {class: VarClampMovement, ns: rwby, asm: rwby.csharp}
+      data:
+        name: 
+        id: 6
+        parent: -1
+        children: 
+        frameRanges:
+        - {x: 0, y: 0}
+        condition:
+          rid: -2
+        magnitude:
+          rid: 7270848899719102494
+    - rid: 7270848899719102494
+      type: {class: FighterStatReferenceFloatBase, ns: rwby, asm: rwby.csharp}
+      data:
+        inverse: 0
+        statReference: 0
+        value: 5
+    - rid: 7270848899719102508
+      type: {class: VarExternal, ns: rwby, asm: rwby.csharp}
+      data:
+        name: Try Atk
+        id: 7
+        parent: 5
+        children: 
+        frameRanges:
+        - {x: 7, y: -1}
+        condition:
+          rid: -2
+        asset: {fileID: 11400000, guid: ba688ef34edd2d84ea6a5b2e1e2af06e, type: 2}
     - rid: 8688056217396838433
       type: {class: VarCreateBox, ns: rwby, asm: rwby.csharp}
       data:

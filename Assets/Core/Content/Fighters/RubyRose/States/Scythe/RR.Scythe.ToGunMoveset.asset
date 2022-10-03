@@ -27,9 +27,13 @@ MonoBehaviour:
   - rid: 8688056405345435658
   - rid: 8688056405345435659
   - rid: 8688056405345435660
+  - rid: 7270848885102739473
+  - rid: 7270848885102739474
+  auraRequirement: 0
   initialGroundedState: 1
   stateType: 2
   maxUsesInString: -1
+  selfChainable: 0
   allowBaseStateTransitions: 1
   inputSequence:
     executeWindow: 3
@@ -53,6 +57,30 @@ MonoBehaviour:
     RefIds:
     - rid: -2
       type: {class: , ns: , asm: }
+    - rid: 7270848885102739473
+      type: {class: VarSetGroundedState, ns: rwby, asm: rwby.csharp}
+      data:
+        name: 
+        id: 9
+        parent: 5
+        children: 
+        frameRanges:
+        - {x: 0, y: 0}
+        condition:
+          rid: -2
+        groundedGroup: 2
+    - rid: 7270848885102739474
+      type: {class: VarSetGroundedState, ns: rwby, asm: rwby.csharp}
+      data:
+        name: 
+        id: 10
+        parent: 3
+        children: 
+        frameRanges:
+        - {x: 0, y: 0}
+        condition:
+          rid: -2
+        groundedGroup: 1
     - rid: 8688056405345435648
       type: {class: VarModifyMoveset, ns: rwby, asm: rwby.csharp}
       data:
@@ -72,7 +100,7 @@ MonoBehaviour:
         name: Is Grounded
         id: 3
         parent: -1
-        children: 0400000006000000
+        children: 04000000060000000a000000
         frameRanges: []
         condition:
           rid: 8688056405345435653
@@ -108,7 +136,7 @@ MonoBehaviour:
         name: Is Aerial
         id: 5
         parent: -1
-        children: 0800000007000000
+        children: 080000000700000009000000
         frameRanges: []
         condition:
           rid: 8688056405345435657
