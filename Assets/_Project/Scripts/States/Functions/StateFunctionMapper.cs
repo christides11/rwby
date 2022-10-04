@@ -64,6 +64,7 @@ namespace rwby
             functions.Add(typeof(VarConsumeWallBounce), BaseStateFunctions.ConsumeWallBounce);
             functions.Add(typeof(VarMoveTowardsMagnitude), BaseStateFunctions.MoveTowardsMagnitude);
             functions.Add(typeof(VarSetGroundedState), BaseStateFunctions.SetGroundedState);
+            functions.Add(typeof(VarModifyIntWhiteboard), BaseStateFunctions.ModifyIntWhiteboard);
         }
     }
 }

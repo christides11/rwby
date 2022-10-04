@@ -1016,5 +1016,13 @@ namespace rwby
 
             fm.FStateManager.CurrentGroundedState = vars.groundedGroup;
         }
+        
+        public static void ModifyIntWhiteboard(IFighterBase fighter, IStateVariables variables, HnSF.StateTimeline stateTimeline, int frame)
+        {
+            FighterManager fm = (FighterManager)fighter;
+            VarModifyIntWhiteboard vars = (VarModifyIntWhiteboard)variables;
+            
+            fm.fighterWhiteboard.UpdateInt(vars.index, vars.modifyType, vars.val);
+        }
     }
 }

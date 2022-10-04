@@ -12,9 +12,26 @@ namespace rwby
         [Networked, Capacity(5)] public NetworkArray<int> Ints => default;
         [Networked, Capacity(5)] public NetworkArray<float> Floats => default;
 
-        public void UpdateInt(int index, int value)
+        public void UpdateInt(int index, WhiteboardModifyTypes modifyType, int value)
         {
-            Ints.Set(index, value);
+            switch (modifyType)
+            {
+                case WhiteboardModifyTypes.SET:
+                    Ints.Set(index, value);
+                    break;
+                case WhiteboardModifyTypes.ADD:
+                    Ints.Set(index, Ints[index] + value);
+                    break;
+                case WhiteboardModifyTypes.SUBTRACT:
+                    Ints.Set(index, Ints[index] - value);
+                    break;
+                case WhiteboardModifyTypes.MULTIPLY:
+                    Ints.Set(index, Ints[index] * value);
+                    break;
+                case WhiteboardModifyTypes.DIVIDE:
+                    Ints.Set(index, Ints[index] / value);
+                    break;
+            }
         }
 
         public void UpdateFloat(int index, float value)

@@ -148,9 +148,10 @@ public class RRoseMan : FighterManager
     public override void Spawned()
     {
         base.Spawned();
-        fighterWhiteboard.UpdateInt(0, 16); // Max bullets
-        fighterWhiteboard.UpdateInt(1, fighterWhiteboard.Ints[0]); // Current Bullets
-        fighterWhiteboard.UpdateInt(2, 1); // Has Weapon
+        fighterWhiteboard.UpdateInt(0, WhiteboardModifyTypes.SET, 16); // Max bullets
+        fighterWhiteboard.UpdateInt(1, WhiteboardModifyTypes.SET, fighterWhiteboard.Ints[0]); // Current Bullets
+        fighterWhiteboard.UpdateInt(2, WhiteboardModifyTypes.SET,1); // Has Weapon
+        fighterWhiteboard.UpdateInt(3, WhiteboardModifyTypes.SET,0); // Current Gundash
         FStateManager.ChangeState((int)FighterCmnStates.IDLE, 0);
     }
 }

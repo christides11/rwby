@@ -450,5 +450,17 @@ namespace rwby
             
             return vars.inverse ? !fResult : fResult;
         }
+        
+        public static bool NextState(IFighterBase fighter, IConditionVariables variables, HnSF.StateTimeline arg3,
+            int arg4)
+        {
+            FighterManager f = fighter as FighterManager;
+            ConditionNextState vars = (ConditionNextState)variables;
+
+            if (vars.stateMovesetID != -1 && f.FStateManager.nextStateMoveset != vars.stateMovesetID) 
+                return vars.inverse ? true : false;
+            if (vars.state.GetState() != f.FStateManager.nextState) return vars.inverse ? true : false;
+            return !vars.inverse;
+        }
     }
 }

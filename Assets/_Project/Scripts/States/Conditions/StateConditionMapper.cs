@@ -35,6 +35,7 @@ namespace rwby
             functions.Add(typeof(ConditionWhiteboardIntIntComparison), BaseStateConditionFunctions.WhiteboardIntIntComparison);
             functions.Add(typeof(ConditionWhiteboardBoolean), BaseStateConditionFunctions.WhiteboardBoolean);
             functions.Add(typeof(ConditionButtonHeld), BaseStateConditionFunctions.ButtonHeld);
+            functions.Add(typeof(ConditionNextState), BaseStateConditionFunctions.NextState);
         }
     }
 }
