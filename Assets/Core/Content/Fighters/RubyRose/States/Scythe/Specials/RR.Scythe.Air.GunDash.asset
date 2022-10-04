@@ -28,10 +28,8 @@ MonoBehaviour:
   - rid: 7270848763132117013
   - rid: 7270848763132117016
   - rid: 7270848763132117019
-  - rid: 7270848770961047552
-  - rid: 7270848773193990144
-  - rid: 7270848773193990146
   - rid: 7270848773193990149
+  - rid: 1219246341873467403
   auraRequirement: 0
   initialGroundedState: 2
   stateType: 2
@@ -168,6 +166,48 @@ MonoBehaviour:
     RefIds:
     - rid: -2
       type: {class: , ns: , asm: }
+    - rid: 1219246341873467403
+      type: {class: VarModifyIntWhiteboard, ns: rwby, asm: rwby.csharp}
+      data:
+        name: Reset Gundash Cnt
+        id: 18
+        parent: -1
+        children: 
+        frameRanges:
+        - {x: -2, y: -2}
+        condition:
+          rid: 1219246341873467404
+        modifyType: 4
+        index: 3
+        val: 0
+    - rid: 1219246341873467404
+      type: {class: ConditionAnd, ns: rwby, asm: rwby.csharp}
+      data:
+        conditions:
+        - rid: 1219246341873467405
+        - rid: 1219246341873467407
+    - rid: 1219246341873467405
+      type: {class: ConditionNextState, ns: rwby, asm: rwby.csharp}
+      data:
+        stateMovesetID: -1
+        state:
+          rid: 1219246341873467406
+        inverse: 1
+    - rid: 1219246341873467406
+      type: {class: RubyRoseStateReference, ns: rwby.core, asm: rwby.core}
+      data:
+        state: 94
+    - rid: 1219246341873467407
+      type: {class: ConditionNextState, ns: rwby, asm: rwby.csharp}
+      data:
+        stateMovesetID: -1
+        state:
+          rid: 1219246341873467408
+        inverse: 1
+    - rid: 1219246341873467408
+      type: {class: RubyRoseStateReference, ns: rwby.core, asm: rwby.core}
+      data:
+        state: 95
     - rid: 2193520813467238401
       type: {class: VarChangeState, ns: rwby, asm: rwby.csharp}
       data:
@@ -198,7 +238,7 @@ MonoBehaviour:
         parent: -1
         children: 
         frameRanges:
-        - {x: 0, y: 0}
+        - {x: 5, y: 5}
         condition:
           rid: -2
         targetType: 0
@@ -278,56 +318,6 @@ MonoBehaviour:
         inverse: 0
         statReference: 0
         value: 3
-    - rid: 7270848770961047552
-      type: {class: VarChangeState, ns: rwby, asm: rwby.csharp}
-      data:
-        name: GunDash-Down
-        id: 14
-        parent: -1
-        children: 
-        frameRanges:
-        - {x: 2, y: -1}
-        condition:
-          rid: -2
-        checkInputSequence: 1
-        checkCondition: 0
-        targetType: 0
-        stateMovesetID: -1
-        state:
-          rid: 7270848770961047553
-        frame: 0
-    - rid: 7270848770961047553
-      type: {class: RubyRoseStateReference, ns: rwby.core, asm: rwby.core}
-      data:
-        state: 79
-    - rid: 7270848773193990144
-      type: {class: VarEmpty, ns: rwby, asm: rwby.csharp}
-      data:
-        name: On Hit
-        id: 15
-        parent: -1
-        children: 10000000
-        frameRanges: []
-        condition:
-          rid: 7270848773193990145
-    - rid: 7270848773193990145
-      type: {class: ConditionHitOrBlockCount, ns: rwby, asm: rwby.csharp}
-      data:
-        inverse: 0
-        hitCount: 1
-        hitOrBlock: 1
-    - rid: 7270848773193990146
-      type: {class: VarExternal, ns: rwby, asm: rwby.csharp}
-      data:
-        name: Try Atk
-        id: 16
-        parent: 15
-        children: 
-        frameRanges:
-        - {x: 7, y: -1}
-        condition:
-          rid: -2
-        asset: {fileID: 11400000, guid: 852b081cfd9efbb449cca3171458f8cc, type: 2}
     - rid: 7270848773193990149
       type: {class: VarMoveTowardsMagnitude, ns: rwby, asm: rwby.csharp}
       data:
@@ -365,7 +355,7 @@ MonoBehaviour:
         parent: -1
         children: 
         frameRanges:
-        - {x: 1, y: 4}
+        - {x: 5, y: 8}
         condition:
           rid: -2
         boxType: 1

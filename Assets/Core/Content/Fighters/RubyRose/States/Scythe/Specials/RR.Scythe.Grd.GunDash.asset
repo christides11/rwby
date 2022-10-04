@@ -26,9 +26,10 @@ MonoBehaviour:
   - rid: 1219246315631804420
   - rid: 1219246315631804422
   - rid: 1219246315631804424
-  - rid: 1219246315631804427
+  - rid: 1219246341873467410
   - rid: 1219246319766863877
   - rid: 1219246341873467393
+  - rid: 1219246341873467412
   auraRequirement: 0
   initialGroundedState: 1
   stateType: 2
@@ -37,12 +38,16 @@ MonoBehaviour:
   allowBaseStateTransitions: 1
   inputSequence:
     executeWindow: 3
-    executeInputs: []
+    executeInputs:
+    - inputType: 0
+      buttonID: 2
+      stickDirection: {x: 0, y: 0}
+      directionDeviation: 0
     sequenceWindow: 8
     sequenceInputs: []
   inputSequenceAsHoldInputs: 1
   condition:
-    rid: -2
+    rid: 1219246341873467409
   hitboxInfo:
   - ID: 0
     groundedFoldoutGroup: 0
@@ -287,22 +292,6 @@ MonoBehaviour:
         inverse: 0
         statReference: 0
         value: 1
-    - rid: 1219246315631804427
-      type: {class: VarEmpty, ns: rwby, asm: rwby.csharp}
-      data:
-        name: On hit or block
-        id: 7
-        parent: -1
-        children: 
-        frameRanges: []
-        condition:
-          rid: 1219246315631804428
-    - rid: 1219246315631804428
-      type: {class: ConditionHitOrBlockCount, ns: rwby, asm: rwby.csharp}
-      data:
-        inverse: 0
-        hitCount: 1
-        hitOrBlock: -1
     - rid: 1219246319766863877
       type: {class: VarExternal, ns: rwby, asm: rwby.csharp}
       data:
@@ -345,7 +334,7 @@ MonoBehaviour:
     - rid: 1219246341873467398
       type: {class: RubyRoseStateReference, ns: rwby.core, asm: rwby.core}
       data:
-        state: 93
+        state: 94
     - rid: 1219246341873467399
       type: {class: ConditionNextState, ns: rwby, asm: rwby.csharp}
       data:
@@ -356,4 +345,47 @@ MonoBehaviour:
     - rid: 1219246341873467400
       type: {class: RubyRoseStateReference, ns: rwby.core, asm: rwby.core}
       data:
+        state: 95
+    - rid: 1219246341873467409
+      type: {class: ConditionWhiteboardIntIntComparison, ns: rwby, asm: rwby.csharp}
+      data:
+        inverse: 0
+        comparison: 0
+        valueAIndex: 3
+        valueBIndex: 4
+    - rid: 1219246341873467410
+      type: {class: VarChangeState, ns: rwby, asm: rwby.csharp}
+      data:
+        name: Try Gundash
+        id: 13
+        parent: -1
+        children: 
+        frameRanges:
+        - {x: 8, y: -1}
+        condition:
+          rid: -2
+        checkInputSequence: 1
+        checkCondition: 1
+        targetType: 0
+        stateMovesetID: -1
+        state:
+          rid: 1219246341873467411
+        frame: 0
+    - rid: 1219246341873467411
+      type: {class: RubyRoseStateReference, ns: rwby.core, asm: rwby.core}
+      data:
         state: 94
+    - rid: 1219246341873467412
+      type: {class: VarModifyIntWhiteboard, ns: rwby, asm: rwby.csharp}
+      data:
+        name: Incr Gundash Cnt
+        id: 14
+        parent: -1
+        children: 
+        frameRanges:
+        - {x: 0, y: 0}
+        condition:
+          rid: -2
+        modifyType: 0
+        index: 3
+        val: 1
