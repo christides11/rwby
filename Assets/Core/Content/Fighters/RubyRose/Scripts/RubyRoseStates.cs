@@ -48,5 +48,7 @@ namespace rwby.core
         SCYTHE_SPECIAL_Ready_Air = 92,
         SCYTHE_SPECIAL_Gundash_Grd = 94,
         SCYTHE_SPECIAL_Gundash_Air = 95,
+        SCYTHE_SPECIAL_Gundash_Air_Dash = 96,
+        SCYTHE_SPECIAL_Gundash_Air_Down = 97,
     }
 }

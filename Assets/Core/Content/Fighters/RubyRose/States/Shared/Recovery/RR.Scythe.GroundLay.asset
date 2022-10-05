@@ -20,6 +20,8 @@ MonoBehaviour:
   autoLoop: 0
   autoLoopFrame: 1
   data:
+  - rid: 1219246356780023813
+  - rid: 1219246356780023815
   - rid: 8688056249043648523
   - rid: 8688056342057058327
   - rid: 8688056342057058329
@@ -47,6 +49,80 @@ MonoBehaviour:
     RefIds:
     - rid: -2
       type: {class: , ns: , asm: }
+    - rid: 1219246356780023813
+      type: {class: VarCreateBox, ns: rwby, asm: rwby.csharp}
+      data:
+        name: Hurtbox
+        id: 4
+        parent: -1
+        children: 
+        frameRanges:
+        - {x: 1, y: -1}
+        condition:
+          rid: -2
+        boxType: 0
+        attachedTo: 0
+        shape: 0
+        offset: {x: 0, y: 1, z: 0}
+        boxExtents: {x: 1, y: 1, z: 1}
+        radius: 0
+        definitionIndex: 0
+    - rid: 1219246356780023815
+      type: {class: VarChangeState, ns: rwby, asm: rwby.csharp}
+      data:
+        name: Neutral Tech
+        id: 5
+        parent: -1
+        children: 
+        frameRanges:
+        - {x: 1, y: 8}
+        condition:
+          rid: 1219246356780023817
+        checkInputSequence: 0
+        checkCondition: 0
+        targetType: 0
+        stateMovesetID: -1
+        state:
+          rid: 1219246356780023816
+        frame: 0
+    - rid: 1219246356780023816
+      type: {class: FighterCmnStateReference, ns: rwby, asm: rwby.csharp}
+      data:
+        state: 24
+    - rid: 1219246356780023817
+      type: {class: ConditionOr, ns: rwby, asm: rwby.csharp}
+      data:
+        conditions:
+        - rid: 1219246356780023818
+        - rid: 1219246356780023819
+        - rid: 1219246356780023820
+    - rid: 1219246356780023818
+      type: {class: ConditionButton, ns: rwby, asm: rwby.csharp}
+      data:
+        inverse: 0
+        checkAbilityButton: 0
+        button: 2
+        buttonState: 0
+        offset: 0
+        buffer: 0
+    - rid: 1219246356780023819
+      type: {class: ConditionButton, ns: rwby, asm: rwby.csharp}
+      data:
+        inverse: 0
+        checkAbilityButton: 0
+        button: 3
+        buttonState: 0
+        offset: 0
+        buffer: 0
+    - rid: 1219246356780023820
+      type: {class: ConditionButton, ns: rwby, asm: rwby.csharp}
+      data:
+        inverse: 0
+        checkAbilityButton: 0
+        button: 6
+        buttonState: 0
+        offset: 0
+        buffer: 0
     - rid: 8688056249043648523
       type: {class: VarChangeState, ns: rwby, asm: rwby.csharp}
       data:
@@ -79,6 +155,7 @@ MonoBehaviour:
       type: {class: ConditionButton, ns: rwby, asm: rwby.csharp}
       data:
         inverse: 0
+        checkAbilityButton: 0
         button: 2
         buttonState: 0
         offset: 0

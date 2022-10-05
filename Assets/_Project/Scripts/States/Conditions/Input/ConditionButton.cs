@@ -15,6 +15,7 @@ namespace rwby
         }
 
         public bool inverse;
+        public bool checkAbilityButton;
         public PlayerInputType button;
         public ButtonStateType buttonState;
         public int offset;

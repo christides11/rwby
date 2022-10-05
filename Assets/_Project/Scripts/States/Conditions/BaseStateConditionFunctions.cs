@@ -54,7 +54,26 @@ namespace rwby
             ConditionButton vars = (ConditionButton)variables;
             
             bool fResult = false;
-            var b = f.InputManager.GetButton((int)vars.button, vars.offset, vars.buffer);
+            var buttonInt = (int)vars.button;
+            if (vars.checkAbilityButton)
+            {
+                switch (f.FCombatManager.lastUsedSpecial)
+                {
+                    case 0:
+                        buttonInt = (int)PlayerInputType.ABILITY_1;
+                        break;
+                    case 1:
+                        buttonInt = (int)PlayerInputType.ABILITY_2;
+                        break;
+                    case 2:
+                        buttonInt = (int)PlayerInputType.ABILITY_3;
+                        break;
+                    case 3:
+                        buttonInt = (int)PlayerInputType.ABILITY_4;
+                        break;
+                }
+            }
+            var b = f.InputManager.GetButton(buttonInt, vars.offset, vars.buffer);
             switch (vars.buttonState)
             {
                 case ConditionButton.ButtonStateType.IsDown:
@@ -461,6 +480,16 @@ namespace rwby
                 return vars.inverse ? true : false;
             if (vars.state.GetState() != f.FStateManager.nextState) return vars.inverse ? true : false;
             return !vars.inverse;
+        }
+        
+        public static bool HardKnockdown(IFighterBase fighter, IConditionVariables variables, HnSF.StateTimeline arg3,
+            int arg4)
+        {
+            FighterManager f = fighter as FighterManager;
+            ConditionHardKnockdown vars = (ConditionHardKnockdown)variables;
+
+            bool r = f.FCombatManager.hardKnockdown;
+            return vars.inverse ? !r : r;
         }
     }
 }

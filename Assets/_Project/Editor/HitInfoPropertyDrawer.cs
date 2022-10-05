@@ -29,7 +29,7 @@ namespace rwby
             if (property.FindPropertyRelative("hit").FindPropertyRelative("hitSoundbank").isExpanded) val += lineValue * 2;
             if (property.FindPropertyRelative("counterhit").FindPropertyRelative("hitSoundbank").isExpanded) val += lineValue * 2;
             
-            val += lineValue * 39 * windowsOpen;
+            val += lineValue * 40 * windowsOpen;
             return val;
         }
 
@@ -72,6 +72,7 @@ namespace rwby
             EditorGUI.PropertyField(new Rect(position.x, GetLineY(), position.width, lineHeight), property.FindPropertyRelative("ignoreProration"));
             EditorGUI.PropertyField(new Rect(position.x, GetLineY(), position.width, lineHeight), property.FindPropertyRelative("noKill"));
             EditorGUI.PropertyField(new Rect(position.x, GetLineY(), position.width, lineHeight), property.FindPropertyRelative("unblockable"));
+            EditorGUI.PropertyField(new Rect(position.x, GetLineY(), position.width, lineHeight), property.FindPropertyRelative("hardKnockdown"));
             EditorGUI.PropertyField(new Rect(position.x, GetLineY(), position.width, lineHeight), property.FindPropertyRelative("groundHitState"));
             EditorGUI.PropertyField(new Rect(position.x, GetLineY(), position.width, lineHeight), property.FindPropertyRelative("airHitState"));
             EditorGUI.PropertyField(new Rect(position.x, GetLineY(), position.width, lineHeight), property.FindPropertyRelative("groundBounce"));

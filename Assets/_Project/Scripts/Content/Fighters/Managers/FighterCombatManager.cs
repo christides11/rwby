@@ -74,6 +74,9 @@ namespace rwby
         [Networked] public int LastSuccessfulBlockTick { get; set; }
         [Networked] public PushblockState CurrentPushblockState { get; set; } = PushblockState.NONE;
         [Networked] public int LastPushblockAttempt { get; set; } = 0;
+        
+        [Networked] public int lastUsedSpecial { get; set; }
+        [Networked] public NetworkBool hardKnockdown { get; set; }
 
         public static void OnChangedAura(Changed<FighterCombatManager> changed)
         {
@@ -118,6 +121,7 @@ namespace rwby
             var currentState = stateManager.GetState();
             if (assignedSpecials[0] != 0 && inputManager.GetAbility1(out bOff).firstPress)
             {
+                lastUsedSpecial = 0;
                 stateManager.MarkForStateChange(stateManager.CurrentGroundedState == StateGroundedGroupType.GROUND
                     ? stateManager.GetMoveset().specials[assignedSpecials[0] - 1].groundState.GetState()
                     : stateManager.GetMoveset().specials[assignedSpecials[0] - 1].aerialState.GetState());
@@ -125,6 +129,7 @@ namespace rwby
             }
             if (assignedSpecials[1] != 0 && inputManager.GetAbility2(out bOff).firstPress)
             {
+                lastUsedSpecial = 1;
                 stateManager.MarkForStateChange(stateManager.CurrentGroundedState == StateGroundedGroupType.GROUND
                     ? stateManager.GetMoveset().specials[assignedSpecials[1] - 1].groundState.GetState()
                     : stateManager.GetMoveset().specials[assignedSpecials[1] - 1].aerialState.GetState());
@@ -132,6 +137,7 @@ namespace rwby
             }
             if (assignedSpecials[2] != 0 && inputManager.GetAbility3(out bOff).firstPress)
             {
+                lastUsedSpecial = 2;
                 stateManager.MarkForStateChange(stateManager.CurrentGroundedState == StateGroundedGroupType.GROUND
                     ? stateManager.GetMoveset().specials[assignedSpecials[2] - 1].groundState.GetState()
                     : stateManager.GetMoveset().specials[assignedSpecials[2] - 1].aerialState.GetState());
@@ -139,6 +145,7 @@ namespace rwby
             }
             if (assignedSpecials[3] != 0 && inputManager.GetAbility4(out bOff).firstPress)
             {
+                lastUsedSpecial = 3;
                 stateManager.MarkForStateChange(stateManager.CurrentGroundedState == StateGroundedGroupType.GROUND
                     ? stateManager.GetMoveset().specials[assignedSpecials[3] - 1].groundState.GetState()
                     : stateManager.GetMoveset().specials[assignedSpecials[3] - 1].aerialState.GetState());
@@ -504,7 +511,8 @@ namespace rwby
             SetHitStun(hitInfoGroup.ignoreHitstunScaling ? initHitstunValue : ApplyHitstunScaling(initHitstunValue));
             ApplyHitForces(hurtInfo, currentState, hitInfoGroup.hitForceType, isGrounded ?  hitInfoGroup.groundHitForce : hitInfoGroup.aerialHitForce, hitInfoGroup.pullPushMultiplier, hitInfoGroup.pullPushMaxDistance, hitInfoGroup.hitForceRelationOffset,
                 hitInfoGroup.ignorePushbackScaling);
-            
+
+            hardKnockdown = hitInfoGroup.hardKnockdown;
             WallBounce = hitInfoGroup.wallBounce;
             WallBounceForce = hitInfoGroup.wallBounceForce;
             GroundBounce = hitInfoGroup.groundBounce;

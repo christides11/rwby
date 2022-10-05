@@ -21,6 +21,7 @@ namespace rwby
             public float wallBounceForce;
             public bool noKill;
             public bool unblockable;
+            public bool hardKnockdown;
 
             public HitboxForceType hitForceType;
             public HitboxForceRelation hitForceRelation;
