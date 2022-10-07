@@ -77,7 +77,7 @@ MonoBehaviour:
         frameRanges:
         - {x: 1, y: 8}
         condition:
-          rid: 1219246356780023817
+          rid: 1219246356780023821
         checkInputSequence: 0
         checkCondition: 0
         targetType: 0
@@ -89,14 +89,13 @@ MonoBehaviour:
       type: {class: FighterCmnStateReference, ns: rwby, asm: rwby.csharp}
       data:
         state: 24
-    - rid: 1219246356780023817
-      type: {class: ConditionOr, ns: rwby, asm: rwby.csharp}
+    - rid: 1219246356780023821
+      type: {class: ConditionAnd, ns: rwby, asm: rwby.csharp}
       data:
         conditions:
-        - rid: 1219246356780023818
-        - rid: 1219246356780023819
-        - rid: 1219246356780023820
-    - rid: 1219246356780023818
+        - rid: 1219246356780023822
+        - rid: 1219246356780023823
+    - rid: 1219246356780023822
       type: {class: ConditionButton, ns: rwby, asm: rwby.csharp}
       data:
         inverse: 0
@@ -105,24 +104,10 @@ MonoBehaviour:
         buttonState: 0
         offset: 0
         buffer: 0
-    - rid: 1219246356780023819
-      type: {class: ConditionButton, ns: rwby, asm: rwby.csharp}
+    - rid: 1219246356780023823
+      type: {class: ConditionHardKnockdown, ns: rwby, asm: rwby.csharp}
       data:
-        inverse: 0
-        checkAbilityButton: 0
-        button: 3
-        buttonState: 0
-        offset: 0
-        buffer: 0
-    - rid: 1219246356780023820
-      type: {class: ConditionButton, ns: rwby, asm: rwby.csharp}
-      data:
-        inverse: 0
-        checkAbilityButton: 0
-        button: 6
-        buttonState: 0
-        offset: 0
-        buffer: 0
+        inverse: 1
     - rid: 8688056249043648523
       type: {class: VarChangeState, ns: rwby, asm: rwby.csharp}
       data:

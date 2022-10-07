@@ -10,26 +10,23 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7789f25d17401bc4b915ca6fcecf2a29, type: 3}
-  m_Name: RR.Scythe.Air.Ready
+  m_Name: RR.Rifle.Grd.Ready
   m_EditorClassIdentifier: 
-  stateName: Ready (Air)
+  stateName: Ready
   useBaseState: 0
   baseState: {fileID: 0}
-  totalFrames: 11
+  totalFrames: 20
   autoIncrement: 1
   autoLoop: 0
-  autoLoopFrame: 6
+  autoLoopFrame: 1
   data:
   - rid: 8688056217396838433
+  - rid: 8688056360164655109
   - rid: 7270848570176831488
-  - rid: 7270848809565159426
-  - rid: 7270848812440879104
-  - rid: 7270848809565159431
-  - rid: 7270848816917512193
-  - rid: 7270848813903118342
-  - rid: 7270848842656382984
+  - rid: 7270848842656382979
+  - rid: 7270848809565159424
   auraRequirement: 0
-  initialGroundedState: 2
+  initialGroundedState: 1
   stateType: 2
   maxUsesInString: 1
   selfChainable: 0
@@ -60,6 +57,7 @@ MonoBehaviour:
       wallBounceForce: 0
       noKill: 0
       unblockable: 0
+      hardKnockdown: 0
       hitForceType: 0
       hitForceRelation: 0
       hitForceRelationOffset: {x: 0, y: 0, z: 0}
@@ -113,6 +111,7 @@ MonoBehaviour:
       wallBounceForce: 0
       noKill: 0
       unblockable: 0
+      hardKnockdown: 0
       hitForceType: 0
       hitForceRelation: 0
       hitForceRelationOffset: {x: 0, y: 0, z: 0}
@@ -176,130 +175,50 @@ MonoBehaviour:
         condition:
           rid: -2
         actionType: 1
-    - rid: 7270848809565159426
-      type: {class: VarTeleportRaycast, ns: rwby, asm: rwby.csharp}
+    - rid: 7270848809565159424
+      type: {class: VarChangeState, ns: rwby, asm: rwby.csharp}
       data:
-        name: 
+        name: C
         id: 14
         parent: -1
         children: 
         frameRanges:
-        - {x: 5, y: 5}
+        - {x: 10, y: -1}
         condition:
           rid: -2
-        raycastDirectionSource: 3
-        direction: {x: 0, y: -1, z: 0}
-        distance: 15
-        goToPosOnNoHit: 1
-        bypassInterpolation: 1
-        startPoint: 0
-    - rid: 7270848809565159431
+        checkInputSequence: 1
+        checkCondition: 0
+        targetType: 0
+        stateMovesetID: -1
+        state:
+          rid: 7270848809565159425
+        frame: 0
+    - rid: 7270848809565159425
+      type: {class: RubyRoseStateReference, ns: rwby.core, asm: rwby.core}
+      data:
+        state: 91
+    - rid: 7270848842656382979
       type: {class: VarChangeState, ns: rwby, asm: rwby.csharp}
       data:
-        name: Try Land
+        name: B
         id: 15
         parent: -1
         children: 
         frameRanges:
-        - {x: 6, y: -1}
+        - {x: 10, y: -1}
         condition:
-          rid: 7270848816917512192
-        checkInputSequence: 0
+          rid: -2
+        checkInputSequence: 1
         checkCondition: 0
         targetType: 0
         stateMovesetID: -1
         state:
-          rid: 7270848809565159433
+          rid: 7270848842656382980
         frame: 0
-    - rid: 7270848809565159433
-      type: {class: FighterCmnStateReference, ns: rwby, asm: rwby.csharp}
+    - rid: 7270848842656382980
+      type: {class: RubyRoseStateReference, ns: rwby.core, asm: rwby.core}
       data:
-        state: 28
-    - rid: 7270848812440879104
-      type: {class: VarModifyFallSpeed, ns: rwby, asm: rwby.csharp}
-      data:
-        name: 
-        id: 16
-        parent: -1
-        children: 
-        frameRanges:
-        - {x: 1, y: 1}
-        condition:
-          rid: -2
-        targetType: 0
-        modifyType: 1
-        value:
-          rid: 7270848812440879105
-    - rid: 7270848812440879105
-      type: {class: FighterBaseStatReferenceFloat, ns: rwby, asm: rwby.csharp}
-      data:
-        inverse: 0
-        statReference: 0
-        value: -0.5
-        variable: 0
-    - rid: 7270848813903118342
-      type: {class: VarClampMovement, ns: rwby, asm: rwby.csharp}
-      data:
-        name: 
-        id: 18
-        parent: -1
-        children: 
-        frameRanges:
-        - {x: 0, y: 0}
-        condition:
-          rid: -2
-        magnitude:
-          rid: 7270848813903118344
-    - rid: 7270848813903118344
-      type: {class: FighterStatReferenceFloatBase, ns: rwby, asm: rwby.csharp}
-      data:
-        inverse: 0
-        statReference: 0
-        value: 0
-    - rid: 7270848816917512192
-      type: {class: ConditionIsGrounded, ns: rwby, asm: rwby.csharp}
-      data:
-        inverse: 0
-    - rid: 7270848816917512193
-      type: {class: VarChangeState, ns: rwby, asm: rwby.csharp}
-      data:
-        name: Try Fall
-        id: 19
-        parent: -1
-        children: 
-        frameRanges:
-        - {x: 6, y: -1}
-        condition:
-          rid: 7270848816917512195
-        checkInputSequence: 0
-        checkCondition: 0
-        targetType: 0
-        stateMovesetID: -1
-        state:
-          rid: 7270848816917512194
-        frame: 0
-    - rid: 7270848816917512194
-      type: {class: FighterCmnStateReference, ns: rwby, asm: rwby.csharp}
-      data:
-        state: 5
-    - rid: 7270848816917512195
-      type: {class: ConditionIsGrounded, ns: rwby, asm: rwby.csharp}
-      data:
-        inverse: 1
-    - rid: 7270848842656382984
-      type: {class: VarSetECB, ns: rwby, asm: rwby.csharp}
-      data:
-        name: 
-        id: 20
-        parent: -1
-        children: 
-        frameRanges:
-        - {x: 4, y: 4}
-        condition:
-          rid: -2
-        ecbCenter: 0.825
-        ecbRadius: 0.3
-        ecbHeight: 1.65
+        state: 90
     - rid: 8688056217396838433
       type: {class: VarCreateBox, ns: rwby, asm: rwby.csharp}
       data:
@@ -318,3 +237,25 @@ MonoBehaviour:
         boxExtents: {x: 0.5, y: 1, z: 0.5}
         radius: 0
         definitionIndex: 0
+    - rid: 8688056360164655109
+      type: {class: VarApplyTraction, ns: rwby, asm: rwby.csharp}
+      data:
+        name: 
+        id: 7
+        parent: -1
+        children: 
+        frameRanges:
+        - {x: 1, y: -1}
+        condition:
+          rid: -2
+        traction:
+          rid: 8688056360164655110
+        applyMovement: 1
+        applyGravity: 0
+    - rid: 8688056360164655110
+      type: {class: FighterBaseStatReferenceFloat, ns: rwby, asm: rwby.csharp}
+      data:
+        inverse: 0
+        statReference: 1
+        value: 0
+        variable: 0

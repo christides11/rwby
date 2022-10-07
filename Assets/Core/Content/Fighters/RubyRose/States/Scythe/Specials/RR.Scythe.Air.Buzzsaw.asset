@@ -62,6 +62,7 @@ MonoBehaviour:
       wallBounceForce: 0
       noKill: 0
       unblockable: 0
+      hardKnockdown: 0
       hitForceType: 2
       hitForceRelation: 0
       hitForceRelationOffset: {x: 0, y: 0, z: 1}
@@ -115,6 +116,7 @@ MonoBehaviour:
       wallBounceForce: 0
       noKill: 0
       unblockable: 0
+      hardKnockdown: 0
       hitForceType: 0
       hitForceRelation: 0
       hitForceRelationOffset: {x: 0, y: 0, z: 0}
@@ -400,7 +402,7 @@ MonoBehaviour:
       data:
         inverse: 0
         statReference: 0
-        value: 11
+        value: 7
         variable: 0
     - rid: 8688056377568657429
       type: {class: VarClampMovement, ns: rwby, asm: rwby.csharp}
@@ -420,7 +422,7 @@ MonoBehaviour:
       data:
         inverse: 0
         statReference: 0
-        value: 7
+        value: 1
         variable: 0
     - rid: 8688056377568657431
       type: {class: VarModifyRotation, ns: rwby, asm: rwby.csharp}

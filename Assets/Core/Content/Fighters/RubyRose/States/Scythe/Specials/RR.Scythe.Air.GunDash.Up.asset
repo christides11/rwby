@@ -10,12 +10,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7789f25d17401bc4b915ca6fcecf2a29, type: 3}
-  m_Name: RR.Scythe.Air.GunDash
+  m_Name: RR.Scythe.Air.GunDash.Up
   m_EditorClassIdentifier: 
-  stateName: GunDash (Air)
+  stateName: GunDash (Air) - Up
   useBaseState: 0
   baseState: {fileID: 0}
-  totalFrames: 35
+  totalFrames: 20
   autoIncrement: 1
   autoLoop: 0
   autoLoopFrame: 1
@@ -31,7 +31,7 @@ MonoBehaviour:
   - rid: 1219246341873467403
   - rid: 1219246356780023810
   - rid: 1219246356780023812
-  - rid: 1219246385953243136
+  - rid: 1219246402327543809
   auraRequirement: 0
   initialGroundedState: 2
   stateType: 2
@@ -69,7 +69,7 @@ MonoBehaviour:
       hitForceRelation: 0
       hitForceRelationOffset: {x: 0, y: 0, z: 0}
       autolink: 1
-      gravityAutolinkPercentage: 0.7
+      gravityAutolinkPercentage: 1
       movementAutolinkPercentage: 0.4
       groundHitForce: {x: 0, y: 0, z: 0}
       aerialHitForce: {x: 0, y: 0, z: 0}
@@ -164,7 +164,9 @@ MonoBehaviour:
       ignoreHitstunScaling: 0
       ignorePushbackScaling: 0
   throwboxInfo: []
-  hurtboxInfo: []
+  hurtboxInfo:
+  - hitInvincible: 0
+    projectileInvincible: 0
   references:
     version: 2
     RefIds:
@@ -240,37 +242,25 @@ MonoBehaviour:
         condition:
           rid: -2
         asset: {fileID: 11400000, guid: 852b081cfd9efbb449cca3171458f8cc, type: 2}
-    - rid: 1219246385953243136
-      type: {class: VarChangeState, ns: rwby, asm: rwby.csharp}
+    - rid: 1219246402327543809
+      type: {class: VarClampMovement, ns: rwby, asm: rwby.csharp}
       data:
-        name: Try Gundash Down
+        name: 
         id: 21
         parent: -1
         children: 
         frameRanges:
-        - {x: 5, y: 5}
+        - {x: -2, y: -2}
         condition:
-          rid: 1219246385953243138
-        checkInputSequence: 0
-        checkCondition: 0
-        targetType: 0
-        stateMovesetID: -1
-        state:
-          rid: 1219246385953243137
-        frame: 6
-    - rid: 1219246385953243137
-      type: {class: RubyRoseStateReference, ns: rwby.core, asm: rwby.core}
-      data:
-        state: 97
-    - rid: 1219246385953243138
-      type: {class: ConditionButton, ns: rwby, asm: rwby.csharp}
+          rid: -2
+        magnitude:
+          rid: 1219246402327543810
+    - rid: 1219246402327543810
+      type: {class: FighterStatReferenceFloatBase, ns: rwby, asm: rwby.csharp}
       data:
         inverse: 0
-        checkAbilityButton: 1
-        button: 0
-        buttonState: 0
-        offset: 0
-        buffer: 0
+        statReference: 0
+        value: 2
     - rid: 2193520813467238401
       type: {class: VarChangeState, ns: rwby, asm: rwby.csharp}
       data:
@@ -279,7 +269,7 @@ MonoBehaviour:
         parent: -1
         children: 
         frameRanges:
-        - {x: 6, y: -1}
+        - {x: 4, y: -1}
         condition:
           rid: 8688056473731203104
         checkInputSequence: 0
@@ -301,7 +291,7 @@ MonoBehaviour:
         parent: -1
         children: 
         frameRanges:
-        - {x: 6, y: 6}
+        - {x: 1, y: 1}
         condition:
           rid: -2
         targetType: 0
@@ -337,12 +327,12 @@ MonoBehaviour:
         parent: -1
         children: 
         frameRanges:
-        - {x: 6, y: 6}
+        - {x: 1, y: 1}
         condition:
           rid: -2
         inputSource: 0
         normalizeInputSource: 1
-        useRotationIfInputZero: 1
+        useRotationIfInputZero: 0
         reverseInputSource: 0
         force:
           rid: 7270848763132117017
@@ -380,7 +370,7 @@ MonoBehaviour:
       data:
         inverse: 0
         statReference: 0
-        value: 1
+        value: 1.2
     - rid: 8688056217396838416
       type: {class: VarCreateBox, ns: rwby, asm: rwby.csharp}
       data:
@@ -389,7 +379,7 @@ MonoBehaviour:
         parent: -1
         children: 
         frameRanges:
-        - {x: 6, y: 8}
+        - {x: 1, y: 3}
         condition:
           rid: -2
         boxType: 1
@@ -407,7 +397,7 @@ MonoBehaviour:
         parent: -1
         children: 
         frameRanges:
-        - {x: 11, y: -1}
+        - {x: 8, y: -1}
         condition:
           rid: -2
         boxType: 2

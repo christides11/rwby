@@ -49,66 +49,45 @@ MonoBehaviour:
     rid: -2
   hitboxInfo:
   - ID: 0
-    groundedFoldoutGroup: 1
+    groundedFoldoutGroup: 0
     groundedCounterHitFoldoutGroup: 0
     hitStateGroundedGroups: -1
     hit:
-      groundHitState: 30
-      airHitState: 32
+      groundHitState: 34
+      airHitState: 34
       groundBounce: 0
       wallBounce: 0
       groundBounceForce: 0
       wallBounceForce: 0
       noKill: 0
       unblockable: 0
+      hardKnockdown: 1
       hitForceType: 0
       hitForceRelation: 0
       hitForceRelationOffset: {x: 0, y: 0, z: 0}
       autolink: 0
-      autolinkPercentage: 0
-      groundHitForce: {x: 0, y: 10, z: 0}
-      aerialHitForce: {x: 0, y: 0, z: 0}
-      pullPushCurve:
-        serializedVersion: 2
-        m_Curve:
-        - serializedVersion: 3
-          time: 0
-          value: 0
-          inSlope: 10
-          outSlope: 10
-          tangentMode: 34
-          weightedMode: 0
-          inWeight: 0
-          outWeight: 0.33333334
-        - serializedVersion: 3
-          time: 1
-          value: 10
-          inSlope: 10
-          outSlope: 10
-          tangentMode: 34
-          weightedMode: 0
-          inWeight: 0.33333334
-          outWeight: 0
-        m_PreInfinity: 2
-        m_PostInfinity: 2
-        m_RotationOrder: 4
+      gravityAutolinkPercentage: 0
+      movementAutolinkPercentage: 0
+      groundHitForce: {x: 0, y: -10, z: 0}
+      aerialHitForce: {x: 0, y: -10, z: 0}
+      pullPushMultiplier: 0
       pullPushMaxDistance: 10
       blockLift: 0
       attackerHitstop: 8
       hitstop: 8
-      hitstun: 60
+      hitstun: 10
       blockstun: 15
-      untech: 60
+      untech: 30
       initialProration: 0
       comboProration: 0
-      damage: 9999
+      damage: 200
       chipDamage: 0
       hitEffectbank:
         modGUID:
-          guid: 
+          guid: 1d292c1f00000000
         contentGUID:
-          guid: 
-      hitEffect: 
+          guid: 1d27280000000000
+      hitEffect: hit1
       blockEffectbank:
         modGUID:
           guid: 
@@ -136,19 +115,16 @@ MonoBehaviour:
       wallBounceForce: 0
       noKill: 0
       unblockable: 0
+      hardKnockdown: 0
       hitForceType: 0
       hitForceRelation: 0
       hitForceRelationOffset: {x: 0, y: 0, z: 0}
       autolink: 0
-      autolinkPercentage: 0
+      gravityAutolinkPercentage: 0
+      movementAutolinkPercentage: 0
       groundHitForce: {x: 0, y: 0, z: 0}
       aerialHitForce: {x: 0, y: 0, z: 0}
-      pullPushCurve:
-        serializedVersion: 2
-        m_Curve: []
-        m_PreInfinity: 2
-        m_PostInfinity: 2
-        m_RotationOrder: 4
+      pullPushMultiplier: 0
       pullPushMaxDistance: 0
       blockLift: 0
       attackerHitstop: 0
@@ -185,7 +161,7 @@ MonoBehaviour:
       ignoreHitstunScaling: 0
       ignorePushbackScaling: 0
   - ID: 0
-    groundedFoldoutGroup: 1
+    groundedFoldoutGroup: 0
     groundedCounterHitFoldoutGroup: 0
     hitStateGroundedGroups: -1
     hit:
@@ -197,37 +173,16 @@ MonoBehaviour:
       wallBounceForce: 0
       noKill: 0
       unblockable: 0
+      hardKnockdown: 0
       hitForceType: 0
       hitForceRelation: 0
       hitForceRelationOffset: {x: 0, y: 0, z: 0}
       autolink: 0
-      autolinkPercentage: 0
+      gravityAutolinkPercentage: 0
+      movementAutolinkPercentage: 0
       groundHitForce: {x: 0, y: 20, z: 0}
       aerialHitForce: {x: 0, y: 0, z: 0}
-      pullPushCurve:
-        serializedVersion: 2
-        m_Curve:
-        - serializedVersion: 3
-          time: 0
-          value: 0
-          inSlope: 10
-          outSlope: 10
-          tangentMode: 34
-          weightedMode: 0
-          inWeight: 0
-          outWeight: 0.33333334
-        - serializedVersion: 3
-          time: 1
-          value: 10
-          inSlope: 10
-          outSlope: 10
-          tangentMode: 34
-          weightedMode: 0
-          inWeight: 0.33333334
-          outWeight: 0
-        m_PreInfinity: 2
-        m_PostInfinity: 2
-        m_RotationOrder: 4
+      pullPushMultiplier: 0
       pullPushMaxDistance: 10
       blockLift: 0
       attackerHitstop: 12
@@ -272,19 +227,16 @@ MonoBehaviour:
       wallBounceForce: 0
       noKill: 0
       unblockable: 0
+      hardKnockdown: 0
       hitForceType: 0
       hitForceRelation: 0
       hitForceRelationOffset: {x: 0, y: 0, z: 0}
       autolink: 0
-      autolinkPercentage: 0
+      gravityAutolinkPercentage: 0
+      movementAutolinkPercentage: 0
       groundHitForce: {x: 0, y: 0, z: 0}
       aerialHitForce: {x: 0, y: 0, z: 0}
-      pullPushCurve:
-        serializedVersion: 2
-        m_Curve: []
-        m_PreInfinity: 2
-        m_PostInfinity: 2
-        m_RotationOrder: 4
+      pullPushMultiplier: 0
       pullPushMaxDistance: 0
       blockLift: 0
       attackerHitstop: 0

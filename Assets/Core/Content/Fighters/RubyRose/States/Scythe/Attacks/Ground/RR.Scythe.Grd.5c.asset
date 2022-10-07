@@ -28,6 +28,7 @@ MonoBehaviour:
   - rid: 8688056331001921538
   - rid: 7270848718906589185
   - rid: 7270848718906589186
+  - rid: 1219246385953243139
   auraRequirement: 0
   initialGroundedState: 1
   stateType: 2
@@ -60,6 +61,7 @@ MonoBehaviour:
       wallBounceForce: 0
       noKill: 0
       unblockable: 0
+      hardKnockdown: 0
       hitForceType: 0
       hitForceRelation: 0
       hitForceRelationOffset: {x: 0, y: 0, z: 0}
@@ -67,7 +69,7 @@ MonoBehaviour:
       gravityAutolinkPercentage: 0
       movementAutolinkPercentage: 0
       groundHitForce: {x: 0, y: 0, z: 5}
-      aerialHitForce: {x: 0, y: 3, z: 0}
+      aerialHitForce: {x: 0, y: 3, z: 5}
       pullPushMultiplier: 0
       pullPushMaxDistance: 10
       blockLift: 0
@@ -113,6 +115,7 @@ MonoBehaviour:
       wallBounceForce: 0
       noKill: 0
       unblockable: 0
+      hardKnockdown: 0
       hitForceType: 0
       hitForceRelation: 0
       hitForceRelationOffset: {x: 0, y: 0, z: 0}
@@ -166,6 +169,25 @@ MonoBehaviour:
     RefIds:
     - rid: -2
       type: {class: , ns: , asm: }
+    - rid: 1219246385953243139
+      type: {class: VarClampMovement, ns: rwby, asm: rwby.csharp}
+      data:
+        name: 
+        id: 8
+        parent: -1
+        children: 
+        frameRanges:
+        - {x: 0, y: 0}
+        condition:
+          rid: -2
+        magnitude:
+          rid: 1219246385953243140
+    - rid: 1219246385953243140
+      type: {class: FighterStatReferenceFloatBase, ns: rwby, asm: rwby.csharp}
+      data:
+        inverse: 0
+        statReference: 0
+        value: 5
     - rid: 2193520813467238401
       type: {class: VarChangeState, ns: rwby, asm: rwby.csharp}
       data:

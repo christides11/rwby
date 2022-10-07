@@ -59,14 +59,15 @@ MonoBehaviour:
       wallBounceForce: 0
       noKill: 0
       unblockable: 0
+      hardKnockdown: 0
       hitForceType: 0
       hitForceRelation: 0
       hitForceRelationOffset: {x: 0, y: 0, z: 0}
       autolink: 0
       gravityAutolinkPercentage: 0
       movementAutolinkPercentage: 0
-      groundHitForce: {x: 0, y: 0, z: -7}
-      aerialHitForce: {x: 0, y: 5, z: -7}
+      groundHitForce: {x: 0, y: 0, z: -8}
+      aerialHitForce: {x: 0, y: 5, z: -8}
       pullPushMultiplier: 0
       pullPushMaxDistance: 10
       blockLift: 0
@@ -112,6 +113,7 @@ MonoBehaviour:
       wallBounceForce: 0
       noKill: 0
       unblockable: 0
+      hardKnockdown: 0
       hitForceType: 0
       hitForceRelation: 0
       hitForceRelationOffset: {x: 0, y: 0, z: 0}
@@ -308,4 +310,4 @@ MonoBehaviour:
       data:
         inverse: 0
         statReference: 0
-        value: -10
+        value: -14

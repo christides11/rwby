@@ -171,13 +171,15 @@ MonoBehaviour:
       wallBounceForce: 0
       noKill: 0
       unblockable: 0
+      hardKnockdown: 0
       hitForceType: 0
       hitForceRelation: 0
       hitForceRelationOffset: {x: 0, y: 0, z: 0}
       autolink: 0
-      autolinkPercentage: 0
-      groundHitForce: {x: 0, y: 0, z: 20}
-      aerialHitForce: {x: 0, y: 0, z: 20}
+      gravityAutolinkPercentage: 0
+      movementAutolinkPercentage: 0
+      groundHitForce: {x: 0, y: 10, z: 5}
+      aerialHitForce: {x: 0, y: 10, z: 5}
       pullPushMultiplier: 0
       pullPushMaxDistance: 0
       blockLift: 0
@@ -192,10 +194,10 @@ MonoBehaviour:
       chipDamage: 50
       hitEffectbank:
         modGUID:
-          guid: 
+          guid: 1d292c1f00000000
         contentGUID:
-          guid: 
-      hitEffect: 
+          guid: 1d27280000000000
+      hitEffect: hit1
       blockEffectbank:
         modGUID:
           guid: 
@@ -223,11 +225,13 @@ MonoBehaviour:
       wallBounceForce: 0
       noKill: 0
       unblockable: 0
+      hardKnockdown: 0
       hitForceType: 0
       hitForceRelation: 0
       hitForceRelationOffset: {x: 0, y: 0, z: 0}
       autolink: 0
-      autolinkPercentage: 0
+      gravityAutolinkPercentage: 0
+      movementAutolinkPercentage: 0
       groundHitForce: {x: 0, y: 0, z: 0}
       aerialHitForce: {x: 0, y: 0, z: 0}
       pullPushMultiplier: 0

@@ -320,7 +320,11 @@ MonoBehaviour:
   - name: Gundash (Air) - Down
     state:
       rid: 1219246354824429572
-    stateTimeline: {fileID: 11400000, guid: d6b67e2b580dd04468e7c80dbb529305, type: 2}
+    stateTimeline: {fileID: 11400000, guid: ceaffe0657aefdd49aeb1bda814efe29, type: 2}
+  - name: Gundash (Air) - Up
+    state:
+      rid: 1219246402327543808
+    stateTimeline: {fileID: 11400000, guid: 038a4176009b822468142adcb0aeeda7, type: 2}
   fighterStats: {fileID: 11400000, guid: 9db018607e1c48c498ee3d8a7c4cefc3, type: 2}
   specials:
   - groundState:
@@ -372,6 +376,10 @@ MonoBehaviour:
       type: {class: RubyRoseStateReference, ns: rwby.core, asm: rwby.core}
       data:
         state: 97
+    - rid: 1219246402327543808
+      type: {class: RubyRoseStateReference, ns: rwby.core, asm: rwby.core}
+      data:
+        state: 98
     - rid: 2193520745304817664
       type: {class: FighterCmnStateReference, ns: rwby, asm: rwby.csharp}
       data:
