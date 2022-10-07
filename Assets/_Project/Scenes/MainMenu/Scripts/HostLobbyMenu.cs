@@ -4,6 +4,7 @@ using UnityEngine.UI;
 using Fusion;
 using System;
 using Cysharp.Threading.Tasks;
+using UnityEngine.EventSystems;
 
 namespace rwby.ui.mainmenu
 {
@@ -18,6 +19,10 @@ namespace rwby.ui.mainmenu
         public TMP_Dropdown playerCountDropdown;
         public Toggle privateLobbyToggle;
 
+        public GameObject defaultSelectedUIItem;
+        private EventSystem eventSystem;
+        private LocalPlayerManager localPlayerManager;
+        
         // Options.
         private int playerCount = 8;
         private int maxPlayersPerClient = 4;
@@ -26,9 +31,15 @@ namespace rwby.ui.mainmenu
         private IGameModeDefinition selectedGamemodeDefinition;
         private GameModeBase selectedGamemode;
 
+        private void Awake()
+        {
+            localPlayerManager = GameManager.singleton.localPlayerManager;
+        }
+        
         public override void Open(MenuDirection direction, IMenuHandler menuHandler)
         {
             base.Open(direction, menuHandler);
+            eventSystem = EventSystem.current;
             lobbySettings.Open();
             Refresh();
             gameObject.SetActive(true);
@@ -44,11 +55,21 @@ namespace rwby.ui.mainmenu
             gameObject.SetActive(false);
             return true;
         }
+        
+        private void Update()
+        {
+            if (UIHelpers.SelectDefaultSelectable(eventSystem, localPlayerManager.systemPlayer))
+            {
+                eventSystem.SetSelectedGameObject(defaultSelectedUIItem);
+            }
+        }
 
         public void Refresh()
         {
             lobbySettings.ClearOptions();
-            lobbySettings.AddOption("Back").onSubmit.AddListener(Button_Back);
+            var backSelectable = lobbySettings.AddOption("Back");
+            backSelectable.onSubmit.AddListener(Button_Back);
+            defaultSelectedUIItem = backSelectable.gameObject;
             var playerCountButtons = lobbySettings.AddOption("Player Count", playerCount);
             playerCountButtons[0].onSubmit.AddListener(DecrementPlayerCount);
             playerCountButtons[1].onSubmit.AddListener(IncrementPlayerCount);

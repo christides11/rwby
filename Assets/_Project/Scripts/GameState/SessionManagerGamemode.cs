@@ -107,6 +107,12 @@ namespace rwby
             if (CurrentGameMode == null) return false;
 
             IGameModeDefinition gamemodeDefinition = ContentManager.singleton.GetContentDefinition<IGameModeDefinition>(GamemodeSettings.gamemodeReference);
+            if (Runner.ActivePlayers.Count() < CurrentGameMode.definition.minimumPlayers
+                || Runner.ActivePlayers.Count() > CurrentGameMode.definition.maximumPlayers)
+            {
+                Debug.LogError("Player count is not valid for this gamemode.");
+                return false;
+            }
             if (VerifyTeams(gamemodeDefinition) == false) return false;
             if (await CurrentGameMode.VerifyGameModeSettings() == false) return false;
             return true;

@@ -7,6 +7,8 @@ namespace rwby
         public override string Name { get; }
         public override string Description { get; }
 
+        public int minimumPlayers = 0;
+        public int maximumPlayers = int.MaxValue;
         public int minimumTeams;
         public int maximumTeams;
         public TeamDefinition defaultTeam;
