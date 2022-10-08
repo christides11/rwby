@@ -85,6 +85,11 @@ namespace rwby
             
         }
 
+        public virtual void ClearGamemodeSettings(int player, LobbySettingsMenu settingsMenu, bool local = false)
+        {
+            
+        }
+
         public virtual async UniTask<bool> VerifyGameModeSettings()
         {
             return true;

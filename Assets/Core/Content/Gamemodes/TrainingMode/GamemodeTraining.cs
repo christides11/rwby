@@ -62,10 +62,23 @@ namespace rwby.core.training
         public override void AddGamemodeSettings(int player, LobbySettingsMenu settingsMenu, bool local = false)
         {
             ModGUIDContentReference mapRef = local ? localMap : Map;
-            
+
             IMapDefinition mapDefinition = ContentManager.singleton.GetContentDefinition<IMapDefinition>(mapRef);
             string mapName = mapDefinition != null ? mapDefinition.Name : "None";
-            settingsMenu.AddOption("Map", mapName).onSubmit.AddListener(async () => { await OpenMapSelection(player, local); });
+            if (settingsMenu.idFieldDictionary.ContainsKey("Map"))
+            {
+                ((LobbySettingsStringValueContent)settingsMenu.idContentDictionary["Map"]).text.text = mapName;
+            }
+            else
+            {
+                settingsMenu.AddOption("Map", mapName).onSubmit.AddListener(async () => { await OpenMapSelection(player, local); });
+            }
+        }
+
+        public override void ClearGamemodeSettings(int player, LobbySettingsMenu settingsMenu, bool local = false)
+        {
+            base.ClearGamemodeSettings(player, settingsMenu, local);
+            settingsMenu.ClearOption("Map");
         }
 
         private async UniTask OpenMapSelection(int player, bool local = false)

@@ -15,6 +15,9 @@ namespace rwby.ui.mainmenu
 
         public SessionManagerGamemode sessionManagerGamemode;
 
+        private EventSystem eventSystem;
+        private LocalPlayerManager localPlayerManager;
+        
         private void OnEnable()
         {
             instancePrefab.gameObject.SetActive(false);
@@ -23,6 +26,8 @@ namespace rwby.ui.mainmenu
         public override void Open(MenuDirection direction, IMenuHandler menuHandler)
         {
             base.Open(direction, menuHandler);
+            eventSystem = EventSystem.current;
+            localPlayerManager = GameManager.singleton.localPlayerManager;
             ClientManager.OnPlayerCountChanged += WhenClientPlayerCountChanged;
             sessionManagerGamemode.OnGamemodeStateChanged += WhenGamemodeStateChanged;
             sessionManagerGamemode.OnClientDefinitionsChanged += UpdatePlayerInfo;
@@ -65,6 +70,7 @@ namespace rwby.ui.mainmenu
                 sessionManagerGamemode.OnLobbySettingsChanged -= UpdateLobbyInfo;
                 sessionManagerGamemode.OnGamemodeSettingsChanged -= UpdateLobbyInfo;
             }
+            EventSystem.current.SetSelectedGameObject(null);
             gameObject.SetActive(false);
             return true;
         }

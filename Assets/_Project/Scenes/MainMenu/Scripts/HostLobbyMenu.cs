@@ -15,10 +15,6 @@ namespace rwby.ui.mainmenu
         [SerializeField] private LobbyMenuHandler lobbyMenuHandler;
         [SerializeField] private LobbySettingsMenu lobbySettings;
 
-        public TMP_InputField lobbyNameTextMesh;
-        public TMP_Dropdown playerCountDropdown;
-        public Toggle privateLobbyToggle;
-
         public GameObject defaultSelectedUIItem;
         private EventSystem eventSystem;
         private LocalPlayerManager localPlayerManager;
@@ -41,6 +37,7 @@ namespace rwby.ui.mainmenu
             base.Open(direction, menuHandler);
             eventSystem = EventSystem.current;
             lobbySettings.Open();
+            SetupOptions();
             Refresh();
             gameObject.SetActive(true);
             if (direction == MenuDirection.BACKWARDS) currentHandler.Back();
@@ -64,37 +61,44 @@ namespace rwby.ui.mainmenu
             }
         }
 
-        public void Refresh()
+        public void SetupOptions()
         {
-            lobbySettings.ClearOptions();
-            var backSelectable = lobbySettings.AddOption("Back");
+            var backSelectable = lobbySettings.AddOption("Back", "Back");
             backSelectable.onSubmit.AddListener(Button_Back);
             defaultSelectedUIItem = backSelectable.gameObject;
-            var playerCountButtons = lobbySettings.AddOption("Player Count", playerCount);
+            var playerCountButtons = lobbySettings.AddOption("PlayerCount", "Player Count", playerCount);
             playerCountButtons[0].onSubmit.AddListener(DecrementPlayerCount);
             playerCountButtons[1].onSubmit.AddListener(IncrementPlayerCount);
-            var playersPerCountButtons = lobbySettings.AddOption("Max Players per Client", maxPlayersPerClient);
+            var playersPerCountButtons = lobbySettings.AddOption("MaxPlayersPerClient", "Max Players per Client", maxPlayersPerClient);
             playersPerCountButtons[0].onSubmit.AddListener(() => { maxPlayersPerClient--; });
             playersPerCountButtons[1].onSubmit.AddListener(() => { maxPlayersPerClient++; });
             lobbySettings.AddOption("GameMode",  selectedGamemodeDefinition ? selectedGamemodeDefinition.Name : "None").onSubmit.AddListener(Button_GameMode);
-            if(selectedGamemode) selectedGamemode.AddGamemodeSettings(0, lobbySettings, true);
-            var teamButtons = lobbySettings.AddOption("Teams", teamCount);
+            var teamButtons = lobbySettings.AddOption("Teams", "Teams", teamCount);
             teamButtons[0].onSubmit.AddListener(() => { ChangeTeamCount(-1); });
             teamButtons[1].onSubmit.AddListener(() => { ChangeTeamCount(1); });
-            lobbySettings.AddOption("Host").onSubmit.AddListener(async () => await TryHostLobby());
+            lobbySettings.AddOption("Host", "Host").onSubmit.AddListener(async () => await TryHostLobby());
+        }
+        
+        public void Refresh()
+        {
+            ((LobbySettingsStringValueContent)lobbySettings.idContentDictionary["GameMode"]).text.text =
+                selectedGamemodeDefinition ? selectedGamemodeDefinition.Name : "None";
+            if(selectedGamemode) selectedGamemode.AddGamemodeSettings(0, lobbySettings, true);
+            lobbySettings.BringOptionToBottom("Teams");
+            lobbySettings.BringOptionToBottom("Host");
         }
 
         private void IncrementPlayerCount()
         {
             playerCount++;
-            Refresh();
+            ((LobbySettingsIntValueContent)lobbySettings.idContentDictionary["PlayerCount"]).text.text = playerCount.ToString();
         }
 
         private void DecrementPlayerCount()
         {
             if (playerCount == 1) return;
             playerCount--;
-            Refresh();
+            ((LobbySettingsIntValueContent)lobbySettings.idContentDictionary["PlayerCount"]).text.text = playerCount.ToString();
         }
 
         private void ChangeTeamCount(int change)
@@ -132,6 +136,7 @@ namespace rwby.ui.mainmenu
             if (selectedGamemode)
             {
                 selectedGamemode.OnLocalGamemodeSettingsChanged -= Refresh;
+                selectedGamemode.ClearGamemodeSettings(0, lobbySettings, true);
                 Destroy(selectedGamemode.gameObject);
             }
             selectedGamemodeDefinition = gameModeDefinition;
@@ -144,7 +149,7 @@ namespace rwby.ui.mainmenu
         public async UniTask TryHostLobby()
         {
             GameManager.singleton.loadingMenu.OpenMenu(0, "Attempting host...");
-            int sessionHandlerID = await GameManager.singleton.HostGamemodeSession(lobbyNameTextMesh.text, playerCount, false);
+            int sessionHandlerID = await GameManager.singleton.HostGamemodeSession("", playerCount, false);
             GameManager.singleton.loadingMenu.CloseMenu(0);
             if (sessionHandlerID == -1) return;
 
