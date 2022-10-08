@@ -107,6 +107,7 @@ namespace rwby
             if (CurrentGameMode == null) return false;
 
             IGameModeDefinition gamemodeDefinition = ContentManager.singleton.GetContentDefinition<IGameModeDefinition>(GamemodeSettings.gamemodeReference);
+            // TODO: Check actual player count.
             if (Runner.ActivePlayers.Count() < CurrentGameMode.definition.minimumPlayers
                 || Runner.ActivePlayers.Count() > CurrentGameMode.definition.maximumPlayers)
             {

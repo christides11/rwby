@@ -128,14 +128,9 @@ public class FusionStats : Fusion.Behaviour {
   public const Stats.SimStatFlags DefaultSimStatsMask = (Stats.SimStatFlags)(-1);
 #else
   public const Stats.SimStatFlags DefaultSimStatsMask =
-      ~(
-      Stats.SimStatFlags.InterpDiff |
-      Stats.SimStatFlags.InterpUncertainty |
-      Stats.SimStatFlags.InterpMultiplier |
-      Stats.SimStatFlags.InputOffsetTarget |
-      Stats.SimStatFlags.InputOffsetDeviation |
-      Stats.SimStatFlags.InputReceiveDeltaDeviation
-      );
+    Stats.SimStatFlags.ForwardSimCount |
+    Stats.SimStatFlags.ResimCount      |
+    Stats.SimStatFlags.PacketSize;
 #endif
 
 
@@ -221,7 +216,7 @@ public class FusionStats : Fusion.Behaviour {
   [SerializeField]
   [Range(0, 200)]
   [MultiPropertyDrawersFix]
-  int _maxHeaderHeight = 80;
+  int _maxHeaderHeight = 70;
   /// <summary>
   /// Height of button region at top of the stats panel. Values less than or equal to 0 hide the buttons, and reduce the header size.
   /// </summary>
@@ -348,7 +343,7 @@ public class FusionStats : Fusion.Behaviour {
   /// </summary>
   [InlineHelp]
   [SerializeField]
-  [DrawIf(nameof(GraphColumnCount))]
+  [DrawIf(nameof(GraphColumnCount), 0)]
   [Range(30, SCREEN_SCALE_W)]
   [MultiPropertyDrawersFix]
   int _graphMaxWidth = SCREEN_SCALE_W / 4;
@@ -644,7 +639,7 @@ public class FusionStats : Fusion.Behaviour {
   [InlineHelp]
   [SerializeField]
   [DrawIf(nameof(ShowColorControls), Hide = true)]
-  Color PanelColor = new Color(0.3f, 0.3f, 0.3f, 0.9f);
+  Color PanelColor = new Color(0.3f, 0.3f, 0.3f, 1.0f);
 
   [InlineHelp]
   [SerializeField]
@@ -981,7 +976,6 @@ public class FusionStats : Fusion.Behaviour {
       }
 
       _layoutDirty = 1;
-      return;
     }
   }
 

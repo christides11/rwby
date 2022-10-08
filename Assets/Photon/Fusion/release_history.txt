@@ -1,6 +1,207 @@
-# 1.1.2
+# 1.1.3
 
 ## Nightly
+
+### Build 589 (Oct 05, 2022)
+
+**What's New**
+
+- NetworkId/NetworkBId documentation snippets
+
+**Bug Fixes**
+
+- Fixed: `OrderBefore` and `OrderAfter` attributes being removed when High Managed Stripping Level is selected
+
+### Build 588 (Oct 04, 2022)
+
+**Changes**
+
+- Added `Serializable` attribute to `NetworkId`
+- PhotonCloud PlayerTTL set to 15sec
+
+**Bug Fixes**
+
+- Fixed: Unable to Update Session Properties
+
+### Build 586 (Sep 29, 2022)
+
+**Bug Fixes**
+
+- Fixed: SetPlayerObject after Host Migration
+- Fixed: Nested `NetworkObjects` in prefabs not being attached to in Shared mode
+- Fixed: Nested `NetworkObjects` not being detached when `NetworkRunner.Despawn` and custom `INetworkObjectPool` are used
+
+### Build 585 (Sep 28, 2022)
+
+**What's New**
+
+- NanoSockets for tvOS
+- `NetworkPosition` behaviour, streamlined version of `NetworkTransform` without interpolation logic or rotation synchronization
+
+**Changes**
+
+- Added null Runner check on `NetworkRigidbody2D.Rigidbody` Initializer
+
+### Build 584 (Sep 27, 2022)
+
+**Changes**
+
+- Null check on Rigidbody Initializer
+- Increased Join Message timeout to 15secs
+
+### Build 583 (Sep 24, 2022)
+
+**Bug Fixes**
+
+- Fixed: `NullReferenceException` when initializing a network object with a nested and disabled 2D or 3D `NetworkRigidbody`
+- Fixed: IndexOutOfBounds when removing NO from Interest List
+- Fixed: NO Destroy Assert Check
+
+### Build 582 (Sep 22, 2022)
+
+**What's New**
+
+- Lag Compensation `HitboxRoot` behaviours now have configuration flags exposed
+
+**Changes**
+
+- Force SessionInfo Update after joining Session
+
+**Bug Fixes**
+
+- Fixed: Mem Alloc when checking STUN Message
+
+### Build 581 (Sep 21, 2022)
+
+**What's New**
+
+- Fusion.Log.LogLevel
+- StartGameArgs.IsOpen
+- StartGameArgs.IsVisible
+
+# 1.1.2
+
+## F
+
+### Build 579 (Sep 19, 2022)
+
+- Marking 1.1.2 final
+
+## Nightly
+
+### Build 578 (Sep 17, 2022)
+
+**Removed**
+
+- Relay Connection Protocol Override
+
+### Build 577 (Sep 14, 2022)
+
+**What's New**
+
+- NanoSockets for Android x86_64
+- `IBeforeHitboxRegistration` callback, called before the Lag-compensation `HitboxManager` registers a snapshot of the hitboxes
+
+**Changes**
+
+- Lag-compensation's `HitboxManager` behaviour execution is now ordered after the 2D and 3D `NetworkPhysics` behaviours by default (not mandatory). Doing so ensures that NRBs with hitboxes will be moved by physics before the hitboxes are registered
+
+### Build 575 (Sep 10, 2022)
+
+**Bug Fixes**
+
+- Fixed: Missing NetworkMecanAnimator null check added for no AnimationController on Animator
+
+### Build 574 (Sep 09, 2022)
+
+**What's New**
+
+- StartGameArgs.CustomPublicAddress
+
+**Changes**
+
+- Log StartGameArgs at StartGame
+
+**Bug Fixes**
+
+- Fixed: NetworkRunner.GetPlayerConnectionToken to get Local Token
+- Fixed: Limite Max Ticks per Update
+
+### Build 573 (Sep 08, 2022)
+
+**What's New**
+
+- `IAfterSpawned`: implement to get a call when a block of `NetworkObjects` (scene objects, remote spawns, object hierarchy) is done calling `Spawned`. Allows to recreate a pattern similar to Unity's `Awake`-`Start` (`Spawned`-`AfterSpawned`)
+
+**Bug Fixes**
+
+- Fixed: Null check added to NetworkMecanAnimator for missing Animator component
+
+### Build 572 (Sep 06, 2022)
+
+**Bug Fixes**
+
+- Fixed: Client never catch up Simulation on low FPS
+- Fixed: GetPlayerConnectionToken now returns the  connection token for the local player on a client also
+- Fixed: FusionStats GraphMaxWidth field was disabled when it should have been enabled. Changed default Graphs
+
+### Build 571 (Sep 05, 2022)
+
+**Changes**
+
+- Re-work STUN Addr Check
+
+**Bug Fixes**
+
+- Fixed: IndexOutOfRangeException if using Max Allowed Players
+
+### Build 569 (Sep 02, 2022)
+
+**What's New**
+
+- `NetworkPrefabTable.Unload` and `NetworkPrefabTable.UnloadAll` - a way to unload prefab instances loaded by Fusion
+
+**Bug Fixes**
+
+- Fixed: Occasional "Collection was modified" exception with Multi-Peer
+- Fixed: Lag-compensation hitbox snapshot history picking the newest snapshot instead of the oldest when the desired tick is older than the oldest snapshot available
+- Fixed: New MasterClient not receiving StateAuth from old MasterClient
+
+### Build 568 (Sep 01, 2022)
+
+**Bug Fixes**
+
+- Fixed: Code-generated methods lacking `PreserveAttribute` and being possibly stripped out
+
+### Build 567 (Aug 31, 2022)
+
+**What's New**
+
+- NetworkRunner.LobbyInfo.Region field
+
+**Bug Fixes**
+
+- Fixed: NetworkMecanAnimator now caches WordCount for Animator at development time. Scene objects had an issue scanning the Animator for properties at runtime
+- Fixed: Assertion error in the `HitboxSnapshot` structure (lag-compensation) when performing multiple queries with sub-tick accuracy on the same tick (introduced on build 564)
+
+### Build 566 (Aug 29, 2022)
+
+**Bug Fixes**
+
+- Fixed: Use of Delays causing a stall
+
+### Build 565 (Aug 26, 2022)
+
+**Bug Fixes**
+
+- Fixed: WebGL Invalid Memory Access
+- Fixed: Linux Build Delay issues
+
+### Build 564 (Aug 23, 2022)
+
+**Bug Fixes**
+
+- Fixed: Lag-compensated snapshots not immediately releasing temp colliders used when sub-tick accuracy was requested, increasing the usage of the hitbox capacity proportionally to the number of queries performed
 
 ### Build 562 (Aug 22, 2022)
 

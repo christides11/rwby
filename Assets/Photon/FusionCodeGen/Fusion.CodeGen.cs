@@ -1278,6 +1278,8 @@ namespace Fusion.CodeGen {
             invoker.AddAttribute<NetworkRpcWeavedInvokerAttribute, int, int, int>(asm, instanceRpcKey, sources, targets);
           }
 
+          invoker.AddAttribute<UnityEngine.Scripting.PreserveAttribute>(asm);
+
           // put on type
           type.Methods.Add(invoker);
 
