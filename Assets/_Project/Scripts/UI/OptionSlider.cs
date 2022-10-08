@@ -35,7 +35,8 @@ namespace rwby.ui
                 case MoveDirection.Right:
                     if (currentOption == options.Length-1)
                     {
-                        Navigate(eventData, selectOnLeft);
+                        base.OnMove(eventData);
+                        //Navigate(eventData, navigation.selectOnLeft);
                     }
                     else
                     {
@@ -43,12 +44,14 @@ namespace rwby.ui
                     }
                     break;
                 case MoveDirection.Up:
-                    Navigate(eventData, selectOnUp);
+                    base.OnMove(eventData);
+                    //Navigate(eventData, navigation.selectOnUp);
                     break;
                 case MoveDirection.Left:
                     if (currentOption == 0)
                     {
-                        Navigate(eventData, selectOnLeft);
+                        base.OnMove(eventData);
+                        //Navigate(eventData, navigation.selectOnLeft);
                     }
                     else
                     {
@@ -56,7 +59,8 @@ namespace rwby.ui
                     }
                     break;
                 case MoveDirection.Down:
-                    Navigate(eventData, selectOnDown);
+                    base.OnMove(eventData);
+                    //Navigate(eventData, navigation.selectOnDown);
                     break;
             }
         }

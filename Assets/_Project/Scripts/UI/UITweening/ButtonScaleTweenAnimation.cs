@@ -12,28 +12,33 @@ namespace rwby
         public Vector3 selectedScale;
         public float scaleTime = 0.15f;
         
-        public override void OnEnable()
+        protected override void OnEnable()
         {
+            base.OnEnable();
             element.localScale = deselectedScale;
         }
 
         public override void OnSelect(BaseEventData eventData)
         {
+            base.OnSelect(eventData);
             element.DOScale(selectedScale, scaleTime).SetEase(easeInType);
         }
 
         public override void OnDeselect(BaseEventData eventData)
         {
+            base.OnDeselect(eventData);
             element.DOScale(deselectedScale, scaleTime).SetEase(easeOutType);
         }
 
         public override void OnPointerEnter(PointerEventData eventData)
         {
+            base.OnPointerEnter(eventData);
             element.DOScale(selectedScale, scaleTime).SetEase(easeInType);
         }
 
         public override void OnPointerExit(PointerEventData eventData)
         {
+            base.OnPointerExit(eventData);
             element.DOScale(deselectedScale, scaleTime).SetEase(easeOutType);
         }
     }

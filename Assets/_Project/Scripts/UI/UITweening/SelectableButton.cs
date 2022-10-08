@@ -13,7 +13,7 @@ namespace rwby.ui
         public Color selectedColor;
         public Color submitColor;
 
-        public override void OnEnable()
+        protected override void OnEnable()
         {
             base.OnEnable();
             target.color = normalColor;

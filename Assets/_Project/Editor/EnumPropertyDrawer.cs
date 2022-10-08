@@ -30,6 +30,7 @@ public class EnumPropertyDrawer : PropertyDrawer
     }
 }*/
 
+/*
 public class AdvancedStringOptionsDropdown : AdvancedDropdown
 {
     public SerializedProperty selectedProperty;
@@ -60,4 +61,4 @@ public class AdvancedStringOptionsDropdown : AdvancedDropdown
 
         return root;
     }
-}
+}*/
