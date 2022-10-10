@@ -3,6 +3,7 @@ using UnityEngine;
 using Fusion;
 using System;
 using System.Linq;
+using System.Threading;
 using Cysharp.Threading.Tasks;
 
 namespace rwby
@@ -45,6 +46,7 @@ namespace rwby
 
             if (Runner.ActivePlayers.Count() == 0)
             {
+                Debug.LogError("No active players.");
                 return new List<PlayerRef>();
             }
 
@@ -56,11 +58,28 @@ namespace rwby
 
             // Wait until all other clients report their results, or until the timeout period.
             float startTime = Time.realtimeSinceStartup;
-            while (loadRequests[loadRequestNumber].Count < Runner.ActivePlayers.Count())
+            
+            var cts = new CancellationTokenSource();
+            cts.CancelAfterSlim(TimeSpan.FromSeconds(timeoutTime));
+
+            try
+            {
+                await UniTask.WaitUntil(() => loadRequests[loadRequestNumber].Count >= Runner.ActivePlayers.Count(),
+                    cancellationToken: cts.Token);
+            }
+            catch (OperationCanceledException ex)
+            {
+                if (ex.CancellationToken == cts.Token)
+                {
+                    Debug.LogError("Timeout waiting for client(s) to report load result(s).");
+                }
+            }
+            Debug.Log($"CHECK: {loadRequests[loadRequestNumber].Count} : {Runner.ActivePlayers.Count()} : {loadRequests[loadRequestNumber].Count >= Runner.ActivePlayers.Count()} : {Time.realtimeSinceStartup-startTime}");
+            /*while (loadRequests[loadRequestNumber].Count < Runner.ActivePlayers.Count())
             {
                 await UniTask.WaitForFixedUpdate();
                 if ((Time.realtimeSinceStartup - startTime) >= timeoutTime) break;
-            }
+            }*/
 
             // Record the clients that didn't report back.
             List<PlayerRef> failedToLoadClients = new List<PlayerRef>();
@@ -79,6 +98,7 @@ namespace rwby
         [Rpc(RpcSources.StateAuthority, RpcTargets.All, HostMode = RpcHostMode.SourceIsHostPlayer)]
         public void RPC_ClientTryLoad(int requestNumber, NetworkModObjectGUIDReference objectReference, NetworkBool loadContent)
         {
+            if (Runner.IsServer && !Runner.LocalPlayer) return;
             _ = ClientTryLoad(requestNumber, objectReference, loadContent);
         }
 

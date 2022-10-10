@@ -75,7 +75,7 @@ namespace rwby
             }
         }
 
-        public virtual void SetGamemodeSettings(string args)
+        public virtual async UniTask SetGamemodeSettings(string args)
         {
             
         }

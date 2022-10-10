@@ -92,7 +92,7 @@ namespace rwby.Debugging
                         return;
                     }
                     
-                    var selectedGamemode = GameObject.Instantiate(gameModeDefinition.GetGamemode(), Vector3.zero, Quaternion.identity).GetComponent<GameModeBase>();
+                    //var selectedGamemode = GameObject.Instantiate(gameModeDefinition.GetGamemode(), Vector3.zero, Quaternion.identity).GetComponent<GameModeBase>();
                     
                     int sessionHandlerID = await GameManager.singleton.HostGamemodeSession(lobbyName, playerCount, password, false);
                     if (sessionHandlerID == -1)
@@ -111,9 +111,7 @@ namespace rwby.Debugging
 
                     smc.SetTeamCount(0);
                     smc.SetMaxPlayersPerClient(playersPerClient);
-                    smc.CurrentGameMode.SetGamemodeSettings(selectedGamemode);
-                    
-                    if(selectedGamemode) GameObject.Destroy(selectedGamemode.gameObject);
+                    await smc.CurrentGameMode.SetGamemodeSettings(gamemodeSettings);
                     break;
             }
         }

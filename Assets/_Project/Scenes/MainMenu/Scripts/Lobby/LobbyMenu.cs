@@ -36,9 +36,23 @@ namespace rwby.ui
             {
                 readyButton.GetComponent<Selectable>().onSubmit.AddListener(async () => await lobbyMenuInstance.lobbyMenuHandler.StartMatch());
             }
+            else
+            {
+                readyButton.GetComponent<Selectable>().onSubmit.AddListener(ReadyUp);
+            }
             characterSelectButton.onSubmit.AddListener(OpenCharacterSelect);
             
             Refresh();
+        }
+
+        private void ReadyUp()
+        {
+            PlayerRef localPlayerRef = lobbyMenuInstance.lobbyMenuHandler.sessionManagerGamemode.Runner.LocalPlayer;
+            var clientInfo = lobbyMenuInstance.lobbyMenuHandler.sessionManagerGamemode.GetClientInformation(localPlayerRef);
+            if (clientInfo.clientRef.IsValid == false) return;
+            if (clientInfo.players.Count <= lobbyMenuInstance.playerID) return;
+            ClientManager cm = lobbyMenuInstance.lobbyMenuHandler.sessionManagerGamemode.Runner.GetPlayerObject(localPlayerRef).GetComponent<ClientManager>();
+            cm.CLIENT_SetReadyStatus(!cm.ReadyStatus);
         }
 
         public override bool TryClose(MenuDirection direction, bool forceClose = false)

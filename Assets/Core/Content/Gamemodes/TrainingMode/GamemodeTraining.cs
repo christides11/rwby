@@ -5,6 +5,7 @@ using rwby.ui.mainmenu;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using rwby.Debugging;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Serialization;
@@ -51,14 +52,46 @@ namespace rwby.core.training
             settingsMenu.Open();
         }
 
-        #region Lobby
+        public override async UniTask SetGamemodeSettings(string args)
+        {
+            base.SetGamemodeSettings(args);
+            var r = ConsoleReader.SplitInputLine(args);
 
+            if (r.input.Length < 1)
+            {
+                Debug.LogError("Not enough args for gamemode settings.");
+                return;
+            }
+            
+            string[] gamemodeRefStr = r.input[0].Split(',');
+            ModObjectSetContentReference mapSetReference = new ModObjectSetContentReference(gamemodeRefStr[0], gamemodeRefStr[1]);
+
+            ModContentGUIDReference mapGUIDReference = new ModContentGUIDReference()
+            {
+                modGUID = mapSetReference.modGUID,
+                contentType = (int)ContentType.Map,
+                contentGUID = mapSetReference.contentGUID
+            };
+            var mapGUIDContentReference =
+                ContentManager.singleton.ConvertModContentGUIDReference(mapGUIDReference);
+
+            var loadResult = await ContentManager.singleton.LoadContentDefinition(mapGUIDContentReference);
+            if (!loadResult)
+            {
+                Debug.LogError($"Error loading map: {mapGUIDReference.ToString()}");
+                return;
+            }
+
+            Map = mapGUIDContentReference;
+        }
+        
         public override void SetGamemodeSettings(GameModeBase gamemode)
         {
             GamemodeTraining train = gamemode as GamemodeTraining;
             Map = train.localMap;
         }
 
+        #region Lobby UI Settings
         public override void AddGamemodeSettings(int player, LobbySettingsMenu settingsMenu, bool local = false)
         {
             ModGUIDContentReference mapRef = local ? localMap : Map;

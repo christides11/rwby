@@ -73,6 +73,7 @@ namespace rwby.Debugging
             switch (msgType)
             {
                 case ConsoleMessageType.Debug:
+                case ConsoleMessageType.Print:
                     Debug.Log(text);
                     break;
                 case ConsoleMessageType.Error:
@@ -81,7 +82,7 @@ namespace rwby.Debugging
                 case ConsoleMessageType.Warning:
                     Debug.LogWarning(text);
                     break;
-                case ConsoleMessageType.Print:
+                default:
                     Debug.Log(text);
                     break;
             }

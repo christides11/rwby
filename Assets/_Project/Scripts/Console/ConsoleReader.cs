@@ -28,7 +28,7 @@ namespace rwby.Debugging
             await inputProcessor.Process(inputs);
         }
 
-        private static ConsoleInput SplitInputLine(string inputLine)
+        public static ConsoleInput SplitInputLine(string inputLine)
         {
             List<string> splitInputs = new List<string>();
 

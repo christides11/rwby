@@ -53,6 +53,48 @@ namespace rwby
             base.Spawned();
             GamemodeSettings = new SessionGamemodeSettings();
         }
+
+        public override void Render()
+        {
+            base.Render();
+
+            if (Runner.IsServer && Runner.LocalPlayer.IsValid == false)
+            {
+                if (Runner.Tick % 300 == 0 && CheckPlayersReady())
+                {
+                    ResetPlayerReady();
+                    _ = TryStartMatch();
+                }
+            }
+        }
+
+        private void ResetPlayerReady()
+        {
+            if (ClientDefinitions.Count == 0) return;
+            for (int i = 0; i < ClientDefinitions.Count; i++)
+            {
+                var clientDefinition = ClientDefinitions[i];
+                ClientManager cm = Runner.GetPlayerObject(ClientDefinitions[i].clientRef).GetBehaviour<ClientManager>();
+                cm.ReadyStatus = false;
+            }
+        }
+
+        public override void FixedUpdateNetwork()
+        {
+            base.FixedUpdateNetwork();
+        }
+
+        private bool CheckPlayersReady()
+        {
+            if (ClientDefinitions.Count == 0) return false;
+            for (int i = 0; i < ClientDefinitions.Count; i++)
+            {
+                var clientDefinition = ClientDefinitions[i];
+                ClientManager cm = Runner.GetPlayerObject(ClientDefinitions[i].clientRef).GetBehaviour<ClientManager>();
+                if (!cm.ReadyStatus) return false;
+            }
+            return true;
+        }
         
         public async UniTask<bool> TryStartMatch()
         {

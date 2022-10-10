@@ -28,6 +28,7 @@ namespace rwby
 		public int setInputDelay = 3;
 
 		[Networked] public byte mapLoadPercent { get; set; } = 100;
+		[Networked] public NetworkBool ReadyStatus { get; set; } = false;
 
 		public List<string> profiles = new List<string>(4);
 
@@ -71,6 +72,18 @@ namespace rwby
 				if(Runner.IsServer) sessionHandler.sessionManager.InitializeClient(this);
 				sessionHandlerSet = true;
 			}
+		}
+
+		public void CLIENT_SetReadyStatus(bool readyStatus)
+		{
+			RPC_SetReadyStatus(readyStatus);
+		}
+
+		[Rpc(RpcSources.InputAuthority | RpcSources.StateAuthority, RpcTargets.StateAuthority,
+			HostMode = RpcHostMode.SourceIsHostPlayer)]
+		private void RPC_SetReadyStatus(NetworkBool status)
+		{
+			ReadyStatus = status;
 		}
 
 		public void CLIENT_SetMapLoadPercentage(byte loadPercentage)

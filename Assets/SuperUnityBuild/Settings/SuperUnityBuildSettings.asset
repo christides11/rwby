@@ -24,16 +24,6 @@ MonoBehaviour:
     syncWithPlayerSettings: 0
   _releaseTypeList:
     releaseTypes:
-    - typeName: DedicatedServer
-      bundleIdentifier: com.ChrisTides11.rwby
-      companyName: ChrisTides11
-      productName: rwby
-      buildOptions: 16384
-      customDefines: 
-      sceneList:
-        enabledScenes:
-        - fileGUID: 0a31a49620566e346930805759bb059d
-        - fileGUID: 5d6ca7d5528776e4cbc568fb76095f23
     - typeName: Release
       bundleIdentifier: com.ChrisTides11.rwby
       companyName: ChrisTides11
@@ -49,30 +39,18 @@ MonoBehaviour:
     - {fileID: 12252119849156343}
   _projectConfigurations:
     configSet:
-      _Buckets: ffffffff010000000500000000000000ffffffff0400000002000000
-      _HashCodes: 8058d147c02c8c190417a25a4bbe5b54510e9f592d6dfd4800000000
-      _Next: ffffffffffffffffffffffffffffffffffffffff0300000000000000
-      _Count: 6
-      _Version: 6
+      _Buckets: ffffffff0100000002000000
+      _HashCodes: 4bbe5b54510e9f592d6dfd48
+      _Next: ffffffffffffffff00000000
+      _Count: 3
+      _Version: 3
       _FreeList: -1
       _FreeCount: 0
       _Keys:
-      - DedicatedServer/PC/Windows x64
-      - DedicatedServer/PC
-      - DedicatedServer
       - Release/PC/Windows x64
       - Release/PC
       - Release
-      - 
       _Values:
-      - enabled: 1
-        childKeys: []
-      - enabled: 1
-        childKeys:
-        - DedicatedServer/PC/Windows x64
-      - enabled: 1
-        childKeys:
-        - DedicatedServer/PC
       - enabled: 1
         childKeys: []
       - enabled: 1
@@ -81,8 +59,6 @@ MonoBehaviour:
       - enabled: 1
         childKeys:
         - Release/PC
-      - enabled: 1
-        childKeys: []
     showViewOptions: 0
     showConfigs: 0
     showBuildInfo: 0
