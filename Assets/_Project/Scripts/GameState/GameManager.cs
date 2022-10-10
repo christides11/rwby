@@ -3,6 +3,7 @@ using Cysharp.Threading.Tasks;
 using Fusion;
 using Rewired.UI.ControlMapper;
 using Rewired;
+using rwby.Debugging;
 using rwby.ui.mainmenu;
 using UnityEngine;
 using UnityEngine.Events;
@@ -22,6 +23,8 @@ namespace rwby
         public LoadingMenu loadingMenu;
         public ProfilesManager profilesManager;
         public NetworkManager networkManager;
+        public ConsoleReader consoleReader;
+        public ConsoleWindow consoleWindow;
 
         public Settings settings;
         public ContentGUID internalModGUID = new ContentGUID(8, "");
@@ -75,10 +78,11 @@ namespace rwby
         }
 
         public SessionManagerGamemode gamemodeSessionHandlerPrefab;
-        public virtual async UniTask<int> HostGamemodeSession(string lobbyName, int playerCount, bool privateLobby)
+        public virtual async UniTask<int> HostGamemodeSession(string lobbyName, int playerCount, string password, bool hostMode = true)
         {
             int sessionHandlerID = networkManager.CreateSessionHandler();
-            StartGameResult result = await networkManager.sessions[sessionHandlerID].HostSession(lobbyName, playerCount, privateLobby);
+            StartGameResult result = hostMode ? await networkManager.sessions[sessionHandlerID].HostSession(lobbyName, playerCount, password)
+                    : await networkManager.sessions[sessionHandlerID].DedicateHostSession(lobbyName, playerCount, password);
             if (result.Ok == false)
             {
                 Debug.Log($"Failed to host gamemode session: {result.ShutdownReason}");

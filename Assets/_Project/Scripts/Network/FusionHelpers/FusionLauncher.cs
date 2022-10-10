@@ -23,6 +23,7 @@ namespace rwby
 
 		public event EmptyAction OnStartHosting;
 		public event EmptyAction OnHostingFailed;
+		public event EmptyAction OnDedicatedHostingFailed;
 		public event ConnectionStatusAction OnConnectionStatusChanged;
 		public event ConnectionAction ClientOnConnectedToServer;
 		public event ConnectionAction ClientOnDisconnectedFromServer;
@@ -53,6 +54,8 @@ namespace rwby
 		{
 			new CustomSceneRef(new ContentGUID(8), 0, 1)
 		};
+
+		private string password;
 		
 		public List<CustomSceneRef> GetCurrentScenes()
 		{
@@ -79,9 +82,9 @@ namespace rwby
 			await _runner.JoinSessionLobby(SessionLobby.ClientServer);
 		}
 
-		public async UniTask<StartGameResult> DedicateHostSession(string roomName, int playerCount, bool privateLobby, NetworkObject playerPrefab)
+		public async UniTask<StartGameResult> DedicateHostSession(string roomName, int playerCount, string password)
 		{
-			clientPrefab = playerPrefab;
+			//clientPrefab = playerPrefab;
 			_connectionCallback = OnConnectionStatusUpdate;
 			InitSingletions(false);
 			
@@ -89,27 +92,30 @@ namespace rwby
 			customProps["name"] = roomName;
 			customProps["map"] = "";
 			customProps["gamemode"] = "";
+			customProps["modhash"] = "";
+			customProps["password"] = String.IsNullOrEmpty(password) ? "f" : "t";
+
+			this.password = this.password;
 
 			_gamemode = GameMode.Server;
 			StartGameResult result = await _runner.StartGame(new StartGameArgs()
 			{
 				GameMode = GameMode.Server, 
 				SessionProperties = customProps,
-				SessionName = roomName, 
 				ObjectPool = _pool, 
 				SceneManager = netSceneManager, 
-				PlayerCount = playerCount
+				PlayerCount = playerCount,
 			});
 			if(result.Ok == false)
             {
 				Debug.LogError(result.ShutdownReason);
-				OnHostingFailed?.Invoke();
+				OnDedicatedHostingFailed?.Invoke();
 				return result;
             }
 			return result;
 		}
 
-		public async UniTask<StartGameResult> HostSession(string roomName, int playerCount, bool privateLobby, bool local = false)
+		public async UniTask<StartGameResult> HostSession(string roomName, int playerCount, string password, bool local = false)
 		{
 			_connectionCallback = OnConnectionStatusUpdate;
 			InitSingletions(true);
@@ -119,6 +125,9 @@ namespace rwby
 			customProps["map"] = "";
 			customProps["gamemode"] = "";
 			customProps["modhash"] = "";
+			customProps["password"] = String.IsNullOrEmpty(password) ? "f" : "t";
+
+			this.password = password;
 			
 			_gamemode = GameMode.Host;
 			StartGameResult result = await _runner.StartGame(new StartGameArgs()

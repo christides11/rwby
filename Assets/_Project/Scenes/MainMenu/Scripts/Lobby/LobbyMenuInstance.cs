@@ -1,67 +1,49 @@
-using System;
+using System.Collections;
 using System.Collections.Generic;
-using Fusion;
+using rwby.ui;
 using rwby.ui.mainmenu;
 using UnityEngine;
-using TMPro;
 using UnityEngine.EventSystems;
-using UnityEngine.Serialization;
-using UnityEngine.UI;
-using UnityEngine.UI.Extensions;
-using Selectable = rwby.ui.Selectable;
 
 namespace rwby
 {
-    public class LobbyMenuInstance : MonoBehaviour
+    public class LobbyMenuInstance : MonoBehaviour, IMenuHandler
     {
-        [System.Serializable]
-        public class CSSConnection
-        {
-            public Selectable cssSelectable;
-            [FormerlySerializedAs("characterReference")] [SerializeField] public ModGUIDContentReference characterContentReference 
-                = new ModGUIDContentReference(new ContentGUID(8), 0, 0);
-        }
-        
         public int playerID;
         
         public Canvas canvas;
-
-        public GameObject defaultSelectedObject;
         
-        private LobbyMenuHandler lobbyMenuHandler;
+        public LobbyMenuHandler lobbyMenuHandler;
 
-        [Header("Content")] 
-        public Selectable readyButton;
-        public Selectable profileButton;
-        public Selectable spectateButton;
-        public Selectable exitButton;
-        public Selectable topBar;
-        public Transform characterContentTransform;
-        public GameObject characterContentPrefab;
-        public GameObject characterSelectMenu;
-        public GameObject characterSelectBigCharacter;
-        public List<CSSConnection> cssConnections = new List<CSSConnection>();
+        [Header("Menus")] 
+        [SerializeField] private LobbyMenu lobbyMenu;
+        [SerializeField] private CharacterSelectMenu characterSelectMenu;
 
+        [SerializeField] private List<int> history = new List<int>();
+        public Dictionary<int, MenuBase> menus = new Dictionary<int, MenuBase>();
+        
         public void Initialize(LobbyMenuHandler menuHandler)
         {
-            NetworkString<_32> aa;
-            this.lobbyMenuHandler = menuHandler;
-            readyButton.GetComponentInChildren<TextMeshProUGUI>().text = lobbyMenuHandler.sessionManagerGamemode.Runner.IsServer ? "Start Match" : "Ready";
-            if (lobbyMenuHandler.sessionManagerGamemode.Runner.IsServer)
-            {
-                readyButton.GetComponent<Selectable>().onSubmit.AddListener(async () => await lobbyMenuHandler.StartMatch());
-            }
-            exitButton.onSubmit.AddListener(menuHandler.ExitLobby);
-
-            for (int i = 0; i < cssConnections.Count; i++)
-            {
-                int temp = i;
-                cssConnections[i].cssSelectable.onSubmit.AddListener(() => { SetCharacter(cssConnections[temp].characterContentReference); });
-            }
+            menus.Add((int)LobbyMenuType.LOBBY, lobbyMenu);
+            menus.Add((int)LobbyMenuType.CHARACTER_SELECT, characterSelectMenu);
+            history.Add((int)LobbyMenuType.LOBBY);
             
-            ResetCharacterList();
+            foreach (var menu in menus.Values)
+            {
+                menu.TryClose(MenuDirection.BACKWARDS, true);
+            }
+            menus[(int)LobbyMenuType.LOBBY].Open(MenuDirection.FORWARDS, this);
+            
+            this.lobbyMenuHandler = menuHandler;
         }
 
+        public void Refresh()
+        {
+            lobbyMenu.Refresh();
+            characterSelectMenu.Refresh();
+        }
+
+        /*
         public void ResetCharacterList()
         {
             foreach(Transform child in characterContentTransform)
@@ -120,11 +102,41 @@ namespace rwby
         {
             characterSelectMenu.SetActive(false);
             lobbyMenuHandler.sessionManagerGamemode.CLIENT_SetPlayerCharacter(playerID, currentSelectingCharacterIndex, characterContentReference);
-        }
+        }*/
         
         public void Cleanup()
         {
             
+        }
+        
+        public bool Forward(int menu, bool autoClose = true)
+        {
+            if (!menus.ContainsKey(menu)) return false;
+            EventSystem.current.SetSelectedGameObject(null);
+            if (autoClose) GetCurrentMenu().TryClose(MenuDirection.FORWARDS, true);
+            menus[menu].Open(MenuDirection.FORWARDS, this);
+            history.Add(menu);
+            return true;
+        }
+
+        public bool Back()
+        {
+            if (history.Count <= 1) return false;
+            bool result = GetCurrentMenu().TryClose(MenuDirection.BACKWARDS);
+            if(result == true) history.RemoveAt(history.Count-1);
+            GetCurrentMenu().Open(MenuDirection.BACKWARDS, this);
+            return result;
+        }
+
+        public IList GetHistory()
+        {
+            return history;
+        }
+
+        public IMenu GetCurrentMenu()
+        {
+            if (history.Count == 0) return null;
+            return menus[history[^1]];
         }
     }
 }

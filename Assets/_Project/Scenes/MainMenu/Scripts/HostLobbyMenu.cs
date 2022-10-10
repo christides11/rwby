@@ -14,14 +14,15 @@ namespace rwby.ui.mainmenu
         [SerializeField] private OnlineMenu onlineMenu;
         [SerializeField] private LobbyMenuHandler lobbyMenuHandler;
         [SerializeField] private LobbySettingsMenu lobbySettings;
-
-        public GameObject defaultSelectedUIItem;
+        public CanvasGroup canvasGroup;
+        
+        private GameObject defaultSelectedUIItem;
         private EventSystem eventSystem;
         private LocalPlayerManager localPlayerManager;
-        
+
         // Options.
         private int playerCount = 8;
-        private int maxPlayersPerClient = 4;
+        private int maxPlayersPerClient = 1;
         private byte teamCount = 0;
         private ModGUIDContentReference _selectedGamemodeContentReference;
         private IGameModeDefinition selectedGamemodeDefinition;
@@ -55,7 +56,7 @@ namespace rwby.ui.mainmenu
         
         private void Update()
         {
-            if (UIHelpers.SelectDefaultSelectable(eventSystem, localPlayerManager.systemPlayer))
+            if (canvasGroup.interactable && UIHelpers.SelectDefaultSelectable(eventSystem, localPlayerManager.systemPlayer))
             {
                 eventSystem.SetSelectedGameObject(defaultSelectedUIItem);
             }
@@ -66,12 +67,12 @@ namespace rwby.ui.mainmenu
             var backSelectable = lobbySettings.AddOption("Back", "Back");
             backSelectable.onSubmit.AddListener(Button_Back);
             defaultSelectedUIItem = backSelectable.gameObject;
-            var playerCountButtons = lobbySettings.AddOption("PlayerCount", "Player Count", playerCount);
+            var playerCountButtons = lobbySettings.AddOption("PlayerCount", "Lobby Size", playerCount);
             playerCountButtons[0].onSubmit.AddListener(DecrementPlayerCount);
             playerCountButtons[1].onSubmit.AddListener(IncrementPlayerCount);
-            var playersPerCountButtons = lobbySettings.AddOption("MaxPlayersPerClient", "Max Players per Client", maxPlayersPerClient);
-            playersPerCountButtons[0].onSubmit.AddListener(() => { maxPlayersPerClient--; });
-            playersPerCountButtons[1].onSubmit.AddListener(() => { maxPlayersPerClient++; });
+            var playersPerCountButtons = lobbySettings.AddOption("MaxPlayersPerClient", "Players per Client", maxPlayersPerClient);
+            playersPerCountButtons[0].onSubmit.AddListener(() => { SetPlayersPerClientCount(maxPlayersPerClient-1); });
+            playersPerCountButtons[1].onSubmit.AddListener(() => { SetPlayersPerClientCount(maxPlayersPerClient+1); });
             lobbySettings.AddOption("GameMode",  selectedGamemodeDefinition ? selectedGamemodeDefinition.Name : "None").onSubmit.AddListener(Button_GameMode);
             var teamButtons = lobbySettings.AddOption("Teams", "Teams", teamCount);
             teamButtons[0].onSubmit.AddListener(() => { ChangeTeamCount(-1); });
@@ -91,14 +92,24 @@ namespace rwby.ui.mainmenu
         private void IncrementPlayerCount()
         {
             playerCount++;
-            ((LobbySettingsIntValueContent)lobbySettings.idContentDictionary["PlayerCount"]).text.text = playerCount.ToString();
+            ((LobbySettingsIntValueContent)lobbySettings.idContentDictionary["PlayerCount"]).text.text 
+                = playerCount.ToString();
         }
 
         private void DecrementPlayerCount()
         {
             if (playerCount == 1) return;
             playerCount--;
-            ((LobbySettingsIntValueContent)lobbySettings.idContentDictionary["PlayerCount"]).text.text = playerCount.ToString();
+            ((LobbySettingsIntValueContent)lobbySettings.idContentDictionary["PlayerCount"]).text.text 
+                = playerCount.ToString();
+        }
+
+        private void SetPlayersPerClientCount(int value)
+        {
+            if (value < 1) return;
+            maxPlayersPerClient = value;
+            ((LobbySettingsIntValueContent)lobbySettings.idContentDictionary["MaxPlayersPerClient"]).text.text =
+                maxPlayersPerClient.ToString();
         }
 
         private void ChangeTeamCount(int change)
@@ -114,14 +125,20 @@ namespace rwby.ui.mainmenu
             currentHandler.Back();
         }
 
-        public void Button_GameMode()
+        public async void Button_GameMode()
         {
-            ContentSelect.singleton.OpenMenu(0, (int)ContentType.Gamemode, async (a, b) => { await WhenGamemodeSelected(a, b); });
+            canvasGroup.interactable = false;
+            var csMenu = await ContentSelect.singleton.OpenMenu(0, (int)ContentType.Gamemode, async (a, b) => { await WhenGamemodeSelected(a, b); });
+            if (csMenu == null)
+            {
+                canvasGroup.interactable = true;
+                return;
+            }
         }
 
         private async UniTask WhenGamemodeSelected(int player, ModGUIDContentReference arg1)
         {
-            Debug.Log($"Gamemode {arg1} selected.");
+            canvasGroup.interactable = true;
             ContentSelect.singleton.CloseMenu(0);
 
             _selectedGamemodeContentReference = arg1;
@@ -149,7 +166,7 @@ namespace rwby.ui.mainmenu
         public async UniTask TryHostLobby()
         {
             GameManager.singleton.loadingMenu.OpenMenu(0, "Attempting host...");
-            int sessionHandlerID = await GameManager.singleton.HostGamemodeSession("", playerCount, false);
+            int sessionHandlerID = await GameManager.singleton.HostGamemodeSession("", playerCount, "");
             GameManager.singleton.loadingMenu.CloseMenu(0);
             if (sessionHandlerID == -1) return;
 

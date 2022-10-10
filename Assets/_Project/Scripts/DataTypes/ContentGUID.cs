@@ -101,6 +101,17 @@ namespace rwby
             }
         }
 
+        public static ContentGUID StringToContentGUID(string value, byte maxLength = 8)
+        {
+            ContentGUID cGUID = new ContentGUID(maxLength);
+            if (ContentGUID.TryBuildGUID(maxLength, value, out byte[] output))
+            {
+                cGUID.guid = output;
+            }
+
+            return cGUID;
+        }
+
         #if UNITY_EDITOR
         public static string BuildString(byte length, SerializedProperty sp)
         {

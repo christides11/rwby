@@ -75,6 +75,11 @@ namespace rwby
             }
         }
 
+        public virtual void SetGamemodeSettings(string args)
+        {
+            
+        }
+        
         public virtual void SetGamemodeSettings(GameModeBase gamemode)
         {
             

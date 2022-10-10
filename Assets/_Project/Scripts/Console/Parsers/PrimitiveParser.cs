@@ -8,7 +8,7 @@ namespace rwby.Debugging
 
         public bool CanParse(Type type)
         {
-            if(type == typeof(int) || type == typeof(float))
+            if(type == typeof(int) || type == typeof(float) || type == typeof(bool))
             {
                 return true;
             }
@@ -28,6 +28,9 @@ namespace rwby.Debugging
                 if(float.TryParse(value, out float result)){
                     return result;
                 }
+            }else if (type == typeof(bool))
+            {
+                return (value.ToLower() == "true" || value.ToLower() == "t");
             }
             return null;
         }

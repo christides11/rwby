@@ -20,6 +20,12 @@ namespace rwby
             this.modGUID = new ContentGUID(modGUID);
             this.contentGUID = new ContentGUID(contentGUID);
         }
+
+        public ModObjectSetContentReference(string modGUID, string contentGUID)
+        {
+            this.modGUID = ContentGUID.StringToContentGUID(modGUID);
+            this.contentGUID = ContentGUID.StringToContentGUID(contentGUID);
+        }
         
         public override string ToString()
         {

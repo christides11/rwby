@@ -15,6 +15,7 @@ namespace rwby.ui.mainmenu
 
         public SessionManagerGamemode sessionManagerGamemode;
 
+        [SerializeField] private GameObject defaultSelectedUIItem;
         private EventSystem eventSystem;
         private LocalPlayerManager localPlayerManager;
         
@@ -25,6 +26,8 @@ namespace rwby.ui.mainmenu
 
         public override void Open(MenuDirection direction, IMenuHandler menuHandler)
         {
+            localPlayerManager = GameManager.singleton.localPlayerManager;
+            eventSystem = EventSystem.current;
             base.Open(direction, menuHandler);
             eventSystem = EventSystem.current;
             localPlayerManager = GameManager.singleton.localPlayerManager;
@@ -73,6 +76,14 @@ namespace rwby.ui.mainmenu
             EventSystem.current.SetSelectedGameObject(null);
             gameObject.SetActive(false);
             return true;
+        }
+
+        private void Update()
+        {
+            if (UIHelpers.SelectDefaultSelectable(eventSystem, localPlayerManager.systemPlayer))
+            {
+                eventSystem.SetSelectedGameObject(defaultSelectedUIItem);
+            }
         }
 
         public async UniTask StartMatch()
@@ -170,7 +181,7 @@ namespace rwby.ui.mainmenu
         {
             for (int i = 0; i < menuInstances.Count; i++)
             {
-                menuInstances[i].ResetCharacterList();
+                menuInstances[i].Refresh();
             }
         }
 

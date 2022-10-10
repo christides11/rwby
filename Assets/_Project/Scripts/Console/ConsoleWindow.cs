@@ -1,6 +1,6 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
+using Rewired.Integration.UnityUI;
 using UnityEngine;
 using TMPro;
 
@@ -19,12 +19,13 @@ namespace rwby.Debugging
 
         public GameObject canvasGO;
 
+        /*
         [Header("MP Info")]
         public TextMeshProUGUI rttText;
         public TextMeshProUGUI frameText;
         public TextMeshProUGUI leadServerText;
         public TextMeshProUGUI leadLocalText;
-        public TextMeshProUGUI adjText;
+        public TextMeshProUGUI adjText;*/
 
         [Header("Console")]
         [SerializeField] private ConsoleReader consoleReader;
@@ -32,7 +33,7 @@ namespace rwby.Debugging
         [SerializeField] private TMP_InputField inputField;
         [SerializeField] private List<Color> messageColors = new List<Color>(4);
 
-        public void Init()
+        public void Awake()
         {
             current = this;
         }
@@ -40,7 +41,7 @@ namespace rwby.Debugging
         // Update is called once per frame
         void Update()
         {
-            if (UnityEngine.Input.GetKeyDown(KeyCode.F1))
+            if (UnityEngine.Input.GetKeyDown(KeyCode.F9))
             {
                 canvasGO.SetActive(!canvasGO.activeSelf);
             }
@@ -50,7 +51,8 @@ namespace rwby.Debugging
                 return;
             }
 
-            if (UnityEngine.Input.GetKeyDown(KeyCode.Return) && !String.IsNullOrEmpty(inputField.text))
+            if (RewiredEventSystem.current.currentSelectedGameObject == inputField.gameObject
+                && UnityEngine.Input.GetKeyDown(KeyCode.Return) && !String.IsNullOrEmpty(inputField.text))
             {
                 string input = inputField.text;
                 inputField.text = "";
@@ -68,6 +70,21 @@ namespace rwby.Debugging
         {
             Write($"<#{ColorUtility.ToHtmlStringRGBA(messageColors[(int)msgType])}>" + text + "</color>");
             Write("\n");
+            switch (msgType)
+            {
+                case ConsoleMessageType.Debug:
+                    Debug.Log(text);
+                    break;
+                case ConsoleMessageType.Error:
+                    Debug.LogError(text);
+                    break;
+                case ConsoleMessageType.Warning:
+                    Debug.LogWarning(text);
+                    break;
+                case ConsoleMessageType.Print:
+                    Debug.Log(text);
+                    break;
+            }
         }
 
     }

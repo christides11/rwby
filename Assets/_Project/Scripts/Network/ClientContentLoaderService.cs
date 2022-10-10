@@ -43,6 +43,11 @@ namespace rwby
                 return null;
             }
 
+            if (Runner.ActivePlayers.Count() == 0)
+            {
+                return new List<PlayerRef>();
+            }
+
             int loadRequestNumber = loadRequestCounter;
             loadRequestCounter++;
             loadRequests.Add(loadRequestNumber, new List<ClientLoadRequestTracker>());
