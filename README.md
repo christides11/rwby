@@ -13,7 +13,7 @@
 N/A.
 
 ## Important Links
-* [Trello](trello.com/b/v1Wwj3N7/rwby-from-dust) - Project roadmap.
+* [Trello](https://trello.com/b/v1Wwj3N7/rwby-from-dust) - Project roadmap.
 * Modding Guide - N/A
 * Development Guide - N/A
 
