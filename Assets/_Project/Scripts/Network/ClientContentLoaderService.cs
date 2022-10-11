@@ -73,8 +73,7 @@ namespace rwby
                 {
                     Debug.LogError("Timeout waiting for client(s) to report load result(s).");
                 }
-            }
-            Debug.Log($"CHECK: {loadRequests[loadRequestNumber].Count} : {Runner.ActivePlayers.Count()} : {loadRequests[loadRequestNumber].Count >= Runner.ActivePlayers.Count()} : {Time.realtimeSinceStartup-startTime}");
+            } 
             /*while (loadRequests[loadRequestNumber].Count < Runner.ActivePlayers.Count())
             {
                 await UniTask.WaitForFixedUpdate();

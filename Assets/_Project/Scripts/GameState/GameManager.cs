@@ -78,10 +78,10 @@ namespace rwby
         }
 
         public SessionManagerGamemode gamemodeSessionHandlerPrefab;
-        public virtual async UniTask<int> HostGamemodeSession(string lobbyName, int playerCount, string password, bool hostMode = true)
+        public virtual async UniTask<int> HostGamemodeSession(string lobbyName, int playerCount, string password, bool hostMode = true, bool localMatch = false)
         {
             int sessionHandlerID = networkManager.CreateSessionHandler();
-            StartGameResult result = hostMode ? await networkManager.sessions[sessionHandlerID].HostSession(lobbyName, playerCount, password)
+            StartGameResult result = hostMode ? await networkManager.sessions[sessionHandlerID].HostSession(lobbyName, playerCount, password, localMatch)
                     : await networkManager.sessions[sessionHandlerID].DedicateHostSession(lobbyName, playerCount, password);
             if (result.Ok == false)
             {

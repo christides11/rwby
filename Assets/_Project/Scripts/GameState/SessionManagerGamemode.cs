@@ -120,7 +120,7 @@ namespace rwby
                     {
                         if (!ClientDefinitions[i].players[j].characterReferences[chara].IsValid())
                         {
-                            Debug.LogError($" has an invalid character reference.");
+                            Debug.LogError($" has an invalid character reference. {ClientDefinitions[i].players[j].characterReferences[chara].ToString()}");
                             return false;
                         }   
                         

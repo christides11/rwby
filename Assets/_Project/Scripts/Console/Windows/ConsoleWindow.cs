@@ -27,7 +27,7 @@ namespace Windows
 				AllocConsole();
 			}
 
-			oldOutput = Console.Out;
+			oldOutput = System.Console.Out;
 
 			try
 			{
@@ -38,7 +38,7 @@ namespace Windows
 				FileStream fileStream = new FileStream( safeFileHandle, FileAccess.Write );
 				StreamWriter standardOutput = new StreamWriter( fileStream, encoding );
 				standardOutput.AutoFlush = true;
-				Console.SetOut( standardOutput );
+				System.Console.SetOut( standardOutput );
 			}
 			catch ( System.Exception e )
 			{
@@ -48,7 +48,7 @@ namespace Windows
 
 		public void Shutdown()
 		{
-			Console.SetOut( oldOutput );
+			System.Console.SetOut( oldOutput );
 			FreeConsole();
 		}
 

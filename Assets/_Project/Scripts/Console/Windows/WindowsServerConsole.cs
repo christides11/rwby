@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using IngameDebugConsole;
 using rwby;
 using UnityEngine;
 
@@ -35,7 +36,8 @@ public class WindowsServerConsole : MonoBehaviour
     //
     void OnInputText( string obj )
     {
-        _ = GameManager.singleton.consoleReader.Convert(obj);
+        DebugLogConsole.ExecuteCommand(obj);
+        //_ = GameManager.singleton.consoleReader.Convert(obj);
     }
  
     //

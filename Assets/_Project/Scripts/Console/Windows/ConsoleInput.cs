@@ -14,17 +14,17 @@ namespace Windows
 
         public void ClearLine()
         {
-            Console.CursorLeft = 0;
-            Console.Write( new String( ' ', Console.BufferWidth ) );
-            Console.CursorTop--;
-            Console.CursorLeft = 0;
+            System.Console.CursorLeft = 0;
+            System.Console.Write( new String( ' ', System.Console.BufferWidth ) );
+            System.Console.CursorTop--;
+            System.Console.CursorLeft = 0;
         }
 
         public void RedrawInputLine()
         {
             if ( inputString.Length == 0 ) return;
 
-            if ( Console.CursorLeft > 0 )
+            if ( System.Console.CursorLeft > 0 )
                 ClearLine();
 
             System.Console.ForegroundColor = ConsoleColor.Green;
@@ -62,8 +62,8 @@ namespace Windows
 
         public void Update()
         {
-            if ( !Console.KeyAvailable ) return;
-            var key = Console.ReadKey();
+            if ( !System.Console.KeyAvailable ) return;
+            var key = System.Console.ReadKey();
 
             if ( key.Key == ConsoleKey.Enter )
             {

@@ -26,6 +26,18 @@ namespace rwby
             AddPlayer();
         }
 
+        public void AutoAssignControllers()
+        {
+            if (localPlayers.Count < 1) return;
+            
+            foreach (var controller in ReInput.controllers.GetControllers(ControllerType.Joystick))
+            {
+                localPlayers[0].rewiredPlayer.controllers.AddController(controller, true);
+            }
+            
+            GiveMouseKeyboard(0);
+        }
+
         public LocalPlayerData GetPlayer(int playerID)
         {
             if (playerID < 0 || playerID >= localPlayers.Count) return default;

@@ -1,5 +1,6 @@
 using Cysharp.Threading.Tasks;
 using System.Collections.Generic;
+using IngameDebugConsole;
 using UnityEngine;
 
 namespace rwby
@@ -34,7 +35,7 @@ namespace rwby
             {
                 foreach (string s in args)
                 {
-                    _ = gameManager.consoleReader.Convert(s);
+                    DebugLogConsole.ExecuteCommand(s);
                 }
             }
         }
