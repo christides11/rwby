@@ -7,8 +7,8 @@ using UnityEngine;
 
 namespace rwby
 {
-    [CustomEditor(typeof(AddressablesModDefinition), true)]
-    public class AddressablesModDefinitionEditor : Editor
+    [CustomEditor(typeof(UModModDefinition), true)]
+    public class UMOdModDefinitionEditor : Editor
     {
         protected Dictionary<string, (string, Type)> hurtboxGroupTypes = new Dictionary<string, (string, Type)>();
 
@@ -22,8 +22,9 @@ namespace rwby
                     if (givenType.IsSubclassOf(typeof(IContentParser))
                         && givenType.ContainsGenericParameters == false)
                     {
-                        AddressablesContentParserAttribute acp = (AddressablesContentParserAttribute)givenType.GetCustomAttribute(typeof(AddressablesContentParserAttribute), true);
+                        UModContentParserAttribute acp = (UModContentParserAttribute)givenType.GetCustomAttribute(typeof(UModContentParserAttribute), true);
                         if (acp == null) continue;
+                        Debug.Log("A");
 
                         hurtboxGroupTypes.Add(acp.parsetPath, (acp.parserNickname, givenType));
                     }

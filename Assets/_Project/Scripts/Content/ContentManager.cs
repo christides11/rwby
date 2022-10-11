@@ -55,7 +55,7 @@ namespace rwby
         {
             if (!modLoader.TryGetLoadedMod(modGUID, out LoadedModDefinition mod)) return false;
             if (!mod.definition.ContentParsers.TryGetValue(contentType, out IContentParser parser)) return false;
-            var result = await parser.LoadContentDefinitions();
+            var result = await parser.LoadContentDefinitions(mod);
             foreach (var r in result) TrackItem(new ModGUIDContentReference(){ modGUID = modGUID, contentType = contentType, contentIdx = r});
             return true;
         }
@@ -68,7 +68,7 @@ namespace rwby
                 return false;
             }
             if (!mod.definition.ContentParsers.TryGetValue(contentReference.contentType, out IContentParser parser)) return false;
-            bool result = await parser.LoadContentDefinition(contentReference.contentIdx);
+            bool result = await parser.LoadContentDefinition(mod, contentReference.contentIdx);
             if(result) TrackItem(contentReference);
             return result;
         }

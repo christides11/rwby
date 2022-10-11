@@ -40,7 +40,7 @@ namespace rwby
             return content.ContainsKey(contentIdentifier) ? true : false;
         }
 
-        public override async UniTask<List<int>> LoadContentDefinitions()
+        public override async UniTask<List<int>> LoadContentDefinitions(LoadedModDefinition modDefinition)
         {
             List<int> results = new List<int>();
             // All of the content is already loaded.
@@ -52,7 +52,7 @@ namespace rwby
             {
                 foreach (var contentIdentifier in content.Keys)
                 {
-                    bool r = await LoadContentDefinition(contentIdentifier);
+                    bool r = await LoadContentDefinition(modDefinition, contentIdentifier);
                     if(r) results.Add(contentIdentifier);
                 }
                 return results;
@@ -65,12 +65,12 @@ namespace rwby
             return results;
         }
 
-        public override async UniTask<bool> LoadContentDefinition(ContentGUID contentIdentifier)
+        public override async UniTask<bool> LoadContentDefinition(LoadedModDefinition modDefinition, ContentGUID contentIdentifier)
         {
-            return await LoadContentDefinition(GUIDToInt[contentIdentifier]);
+            return await LoadContentDefinition(modDefinition, GUIDToInt[contentIdentifier]);
         }
 
-        public override async UniTask<bool> LoadContentDefinition(int index)
+        public override async UniTask<bool> LoadContentDefinition(LoadedModDefinition modDefinition, int index)
         {
             // Content doesn't exist.
             if (content.ContainsKey(index) == false)

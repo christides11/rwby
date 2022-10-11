@@ -4,9 +4,15 @@ using UnityEngine;
 
 namespace rwby
 {
-    [CreateAssetMenu(fileName = "UModModDefinition", menuName = "Mahou/Content/UMod/ModDefinition")]
+    [CreateAssetMenu(fileName = "UModModDefinition", menuName = "rwby/Content/UMod/ModDefinition")]
     public class UModModDefinition : ScriptableObject, IModDefinition
     {
+        [System.Serializable]
+        public class IdentifierAssetStringRelation
+        {
+            public ContentGUID identifier;
+            public string asset;
+        }
         public string Description { get { return description; } }
         public ContentGUID ModGUID { get { return guid; } }
         public string ModID {

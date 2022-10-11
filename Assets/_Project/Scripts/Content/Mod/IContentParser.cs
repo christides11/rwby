@@ -27,10 +27,10 @@ namespace rwby
             return false;
         }
 
-        public abstract UniTask<List<int>> LoadContentDefinitions();
+        public abstract UniTask<List<int>> LoadContentDefinitions(LoadedModDefinition modDefinition);
         
-        public abstract UniTask<bool> LoadContentDefinition(ContentGUID contentIdentifier);
-        public abstract UniTask<bool> LoadContentDefinition(int index);
+        public abstract UniTask<bool> LoadContentDefinition(LoadedModDefinition modDefinition, ContentGUID contentIdentifier);
+        public abstract UniTask<bool> LoadContentDefinition(LoadedModDefinition modDefinition, int index);
 
         public virtual List<IContentDefinition> GetContentDefinitions()
         {
