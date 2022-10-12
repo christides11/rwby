@@ -11,7 +11,7 @@ namespace rwby
         public class IdentifierAssetStringRelation
         {
             public ContentGUID identifier;
-            public string asset;
+            public UModAssetReference asset;
         }
         public string Description { get { return description; } }
         public ContentGUID ModGUID { get { return guid; } }

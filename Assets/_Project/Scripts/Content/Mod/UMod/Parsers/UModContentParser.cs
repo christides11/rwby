@@ -14,7 +14,7 @@ namespace rwby
         [SerializeField] private List<UModModDefinition.IdentifierAssetStringRelation> references
             = new List<UModModDefinition.IdentifierAssetStringRelation>();
         
-        [NonSerialized] private Dictionary<int, string> content = new Dictionary<int, string>();
+        [NonSerialized] private Dictionary<int, UModAssetReference> content = new Dictionary<int, UModAssetReference>();
         [NonSerialized] private Dictionary<int, ModAsyncOperation<T>> contentHandles = new Dictionary<int, ModAsyncOperation<T>>();
         
         public override void Initialize()
@@ -89,7 +89,7 @@ namespace rwby
             
             if (handleExist == false)
             {
-                contentHandles.Add(index, umodModDefinition.host.Assets.LoadAsync<T>(content[index]));
+                contentHandles.Add(index, umodModDefinition.host.Assets.LoadAsync<T>(content[index].lookupTable[content[index].tableID]));
             }
             
             if(contentHandles[index].IsDone == false || !contentHandles[index].IsSuccessful)

@@ -15,11 +15,11 @@
       "hash": "e949d3e741950d55be7e3d6c6924dcf8935bbec2"
     },
     "com.cysharp.unitask": {
-      "version": "https://github.com/Cysharp/UniTask.git?path=src/UniTask/Assets/Plugins/UniTask",
+      "version": "https://github.com/Cysharp/UniTask.git?path=src/UniTask/Assets/Plugins/UniTask/#2.3.1",
       "depth": 0,
       "source": "git",
       "dependencies": {},
-      "hash": "4f6166102d3c9bd4dcf9acdc48ead7a618cfe891"
+      "hash": "33d32baea4d50040e0601b725a694dcf3dcf6640"
     },
     "com.dbrizov.naughtyattributes": {
       "version": "https://github.com/dbrizov/NaughtyAttributes.git#upm",
@@ -73,10 +73,12 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.cinemachine": {
-      "version": "2.8.6",
+      "version": "2.9.1",
       "depth": 0,
       "source": "registry",
-      "dependencies": {},
+      "dependencies": {
+        "com.unity.test-framework": "1.1.31"
+      },
       "url": "https://packages.unity.com"
     },
     "com.unity.ext.nunit": {

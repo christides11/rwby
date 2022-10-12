@@ -24,7 +24,6 @@ namespace rwby
                     {
                         UModContentParserAttribute acp = (UModContentParserAttribute)givenType.GetCustomAttribute(typeof(UModContentParserAttribute), true);
                         if (acp == null) continue;
-                        Debug.Log("A");
 
                         hurtboxGroupTypes.Add(acp.parsetPath, (acp.parserNickname, givenType));
                     }

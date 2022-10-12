@@ -2,9 +2,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Text;
-#if UNITY_EDITOR
-using UnityEditor;
-#endif
 using UnityEngine;
 
 namespace rwby
@@ -111,31 +108,6 @@ namespace rwby
 
             return cGUID;
         }
-
-        #if UNITY_EDITOR
-        public static string BuildString(byte length, SerializedProperty sp)
-        {
-            try
-            {
-                StringBuilder sb = new StringBuilder("", length);
-
-                for (int i = 0; i < sp.arraySize; i++)
-                {
-                    byte value = (byte)sp.GetArrayElementAtIndex(i).intValue;
-                    if (value == 0) break;
-                    if (value >= byteToLetterLookup.Length) throw new Exception($"GUID byte {value} out of range.");
-                    sb.Append(byteToLetterLookup[value - 1]);
-                }
-
-                return sb.ToString();
-            }
-            catch(Exception e)
-            {
-                Debug.LogError($"Error building string: {e}");
-                return "";
-            }
-        }
-        #endif
 
         public static implicit operator NetworkedContentGUID(ContentGUID cguid) =>
             new NetworkedContentGUID(cguid.guid);

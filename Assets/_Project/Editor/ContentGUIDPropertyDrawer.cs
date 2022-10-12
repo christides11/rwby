@@ -1,3 +1,5 @@
+using System;
+using System.Text;
 using UnityEditor;
 using UnityEngine;
 
@@ -11,7 +13,7 @@ namespace rwby
         {
             EditorGUI.BeginProperty(position, label, property);
             byte maxLength = (byte)property.FindPropertyRelative("guid").arraySize;
-            string tempString = ContentGUID.BuildString(maxLength, property.FindPropertyRelative("guid"));
+            string tempString = BuildString(maxLength, property.FindPropertyRelative("guid"));
             string oldString = tempString;
 
             tempString = EditorGUI.TextField(position, label, tempString);
@@ -35,6 +37,29 @@ namespace rwby
                 }
             }
             EditorGUI.EndProperty();
+        }
+        
+        public static string BuildString(byte length, SerializedProperty sp)
+        {
+            try
+            {
+                StringBuilder sb = new StringBuilder("", length);
+
+                for (int i = 0; i < sp.arraySize; i++)
+                {
+                    byte value = (byte)sp.GetArrayElementAtIndex(i).intValue;
+                    if (value == 0) break;
+                    if (value >= ContentGUID.byteToLetterLookup.Length) throw new Exception($"GUID byte {value} out of range.");
+                    sb.Append(ContentGUID.byteToLetterLookup[value - 1]);
+                }
+
+                return sb.ToString();
+            }
+            catch(Exception e)
+            {
+                Debug.LogError($"Error building string: {e}");
+                return "";
+            }
         }
     }
 }
