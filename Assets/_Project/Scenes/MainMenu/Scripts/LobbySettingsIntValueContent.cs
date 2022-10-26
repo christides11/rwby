@@ -1,3 +1,4 @@
+using rwby.ui;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -5,7 +6,7 @@ using UnityEngine.UI;
 
 namespace rwby
 {
-    public class LobbySettingsIntValueContent : ButtonScaleTweenAnimation
+    public class LobbySettingsIntValueContent : TweenSelectable
     {
         public rwby.ui.Selectable selectableSubtract;
         public rwby.ui.Selectable selectableAdd;

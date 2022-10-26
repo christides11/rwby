@@ -38,19 +38,12 @@ namespace rwby
                 await sceneHandles[i];
             }
         }
-
-        //TODO: Better addressables map scene loading.
         public override async UniTask<Scene> LoadScene(int sceneIndex, LoadSceneParameters parameters)
         {
             sceneHandles[sceneIndex] = Addressables.LoadSceneAsync(sceneReferences[sceneIndex], parameters);
             await sceneHandles[sceneIndex];
             Scene loadedScene = sceneHandles[sceneIndex].Result.Scene;
             return loadedScene;
-        }
-
-        public override UniTask UnloadScene(int sceneIndex)
-        {
-            throw new NotImplementedException();
         }
 
         public override List<string> GetSceneNames()
@@ -60,16 +53,20 @@ namespace rwby
             {
                 if (sceneHandles[i].Status != AsyncOperationStatus.Succeeded) continue;
                 sList.Add(sceneHandles[i].Result.Scene.name + ".copy");
-                Debug.Log($"Returning {sceneHandles[i].Result.Scene.name}.copy");
             }
             return sList;
         }
 
+        public override UniTask UnloadScene(int sceneIndex)
+        {
+            throw new NotImplementedException();
+        }
+        
         public override async UniTask UnloadMap()
         {
             for (int i = 0; i < sceneHandles.Length; i++)
             {
-                if (sceneHandles[i].Status == AsyncOperationStatus.Succeeded) Addressables.UnloadSceneAsync(sceneHandles[i]);
+                if (sceneHandles[i].Status == AsyncOperationStatus.Succeeded) await Addressables.UnloadSceneAsync(sceneHandles[i]);
             }
         }
 

@@ -41,8 +41,7 @@ namespace rwby
 
         [SerializeField] private string fighterReference = "";
         [SerializeField] private string[] movesetReferences = Array.Empty<string>();
-        [SerializeField] private ModGameAssetReference testFighterReference;
-
+        
         [NonSerialized] private ModAsyncOperation<Moveset>[] movesetHandles = null;
         [NonSerialized] private ModAsyncOperation<GameObject> fighterHandle = null;
 
