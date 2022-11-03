@@ -46,6 +46,7 @@ namespace rwby.ui
         public override bool TryClose(MenuDirection direction, bool forceClose = false)
         {
             gameObject.SetActive(false);
+            modifiedSettings = null;
             return true;
         }
 
@@ -91,7 +92,7 @@ namespace rwby.ui
             resStrings.Add("Custom");
             foreach (var res in resolutions)
             {
-                resStrings.Add(res.width + "x" + res.height);
+                resStrings.Add($"{res.width}x{res.height} ({res.refreshRate})");
                 if (res.width == Screen.width && res.height == Screen.height)
                     currentRes = Array.IndexOf(resolutions, res) + 1;
             }

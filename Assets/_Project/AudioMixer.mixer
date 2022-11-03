@@ -1,5 +1,19 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!244 &-8268620956277758815
+AudioMixerEffectController:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: 
+  m_EffectID: 27a9950c246e19b4f9cb4cad857b5869
+  m_EffectName: Attenuation
+  m_MixLevel: b6c86e0fc18f4a44aa460768e358b480
+  m_Parameters: []
+  m_SendTarget: {fileID: 0}
+  m_EnableWetMix: 0
+  m_Bypass: 0
 --- !u!244 &-7732371604511929011
 AudioMixerEffectController:
   m_ObjectHideFlags: 3
@@ -14,13 +28,65 @@ AudioMixerEffectController:
   m_SendTarget: {fileID: 0}
   m_EnableWetMix: 0
   m_Bypass: 0
+--- !u!243 &-6740713211975583942
+AudioMixerGroupController:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: voice
+  m_AudioMixer: {fileID: 24100000}
+  m_GroupID: 4900de0aa99fe244781c6d5f5dcc4e6f
+  m_Children: []
+  m_Volume: 5fde3c7efb4beb349a245357b91625b8
+  m_Pitch: dcc4f368cbb4bc445a7ea34655db0fcf
+  m_Send: 00000000000000000000000000000000
+  m_Effects:
+  - {fileID: -6162754166656970570}
+  m_UserColorIndex: 0
+  m_Mute: 0
+  m_Solo: 0
+  m_BypassEffects: 0
+--- !u!244 &-6162754166656970570
+AudioMixerEffectController:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: 
+  m_EffectID: f3fa4be2a4fada342bf68d5ce46d437d
+  m_EffectName: Attenuation
+  m_MixLevel: d24a479af3c95f7429f6c2581074ea31
+  m_Parameters: []
+  m_SendTarget: {fileID: 0}
+  m_EnableWetMix: 0
+  m_Bypass: 0
+--- !u!243 &-501190937168746327
+AudioMixerGroupController:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: ambience
+  m_AudioMixer: {fileID: 24100000}
+  m_GroupID: 1970b07b43208464490f0f0f732641c8
+  m_Children: []
+  m_Volume: bc0946dc498249f4db8ae53804012dde
+  m_Pitch: ff32db68106403948ba0870dd051d7d9
+  m_Send: 00000000000000000000000000000000
+  m_Effects:
+  - {fileID: -8268620956277758815}
+  m_UserColorIndex: 0
+  m_Mute: 0
+  m_Solo: 0
+  m_BypassEffects: 0
 --- !u!243 &-215054419403138311
 AudioMixerGroupController:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: SFX
+  m_Name: sfx
   m_AudioMixer: {fileID: 24100000}
   m_GroupID: c0a0e70e8fdf8164285b221dfebfda89
   m_Children: []
@@ -48,12 +114,24 @@ AudioMixerController:
   m_SuspendThreshold: -80
   m_EnableSuspend: 1
   m_UpdateMode: 0
-  m_ExposedParameters: []
+  m_ExposedParameters:
+  - guid: bc0946dc498249f4db8ae53804012dde
+    name: ambienceVol
+  - guid: 9a742ce6fc67bfb4d9d850993ab76e27
+    name: masterVol
+  - guid: dfb8082345331304995783b6068c39a9
+    name: musicVol
+  - guid: d2f6731a12166d742a74a498721e7837
+    name: sfxVol
+  - guid: 5fde3c7efb4beb349a245357b91625b8
+    name: voiceVol
   m_AudioMixerGroupViews:
   - guids:
     - c5321407080f6914e8ef7a431cb319a9
     - 880612185ade2c14a860797faa0bb5bb
     - c0a0e70e8fdf8164285b221dfebfda89
+    - 4900de0aa99fe244781c6d5f5dcc4e6f
+    - 1970b07b43208464490f0f0f732641c8
     name: View
   m_CurrentViewIndex: 0
   m_TargetSnapshot: {fileID: 24500006}
@@ -67,8 +145,10 @@ AudioMixerGroupController:
   m_AudioMixer: {fileID: 24100000}
   m_GroupID: c5321407080f6914e8ef7a431cb319a9
   m_Children:
-  - {fileID: 2378271654386457755}
   - {fileID: -215054419403138311}
+  - {fileID: -6740713211975583942}
+  - {fileID: -501190937168746327}
+  - {fileID: 2378271654386457755}
   m_Volume: 9a742ce6fc67bfb4d9d850993ab76e27
   m_Pitch: d506a47313d430548be407f9211fc934
   m_Send: 00000000000000000000000000000000
@@ -109,7 +189,7 @@ AudioMixerGroupController:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Music
+  m_Name: music
   m_AudioMixer: {fileID: 24100000}
   m_GroupID: 880612185ade2c14a860797faa0bb5bb
   m_Children: []

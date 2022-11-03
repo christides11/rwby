@@ -1,5 +1,6 @@
 using UnityEngine;
 using Cinemachine;
+using UnityEngine.Audio;
 using UnityEngine.Rendering.Universal;
 
 namespace rwby
@@ -13,6 +14,7 @@ namespace rwby
         public Hurtbox hurtboxPrefab;
         public bool showHitboxes;
         public BaseHUD baseUI;
+        public AudioMixer audioMixer;
 
         [Header("Camera")] 
         public DummyCamera dummyCamera;

@@ -3,6 +3,15 @@ namespace rwby
     [System.Serializable]
     public class SettingsDataType
     {
+        //AUDIO
+        public int masterVolume = 100;
+        public int soundEffectVolume = 100;
+        public int voiceVolume = 100;
+        public int ambienceVolume = 100;
+        public int musicVolume = 100;
+        public int speakerConfiguration = 1; // MONO, STEREO, QUAD, SURROUND, 5.1, 7.1, PROLOGIC
+        
+        // VIDEO
         public int screenResX = 0;
         public int screenResY = 0;
         public int screenMode = 0; // WINDOWED, FULLSCREEN WINDOWED, EXCLUSIVE FULLSCREEN

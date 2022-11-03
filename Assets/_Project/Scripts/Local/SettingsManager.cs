@@ -41,6 +41,35 @@ namespace rwby
             }
             currentSettings = loadedData;
         }
+
+        public void ApplyAllSettings()
+        {
+            ApplyAudioSettings();
+            ApplyVideoSettings();
+        }
+        
+        public void ApplyAudioSettings()
+        {
+            var audioMixer = GameManager.singleton.settings.audioMixer;
+
+            float masterVolume = Remap(currentSettings.masterVolume, 0.0f, 100.0f, 0.001f, 1.0f);
+            audioMixer.SetFloat("masterVol", Mathf.Log(masterVolume) * 20);
+            float sfxVolume = Remap(currentSettings.soundEffectVolume, 0.0f, 100.0f, 0.001f, 1.0f);
+            audioMixer.SetFloat("sfxVol", Mathf.Log(sfxVolume) * 20);
+            float voiceVolume = Remap(currentSettings.voiceVolume, 0.0f, 100.0f, 0.001f, 1.0f);
+            audioMixer.SetFloat("voiceVol", Mathf.Log(voiceVolume) * 20);
+            float ambienceVolume = Remap(currentSettings.ambienceVolume, 0.0f, 100.0f, 0.001f, 1.0f);
+            audioMixer.SetFloat("ambienceVol", Mathf.Log(ambienceVolume) * 20);
+            float musicVolume = Remap(currentSettings.musicVolume, 0.0f, 100.0f, 0.001f, 1.0f);
+            audioMixer.SetFloat("musicVol", Mathf.Log(musicVolume) * 20);
+
+            AudioSettings.speakerMode = (AudioSpeakerMode)(currentSettings.speakerConfiguration+1);
+        }
+        
+        private float Remap(float value, float from1, float to1, float from2, float to2)
+        {
+            return (value - from1) / (to1 - from1) * (to2 - from2) + from2;
+        }
         
         public void ApplyVideoSettings()
         {
