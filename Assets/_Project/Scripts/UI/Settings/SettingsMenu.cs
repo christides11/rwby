@@ -8,6 +8,8 @@ namespace rwby.ui
 {
     public class SettingsMenu : MenuBase
     {
+        public int playerID = 0;
+        
         [Header("Menus")] 
         public SettingsProfilesMenu profilesMenu;
         public SettingsKeyboardMenu keyboardMenu;

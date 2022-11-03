@@ -33,7 +33,7 @@ namespace rwby.ui
 
         private Resolution[] resolutions;
         private List<string> resStrings = new List<string>();
-        
+
         public override void Open(MenuDirection direction, IMenuHandler menuHandler)
         {
             base.Open(direction, menuHandler);
