@@ -6,6 +6,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using rwby.Debugging;
+using rwby.ui;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Serialization;
@@ -98,9 +99,9 @@ namespace rwby.core.training
 
             IMapDefinition mapDefinition = ContentManager.singleton.GetContentDefinition<IMapDefinition>(mapRef);
             string mapName = mapDefinition != null ? mapDefinition.Name : "None";
-            if (settingsMenu.idFieldDictionary.ContainsKey("Map"))
+            if (settingsMenu.idContentDictionary.ContainsKey("Map"))
             {
-                ((LobbySettingsStringValueContent)settingsMenu.idContentDictionary["Map"]).text.text = mapName;
+                ((ContentButtonStringValue)settingsMenu.idContentDictionary["Map"]).valueString.text = mapName;
             }
             else
             {

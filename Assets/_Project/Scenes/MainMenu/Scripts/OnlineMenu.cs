@@ -38,12 +38,12 @@ namespace rwby.ui.mainmenu
 
         public void BUTTON_FindLobby()
         {
-            currentHandler.Forward((int)MainMenuType.FIND_LOBBY);
+            //currentHandler.Forward((int)MainMenuType.FIND_LOBBY);
         }
 
         public void BUTTON_HostLobby()
         {
-            currentHandler.Forward((int)MainMenuType.HOST_LOBBY);
+            //currentHandler.Forward((int)MainMenuType.HOST_LOBBY);
         }
 
         public void BUTTON_QuickJoin()

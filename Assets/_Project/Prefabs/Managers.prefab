@@ -2996,7 +2996,7 @@ MonoBehaviour:
       _userAssignable: 1
       _categoryId: 1
     - _id: 5
-      _name: Jump/Ability 4
+      _name: Jump
       _type: 1
       _descriptiveName: Jump
       _positiveDescriptiveName: 
@@ -3005,7 +3005,7 @@ MonoBehaviour:
       _userAssignable: 1
       _categoryId: 1
     - _id: 6
-      _name: A/Ability 1
+      _name: A
       _type: 1
       _descriptiveName: A
       _positiveDescriptiveName: 
@@ -3014,7 +3014,7 @@ MonoBehaviour:
       _userAssignable: 1
       _categoryId: 1
     - _id: 7
-      _name: B/Ability 2
+      _name: B
       _type: 1
       _descriptiveName: B
       _positiveDescriptiveName: 
@@ -3041,7 +3041,7 @@ MonoBehaviour:
       _userAssignable: 1
       _categoryId: 1
     - _id: 10
-      _name: C/Ability 3
+      _name: C
       _type: 1
       _descriptiveName: C
       _positiveDescriptiveName: 
@@ -3193,6 +3193,15 @@ MonoBehaviour:
       _behaviorId: 0
       _userAssignable: 1
       _categoryId: 1
+    - _id: 28
+      _name: Apply
+      _type: 1
+      _descriptiveName: Apply
+      _positiveDescriptiveName: 
+      _negativeDescriptiveName: 
+      _behaviorId: 0
+      _userAssignable: 1
+      _categoryId: 2
     actionCategories:
     - _name: Default
       _descriptiveName: Default
@@ -3216,7 +3225,7 @@ MonoBehaviour:
       - categoryId: 1
         actionIds: 010000000200000003000000040000000500000006000000070000000a00000008000000090000000b0000000d0000000e0000000f000000100000001100000012000000130000001400000015000000160000001b000000
       - categoryId: 2
-        actionIds: 17000000190000001a00000018000000
+        actionIds: 17000000190000001a000000180000001c000000
     inputBehaviors:
     - _id: 0
       _name: Default
@@ -3586,6 +3595,17 @@ MonoBehaviour:
         _modifierKey1: 0
         _modifierKey2: 0
         _modifierKey3: 0
+      - _actionCategoryId: 0
+        _actionId: 28
+        _elementType: 1
+        _elementIdentifierId: 7
+        _axisRange: 0
+        _invert: 0
+        _axisContribution: 0
+        _keyboardKeyCode: 0
+        _modifierKey1: 0
+        _modifierKey2: 0
+        _modifierKey3: 0
     keyboardMaps:
     - id: 2
       categoryId: 1
@@ -3784,7 +3804,7 @@ MonoBehaviour:
         _axisRange: 0
         _invert: 0
         _axisContribution: 0
-        _keyboardKeyCode: 13
+        _keyboardKeyCode: 32
         _modifierKey1: 0
         _modifierKey2: 0
         _modifierKey3: 0
@@ -3840,6 +3860,17 @@ MonoBehaviour:
         _invert: 0
         _axisContribution: 1
         _keyboardKeyCode: 115
+        _modifierKey1: 0
+        _modifierKey2: 0
+        _modifierKey3: 0
+      - _actionCategoryId: 0
+        _actionId: 28
+        _elementType: 1
+        _elementIdentifierId: -1
+        _axisRange: 0
+        _invert: 0
+        _axisContribution: 0
+        _keyboardKeyCode: 101
         _modifierKey1: 0
         _modifierKey2: 0
         _modifierKey3: 0
@@ -4341,7 +4372,7 @@ MonoBehaviour:
           _controllerId: -1
     controllerMapEnablerRuleSets: []
     playerIdCounter: 7
-    actionIdCounter: 28
+    actionIdCounter: 29
     actionCategoryIdCounter: 3
     inputBehaviorIdCounter: 1
     mapCategoryIdCounter: 3
@@ -4369,6 +4400,8 @@ GameObject:
   - component: {fileID: 7663082699953192565}
   - component: {fileID: 8649765285665865173}
   - component: {fileID: 6696554396105690595}
+  - component: {fileID: 1759112674724991027}
+  - component: {fileID: 307573912985116940}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -4411,6 +4444,7 @@ MonoBehaviour:
   loadingMenu: {fileID: 5270607472877389111}
   profilesManager: {fileID: 6696554396105690595}
   networkManager: {fileID: 7663082700249121293}
+  settingsManager: {fileID: 307573912985116940}
   consoleReader: {fileID: 1243839822166462484}
   consoleWindow: {fileID: 5187699804377792787}
   settings: {fileID: 11400000, guid: fa9f7c1fd91f42e4087fa739f9dd3614, type: 2}
@@ -4505,6 +4539,32 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   profiles: []
+--- !u!114 &1759112674724991027
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7663082699953192564}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 035c836ac30f3d242b0f1c411ae7e819, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Rate: 60
+--- !u!114 &307573912985116940
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7663082699953192564}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 47daf7eeefd132e44aeef8488debbc8c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  forceRenderRate: {fileID: 1759112674724991027}
 --- !u!1 &7663082700113663894
 GameObject:
   m_ObjectHideFlags: 0
@@ -4737,6 +4797,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 11452418, guid: 67117722a812a2e46ab8cb8eafbf5f5e, type: 3}
       propertyPath: singleton
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 11452418, guid: 67117722a812a2e46ab8cb8eafbf5f5e, type: 3}
+      propertyPath: enablePopup
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 11452418, guid: 67117722a812a2e46ab8cb8eafbf5f5e, type: 3}

@@ -37,31 +37,34 @@ namespace rwby.ui.mainmenu
         {
             base.Open(direction, menuHandler);
             eventSystem = EventSystem.current;
-            lobbySettings.Open();
+            /*lobbySettings.Open();
             SetupOptions();
-            Refresh();
+            Refresh();*/
             gameObject.SetActive(true);
             if (direction == MenuDirection.BACKWARDS) currentHandler.Back();
         }
 
         public override bool TryClose(MenuDirection direction, bool forceClose = false)
         {
+            /*
             if(selectedGamemode) Destroy(selectedGamemode.gameObject);
             _selectedGamemodeContentReference = default;
             selectedGamemodeDefinition = null;
-            lobbySettings.Close();
+            lobbySettings.Close();*/
             gameObject.SetActive(false);
             return true;
         }
         
+        /*
         private void Update()
         {
             if (canvasGroup.interactable && UIHelpers.SelectDefaultSelectable(eventSystem, localPlayerManager.systemPlayer))
             {
                 eventSystem.SetSelectedGameObject(defaultSelectedUIItem);
             }
-        }
-
+        }*/
+        
+        /*
         public void SetupOptions()
         {
             var backSelectable = lobbySettings.AddOption("Back", "Back");
@@ -87,8 +90,9 @@ namespace rwby.ui.mainmenu
             if(selectedGamemode) selectedGamemode.AddGamemodeSettings(0, lobbySettings, true);
             lobbySettings.BringOptionToBottom("Teams");
             lobbySettings.BringOptionToBottom("Host");
-        }
+        }*/
 
+        /*
         private void IncrementPlayerCount()
         {
             playerCount++;
@@ -185,6 +189,6 @@ namespace rwby.ui.mainmenu
             lobbyMenuHandler.sessionManagerGamemode = smc;
             
             currentHandler.Forward((int)MainMenuType.LOBBY);
-        }
+        }*/
     }
 }

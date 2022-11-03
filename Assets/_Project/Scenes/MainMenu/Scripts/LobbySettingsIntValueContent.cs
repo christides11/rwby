@@ -6,12 +6,11 @@ using UnityEngine.UI;
 
 namespace rwby
 {
-    public class LobbySettingsIntValueContent : TweenSelectable
+    public class LobbySettingsIntValueContent : ContentButtonBase
     {
         public rwby.ui.Selectable selectableSubtract;
         public rwby.ui.Selectable selectableAdd;
         public LayoutElement LayoutElement;
-        public TextMeshProUGUI text;
 
         public override void OnMove(AxisEventData eventData)
         {

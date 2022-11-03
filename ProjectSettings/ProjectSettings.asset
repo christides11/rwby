@@ -335,7 +335,7 @@ PlayerSettings:
     m_Automatic: 0
   - m_BuildTarget: WindowsStandaloneSupport
     m_APIs: 0200000015000000
-    m_Automatic: 0
+    m_Automatic: 1
   m_BuildTargetVRSettings: []
   openGLRequireES31: 0
   openGLRequireES31AEP: 0
@@ -611,7 +611,7 @@ PlayerSettings:
   webGLDecompressionFallback: 0
   scriptingDefineSymbols:
     Server: FUSION_WEAVER;DEDICATED_SERVER
-    Standalone: FUSION_WEAVER
+    Standalone: BUILD_TYPE_RELEASE;BUILD_PLATFORM_PC;BUILD_ARCH_WINDOWSX64;FUSION_WEAVER
   additionalCompilerArguments: {}
   platformArchitecture: {}
   scriptingBackend:

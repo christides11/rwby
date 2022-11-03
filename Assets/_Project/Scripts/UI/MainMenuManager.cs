@@ -13,25 +13,25 @@ namespace rwby.ui.mainmenu
         public MainMenuType startingMenu = MainMenuType.TITLE_SCREEN;
         
         [SerializeField] private TitleScreenMenu titleScreen;
-        [SerializeField] private ModeSelectMenu modeSelect;
-        [SerializeField] private LocalMenu local;
-        [SerializeField] private OnlineMenu online;
+        [SerializeField] private MainMenu main;
+        //[SerializeField] private LocalMenu local;
+        //[SerializeField] private OnlineMenu online;
         [SerializeField] private OptionsMenu options;
-        [SerializeField] private HostLobbyMenu hostLobby;
+        //[SerializeField] private HostLobbyMenu hostLobby;
         [SerializeField] private LobbyMenuHandler lobbyMenu;
-        [SerializeField] private FindLobbyMenu findLobby;
+        //[SerializeField] private FindLobbyMenu findLobby;
         
         
         private void Awake()
         {
             menus.Add((int)MainMenuType.TITLE_SCREEN, titleScreen);
-            menus.Add((int)MainMenuType.MODE_SELECT, modeSelect);
-            menus.Add((int)MainMenuType.LOCAL, local);
-            menus.Add((int)MainMenuType.ONLINE, online);
+            menus.Add((int)MainMenuType.MAIN_MENU, main);
+            //menus.Add((int)MainMenuType.LOCAL, local);
+            //menus.Add((int)MainMenuType.ONLINE, online);
             menus.Add((int)MainMenuType.OPTIONS, options);
-            menus.Add((int)MainMenuType.HOST_LOBBY, hostLobby);
+            //menus.Add((int)MainMenuType.HOST_LOBBY, hostLobby);
             menus.Add((int)MainMenuType.LOBBY, lobbyMenu);
-            menus.Add((int)MainMenuType.FIND_LOBBY, findLobby);
+            //menus.Add((int)MainMenuType.FIND_LOBBY, findLobby);
             history.Add((int)startingMenu);
 
             foreach (var menu in menus.Values)

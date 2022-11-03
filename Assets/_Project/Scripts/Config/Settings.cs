@@ -1,5 +1,6 @@
 using UnityEngine;
 using Cinemachine;
+using UnityEngine.Rendering.Universal;
 
 namespace rwby
 {
@@ -17,5 +18,9 @@ namespace rwby
         public DummyCamera dummyCamera;
         public CameraSwitcher cameraSwitcher;
         public LockonCameraManager lockonCameraManager;
+
+        [Header("Render Pipeline Settings")] 
+        public UniversalRendererData rendererData;
+        public UniversalRenderPipelineAsset pipelineAsset;
     }
 }

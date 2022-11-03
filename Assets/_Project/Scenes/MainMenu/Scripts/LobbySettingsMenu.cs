@@ -7,97 +7,90 @@ namespace rwby
 {
     public class LobbySettingsMenu : MonoBehaviour
     {
-        public Transform contentFieldTransform;
-        public Transform contentValueTransform;
-        public LobbySettingsFieldContent fieldPrefab;
-        public LobbySettingsStringValueContent stringValuePrefab;
-        public LobbySettingsIntValueContent intValuePrefab;
+        public Transform contentTransform;
+        public ContentButtonBase basePrefab;
+        public ContentButtonIntValue intValuePrefab;
+        public ContentButtonStringValue stringValuePrefab;
+        public ContentButtonInputField inputFieldPrefab;
 
         public float defaultHeight = 90;
 
-        public Dictionary<string, LobbySettingsFieldContent> idFieldDictionary =
-            new Dictionary<string, LobbySettingsFieldContent>();
-
-        public Dictionary<string, MonoBehaviour> idContentDictionary =
-            new Dictionary<string, MonoBehaviour>();
+        public Dictionary<string, ContentButtonBase> idContentDictionary =
+            new Dictionary<string, ContentButtonBase>();
 
         public void Open()
         {
             ClearOptions();
-            gameObject.SetActive(true);
         }
 
         public void Close()
         {
-            gameObject.SetActive(false);
             ClearOptions();
         }
 
         public void ClearOptions()
         {
-            foreach (Transform child in contentFieldTransform)
+            foreach (Transform child in contentTransform)
             {
                 Destroy(child.gameObject);
             }
-            
-            foreach (Transform child in contentValueTransform)
-            {
-                Destroy(child.gameObject);
-            }
-            
-            idFieldDictionary.Clear();
+
             idContentDictionary.Clear();
         }
 
         public void ClearOption(string id)
         {
-            if (!idFieldDictionary.ContainsKey(id)) return;
-            Destroy(idFieldDictionary[id]);
+            if (!idContentDictionary.ContainsKey(id)) return;
             Destroy(idContentDictionary[id]);
-            idFieldDictionary.Remove(id);
             idContentDictionary.Remove(id);
         }
 
-        public rwby.ui.Selectable AddOption(string id, string value, float height = 0)
+        public ContentButtonStringValue AddOption(string id, string value, float height = 0)
         {
-            return AddOption(id, "", value, height);
+            return AddStringValueOption(id, "", value, height);
         }
 
         public void BringOptionToBottom(string id)
         {
-            if (!idFieldDictionary.ContainsKey(id)) return;
-            idFieldDictionary[id].transform.SetAsLastSibling();
+            if (!idContentDictionary.ContainsKey(id)) return;
             idContentDictionary[id].transform.SetAsLastSibling();
         }
         
-        public rwby.ui.Selectable AddOption(string id, string fieldName, string value, float height = 0)
+        public ContentButtonStringValue AddStringValueOption(string id, string fieldName, string value, float height = 0)
         {
             if (height == 0) height = defaultHeight;
-            LobbySettingsFieldContent fc = GameObject.Instantiate(fieldPrefab, contentFieldTransform, false);
-            fc.LayoutElement.preferredHeight = height;
-            fc.text.text = fieldName;
-            LobbySettingsStringValueContent svc = GameObject.Instantiate(stringValuePrefab, contentValueTransform, false);
-            svc.LayoutElement.preferredHeight = height;
-            svc.text.text = value;
-            
-            idFieldDictionary.Add(id, fc);
+            var svc = GameObject.Instantiate(stringValuePrefab, contentTransform, false);
+            //svc.LayoutElement.preferredHeight = height;
+            svc.label.text = fieldName;
+            svc.valueString.text = value;
             idContentDictionary.Add(id, svc);
-            return svc.selectable;
+            
+            return svc;
+        }
+        
+        public ContentButtonInputField AddInputField(string id, string fieldName, string defaultText, float height = 0)
+        {
+            if (height == 0) height = defaultHeight;
+            var svc = GameObject.Instantiate(inputFieldPrefab, contentTransform, false);
+            //svc.LayoutElement.preferredHeight = height;
+            svc.label.text = fieldName;
+            svc.inputField.text = defaultText;
+            idContentDictionary.Add(id, svc);
+            
+            return svc;
         }
 
-        public rwby.ui.Selectable[] AddOption(string id, string fieldName, int value, float height = 0)
+        public ContentButtonIntValue AddIntValueOption(string id, string fieldName, int value, float height = 0)
         {
             if (height == 0) height = defaultHeight;
-            LobbySettingsFieldContent fc = GameObject.Instantiate(fieldPrefab, contentFieldTransform, false);
-            fc.LayoutElement.preferredHeight = height;
-            fc.text.text = fieldName;
-            LobbySettingsIntValueContent svc = GameObject.Instantiate(intValuePrefab, contentValueTransform, false);
-            svc.LayoutElement.preferredHeight = height;
-            svc.text.text = value.ToString();
-            
-            idFieldDictionary.Add(id, fc);
+            var svc = GameObject.Instantiate(intValuePrefab, contentTransform, false);
+            //svc.LayoutElement.preferredHeight = height;
+            svc.label.text = fieldName;
+            svc.intValueText.text = value.ToString();
             idContentDictionary.Add(id, svc);
-            return new Selectable[2]{ svc.selectableSubtract, svc.selectableAdd };
+
+            return svc;
+            //return new Selectable[2]{ svc.selectableSubtract, svc.selectableAdd };
         }
     }
 }

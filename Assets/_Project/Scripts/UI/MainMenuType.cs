@@ -3,12 +3,8 @@ namespace rwby.ui.mainmenu
     public enum MainMenuType
     {
         TITLE_SCREEN,
-        MODE_SELECT,
+        MAIN_MENU,
         OPTIONS,
-        LOCAL,
-        ONLINE,
-        FIND_LOBBY,
-        HOST_LOBBY,
         LOBBY
     }
 }

@@ -23,6 +23,7 @@ namespace rwby
         public LoadingMenu loadingMenu;
         public ProfilesManager profilesManager;
         public NetworkManager networkManager;
+        public SettingsManager settingsManager;
         public ConsoleReader consoleReader;
         public ConsoleWindow consoleWindow;
 
@@ -36,19 +37,12 @@ namespace rwby
             contentManager.Initialize();
             localPlayerManager.Initialize();
             profilesManager.Initialize();
+            settingsManager.LoadSettings();
+            settingsManager.ApplyVideoSettings();
         }
 
         private void Update()
-        {
-            if (Input.GetKeyDown(KeyCode.F2))
-            {
-                QualitySettings.vSyncCount = 0;
-            }
-            if (Input.GetKeyDown(KeyCode.F3))
-            {
-                QualitySettings.vSyncCount = 1;
-            }
-
+        { 
             /*
             if (Input.GetKeyDown(KeyCode.F4))
             {

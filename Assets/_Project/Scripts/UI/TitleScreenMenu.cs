@@ -1,11 +1,12 @@
 using Rewired;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace rwby.ui.mainmenu
 {
     public class TitleScreenMenu : MainMenuMenu
     {
-        public ModeSelectMenu modeSelectMenu;
+        [FormerlySerializedAs("modeSelectMenu")] public MainMenu mainMenu;
 
         [ActionIdProperty(typeof(Action))]
         public int[] validActions;
@@ -42,7 +43,7 @@ namespace rwby.ui.mainmenu
 
         private void NextMenu()
         {
-            currentHandler.Forward((int)MainMenuType.MODE_SELECT);
+            currentHandler.Forward((int)MainMenuType.MAIN_MENU);
             gameObject.SetActive(false);
         }
     }

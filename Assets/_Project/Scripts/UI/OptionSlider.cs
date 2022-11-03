@@ -10,12 +10,14 @@ namespace rwby.ui
         public event EmptyAction OnValueChanged;
         
         public TextMeshProUGUI text;
+        public RectTransform bar;
         public RectTransform filledBar;
 
         public string[] options;
 
         public int currentOption;
 
+        
         public override void OnSubmit(BaseEventData eventData)
         {
             SetOption(currentOption == (options.Length-1) ? 0 : currentOption + 1);
@@ -24,7 +26,10 @@ namespace rwby.ui
 
         public override void OnPointerClick(PointerEventData eventData)
         {
-            SetOption(currentOption == (options.Length-1) ? 0 : currentOption + 1);
+            if(eventData.button == PointerEventData.InputButton.Left)
+                SetOption(currentOption == (options.Length-1) ? 0 : currentOption + 1);
+            if(eventData.button == PointerEventData.InputButton.Right)
+                SetOption(currentOption == (0) ? options.Length-1 : currentOption - 1);
             base.OnPointerClick(eventData);
         }
 
@@ -36,7 +41,6 @@ namespace rwby.ui
                     if (currentOption == options.Length-1)
                     {
                         base.OnMove(eventData);
-                        //Navigate(eventData, navigation.selectOnLeft);
                     }
                     else
                     {
@@ -45,13 +49,11 @@ namespace rwby.ui
                     break;
                 case MoveDirection.Up:
                     base.OnMove(eventData);
-                    //Navigate(eventData, navigation.selectOnUp);
                     break;
                 case MoveDirection.Left:
                     if (currentOption == 0)
                     {
                         base.OnMove(eventData);
-                        //Navigate(eventData, navigation.selectOnLeft);
                     }
                     else
                     {
@@ -60,7 +62,6 @@ namespace rwby.ui
                     break;
                 case MoveDirection.Down:
                     base.OnMove(eventData);
-                    //Navigate(eventData, navigation.selectOnDown);
                     break;
             }
         }
@@ -71,7 +72,7 @@ namespace rwby.ui
             text.text = options[currentOption];
 
             Vector2 temp = filledBar.sizeDelta;
-            temp.x = GetComponent<RectTransform>().sizeDelta.x / (float)options.Length;
+            temp.x = bar.sizeDelta.x / (float)options.Length;
             filledBar.sizeDelta = temp;
             Vector2 aPos = filledBar.anchoredPosition;
             aPos.x = temp.x * currentOption;

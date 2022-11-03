@@ -16,7 +16,8 @@ namespace rwby.ui.mainmenu
         [SerializeField] private FindLobbyMenuContent lobbyContentItem;
 
         [Header("Menus")] 
-        [SerializeField] private OnlineMenu onlineMenu;
+        [SerializeField] private MainMenu mainMenu;
+        //[SerializeField] private OnlineMenu onlineMenu;
         [SerializeField] private LobbyMenuHandler lobbyMenuHandler;
 
         [Header("UI")] 
@@ -50,14 +51,6 @@ namespace rwby.ui.mainmenu
             ClearLobbyScrollView();
             gameObject.SetActive(false);
             return true;
-        }
-        
-        private void Update()
-        {
-            if (Input.GetKeyDown(KeyCode.Escape))
-            {
-                currentHandler.Back();
-            }
         }
 
         private void OnSessionsUpdated(NetworkRunner runner, List<SessionInfo> sessionList)
@@ -102,7 +95,7 @@ namespace rwby.ui.mainmenu
             await UniTask.WaitUntil(() => sessionHandler.sessionManager != null);
             lobbyMenuHandler.sessionManagerGamemode = (SessionManagerGamemode)sessionHandler.sessionManager;
             
-            currentHandler.Forward((int)MainMenuType.LOBBY);
+            mainMenu.currentHandler.Forward((int)MainMenuType.LOBBY);
         }
     }
 }
