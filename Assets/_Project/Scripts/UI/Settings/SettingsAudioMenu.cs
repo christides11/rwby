@@ -8,20 +8,26 @@ namespace rwby.ui
 {
     public class SettingsAudioMenu : MenuBase
     {
+        public rwby.ui.SettingsMenu settingsMenu;
+        
         public ButtonIntSlider masterVolume;
         public ButtonIntSlider soundEffectVolume;
         public ButtonIntSlider voiceVolume;
         public ButtonIntSlider ambienceVolume;
         public ButtonIntSlider musicVolume;
         public OptionSlider speakerConfig;
-
+        
         private SettingsDataType modifiedSettings;
         
+        private Player rewiredPlayer;
         public override void Open(MenuDirection direction, IMenuHandler menuHandler)
         {
             base.Open(direction, menuHandler);
             modifiedSettings = GameManager.singleton.settingsManager.Settings;
             gameObject.SetActive(true);
+            rewiredPlayer = settingsMenu.playerID == -1
+                ? ReInput.players.GetSystemPlayer()
+                : ReInput.players.GetPlayer(settingsMenu.playerID);
             SetupOptions();
         }
         
@@ -34,7 +40,7 @@ namespace rwby.ui
         
         private void Update()
         {
-            if (ReInput.players.SystemPlayer.GetButtonDown(Action.Apply))
+            if (rewiredPlayer.GetButtonDown(Action.Apply))
             {
                 if (!GatherSettings()) return;
                 GameManager.singleton.settingsManager.SetSettings(modifiedSettings);

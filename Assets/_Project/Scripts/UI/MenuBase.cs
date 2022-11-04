@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace rwby.ui.mainmenu
+namespace rwby.ui
 {
     public class MenuBase : MonoBehaviour, IMenu
     {

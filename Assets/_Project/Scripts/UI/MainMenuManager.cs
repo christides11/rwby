@@ -16,7 +16,7 @@ namespace rwby.ui.mainmenu
         [SerializeField] private MainMenu main;
         //[SerializeField] private LocalMenu local;
         //[SerializeField] private OnlineMenu online;
-        [SerializeField] private OptionsMenu options;
+        //[SerializeField] private OptionsMenu options;
         //[SerializeField] private HostLobbyMenu hostLobby;
         [SerializeField] private LobbyMenuHandler lobbyMenu;
         //[SerializeField] private FindLobbyMenu findLobby;
@@ -28,7 +28,7 @@ namespace rwby.ui.mainmenu
             menus.Add((int)MainMenuType.MAIN_MENU, main);
             //menus.Add((int)MainMenuType.LOCAL, local);
             //menus.Add((int)MainMenuType.ONLINE, online);
-            menus.Add((int)MainMenuType.OPTIONS, options);
+            //menus.Add((int)MainMenuType.OPTIONS, options);
             //menus.Add((int)MainMenuType.HOST_LOBBY, hostLobby);
             menus.Add((int)MainMenuType.LOBBY, lobbyMenu);
             //menus.Add((int)MainMenuType.FIND_LOBBY, findLobby);

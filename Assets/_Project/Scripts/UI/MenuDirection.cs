@@ -1,4 +1,4 @@
-namespace rwby.ui.mainmenu
+namespace rwby.ui
 {
     public enum MenuDirection
     {

@@ -2,6 +2,7 @@ using Fusion;
 using Fusion.Sockets;
 using System;
 using System.Collections.Generic;
+using rwby.ui;
 using UnityEngine;
 
 namespace rwby
@@ -144,17 +145,17 @@ namespace rwby
 				
 				if (player.rewiredPlayer.GetButtonDown(Action.Pause))
                 {
-                    if (PauseMenu.singleton.paused)
+                    if (PauseMenu.singleton.IsPlayerPaused(j))
                     {
-						PauseMenu.singleton.Close();
+						PauseMenu.singleton.CloseMenu(j);
                     }
                     else
                     {
-						PauseMenu.singleton.Open();
+	                    PauseMenu.singleton.OpenMenu(j);
                     }
                 }
 
-				if (PauseMenu.singleton.paused) return;
+				if (PauseMenu.singleton.IsPlayerPaused(j)) return;
 
 				buttonMovement[j] = player.rewiredPlayer.GetAxis2D(Action.Movement_X, Action.Movement_Y);
 				buttonCamera[j] = player.rewiredPlayer.GetAxis2D(Action.Camera_X, Action.Camera_Y);

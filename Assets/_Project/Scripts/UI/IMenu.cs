@@ -1,6 +1,6 @@
 using rwby.ui.mainmenu;
 
-namespace rwby
+namespace rwby.ui
 {
     public interface IMenu
     {

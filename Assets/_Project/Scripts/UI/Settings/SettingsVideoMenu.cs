@@ -34,12 +34,18 @@ namespace rwby.ui
         private Resolution[] resolutions;
         private List<string> resStrings = new List<string>();
 
+        public rwby.ui.SettingsMenu settingsMenu;
+
+        private Player rewiredPlayer;
         public override void Open(MenuDirection direction, IMenuHandler menuHandler)
         {
             base.Open(direction, menuHandler);
             resolutions = Screen.resolutions;
             modifiedSettings = GameManager.singleton.settingsManager.Settings;
             gameObject.SetActive(true);
+            rewiredPlayer = settingsMenu.playerID == -1
+                ? ReInput.players.GetSystemPlayer()
+                : ReInput.players.GetPlayer(settingsMenu.playerID);
             SetupOptions();
         }
         
@@ -52,7 +58,7 @@ namespace rwby.ui
 
         private void Update()
         {
-            if (ReInput.players.SystemPlayer.GetButtonDown(Action.Apply))
+            if (rewiredPlayer.GetButtonDown(Action.Apply))
             {
                 if (!GatherSettings()) return;
                 GameManager.singleton.settingsManager.SetSettings(modifiedSettings);

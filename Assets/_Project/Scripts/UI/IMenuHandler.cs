@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace rwby.ui.mainmenu
+namespace rwby.ui
 {
     public interface IMenuHandler
     {

@@ -8,7 +8,7 @@ namespace rwby.ui
 {
     public class SettingsMenu : MenuBase
     {
-        public int playerID = 0;
+        public int playerID = -1;
         
         [Header("Menus")] 
         public SettingsProfilesMenu profilesMenu;
@@ -35,6 +35,7 @@ namespace rwby.ui
         {
             if (!CloseAllMenus()) return false;
             gameObject.SetActive(false);
+            playerID = -1;
             return true;
         }
 

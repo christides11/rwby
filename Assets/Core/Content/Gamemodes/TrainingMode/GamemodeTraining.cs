@@ -38,19 +38,19 @@ namespace rwby.core.training
             
             if (Object.HasStateAuthority)
             {
-                PauseMenu.onOpened += OnPaused;
+                PauseMenu.onInstanceOpened += OnInstancePaused;
             }
         }
 
-        private void OnPaused()
+        private void OnInstancePaused(int playerID)
         {
-            PauseMenu.singleton.AddOption("Training Options", OpenSettingsMenu);
+            //PauseMenu.singleton.AddOption("Training Options", OpenSettingsMenu);
         }
 
         private void OpenSettingsMenu(PlayerPointerEventData arg0)
         {
-            PauseMenu.singleton.currentSubmenu = settingsMenu;
-            settingsMenu.Open();
+            //PauseMenu.singleton.currentSubmenu = settingsMenu;
+            //settingsMenu.Open();
         }
 
         public override async UniTask SetGamemodeSettings(string args)
