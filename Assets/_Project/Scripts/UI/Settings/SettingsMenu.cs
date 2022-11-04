@@ -12,20 +12,13 @@ namespace rwby.ui
         
         [Header("Menus")] 
         public SettingsProfilesMenu profilesMenu;
-        public SettingsKeyboardMenu keyboardMenu;
         public SettingsAudioMenu audioMenu;
         public SettingsVideoMenu videoMenu;
         
-        private void Awake()
-        {
-            
-        }
-
         public override void Open(MenuDirection direction, IMenuHandler menuHandler)
         {
             base.Open(direction, menuHandler);
             profilesMenu.TryClose(MenuDirection.BACKWARDS, true);
-            keyboardMenu.TryClose(MenuDirection.BACKWARDS, true);
             audioMenu.TryClose(MenuDirection.BACKWARDS, true);
             videoMenu.TryClose(MenuDirection.BACKWARDS, true);
             gameObject.SetActive(true);
@@ -42,7 +35,6 @@ namespace rwby.ui
         public bool CloseAllMenus()
         {
             if (!profilesMenu.TryClose(MenuDirection.BACKWARDS, true)) return false;
-            if (!keyboardMenu.TryClose(MenuDirection.BACKWARDS, true)) return false;
             if (!audioMenu.TryClose(MenuDirection.BACKWARDS, true)) return false;
             if (!videoMenu.TryClose(MenuDirection.BACKWARDS, true)) return false;
             return true;
@@ -53,13 +45,7 @@ namespace rwby.ui
             if (!CloseAllMenus()) return;
             profilesMenu.Open(MenuDirection.FORWARDS, null);
         }
-        
-        public void Open_KeyboardMenu()
-        {
-            if (!CloseAllMenus()) return;
-            keyboardMenu.Open(MenuDirection.FORWARDS, null);
-        }
-        
+
         public void Open_AudioMenu()
         {
             if (!CloseAllMenus()) return;

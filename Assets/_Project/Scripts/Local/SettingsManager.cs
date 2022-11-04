@@ -1,9 +1,11 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using GraphicsConfigurator.API.URP;
 using UnityEngine.Rendering.Universal;
+using UnityEngine.Rendering.Universal.Internal;
 using ShadowResolution = UnityEngine.Rendering.Universal.ShadowResolution;
 
 namespace rwby
@@ -150,6 +152,9 @@ namespace rwby
             }
 
             var pipelineAsset = GameManager.singleton.settings.pipelineAsset;
+            var rendererAsset = GameManager.singleton.settings.rendererData;
+            var ssaoFeature = rendererAsset.rendererFeatures
+                .FirstOrDefault(f => f.name == "ScreenSpaceAmbientOcclusion");
 
             switch (currentSettings.shadowQuality)
             {
@@ -172,6 +177,18 @@ namespace rwby
                     Configuring.CurrentURPA.MainLightShadowsCasting(true);
                     Configuring.CurrentURPA.AdditionalLightsShadowsCasting(true);
                     pipelineAsset.shadowDistance = 100;
+                    break;
+            }
+
+            switch (currentSettings.ambientOcclusion)
+            {
+                case 0:
+                    break;
+                case 1:
+                    break;
+                case 2:
+                    break;
+                case 3:
                     break;
             }
         }

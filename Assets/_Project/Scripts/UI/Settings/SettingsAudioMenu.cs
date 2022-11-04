@@ -24,10 +24,10 @@ namespace rwby.ui
         {
             base.Open(direction, menuHandler);
             modifiedSettings = GameManager.singleton.settingsManager.Settings;
-            gameObject.SetActive(true);
             rewiredPlayer = settingsMenu.playerID == -1
                 ? ReInput.players.GetSystemPlayer()
                 : ReInput.players.GetPlayer(settingsMenu.playerID);
+            gameObject.SetActive(true);
             SetupOptions();
         }
         
