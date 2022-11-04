@@ -57,7 +57,7 @@ namespace rwby.ui.mainmenu
 
         public override bool TryClose(MenuDirection direction, bool forceClose = false)
         {
-            TryCloseAll();
+            if(direction == MenuDirection.BACKWARDS) TryCloseAll();
             EventSystem.current.SetSelectedGameObject(null);
             gameObject.SetActive(false);
             return true;

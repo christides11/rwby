@@ -12,6 +12,7 @@ namespace rwby
         public ContentButtonIntValue intValuePrefab;
         public ContentButtonStringValue stringValuePrefab;
         public ContentButtonInputField inputFieldPrefab;
+        public OptionSlider optionSliderPrefab;
 
         public float defaultHeight = 90;
 
@@ -54,6 +55,17 @@ namespace rwby
         {
             if (!idContentDictionary.ContainsKey(id)) return;
             idContentDictionary[id].transform.SetAsLastSibling();
+        }
+
+        public OptionSlider AddOptionSlider(string id, string fieldName, string[] values, int defaultOption, float height = 0)
+        {
+            if (height == 0) height = defaultHeight;
+            var svc = GameObject.Instantiate(optionSliderPrefab, contentTransform, false);
+            svc.label.text = fieldName;
+            svc.options = values;
+            svc.SetOption(defaultOption);
+            idContentDictionary.Add(id, svc);
+            return svc;
         }
         
         public ContentButtonStringValue AddStringValueOption(string id, string fieldName, string value, float height = 0)

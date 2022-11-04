@@ -73,13 +73,14 @@ namespace rwby
 			OnConnectionStatusChanged?.Invoke(_runner, status);
 		}
 
-		public async UniTask JoinSessionLobby()
+		public async UniTask<StartGameResult> JoinSessionLobby()
 		{
 			if (!_runner)
 				_runner = gameObject.AddComponent<NetworkRunner>();
 			_runner.AddCallbacks(this);
 			
-			await _runner.JoinSessionLobby(SessionLobby.ClientServer);
+			var result = await _runner.JoinSessionLobby(SessionLobby.ClientServer);
+			return result;
 		}
 
 		public async UniTask<StartGameResult> DedicateHostSession(string roomName, int playerCount, string password)

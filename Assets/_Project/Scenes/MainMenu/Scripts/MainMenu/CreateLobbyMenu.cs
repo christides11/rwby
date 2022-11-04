@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
+using Fusion.Photon.Realtime;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -21,6 +22,7 @@ namespace rwby.ui.mainmenu
         private LocalPlayerManager localPlayerManager;
         
         // Options.
+        private int region = 0;
         private string lobbyName = "";
         private int playerCount = 8;
         private int maxPlayersPerClient = 1;
@@ -69,6 +71,8 @@ namespace rwby.ui.mainmenu
 
         public void SetupOptions()
         {
+            var regionOptionSlider = lobbySettings.AddOptionSlider("region", "Region", new []{ "United States", "South Korea", "South America", "Europe", "Japan", "Asia" }, 0);
+            regionOptionSlider.OnValueChanged += UpdateRegion;
             var lobbyNameInputField = lobbySettings.AddInputField("LobbyName", "Lobby Name", $"Lobby {Random.Range(1, 1000)}");
             lobbyNameInputField.inputField.onValueChanged.AddListener(UpdateLobbyName);
             var playerCountButtons = lobbySettings.AddIntValueOption("PlayerCount", "Lobby Size", playerCount);
@@ -85,6 +89,11 @@ namespace rwby.ui.mainmenu
             teamButtons.addButton.onSubmit.AddListener(() => { ChangeTeamCount(1); });
             
             lobbySettings.AddOption("Host", "Host").onSubmit.AddListener(async () => await TryHostLobby());
+        }
+
+        private void UpdateRegion(int value)
+        {
+            region = value;
         }
 
         private void UpdateLobbyName(string arg0)
@@ -172,6 +181,9 @@ namespace rwby.ui.mainmenu
         
         public async UniTask TryHostLobby()
         {
+            var appSettings = PhotonAppSettings.Instance.AppSettings;
+            appSettings.FixedRegion = NetworkManager.regionCodes[region];
+            
             GameManager.singleton.loadingMenu.OpenMenu(0, "Attempting host...");
             int sessionHandlerID = await GameManager.singleton.HostGamemodeSession(lobbyName, playerCount, "");
             GameManager.singleton.loadingMenu.CloseMenu(0);
@@ -190,6 +202,8 @@ namespace rwby.ui.mainmenu
             smc.CurrentGameMode.SetGamemodeSettings(selectedGamemode);
 
             lobbyMenuHandler.sessionManagerGamemode = smc;
+            
+            Debug.Log($"{fl._runner.SessionInfo.Name} ({fl._runner.SessionInfo.Region})");
 
             mainMenu.currentHandler.Forward((int)MainMenuType.LOBBY);
         }

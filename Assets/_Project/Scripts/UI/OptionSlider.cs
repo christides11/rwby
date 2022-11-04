@@ -4,7 +4,7 @@ using UnityEngine.EventSystems;
 
 namespace rwby.ui
 {
-    public class OptionSlider : rwby.ui.Selectable
+    public class OptionSlider : ContentButtonBase
     {
         public delegate void EmptyAction(int value);
         public event EmptyAction OnValueChanged;

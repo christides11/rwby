@@ -1,5 +1,7 @@
 using Fusion;
 using System.Collections.Generic;
+using Cysharp.Threading.Tasks;
+using UnityEditor.PackageManager;
 using UnityEngine;
 
 namespace rwby
@@ -7,6 +9,8 @@ namespace rwby
     public class NetworkManager : MonoBehaviour
     {
         public static NetworkManager singleton;
+        
+        public static readonly string[] regionCodes = new[] { "us", "kr", "sa", "eu", "jp", "asia" };
 
         public NetworkObject clientPrefab;
         
@@ -18,6 +22,15 @@ namespace rwby
             singleton = this;
         }
 
+        public int CreateOrGetSessionHandler(int sessionHandlerID)
+        {
+            if (sessions.ContainsKey(sessionHandlerID))
+            {
+                return sessionHandlerID;
+            }
+            return CreateSessionHandler();
+        }
+        
         public int CreateSessionHandler()
         {
             SessionIDCounter++;
@@ -34,6 +47,31 @@ namespace rwby
             sessions[id].LeaveSession();
             Destroy(sessions[id]);
             sessions.Remove(id);
+        }
+
+        public async UniTask<(bool, int)> TryJoinSession(string sessionName, string password)
+        {
+            var sessionHandlerID = CreateSessionHandler();
+            var sessionHandler = GetSessionHandler(sessionHandlerID);
+            var joinSessionLobbyResult = await sessionHandler.JoinSessionLobby();
+            if (!joinSessionLobbyResult.Ok)
+            {
+                Debug.LogError($"Join Session Lobby Error: {joinSessionLobbyResult.ShutdownReason.ToString()}");
+                DestroySessionHandler(sessionHandlerID);
+                return (false, -1);
+            }
+            
+            var joinSessionResult = await sessionHandler.JoinSession(sessionName);
+            if (!joinSessionLobbyResult.Ok)
+            {
+                Debug.LogError($"Join Session Error: {joinSessionResult.ShutdownReason.ToString()}");
+                DestroySessionHandler(sessionHandlerID);
+                return (false, -1);
+            }
+            
+            await UniTask.WaitUntil(() => sessionHandler.sessionManager != null);
+            
+            return (true, sessionHandlerID);
         }
 
         public FusionLauncher GetSessionHandler(int id)
