@@ -138,6 +138,8 @@ namespace rwby.ui.mainmenu
             int minTeams = selectedGamemodeDefinition != null ? selectedGamemodeDefinition.minimumTeams : 0;
             int maxTeams = selectedGamemodeDefinition != null ? selectedGamemodeDefinition.maximumTeams : 0;
             teamCount = (byte)Mathf.Clamp(teamCount + change, minTeams, maxTeams);
+            ((ContentButtonIntValue)lobbySettings.idContentDictionary["Teams"]).intValueText.text =
+                teamCount.ToString();
             Refresh();
         }
         

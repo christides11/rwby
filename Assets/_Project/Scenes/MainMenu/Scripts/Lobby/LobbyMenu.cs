@@ -1,7 +1,9 @@
+using System.Collections.Generic;
 using Fusion;
 using rwby.ui.mainmenu;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace rwby.ui
 {
@@ -19,6 +21,12 @@ namespace rwby.ui
         public Transform characterContentTransform;
         public GameObject characterContentPrefab;
         public CharacterSelectMenu characterSelectMenu;
+
+        [Header("Lobby Players")] 
+        public Transform teamListContentHolder;
+        public GameObject teamListHorizontalHolder;
+        public GameObject teamHolder;
+        public GameObject teamPlayerHeader;
         
         private int currentSelectingCharacterIndex = 0;
         
@@ -87,6 +95,49 @@ namespace rwby.ui
                     chara.GetComponentInChildren<TextMeshProUGUI>().text = fighterDefinition.Name;
                 }
                 int selectIndex = i;
+            }
+
+            UpdatePlayerList();
+        }
+
+        private Dictionary<int, GameObject> teamHolders = new Dictionary<int, GameObject>();
+        private void UpdatePlayerList()
+        {
+            var smg = lobbyMenuInstance.lobbyMenuHandler.sessionManagerGamemode;
+            var playerList = smg.GetPlayerList();
+
+            foreach (Transform child in teamListContentHolder)
+            {
+                Destroy(child.gameObject);
+            }
+            
+            teamHolders.Clear();
+
+            if (smg.teams <= 1)
+            {
+                var singleHorizontalHolder = GameObject.Instantiate(teamListHorizontalHolder, teamListContentHolder, false);
+                singleHorizontalHolder.GetComponent<LayoutElement>().preferredHeight = 480;
+
+                var singleTeamHolder = GameObject.Instantiate(teamHolder, singleHorizontalHolder.transform, false);
+                teamHolders.Add(smg.teams, singleTeamHolder);
+            }
+            else
+            {
+                int ts = 0;
+                for (int i = 0; i < (smg.teams / 4)+1; i++)
+                {
+                    var horizontalHolder =
+                        GameObject.Instantiate(teamListHorizontalHolder, teamListContentHolder, false);
+                    horizontalHolder.GetComponent<LayoutElement>().preferredHeight = 240;
+
+                    for (int j = 0; j < 4; j++)
+                    {
+                        if (ts >= smg.teams) return;
+                        var singleTeamHolder = GameObject.Instantiate(teamHolder, horizontalHolder.transform, false);
+                        teamHolders.Add(ts+1, singleTeamHolder);
+                        ts++;
+                    }
+                }
             }
         }
 

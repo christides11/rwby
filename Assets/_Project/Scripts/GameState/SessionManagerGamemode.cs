@@ -84,6 +84,25 @@ namespace rwby
             base.FixedUpdateNetwork();
         }
 
+        public List<SessionPlayerDefinition> GetPlayerList()
+        {
+            var players = new List<SessionPlayerDefinition>();
+
+            for (int i = 0; i < ClientDefinitions.Count; i++)
+            {
+                for (int j = 0; j < ClientDefinitions[i].players.Count; j++)
+                {
+                    players.Add(new SessionPlayerDefinition()
+                    {
+                        clientManager = Runner.GetPlayerObject(ClientDefinitions[i].clientRef).GetBehaviour<ClientManager>(),
+                        clientIndex = i,
+                        playerIndex = j
+                    });
+                }
+            }
+            return players;
+        }
+
         private bool CheckPlayersReady()
         {
             if (ClientDefinitions.Count == 0) return false;
