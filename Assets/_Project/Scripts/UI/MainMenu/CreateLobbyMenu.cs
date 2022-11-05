@@ -26,7 +26,7 @@ namespace rwby.ui.mainmenu
         private string lobbyName = "";
         private int playerCount = 8;
         private int maxPlayersPerClient = 1;
-        private byte teamCount = 0;
+        //private byte teamCount = 0;
         private ModGUIDContentReference _selectedGamemodeContentReference;
         private IGameModeDefinition selectedGamemodeDefinition;
         private GameModeBase selectedGamemode;
@@ -84,9 +84,9 @@ namespace rwby.ui.mainmenu
             var gamemodeButtons = lobbySettings.AddStringValueOption("GameMode", "GameMode",
                 selectedGamemodeDefinition ? selectedGamemodeDefinition.Name : "None");
             gamemodeButtons.onSubmit.AddListener(Button_GameMode);
-            var teamButtons = lobbySettings.AddIntValueOption("Teams", "Teams", teamCount);
-            teamButtons.subtractButton.onSubmit.AddListener(() => { ChangeTeamCount(-1); });
-            teamButtons.addButton.onSubmit.AddListener(() => { ChangeTeamCount(1); });
+            //var teamButtons = lobbySettings.AddIntValueOption("Teams", "Teams", teamCount);
+            //teamButtons.subtractButton.onSubmit.AddListener(() => { ChangeTeamCount(-1); });
+            //teamButtons.addButton.onSubmit.AddListener(() => { ChangeTeamCount(1); });
             
             lobbySettings.AddOption("Host", "Host").onSubmit.AddListener(async () => await TryHostLobby());
         }
@@ -133,6 +133,7 @@ namespace rwby.ui.mainmenu
                 maxPlayersPerClient.ToString();
         }
         
+        /*
         private void ChangeTeamCount(int change)
         {
             int minTeams = selectedGamemodeDefinition != null ? selectedGamemodeDefinition.minimumTeams : 0;
@@ -141,7 +142,7 @@ namespace rwby.ui.mainmenu
             ((ContentButtonIntValue)lobbySettings.idContentDictionary["Teams"]).intValueText.text =
                 teamCount.ToString();
             Refresh();
-        }
+        }*/
         
         public async void Button_GameMode()
         {
@@ -199,7 +200,8 @@ namespace rwby.ui.mainmenu
             
             bool setGamemodeResult = await smc.TrySetGamemode(_selectedGamemodeContentReference);
 
-            smc.SetTeamCount(teamCount);
+            // TODO
+            //smc.SetTeamCount(teamCount);
             smc.SetMaxPlayersPerClient(maxPlayersPerClient);
             smc.CurrentGameMode.SetGamemodeSettings(selectedGamemode);
 

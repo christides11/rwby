@@ -110,8 +110,7 @@ namespace rwby.Debugging
                     SessionManagerGamemode smc = (SessionManagerGamemode)fl.sessionManager;
             
                     bool setGamemodeResult = await smc.TrySetGamemode(gamemodeGUIDContentReference);
-
-                    smc.SetTeamCount(0);
+                    
                     smc.SetMaxPlayersPerClient(playersPerClient);
                     await smc.CurrentGameMode.SetGamemodeSettings(gamemodeSettings);
                     break;
@@ -176,7 +175,7 @@ namespace rwby.Debugging
             
             bool setGamemodeResult = await smc.TrySetGamemode(gamemodeGUIDContentReference);
 
-            smc.SetTeamCount(0);
+            //smc.SetTeamCount(0);
             smc.SetMaxPlayersPerClient(localPlayers);
             await smc.CurrentGameMode.SetGamemodeSettings(gamemodeSettings);
 

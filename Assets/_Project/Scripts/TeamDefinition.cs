@@ -1,12 +1,13 @@
+using Fusion;
 using UnityEngine;
 
 namespace rwby
 {
     [System.Serializable]
-    public struct TeamDefinition
+    public struct TeamDefinition : INetworkStruct
     {
-        public string teamName;
-        public Color color;
+        public bool editable;
+        public bool removable;
         public int minimumPlayers;
         public int maximumPlayers;
         public int minCharactersPerPlayer;

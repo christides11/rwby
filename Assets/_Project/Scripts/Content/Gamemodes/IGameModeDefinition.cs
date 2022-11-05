@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace rwby
 {
@@ -7,12 +8,11 @@ namespace rwby
         public override string Name { get; }
         public override string Description { get; }
 
-        public int minimumPlayers = 0;
+        public int minimumPlayers = 1;
         public int maximumPlayers = int.MaxValue;
-        public int minimumTeams;
-        public int maximumTeams;
-        public TeamDefinition defaultTeam;
-        public TeamDefinition[] teams;
+        public int minimumTeams = 1;
+        public int maximumTeams = 1;
+        [FormerlySerializedAs("teams")] public TeamDefinition[] defaultTeams;
 
         public abstract GameObject GetGamemode();
     }

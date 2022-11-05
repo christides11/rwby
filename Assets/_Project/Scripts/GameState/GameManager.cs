@@ -1,6 +1,7 @@
 using System;
 using Cysharp.Threading.Tasks;
 using Fusion;
+using IngameDebugConsole;
 using Rewired.UI.ControlMapper;
 using Rewired;
 using rwby.Debugging;
@@ -26,6 +27,7 @@ namespace rwby
         public SettingsManager settingsManager;
         public ConsoleReader consoleReader;
         public ConsoleWindow consoleWindow;
+        public DebugLogManager debugLogManager;
 
         public Settings settings;
         public ContentGUID internalModGUID = new ContentGUID(8, "");
@@ -39,6 +41,11 @@ namespace rwby
             profilesManager.Initialize();
             settingsManager.LoadSettings();
             settingsManager.ApplyVideoSettings();
+        }
+
+        private void Start()
+        {
+            debugLogManager.gameObject.SetActive(false);
         }
 
         private void Update()

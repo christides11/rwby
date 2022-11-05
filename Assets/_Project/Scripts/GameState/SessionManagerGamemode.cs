@@ -224,28 +224,14 @@ namespace rwby
             temp.gamemodeReference = gamemodeContentReference; 
             GamemodeSettings = temp;
             
-            teams = (byte)gamemodeDefinition.maximumTeams;
+            SetTeamDefinitions(gamemodeDefinition.defaultTeams);
             return true;
         }
 
-        public TeamDefinition GetTeamDefinition(int team)
-        {
-            if (CurrentGameMode == null) return new TeamDefinition();
-            if (team < 0 || team > teams) return new TeamDefinition();
-            if (team == 0)
-            {
-                return CurrentGameMode.definition.defaultTeam;
-            }
-            else
-            {
-                return CurrentGameMode.definition.teams[team-1];
-            }
-        }
-        
         // TODO: Better team verification.
         private bool VerifyTeams(IGameModeDefinition gamemodeDefiniton)
         {
-            int[] teamCount = new int[teams];
+            int[] teamCount = new int[teamDefinitions.Count];
 
             for (int i = 0; i < ClientDefinitions.Count; i++)
             {
@@ -259,8 +245,8 @@ namespace rwby
 
             for (int w = 0; w < teamCount.Length; w++)
             {
-                if (teamCount[w] > gamemodeDefiniton.teams[w].maximumPlayers
-                    || teamCount[w] < gamemodeDefiniton.teams[w].minimumPlayers) return false;
+                if (teamCount[w] > teamDefinitions[w].maximumPlayers
+                    || teamCount[w] < teamDefinitions[w].minimumPlayers) return false;
             }
 
             return true;
@@ -302,6 +288,31 @@ namespace rwby
                 if (c.clientRef == client) return c;
             }
             return default;
+        }
+
+        public void CLIENT_SetPlayerTeam(int playerID, byte team)
+        {
+            RPC_SetPlayerTeam(playerID, team);
+        }
+
+        [Rpc(RpcSources.All, RpcTargets.StateAuthority,
+            HostMode = RpcHostMode.SourceIsHostPlayer)]
+        private void RPC_SetPlayerTeam(int playerID, byte team, RpcInfo info = default)
+        {
+            for (int i = 0; i < ClientDefinitions.Count; i++)
+            {
+                if (ClientDefinitions[i].clientRef != info.Source) continue;
+                var clientDefinitions = ClientDefinitions;
+                var temp = clientDefinitions[i];
+                var clientPlayers = temp.players;
+                var playerTemp = clientPlayers[playerID];
+
+                playerTemp.team = team;
+
+                clientPlayers.Set(playerID, playerTemp);
+                clientDefinitions.Set(i, temp);
+                return;
+            }
         }
 
         public void CLIENT_SetPlayerCharacterCount(int playerID, int count)

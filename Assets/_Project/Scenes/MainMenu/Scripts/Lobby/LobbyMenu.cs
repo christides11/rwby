@@ -3,6 +3,7 @@ using Fusion;
 using rwby.ui.mainmenu;
 using TMPro;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 namespace rwby.ui
@@ -11,6 +12,8 @@ namespace rwby.ui
     {
         public LobbyMenuInstance lobbyMenuInstance;
 
+        public GameObject defaultSelectedUIItem;
+        
         [Header("Content")] 
         public Selectable readyButton;
         public Selectable configureButton;
@@ -68,6 +71,14 @@ namespace rwby.ui
             gameObject.SetActive(false);
             return true;
         }
+        
+        private void Update()
+        {
+            if (UIHelpers.SelectDefaultSelectable(EventSystem.current, GameManager.singleton.localPlayerManager.localPlayers[lobbyMenuInstance.playerID]))
+            {
+                EventSystem.current.SetSelectedGameObject(defaultSelectedUIItem);
+            }
+        }
 
         public void Refresh()
         {
@@ -113,18 +124,19 @@ namespace rwby.ui
             
             teamHolders.Clear();
 
-            if (smg.teams <= 1)
+            if (smg.teamDefinitions.Count == 1)
             {
                 var singleHorizontalHolder = GameObject.Instantiate(teamListHorizontalHolder, teamListContentHolder, false);
                 singleHorizontalHolder.GetComponent<LayoutElement>().preferredHeight = 480;
 
                 var singleTeamHolder = GameObject.Instantiate(teamHolder, singleHorizontalHolder.transform, false);
-                teamHolders.Add(smg.teams, singleTeamHolder);
+                teamHolders.Add(1, singleTeamHolder);
+                singleTeamHolder.GetComponent<rwby.ui.Selectable>().onSubmit.AddListener(() => SetTeam(1));
             }
-            else
+            else if(smg.teamDefinitions.Count != 0)
             {
-                int ts = 0;
-                for (int i = 0; i < (smg.teams / 4)+1; i++)
+                byte ts = 0;
+                for (int i = 0; i < (smg.teamDefinitions.Count / 4)+1; i++)
                 {
                     var horizontalHolder =
                         GameObject.Instantiate(teamListHorizontalHolder, teamListContentHolder, false);
@@ -132,13 +144,21 @@ namespace rwby.ui
 
                     for (int j = 0; j < 4; j++)
                     {
-                        if (ts >= smg.teams) return;
+                        if (ts >= smg.teamDefinitions.Count) return;
                         var singleTeamHolder = GameObject.Instantiate(teamHolder, horizontalHolder.transform, false);
                         teamHolders.Add(ts+1, singleTeamHolder);
+                        byte teamIndx = ts;
+                        singleTeamHolder.GetComponent<rwby.ui.Selectable>().onSubmit.AddListener(() => SetTeam(teamIndx));
                         ts++;
                     }
                 }
             }
+        }
+
+        public void SetTeam(byte team)
+        {
+            lobbyMenuInstance.lobbyMenuHandler.sessionManagerGamemode
+                .CLIENT_SetPlayerTeam(lobbyMenuInstance.playerID, team);
         }
 
         public void OpenCharacterSelect()

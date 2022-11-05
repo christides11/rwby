@@ -20,7 +20,7 @@ namespace rwby
             new CustomSceneRef(new ContentGUID(8), 0, 1)
         });
 
-        [Networked] public byte teams { get; set; }
+        [Networked, Capacity(8)] public NetworkLinkedList<TeamDefinition> teamDefinitions => default;
         [Networked] public byte maxPlayersPerClient { get; set; }
 
         public ClientContentLoaderService clientContentLoaderService;
@@ -40,7 +40,6 @@ namespace rwby
         {
             base.Spawned();
             maxPlayersPerClient = 4;
-            teams = 1;
             
             sessionHandlerID = GameManager.singleton.networkManager.GetSessionHandlerIDByRunner(Runner);
             GameManager.singleton.networkManager.sessions[sessionHandlerID].sessionManager = this;
@@ -72,12 +71,16 @@ namespace rwby
             if (max < 0 || max > 4) return;
             maxPlayersPerClient = (byte)max;
         }
-        
-        public void SetTeamCount(byte count)
+
+        public void SetTeamDefinitions(TeamDefinition[] teamDefinitions)
         {
-            teams = count;
+            this.teamDefinitions.Clear();
+            for (int i = 0; i < teamDefinitions.Length; i++)
+            {
+                this.teamDefinitions.Add(teamDefinitions[i]);
+            }
         }
-        
+
         protected virtual HashSet<ModGUIDContentReference> BuildLoadedContentList()
         {
             HashSet<ModGUIDContentReference> references = new HashSet<ModGUIDContentReference>();
