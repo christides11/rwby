@@ -153,6 +153,19 @@ namespace rwby.ui
                     }
                 }
             }
+
+            var players = lobbyMenuInstance.lobbyMenuHandler.sessionManagerGamemode.GetPlayerList();
+
+            for (int w = 0; w < players.Count; w++)
+            {
+                var pInfo = lobbyMenuInstance.lobbyMenuHandler.sessionManagerGamemode
+                    .ClientDefinitions[players[w].clientIndex]
+                    .players[players[w].playerIndex];
+                if (!teamHolders.ContainsKey(pInfo.team)) return;
+                var playerHeader = GameObject.Instantiate(teamPlayerHeader, 
+                    teamHolders[pInfo.team].transform.Find("Scroll View").Find("Viewport").Find("Content"), 
+                    false);
+            }
         }
 
         public void SetTeam(byte team)

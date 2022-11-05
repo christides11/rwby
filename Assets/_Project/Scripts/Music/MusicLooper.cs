@@ -19,10 +19,10 @@ namespace rwby
 
         private void Start()
         {
-            StartSong();
+            Play();
         }
 
-        public void StartSong()
+        public void Play()
         {
             audioSources[nextSource].clip = song;
             audioSources[nextSource].PlayScheduled(AudioSettings.dspTime);
@@ -36,6 +36,19 @@ namespace rwby
             audioSources[nextSource].SetScheduledEndTime(AudioSettings.dspTime + loopPointBoundary);
 
             nextEventTime = AudioSettings.dspTime + loopPointBoundary;
+        }
+
+        public void Pause()
+        {
+            
+        }
+        
+        public void Stop()
+        {
+            for (int i = 0; i < audioSources.Length; i++)
+            {
+                audioSources[i].Stop();
+            }
         }
 
         private void Update()

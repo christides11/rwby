@@ -207,6 +207,7 @@ namespace rwby.Debugging
                 return;
             }
             
+            smc.CLIENT_SetPlayerTeam(0, 1);
             smc.CLIENT_SetPlayerCharacterCount(0, 1);
             smc.CLIENT_SetPlayerCharacter(0, 0, charaGUIDContentReference);
 
