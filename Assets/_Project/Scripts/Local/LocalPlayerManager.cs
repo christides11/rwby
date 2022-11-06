@@ -40,6 +40,7 @@ namespace rwby
 
         public LocalPlayerData GetPlayer(int playerID)
         {
+            if (playerID == -1) return systemPlayer;
             if (playerID < 0 || playerID >= localPlayers.Count) return default;
             return localPlayers[playerID];
         }

@@ -23,6 +23,8 @@ namespace rwby
         [SerializeField] public string profileName;
         [SerializeField] public List<string> behaviours;
         [SerializeField] public List<string> joystickMaps;
+        [SerializeField] public List<string> keyboardMaps;
+        [SerializeField] public List<string> mouseMaps;
         [SerializeField] public CameraVariables controllerCam;
         [SerializeField] public CameraVariables keyboardCam;
 

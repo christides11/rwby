@@ -11,5 +11,6 @@ namespace rwby
         public BaseHUD hud;
         public CameraSwitcher cameraHandler;
         public Camera camera;
+        public string profile;
     }
 }

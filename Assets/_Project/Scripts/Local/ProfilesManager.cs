@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using Rewired;
 using UnityEngine;
 
@@ -29,7 +30,7 @@ namespace rwby
                     profileName = defaultProfileIdentifier
                 };
                 profiles.Add(temp);
-                ApplyControlsToProfile(0, 0, true);
+                ApplyControlsToProfile(-1, 0);
                 SaveProfiles();
                 LoadProfiles();
             }
@@ -70,38 +71,74 @@ namespace rwby
             }
             return new ProfileDefinition();
         }
-        
-        public void ApplyControlsToProfile(int player, int profileIndex, bool systemPlayer = false)
+
+        public void RestoreDefaultControls(int playerID)
         {
-            Rewired.PlayerSaveData playerData = (systemPlayer ? ReInput.players.GetSystemPlayer() : ReInput.players.GetPlayer(player)).GetSaveData(true);
+            var player = playerID == -1 ? ReInput.players.SystemPlayer : ReInput.players.GetPlayer(playerID);
+            player.controllers.maps.LoadDefaultMaps(ControllerType.Joystick);
+            player.controllers.maps.LoadDefaultMaps(ControllerType.Keyboard);
+            player.controllers.maps.LoadDefaultMaps(ControllerType.Mouse);
+            player.controllers.maps.LoadDefaultMaps(ControllerType.Custom);
+        }
+        
+        public void ApplyControlsToProfile(int player, int profileIndex)
+        {
+            Rewired.PlayerSaveData playerData = (player == -1 ? ReInput.players.GetSystemPlayer() : ReInput.players.GetPlayer(player)).GetSaveData(true);
 
             List<string> tempInputBehaviours = new List<string>();
             foreach(InputBehavior behavior in playerData.inputBehaviors) {
                 tempInputBehaviours.Add(behavior.ToJsonString());
             }
 
+            // CONTROLLERS
             List<string> tempControllerMaps = new List<string>();
             foreach(var joystickMapSaveData in playerData.joystickMapSaveData)
             {
                 tempControllerMaps.Add(joystickMapSaveData.map.ToJsonString());
             }
-            Debug.Log($"{playerData.joystickMapSaveData.Length} , {playerData.joystickMapCount}");
-            Debug.Log($"{ReInput.players.GetPlayer(0).GetSaveData(true).joystickMapSaveData.Length} , " +
-                      $"{ReInput.players.GetPlayer(0).GetSaveData(true).joystickMapCount}");
+            
+            // KEYBOARD
+            var tempKeyboardMaps = new List<string>();
+            foreach (var keyboardMapSaveData in playerData.keyboardMapSaveData)
+            {
+                tempKeyboardMaps.Add(keyboardMapSaveData.map.ToJsonString());
+            }
+            
+            // Mouse
+            var tempMouseMaps = new List<string>();
+            foreach (var mouseMapSaveData in playerData.mouseMapSaveData)
+            {
+                tempMouseMaps.Add(mouseMapSaveData.map.ToJsonString());
+            }
+
             ProfileDefinition temp = profiles[profileIndex];
             temp.behaviours = tempInputBehaviours;
             temp.joystickMaps = tempControllerMaps;
+            temp.keyboardMaps = tempKeyboardMaps;
+            temp.mouseMaps = tempMouseMaps;
             temp.version = version;
             profiles[profileIndex] = temp;
         }
 
-        public void ApplyProfileToPlayer(int playerID, int profileIndex, bool systemPlayer = false)
+        public void ApplyProfileToPlayer(int playerID, string profileName)
+        {
+            if (String.IsNullOrEmpty(profileName)) profileName = defaultProfileIdentifier;
+
+            var p = profiles.FirstOrDefault(x => x.profileName.ToLower() == profileName.ToLower());
+            if (p.Equals(default(ProfileDefinition)))
+            {
+                p = profiles[0];
+            }
+            
+            ApplyProfileToPlayer(playerID, profiles.IndexOf(p));
+        }
+        
+        public void ApplyProfileToPlayer(int playerID, int profileIndex)
         {
             ProfileDefinition profile = profiles[profileIndex];
-            var player = systemPlayer ? ReInput.players.SystemPlayer : ReInput.players.GetPlayer(playerID);
-            player.controllers.maps.LoadDefaultMaps(ControllerType.Joystick);
-            
-            
+            var player = playerID == -1 ? ReInput.players.SystemPlayer : ReInput.players.GetPlayer(playerID);
+            RestoreDefaultControls(playerID);
+
             IList<InputBehavior> behaviors = ReInput.mapping.GetInputBehaviors(player.id);
             for(int j = 0; j < behaviors.Count; j++)
             {
@@ -121,11 +158,37 @@ namespace rwby
             }
 
             // Joystick maps
-            if (foundJoystickMaps == false) return;
-            int count = 0;
-            foreach(Joystick joystick in player.controllers.Joysticks) {
-                player.controllers.maps.AddMapsFromJson(ControllerType.Joystick, joystick.id, joystickMaps[count]); // add joystick controller maps to player
-                count++;
+            if (foundJoystickMaps)
+            {
+                int count = 0;
+                player.controllers.maps.ClearMaps(ControllerType.Joystick, true);
+                foreach (Joystick joystick in player.controllers.Joysticks)
+                {
+                    player.controllers.maps.AddMapsFromJson(ControllerType.Joystick, joystick.id,
+                        joystickMaps[count]); // add joystick controller maps to player
+                    count++;
+                }
+            }
+
+            // LOAD KEYBOARD MAPS
+            var keyboardMaps = profile.keyboardMaps;
+            bool keyboardMapsValid = keyboardMaps != null && keyboardMaps.Count > 0;
+
+            // KEYBOARD
+            if (keyboardMapsValid)
+            {
+                player.controllers.maps.ClearMaps(ControllerType.Keyboard, true);
+                player.controllers.maps.AddMapsFromJson(ControllerType.Keyboard, 0, keyboardMaps);
+            }
+            
+            // MOUSE
+            var mouseMaps = profile.mouseMaps;
+            bool mouseMapsValid = mouseMaps != null && mouseMaps.Count > 0;
+
+            if (mouseMapsValid)
+            {
+                player.controllers.maps.ClearMaps(ControllerType.Mouse, true);
+                player.controllers.maps.AddMapsFromJson(ControllerType.Mouse, 0, mouseMaps);
             }
         }
     }

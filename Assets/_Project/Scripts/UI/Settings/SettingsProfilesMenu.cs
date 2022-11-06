@@ -54,8 +54,7 @@ namespace rwby.ui
         {
             int index = profileIndex;
             var profilesManager = GameManager.singleton.profilesManager;
-            Debug.Log(profilesManager.Profiles[profileIndex]);
-            profilesManager.ApplyProfileToPlayer(settingsMenu.playerID, profileIndex, false);
+            profilesManager.ApplyProfileToPlayer(settingsMenu.playerID, profileIndex);
             screenClosedEvent = () => ApplyProfileChanges(index);
             GameManager.singleton.cMapper.onScreenClosed += screenClosedEvent;
             GameManager.singleton.cMapper.Open();
@@ -63,9 +62,14 @@ namespace rwby.ui
 
         private void ApplyProfileChanges(int profileIndex)
         {
-            GameManager.singleton.profilesManager.ApplyControlsToProfile(settingsMenu.playerID, profileIndex, false);
+            var playerID = settingsMenu.playerID;
+            GameManager.singleton.profilesManager.ApplyControlsToProfile(playerID, profileIndex);
             GameManager.singleton.profilesManager.SaveProfiles();
+            GameManager.singleton.profilesManager.RestoreDefaultControls(playerID);
+            GameManager.singleton.profilesManager.ApplyProfileToPlayer(playerID,
+                GameManager.singleton.localPlayerManager.GetPlayer(playerID).profile);
             GameManager.singleton.cMapper.onScreenClosed -= screenClosedEvent;
+            Debug.Log($"Applied profile changes. Reapplied {GameManager.singleton.localPlayerManager.GetPlayer(playerID).profile} to player {playerID}.");
         }
     }
 }

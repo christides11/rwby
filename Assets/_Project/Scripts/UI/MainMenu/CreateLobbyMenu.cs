@@ -78,9 +78,9 @@ namespace rwby.ui.mainmenu
             var playerCountButtons = lobbySettings.AddIntValueOption("PlayerCount", "Lobby Size", playerCount);
             playerCountButtons.subtractButton.onSubmit.AddListener(DecrementPlayerCount);
             playerCountButtons.addButton.onSubmit.AddListener(IncrementPlayerCount);
-            var playersPerCountButtons = lobbySettings.AddIntValueOption("MaxPlayersPerClient", "Players per Client", maxPlayersPerClient);
-            playersPerCountButtons.subtractButton.onSubmit.AddListener(() => { SetPlayersPerClientCount(maxPlayersPerClient-1); });
-            playersPerCountButtons.addButton.onSubmit.AddListener(() => { SetPlayersPerClientCount(maxPlayersPerClient+1); });
+            //var playersPerCountButtons = lobbySettings.AddIntValueOption("MaxPlayersPerClient", "Players per Client", maxPlayersPerClient);
+            //playersPerCountButtons.subtractButton.onSubmit.AddListener(() => { SetPlayersPerClientCount(maxPlayersPerClient-1); });
+            //playersPerCountButtons.addButton.onSubmit.AddListener(() => { SetPlayersPerClientCount(maxPlayersPerClient+1); });
             var gamemodeButtons = lobbySettings.AddStringValueOption("GameMode", "GameMode",
                 selectedGamemodeDefinition ? selectedGamemodeDefinition.Name : "None");
             gamemodeButtons.onSubmit.AddListener(Button_GameMode);
