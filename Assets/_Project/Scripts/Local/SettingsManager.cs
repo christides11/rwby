@@ -65,7 +65,8 @@ namespace rwby
             float musicVolume = Remap(currentSettings.musicVolume, 0.0f, 100.0f, 0.001f, 1.0f);
             audioMixer.SetFloat("musicVol", Mathf.Log(musicVolume) * 20);
 
-            AudioSettings.speakerMode = (AudioSpeakerMode)(currentSettings.speakerConfiguration+1);
+            if(AudioSettings.speakerMode != (AudioSpeakerMode)(currentSettings.speakerConfiguration+1))
+                AudioSettings.speakerMode = (AudioSpeakerMode)(currentSettings.speakerConfiguration+1);
         }
         
         private float Remap(float value, float from1, float to1, float from2, float to2)
@@ -166,16 +167,22 @@ namespace rwby
                 case 1:
                     Configuring.CurrentURPA.MainLightShadowsCasting(true);
                     Configuring.CurrentURPA.AdditionalLightsShadowsCasting(true);
+                    Configuring.CurrentURPA.MainLightShadowResolution(ShadowResolution._512);
+                    Configuring.CurrentURPA.AddtionalLightShadowResolution(ShadowResolution._512);
                     pipelineAsset.shadowDistance = 100;
                     break;
                 case 2:
                     Configuring.CurrentURPA.MainLightShadowsCasting(true);
                     Configuring.CurrentURPA.AdditionalLightsShadowsCasting(true);
+                    Configuring.CurrentURPA.MainLightShadowResolution(ShadowResolution._2048);
+                    Configuring.CurrentURPA.AddtionalLightShadowResolution(ShadowResolution._1024);
                     pipelineAsset.shadowDistance = 100;
                     break;
                 case 3:
                     Configuring.CurrentURPA.MainLightShadowsCasting(true);
                     Configuring.CurrentURPA.AdditionalLightsShadowsCasting(true);
+                    Configuring.CurrentURPA.MainLightShadowResolution(ShadowResolution._4096);
+                    Configuring.CurrentURPA.AddtionalLightShadowResolution(ShadowResolution._2048);
                     pipelineAsset.shadowDistance = 100;
                     break;
             }

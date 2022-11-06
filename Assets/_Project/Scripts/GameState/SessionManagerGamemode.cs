@@ -25,6 +25,8 @@ namespace rwby
         [Networked(OnChanged = nameof(OnChangedCurrentGameMode))] public GameModeBase CurrentGameMode { get; set; }
         [Networked(OnChanged = nameof(OnChangedClientDefinitions)), Capacity(8)] public NetworkLinkedList<SessionGamemodeClientContainer> ClientDefinitions => default;
 
+        public ISongDefinition musicToPlay;
+        
         protected static void OnChangedSessionState(Changed<SessionManagerGamemode> changed)
         {
             changed.LoadOld();

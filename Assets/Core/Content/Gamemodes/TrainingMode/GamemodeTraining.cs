@@ -166,7 +166,6 @@ namespace rwby.core.training
         
         public override async UniTaskVoid StartGamemode()
         {
-            Debug.Log("Attempting to start.");
             sessionManager.SessionState = SessionGamemodeStateType.LOADING_GAMEMODE;
             GamemodeState = GameModeState.INITIALIZING;
 
@@ -181,6 +180,8 @@ namespace rwby.core.training
             });
             Runner.SetActiveScene(Runner.CurrentScene+1);
 
+            RPC_FadeOutMusic();
+            
             await UniTask.WaitForEndOfFrame(); 
             var sh = sessionManager.gameManager.networkManager.GetSessionHandlerByRunner(Runner);
             await UniTask.WaitUntil(() => sh.netSceneManager.loadPercentage == 100);
@@ -277,6 +278,8 @@ namespace rwby.core.training
 
             GamemodeState = GameModeState.PRE_MATCH;
 
+            RPC_PlayMusic();
+            
             if (mapHandler.Length > 0)
             {
                 for (int i = 0; i < mapHandler.Length; i++)
@@ -287,6 +290,20 @@ namespace rwby.core.training
 
             RPC_TransitionToMatch();
 
+        }
+
+        [Rpc(RpcSources.InputAuthority | RpcSources.StateAuthority, RpcTargets.All, HostMode = RpcHostMode.SourceIsHostPlayer)]
+        private void RPC_FadeOutMusic()
+        {
+            GameManager.singleton.musicManager.FadeAll(1.0f);
+        }
+
+        [Rpc(RpcSources.InputAuthority | RpcSources.StateAuthority, RpcTargets.All, HostMode = RpcHostMode.SourceIsHostPlayer)]
+        private void RPC_PlayMusic()
+        {
+            if (sessionManager.musicToPlay == null) return;
+            
+            GameManager.singleton.musicManager.Play(sessionManager.musicToPlay.Song);
         }
 
         [Rpc(RpcSources.InputAuthority | RpcSources.StateAuthority, RpcTargets.All, HostMode = RpcHostMode.SourceIsHostPlayer)]

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 
 namespace rwby
@@ -15,10 +16,13 @@ namespace rwby
 
         public SongAudio song;
 
+        private float currentVolume;
+
         public void Play(SongAudio wantedSong)
         {
             this.song = wantedSong;
             ClearTracks();
+            currentVolume = wantedSong.volume;
             referenceAudioSource.volume = wantedSong.volume;
             referenceAudioSource.pitch = wantedSong.pitch;
             for (int i = 0; i < song.audioClips.Length; i++)
@@ -56,6 +60,22 @@ namespace rwby
         private void Update()
         {
             
+        }
+
+        public async UniTask FadeOut(float fadeTime = 0.5f)
+        {
+            float currentTime = 0;
+            float start = currentVolume;
+            while (currentTime < fadeTime)
+            {
+                currentTime += Time.deltaTime;
+                foreach (var t in tracks)
+                {
+                    t.SetVolume(Mathf.Lerp(start, 0.0f, currentTime / fadeTime));
+                }
+
+                await UniTask.Yield(PlayerLoopTiming.LastPostLateUpdate);
+            }
         }
     }
 }

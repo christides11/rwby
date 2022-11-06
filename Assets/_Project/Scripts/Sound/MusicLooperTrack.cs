@@ -75,6 +75,14 @@ namespace rwby
         {
             return val == 0 ? 1 : 0;
         }
+
+        public void SetVolume(float volume)
+        {
+            for (int i = 0; i < audioSources.Length; i++)
+            {
+                audioSources[i].volume = volume;
+            }
+        }
         
         private void Update()
         {

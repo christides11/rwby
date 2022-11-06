@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Cysharp.Threading.Tasks;
 using Fusion;
 using rwby.ui.mainmenu;
 using TMPro;
@@ -30,6 +31,7 @@ namespace rwby.ui
         public GameObject teamListHorizontalHolder;
         public GameObject teamHolder;
         public GameObject teamPlayerHeader;
+        public TextMeshProUGUI songText;
         
         private int currentSelectingCharacterIndex = 0;
         
@@ -197,6 +199,25 @@ namespace rwby.ui
                     .CLIENT_SetPlayerCharacter(lobbyMenuInstance.playerID, i,
                         characterSelectMenu.charactersSelected[i]);
             }
+        }
+
+        public async void OpenSongSelector()
+        {
+            int player = lobbyMenuInstance.playerID;
+            await ContentSelect.singleton.OpenMenu(lobbyMenuInstance.playerID, (int)ContentType.Song,(a, b) =>
+            {
+                ContentSelect.singleton.CloseMenu(player);
+                _ = SetSong(b);
+            });
+        }
+
+        private async UniTask SetSong(ModGUIDContentReference modGuidContentReference)
+        {
+            var ob = (ISongDefinition)ContentManager.singleton.GetContentDefinition(modGuidContentReference);
+
+            await ob.Load();
+            songText.text = ob.Name;
+            lobbyMenuInstance.lobbyMenuHandler.sessionManagerGamemode.musicToPlay = ob;
         }
     }
 }

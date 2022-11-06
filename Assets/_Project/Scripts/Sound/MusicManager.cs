@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -19,16 +20,17 @@ namespace rwby
             musicLooper.Play(song);
         }
 
-        public void FadeAll()
+        public void FadeAll(float timeToFade = 0.5f)
         {
             for (int i = currentlyPlaying.Count-1; i >= 0; i--)
             {
-                Fade(i);
+                Fade(i, timeToFade);
             }
         }
         
-        public void Fade(int index)
+        public void Fade(int index, float timeToFade = 0.5f)
         {
+            _ = currentlyPlaying[index].FadeOut(timeToFade);
             currentlyFading.Add(currentlyPlaying[index]);
             currentlyPlaying.RemoveAt(index);
         }
