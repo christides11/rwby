@@ -44,7 +44,7 @@ namespace rwby.ui
             modifiedSettings = GameManager.singleton.settingsManager.Settings;
             gameObject.SetActive(true);
             rewiredPlayer = settingsMenu.playerID == -1
-                ? ReInput.players.GetSystemPlayer()
+                ? ReInput.players.GetPlayer(0)
                 : ReInput.players.GetPlayer(settingsMenu.playerID);
             SetupOptions();
         }

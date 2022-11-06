@@ -41,8 +41,8 @@ namespace rwby.ui.mainmenu
             
             //GameManager.singleton.controllerAssignmentMenu.OnControllersAssigned += OnControllersAssigned;
             //GameManager.singleton.controllerAssignmentMenu.OpenMenu();
-            GameManager.singleton.localPlayerManager.SetPlayerCount(1);
-            GameManager.singleton.localPlayerManager.AutoAssignControllers();
+            //GameManager.singleton.localPlayerManager.SetPlayerCount(1);
+            //GameManager.singleton.localPlayerManager.AutoAssignControllers();
             WhenLocalPlayerCountChanged(GameManager.singleton.localPlayerManager, GameManager.singleton.localPlayerManager.localPlayers.Count);
             //OnControllersAssigned();
         }

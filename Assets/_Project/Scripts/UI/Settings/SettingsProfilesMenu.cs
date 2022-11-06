@@ -52,6 +52,7 @@ namespace rwby.ui
         UnityAction screenClosedEvent;
         private void OnProfileSelected(int profileIndex)
         {
+            //GameManager.singleton.localPlayerManager.AutoAssignControllers();
             int index = profileIndex;
             var profilesManager = GameManager.singleton.profilesManager;
             profilesManager.ApplyProfileToPlayer(settingsMenu.playerID, profileIndex);

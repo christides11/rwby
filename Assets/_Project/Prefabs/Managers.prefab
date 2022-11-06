@@ -2956,7 +2956,7 @@ MonoBehaviour:
         useNativeKeyboard: 1
         useNativeMouse: 1
       maxJoysticksPerPlayer: 100
-      autoAssignJoysticks: 0
+      autoAssignJoysticks: 1
       assignJoysticksToPlayingPlayersOnly: 1
       distributeJoysticksEvenly: 1
       reassignJoystickToPreviousOwnerOnReconnect: 1
@@ -3035,7 +3035,7 @@ MonoBehaviour:
     - _id: 1
       _name: Player 1
       _descriptiveName: Player 1
-      _startPlaying: 0
+      _startPlaying: 1
       _defaultJoystickMaps:
       - _enabled: 1
         _categoryId: 2
@@ -3059,11 +3059,11 @@ MonoBehaviour:
         _layoutId: 0
       _defaultCustomControllerMaps: []
       _startingCustomControllers: []
-      _assignMouseOnStart: 0
-      _assignKeyboardOnStart: 0
+      _assignMouseOnStart: 1
+      _assignKeyboardOnStart: 1
       _excludeFromControllerAutoAssignment: 0
       _controllerMapLayoutManagerSettings:
-        _enabled: 1
+        _enabled: 0
         _loadFromUserDataStore: 0
         _ruleSets: []
       _controllerMapEnablerSettings:
@@ -3086,7 +3086,7 @@ MonoBehaviour:
       _startingCustomControllers: []
       _assignMouseOnStart: 0
       _assignKeyboardOnStart: 0
-      _excludeFromControllerAutoAssignment: 0
+      _excludeFromControllerAutoAssignment: 1
       _controllerMapLayoutManagerSettings:
         _enabled: 1
         _loadFromUserDataStore: 0
@@ -3111,7 +3111,7 @@ MonoBehaviour:
       _startingCustomControllers: []
       _assignMouseOnStart: 0
       _assignKeyboardOnStart: 0
-      _excludeFromControllerAutoAssignment: 0
+      _excludeFromControllerAutoAssignment: 1
       _controllerMapLayoutManagerSettings:
         _enabled: 1
         _loadFromUserDataStore: 0
@@ -3136,7 +3136,7 @@ MonoBehaviour:
       _startingCustomControllers: []
       _assignMouseOnStart: 0
       _assignKeyboardOnStart: 0
-      _excludeFromControllerAutoAssignment: 0
+      _excludeFromControllerAutoAssignment: 1
       _controllerMapLayoutManagerSettings:
         _enabled: 1
         _loadFromUserDataStore: 0
@@ -5427,7 +5427,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 11452084, guid: 03b9a6db219d12e4f8ec2934e0c7e721, type: 3}
       propertyPath: _showPlayersGroupLabel
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 11452084, guid: 03b9a6db219d12e4f8ec2934e0c7e721, type: 3}
       propertyPath: _mappingSets.Array.size

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Rewired;
 using UnityEngine;
@@ -22,8 +23,15 @@ namespace rwby
         {
             systemPlayer = new LocalPlayerData() { rewiredPlayer = ReInput.players.GetSystemPlayer(), controllerType = PlayerControllerType.NONE, camera = Camera.main };
             systemPlayer.rewiredPlayer.controllers.AddLastActiveControllerChangedDelegate(WhenSystemPlayerActiveControllerChanged);
+            systemPlayer.rewiredPlayer.controllers.ControllerAddedEvent += ReassignController;
             CollectJoysticks();
             AddPlayer();
+            AutoAssignControllers();
+        }
+
+        private void ReassignController(ControllerAssignmentChangedEventArgs obj)
+        {
+            AutoAssignControllers();
         }
 
         public void AutoAssignControllers()

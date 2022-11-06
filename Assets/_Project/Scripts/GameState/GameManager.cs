@@ -42,7 +42,7 @@ namespace rwby
             localPlayerManager.Initialize();
             profilesManager.Initialize();
             settingsManager.LoadSettings();
-            settingsManager.ApplyVideoSettings();
+            settingsManager.ApplyAllSettings();
         }
 
         private void Start()

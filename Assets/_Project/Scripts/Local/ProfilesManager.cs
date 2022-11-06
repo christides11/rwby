@@ -27,7 +27,23 @@ namespace rwby
                 ProfileDefinition temp = new ProfileDefinition
                 {
                     undeletable = true,
-                    profileName = defaultProfileIdentifier
+                    profileName = defaultProfileIdentifier,
+                    controllerCam = new ProfileDefinition.CameraVariables()
+                    {
+                        deadzoneHoz = 0.1f,
+                        deadzoneVert = 0.1f,
+                        speedHoz = 1.0f,
+                        speedVert = 1.0f,
+                        speedLockOnHoz = 1.0f,
+                        speedLockOnVert = 1.0f
+                    },
+                    keyboardCam = new ProfileDefinition.CameraVariables()
+                    {
+                        speedHoz = 0.3f,
+                        speedVert = 0.3f,
+                        speedLockOnHoz = 0.3f,
+                        speedLockOnVert = 0.3f
+                    }
                 };
                 profiles.Add(temp);
                 ApplyControlsToProfile(-1, 0);
@@ -74,7 +90,8 @@ namespace rwby
 
         public void RestoreDefaultControls(int playerID)
         {
-            var player = playerID == -1 ? ReInput.players.SystemPlayer : ReInput.players.GetPlayer(playerID);
+            //var player = playerID == -1 ? ReInput.players.SystemPlayer : ReInput.players.GetPlayer(playerID);
+            var player = playerID == -1 ? ReInput.players.GetPlayer(0) : ReInput.players.GetPlayer(playerID);
             player.controllers.maps.LoadDefaultMaps(ControllerType.Joystick);
             player.controllers.maps.LoadDefaultMaps(ControllerType.Keyboard);
             player.controllers.maps.LoadDefaultMaps(ControllerType.Mouse);
@@ -83,7 +100,8 @@ namespace rwby
         
         public void ApplyControlsToProfile(int player, int profileIndex)
         {
-            Rewired.PlayerSaveData playerData = (player == -1 ? ReInput.players.GetSystemPlayer() : ReInput.players.GetPlayer(player)).GetSaveData(true);
+            //Rewired.PlayerSaveData playerData = (player == -1 ? ReInput.players.GetSystemPlayer() : ReInput.players.GetPlayer(player)).GetSaveData(true);
+            Rewired.PlayerSaveData playerData = (player == -1 ? ReInput.players.GetPlayer(0) : ReInput.players.GetPlayer(player)).GetSaveData(true);
 
             List<string> tempInputBehaviours = new List<string>();
             foreach(InputBehavior behavior in playerData.inputBehaviors) {
@@ -136,7 +154,8 @@ namespace rwby
         public void ApplyProfileToPlayer(int playerID, int profileIndex)
         {
             ProfileDefinition profile = profiles[profileIndex];
-            var player = playerID == -1 ? ReInput.players.SystemPlayer : ReInput.players.GetPlayer(playerID);
+            //var player = playerID == -1 ? ReInput.players.SystemPlayer : ReInput.players.GetPlayer(playerID);
+            var player = playerID == -1 ? ReInput.players.GetPlayer(0) : ReInput.players.GetPlayer(playerID);
             RestoreDefaultControls(playerID);
 
             IList<InputBehavior> behaviors = ReInput.mapping.GetInputBehaviors(player.id);
