@@ -15,6 +15,8 @@ namespace rwby
         public bool useArgs = false;
         public List<string> args = new List<string>();
 
+        public ModObjectSetContentReference menuSoundseference;
+        
         async UniTask Awake()
         {
             if(singleton != null)
@@ -28,8 +30,17 @@ namespace rwby
             DontDestroyOnLoad(managersObject);
             await managersObject.GetComponentInChildren<GameManager>().Initialize();
             GameManager gameManager = managersObject.GetComponentInChildren<GameManager>();
+
+            var guidRef = new ModContentGUIDReference()
+            {
+                contentGUID = menuSoundseference.contentGUID,
+                contentType = (int)ContentType.Soundbank,
+                modGUID = menuSoundseference.modGUID
+            };
+            var rawRef = ContentManager.singleton.ConvertModContentGUIDReference(guidRef);
             
-            
+            await gameManager.contentManager.LoadContentDefinition(rawRef);
+
             await UniTask.WaitForEndOfFrame();
             if (useArgs && Application.isEditor)
             {

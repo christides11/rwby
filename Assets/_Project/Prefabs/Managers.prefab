@@ -1683,6 +1683,51 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!1 &1839987328895889017
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2863042999743030581}
+  - component: {fileID: 6407841346408721970}
+  m_Layer: 0
+  m_Name: SoundManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2863042999743030581
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1839987328895889017}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 7663082699315219240}
+  m_RootOrder: 14
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &6407841346408721970
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1839987328895889017}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cca6b7246834e3642aa15311acbe6735, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  audioSourcePrefab: {fileID: 5334101577290352513, guid: 4f7ed8383350df04fae09ad41b2409ac, type: 3}
 --- !u!1 &1942085334220340589
 GameObject:
   m_ObjectHideFlags: 0
@@ -2763,6 +2808,7 @@ Transform:
   - {fileID: 5465079460022276835}
   - {fileID: 2688416243541688641}
   - {fileID: 1840430608713300408}
+  - {fileID: 2863042999743030581}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -4618,6 +4664,7 @@ MonoBehaviour:
   consoleWindow: {fileID: 5187699804377792787}
   debugLogManager: {fileID: 2688416243551644163}
   musicManager: {fileID: 5383907445220528725}
+  soundManager: {fileID: 6407841346408721970}
   settings: {fileID: 11400000, guid: fa9f7c1fd91f42e4087fa739f9dd3614, type: 2}
   internalModGUID:
     guid: 0000000000000000

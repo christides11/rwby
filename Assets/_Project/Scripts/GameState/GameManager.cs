@@ -29,6 +29,7 @@ namespace rwby
         public ConsoleWindow consoleWindow;
         public DebugLogManager debugLogManager;
         public MusicManager musicManager;
+        public SoundManager soundManager;
 
         public Settings settings;
         public ContentGUID internalModGUID = new ContentGUID(8, "");
