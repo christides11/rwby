@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 using Rewired;
 using TMPro;
@@ -53,6 +54,32 @@ namespace rwby.ui.mainmenu
             systemPlayer = ReInput.players.GetSystemPlayer();
             eventSystem = EventSystem.current;
             gameObject.SetActive(true);
+
+            _ = PlayMenuTheme();
+        }
+
+        public ModObjectSetContentReference menuThemeReference;
+        private async UniTask PlayMenuTheme()
+        {
+            var guidRef = new ModContentGUIDReference()
+            {
+                contentGUID = menuThemeReference.contentGUID,
+                contentType = (int)ContentType.Song,
+                modGUID = menuThemeReference.modGUID
+            };
+            var rawRef = ContentManager.singleton.ConvertModContentGUIDReference(guidRef);
+            
+            bool result = await GameManager.singleton.contentManager.LoadContentDefinition(rawRef);
+
+            if (!result) return;
+
+            var songRef = (ISongDefinition)GameManager.singleton.contentManager.GetContentDefinition(rawRef);
+
+            bool songResult = await songRef.Load();
+
+            if (!songResult) return;
+            
+            GameManager.singleton.musicManager.Play(songRef.Song);
         }
 
         public override bool TryClose(MenuDirection direction, bool forceClose = false)

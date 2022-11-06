@@ -1,41 +1,43 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 namespace rwby
 {
     public class MusicLooper : MonoBehaviour
     {
-        public AudioSource[] audioSources;
-        public AudioClip song;
+        [SerializeField] private MusicLooperTrack trackPrefab;
+        public List<MusicLooperTrack> tracks = new List<MusicLooperTrack>();
+        [SerializeField] private AudioSource referenceAudioSource;
 
-        public double introBoundary;
-        public double loopPointBoundary;
-        
         private int nextSource = 0;
         private double nextEventTime;
 
-        private void Start()
+        public SongAudio song;
+
+        public void Play(SongAudio wantedSong)
         {
-            Play();
+            this.song = wantedSong;
+            ClearTracks();
+            referenceAudioSource.volume = wantedSong.volume;
+            referenceAudioSource.pitch = wantedSong.pitch;
+            for (int i = 0; i < song.audioClips.Length; i++)
+            {
+                var trackObj = new GameObject($"Track{i+1}").AddComponent<MusicLooperTrack>();
+                trackObj.transform.SetParent(transform);
+                tracks.Add(trackObj);
+                trackObj.Play(referenceAudioSource, song.audioClips[i], song.loopType, 
+                    song.introBoundary, song.loopingBoundary);
+            }
         }
 
-        public void Play()
+        private void ClearTracks()
         {
-            audioSources[nextSource].clip = song;
-            audioSources[nextSource].PlayScheduled(AudioSettings.dspTime);
-            audioSources[nextSource].SetScheduledEndTime(AudioSettings.dspTime + introBoundary);
-            nextSource = GetNextSource(nextSource);
-            
-            audioSources[nextSource].clip = song;
-            audioSources[nextSource].PlayScheduled(AudioSettings.dspTime + introBoundary);
-            audioSources[nextSource].time = (float)introBoundary;
-            audioSources[nextSource].SetScheduledStartTime(AudioSettings.dspTime + introBoundary);
-            audioSources[nextSource].SetScheduledEndTime(AudioSettings.dspTime + loopPointBoundary);
-
-            nextEventTime = AudioSettings.dspTime + loopPointBoundary;
+            for (int i = tracks.Count - 1; i >= 0; i--)
+            {
+                Destroy(tracks[i].gameObject);
+                tracks.RemoveAt(i);
+            }
         }
 
         public void Pause()
@@ -45,31 +47,15 @@ namespace rwby
         
         public void Stop()
         {
-            for (int i = 0; i < audioSources.Length; i++)
+            for (int i = 0; i < tracks.Count; i++)
             {
-                audioSources[i].Stop();
+                tracks[i].Stop();
             }
         }
 
         private void Update()
         {
-            double time = AudioSettings.dspTime;
-            if (time + 1.0f > nextEventTime)
-            {
-                int flip = GetNextSource(nextSource);
-
-                audioSources[flip].time = (float)introBoundary;
-                audioSources[flip].PlayScheduled(nextEventTime);
-                
-                nextEventTime = nextEventTime + (loopPointBoundary - introBoundary);
-
-                nextSource = flip;
-            }
-        }
-
-        public int GetNextSource(int val)
-        {
-            return val == 0 ? 1 : 0;
+            
         }
     }
 }

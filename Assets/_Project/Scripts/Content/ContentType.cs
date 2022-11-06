@@ -11,6 +11,7 @@ namespace rwby
         Effectbank,
         Animationbank,
         HUDElementbank,
-        Projectilebank
+        Projectilebank,
+        Song
     }
 }
