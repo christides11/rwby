@@ -110,6 +110,8 @@ namespace rwby
         public delegate void EmptyDelegate(FighterManager fighterManager);
         public event EmptyDelegate OnCameraModeChanged;
         
+        public float poleSpinLaunchForce = 10.0f;
+        
         public static void OnChangedCameraMode(Changed<FighterManager> changed)
         {
             changed.Behaviour.OnCameraModeChanged?.Invoke(changed.Behaviour);

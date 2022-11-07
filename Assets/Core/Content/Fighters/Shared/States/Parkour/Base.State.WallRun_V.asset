@@ -29,10 +29,12 @@ MonoBehaviour:
   - rid: 8688056177854775303
   - rid: 8688056635878539266
   - rid: 8688056635878539269
+  - rid: 387795715308912646
   auraRequirement: 0
   initialGroundedState: 2
   stateType: 1
   maxUsesInString: -1
+  selfChainable: 0
   allowBaseStateTransitions: 1
   inputSequence:
     executeWindow: 3
@@ -50,6 +52,33 @@ MonoBehaviour:
     RefIds:
     - rid: -2
       type: {class: , ns: , asm: }
+    - rid: 387795715308912646
+      type: {class: VarClampGravity, ns: rwby, asm: rwby.csharp}
+      data:
+        name: 
+        id: 13
+        parent: 7
+        children: 
+        frameRanges:
+        - {x: 1, y: -1}
+        condition:
+          rid: -2
+        minValue:
+          rid: 387795715308912647
+        maxValue:
+          rid: 387795715308912648
+    - rid: 387795715308912647
+      type: {class: FighterStatReferenceFloatBase, ns: rwby, asm: rwby.csharp}
+      data:
+        inverse: 0
+        statReference: 0
+        value: 0
+    - rid: 387795715308912648
+      type: {class: FighterStatReferenceFloatBase, ns: rwby, asm: rwby.csharp}
+      data:
+        inverse: 0
+        statReference: 0
+        value: 8
     - rid: 8688056157277782022
       type: {class: VarModifyFallSpeed, ns: rwby, asm: rwby.csharp}
       data:
@@ -108,6 +137,7 @@ MonoBehaviour:
         stateMovesetID: -1
         state:
           rid: 8688056177854775297
+        frame: 0
     - rid: 8688056177854775297
       type: {class: FighterCmnStateReference, ns: rwby, asm: rwby.csharp}
       data:
@@ -145,6 +175,7 @@ MonoBehaviour:
         stateMovesetID: -1
         state:
           rid: 8688056195711238150
+        frame: 0
     - rid: 8688056195711238150
       type: {class: FighterCmnStateReference, ns: rwby, asm: rwby.csharp}
       data:
@@ -153,6 +184,7 @@ MonoBehaviour:
       type: {class: ConditionButton, ns: rwby, asm: rwby.csharp}
       data:
         inverse: 0
+        checkAbilityButton: 0
         button: 0
         buttonState: 1
         offset: 0
@@ -167,7 +199,7 @@ MonoBehaviour:
         name: No Wall
         id: 7
         parent: -1
-        children: 09000000
+        children: 0d00000009000000
         frameRanges:
         - {x: 1, y: -1}
         condition:
@@ -186,6 +218,7 @@ MonoBehaviour:
         inputSource: 1
         normalizeInputSource: 0
         useRotationIfInputZero: 0
+        inputSourceOffset: 0
         minAngle: -180
         maxAngle: 180
         raycastCount: 1
@@ -213,6 +246,7 @@ MonoBehaviour:
         stateMovesetID: -1
         state:
           rid: 8688056635878539270
+        frame: 0
     - rid: 8688056635878539270
       type: {class: FighterCmnStateReference, ns: rwby, asm: rwby.csharp}
       data:

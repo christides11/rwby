@@ -24,9 +24,11 @@ MonoBehaviour:
   - rid: 2193520703102779397
   - rid: 2193520791838261256
   - rid: 2193520791838261262
+  auraRequirement: 0
   initialGroundedState: 2
   stateType: 1
   maxUsesInString: -1
+  selfChainable: 0
   allowBaseStateTransitions: 1
   inputSequence:
     executeWindow: 3
@@ -89,7 +91,7 @@ MonoBehaviour:
       data:
         inverse: 0
         statReference: 0
-        value: 1
+        value: 1.2
         variable: 0
     - rid: 2193520703102779396
       type: {class: FighterBaseStatReferenceFloat, ns: rwby, asm: rwby.csharp}
@@ -129,6 +131,7 @@ MonoBehaviour:
         slopeDivi: 0
         slopeMulti: 0
         slopeMultiMax: 0
+        slopeinputModi: 0
     - rid: 2193520703102779398
       type: {class: FighterBaseStatReferenceFloat, ns: rwby, asm: rwby.csharp}
       data:
@@ -191,7 +194,7 @@ MonoBehaviour:
     - rid: 2193520791838261262
       type: {class: VarExternal, ns: rwby, asm: rwby.csharp}
       data:
-        name: Try JumpEnd
+        name: Try Fall
         id: 5
         parent: -1
         children: 
@@ -199,4 +202,4 @@ MonoBehaviour:
         - {x: 10, y: -1}
         condition:
           rid: -2
-        asset: {fileID: 11400000, guid: e3eaa1968ad0197499aa52999cb46489, type: 2}
+        asset: {fileID: 11400000, guid: 1162694b58372df409579eb60fda1335, type: 2}

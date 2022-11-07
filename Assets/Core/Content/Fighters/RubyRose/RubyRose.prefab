@@ -478,6 +478,7 @@ MonoBehaviour:
   _thrower: {fileID: 0}
   _throwees: []
   _cameraMode: 0
+  poleSpinLaunchForce: 20
   hitstopShakeDistance: 0.5
   hitstopDir: 1
   hitstopShakeFrames: 1
@@ -586,6 +587,9 @@ MonoBehaviour:
   _LastSuccessfulBlockTick: 0
   _CurrentPushblockState: 0
   _LastPushblockAttempt: 0
+  _lastUsedSpecial: 0
+  _hardKnockdown:
+    _value: 0
   stickDirectionCheck: 1
   _hurtboxHitCount: 
   pushF: 2
@@ -817,7 +821,6 @@ MonoBehaviour:
   KillRemainingMovementWhenExceedMaxMovementIterations: 1
   GroundCollider: {fileID: 0}
   interpolationTarget: {fileID: 7954403120791412188}
-  empt: 0
   __mustUnground:
     _value: 0
   __mustUngroundTimeCounter: 0
@@ -860,6 +863,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _interpolationDataSource: 0
+  Config: 1
   BroadRadius: 4
   Offset: {x: 0, y: 0, z: 0}
   GizmosColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}

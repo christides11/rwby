@@ -693,7 +693,7 @@ namespace rwby
             if (fm.foundPole == null) return;
             fm.FPhysicsManager.SetPosition(fm.foundPole.GetNearestPoint(fm.transform.position), false);
             fm.SetRotation(fm.foundPole.GetNearestFaceDirection(fm.transform.forward));
-            fm.poleMagnitude = (fm.FPhysicsManager.forceMovement + new Vector3(0, fm.FPhysicsManager.forceGravity, 0)).magnitude;
+            fm.poleMagnitude = fm.poleSpinLaunchForce; //(fm.FPhysicsManager.forceMovement + new Vector3(0, fm.FPhysicsManager.forceGravity, 0)).magnitude;
         }
         
         public static void ClampMovement(IFighterBase fighter, IStateVariables variables, HnSF.StateTimeline arg3, int arg4)
