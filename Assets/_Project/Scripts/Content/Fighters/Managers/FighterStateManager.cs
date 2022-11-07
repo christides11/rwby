@@ -1,4 +1,5 @@
 using System;
+using ExitGames.Client.Photon.StructWrapping;
 using Fusion;
 using HnSF;
 using HnSF.Combat;
@@ -172,7 +173,7 @@ namespace rwby
             return (rwby.Moveset)GetMoveset(CurrentStateMoveset);
         }
         
-        public MovesetDefinition GetMoveset(int index)
+        public HnSF.Combat.IMovesetDefinition GetMoveset(int index)
         {
             return movesets[index];
         }
@@ -279,12 +280,12 @@ namespace rwby
         
         public HnSF.StateTimeline GetState(int state)
         {
-            return (GetMoveset(CurrentStateMoveset) as rwby.Moveset).stateMap[state];
+            return (GetMoveset(CurrentStateMoveset) as rwby.Moveset).GetState(state);
         }
 
         public HnSF.StateTimeline GetState(int moveset, int state)
         {
-            return movesets[moveset].stateMap[state];
+            return movesets[moveset].GetState(state);
         }
 
         public void SetMoveset(int movesetIndex)
@@ -294,7 +295,7 @@ namespace rwby
 
         public string GetCurrentStateName()
         {
-            return ((GetMoveset(CurrentStateMoveset) as rwby.Moveset).stateMap[CurrentState] as rwby.StateTimeline).stateName;
+            return ((GetMoveset(CurrentStateMoveset) as rwby.Moveset).GetState(CurrentState) as rwby.StateTimeline).stateName;
         }
 
         public void IncrementFrame()
