@@ -22,9 +22,11 @@ MonoBehaviour:
   data:
   - rid: 2193520703102779424
   - rid: 2193520703102779427
-  stateGroundedGroup: 2
+  auraRequirement: 0
+  initialGroundedState: 2
   stateType: 0
   maxUsesInString: -1
+  selfChainable: 0
   allowBaseStateTransitions: 1
   inputSequence:
     executeWindow: 3
@@ -50,7 +52,7 @@ MonoBehaviour:
         parent: -1
         children: 
         frameRanges:
-        - {x: -2, y: -2}
+        - {x: -1, y: -1}
         condition:
           rid: -2
         useValue: 0
@@ -86,9 +88,11 @@ MonoBehaviour:
           rid: -2
         checkInputSequence: 0
         checkCondition: 0
+        targetType: 0
         stateMovesetID: -1
         state:
           rid: 2193520703102779428
+        frame: 0
     - rid: 2193520703102779428
       type: {class: FighterCmnStateReference, ns: rwby, asm: rwby.csharp}
       data:

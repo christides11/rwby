@@ -41,6 +41,7 @@ namespace rwby.core.training
         {
             this.cpuHandler = cpuHandler;
             this.index = index;
+            /*
             // BASICS
             status.options = new[] { "Standing", "Jumping", "CPU", "Controller" };
             status.SetOption(cpuHandler.cpuSettings[index].status);
@@ -83,7 +84,7 @@ namespace rwby.core.training
             afterBlock.OnValueChanged += OnOptionChanged;
             afterHit.options = aOpts.ToArray();
             afterHit.SetOption(cpuHandler.cpuSettings[index].afterHit);
-            afterHit.OnValueChanged += OnOptionChanged;
+            afterHit.OnValueChanged += OnOptionChanged;*/
         }
 
         private void OnOptionChanged(int value)

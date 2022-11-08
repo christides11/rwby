@@ -10,9 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7789f25d17401bc4b915ca6fcecf2a29, type: 3}
-  m_Name: RR.Scythe.Grd.2c
+  m_Name: RR.Scythe.Grd.8LL
   m_EditorClassIdentifier: 
-  stateName: 2c
+  stateName: 8LL
   useBaseState: 0
   baseState: {fileID: 0}
   totalFrames: 30
@@ -21,12 +21,7 @@ MonoBehaviour:
   autoLoopFrame: 1
   data:
   - rid: 2193520813467238401
-  - rid: 2193520813467238403
   - rid: 2193520817874927616
-  - rid: 8688056339992412162
-  - rid: 8688056339992412164
-  - rid: 7270848809565159434
-  - rid: 7270848857037078542
   auraRequirement: 0
   initialGroundedState: 1
   stateType: 2
@@ -37,20 +32,16 @@ MonoBehaviour:
     executeWindow: 3
     executeInputs:
     - inputType: 0
-      buttonID: 6
+      buttonID: 2
       stickDirection: {x: 0, y: 0}
       directionDeviation: 0
     - inputType: 1
-      buttonID: 6
-      stickDirection: {x: 0, y: -1}
+      buttonID: 3
+      stickDirection: {x: 0, y: 1}
       directionDeviation: 0.85
     sequenceWindow: 8
-    sequenceInputs:
-    - inputType: 0
-      buttonID: 5
-      stickDirection: {x: 0, y: -1}
-      directionDeviation: 0.85
-  inputSequenceAsHoldInputs: 1
+    sequenceInputs: []
+  inputSequenceAsHoldInputs: 0
   condition:
     rid: -2
   hitboxInfo:
@@ -59,22 +50,23 @@ MonoBehaviour:
     groundedCounterHitFoldoutGroup: 0
     hitStateGroundedGroups: -1
     hit:
-      groundHitState: 32
-      airHitState: 32
+      groundHitState: 30
+      airHitState: 0
       groundBounce: 0
       wallBounce: 0
       groundBounceForce: 0
       wallBounceForce: 0
       noKill: 0
       unblockable: 0
+      hardKnockdown: 0
       hitForceType: 0
       hitForceRelation: 0
       hitForceRelationOffset: {x: 0, y: 0, z: 0}
       autolink: 0
       gravityAutolinkPercentage: 0
       movementAutolinkPercentage: 0
-      groundHitForce: {x: 0, y: 13, z: 0}
-      aerialHitForce: {x: 0, y: 13, z: 0}
+      groundHitForce: {x: 0, y: 0, z: 15}
+      aerialHitForce: {x: 0, y: 0, z: 0}
       pullPushMultiplier: 0
       pullPushMaxDistance: 10
       blockLift: 0
@@ -82,11 +74,11 @@ MonoBehaviour:
       hitstop: 4
       hitstun: 60
       blockstun: 15
-      untech: 60
+      untech: 0
       initialProration: 0
       comboProration: 0
-      damage: 150
-      chipDamage: 50
+      damage: 300
+      chipDamage: 100
       hitEffectbank:
         modGUID:
           guid: 
@@ -105,21 +97,22 @@ MonoBehaviour:
         contentGUID:
           guid: 
       hitSound: 
-      hitCameraShakeStrength: 0
-      blockCameraShakeStrength: 0
-      cameraShakeLength: 0
+      hitCameraShakeStrength: 1
+      blockCameraShakeStrength: 1
+      cameraShakeLength: 4
       ignoreProration: 0
       ignoreHitstunScaling: 0
       ignorePushbackScaling: 0
     counterhit:
-      groundHitState: 30
-      airHitState: 32
+      groundHitState: 0
+      airHitState: 0
       groundBounce: 0
       wallBounce: 0
       groundBounceForce: 0
       wallBounceForce: 0
       noKill: 0
       unblockable: 0
+      hardKnockdown: 0
       hitForceType: 0
       hitForceRelation: 0
       hitForceRelationOffset: {x: 0, y: 0, z: 0}
@@ -193,24 +186,6 @@ MonoBehaviour:
       type: {class: FighterCmnStateReference, ns: rwby, asm: rwby.csharp}
       data:
         state: 1
-    - rid: 2193520813467238403
-      type: {class: VarCreateBox, ns: rwby, asm: rwby.csharp}
-      data:
-        name: Hitbox
-        id: 1
-        parent: -1
-        children: 
-        frameRanges:
-        - {x: 6, y: 10}
-        condition:
-          rid: -2
-        boxType: 1
-        attachedTo: 0
-        shape: 0
-        offset: {x: 0, y: 1, z: 1}
-        boxExtents: {x: 1, y: 1, z: 1}
-        radius: 0
-        definitionIndex: 0
     - rid: 2193520817874927616
       type: {class: VarApplyTraction, ns: rwby, asm: rwby.csharp}
       data:
@@ -233,82 +208,3 @@ MonoBehaviour:
         statReference: 0
         value: 30
         variable: 0
-    - rid: 7270848809565159434
-      type: {class: VarExternal, ns: rwby, asm: rwby.csharp}
-      data:
-        name: Try Atk
-        id: 5
-        parent: 3
-        children: 
-        frameRanges:
-        - {x: 1, y: -1}
-        condition:
-          rid: -2
-        asset: {fileID: 11400000, guid: 38d47b53b1c6fa24580e163448503c28, type: 2}
-    - rid: 7270848857037078542
-      type: {class: VarChangeState, ns: rwby, asm: rwby.csharp}
-      data:
-        name: 
-        id: 6
-        parent: -1
-        children: 
-        frameRanges:
-        - {x: 5, y: 5}
-        condition:
-          rid: 7270848857037078552
-        checkInputSequence: 0
-        checkCondition: 0
-        targetType: 0
-        stateMovesetID: -1
-        state:
-          rid: 7270848857037078544
-        frame: 0
-    - rid: 7270848857037078544
-      type: {class: RubyRoseStateReference, ns: rwby.core, asm: rwby.core}
-      data:
-        state: 93
-    - rid: 7270848857037078552
-      type: {class: ConditionButtonHeld, ns: rwby, asm: rwby.csharp}
-      data:
-        inverse: 0
-        button: 6
-        offset: 0
-        holdTime: 5
-    - rid: 8688056339992412162
-      type: {class: VarEmpty, ns: rwby, asm: rwby.csharp}
-      data:
-        name: On Hit or Block
-        id: 3
-        parent: -1
-        children: 0400000005000000
-        frameRanges: []
-        condition:
-          rid: 8688056339992412163
-    - rid: 8688056339992412163
-      type: {class: ConditionHitOrBlockCount, ns: rwby, asm: rwby.csharp}
-      data:
-        inverse: 0
-        hitCount: 1
-        hitOrBlock: -1
-    - rid: 8688056339992412164
-      type: {class: VarChangeState, ns: rwby, asm: rwby.csharp}
-      data:
-        name: Try Jump
-        id: 4
-        parent: 3
-        children: 
-        frameRanges:
-        - {x: 5, y: -1}
-        condition:
-          rid: -2
-        checkInputSequence: 1
-        checkCondition: 0
-        targetType: 0
-        stateMovesetID: -1
-        state:
-          rid: 8688056339992412165
-        frame: 0
-    - rid: 8688056339992412165
-      type: {class: FighterCmnStateReference, ns: rwby, asm: rwby.csharp}
-      data:
-        state: 6

@@ -20,14 +20,18 @@ MonoBehaviour:
   autoLoop: 1
   autoLoopFrame: 1
   data:
+  - rid: 387795733835153477
   - rid: 2193520789975990277
   - rid: 2193520783924396046
   - rid: 8688056473731203080
   - rid: 8688056473731203086
   - rid: 2193520716547358732
+  - rid: 387795733835153478
+  auraRequirement: 0
   initialGroundedState: 1
   stateType: 1
   maxUsesInString: -1
+  selfChainable: 0
   allowBaseStateTransitions: 1
   inputSequence:
     executeWindow: 3
@@ -45,6 +49,37 @@ MonoBehaviour:
     RefIds:
     - rid: -2
       type: {class: , ns: , asm: }
+    - rid: 387795733835153477
+      type: {class: VarExternal, ns: rwby, asm: rwby.csharp}
+      data:
+        name: Try JumpSquat (Momentum)
+        id: 8
+        parent: -1
+        children: 
+        frameRanges:
+        - {x: 1, y: -1}
+        condition:
+          rid: -2
+        asset: {fileID: 11400000, guid: 893ede551a6f8314185dbd9614e32ac8, type: 2}
+    - rid: 387795733835153478
+      type: {class: VarClampMovement, ns: rwby, asm: rwby.csharp}
+      data:
+        name: 
+        id: 9
+        parent: -1
+        children: 
+        frameRanges:
+        - {x: -2, y: -2}
+        condition:
+          rid: -2
+        magnitude:
+          rid: 387795733835153479
+    - rid: 387795733835153479
+      type: {class: FighterStatReferenceFloatBase, ns: rwby, asm: rwby.csharp}
+      data:
+        inverse: 0
+        statReference: 0
+        value: 30
     - rid: 2193520716547358732
       type: {class: VarRotateTowards, ns: rwby, asm: rwby.csharp}
       data:
@@ -81,9 +116,11 @@ MonoBehaviour:
           rid: 2193520783924396047
         checkInputSequence: 0
         checkCondition: 0
+        targetType: 0
         stateMovesetID: -1
         state:
           rid: 2193520783924396048
+        frame: 0
     - rid: 2193520783924396047
       type: {class: ConditionMoveStickMagnitude, ns: rwby, asm: rwby.csharp}
       data:
@@ -118,9 +155,11 @@ MonoBehaviour:
           rid: 8688056473731203082
         checkInputSequence: 0
         checkCondition: 0
+        targetType: 0
         stateMovesetID: -1
         state:
           rid: 8688056473731203081
+        frame: 0
     - rid: 8688056473731203081
       type: {class: FighterCmnStateReference, ns: rwby, asm: rwby.csharp}
       data:

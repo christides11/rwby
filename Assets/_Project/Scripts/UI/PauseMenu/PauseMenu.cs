@@ -9,6 +9,7 @@ namespace rwby.ui
     {
         public delegate void EmptyAction(int playerID);
         public static event EmptyAction onInstanceOpened;
+        public static event EmptyAction OnInstanceClosed;
 
         public static PauseMenu singleton;
 
@@ -38,6 +39,7 @@ namespace rwby.ui
             if (!pauseMenus[playerID].Close()) return false;
             Destroy(pauseMenus[playerID].gameObject);
             pauseMenus.Remove(playerID);
+            OnInstanceClosed?.Invoke(playerID);
             return true;
         }
 

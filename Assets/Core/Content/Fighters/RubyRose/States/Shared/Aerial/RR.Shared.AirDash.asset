@@ -31,6 +31,7 @@ MonoBehaviour:
   - rid: 7270848729635094542
   - rid: 7270848899719102488
   - rid: 7270848899719102490
+  - rid: 387795729903517697
   auraRequirement: 0
   initialGroundedState: 2
   stateType: 1
@@ -59,6 +60,55 @@ MonoBehaviour:
     RefIds:
     - rid: -2
       type: {class: , ns: , asm: }
+    - rid: 387795729903517697
+      type: {class: VarApplyGravity, ns: rwby, asm: rwby.csharp}
+      data:
+        name: 
+        id: 13
+        parent: -1
+        children: 
+        frameRanges:
+        - {x: 10, y: -1}
+        condition:
+          rid: -2
+        useValue: 0
+        value:
+          rid: -2
+        jumpHeight:
+          rid: 387795729903517699
+        jumpTime:
+          rid: 387795729903517700
+        multi:
+          rid: 387795729903517701
+        maxFallSpeed:
+          rid: 387795729903517702
+    - rid: 387795729903517699
+      type: {class: FighterBaseStatReferenceFloat, ns: rwby, asm: rwby.csharp}
+      data:
+        inverse: 0
+        statReference: 1
+        value: 0
+        variable: 13
+    - rid: 387795729903517700
+      type: {class: FighterBaseStatReferenceFloat, ns: rwby, asm: rwby.csharp}
+      data:
+        inverse: 0
+        statReference: 1
+        value: 0
+        variable: 12
+    - rid: 387795729903517701
+      type: {class: FighterStatReferenceFloatBase, ns: rwby, asm: rwby.csharp}
+      data:
+        inverse: 0
+        statReference: 0
+        value: 1.3
+    - rid: 387795729903517702
+      type: {class: FighterBaseStatReferenceFloat, ns: rwby, asm: rwby.csharp}
+      data:
+        inverse: 0
+        statReference: 1
+        value: 0
+        variable: 23
     - rid: 2193520783924396052
       type: {class: VarChangeState, ns: rwby, asm: rwby.csharp}
       data:
@@ -99,7 +149,7 @@ MonoBehaviour:
       data:
         inverse: 0
         statReference: 0
-        value: 10
+        value: 1000
     - rid: 7270848899719102488
       type: {class: VarEmpty, ns: rwby, asm: rwby.csharp}
       data:
@@ -222,7 +272,7 @@ MonoBehaviour:
       data:
         inverse: 0
         statReference: 0
-        value: 3
+        value: 0.5
     - rid: 8688056473731203100
       type: {class: VarAddMovement, ns: rwby, asm: rwby.csharp}
       data:

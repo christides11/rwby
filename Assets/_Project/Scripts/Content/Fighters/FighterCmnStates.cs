@@ -50,6 +50,7 @@ namespace rwby
         THROW,
         SHIELD_GRD,
         SHIELD_AIR,
-        WALL_BOUNCE
+        WALL_BOUNCE,
+        JUMPSQUAT_MOMENTUM
     }
 }

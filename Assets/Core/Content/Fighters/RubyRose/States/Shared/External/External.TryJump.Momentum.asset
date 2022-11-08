@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d4d62b28b52db7d459dd2f283317c705, type: 3}
-  m_Name: External.TryDoubleJump
+  m_Name: External.TryJump.Momentum
   m_EditorClassIdentifier: 
   data:
   - rid: 6951768367642443815
@@ -37,13 +37,12 @@ MonoBehaviour:
     - rid: 6951768367642443816
       type: {class: FighterCmnStateReference, ns: rwby, asm: rwby.csharp}
       data:
-        state: 8
+        state: 48
     - rid: 6951768367642443817
       type: {class: ConditionAnd, ns: rwby, asm: rwby.csharp}
       data:
         conditions:
         - rid: 6951768367642443818
-        - rid: 6951768367642443819
     - rid: 6951768367642443818
       type: {class: ConditionButton, ns: rwby, asm: rwby.csharp}
       data:
@@ -52,16 +51,4 @@ MonoBehaviour:
         button: 0
         buttonState: 1
         offset: 0
-        buffer: 0
-    - rid: 6951768367642443819
-      type: {class: ConditionCanAirJump, ns: rwby, asm: rwby.csharp}
-      data:
-        maxAirJumps:
-          rid: 6951768367642443820
-    - rid: 6951768367642443820
-      type: {class: FighterBaseStatReferenceInt, ns: rwby, asm: rwby.csharp}
-      data:
-        inverse: 0
-        statReference: 1
-        value: 0
-        variable: 2
+        buffer: 3

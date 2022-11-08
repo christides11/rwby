@@ -10,9 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7789f25d17401bc4b915ca6fcecf2a29, type: 3}
-  m_Name: RR.Shared.JumpSquat
+  m_Name: RR.Shared.JumpSquat.Momentum
   m_EditorClassIdentifier: 
-  stateName: Jump Squat
+  stateName: Jump Squat (M)
   useBaseState: 1
   baseState: {fileID: 11400000, guid: e4c224cfcb67b3a4ca1b36ce8a42db67, type: 2}
   totalFrames: 4
@@ -24,9 +24,6 @@ MonoBehaviour:
   - rid: 8688056217396838404
   - rid: 8688056817054646274
   - rid: 387795733835153463
-  - rid: 387795733835153470
-  - rid: 387795733835153472
-  - rid: 387795733835153474
   auraRequirement: 0
   initialGroundedState: 2
   stateType: 1
@@ -68,68 +65,6 @@ MonoBehaviour:
         rotateTowards: 0
         useTargetWhenNoMovement: 0
         eulerAngle: {x: 0, y: 0, z: 0}
-    - rid: 387795733835153470
-      type: {class: VarClampMovement, ns: rwby, asm: rwby.csharp}
-      data:
-        name: 
-        id: 4
-        parent: -1
-        children: 
-        frameRanges:
-        - {x: -1, y: -1}
-        condition:
-          rid: -2
-        magnitude:
-          rid: 387795733835153471
-    - rid: 387795733835153471
-      type: {class: FighterStatReferenceFloatBase, ns: rwby, asm: rwby.csharp}
-      data:
-        inverse: 0
-        statReference: 0
-        value: 5
-    - rid: 387795733835153472
-      type: {class: VarMultiplyMovement, ns: rwby, asm: rwby.csharp}
-      data:
-        name: 
-        id: 5
-        parent: -1
-        children: 
-        frameRanges:
-        - {x: -1, y: -1}
-        condition:
-          rid: -2
-        multiplier:
-          rid: 387795733835153473
-    - rid: 387795733835153473
-      type: {class: FighterBaseStatReferenceFloat, ns: rwby, asm: rwby.csharp}
-      data:
-        inverse: 0
-        statReference: 1
-        value: 0
-        variable: 15
-    - rid: 387795733835153474
-      type: {class: VarAddMovement, ns: rwby, asm: rwby.csharp}
-      data:
-        name: 
-        id: 6
-        parent: -1
-        children: 
-        frameRanges:
-        - {x: -1, y: -1}
-        condition:
-          rid: -2
-        inputSource: 0
-        normalizeInputSource: 0
-        useRotationIfInputZero: 0
-        force:
-          rid: 387795733835153475
-    - rid: 387795733835153475
-      type: {class: FighterBaseStatReferenceFloat, ns: rwby, asm: rwby.csharp}
-      data:
-        inverse: 0
-        statReference: 1
-        value: 0
-        variable: 14
     - rid: 8688056217396838403
       type: {class: VarModifyAnimationSet, ns: rwby, asm: rwby.csharp}
       data:

@@ -338,7 +338,7 @@ namespace rwby
                     break;
             }
 
-            if (wantedDir.sqrMagnitude == 0)
+            if (wantedDir.sqrMagnitude == 0 || f.HardTargeting)
             {
                 if (!vars.rotateTowardsTarget || f.CurrentTarget == null) return;
                 wantedDir = f.CurrentTarget.transform.position - f.myTransform.position;
@@ -675,13 +675,16 @@ namespace rwby
             Vector3 newPos = fm.cWallPoint + (fm.cWallNormal * fm.FPhysicsManager.ecbRadius) - (new Vector3(0, fm.FPhysicsManager.ecbOffset, 0));
 
             fm.FPhysicsManager.SetPosition(newPos, false);
+            var tempNormal = fm.cWallNormal;
+            tempNormal.y = 0;
+            tempNormal.Normalize();
             if (vars.useWallSide)
             {
-                fm.SetRotation(Vector3.Cross(-fm.cWallNormal, Vector3.up) * fm.cWallSide, false);
+                fm.SetRotation(Vector3.Cross(-tempNormal, Vector3.up) * fm.cWallSide, false);
             }
             else
             {
-                fm.SetRotation(-fm.cWallNormal, false);
+                fm.SetRotation(-tempNormal, false);
             }
         }
         
