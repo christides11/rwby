@@ -14,6 +14,9 @@ namespace rwby
     {
         public static string SETTINGS_PATH;
         
+        public delegate void EmptyDelegate();
+        public event EmptyDelegate OnSettingsSet;
+        
         public SettingsDataType Settings
         {
             get { return currentSettings; }
@@ -32,6 +35,7 @@ namespace rwby
         public void SetSettings(SettingsDataType wantedSettings)
         {
             currentSettings = wantedSettings;
+            OnSettingsSet?.Invoke();
         }
 
         public void LoadSettings()
@@ -76,6 +80,11 @@ namespace rwby
         
         public void ApplyVideoSettings()
         {
+            var pipelineAsset = GameManager.singleton.settings.pipelineAsset;
+            var rendererAsset = GameManager.singleton.settings.rendererData;
+            var ssaoFeature = rendererAsset.rendererFeatures
+                .FirstOrDefault(f => f.name == "ScreenSpaceAmbientOcclusion");
+            
             FullScreenMode fullscreenMode = FullScreenMode.Windowed;
             switch (currentSettings.screenMode)
             {
@@ -126,15 +135,25 @@ namespace rwby
                 forceRenderRate.Deactivate();
             }
 
+            Configuring.CurrentURPA.AntiAliasing(MsaaQuality.Disabled);
+            pipelineAsset.upscalingFilter = UpscalingFilterSelection.Linear;
             switch (currentSettings.antiAliasing)
             {
                 case 3:
                     Configuring.CurrentURPA.AntiAliasing(MsaaQuality._2x);
                     break;
-                default:
-                    Configuring.CurrentURPA.AntiAliasing(MsaaQuality.Disabled);
+                case 4:
+                    Configuring.CurrentURPA.AntiAliasing(MsaaQuality._4x);
+                    break;
+                case 5:
+                    Configuring.CurrentURPA.AntiAliasing(MsaaQuality._8x);
+                    break;
+                case 6:
+                    pipelineAsset.upscalingFilter = UpscalingFilterSelection.FSR;
                     break;
             }
+
+            pipelineAsset.renderScale = currentSettings.resolutionScale;
 
             switch (currentSettings.textureQuality)
             {
@@ -151,11 +170,6 @@ namespace rwby
                     QualitySettings.masterTextureLimit = 0;
                     break;
             }
-
-            var pipelineAsset = GameManager.singleton.settings.pipelineAsset;
-            var rendererAsset = GameManager.singleton.settings.rendererData;
-            var ssaoFeature = rendererAsset.rendererFeatures
-                .FirstOrDefault(f => f.name == "ScreenSpaceAmbientOcclusion");
 
             switch (currentSettings.shadowQuality)
             {

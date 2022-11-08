@@ -16,6 +16,7 @@ namespace rwby.ui
         public OptionSlider reduceInputLatency;
         public ButtonIntSlider frameRateCap;
         public OptionSlider antiAliasing;
+        public ButtonFloatSlider resolutionScale;
 
         public OptionSlider textureQuality;
         
@@ -84,6 +85,7 @@ namespace rwby.ui
             modifiedSettings.frameRateCap = (int)frameRateCap.slider.value;
             if (modifiedSettings.frameRateCap < 10) modifiedSettings.frameRateCap = 0;
             modifiedSettings.antiAliasing = antiAliasing.currentOption;
+            modifiedSettings.resolutionScale = (float)Math.Round(resolutionScale.slider.value, 1, MidpointRounding.AwayFromZero);
             modifiedSettings.textureQuality = textureQuality.currentOption;
             modifiedSettings.shadowQuality = shadowQuality.currentOption;
             modifiedSettings.ambientOcclusion = ambientOcclusion.currentOption;
@@ -120,8 +122,13 @@ namespace rwby.ui
             frameRateCap.slider.value = modifiedSettings.frameRateCap;
             frameRateCap.valueText.text = modifiedSettings.frameRateCap.ToString();
 
-            antiAliasing.options = new[] { "Off", "FXAA", "SMAA", "MSAA" };
+            antiAliasing.options = new[] { "Off", "FXAA", "SMAA", "MSAA x2", "MSAA x4", "MSAA x8", "FSR 1.0" };
             antiAliasing.SetOption(modifiedSettings.antiAliasing);
+
+            resolutionScale.slider.maxValue = 2.0f;
+            resolutionScale.slider.minValue = 0.1f;
+            resolutionScale.slider.value = modifiedSettings.resolutionScale;
+            resolutionScale.valueText.text = modifiedSettings.resolutionScale.ToString("F1");
 
             textureQuality.options = new[] { "Lowest", "Low", "Medium", "High" };
             textureQuality.SetOption(modifiedSettings.textureQuality);

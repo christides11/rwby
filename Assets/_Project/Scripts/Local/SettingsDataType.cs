@@ -18,7 +18,8 @@ namespace rwby
         public int vsync = 0; // OFF, ON, TRIPLE BUFFER
         public int reduceInputLatency = 0; // OFF, ON
         public int frameRateCap = 0;
-        public int antiAliasing = 0; // OFF, FXAA, SMAA, MSAA
+        public int antiAliasing = 0; // OFF, FXAA, SMAA, MSAAx2, MSAAx4, MSAAx8, FSR1.0
+        public float resolutionScale = 1.0f;
         
         public int textureQuality = 3; // LOWEST, LOW, MEDIUM, HIGH
         

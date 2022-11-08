@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Cinemachine;
 using Fusion;
 using UnityEngine;
+using UnityEngine.Rendering.Universal;
 
 namespace rwby
 {
@@ -15,6 +16,26 @@ namespace rwby
         public virtual void Initialize()
         {
             Runner.AddSimulationBehaviour(cutoutHandler, null);
+            GameManager.singleton.settingsManager.OnSettingsSet += UpdateCameraSettings;
+            UpdateCameraSettings();
+        }
+
+        private void UpdateCameraSettings()
+        {
+            var settingsMenu = GameManager.singleton.settingsManager;
+
+            var urpCam = camera.GetComponent<UniversalAdditionalCameraData>();
+            urpCam.antialiasing = AntialiasingMode.None;
+            switch (settingsMenu.Settings.antiAliasing)
+            {
+                case 1:
+                    urpCam.antialiasing = AntialiasingMode.FastApproximateAntialiasing;
+                    break;
+                case 2:
+                    urpCam.antialiasing = AntialiasingMode.SubpixelMorphologicalAntiAliasing;
+                    urpCam.antialiasingQuality = AntialiasingQuality.High;
+                    break;
+            }
         }
     }
 }
