@@ -25,6 +25,7 @@ MonoBehaviour:
   - rid: 7270848428946489348
   - rid: 7270848428946489351
   - rid: 7270848428946489352
+  - rid: 387795752378957824
   auraRequirement: 0
   initialGroundedState: 1
   stateType: 1
@@ -59,6 +60,28 @@ MonoBehaviour:
         condition:
           rid: -2
         asset: {fileID: 11400000, guid: 893ede551a6f8314185dbd9614e32ac8, type: 2}
+    - rid: 387795752378957824
+      type: {class: VarRotateTowards, ns: rwby, asm: rwby.csharp}
+      data:
+        name: 
+        id: 5
+        parent: -1
+        children: 
+        frameRanges:
+        - {x: 1, y: 15}
+        condition:
+          rid: -2
+        rotateTowards: 0
+        eulerAngle: {x: 0, y: 0, z: 0}
+        rotateTowardsTarget: 0
+        rotationSpeed:
+          rid: 387795752378957825
+    - rid: 387795752378957825
+      type: {class: FighterStatReferenceFloatBase, ns: rwby, asm: rwby.csharp}
+      data:
+        inverse: 0
+        statReference: 0
+        value: 3
     - rid: 7270848428946489345
       type: {class: VarEmpty, ns: rwby, asm: rwby.csharp}
       data:

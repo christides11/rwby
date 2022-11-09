@@ -23,9 +23,11 @@ MonoBehaviour:
   - rid: 2193520783924396044
   - rid: 2193520716547358736
   - rid: 8688056136894513159
-  stateGroundedGroup: 1
+  auraRequirement: 0
+  initialGroundedState: 1
   stateType: 0
   maxUsesInString: -1
+  selfChainable: 0
   allowBaseStateTransitions: 1
   inputSequence:
     executeWindow: 3
@@ -51,12 +53,13 @@ MonoBehaviour:
         parent: -1
         children: 
         frameRanges:
-        - {x: 0, y: 0}
+        - {x: 1, y: -1}
         condition:
           rid: -2
-        inputSource: 0
+        inputSource: 1
         normalizeInputSource: 1
-        useRotationIfInputZero: 1
+        useRotationIfInputZero: 0
+        reverseInputSource: 0
         force:
           rid: 2193520716547358737
     - rid: 2193520716547358737
@@ -79,9 +82,11 @@ MonoBehaviour:
           rid: -2
         checkInputSequence: 0
         checkCondition: 0
+        targetType: 0
         stateMovesetID: -1
         state:
           rid: 2193520783924396045
+        frame: 0
     - rid: 2193520783924396045
       type: {class: FighterCmnStateReference, ns: rwby, asm: rwby.csharp}
       data:
@@ -98,5 +103,6 @@ MonoBehaviour:
         condition:
           rid: -2
         modifyType: 1
-        rotateTowards: 1
+        rotateTowards: 0
+        useTargetWhenNoMovement: 0
         eulerAngle: {x: 0, y: 0, z: 0}

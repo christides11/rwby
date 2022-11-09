@@ -25,9 +25,11 @@ MonoBehaviour:
   - rid: 2193520789975990277
   - rid: 2193520783924396046
   - rid: 8688056473731203083
+  auraRequirement: 0
   initialGroundedState: 1
   stateType: 0
   maxUsesInString: -1
+  selfChainable: 0
   allowBaseStateTransitions: 1
   inputSequence:
     executeWindow: 3
@@ -45,6 +47,26 @@ MonoBehaviour:
     RefIds:
     - rid: -2
       type: {class: , ns: , asm: }
+    - rid: 387795752378957829
+      type: {class: ConditionOr, ns: rwby, asm: rwby.csharp}
+      data:
+        conditions:
+        - rid: 387795752378957830
+        - rid: 387795752378957831
+    - rid: 387795752378957830
+      type: {class: ConditionMoveStickMagnitude, ns: rwby, asm: rwby.csharp}
+      data:
+        minValue: 0
+        maxValue: 0
+    - rid: 387795752378957831
+      type: {class: ConditionCompareInputDir, ns: rwby, asm: rwby.csharp}
+      data:
+        inverse: 1
+        inputSourceA: 1
+        inputSourceB: 0
+        minAngle: -80
+        maxAngle: 80
+        signedAngle: 1
     - rid: 2193520716547358725
       type: {class: VarApplyMovement, ns: rwby, asm: rwby.csharp}
       data:
@@ -76,6 +98,7 @@ MonoBehaviour:
         slopeDivi: 0
         slopeMulti: 0
         slopeMultiMax: 0
+        slopeinputModi: 0
     - rid: 2193520716547358726
       type: {class: FighterBaseStatReferenceFloat, ns: rwby, asm: rwby.csharp}
       data:
@@ -156,17 +179,14 @@ MonoBehaviour:
         frameRanges:
         - {x: 1, y: -1}
         condition:
-          rid: 2193520783924396047
+          rid: 387795752378957829
         checkInputSequence: 0
         checkCondition: 0
+        targetType: 0
         stateMovesetID: -1
         state:
           rid: 2193520783924396048
-    - rid: 2193520783924396047
-      type: {class: ConditionMoveStickMagnitude, ns: rwby, asm: rwby.csharp}
-      data:
-        minValue: 0
-        maxValue: 0
+        frame: 0
     - rid: 2193520783924396048
       type: {class: FighterCmnStateReference, ns: rwby, asm: rwby.csharp}
       data:
@@ -196,9 +216,11 @@ MonoBehaviour:
           rid: 8688056473731203093
         checkInputSequence: 0
         checkCondition: 0
+        targetType: 0
         stateMovesetID: -1
         state:
           rid: 8688056473731203084
+        frame: 0
     - rid: 8688056473731203084
       type: {class: FighterCmnStateReference, ns: rwby, asm: rwby.csharp}
       data:

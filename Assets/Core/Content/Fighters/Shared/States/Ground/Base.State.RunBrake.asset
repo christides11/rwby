@@ -20,17 +20,21 @@ MonoBehaviour:
   autoLoop: 0
   autoLoopFrame: 1
   data:
+  - rid: 387795752378957826
   - rid: 2193520783924396049
   - rid: 2193520716547358734
-  stateGroundedGroup: 1
+  auraRequirement: 0
+  initialGroundedState: 1
   stateType: 0
   maxUsesInString: -1
+  selfChainable: 0
   allowBaseStateTransitions: 1
   inputSequence:
     executeWindow: 3
     executeInputs: []
     sequenceWindow: 8
     sequenceInputs: []
+  inputSequenceAsHoldInputs: 0
   condition:
     rid: -2
   hitboxInfo: []
@@ -41,12 +45,44 @@ MonoBehaviour:
     RefIds:
     - rid: -2
       type: {class: , ns: , asm: }
+    - rid: 387795752378957826
+      type: {class: VarChangeState, ns: rwby, asm: rwby.csharp}
+      data:
+        name: To Run Init
+        id: 2
+        parent: -1
+        children: 
+        frameRanges:
+        - {x: -1, y: -1}
+        condition:
+          rid: 387795752378957827
+        checkInputSequence: 0
+        checkCondition: 0
+        targetType: 0
+        stateMovesetID: -1
+        state:
+          rid: 387795752378957828
+        frame: 0
+    - rid: 387795752378957827
+      type: {class: ConditionButton, ns: rwby, asm: rwby.csharp}
+      data:
+        inverse: 0
+        checkAbilityButton: 0
+        button: 4
+        buttonState: 1
+        offset: 0
+        buffer: 5
+    - rid: 387795752378957828
+      type: {class: FighterCmnStateReference, ns: rwby, asm: rwby.csharp}
+      data:
+        state: 27
     - rid: 2193520716547358734
       type: {class: VarApplyTraction, ns: rwby, asm: rwby.csharp}
       data:
         name: 
         id: 0
         parent: -1
+        children: 
         frameRanges:
         - {x: 1, y: -1}
         condition:
@@ -68,15 +104,18 @@ MonoBehaviour:
         name: To Idle
         id: 1
         parent: -1
+        children: 
         frameRanges:
         - {x: -1, y: -1}
         condition:
           rid: -2
         checkInputSequence: 0
         checkCondition: 0
+        targetType: 0
         stateMovesetID: -1
         state:
           rid: 2193520783924396050
+        frame: 0
     - rid: 2193520783924396050
       type: {class: FighterCmnStateReference, ns: rwby, asm: rwby.csharp}
       data:

@@ -14,6 +14,8 @@ namespace rwby.ui
 
         public float stepSize = 0.1f;
 
+        public string stringFormat = "F1";
+        
         protected override void Awake()
         {
             base.Awake();
@@ -22,7 +24,7 @@ namespace rwby.ui
 
         private void UpdateValue(float arg0)
         {
-            valueText.text = arg0.ToString();
+            valueText.text = arg0.ToString(stringFormat);
         }
 
         public override void OnMove(AxisEventData eventData)

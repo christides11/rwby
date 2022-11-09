@@ -26,7 +26,7 @@ namespace rwby
 
             var urpCam = camera.GetComponent<UniversalAdditionalCameraData>();
             urpCam.antialiasing = AntialiasingMode.None;
-            switch (settingsMenu.Settings.antiAliasing)
+            switch (settingsMenu.Settings.antiAliasingPP)
             {
                 case 1:
                     urpCam.antialiasing = AntialiasingMode.FastApproximateAntialiasing;

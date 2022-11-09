@@ -313,6 +313,7 @@ namespace rwby
             {
                 case VarInputSourceType.stick:
                     angleA = f.GetMovementVector();
+                    if (angleA == Vector3.zero) angleA = f.myTransform.forward;
                     break;
                 case VarInputSourceType.slope:
                     angleA = f.groundSlopeDir;
@@ -328,6 +329,7 @@ namespace rwby
             {
                 case VarInputSourceType.stick:
                     angleB = f.GetMovementVector();
+                    if (angleA == Vector3.zero) angleA = f.myTransform.forward;
                     break;
                 case VarInputSourceType.slope:
                     angleB = f.groundSlopeDir;
@@ -339,9 +341,10 @@ namespace rwby
                     break;
             }
 
-            var angle = Vector3.SignedAngle(angleA, angleB, Vector3.up);
-            if (angle >= vars.minAngle && angle <= vars.maxAngle) return true;
-            return false;
+            var angle = vars.signedAngle ? Vector3.SignedAngle(angleA, angleB, Vector3.up) 
+                : Vector3.Angle(angleA, angleB);
+            if (angle >= vars.minAngle && angle <= vars.maxAngle) return !vars.inverse;
+            return vars.inverse ? true : false;
         }
         
         public static bool WallAngle(IFighterBase fighter, IConditionVariables variables, HnSF.StateTimeline arg3, int arg4)

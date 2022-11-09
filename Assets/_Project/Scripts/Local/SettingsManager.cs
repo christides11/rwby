@@ -139,16 +139,16 @@ namespace rwby
             pipelineAsset.upscalingFilter = UpscalingFilterSelection.Linear;
             switch (currentSettings.antiAliasing)
             {
-                case 3:
+                case 1:
                     Configuring.CurrentURPA.AntiAliasing(MsaaQuality._2x);
                     break;
-                case 4:
+                case 2:
                     Configuring.CurrentURPA.AntiAliasing(MsaaQuality._4x);
                     break;
-                case 5:
+                case 3:
                     Configuring.CurrentURPA.AntiAliasing(MsaaQuality._8x);
                     break;
-                case 6:
+                case 4:
                     pipelineAsset.upscalingFilter = UpscalingFilterSelection.FSR;
                     break;
             }
