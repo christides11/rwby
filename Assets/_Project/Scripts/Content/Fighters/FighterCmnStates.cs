@@ -51,6 +51,7 @@ namespace rwby
         SHIELD_GRD,
         SHIELD_AIR,
         WALL_BOUNCE,
-        JUMPSQUAT_MOMENTUM
+        JUMPSQUAT_MOMENTUM,
+        DEATH
     }
 }

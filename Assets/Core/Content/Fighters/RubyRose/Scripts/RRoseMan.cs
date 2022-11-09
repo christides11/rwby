@@ -155,4 +155,15 @@ public class RRoseMan : FighterManager
         fighterWhiteboard.UpdateInt(4, WhiteboardModifyTypes.SET,3); // Gundash Max
         FStateManager.ChangeState((int)FighterCmnStates.IDLE, 0);
     }
+
+    public override void HandleDeath()
+    {
+        base.HandleDeath();
+    }
+
+    public override void HandleRespawn()
+    {
+        base.HandleRespawn();
+        FStateManager.ChangeState((int)FighterCmnStates.IDLE, 0);
+    }
 }

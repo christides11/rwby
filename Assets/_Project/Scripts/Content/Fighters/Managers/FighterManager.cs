@@ -43,6 +43,7 @@ namespace rwby
         [Networked] public NetworkBool HardTargeting { get; set; }
         [Networked] public NetworkObject CurrentTarget { get; set; }
         [Networked] public NetworkBool Visible { get; set; }
+        [Networked] public NetworkBool Process { get; set; } = true;
         [Networked] public NetworkBehaviour callbacks { get; set; }
         
         // Stats
@@ -135,12 +136,14 @@ namespace rwby
         public override void Spawned()
         {
             base.Spawned();
+            HandleRespawn();
+            /*
             TargetableNetworked = true;
             Visible = true;
             combatManager.Cleanup();
             stateManager.SetMoveset(0);
             statManager.SetupStats((stateManager.movesets[0] as Moveset).fighterStats);
-            combatManager.Aura = fighterDefinition.Aura;
+            combatManager.Aura = fighterDefinition.Aura;*/
         }
 
         [Header("Hitstop")]
@@ -174,6 +177,7 @@ namespace rwby
 
         public virtual void FighterUpdate()
         {
+            if (!Process) return;
             combatManager.CounterhitState = false;
             GetFloorAngle();
             inputManager.FeedInput();
@@ -477,6 +481,32 @@ namespace rwby
         public void SetTargetable(bool value)
         {
             TargetableNetworked = value;
+        }
+
+        public virtual void HandleDeath()
+        {
+            TargetableNetworked = false;
+            Visible = false;
+            Process = false;
+            combatManager.SetHitStop(0);
+            combatManager.SetHitStun(0);
+            combatManager.ResetProration();
+            combatManager.ResetString();
+            combatManager.ResetCharge();
+            combatManager.HitboxManager.Reset();
+            boxManager.ResetAllBoxes();
+            physicsManager.ResetForces();
+        }
+
+        public virtual void HandleRespawn()
+        {
+            TargetableNetworked = true;
+            Visible = true;
+            Process = true;
+            combatManager.Cleanup();
+            stateManager.SetMoveset(0);
+            statManager.SetupStats((stateManager.movesets[0] as Moveset).fighterStats);
+            combatManager.Aura = fighterDefinition.Aura;
         }
 
         public GameObject GetGameObject()
