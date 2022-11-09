@@ -77,8 +77,8 @@ MonoBehaviour:
       autolink: 0
       gravityAutolinkPercentage: 0
       movementAutolinkPercentage: 0
-      groundHitForce: {x: 0, y: 0, z: 5}
-      aerialHitForce: {x: 0, y: 3, z: 2}
+      groundHitForce: {x: 0, y: 0, z: 8}
+      aerialHitForce: {x: 0, y: 3, z: 4}
       pullPushMultiplier: 0
       pullPushMaxDistance: 10
       blockLift: 0
@@ -262,7 +262,7 @@ MonoBehaviour:
       data:
         inverse: 0
         statReference: 0
-        value: 7
+        value: 9
     - rid: 2193520813467238401
       type: {class: VarChangeState, ns: rwby, asm: rwby.csharp}
       data:
@@ -323,7 +323,7 @@ MonoBehaviour:
       data:
         inverse: 0
         statReference: 0
-        value: 25
+        value: 35
         variable: 0
     - rid: 7270848428946489353
       type: {class: VarRotateTowards, ns: rwby, asm: rwby.csharp}
@@ -411,7 +411,7 @@ MonoBehaviour:
               guid: 1d292c1f00000000
             contentGUID:
               guid: 1d27280000000000
-          sound: whoosh1
+          sound: swing1
           parented: 1
           offset: {x: 0, y: 0, z: 0}
           volume: 1

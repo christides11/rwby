@@ -28,8 +28,10 @@ namespace rwby
             if (property.FindPropertyRelative("counterhit").FindPropertyRelative("blockEffectbank").isExpanded) val += lineValue * 2;
             if (property.FindPropertyRelative("hit").FindPropertyRelative("hitSoundbank").isExpanded) val += lineValue * 2;
             if (property.FindPropertyRelative("counterhit").FindPropertyRelative("hitSoundbank").isExpanded) val += lineValue * 2;
+            if (property.FindPropertyRelative("hit").FindPropertyRelative("hitBlockSoundbank").isExpanded) val += lineValue * 2;
+            if (property.FindPropertyRelative("counterhit").FindPropertyRelative("hitBlockSoundbank").isExpanded) val += lineValue * 2;
             
-            val += lineValue * 40 * windowsOpen;
+            val += lineValue * 44 * windowsOpen;
             return val;
         }
 
@@ -144,7 +146,17 @@ namespace rwby
                 GetLineY();
                 GetLineY();
             }
+            EditorGUI.PropertyField(new Rect(position.x, GetLineY(), position.width, lineHeight), property.FindPropertyRelative("hitBlockSoundbank"), true);
+            if (property.FindPropertyRelative("hitBlockSoundbank").isExpanded)
+            {
+                GetLineY();
+                GetLineY();
+            }
             EditorGUI.PropertyField(new Rect(position.x, GetLineY(), position.width, lineHeight), property.FindPropertyRelative("hitSound"), true);
+            EditorGUI.PropertyField(new Rect(position.x, GetLineY(), position.width, lineHeight), property.FindPropertyRelative("hitBlockSound"), true);
+            EditorGUI.PropertyField(new Rect(position.x, GetLineY(), position.width, lineHeight), property.FindPropertyRelative("hitSoundVolume"), true);
+            EditorGUI.PropertyField(new Rect(position.x, GetLineY(), position.width, lineHeight), property.FindPropertyRelative("hitSoundMinDist"), true);
+            EditorGUI.PropertyField(new Rect(position.x, GetLineY(), position.width, lineHeight), property.FindPropertyRelative("hitSoundMaxDist"), true);
             EditorGUI.PropertyField(new Rect(position.x, GetLineY(), position.width, lineHeight), property.FindPropertyRelative("cameraShakeLength"), true);
             EditorGUI.PropertyField(new Rect(position.x, GetLineY(), position.width, lineHeight), property.FindPropertyRelative("hitCameraShakeStrength"), true);
             EditorGUI.PropertyField(new Rect(position.x, GetLineY(), position.width, lineHeight), property.FindPropertyRelative("blockCameraShakeStrength"), true);

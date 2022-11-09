@@ -75,11 +75,11 @@ namespace rwby
                 {
                     soundbank = hitReaction.hitInfoGroup.hitSoundbank,
                     sound = hitReaction.hitInfoGroup.hitSound,
-                    maxDist = 20,
-                    minDist = 5,
+                    maxDist = hitReaction.hitInfoGroup.hitSoundMaxDist,
+                    minDist = hitReaction.hitInfoGroup.hitSoundMinDist,
                     offset = enemyHurtbox.Position,
                     parented = false,
-                    volume = 1.0f
+                    volume = hitReaction.hitInfoGroup.hitSoundVolume
                 }});
             }
             
@@ -108,6 +108,20 @@ namespace rwby
                     scale = new Vector3(1, 1, 1),
                     autoIncrement = true
                 } });
+            }
+            
+            if (!string.IsNullOrEmpty(hitReaction.hitInfoGroup.hitBlockSound))
+            {
+                manager.fighterSounder.AddSFXs(new []{ new SoundReference()
+                {
+                    soundbank = hitReaction.hitInfoGroup.hitBlockSoundbank,
+                    sound = hitReaction.hitInfoGroup.hitBlockSound,
+                    maxDist = hitReaction.hitInfoGroup.hitSoundMaxDist,
+                    minDist = hitReaction.hitInfoGroup.hitSoundMinDist,
+                    offset = enemyHurtbox.Position,
+                    parented = false,
+                    volume = hitReaction.hitInfoGroup.hitSoundVolume
+                }});
             }
             
             manager.shakeDefinition = new CmaeraShakeDefinition()

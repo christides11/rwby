@@ -75,7 +75,7 @@ MonoBehaviour:
       autolink: 0
       gravityAutolinkPercentage: 0
       movementAutolinkPercentage: 0
-      groundHitForce: {x: 0, y: 0, z: 5}
+      groundHitForce: {x: 0, y: 0, z: 2}
       aerialHitForce: {x: 0, y: 3, z: 2}
       pullPushMultiplier: 0
       pullPushMaxDistance: 10
@@ -103,10 +103,19 @@ MonoBehaviour:
       blockEffect: shieldhit1
       hitSoundbank:
         modGUID:
-          guid: 
+          guid: 1d292c1f00000000
         contentGUID:
-          guid: 
-      hitSound: 
+          guid: 1d27280000000000
+      hitSound: hit-sword-1
+      hitSoundVolume: 0.3
+      hitSoundMinDist: 5
+      hitSoundMaxDist: 20
+      hitBlockSoundbank:
+        modGUID:
+          guid: 1d292c1f00000000
+        contentGUID:
+          guid: 1d27280000000000
+      hitBlockSound: hit-guard-1
       hitCameraShakeStrength: 1
       blockCameraShakeStrength: 1
       cameraShakeLength: 4
@@ -161,6 +170,15 @@ MonoBehaviour:
         contentGUID:
           guid: 
       hitSound: 
+      hitSoundVolume: 0
+      hitSoundMinDist: 0
+      hitSoundMaxDist: 0
+      hitBlockSoundbank:
+        modGUID:
+          guid: 
+        contentGUID:
+          guid: 
+      hitBlockSound: 
       hitCameraShakeStrength: 2
       blockCameraShakeStrength: 2
       cameraShakeLength: 8

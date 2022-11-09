@@ -35,6 +35,7 @@ MonoBehaviour:
   - rid: 7270848428946489353
   - rid: 7270848718906589184
   - rid: 7270848718906589187
+  - rid: 387795756708003851
   auraRequirement: 0
   initialGroundedState: 1
   stateType: 2
@@ -102,10 +103,19 @@ MonoBehaviour:
       blockEffect: shieldhit1
       hitSoundbank:
         modGUID:
-          guid: 
+          guid: 1d292c1f00000000
         contentGUID:
-          guid: 
-      hitSound: 
+          guid: 1d27280000000000
+      hitSound: hit-sword-1
+      hitSoundVolume: 0.3
+      hitSoundMinDist: 5
+      hitSoundMaxDist: 20
+      hitBlockSoundbank:
+        modGUID:
+          guid: 1d292c1f00000000
+        contentGUID:
+          guid: 1d27280000000000
+      hitBlockSound: hit-guard-1
       hitCameraShakeStrength: 1
       blockCameraShakeStrength: 1
       cameraShakeLength: 4
@@ -160,6 +170,15 @@ MonoBehaviour:
         contentGUID:
           guid: 
       hitSound: 
+      hitSoundVolume: 0
+      hitSoundMinDist: 0
+      hitSoundMaxDist: 0
+      hitBlockSoundbank:
+        modGUID:
+          guid: 
+        contentGUID:
+          guid: 
+      hitBlockSound: 
       hitCameraShakeStrength: 2
       blockCameraShakeStrength: 2
       cameraShakeLength: 8
@@ -175,6 +194,29 @@ MonoBehaviour:
     RefIds:
     - rid: -2
       type: {class: , ns: , asm: }
+    - rid: 387795756708003851
+      type: {class: VarModifySoundSet, ns: rwby, asm: rwby.csharp}
+      data:
+        name: 
+        id: 18
+        parent: -1
+        children: 
+        frameRanges:
+        - {x: 3, y: 3}
+        condition:
+          rid: -2
+        sounds:
+        - soundbank:
+            modGUID:
+              guid: 1d292c1f00000000
+            contentGUID:
+              guid: 2c2c000000000000
+          sound: swing16
+          parented: 1
+          offset: {x: 0, y: 0, z: 0}
+          volume: 0.4
+          minDist: 5
+          maxDist: 20
     - rid: 2193520813467238401
       type: {class: VarChangeState, ns: rwby, asm: rwby.csharp}
       data:
@@ -400,7 +442,7 @@ MonoBehaviour:
         parent: -1
         children: 
         frameRanges:
-        - {x: 1, y: 1}
+        - {x: 3, y: 3}
         condition:
           rid: -2
         sounds:
@@ -409,10 +451,10 @@ MonoBehaviour:
               guid: 1d292c1f00000000
             contentGUID:
               guid: 1d27280000000000
-          sound: whoosh1
+          sound: swing1
           parented: 1
           offset: {x: 0, y: 0, z: 0}
-          volume: 1
+          volume: 0.5
           minDist: 5
           maxDist: 20
     - rid: 8688056833868562432

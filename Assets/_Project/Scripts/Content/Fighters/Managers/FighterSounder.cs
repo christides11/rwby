@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using Fusion;
 using UnityEngine;
+using UnityEngine.Audio;
 
 namespace rwby
 {
@@ -21,6 +22,8 @@ namespace rwby
         public AudioSource[] soundObjects = new AudioSource[10];
 
         public AudioSource audioSourceGOPrefab;
+
+        public AudioMixerGroup sfxMixerGroup;
         
         private void Awake()
         {
@@ -108,6 +111,7 @@ namespace rwby
                     soundObjects[i].volume = sounds.sounds[i].volume;
                     soundObjects[i].minDistance = sounds.sounds[i].minDist;
                     soundObjects[i].maxDistance = sounds.sounds[i].maxDist;
+                    soundObjects[i].outputAudioMixerGroup = sfxMixerGroup;
                     soundObjects[i].Play();
                 }
 

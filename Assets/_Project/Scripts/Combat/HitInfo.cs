@@ -55,6 +55,11 @@ namespace rwby
             public string blockEffect;
             public ModObjectSetContentReference hitSoundbank;
             public string hitSound;
+            public float hitSoundVolume;
+            public float hitSoundMinDist;
+            public float hitSoundMaxDist;
+            public ModObjectSetContentReference hitBlockSoundbank;
+            public string hitBlockSound;
 
             public CameraShakeStrength hitCameraShakeStrength;
             public CameraShakeStrength blockCameraShakeStrength;
