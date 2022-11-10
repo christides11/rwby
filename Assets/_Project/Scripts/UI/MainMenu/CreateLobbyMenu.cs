@@ -17,7 +17,6 @@ namespace rwby.ui.mainmenu
         [SerializeField] private LobbySettingsMenu lobbySettings;
         public CanvasGroup canvasGroup;
         
-        //private GameObject defaultSelectedUIItem;
         private EventSystem eventSystem;
         private LocalPlayerManager localPlayerManager;
         
@@ -26,7 +25,6 @@ namespace rwby.ui.mainmenu
         private string lobbyName = "";
         private int playerCount = 8;
         private int maxPlayersPerClient = 1;
-        //private byte teamCount = 0;
         private ModGUIDContentReference _selectedGamemodeContentReference;
         private IGameModeDefinition selectedGamemodeDefinition;
         private GameModeBase selectedGamemode;
@@ -132,18 +130,7 @@ namespace rwby.ui.mainmenu
             ((ContentButtonIntValue)lobbySettings.idContentDictionary["MaxPlayersPerClient"]).intValueText.text =
                 maxPlayersPerClient.ToString();
         }
-        
-        /*
-        private void ChangeTeamCount(int change)
-        {
-            int minTeams = selectedGamemodeDefinition != null ? selectedGamemodeDefinition.minimumTeams : 0;
-            int maxTeams = selectedGamemodeDefinition != null ? selectedGamemodeDefinition.maximumTeams : 0;
-            teamCount = (byte)Mathf.Clamp(teamCount + change, minTeams, maxTeams);
-            ((ContentButtonIntValue)lobbySettings.idContentDictionary["Teams"]).intValueText.text =
-                teamCount.ToString();
-            Refresh();
-        }*/
-        
+
         public async void Button_GameMode()
         {
             canvasGroup.interactable = false;
@@ -166,6 +153,9 @@ namespace rwby.ui.mainmenu
                 return;
             }
 
+            bool loadResult = await ContentManager.singleton.LoadContentDefinition(arg1);
+            if (!loadResult) return;
+            
             IGameModeDefinition gameModeDefinition = ContentManager.singleton.GetContentDefinition<IGameModeDefinition>(_selectedGamemodeContentReference);
             if (gameModeDefinition == null) return;
 

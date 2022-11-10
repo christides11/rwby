@@ -72,6 +72,7 @@ namespace rwby
 
         public override bool Unload()
         {
+            if (sceneHandles == null) return true;
             foreach (var handle in sceneHandles)
             {
                 if (handle.Status == AsyncOperationStatus.Succeeded)

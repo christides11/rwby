@@ -6,7 +6,7 @@ namespace rwby
 {
     public class ClientContentUnLoaderService : NetworkBehaviour
     {
-        public void TellClientsToUnload(ModGUIDContentReference contentReference, bool loadContent = true)
+        public void TellClientsToUnload(ModGUIDContentReference contentReference)
         {
             bool unloadResult = ContentManager.singleton.UnloadContentDefinition(contentReference);
 
@@ -19,11 +19,11 @@ namespace rwby
             }
             
             // Tell clients to load the content.
-            RPC_ClientTryUnload(new NetworkModObjectGUIDReference(contentReference.modGUID, contentReference.contentType, contentReference.contentIdx), loadContent);
+            RPC_ClientTryUnload(new NetworkModObjectGUIDReference(contentReference.modGUID, contentReference.contentType, contentReference.contentIdx));
         }
 
         [Rpc(RpcSources.StateAuthority, RpcTargets.All, HostMode = RpcHostMode.SourceIsHostPlayer)]
-        public void RPC_ClientTryUnload(NetworkModObjectGUIDReference objectReference, NetworkBool loadContent)
+        public void RPC_ClientTryUnload(NetworkModObjectGUIDReference objectReference)
         {
             if (Runner.IsServer && !Runner.LocalPlayer) return;
             ContentManager.singleton.UnloadContentDefinition(objectReference);

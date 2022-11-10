@@ -43,24 +43,32 @@ namespace rwby
         }
 
         #region Loading
-        public async UniTask LoadContentDefinitions(int contentType)
+        public async UniTask LoadContentDefinitions(int contentType, bool track = true)
         {
             foreach (var m in modLoader.loadedModsByGUID.Keys)
             {
-                await LoadContentDefinitions(m, contentType);
+                await LoadContentDefinitions(m, contentType, track);
             }
         }
 
-        public async UniTask<bool> LoadContentDefinitions(ContentGUID modGUID, int contentType)
+        public async UniTask<bool> LoadContentDefinitions(ContentGUID modGUID, int contentType, bool track = true)
         {
             if (!modLoader.TryGetLoadedMod(modGUID, out LoadedModDefinition mod)) return false;
             if (!mod.definition.ContentParsers.TryGetValue(contentType, out IContentParser parser)) return false;
             var result = await parser.LoadContentDefinitions(mod);
-            foreach (var r in result) TrackItem(new ModGUIDContentReference(){ modGUID = modGUID, contentType = contentType, contentIdx = r});
+            if (track)
+            {
+                foreach (var r in result)
+                {
+                    TrackItem(new ModGUIDContentReference()
+                        { modGUID = modGUID, contentType = contentType, contentIdx = r });
+                }
+            }
+
             return true;
         }
 
-        public async UniTask<bool> LoadContentDefinition(ModGUIDContentReference contentReference)
+        public async UniTask<bool> LoadContentDefinition(ModGUIDContentReference contentReference, bool track = true)
         {
             if (!modLoader.TryGetLoadedMod(contentReference.modGUID, out LoadedModDefinition mod))
             {
@@ -69,7 +77,7 @@ namespace rwby
             }
             if (!mod.definition.ContentParsers.TryGetValue(contentReference.contentType, out IContentParser parser)) return false;
             bool result = await parser.LoadContentDefinition(mod, contentReference.contentIdx);
-            if(result) TrackItem(contentReference);
+            if(track && result) TrackItem(contentReference);
             return result;
         }
         #endregion
@@ -171,7 +179,35 @@ namespace rwby
             return true;
         }
         #endregion
+        
+        #region Temporary Loading
+        public List<ModGUIDContentReference> GetPaginatedContent(int contentType, int amtPerPage, int page)
+        {
+            var contentReferences = new List<ModGUIDContentReference>();
+            int startAmt = page * amtPerPage;
+            int currAmt = 0;
+            
+            foreach (var m in modLoader.loadedModsByGUID.Keys)
+            {
+                if (!modLoader.TryGetLoadedMod(m, out LoadedModDefinition mod)) continue;
+                if (!mod.definition.ContentParsers.TryGetValue(contentType, out IContentParser parser)) continue;
+                foreach(var v in parser.GUIDToInt)
+                {
+                    if (currAmt != startAmt)
+                    {
+                        currAmt++;
+                        continue;
+                    }
+                    contentReferences.Add(new ModGUIDContentReference(m, contentType, v.Value));
+                    if (contentReferences.Count == amtPerPage) return contentReferences;
+                }
+            }
 
+            if (currAmt != startAmt) return null;
+            return contentReferences;
+        }
+        #endregion
+        
         private void TrackItem(ModGUIDContentReference contentReference)
         {
             if(currentlyLoadedContent.ContainsKey(contentReference.modGUID) == false) currentlyLoadedContent.Add(contentReference.modGUID, new HashSet<(int, int)>());

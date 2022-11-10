@@ -88,17 +88,31 @@ namespace rwby.core.versus
             await ContentSelect.singleton.OpenMenu(player, (int)ContentType.Map,(a, b) =>
             {
                 ContentSelect.singleton.CloseMenu(player);
-                if (local)
-                {
-                    gamemode.localMap = b;
-                    gamemode.WhenGamemodeSettingsChanged(true);
-                }
-                else
-                {
-                    gamemode.Map = b;
-                    gamemode.WhenGamemodeSettingsChanged();
-                }
+                _ = SelectMap(b, local);
             });
+        }
+
+        private async UniTask SelectMap(ModGUIDContentReference mapReference, bool local)
+        {
+            if (local)
+            {
+                if (gamemode.localMap.IsValid() && gamemode.localMap != mapReference)
+                {
+                    ContentManager.singleton.UnloadContentDefinition(gamemode.localMap);
+                }
+                gamemode.localMap = mapReference;
+                _ = await ContentManager.singleton.LoadContentDefinition(gamemode.localMap);
+                gamemode.WhenGamemodeSettingsChanged(true);
+            }
+            else
+            {
+                if (gamemode.Map.IsValid() && gamemode.Map != mapReference)
+                {
+                    gamemode.sessionManager.clientContentUnloaderService.TellClientsToUnload(gamemode.Map);
+                }
+                gamemode.Map = mapReference;
+                gamemode.WhenGamemodeSettingsChanged();
+            }
         }
     }
 }
