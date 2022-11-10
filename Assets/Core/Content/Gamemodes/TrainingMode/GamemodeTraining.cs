@@ -13,10 +13,13 @@ using UnityEngine.Serialization;
 
 namespace rwby.core.training
 {
-    public class GamemodeTraining : GameModeBase
+    public class GamemodeTraining : GameModeBase, IGamemodeInitialization, IGamemodeLobbyUI
     {
 
         public TrainingSettingsMenu settingsMenu;
+
+        public override IGamemodeInitialization InitializationHandler => this;
+        public override IGamemodeLobbyUI LobbyUIHandler => this;
 
         [Networked] public NetworkModObjectGUIDReference Map { get; set; }
         public ModGUIDContentReference localMap;
@@ -102,7 +105,7 @@ namespace rwby.core.training
         }
 
         #region Lobby UI Settings
-        public override void AddGamemodeSettings(int player, LobbySettingsMenu settingsMenu, bool local = false)
+        public void AddGamemodeSettings(int player, LobbySettingsMenu settingsMenu, bool local = false)
         {
             ModGUIDContentReference mapRef = local ? localMap : Map;
 
@@ -118,9 +121,8 @@ namespace rwby.core.training
             }
         }
 
-        public override void ClearGamemodeSettings(int player, LobbySettingsMenu settingsMenu, bool local = false)
+        public void ClearGamemodeSettings(int player, LobbySettingsMenu settingsMenu, bool local = false)
         {
-            base.ClearGamemodeSettings(player, settingsMenu, local);
             settingsMenu.ClearOption("Map");
         }
 
@@ -143,7 +145,7 @@ namespace rwby.core.training
         }
         #endregion
 
-        public override async UniTask<bool> VerifyGameModeSettings()
+        public async UniTask<bool> VerifyGameModeSettings()
         {
             if (Runner.IsRunning == false) return true;
             List<PlayerRef> failedLoadPlayers = await sessionManager.clientContentLoaderService.TellClientsToLoad<IMapDefinition>(Map);
@@ -173,7 +175,7 @@ namespace rwby.core.training
         List<int> startingPointCurr = new List<int>();
         private List<GameObject> respawnPoints = new List<GameObject>();
         
-        public override async UniTaskVoid StartGamemode()
+        public async UniTaskVoid StartGamemode()
         {
             sessionManager.SessionState = SessionGamemodeStateType.LOADING_GAMEMODE;
             GamemodeState = GameModeState.INITIALIZING;

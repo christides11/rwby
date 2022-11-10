@@ -19,10 +19,14 @@ namespace rwby
         public static GameModeBase singleton;
 
         public IGameModeDefinition definition;
-        
+
+        public virtual IGamemodeInitialization InitializationHandler { get; }
+        public virtual IGamemodeLobbyUI LobbyUIHandler { get; }
+
         [Networked(OnChanged = nameof(GamemodeStateChanged))] public GameModeState GamemodeState { get; set; }
         
         [Networked] public SessionManagerGamemode sessionManager { get; set; }
+        [Networked] public NetworkRNG rngGenerator { get; set; } = new NetworkRNG(0);
 
         public static void GamemodeStateChanged(Changed<GameModeBase> changed)
         {
@@ -49,7 +53,7 @@ namespace rwby
             singleton = this;
             if (Object.HasStateAuthority)
             {
-
+                rngGenerator = new NetworkRNG(Random.Range(0, 9000));
             }
             DontDestroyOnLoad(gameObject);
         }
@@ -84,30 +88,16 @@ namespace rwby
         {
             
         }
-        
-        public virtual void AddGamemodeSettings(int player, LobbySettingsMenu settingsMenu, bool local = false)
-        {
-            
-        }
 
-        public virtual void ClearGamemodeSettings(int player, LobbySettingsMenu settingsMenu, bool local = false)
-        {
-            
-        }
-
+        /*
         public virtual async UniTask<bool> VerifyGameModeSettings()
         {
             return true;
-        }
+        }*/
 
         public virtual bool VerifyReference(ModGUIDContentReference contentReference)
         {
             return false;
-        }
-
-        public virtual async UniTaskVoid StartGamemode()
-        {
-
         }
 
         public virtual bool CanTakeInput()

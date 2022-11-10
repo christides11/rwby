@@ -105,7 +105,7 @@ namespace rwby.ui.mainmenu
         {
             ((ContentButtonStringValue)lobbySettings.idContentDictionary["GameMode"]).valueString.text =
                 selectedGamemodeDefinition ? selectedGamemodeDefinition.Name : "None";
-            if(selectedGamemode) selectedGamemode.AddGamemodeSettings(0, lobbySettings, true);
+            if(selectedGamemode) selectedGamemode.LobbyUIHandler.AddGamemodeSettings(0, lobbySettings, true);
             lobbySettings.BringOptionToBottom("Teams");
             lobbySettings.BringOptionToBottom("Host");
         }
@@ -172,7 +172,7 @@ namespace rwby.ui.mainmenu
             if (selectedGamemode)
             {
                 selectedGamemode.OnLocalGamemodeSettingsChanged -= Refresh;
-                selectedGamemode.ClearGamemodeSettings(0, lobbySettings, true);
+                selectedGamemode.LobbyUIHandler.ClearGamemodeSettings(0, lobbySettings, true);
                 Destroy(selectedGamemode.gameObject);
             }
             selectedGamemodeDefinition = gameModeDefinition;

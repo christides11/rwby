@@ -161,7 +161,7 @@ namespace rwby
                 }
             }
 
-            CurrentGameMode.StartGamemode();
+            CurrentGameMode.InitializationHandler.StartGamemode();
             return true;
         }
         
@@ -178,7 +178,7 @@ namespace rwby
                 return false;
             }
             if (VerifyTeams(gamemodeDefinition) == false) return false;
-            if (await CurrentGameMode.VerifyGameModeSettings() == false) return false;
+            if (await CurrentGameMode.InitializationHandler.VerifyGameModeSettings() == false) return false;
             return true;
         }
         
