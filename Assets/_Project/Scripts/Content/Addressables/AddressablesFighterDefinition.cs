@@ -51,7 +51,7 @@ namespace rwby
             // Load fighter.
             try
             {
-                fighterHandle = Addressables.LoadAssetAsync<GameObject>(fighterReference);
+                if(!fighterHandle.IsValid()) fighterHandle = Addressables.LoadAssetAsync<GameObject>(fighterReference);
                 await fighterHandle;
                 bool fighterRequirementsResult = await fighterHandle.Result.GetComponent<FighterManager>().OnFighterLoaded();
                 if (fighterRequirementsResult == false)
@@ -70,11 +70,14 @@ namespace rwby
             // Load movesets.
             try
             {
-                movesetHandles = new AsyncOperationHandle<Moveset>[movesetReferences.Length];
+                if(movesetHandles == null) movesetHandles = new AsyncOperationHandle<Moveset>[movesetReferences.Length];
                 for (int i = 0; i < movesetReferences.Length; i++)
                 {
-                    var handle = Addressables.LoadAssetAsync<Moveset>(movesetReferences[i]);
-                    movesetHandles[i] = handle;
+                    if (!movesetReferences[i].IsValid())
+                    {
+                        var handle = Addressables.LoadAssetAsync<Moveset>(movesetReferences[i]);
+                        movesetHandles[i] = handle;
+                    }
                     await movesetHandles[i];
                 }
             }
@@ -114,7 +117,7 @@ namespace rwby
             {
                 if(t.Status == AsyncOperationStatus.Succeeded) Addressables.Release(t);
             }
-            if(fighterHandle.Status == AsyncOperationStatus.Succeeded) Addressables.Release(fighterReference);
+            if(fighterHandle.Status == AsyncOperationStatus.Succeeded) Addressables.Release(fighterHandle);
             return true;
         }
     }

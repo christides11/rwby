@@ -75,7 +75,7 @@ namespace rwby
             }
             HandleStateGroup(stateTimeline);
             
-            if (markedForStateChange && GameModeBase.singleton.CanTakeInput())
+            if (markedForStateChange)
             {
                 ChangeState(nextState, nextStateMoveset, nextStateFrame, true);
             }

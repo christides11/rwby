@@ -20,6 +20,7 @@ namespace rwby.core.versus
         {
             if (fm.HealthManager.Health <= 0)
             {
+                if (gamemode.GamemodeState != GameModeState.MATCH_IN_PROGRESS) return;
                 fm.HandleDeath();
                 if (Object.HasStateAuthority)
                 {

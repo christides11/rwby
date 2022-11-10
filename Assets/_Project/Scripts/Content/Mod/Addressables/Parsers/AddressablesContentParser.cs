@@ -149,7 +149,11 @@ namespace rwby
         {
             if (contentHandles.ContainsKey(GUIDToInt[contentIdentifier]) == false) return;
 
-            if(contentHandles[GUIDToInt[contentIdentifier]].Status == AsyncOperationStatus.Succeeded) Addressables.Release(contentHandles[GUIDToInt[contentIdentifier]]);
+            if (contentHandles[GUIDToInt[contentIdentifier]].Status == AsyncOperationStatus.Succeeded)
+            {
+                contentHandles[GUIDToInt[contentIdentifier]].Result.Unload();
+                Addressables.Release(contentHandles[GUIDToInt[contentIdentifier]]);
+            }
             contentHandles.Remove(GUIDToInt[contentIdentifier]);
         }
 
@@ -157,7 +161,11 @@ namespace rwby
         {
             if (contentHandles.ContainsKey(index) == false) return;
 
-            if(contentHandles[index].Status == AsyncOperationStatus.Succeeded) Addressables.Release(contentHandles[index]);
+            if (contentHandles[index].Status == AsyncOperationStatus.Succeeded)
+            {
+                contentHandles[index].Result.Unload();
+                Addressables.Release(contentHandles[index]);
+            }
             contentHandles.Remove(index);
         }
     }

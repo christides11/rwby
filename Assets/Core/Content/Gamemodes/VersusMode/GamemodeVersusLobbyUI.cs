@@ -55,10 +55,12 @@ namespace rwby.core.versus
             if (gamemode.Object != null)
             {
                 gamemode.TimeLimitMinutes += p0;
+                gamemode.WhenGamemodeSettingsChanged();
             }
             else
             {
                 gamemode.localTimeLimitMinutes += p0;
+                gamemode.WhenGamemodeSettingsChanged(local:true);
             }
         }
 
@@ -67,10 +69,12 @@ namespace rwby.core.versus
             if (gamemode.Object != null)
             {
                 gamemode.PointsRequired += p0;
+                gamemode.WhenGamemodeSettingsChanged();
             }
             else
             {
                 gamemode.localPointsRequired += p0;
+                gamemode.WhenGamemodeSettingsChanged(local:true);
             }
         }
 

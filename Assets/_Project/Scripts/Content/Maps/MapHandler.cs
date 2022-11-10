@@ -17,5 +17,10 @@ namespace rwby
         {
             
         }
+
+        public virtual void Teardown(GameModeBase gamemode)
+        {
+            
+        }
     }
 }

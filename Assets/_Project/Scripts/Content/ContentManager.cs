@@ -155,12 +155,20 @@ namespace rwby
             }
         }
         
-        public void UnloadContentDefinition(ModGUIDContentReference contentReference)
+        public bool UnloadContentDefinition(ModGUIDContentReference contentReference)
         {
-            if (!modLoader.TryGetLoadedMod(contentReference.modGUID, out LoadedModDefinition mod)) return;
-            if (!mod.definition.ContentParsers.TryGetValue(contentReference.contentType, out IContentParser parser)) return;
+            if (!modLoader.TryGetLoadedMod(contentReference.modGUID, out LoadedModDefinition mod))
+            {
+                Debug.Log($"Get loaded mod Failure. {contentReference.modGUID.ToString()}.");
+                return false;
+            }
+
+            if (!mod.definition.ContentParsers.TryGetValue(contentReference.contentType, out IContentParser parser)){
+                Debug.Log($"Get content parser failure. {contentReference.ToString()}");
+            }
             parser.UnloadContentDefinition(contentReference.contentIdx);
             UntrackItem(contentReference);
+            return true;
         }
         #endregion
 

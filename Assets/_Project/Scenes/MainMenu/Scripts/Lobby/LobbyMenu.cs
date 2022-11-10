@@ -172,7 +172,6 @@ namespace rwby.ui
 
         public void SetTeam(byte team)
         {
-            Debug.Log($"SET TEAM: {team}, {lobbyMenuInstance.playerID}");
             lobbyMenuInstance.lobbyMenuHandler.sessionManagerGamemode
                 .CLIENT_SetPlayerTeam(lobbyMenuInstance.playerID, team);
         }

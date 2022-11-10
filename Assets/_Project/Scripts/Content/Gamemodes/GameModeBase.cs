@@ -21,6 +21,7 @@ namespace rwby
         public IGameModeDefinition definition;
 
         public virtual IGamemodeInitialization InitializationHandler { get; }
+        public virtual IGamemodeTeardown TeardownHandler { get; }
         public virtual IGamemodeLobbyUI LobbyUIHandler { get; }
 
         [Networked(OnChanged = nameof(GamemodeStateChanged))] public GameModeState GamemodeState { get; set; }

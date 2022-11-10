@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: -4991445741246918759}
   - component: {fileID: -583825843932926835}
   - component: {fileID: 1334026102863918720}
+  - component: {fileID: 7908718851030543689}
   m_Layer: 0
   m_Name: SessionManagerGameMode
   m_TagString: Untagged
@@ -59,6 +60,7 @@ MonoBehaviour:
   NetworkedBehaviours:
   - {fileID: -4991445741246918759}
   - {fileID: 1334026102863918720}
+  - {fileID: 7908718851030543689}
   SimulationBehaviours:
   - {fileID: -583825843932926835}
 --- !u!114 &-4991445741246918759
@@ -75,18 +77,17 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _interpolationDataSource: 0
   _currentLoadedScenes:
-  - mapReference:
+  - mapContentReference:
       modGUID:
         _guid:
           Data: 0000000000000000000000000000000000000000000000000000000000000000
       contentType: 4
-      contentGUID:
-        _guid:
-          Data: 0000000000000000000000000000000000000000000000000000000000000000
+      contentIdx: 0
     sceneIdentifier: 1
-  _teams: 0
+  _teamDefinitions: []
   _maxPlayersPerClient: 0
   clientContentLoaderService: {fileID: 1334026102863918720}
+  clientContentUnloaderService: {fileID: 7908718851030543689}
   gameManager: {fileID: 0}
   contentManager: {fileID: 0}
   sessionHandlerID: -1
@@ -97,11 +98,10 @@ MonoBehaviour:
         _guid:
           Data: 0000000000000000000000000000000000000000000000000000000000000000
       contentType: 0
-      contentGUID:
-        _guid:
-          Data: 0000000000000000000000000000000000000000000000000000000000000000
+      contentIdx: 0
   _CurrentGameMode: {fileID: 0}
   _ClientDefinitions: []
+  musicToPlay: {fileID: 0}
 --- !u!114 &-583825843932926835
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -124,6 +124,21 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 57768ac4374716449aacbcbb341c4c60, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _interpolationDataSource: 0
+  timeoutTime: 5
+  loadRequestCounter: 0
+--- !u!114 &7908718851030543689
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3083336178892963970}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: afe6e9f449a345c4386b531d451246e9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   _interpolationDataSource: 0

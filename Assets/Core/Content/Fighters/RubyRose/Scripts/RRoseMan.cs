@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using rwby;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
@@ -171,5 +172,10 @@ public class RRoseMan : FighterManager
         fighterWhiteboard.UpdateInt(3, WhiteboardModifyTypes.SET,0); // Current Gundash
         fighterWhiteboard.UpdateInt(4, WhiteboardModifyTypes.SET,3); // Gundash Max
         FStateManager.ChangeState((int)FighterCmnStates.IDLE, 0);
+    }
+
+    public override List<ModGUIDContentReference> GetLoadedContentList()
+    {
+        return base.GetLoadedContentList();
     }
 }

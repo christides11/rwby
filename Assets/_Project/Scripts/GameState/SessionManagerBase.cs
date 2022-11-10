@@ -24,6 +24,7 @@ namespace rwby
         [Networked] public byte maxPlayersPerClient { get; set; }
 
         public ClientContentLoaderService clientContentLoaderService;
+        public ClientContentUnLoaderService clientContentUnloaderService;
         
         [HideInInspector] public GameManager gameManager;
         [HideInInspector] public ContentManager contentManager;
@@ -84,8 +85,7 @@ namespace rwby
         protected virtual HashSet<ModGUIDContentReference> BuildLoadedContentList()
         {
             HashSet<ModGUIDContentReference> references = new HashSet<ModGUIDContentReference>();
-
-            // TODO: Build list of content references.
+            
             for (int i = 0; i < currentLoadedScenes.Count; i++)
             {
                 /*

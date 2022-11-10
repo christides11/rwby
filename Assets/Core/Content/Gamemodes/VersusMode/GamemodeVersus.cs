@@ -15,6 +15,7 @@ namespace rwby.core.versus
     {
         public override IGamemodeInitialization InitializationHandler => initialization;
         public override IGamemodeLobbyUI LobbyUIHandler => lobbyUI;
+        public override IGamemodeTeardown TeardownHandler => teardown;
         [Networked] public NetworkModObjectGUIDReference Map { get; set; }
         [Networked] public int PointsRequired { get; set; } = 20;
         [Networked] public int TimeLimitMinutes { get; set; } = 10;
@@ -27,6 +28,7 @@ namespace rwby.core.versus
         public ModGUIDContentReference hudBankContentReference;
 
         public GamemodeVersusInitialization initialization;
+        public GamemodeVersusTeardown teardown;
         public GamemodeVersusLobbyUI lobbyUI;
         public VersusPlayerHandler playerHandler;
 
@@ -37,6 +39,27 @@ namespace rwby.core.versus
         public override void Render()
         {
             base.Render();
+        }
+
+        public override void FixedUpdateNetwork()
+        {
+            base.FixedUpdateNetwork();
+
+            switch (GamemodeState)
+            {
+                case GameModeState.MATCH_IN_PROGRESS:
+                    if (TimeLimitTimer.Expired(Runner))
+                    {
+                        EndMatch();
+                    }
+                    break;
+            }
+        }
+
+        public void EndMatch()
+        {
+            GamemodeState = GameModeState.POST_MATCH;
+            teardown.Teardown();
         }
 
         public override async UniTask SetGamemodeSettings(string args)

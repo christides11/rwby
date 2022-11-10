@@ -402,14 +402,15 @@ namespace rwby
         {
             HashSet<ModGUIDContentReference> references =  base.BuildLoadedContentList();
 
+            // Loaded Characters
             for (int i = 0; i < ClientDefinitions.Count; i++)
             {
                 for (int j = 0; j < ClientDefinitions[i].players.Count; j++)
                 {
                     for (int f = 0; f < ClientDefinitions[i].players[j].characterReferences.Count; f++)
                     {
+                        if (!ClientDefinitions[i].players[j].characterReferences[f].IsValid()) continue;
                         references.Add(ClientDefinitions[i].players[j].characterReferences[f]);
-
                         if (!ClientDefinitions[i].players[j].characterNetworkObjects[f].IsValid) continue;
                         
                         NetworkObject no = Runner.FindObject(ClientDefinitions[i].players[j].characterNetworkObjects[f]);

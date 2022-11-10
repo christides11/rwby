@@ -74,7 +74,10 @@ namespace rwby
         {
             foreach (var handle in sceneHandles)
             {
-                if(handle.Status == AsyncOperationStatus.Succeeded) Addressables.Release(handle);
+                if (handle.Status == AsyncOperationStatus.Succeeded)
+                {
+                    Addressables.Release(handle);
+                }
             }
             return true;
         }

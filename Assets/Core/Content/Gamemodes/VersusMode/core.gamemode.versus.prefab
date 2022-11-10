@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 8317851289354921770}
   - component: {fileID: 1285934090258467466}
   - component: {fileID: 4007105949891906929}
+  - component: {fileID: 3734265557667853275}
   - component: {fileID: -8799064734791111994}
   - component: {fileID: 633154518954445921}
   - component: {fileID: 7196183878911363522}
@@ -63,6 +64,7 @@ MonoBehaviour:
   - {fileID: 8317851289354921770}
   - {fileID: 1285934090258467466}
   - {fileID: 4007105949891906929}
+  - {fileID: 3734265557667853275}
   SimulationBehaviours:
   - {fileID: 633154518954445921}
   - {fileID: 7196183878911363522}
@@ -88,17 +90,22 @@ MonoBehaviour:
         Data: 0000000000000000000000000000000000000000000000000000000000000000
     contentType: 0
     contentIdx: 0
+  _PointsRequired: 20
+  _TimeLimitMinutes: 10
   localMap:
     modGUID:
       guid: 
     contentType: 0
     contentIdx: 0
+  localPointsRequired: 20
+  localTimeLimitMinutes: 10
   hudBankContentReference:
     modGUID:
       guid: 1d292c1f00000000
     contentType: 8
     contentIdx: 0
   initialization: {fileID: 1285934090258467466}
+  teardown: {fileID: 3734265557667853275}
   lobbyUI: {fileID: -8799064734791111994}
   playerHandler: {fileID: 4007105949891906929}
   startingPointCurr: 
@@ -127,6 +134,20 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f46c7c57014144648bb023cfb4b8127d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _interpolationDataSource: 0
+  gamemode: {fileID: 8317851289354921770}
+--- !u!114 &3734265557667853275
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2539808474761606032}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 38b72ab9d221e2643b3503ee450b0ad4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   _interpolationDataSource: 0

@@ -49,6 +49,10 @@ namespace rwby
             if (!inputProvider) return;
             if (!inputProvider.TryGetComponent<IInputProvider>(out IInputProvider pip)) return;
             NetworkPlayerInputData input = pip.GetInput(inputSourceIndex);
+            if (!GameModeBase.singleton.CanTakeInput())
+            {
+                input = new NetworkPlayerInputData();
+            }
             movement.Set(frame % inputCapacity, input.movement.sqrMagnitude > 1 ? input.movement.normalized : input.movement);
             cameraForward.Set(frame % inputCapacity, input.forward);
             cameraRight.Set(frame % inputCapacity, input.right);
