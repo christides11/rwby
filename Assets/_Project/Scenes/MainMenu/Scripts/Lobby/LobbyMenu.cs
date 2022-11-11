@@ -61,7 +61,7 @@ namespace rwby.ui
 
         private void ExitLobby()
         {
-            
+            lobbyMenuInstance.lobbyMenuHandler.ExitLobby();
         }
 
         private void ReadyUp()

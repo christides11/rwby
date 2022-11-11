@@ -114,6 +114,7 @@ namespace rwby.ui.mainmenu
 
         public async void ExitLobby()
         {
+            sessionManagerGamemode.LeaveSession();
             currentHandler.Back();
         }
 

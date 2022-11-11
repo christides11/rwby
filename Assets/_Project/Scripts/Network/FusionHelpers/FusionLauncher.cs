@@ -15,6 +15,7 @@ namespace rwby
 		public enum ConnectionStatus { Disconnected, Connecting, Failed, Connected }
 
 		public delegate void EmptyAction();
+		public delegate void SessionAction(NetworkRunner runner, int sessionHandlerID);
 		public delegate void SessionListAction(NetworkRunner runner, List<SessionInfo> sessionList);
 		public delegate void ConnectionAction(NetworkRunner runner);
 		public delegate void ConnectionStatusAction(NetworkRunner runner, ConnectionStatus status);
@@ -31,6 +32,7 @@ namespace rwby
 		public event PlayerAction HostOnPlayerLeave;
 		public event ConnectFailedAction OnConnectionFailed;
 		public event SessionListAction OnSessionsUpdated;
+		public event SessionAction OnSessionShutdown;
 
 		public ConnectionStatus Status { get { return _status; } }
 		public Dictionary<PlayerRef, NetworkObject> Players { get { return _players; } }
@@ -250,6 +252,7 @@ namespace rwby
 		public void OnShutdown(NetworkRunner runner, ShutdownReason shutdownReason)
 		{
 			Debug.Log($"Shutdown ({shutdownReason.ToString()})");
+			OnSessionShutdown?.Invoke(runner, sessionID);
 		}
 
 		public void OnSessionListUpdated(NetworkRunner runner, List<SessionInfo> sessionList)

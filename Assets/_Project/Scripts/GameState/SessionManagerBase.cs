@@ -38,6 +38,12 @@ namespace rwby
             contentManager = gameManager.contentManager;
         }
 
+        public virtual void LeaveSession()
+        {
+            var sessionHandler = GameManager.singleton.networkManager.GetSessionHandler(sessionHandlerID);
+            sessionHandler.LeaveSession();
+        }
+
         public override void Spawned()
         {
             base.Spawned();
