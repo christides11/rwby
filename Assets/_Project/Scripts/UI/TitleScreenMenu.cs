@@ -21,10 +21,16 @@ namespace rwby.ui.mainmenu
         {
             base.Open(direction, menuHandler);
             gameObject.SetActive(true);
+            animation.enabled = true;
         }
 
         public override bool TryClose(MenuDirection direction, bool forceClose = false)
         {
+            if (forceClose)
+            {
+                gameObject.SetActive(false);
+                animation.enabled = false;
+            }
             return true;
         }
 

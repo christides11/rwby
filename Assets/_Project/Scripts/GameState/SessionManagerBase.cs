@@ -17,6 +17,7 @@ namespace rwby
         [Networked, Capacity(5)]
         public NetworkLinkedList<CustomSceneRef> currentLoadedScenes { get; } = MakeInitializer(new CustomSceneRef[]
         {
+            new CustomSceneRef(new ContentGUID(8), 0, 0),
             new CustomSceneRef(new ContentGUID(8), 0, 1)
         });
 

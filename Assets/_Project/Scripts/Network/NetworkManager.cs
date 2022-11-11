@@ -15,6 +15,7 @@ namespace rwby
         
         public int SessionIDCounter { get; protected set; } = 0;
         public Dictionary<int, FusionLauncher> sessions = new Dictionary<int, FusionLauncher>();
+        public int mainSession = -1;
 
         public void Awake()
         {
@@ -37,6 +38,7 @@ namespace rwby
             newHandler.clientPrefab = clientPrefab;
             newHandler.sessionID = SessionIDCounter;
             sessions.Add(SessionIDCounter, newHandler);
+            mainSession = SessionIDCounter;
             return SessionIDCounter;
         }
 
@@ -46,6 +48,7 @@ namespace rwby
             sessions[id].LeaveSession();
             Destroy(sessions[id]);
             sessions.Remove(id);
+            mainSession = -1;
         }
 
         public async UniTask<(bool, int)> TryJoinSession(string sessionName, string password)

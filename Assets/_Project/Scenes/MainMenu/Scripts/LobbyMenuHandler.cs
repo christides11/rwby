@@ -43,7 +43,17 @@ namespace rwby.ui.mainmenu
             //GameManager.singleton.controllerAssignmentMenu.OpenMenu();
             //GameManager.singleton.localPlayerManager.SetPlayerCount(1);
             //GameManager.singleton.localPlayerManager.AutoAssignControllers();
-            WhenLocalPlayerCountChanged(GameManager.singleton.localPlayerManager, GameManager.singleton.localPlayerManager.localPlayers.Count);
+            var playerRef = sessionManagerGamemode.Runner.LocalPlayer;
+            ClientManager localClient = sessionManagerGamemode.Runner.GetPlayerObject(playerRef).GetBehaviour<ClientManager>();
+            if (localClient.ClientPlayerAmount != GameManager.singleton.localPlayerManager.localPlayers.Count)
+            {
+                WhenLocalPlayerCountChanged(GameManager.singleton.localPlayerManager,
+                    GameManager.singleton.localPlayerManager.localPlayers.Count);
+            }
+            else
+            {
+                WhenClientPlayerCountChanged(localClient);
+            }
             //OnControllersAssigned();
         }
 
@@ -167,7 +177,7 @@ namespace rwby.ui.mainmenu
             }
             
             localplayermanager.ApplyCameraLayout();
-            localplayermanager.systemPlayer.camera.enabled = false;
+            if(localplayermanager.systemPlayer.camera) localplayermanager.systemPlayer.camera.enabled = false;
             
             UpdateLobbyInfo(sessionManagerGamemode);
             UpdatePlayerInfo();

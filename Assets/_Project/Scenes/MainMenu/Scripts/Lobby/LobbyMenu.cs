@@ -47,15 +47,21 @@ namespace rwby.ui
                 .sessionManagerGamemode.Runner.IsServer ? "Start Match" : "Ready";
             if (lobbyMenuInstance.lobbyMenuHandler.sessionManagerGamemode.Runner.IsServer)
             {
-                readyButton.GetComponent<Selectable>().onSubmit.AddListener(async () => await lobbyMenuInstance.lobbyMenuHandler.StartMatch());
+                readyButton.onSubmit.AddListener(async () => await lobbyMenuInstance.lobbyMenuHandler.StartMatch());
             }
             else
             {
-                readyButton.GetComponent<Selectable>().onSubmit.AddListener(ReadyUp);
+                readyButton.onSubmit.AddListener(ReadyUp);
             }
+            exitButton.onSubmit.AddListener(ExitLobby);
             characterSelectButton.onSubmit.AddListener(OpenCharacterSelect);
             
             Refresh();
+        }
+
+        private void ExitLobby()
+        {
+            
         }
 
         private void ReadyUp()
@@ -105,7 +111,7 @@ namespace rwby.ui
                 {
                     IFighterDefinition fighterDefinition = ContentManager.singleton.
                         GetContentDefinition<IFighterDefinition>(clientInfo.players[lobbyMenuInstance.playerID].characterReferences[i]);
-                    chara.GetComponentInChildren<TextMeshProUGUI>().text = fighterDefinition.Name;
+                    if(fighterDefinition) chara.GetComponentInChildren<TextMeshProUGUI>().text = fighterDefinition.Name;
                 }
                 int selectIndex = i;
             }

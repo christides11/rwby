@@ -33,7 +33,10 @@ namespace rwby.core.versus
             
             
             gamemode.sessionManager.currentLoadedScenes.Clear();
-            gamemode.sessionManager.currentLoadedScenes.Add(new CustomSceneRef(new ContentGUID(8), 0, 1));
+            foreach (var s in GameManager.singleton.networkManager.GetSessionHandlerByRunner(Runner).defaultSceneList)
+            {
+                gamemode.sessionManager.currentLoadedScenes.Add(s);
+            }
             Runner.SetActiveScene(Runner.CurrentScene+1);
             
             Resources.UnloadUnusedAssets();

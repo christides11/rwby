@@ -7,7 +7,7 @@ namespace rwby
 {
     public class BootLoader : MonoBehaviour
     {
-        public static BootLoader singleton;
+        public static bool bootLoaded = false;
 
         [SerializeField] private GameObject managersPrefab;
         private GameObject managersObject;
@@ -19,13 +19,10 @@ namespace rwby
         
         async UniTask Awake()
         {
-            if(singleton != null)
-            {
-                Destroy(gameObject);
-                return;
-            }
-            DontDestroyOnLoad(gameObject);
-            singleton = this;
+            if (bootLoaded) return;
+            bootLoaded = true;
+            //DontDestroyOnLoad(gameObject);
+            //singleton = this;
             managersObject = GameObject.Instantiate(managersPrefab, Vector3.zero, Quaternion.identity);
             DontDestroyOnLoad(managersObject);
             await managersObject.GetComponentInChildren<GameManager>().Initialize();

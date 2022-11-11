@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -26,12 +27,7 @@ namespace rwby.ui.mainmenu
         {
             menus.Add((int)MainMenuType.TITLE_SCREEN, titleScreen);
             menus.Add((int)MainMenuType.MAIN_MENU, main);
-            //menus.Add((int)MainMenuType.LOCAL, local);
-            //menus.Add((int)MainMenuType.ONLINE, online);
-            //menus.Add((int)MainMenuType.OPTIONS, options);
-            //menus.Add((int)MainMenuType.HOST_LOBBY, hostLobby);
             menus.Add((int)MainMenuType.LOBBY, lobbyMenu);
-            //menus.Add((int)MainMenuType.FIND_LOBBY, findLobby);
             history.Add((int)startingMenu);
 
             foreach (var menu in menus.Values)
@@ -41,11 +37,28 @@ namespace rwby.ui.mainmenu
             menus[(int)startingMenu].Open(MenuDirection.FORWARDS, this);
         }
 
+        private void Start()
+        {
+            var networkManager = GameManager.singleton.networkManager;
+            if (networkManager.sessions.ContainsKey(networkManager.mainSession))
+            {
+                menus[(int)MainMenuType.TITLE_SCREEN].TryClose(MenuDirection.FORWARDS, true);
+                lobbyMenu.sessionManagerGamemode = (SessionManagerGamemode)networkManager.GetSessionHandler(networkManager.mainSession).sessionManager;
+                Forward((int)MainMenuType.MAIN_MENU);
+                Forward((int)MainMenuType.LOBBY);
+            }else if (BootLoader.bootLoaded)
+            {
+                menus[(int)MainMenuType.TITLE_SCREEN].TryClose(MenuDirection.FORWARDS, true);
+                Forward((int)MainMenuType.MAIN_MENU);
+            }
+            
+        }
+
         public bool Forward(int menu, bool autoClose = true)
         {
             if (!menus.ContainsKey(menu)) return false;
             EventSystem.current.SetSelectedGameObject(null);
-            if (autoClose) GetCurrentMenu().TryClose(MenuDirection.FORWARDS, true);
+            if (autoClose) GetCurrentMenu().TryClose(MenuDirection.FORWARDS, false);
             menus[menu].Open(MenuDirection.FORWARDS, this);
             history.Add(menu);
             return true;
