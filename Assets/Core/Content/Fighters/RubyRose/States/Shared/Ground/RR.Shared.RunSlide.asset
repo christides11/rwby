@@ -1,0 +1,107 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7789f25d17401bc4b915ca6fcecf2a29, type: 3}
+  m_Name: RR.Shared.RunSlide
+  m_EditorClassIdentifier: 
+  stateName: Run (Slide)
+  useBaseState: 1
+  baseState: {fileID: 11400000, guid: e8101fc0a6bbbda4692a0c948684a1af, type: 2}
+  totalFrames: 10
+  autoIncrement: 1
+  autoLoop: 1
+  autoLoopFrame: 1
+  data:
+  - rid: 387795824367894528
+  - rid: 387795824367894530
+  - rid: 387795824367894532
+  - rid: 387795824367894533
+  auraRequirement: 0
+  initialGroundedState: 1
+  stateType: 1
+  maxUsesInString: -1
+  selfChainable: 0
+  allowBaseStateTransitions: 1
+  inputSequence:
+    executeWindow: 3
+    executeInputs: []
+    sequenceWindow: 8
+    sequenceInputs: []
+  inputSequenceAsHoldInputs: 0
+  condition:
+    rid: -2
+  hitboxInfo: []
+  throwboxInfo:
+  - airOnly: 0
+    groundOnly: 1
+    damageOnGrab: 0
+    confirmState:
+      rid: -2
+  hurtboxInfo:
+  - hitInvincible: 0
+    projectileInvincible: 0
+  references:
+    version: 2
+    RefIds:
+    - rid: -2
+      type: {class: , ns: , asm: }
+    - rid: 387795824367894528
+      type: {class: VarEmpty, ns: rwby, asm: rwby.csharp}
+      data:
+        name: Scythe
+        id: 0
+        parent: -1
+        children: 02000000
+        frameRanges: []
+        condition:
+          rid: 387795824367894529
+    - rid: 387795824367894529
+      type: {class: ConditionMoveset, ns: rwby, asm: rwby.csharp}
+      data:
+        moveset: 0
+    - rid: 387795824367894530
+      type: {class: VarEmpty, ns: rwby, asm: rwby.csharp}
+      data:
+        name: Rifle
+        id: 1
+        parent: -1
+        children: 03000000
+        frameRanges: []
+        condition:
+          rid: 387795824367894531
+    - rid: 387795824367894531
+      type: {class: ConditionMoveset, ns: rwby, asm: rwby.csharp}
+      data:
+        moveset: 1
+    - rid: 387795824367894532
+      type: {class: VarExternal, ns: rwby, asm: rwby.csharp}
+      data:
+        name: Try Grd Atk
+        id: 2
+        parent: 0
+        children: 
+        frameRanges:
+        - {x: 1, y: -1}
+        condition:
+          rid: -2
+        asset: {fileID: 11400000, guid: 38d47b53b1c6fa24580e163448503c28, type: 2}
+    - rid: 387795824367894533
+      type: {class: VarExternal, ns: rwby, asm: rwby.csharp}
+      data:
+        name: Try Grd Atk
+        id: 3
+        parent: 1
+        children: 
+        frameRanges:
+        - {x: 1, y: -1}
+        condition:
+          rid: -2
+        asset: {fileID: 11400000, guid: ba688ef34edd2d84ea6a5b2e1e2af06e, type: 2}
