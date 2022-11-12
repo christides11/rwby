@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Drawing;
 using Cysharp.Threading.Tasks;
 using Fusion;
 using rwby.core.training;
@@ -11,14 +12,18 @@ using UnityEngine.Serialization;
 
 namespace rwby.core.versus
 {
-    public class GamemodeVersus : GameModeBase, ITimeProvider
+    public class GamemodeVersus : GameModeBase, ITimeProvider, ITeamScoreProvider
     {
         public override IGamemodeInitialization InitializationHandler => initialization;
         public override IGamemodeLobbyUI LobbyUIHandler => lobbyUI;
         public override IGamemodeTeardown TeardownHandler => teardown;
+
+        public IEnumerable<int> TeamScores => teamScores;
+        public int MaxScore => PointsRequired;
         [Networked] public NetworkModObjectGUIDReference Map { get; set; }
         [Networked] public int PointsRequired { get; set; } = 20;
         [Networked] public int TimeLimitMinutes { get; set; } = 10;
+        [Networked, Capacity(8)] public NetworkLinkedList<int> teamScores => default;
         public ModGUIDContentReference localMap;
         public int localPointsRequired = 20;
         public int localTimeLimitMinutes = 10;
@@ -48,12 +53,24 @@ namespace rwby.core.versus
             switch (GamemodeState)
             {
                 case GameModeState.MATCH_IN_PROGRESS:
-                    if (TimeLimitTimer.Expired(Runner))
+                    if (TimeLimitTimer.Expired(Runner) || CheckTeamScores())
                     {
                         EndMatch();
                     }
                     break;
             }
+        }
+
+        private bool CheckTeamScores()
+        {
+            for (int i = 0; i < teamScores.Count; i++)
+            {
+                if (teamScores[i] > PointsRequired)
+                {
+                    return true;
+                }
+            }
+            return false;
         }
 
         public void EndMatch()
@@ -194,6 +211,8 @@ namespace rwby.core.versus
             baseHUD.AddHUDElement(worldHUD.GetComponent<HUDElement>());
             var timerHUD = GameObject.Instantiate(HUDElementbank.GetHUDElement("timer"), baseHUD.transform, false);
             baseHUD.AddHUDElement(timerHUD.GetComponent<HUDElement>());
+            var teamscores = GameObject.Instantiate(HUDElementbank.GetHUDElement("teamscores"), baseHUD.transform, false);
+            baseHUD.AddHUDElement(teamscores.GetComponent<HUDElement>());
 
             foreach (var hbank in fm.fighterDefinition.huds)
             {

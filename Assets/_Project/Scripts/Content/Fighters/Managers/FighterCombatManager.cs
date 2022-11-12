@@ -552,7 +552,7 @@ namespace rwby
 
             int dmg = (int)(hitInfoGroup.damage * (hitInfoGroup.ignoreProration ? 1.0f : Proration));
             if (hitInfoGroup.damage > 0) dmg = Mathf.Clamp(dmg, 1, Int32.MaxValue);
-            manager.HealthManager.ModifyHealth(-dmg);
+            manager.Hurt(hurtInfo.team, -dmg);
 
             stateManager.ChangeState(isGrounded ? (int)hitInfoGroup.groundHitState : (int)hitInfoGroup.airHitState);
             manager.FCombatManager.Cleanup();

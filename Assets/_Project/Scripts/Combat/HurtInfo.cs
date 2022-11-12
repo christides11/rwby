@@ -7,6 +7,7 @@ namespace rwby
 {
     public class HurtInfo : HnSF.Combat.HurtInfo3D
     {
+        public int team;
         public int hurtboxHit;
         public Vector3 attackerVelocity;
         public Vector3 hitPosition;

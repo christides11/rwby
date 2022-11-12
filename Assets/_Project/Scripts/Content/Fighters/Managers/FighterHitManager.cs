@@ -143,6 +143,7 @@ namespace rwby
         public override HurtInfo BuildHurtInfo(CustomHitbox hitbox, Hurtbox hurtbox)
         {
             HurtInfo hi = base.BuildHurtInfo(hitbox, hurtbox);
+            hi.team = combatManager.GetTeam();
             hi.attackerVelocity = manager.FPhysicsManager.GetOverallForce();
             return hi;
             /*

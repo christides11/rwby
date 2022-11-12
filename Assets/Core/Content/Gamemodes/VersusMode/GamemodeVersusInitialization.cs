@@ -37,8 +37,7 @@ namespace rwby.core.versus
             gamemode.GamemodeState = GameModeState.INITIALIZING;
 
             IMapDefinition mapDefinition = ContentManager.singleton.GetContentDefinition<IMapDefinition>(gamemode.Map);
-            
-            
+
             gamemode.sessionManager.currentLoadedScenes.Clear();
             gamemode.sessionManager.currentLoadedScenes.Add(new CustomSceneRef()
             {
@@ -48,6 +47,11 @@ namespace rwby.core.versus
             Runner.SetActiveScene(Runner.CurrentScene+1);
 
             RPC_FadeOutMusic();
+
+            for (int i = 0; i < gamemode.sessionManager.teamDefinitions.Count; i++)
+            {
+                gamemode.teamScores.Add(0);
+            }
             
             await UniTask.WaitForEndOfFrame(); 
             var sh = gamemode.sessionManager.gameManager.networkManager.GetSessionHandlerByRunner(Runner);

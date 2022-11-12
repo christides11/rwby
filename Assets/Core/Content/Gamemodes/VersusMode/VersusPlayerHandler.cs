@@ -16,9 +16,9 @@ namespace rwby.core.versus
             base.FixedUpdateNetwork();
         }
 
-        public void FighterHealthChanged(FighterManager fm)
+        public void FighterHealthChanged(FighterManager fm, int oldValue)
         {
-            if (fm.HealthManager.Health <= 0)
+            if (fm.HealthManager.Health <= 0 && oldValue > 0)
             {
                 if (gamemode.GamemodeState != GameModeState.MATCH_IN_PROGRESS) return;
                 fm.HandleDeath();
@@ -28,9 +28,15 @@ namespace rwby.core.versus
                     fm.FPhysicsManager.SetPosition(respawnPoint.transform.position, true);
                     fm.FPhysicsManager.SetRotation(respawnPoint.transform.eulerAngles, true);
                     fm.HandleRespawn();
+                    GiveTeamPoint(fm.FCombatManager.GetTeam(), fm.lastHurtByTeam);
                 }
                 fm.HealthManager.SetHealth(fm.fighterDefinition.Health);
             }
+        }
+
+        private void GiveTeamPoint(int getTeam, int fmLastHurtByTeam)
+        {
+            gamemode.teamScores.Set(fmLastHurtByTeam, gamemode.teamScores[fmLastHurtByTeam] + 1);
         }
     }
 }

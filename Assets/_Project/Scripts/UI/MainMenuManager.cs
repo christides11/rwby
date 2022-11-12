@@ -48,8 +48,8 @@ namespace rwby.ui.mainmenu
                 Forward((int)MainMenuType.LOBBY);
             }else if (BootLoader.bootLoaded)
             {
-                menus[(int)MainMenuType.TITLE_SCREEN].TryClose(MenuDirection.FORWARDS, true);
-                Forward((int)MainMenuType.MAIN_MENU);
+                //menus[(int)MainMenuType.TITLE_SCREEN].TryClose(MenuDirection.FORWARDS, true);
+                //Forward((int)MainMenuType.MAIN_MENU);
             }
             
         }

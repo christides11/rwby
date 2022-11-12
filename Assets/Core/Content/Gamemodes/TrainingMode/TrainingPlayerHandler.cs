@@ -9,7 +9,7 @@ namespace rwby
     [OrderBefore(typeof(FighterInputManager))]
     public class TrainingPlayerHandler : NetworkBehaviour, IFighterCallbacks
     {
-        public void FighterHealthChanged(FighterManager fm)
+        public void FighterHealthChanged(FighterManager fm, int lastHealthValue)
         {
             if(fm.HealthManager.Health <= 0) fm.HealthManager.SetHealth(fm.fighterDefinition.Health);
         }

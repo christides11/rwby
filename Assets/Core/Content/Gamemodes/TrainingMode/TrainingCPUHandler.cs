@@ -213,7 +213,7 @@ namespace rwby.core.training
             return testData[inputIndex][Runner.Tick % 10];
         }
 
-        public void FighterHealthChanged(FighterManager fm)
+        public void FighterHealthChanged(FighterManager fm, int lastHealthValue)
         {
             if(fm.HealthManager.Health <= 0) fm.HealthManager.SetHealth(fm.fighterDefinition.Health);
         }

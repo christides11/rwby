@@ -483,6 +483,22 @@ namespace rwby
             TargetableNetworked = value;
         }
 
+        [Networked] public int lastHurtByTeam { get; set; }
+        [Networked] public int lastHealByTeam { get; set; }
+
+        public virtual void Hurt(int hurterTeam, int amt)
+        {
+            lastHurtByTeam = hurterTeam;
+            healthManager.ModifyHealth(amt);
+            ((IFighterCallbacks)callbacks).FighterHealthChanged(this, healthManager.Health - amt);
+        }
+
+        public virtual void Heal(int healerTeam, int amt)
+        {
+            lastHealByTeam = healerTeam;
+            healthManager.ModifyHealth(amt);
+        }
+
         public virtual void HandleDeath()
         {
             TargetableNetworked = false;

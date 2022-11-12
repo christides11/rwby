@@ -6,6 +6,6 @@ namespace rwby
 {
     public interface IFighterCallbacks
     {
-        void FighterHealthChanged(FighterManager fm);
+        void FighterHealthChanged(FighterManager fm, int oldValue);
     }
 }

@@ -11,7 +11,6 @@ namespace rwby
         public override void ModifyHealth(int amt)
         {
             base.ModifyHealth(amt);
-            ((IFighterCallbacks)manager.callbacks).FighterHealthChanged(manager);
         }
     }
 }
