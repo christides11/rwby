@@ -1,0 +1,334 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7789f25d17401bc4b915ca6fcecf2a29, type: 3}
+  m_Name: RR.Scythe.Grd.SniperStance.A
+  m_EditorClassIdentifier: 
+  stateName: Sniper Stance A
+  useBaseState: 0
+  baseState: {fileID: 0}
+  totalFrames: 10
+  autoIncrement: 0
+  autoLoop: 0
+  autoLoopFrame: 1
+  data:
+  - rid: 8688056217396838433
+  - rid: 8688056360164655109
+  - rid: 7270848560384180227
+  - rid: 7270848560384180228
+  - rid: 7270848563102089218
+  - rid: 7270848563102089216
+  - rid: 7270848563102089217
+  - rid: 7270848563102089220
+  auraRequirement: 0
+  initialGroundedState: 1
+  stateType: 2
+  maxUsesInString: 1
+  selfChainable: 0
+  allowBaseStateTransitions: 1
+  inputSequence:
+    executeWindow: 3
+    executeInputs:
+    - inputType: 0
+      buttonID: 2
+      stickDirection: {x: 0, y: 0}
+      directionDeviation: 0
+    sequenceWindow: 8
+    sequenceInputs: []
+  inputSequenceAsHoldInputs: 0
+  condition:
+    rid: -2
+  hitboxInfo:
+  - ID: 0
+    groundedFoldoutGroup: 0
+    groundedCounterHitFoldoutGroup: 0
+    hitStateGroundedGroups: -1
+    hit:
+      groundHitState: 30
+      airHitState: 0
+      groundBounces: 0
+      wallBounces: 0
+      groundBounceForcePercentage: 0
+      wallBounceForcePercentage: 0
+      noKill: 0
+      hitForceType: 0
+      hitForceRelation: 0
+      hitForceRelationOffset: {x: 0, y: 0, z: 0}
+      autolink: 0
+      autolinkPercentage: 0
+      groundHitForce: {x: 0, y: 0, z: 5}
+      aerialHitForce: {x: 0, y: 0, z: 0}
+      pullPushCurve:
+        serializedVersion: 2
+        m_Curve:
+        - serializedVersion: 3
+          time: 0
+          value: 0
+          inSlope: 10
+          outSlope: 10
+          tangentMode: 34
+          weightedMode: 0
+          inWeight: 0
+          outWeight: 0.33333334
+        - serializedVersion: 3
+          time: 1
+          value: 10
+          inSlope: 10
+          outSlope: 10
+          tangentMode: 34
+          weightedMode: 0
+          inWeight: 0.33333334
+          outWeight: 0
+        m_PreInfinity: 2
+        m_PostInfinity: 2
+        m_RotationOrder: 4
+      pullPushMaxDistance: 10
+      blockLift: 0
+      attackerHitstop: 4
+      hitstop: 4
+      hitstun: 60
+      blockstun: 15
+      untech: 0
+      initialProration: 0
+      comboProration: 0
+      damage: 0
+      chipDamage: 0
+      hitEffectbank:
+        modGUID:
+          guid: 
+        contentGUID:
+          guid: 
+      hitEffect: 
+      blockEffectbank:
+        modGUID:
+          guid: 
+        contentGUID:
+          guid: 
+      blockEffect: 
+      hitSoundbank:
+        modGUID:
+          guid: 
+        contentGUID:
+          guid: 
+      hitSound: 
+      hitCameraShakeStrength: 0
+      blockCameraShakeStrength: 0
+      cameraShakeLength: 0
+      ignoreProration: 0
+      ignoreHitstunScaling: 0
+      ignorePushbackScaling: 0
+    counterhit:
+      groundHitState: 0
+      airHitState: 0
+      groundBounces: 0
+      wallBounces: 0
+      groundBounceForcePercentage: 0
+      wallBounceForcePercentage: 0
+      noKill: 0
+      hitForceType: 0
+      hitForceRelation: 0
+      hitForceRelationOffset: {x: 0, y: 0, z: 0}
+      autolink: 0
+      autolinkPercentage: 0
+      groundHitForce: {x: 0, y: 0, z: 0}
+      aerialHitForce: {x: 0, y: 0, z: 0}
+      pullPushCurve:
+        serializedVersion: 2
+        m_Curve: []
+        m_PreInfinity: 2
+        m_PostInfinity: 2
+        m_RotationOrder: 4
+      pullPushMaxDistance: 0
+      blockLift: 0
+      attackerHitstop: 0
+      hitstop: 0
+      hitstun: 0
+      blockstun: 0
+      untech: 0
+      initialProration: 0
+      comboProration: 0
+      damage: 0
+      chipDamage: 0
+      hitEffectbank:
+        modGUID:
+          guid: 
+        contentGUID:
+          guid: 
+      hitEffect: 
+      blockEffectbank:
+        modGUID:
+          guid: 
+        contentGUID:
+          guid: 
+      blockEffect: 
+      hitSoundbank:
+        modGUID:
+          guid: 
+        contentGUID:
+          guid: 
+      hitSound: 
+      hitCameraShakeStrength: 0
+      blockCameraShakeStrength: 0
+      cameraShakeLength: 0
+      ignoreProration: 0
+      ignoreHitstunScaling: 0
+      ignorePushbackScaling: 0
+  throwboxInfo: []
+  hurtboxInfo: []
+  references:
+    version: 2
+    RefIds:
+    - rid: -2
+      type: {class: , ns: , asm: }
+    - rid: 7270848560384180227
+      type: {class: VarModifyCameraMode, ns: rwby, asm: rwby.csharp}
+      data:
+        name: 
+        id: 10
+        parent: -1
+        children: 
+        frameRanges:
+        - {x: 0, y: 0}
+        condition:
+          rid: -2
+        modifyType: 1
+        value: 1
+    - rid: 7270848560384180228
+      type: {class: VarModifyCameraMode, ns: rwby, asm: rwby.csharp}
+      data:
+        name: 
+        id: 11
+        parent: -1
+        children: 
+        frameRanges:
+        - {x: -2, y: -2}
+        condition:
+          rid: -2
+        modifyType: 1
+        value: 0
+    - rid: 7270848563102089216
+      type: {class: VarIncrementChargeLevel, ns: rwby, asm: rwby.csharp}
+      data:
+        name: 
+        id: 12
+        parent: -1
+        children: 
+        frameRanges:
+        - {x: 5, y: 5}
+        condition:
+          rid: -2
+        increment: 1
+        chargePerLevel: 30
+        maxLevel: 1
+        button: 2
+        canHold: 1
+    - rid: 7270848563102089217
+      type: {class: VarModifyFrame, ns: rwby, asm: rwby.csharp}
+      data:
+        name: 
+        id: 13
+        frameRanges:
+        - {x: 1, y: 4}
+        - {x: 6, y: -1}
+        condition:
+          rid: -2
+        modifyType: 0
+        value: 1
+        parent: -1
+        children: 
+    - rid: 7270848563102089218
+      type: {class: VarChangeState, ns: rwby, asm: rwby.csharp}
+      data:
+        name: 
+        id: 14
+        parent: -1
+        children: 
+        frameRanges:
+        - {x: -1, y: -1}
+        condition:
+          rid: -2
+        checkInputSequence: 0
+        checkCondition: 0
+        targetType: 0
+        stateMovesetID: -1
+        state:
+          rid: 7270848563102089219
+    - rid: 7270848563102089219
+      type: {class: RubyRoseStateReference, ns: rwby.core, asm: rwby.core}
+      data:
+        state: 71
+    - rid: 7270848563102089220
+      type: {class: VarCreateProjectile, ns: rwby, asm: rwby.csharp}
+      data:
+        name: 
+        id: 15
+        parent: -1
+        children: 
+        frameRanges:
+        - {x: 6, y: 6}
+        condition:
+          rid: -2
+        def:
+          projectilebank:
+            modGUID:
+              guid: 1d292c1f00000000
+            contentGUID:
+              guid: 2c2c000000000000
+          projectile: bullet
+          parented: 0
+          offset: {x: 0, y: 1, z: 1}
+          rotation: {x: 0, y: 0, z: 0}
+          scale: {x: 1, y: 1, z: 1}
+          overrideMode: 0
+        force: {x: 0, y: 0, z: 30}
+        pointTowardsLockonTargetXZ: 0
+        pointTowardsLockonTargetY: 0
+        useCameraForward: 1
+    - rid: 8688056217396838433
+      type: {class: VarCreateBox, ns: rwby, asm: rwby.csharp}
+      data:
+        name: Colbox
+        id: 4
+        parent: -1
+        children: 
+        frameRanges:
+        - {x: 1, y: -1}
+        condition:
+          rid: -2
+        boxType: 2
+        attachedTo: 0
+        shape: 0
+        offset: {x: 0, y: 1, z: 0}
+        boxExtents: {x: 0.5, y: 1, z: 0.5}
+        radius: 0
+        definitionIndex: 0
+    - rid: 8688056360164655109
+      type: {class: VarApplyTraction, ns: rwby, asm: rwby.csharp}
+      data:
+        name: 
+        id: 7
+        parent: -1
+        children: 
+        frameRanges:
+        - {x: 1, y: -1}
+        condition:
+          rid: -2
+        traction:
+          rid: 8688056360164655110
+        applyMovement: 1
+        applyGravity: 0
+    - rid: 8688056360164655110
+      type: {class: FighterBaseStatReferenceFloat, ns: rwby, asm: rwby.csharp}
+      data:
+        inverse: 0
+        statReference: 1
+        value: 0
+        variable: 0
