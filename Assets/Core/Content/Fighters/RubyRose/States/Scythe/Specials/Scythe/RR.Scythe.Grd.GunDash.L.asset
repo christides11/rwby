@@ -351,6 +351,39 @@ MonoBehaviour:
         buttonState: 1
         offset: 0
         buffer: 3
+    - rid: 387795875669737525
+      type: {class: ConditionNextState, ns: rwby, asm: rwby.csharp}
+      data:
+        stateMovesetID: -1
+        state:
+          rid: 387795875669737526
+        inverse: 1
+    - rid: 387795875669737526
+      type: {class: RubyRoseStateReference, ns: rwby.core, asm: rwby.core}
+      data:
+        state: 96
+    - rid: 387795875669737527
+      type: {class: ConditionNextState, ns: rwby, asm: rwby.csharp}
+      data:
+        stateMovesetID: -1
+        state:
+          rid: 387795875669737528
+        inverse: 1
+    - rid: 387795875669737528
+      type: {class: RubyRoseStateReference, ns: rwby.core, asm: rwby.core}
+      data:
+        state: 98
+    - rid: 387795875669737529
+      type: {class: ConditionNextState, ns: rwby, asm: rwby.csharp}
+      data:
+        stateMovesetID: -1
+        state:
+          rid: 387795875669737530
+        inverse: 1
+    - rid: 387795875669737530
+      type: {class: RubyRoseStateReference, ns: rwby.core, asm: rwby.core}
+      data:
+        state: 97
     - rid: 1219246315631804416
       type: {class: VarCreateBox, ns: rwby, asm: rwby.csharp}
       data:
@@ -507,6 +540,9 @@ MonoBehaviour:
         conditions:
         - rid: 1219246341873467397
         - rid: 1219246341873467399
+        - rid: 387795875669737525
+        - rid: 387795875669737527
+        - rid: 387795875669737529
     - rid: 1219246341873467397
       type: {class: ConditionNextState, ns: rwby, asm: rwby.csharp}
       data:

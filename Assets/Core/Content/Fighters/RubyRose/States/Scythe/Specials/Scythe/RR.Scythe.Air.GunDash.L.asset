@@ -362,7 +362,7 @@ MonoBehaviour:
         frameRanges:
         - {x: 12, y: -1}
         condition:
-          rid: -2
+          rid: 387795875669737524
         checkInputSequence: 0
         checkCondition: 0
         targetType: 0
@@ -439,6 +439,10 @@ MonoBehaviour:
       type: {class: RubyRoseStateReference, ns: rwby.core, asm: rwby.core}
       data:
         state: 98
+    - rid: 387795875669737524
+      type: {class: ConditionIsGrounded, ns: rwby, asm: rwby.csharp}
+      data:
+        inverse: 0
     - rid: 1219246315631804416
       type: {class: VarCreateBox, ns: rwby, asm: rwby.csharp}
       data:

@@ -494,5 +494,16 @@ namespace rwby
             bool r = f.FCombatManager.hardKnockdown;
             return vars.inverse ? !r : r;
         }
+
+        public static bool External(IFighterBase fighter, IConditionVariables variables, HnSF.StateTimeline arg3,
+            int arg4)
+        {
+            FighterManager f = fighter as FighterManager;
+            ConditionExternal vars = (ConditionExternal)variables;
+
+            if (!f.FStateManager.TryCondition(f.FStateManager.GetState(), vars.externalCondition.condition,
+                    f.FStateManager.CurrentStateFrame)) return false;
+            return true;
+        }
     }
 }
