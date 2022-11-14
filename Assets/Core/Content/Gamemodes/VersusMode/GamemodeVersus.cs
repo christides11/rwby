@@ -17,6 +17,7 @@ namespace rwby.core.versus
         public override IGamemodeInitialization InitializationHandler => initialization;
         public override IGamemodeLobbyUI LobbyUIHandler => lobbyUI;
         public override IGamemodeTeardown TeardownHandler => teardown;
+        public override IGamemodeCombat CombatHandler => combatHandler;
 
         public IEnumerable<int> TeamScores => teamScores;
         public int MaxScore => PointsRequired;
@@ -36,6 +37,7 @@ namespace rwby.core.versus
         public GamemodeVersusTeardown teardown;
         public GamemodeVersusLobbyUI lobbyUI;
         public VersusPlayerHandler playerHandler;
+        public GamemodeVersusCombat combatHandler;
 
         public List<List<GameObject>> startingPoints = new List<List<GameObject>>();
         public List<int> startingPointCurr = new List<int>();

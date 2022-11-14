@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 4007105949891906929}
   - component: {fileID: 3734265557667853275}
   - component: {fileID: -8799064734791111994}
+  - component: {fileID: 610706348889170587}
   - component: {fileID: 633154518954445921}
   - component: {fileID: 7196183878911363522}
   m_Layer: 0
@@ -65,6 +66,7 @@ MonoBehaviour:
   - {fileID: 1285934090258467466}
   - {fileID: 4007105949891906929}
   - {fileID: 3734265557667853275}
+  - {fileID: 610706348889170587}
   SimulationBehaviours:
   - {fileID: 633154518954445921}
   - {fileID: 7196183878911363522}
@@ -92,6 +94,7 @@ MonoBehaviour:
     contentIdx: 0
   _PointsRequired: 20
   _TimeLimitMinutes: 10
+  _teamScores: 
   localMap:
     modGUID:
       guid: 
@@ -108,6 +111,7 @@ MonoBehaviour:
   teardown: {fileID: 3734265557667853275}
   lobbyUI: {fileID: -8799064734791111994}
   playerHandler: {fileID: 4007105949891906929}
+  combatHandler: {fileID: 610706348889170587}
   startingPointCurr: 
   respawnPoints: []
 --- !u!114 &1285934090258467466
@@ -165,6 +169,20 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gamemode: {fileID: 8317851289354921770}
+--- !u!114 &610706348889170587
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2539808474761606032}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e3387d8fa2bdaf74881be4c8df7d87ba, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _interpolationDataSource: 0
+  gamemode: {fileID: 8317851289354921770}
 --- !u!114 &633154518954445921
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -177,6 +195,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4a1bbae5141d8294096c55d858108e80, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  gamemode: {fileID: 8317851289354921770}
   broadphaseObjects: []
   hitboxLayermask:
     serializedVersion: 2

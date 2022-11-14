@@ -23,6 +23,7 @@ namespace rwby
         public virtual IGamemodeInitialization InitializationHandler { get; }
         public virtual IGamemodeTeardown TeardownHandler { get; }
         public virtual IGamemodeLobbyUI LobbyUIHandler { get; }
+        public virtual IGamemodeCombat CombatHandler { get; }
 
         [Networked(OnChanged = nameof(GamemodeStateChanged))] public GameModeState GamemodeState { get; set; }
         

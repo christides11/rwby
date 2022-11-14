@@ -36,6 +36,7 @@ namespace rwby.core.versus
 
         private void GiveTeamPoint(int getTeam, int fmLastHurtByTeam)
         {
+            if (fmLastHurtByTeam == -1) return;
             gamemode.teamScores.Set(fmLastHurtByTeam, gamemode.teamScores[fmLastHurtByTeam] + 1);
         }
     }

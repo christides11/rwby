@@ -20,7 +20,7 @@ namespace rwby
         public NetworkObject networkObject;
         public IHurtable hurtable;
         public HitboxRoot hRoot;
-        public Settings settings;
+        [HideInInspector] public Settings settings;
 
         public CustomHitbox[] hitboxes;
         public Hurtbox[] hurtboxes;

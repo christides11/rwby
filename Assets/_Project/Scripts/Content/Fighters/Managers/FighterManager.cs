@@ -489,8 +489,9 @@ namespace rwby
         public virtual void Hurt(int hurterTeam, int amt)
         {
             lastHurtByTeam = hurterTeam;
+            var oldVal = healthManager.Health;
             healthManager.ModifyHealth(amt);
-            ((IFighterCallbacks)callbacks).FighterHealthChanged(this, healthManager.Health - amt);
+            ((IFighterCallbacks)callbacks).FighterHealthChanged(this, oldVal);
         }
 
         public virtual void Heal(int healerTeam, int amt)

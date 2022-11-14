@@ -40,6 +40,8 @@ namespace rwby
 
         public static CombatPairFinder singleton;
 
+        public GameModeBase gamemode;
+        
         public List<NetworkObject> broadphaseObjects = new List<NetworkObject>();
 
         // (Attacker, Attackee)
@@ -153,7 +155,8 @@ namespace rwby
                     {
                         Hurtbox h = hitsList[f].GameObject.GetComponent<Hurtbox>();
                         // An object can only be hit by one source per frame.
-                        if (h.HitboxActive == true && broadphaseObjects[i].GetComponent<IAttacker>().IsHitHurtboxValid(boxCollection.Hitboxes[a], h))
+                        if (h.HitboxActive == true && broadphaseObjects[i].GetComponent<IAttacker>().IsHitHurtboxValid(boxCollection.Hitboxes[a], h)
+                            && gamemode.CombatHandler.IsHitHurtboxValid(boxCollection.Hitboxes[a], h))
                         {
                             var tuple = (broadphaseObjects[i].GetBehaviour<NetworkObject>(), h.ownerNetworkObject);
                             if (hitboxCombatPairs.ContainsKey(tuple))
@@ -207,7 +210,8 @@ namespace rwby
                     for(int g = 0; g < hitboxNumHit; g++)
                     {
                         CustomHitbox h = hitsList[g].GameObject.GetComponent<CustomHitbox>();
-                        if (h.HitboxActive == true && broadphaseObjects[i].GetComponent<IAttacker>().IsHitHitboxValid(boxCollection.Hitboxes[a], h))
+                        if (h.HitboxActive == true && broadphaseObjects[i].GetComponent<IAttacker>().IsHitHitboxValid(boxCollection.Hitboxes[a], h)
+                            && gamemode.CombatHandler.IsHitHitboxValid(boxCollection.Hitboxes[a], h))
                         {
                             var tuple = (broadphaseObjects[i].GetBehaviour<NetworkObject>(), h.ownerNetworkObject);
                             if (hitboxCombatPairs.ContainsKey(tuple))
