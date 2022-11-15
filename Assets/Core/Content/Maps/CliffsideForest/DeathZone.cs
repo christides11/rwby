@@ -1,12 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
 using Fusion;
+using HnSF;
 using HnSF.Combat;
 using UnityEngine;
 
 namespace rwby
 {
-    public class DeathZone : NetworkBehaviour, IBoxDefinitionCollection, IAttacker, IHurtable
+    public class DeathZone : NetworkBehaviour, IBoxDefinitionCollection, IAttacker, IHurtable, ITeamable
     {
         public HitInfo[] HitboxInfo
         {

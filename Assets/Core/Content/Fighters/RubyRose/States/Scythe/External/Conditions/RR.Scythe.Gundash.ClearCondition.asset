@@ -1,0 +1,95 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 033d27ee596b8f049b9a87b975a37c91, type: 3}
+  m_Name: RR.Scythe.Gundash.ClearCondition
+  m_EditorClassIdentifier: 
+  condition:
+    rid: 387795891450544128
+  references:
+    version: 2
+    RefIds:
+    - rid: 387795891450544128
+      type: {class: ConditionAnd, ns: rwby, asm: rwby.csharp}
+      data:
+        conditions:
+        - rid: 387795891450544129
+        - rid: 387795891450544131
+        - rid: 387795891450544133
+        - rid: 387795891450544135
+        - rid: 387795891450544137
+        - rid: 387795891450544139
+    - rid: 387795891450544129
+      type: {class: ConditionNextState, ns: rwby, asm: rwby.csharp}
+      data:
+        stateMovesetID: -1
+        state:
+          rid: 387795891450544130
+        inverse: 1
+    - rid: 387795891450544130
+      type: {class: RubyRoseStateReference, ns: rwby.core, asm: rwby.core}
+      data:
+        state: 94
+    - rid: 387795891450544131
+      type: {class: ConditionNextState, ns: rwby, asm: rwby.csharp}
+      data:
+        stateMovesetID: -1
+        state:
+          rid: 387795891450544132
+        inverse: 1
+    - rid: 387795891450544132
+      type: {class: RubyRoseStateReference, ns: rwby.core, asm: rwby.core}
+      data:
+        state: 95
+    - rid: 387795891450544133
+      type: {class: ConditionNextState, ns: rwby, asm: rwby.csharp}
+      data:
+        stateMovesetID: -1
+        state:
+          rid: 387795891450544134
+        inverse: 1
+    - rid: 387795891450544134
+      type: {class: RubyRoseStateReference, ns: rwby.core, asm: rwby.core}
+      data:
+        state: 96
+    - rid: 387795891450544135
+      type: {class: ConditionNextState, ns: rwby, asm: rwby.csharp}
+      data:
+        stateMovesetID: -1
+        state:
+          rid: 387795891450544136
+        inverse: 1
+    - rid: 387795891450544136
+      type: {class: RubyRoseStateReference, ns: rwby.core, asm: rwby.core}
+      data:
+        state: 98
+    - rid: 387795891450544137
+      type: {class: ConditionNextState, ns: rwby, asm: rwby.csharp}
+      data:
+        stateMovesetID: -1
+        state:
+          rid: 387795891450544138
+        inverse: 1
+    - rid: 387795891450544138
+      type: {class: RubyRoseStateReference, ns: rwby.core, asm: rwby.core}
+      data:
+        state: 97
+    - rid: 387795891450544139
+      type: {class: ConditionNextState, ns: rwby, asm: rwby.csharp}
+      data:
+        stateMovesetID: -1
+        state:
+          rid: 387795891450544140
+        inverse: 1
+    - rid: 387795891450544140
+      type: {class: RubyRoseStateReference, ns: rwby.core, asm: rwby.core}
+      data:
+        state: 99

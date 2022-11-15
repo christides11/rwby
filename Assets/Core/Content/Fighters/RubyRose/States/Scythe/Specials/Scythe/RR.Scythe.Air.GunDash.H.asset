@@ -394,6 +394,10 @@ MonoBehaviour:
       type: {class: RubyRoseStateReference, ns: rwby.core, asm: rwby.core}
       data:
         state: 97
+    - rid: 387795891450544142
+      type: {class: ConditionExternal, ns: rwby, asm: rwby.csharp}
+      data:
+        externalCondition: {fileID: 11400000, guid: 2189fc021d598724393aee0290388637, type: 2}
     - rid: 1219246315631804416
       type: {class: VarCreateBox, ns: rwby, asm: rwby.csharp}
       data:
@@ -540,38 +544,10 @@ MonoBehaviour:
         frameRanges:
         - {x: -2, y: -2}
         condition:
-          rid: 1219246341873467396
+          rid: 387795891450544142
         modifyType: 4
         index: 3
         val: 0
-    - rid: 1219246341873467396
-      type: {class: ConditionAnd, ns: rwby, asm: rwby.csharp}
-      data:
-        conditions:
-        - rid: 1219246341873467397
-        - rid: 1219246341873467399
-    - rid: 1219246341873467397
-      type: {class: ConditionNextState, ns: rwby, asm: rwby.csharp}
-      data:
-        stateMovesetID: -1
-        state:
-          rid: 1219246341873467398
-        inverse: 1
-    - rid: 1219246341873467398
-      type: {class: RubyRoseStateReference, ns: rwby.core, asm: rwby.core}
-      data:
-        state: 94
-    - rid: 1219246341873467399
-      type: {class: ConditionNextState, ns: rwby, asm: rwby.csharp}
-      data:
-        stateMovesetID: -1
-        state:
-          rid: 1219246341873467400
-        inverse: 1
-    - rid: 1219246341873467400
-      type: {class: RubyRoseStateReference, ns: rwby.core, asm: rwby.core}
-      data:
-        state: 95
     - rid: 1219246341873467409
       type: {class: ConditionWhiteboardIntIntComparison, ns: rwby, asm: rwby.csharp}
       data:

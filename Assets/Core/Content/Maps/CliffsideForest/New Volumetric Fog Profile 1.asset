@@ -1,0 +1,118 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 612e70f49e5124da0a95111a57250300, type: 3}
+  m_Name: New Volumetric Fog Profile 1
+  m_EditorClassIdentifier: 
+  raymarchQuality: 3
+  raymarchMinStep: 0.1
+  jittering: 0.5
+  dithering: 1
+  renderQueue: 3100
+  sortingLayerID: 0
+  sortingOrder: 0
+  noiseTexture: {fileID: 2800000, guid: 9c79340e1a1054275ba04070a27de306, type: 3}
+  noiseStrength: 1.7
+  noiseScale: 10
+  noiseFinalMultiplier: 1.06
+  useDetailNoise: 0
+  detailTexture: {fileID: 11700000, guid: 950add8d241c6479bbab1f10e1035d60, type: 2}
+  detailScale: 0.35
+  detailStrength: 0.5
+  detailOffset: -0.5
+  density: 1.68
+  shape: 0
+  border: 0
+  verticalOffset: 0
+  distance: 0
+  distanceFallOff: 0
+  terrainFit: 0
+  terrainFitResolution: 128
+  terrainLayerMask:
+    serializedVersion: 2
+    m_Bits: 4294967293
+  terrainFogHeight: 25
+  terrainFogMinAltitude: 0
+  terrainFogMaxAltitude: 150
+  albedo: {r: 0.957, g: 0.9817177, b: 1, a: 0.6}
+  enableDepthGradient: 0
+  depthGradient:
+    serializedVersion: 2
+    key0: {r: 4.005235, g: 4.005235, b: 4.005235, a: 1}
+    key1: {r: 5.3403144, g: 5.3403144, b: 5.3403144, a: 1}
+    key2: {r: 0, g: 0, b: 0, a: 0}
+    key3: {r: 0, g: 0, b: 0, a: 0}
+    key4: {r: 0, g: 0, b: 0, a: 0}
+    key5: {r: 0, g: 0, b: 0, a: 0}
+    key6: {r: 0, g: 0, b: 0, a: 0}
+    key7: {r: 0, g: 0, b: 0, a: 0}
+    ctime0: 0
+    ctime1: 65535
+    ctime2: 0
+    ctime3: 0
+    ctime4: 0
+    ctime5: 0
+    ctime6: 0
+    ctime7: 0
+    atime0: 0
+    atime1: 65535
+    atime2: 0
+    atime3: 0
+    atime4: 0
+    atime5: 0
+    atime6: 0
+    atime7: 0
+    m_Mode: 0
+    m_NumColorKeys: 2
+    m_NumAlphaKeys: 2
+  depthGradientMaxDistance: 1000
+  enableHeightGradient: 0
+  heightGradient:
+    serializedVersion: 2
+    key0: {r: 1, g: 1, b: 1, a: 1}
+    key1: {r: 1, g: 1, b: 1, a: 1}
+    key2: {r: 0, g: 0, b: 0, a: 0}
+    key3: {r: 0, g: 0, b: 0, a: 0}
+    key4: {r: 0, g: 0, b: 0, a: 0}
+    key5: {r: 0, g: 0, b: 0, a: 0}
+    key6: {r: 0, g: 0, b: 0, a: 0}
+    key7: {r: 0, g: 0, b: 0, a: 0}
+    ctime0: 0
+    ctime1: 65535
+    ctime2: 0
+    ctime3: 0
+    ctime4: 0
+    ctime5: 0
+    ctime6: 0
+    ctime7: 0
+    atime0: 0
+    atime1: 65535
+    atime2: 0
+    atime3: 0
+    atime4: 0
+    atime5: 0
+    atime6: 0
+    atime7: 0
+    m_Mode: 0
+    m_NumColorKeys: 2
+    m_NumAlphaKeys: 2
+  brightness: 0.6666667
+  deepObscurance: 1
+  specularColor: {r: 0.45882356, g: 0.48989186, b: 1, a: 1}
+  specularThreshold: 0.637
+  specularIntensity: 0.53
+  turbulence: 0.73
+  windDirection: {x: 0.02, y: 0, z: 0}
+  dayNightCycle: 1
+  lightDiffusionPower: 32
+  lightDiffusionIntensity: 0.4
+  receiveShadows: 1
+  shadowIntensity: 0.5
