@@ -1,0 +1,194 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7789f25d17401bc4b915ca6fcecf2a29, type: 3}
+  m_Name: RR.Shared.GroundLay.FaceUp
+  m_EditorClassIdentifier: 
+  stateName: Ground Lay (Face Up)
+  useBaseState: 1
+  baseState: {fileID: 11400000, guid: 2db2c07c5ff766a419a7249a03a85ae8, type: 2}
+  totalFrames: 60
+  autoIncrement: 1
+  autoLoop: 0
+  autoLoopFrame: 1
+  data:
+  - rid: 1219246356780023813
+  - rid: 1219246356780023815
+  - rid: 8688056249043648523
+  - rid: 8688056342057058327
+  - rid: 8688056342057058329
+  auraRequirement: 0
+  initialGroundedState: 2
+  stateType: 4
+  maxUsesInString: -1
+  selfChainable: 0
+  allowBaseStateTransitions: 1
+  inputSequence:
+    executeWindow: 3
+    executeInputs: []
+    sequenceWindow: 8
+    sequenceInputs: []
+  inputSequenceAsHoldInputs: 0
+  condition:
+    rid: -2
+  hitboxInfo: []
+  throwboxInfo: []
+  hurtboxInfo:
+  - hitInvincible: 0
+    projectileInvincible: 0
+  references:
+    version: 2
+    RefIds:
+    - rid: -2
+      type: {class: , ns: , asm: }
+    - rid: 1219246356780023813
+      type: {class: VarCreateBox, ns: rwby, asm: rwby.csharp}
+      data:
+        name: Hurtbox
+        id: 4
+        parent: -1
+        children: 
+        frameRanges:
+        - {x: 1, y: -1}
+        condition:
+          rid: -2
+        boxType: 0
+        attachedTo: 0
+        shape: 0
+        offset: {x: 0, y: 1, z: 0}
+        boxExtents: {x: 1, y: 1, z: 1}
+        radius: 0
+        definitionIndex: 0
+    - rid: 1219246356780023815
+      type: {class: VarChangeState, ns: rwby, asm: rwby.csharp}
+      data:
+        name: Neutral Tech
+        id: 5
+        parent: -1
+        children: 
+        frameRanges:
+        - {x: 1, y: 8}
+        condition:
+          rid: 1219246356780023821
+        checkInputSequence: 0
+        checkCondition: 0
+        targetType: 0
+        stateMovesetID: -1
+        state:
+          rid: 1219246356780023816
+        frame: 0
+    - rid: 1219246356780023816
+      type: {class: FighterCmnStateReference, ns: rwby, asm: rwby.csharp}
+      data:
+        state: 24
+    - rid: 1219246356780023821
+      type: {class: ConditionAnd, ns: rwby, asm: rwby.csharp}
+      data:
+        conditions:
+        - rid: 1219246356780023822
+        - rid: 1219246356780023823
+    - rid: 1219246356780023822
+      type: {class: ConditionButton, ns: rwby, asm: rwby.csharp}
+      data:
+        inverse: 0
+        checkAbilityButton: 0
+        button: 2
+        buttonState: 0
+        offset: 0
+        buffer: 0
+    - rid: 1219246356780023823
+      type: {class: ConditionHardKnockdown, ns: rwby, asm: rwby.csharp}
+      data:
+        inverse: 1
+    - rid: 8688056249043648523
+      type: {class: VarChangeState, ns: rwby, asm: rwby.csharp}
+      data:
+        name: Try Neutral Tech
+        id: 1
+        parent: -1
+        children: 
+        frameRanges:
+        - {x: 24, y: 60}
+        condition:
+          rid: 8688056249043648525
+        checkInputSequence: 0
+        checkCondition: 0
+        targetType: 0
+        stateMovesetID: -1
+        state:
+          rid: 8688056249043648524
+        frame: 0
+    - rid: 8688056249043648524
+      type: {class: FighterCmnStateReference, ns: rwby, asm: rwby.csharp}
+      data:
+        state: 24
+    - rid: 8688056249043648525
+      type: {class: ConditionAnd, ns: rwby, asm: rwby.csharp}
+      data:
+        conditions:
+        - rid: 8688056249043648526
+        - rid: 8688056249043648527
+    - rid: 8688056249043648526
+      type: {class: ConditionButton, ns: rwby, asm: rwby.csharp}
+      data:
+        inverse: 0
+        checkAbilityButton: 0
+        button: 2
+        buttonState: 0
+        offset: 0
+        buffer: 0
+    - rid: 8688056249043648527
+      type: {class: ConditionMoveStickMagnitude, ns: rwby, asm: rwby.csharp}
+      data:
+        minValue: 0.1
+        maxValue: 2
+    - rid: 8688056342057058327
+      type: {class: VarMultiplyMovement, ns: rwby, asm: rwby.csharp}
+      data:
+        name: 
+        id: 2
+        parent: -1
+        children: 
+        frameRanges:
+        - {x: 0, y: 0}
+        condition:
+          rid: -2
+        multiplier:
+          rid: 8688056342057058328
+    - rid: 8688056342057058328
+      type: {class: FighterBaseStatReferenceFloat, ns: rwby, asm: rwby.csharp}
+      data:
+        inverse: 0
+        statReference: 0
+        value: 0
+        variable: 0
+    - rid: 8688056342057058329
+      type: {class: VarApplyTraction, ns: rwby, asm: rwby.csharp}
+      data:
+        name: 
+        id: 3
+        parent: -1
+        children: 
+        frameRanges:
+        - {x: 1, y: -1}
+        condition:
+          rid: -2
+        traction:
+          rid: 8688056342057058330
+        applyMovement: 1
+        applyGravity: 0
+    - rid: 8688056342057058330
+      type: {class: FighterBaseStatReferenceFloat, ns: rwby, asm: rwby.csharp}
+      data:
+        inverse: 0
+        statReference: 1
+        value: 0
+        variable: 0

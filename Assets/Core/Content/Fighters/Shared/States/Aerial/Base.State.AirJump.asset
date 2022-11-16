@@ -30,9 +30,11 @@ MonoBehaviour:
   - rid: 8688056136894513158
   - rid: 8688056195711238165
   - rid: 8688056201677897728
+  auraRequirement: 0
   initialGroundedState: 2
   stateType: 0
   maxUsesInString: -1
+  selfChainable: 0
   allowBaseStateTransitions: 1
   inputSequence:
     executeWindow: 3
@@ -50,6 +52,16 @@ MonoBehaviour:
     RefIds:
     - rid: -2
       type: {class: , ns: , asm: }
+    - rid: 387795932360736820
+      type: {class: ConditionLockedOn, ns: rwby, asm: rwby.csharp}
+      data:
+        inverse: 1
+        requireTarget: 0
+    - rid: 387795932360736821
+      type: {class: ConditionLockedOn, ns: rwby, asm: rwby.csharp}
+      data:
+        inverse: 1
+        requireTarget: 0
     - rid: 2193520697185665024
       type: {class: VarApplyJumpForce, ns: rwby, asm: rwby.csharp}
       data:
@@ -112,6 +124,7 @@ MonoBehaviour:
         slopeDivi: 0
         slopeMulti: 0
         slopeMultiMax: 0
+        slopeinputModi: 0
     - rid: 2193520697185665028
       type: {class: FighterBaseStatReferenceFloat, ns: rwby, asm: rwby.csharp}
       data:
@@ -218,7 +231,7 @@ MonoBehaviour:
         frameRanges:
         - {x: 1, y: -1}
         condition:
-          rid: -2
+          rid: 387795932360736821
         rotateTowards: 0
         eulerAngle: {x: 0, y: 0, z: 0}
         rotateTowardsTarget: 0
@@ -265,7 +278,7 @@ MonoBehaviour:
         frameRanges:
         - {x: 0, y: 0}
         condition:
-          rid: -2
+          rid: 387795932360736820
         modifyType: 1
         rotateTowards: 0
         useTargetWhenNoMovement: 0

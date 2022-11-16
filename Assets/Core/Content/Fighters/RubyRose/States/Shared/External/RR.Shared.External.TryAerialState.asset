@@ -1,0 +1,114 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d4d62b28b52db7d459dd2f283317c705, type: 3}
+  m_Name: RR.Shared.External.TryAerialState
+  m_EditorClassIdentifier: 
+  data:
+  - rid: 220443314582978566
+  - rid: 7270848729635094535
+  references:
+    version: 2
+    RefIds:
+    - rid: 220443314582978566
+      type: {class: VarChangeState, ns: rwby, asm: rwby.csharp}
+      data:
+        name: Try Air Dash
+        id: 0
+        parent: 0
+        children: 
+        frameRanges: []
+        condition:
+          rid: 7270848729635094531
+        checkInputSequence: 0
+        checkCondition: 0
+        targetType: 0
+        stateMovesetID: -1
+        state:
+          rid: 220443314582978567
+        frame: 0
+    - rid: 220443314582978567
+      type: {class: FighterCmnStateReference, ns: rwby, asm: rwby.csharp}
+      data:
+        state: 9
+    - rid: 7270848729635094531
+      type: {class: ConditionAnd, ns: rwby, asm: rwby.csharp}
+      data:
+        conditions:
+        - rid: 7270848729635094532
+        - rid: 7270848729635094534
+    - rid: 7270848729635094532
+      type: {class: ConditionCanAirDash, ns: rwby, asm: rwby.csharp}
+      data:
+        maxAirDashes:
+          rid: 7270848729635094533
+    - rid: 7270848729635094533
+      type: {class: FighterBaseStatReferenceInt, ns: rwby, asm: rwby.csharp}
+      data:
+        inverse: 0
+        statReference: 1
+        value: 0
+        variable: 4
+    - rid: 7270848729635094534
+      type: {class: ConditionButton, ns: rwby, asm: rwby.csharp}
+      data:
+        inverse: 0
+        button: 4
+        buttonState: 1
+        offset: 0
+        buffer: 3
+    - rid: 7270848729635094535
+      type: {class: VarChangeState, ns: rwby, asm: rwby.csharp}
+      data:
+        name: Try Air Jump
+        id: 0
+        parent: 0
+        children: 
+        frameRanges: []
+        condition:
+          rid: 7270848729635094537
+        checkInputSequence: 0
+        checkCondition: 0
+        targetType: 0
+        stateMovesetID: -1
+        state:
+          rid: 7270848729635094536
+        frame: 0
+    - rid: 7270848729635094536
+      type: {class: FighterCmnStateReference, ns: rwby, asm: rwby.csharp}
+      data:
+        state: 8
+    - rid: 7270848729635094537
+      type: {class: ConditionAnd, ns: rwby, asm: rwby.csharp}
+      data:
+        conditions:
+        - rid: 7270848729635094538
+        - rid: 7270848729635094540
+    - rid: 7270848729635094538
+      type: {class: ConditionCanAirJump, ns: rwby, asm: rwby.csharp}
+      data:
+        maxAirJumps:
+          rid: 7270848729635094539
+    - rid: 7270848729635094539
+      type: {class: FighterBaseStatReferenceInt, ns: rwby, asm: rwby.csharp}
+      data:
+        inverse: 0
+        statReference: 1
+        value: 0
+        variable: 2
+    - rid: 7270848729635094540
+      type: {class: ConditionButton, ns: rwby, asm: rwby.csharp}
+      data:
+        inverse: 0
+        button: 0
+        buttonState: 1
+        offset: 0
+        buffer: 3

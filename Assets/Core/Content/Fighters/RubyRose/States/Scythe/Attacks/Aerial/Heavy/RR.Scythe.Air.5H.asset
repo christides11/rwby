@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7789f25d17401bc4b915ca6fcecf2a29, type: 3}
   m_Name: RR.Scythe.Air.5H
   m_EditorClassIdentifier: 
-  stateName: 5L (Air)
+  stateName: 5H (Air)
   useBaseState: 0
   baseState: {fileID: 0}
   totalFrames: 26
@@ -32,6 +32,7 @@ MonoBehaviour:
   - rid: 7270848718906589187
   - rid: 387795756708003840
   - rid: 387795756708003845
+  - rid: 387795932360736832
   auraRequirement: 0
   initialGroundedState: 2
   stateType: 2
@@ -103,6 +104,15 @@ MonoBehaviour:
         contentGUID:
           guid: 
       hitSound: 
+      hitSoundVolume: 0
+      hitSoundMinDist: 0
+      hitSoundMaxDist: 0
+      hitBlockSoundbank:
+        modGUID:
+          guid: 
+        contentGUID:
+          guid: 
+      hitBlockSound: 
       hitCameraShakeStrength: 1
       blockCameraShakeStrength: 1
       cameraShakeLength: 4
@@ -157,6 +167,15 @@ MonoBehaviour:
         contentGUID:
           guid: 
       hitSound: 
+      hitSoundVolume: 0
+      hitSoundMinDist: 0
+      hitSoundMaxDist: 0
+      hitBlockSoundbank:
+        modGUID:
+          guid: 
+        contentGUID:
+          guid: 
+      hitBlockSound: 
       hitCameraShakeStrength: 2
       blockCameraShakeStrength: 2
       cameraShakeLength: 8
@@ -240,6 +259,32 @@ MonoBehaviour:
         inverse: 0
         statReference: 0
         value: 5
+    - rid: 387795932360736832
+      type: {class: VarChangeState, ns: rwby, asm: rwby.csharp}
+      data:
+        name: To Land
+        id: 20
+        parent: -1
+        children: 
+        frameRanges:
+        - {x: 1, y: -1}
+        condition:
+          rid: 387795932360736834
+        checkInputSequence: 0
+        checkCondition: 0
+        targetType: 0
+        stateMovesetID: -1
+        state:
+          rid: 387795932360736833
+        frame: 0
+    - rid: 387795932360736833
+      type: {class: FighterCmnStateReference, ns: rwby, asm: rwby.csharp}
+      data:
+        state: 28
+    - rid: 387795932360736834
+      type: {class: ConditionIsGrounded, ns: rwby, asm: rwby.csharp}
+      data:
+        inverse: 0
     - rid: 2193520813467238401
       type: {class: VarChangeState, ns: rwby, asm: rwby.csharp}
       data:

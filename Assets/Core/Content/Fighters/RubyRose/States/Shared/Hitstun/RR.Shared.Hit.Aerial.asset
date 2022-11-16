@@ -1,0 +1,173 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7789f25d17401bc4b915ca6fcecf2a29, type: 3}
+  m_Name: RR.Shared.Hit.Aerial
+  m_EditorClassIdentifier: 
+  stateName: Hit Aerial
+  useBaseState: 1
+  baseState: {fileID: 11400000, guid: 91c2ce98c14b28e41a2c485be0a1bf7d, type: 2}
+  totalFrames: 10
+  autoIncrement: 1
+  autoLoop: 0
+  autoLoopFrame: 2
+  data:
+  - rid: 2193520836063002636
+  - rid: 2193520836063002641
+  - rid: 2193520836063002643
+  - rid: 8688056331001921553
+  - rid: 8688056335261499403
+  auraRequirement: 0
+  initialGroundedState: 2
+  stateType: 4
+  maxUsesInString: -1
+  selfChainable: 0
+  allowBaseStateTransitions: 1
+  inputSequence:
+    executeWindow: 3
+    executeInputs: []
+    sequenceWindow: 8
+    sequenceInputs: []
+  inputSequenceAsHoldInputs: 0
+  condition:
+    rid: -2
+  hitboxInfo: []
+  throwboxInfo: []
+  hurtboxInfo:
+  - hitInvincible: 0
+    projectileInvincible: 0
+  references:
+    version: 2
+    RefIds:
+    - rid: -2
+      type: {class: , ns: , asm: }
+    - rid: 2193520836063002636
+      type: {class: VarApplyGravity, ns: rwby, asm: rwby.csharp}
+      data:
+        name: 
+        id: 0
+        parent: -1
+        children: 
+        frameRanges:
+        - {x: 2, y: -1}
+        condition:
+          rid: -2
+        useValue: 1
+        value:
+          rid: 7270848813903118336
+        jumpHeight:
+          rid: -2
+        jumpTime:
+          rid: -2
+        multi:
+          rid: 2193520836063002639
+        maxFallSpeed:
+          rid: 2193520836063002640
+    - rid: 2193520836063002639
+      type: {class: FighterBaseStatReferenceFloat, ns: rwby, asm: rwby.csharp}
+      data:
+        inverse: 0
+        statReference: 0
+        value: 1
+        variable: 0
+    - rid: 2193520836063002640
+      type: {class: FighterBaseStatReferenceFloat, ns: rwby, asm: rwby.csharp}
+      data:
+        inverse: 0
+        statReference: 1
+        value: 0
+        variable: 23
+    - rid: 2193520836063002641
+      type: {class: VarExternal, ns: rwby, asm: rwby.csharp}
+      data:
+        name: Exit To Aerial State
+        id: 1
+        parent: -1
+        children: 
+        frameRanges:
+        - {x: 1, y: -1}
+        condition:
+          rid: 2193520836063002642
+        asset: {fileID: 11400000, guid: 3e988135845709d4594e5628d0bf81cd, type: 2}
+    - rid: 2193520836063002642
+      type: {class: ConditionHitstunValue, ns: rwby, asm: rwby.csharp}
+      data:
+        minValue: 0
+        maxValue: 0
+    - rid: 2193520836063002643
+      type: {class: VarChangeState, ns: rwby, asm: rwby.csharp}
+      data:
+        name: To Grounded Hitstun
+        id: 2
+        parent: -1
+        children: 
+        frameRanges:
+        - {x: 2, y: -1}
+        condition:
+          rid: 2193520836063002644
+        checkInputSequence: 0
+        checkCondition: 0
+        targetType: 0
+        stateMovesetID: -1
+        state:
+          rid: 2193520836063002645
+        frame: 0
+    - rid: 2193520836063002644
+      type: {class: ConditionIsGrounded, ns: rwby, asm: rwby.csharp}
+      data:
+        inverse: 0
+    - rid: 2193520836063002645
+      type: {class: FighterCmnStateReference, ns: rwby, asm: rwby.csharp}
+      data:
+        state: 30
+    - rid: 7270848813903118336
+      type: {class: FighterBaseStatReferenceFloat, ns: rwby, asm: rwby.csharp}
+      data:
+        inverse: 0
+        statReference: 1
+        value: 0
+        variable: 38
+    - rid: 8688056331001921553
+      type: {class: VarCreateBox, ns: rwby, asm: rwby.csharp}
+      data:
+        name: Colbox
+        id: 3
+        parent: -1
+        children: 
+        frameRanges:
+        - {x: 1, y: -1}
+        condition:
+          rid: -2
+        boxType: 2
+        attachedTo: 0
+        shape: 0
+        offset: {x: 0, y: 0.75, z: 0}
+        boxExtents: {x: 0.35, y: 0.75, z: 0.35}
+        radius: 0
+        definitionIndex: 0
+    - rid: 8688056335261499403
+      type: {class: VarCreateBox, ns: rwby, asm: rwby.csharp}
+      data:
+        name: Hurtbox
+        id: 4
+        parent: -1
+        children: 
+        frameRanges:
+        - {x: 1, y: -1}
+        condition:
+          rid: -2
+        boxType: 0
+        attachedTo: 0
+        shape: 0
+        offset: {x: 0, y: 1, z: 0}
+        boxExtents: {x: 0.35, y: 0.75, z: 0.35}
+        radius: 0
+        definitionIndex: 0

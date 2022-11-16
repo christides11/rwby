@@ -56,14 +56,14 @@ MonoBehaviour:
     - rid: 387795733835153463
       type: {class: VarModifyRotation, ns: rwby, asm: rwby.csharp}
       data:
-        name: 
+        name: No Target Rotation
         id: 3
         parent: -1
         children: 
         frameRanges:
         - {x: 0, y: 0}
         condition:
-          rid: -2
+          rid: 387795932360736817
         modifyType: 1
         rotateTowards: 0
         useTargetWhenNoMovement: 0
@@ -130,6 +130,11 @@ MonoBehaviour:
         statReference: 1
         value: 0
         variable: 14
+    - rid: 387795932360736817
+      type: {class: ConditionLockedOn, ns: rwby, asm: rwby.csharp}
+      data:
+        inverse: 1
+        requireTarget: 0
     - rid: 8688056217396838403
       type: {class: VarModifyAnimationSet, ns: rwby, asm: rwby.csharp}
       data:

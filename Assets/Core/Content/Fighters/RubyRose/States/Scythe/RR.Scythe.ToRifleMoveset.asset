@@ -10,9 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7789f25d17401bc4b915ca6fcecf2a29, type: 3}
-  m_Name: RR.Rifle.ToScytheMoveset
+  m_Name: RR.Scythe.ToRifleMoveset
   m_EditorClassIdentifier: 
-  stateName: To Rifle Moveset
+  stateName: To Gun Moveset
   useBaseState: 0
   baseState: {fileID: 0}
   totalFrames: 15
@@ -27,8 +27,8 @@ MonoBehaviour:
   - rid: 8688056405345435658
   - rid: 8688056405345435659
   - rid: 8688056405345435660
-  - rid: 7270848885102739471
-  - rid: 7270848885102739472
+  - rid: 7270848885102739473
+  - rid: 7270848885102739474
   auraRequirement: 0
   initialGroundedState: 1
   stateType: 2
@@ -57,7 +57,7 @@ MonoBehaviour:
     RefIds:
     - rid: -2
       type: {class: , ns: , asm: }
-    - rid: 7270848885102739471
+    - rid: 7270848885102739473
       type: {class: VarSetGroundedState, ns: rwby, asm: rwby.csharp}
       data:
         name: 
@@ -69,7 +69,7 @@ MonoBehaviour:
         condition:
           rid: -2
         groundedGroup: 2
-    - rid: 7270848885102739472
+    - rid: 7270848885102739474
       type: {class: VarSetGroundedState, ns: rwby, asm: rwby.csharp}
       data:
         name: 
@@ -93,14 +93,14 @@ MonoBehaviour:
         condition:
           rid: -2
         modifyType: 1
-        value: 0
+        value: 1
     - rid: 8688056405345435652
       type: {class: VarEmpty, ns: rwby, asm: rwby.csharp}
       data:
         name: Is Grounded
         id: 3
         parent: -1
-        children: 0a0000000400000006000000
+        children: 04000000060000000a000000
         frameRanges: []
         condition:
           rid: 8688056405345435653
@@ -136,7 +136,7 @@ MonoBehaviour:
         name: Is Aerial
         id: 5
         parent: -1
-        children: 090000000800000007000000
+        children: 080000000700000009000000
         frameRanges: []
         condition:
           rid: 8688056405345435657

@@ -33,6 +33,7 @@ MonoBehaviour:
   - rid: 387795752378957832
   - rid: 387795752378957834
   - rid: 387795909767069699
+  - rid: 387795932360736842
   auraRequirement: 0
   initialGroundedState: 1
   stateType: 2
@@ -57,33 +58,33 @@ MonoBehaviour:
     rid: -2
   hitboxInfo:
   - ID: 0
-    groundedFoldoutGroup: 1
+    groundedFoldoutGroup: 0
     groundedCounterHitFoldoutGroup: 0
     hitStateGroundedGroups: -1
     hit:
-      groundHitState: 30
-      airHitState: 32
+      groundHitState: 34
+      airHitState: 34
       groundBounce: 0
       wallBounce: 0
       groundBounceForce: 0
       wallBounceForce: 0
       noKill: 0
       unblockable: 0
-      hardKnockdown: 0
+      hardKnockdown: 1
       hitForceType: 0
       hitForceRelation: 0
       hitForceRelationOffset: {x: 0, y: 0, z: 0}
       autolink: 0
       gravityAutolinkPercentage: 0
       movementAutolinkPercentage: 0
-      groundHitForce: {x: 0, y: 0, z: 8}
-      aerialHitForce: {x: 0, y: 3, z: 4}
+      groundHitForce: {x: 0, y: 5, z: 3}
+      aerialHitForce: {x: 0, y: 5, z: 3}
       pullPushMultiplier: 0
       pullPushMaxDistance: 10
       blockLift: 0
       attackerHitstop: 4
       hitstop: 4
-      hitstun: 30
+      hitstun: 40
       blockstun: 30
       untech: 30
       initialProration: 0
@@ -124,29 +125,29 @@ MonoBehaviour:
       ignoreHitstunScaling: 0
       ignorePushbackScaling: 0
     counterhit:
-      groundHitState: 30
-      airHitState: 32
+      groundHitState: 34
+      airHitState: 34
       groundBounce: 0
       wallBounce: 0
       groundBounceForce: 0
       wallBounceForce: 0
       noKill: 0
       unblockable: 0
-      hardKnockdown: 0
+      hardKnockdown: 1
       hitForceType: 0
       hitForceRelation: 0
       hitForceRelationOffset: {x: 0, y: 0, z: 0}
       autolink: 0
       gravityAutolinkPercentage: 0
       movementAutolinkPercentage: 0
-      groundHitForce: {x: 0, y: 0, z: 5}
-      aerialHitForce: {x: 0, y: 3, z: 2}
+      groundHitForce: {x: 0, y: 8, z: 3}
+      aerialHitForce: {x: 0, y: 8, z: 3}
       pullPushMultiplier: 0
       pullPushMaxDistance: 0
       blockLift: 0
       attackerHitstop: 8
       hitstop: 8
-      hitstun: 12
+      hitstun: 40
       blockstun: 12
       untech: 300
       initialProration: 0
@@ -259,6 +260,30 @@ MonoBehaviour:
           volume: 0.3
           minDist: 5
           maxDist: 20
+    - rid: 387795932360736842
+      type: {class: VarCreateBox, ns: rwby, asm: rwby.csharp}
+      data:
+        name: Colbox (No Hit)
+        id: 23
+        parent: -1
+        children: 
+        frameRanges:
+        - {x: 8, y: 19}
+        condition:
+          rid: 387795932360736843
+        boxType: 2
+        attachedTo: 0
+        shape: 0
+        offset: {x: 0, y: 1, z: 0}
+        boxExtents: {x: 0.5, y: 1, z: 0.5}
+        radius: 0
+        definitionIndex: 0
+    - rid: 387795932360736843
+      type: {class: ConditionHitOrBlockCount, ns: rwby, asm: rwby.csharp}
+      data:
+        inverse: 1
+        hitCount: 1
+        hitOrBlock: 1
     - rid: 2193520813467238401
       type: {class: VarChangeState, ns: rwby, asm: rwby.csharp}
       data:
@@ -319,7 +344,7 @@ MonoBehaviour:
       data:
         inverse: 0
         statReference: 0
-        value: 50
+        value: 60
         variable: 0
     - rid: 7270848428946489353
       type: {class: VarRotateTowards, ns: rwby, asm: rwby.csharp}
@@ -417,7 +442,7 @@ MonoBehaviour:
     - rid: 8688056833868562432
       type: {class: VarEmpty, ns: rwby, asm: rwby.csharp}
       data:
-        name: On Hit or Block
+        name: On Hit
         id: 13
         parent: -1
         children: 0e000000
@@ -429,7 +454,7 @@ MonoBehaviour:
       data:
         inverse: 0
         hitCount: 1
-        hitOrBlock: -1
+        hitOrBlock: 1
     - rid: 8688056833868562434
       type: {class: VarExternal, ns: rwby, asm: rwby.csharp}
       data:

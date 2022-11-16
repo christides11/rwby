@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7789f25d17401bc4b915ca6fcecf2a29, type: 3}
-  m_Name: RR.Scythe.Air.5L
+  m_Name: RR.Rifle.Air.5L
   m_EditorClassIdentifier: 
   stateName: 5L (Air)
   useBaseState: 0
@@ -34,7 +34,6 @@ MonoBehaviour:
   - rid: 387795756708003845
   - rid: 387795756708003849
   - rid: 387795756708003850
-  - rid: 387795932360736829
   auraRequirement: 0
   initialGroundedState: 2
   stateType: 2
@@ -285,32 +284,6 @@ MonoBehaviour:
         condition:
           rid: -2
         asset: {fileID: 11400000, guid: bc799e59dd7b59244a7f8dcbdcafabf0, type: 2}
-    - rid: 387795932360736829
-      type: {class: VarChangeState, ns: rwby, asm: rwby.csharp}
-      data:
-        name: Try Land
-        id: 22
-        parent: -1
-        children: 
-        frameRanges:
-        - {x: 1, y: -1}
-        condition:
-          rid: 387795932360736830
-        checkInputSequence: 0
-        checkCondition: 0
-        targetType: 0
-        stateMovesetID: -1
-        state:
-          rid: 387795932360736831
-        frame: 0
-    - rid: 387795932360736830
-      type: {class: ConditionIsGrounded, ns: rwby, asm: rwby.csharp}
-      data:
-        inverse: 0
-    - rid: 387795932360736831
-      type: {class: FighterCmnStateReference, ns: rwby, asm: rwby.csharp}
-      data:
-        state: 28
     - rid: 2193520813467238401
       type: {class: VarChangeState, ns: rwby, asm: rwby.csharp}
       data:
@@ -492,4 +465,4 @@ MonoBehaviour:
         - {x: 7, y: -1}
         condition:
           rid: -2
-        asset: {fileID: 11400000, guid: 852b081cfd9efbb449cca3171458f8cc, type: 2}
+        asset: {fileID: 11400000, guid: cc00d510ea2530d49bdc1b20fbaa26a5, type: 2}
