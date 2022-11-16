@@ -12,9 +12,9 @@ namespace rwby
     [CreateAssetMenu(fileName = "AddressablesMapDefinition", menuName = "rwby/Content/Addressables/MapDefinition")]
     public class AddressablesMapDefinition : IMapDefinition
     {
-        public override string Name { get { return mapName; } }
-        public override string Description { get { return description; } }
-        public override bool Selectable { get { return selectable; } }
+        public override string Name => mapName;
+        public override string Description => description;
+        public override bool Selectable => selectable;
 
         [SerializeField] private string mapName;
         [SerializeField] [TextArea] private string description;

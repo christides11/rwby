@@ -10,7 +10,10 @@ namespace rwby
         public virtual int Identifier { get; set; }
         public virtual string Name { get; }
         public virtual string Description { get; }
+        public virtual List<string> Tags => tags;
 
+        [SerializeField] private List<string> tags;
+        
         public abstract UniTask<bool> Load();
         public abstract bool Unload();
     }

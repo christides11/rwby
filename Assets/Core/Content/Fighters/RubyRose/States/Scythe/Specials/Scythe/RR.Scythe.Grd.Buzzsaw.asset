@@ -30,7 +30,6 @@ MonoBehaviour:
   - rid: 1219246315631804427
   - rid: 1219246315631804429
   - rid: 1219246319766863873
-  - rid: 1219246319766863875
   - rid: 1219246319766863877
   auraRequirement: 0
   initialGroundedState: 1
@@ -99,6 +98,15 @@ MonoBehaviour:
         contentGUID:
           guid: 
       hitSound: 
+      hitSoundVolume: 0
+      hitSoundMinDist: 0
+      hitSoundMaxDist: 0
+      hitBlockSoundbank:
+        modGUID:
+          guid: 
+        contentGUID:
+          guid: 
+      hitBlockSound: 
       hitCameraShakeStrength: 1
       blockCameraShakeStrength: 0
       cameraShakeLength: 4
@@ -153,6 +161,15 @@ MonoBehaviour:
         contentGUID:
           guid: 
       hitSound: 
+      hitSoundVolume: 0
+      hitSoundMinDist: 0
+      hitSoundMaxDist: 0
+      hitBlockSoundbank:
+        modGUID:
+          guid: 
+        contentGUID:
+          guid: 
+      hitBlockSound: 
       hitCameraShakeStrength: 0
       blockCameraShakeStrength: 0
       cameraShakeLength: 0
@@ -299,7 +316,7 @@ MonoBehaviour:
         name: On hit or block
         id: 7
         parent: -1
-        children: 08000000090000000a000000
+        children: 0800000009000000
         frameRanges: []
         condition:
           rid: 1219246315631804428
@@ -312,7 +329,7 @@ MonoBehaviour:
     - rid: 1219246315631804429
       type: {class: VarChangeState, ns: rwby, asm: rwby.csharp}
       data:
-        name: A
+        name: L
         id: 8
         parent: 7
         children: 
@@ -334,7 +351,7 @@ MonoBehaviour:
     - rid: 1219246319766863873
       type: {class: VarChangeState, ns: rwby, asm: rwby.csharp}
       data:
-        name: B
+        name: H
         id: 9
         parent: 7
         children: 
@@ -353,28 +370,6 @@ MonoBehaviour:
       type: {class: RubyRoseStateReference, ns: rwby.core, asm: rwby.core}
       data:
         state: 85
-    - rid: 1219246319766863875
-      type: {class: VarChangeState, ns: rwby, asm: rwby.csharp}
-      data:
-        name: C
-        id: 10
-        parent: 7
-        children: 
-        frameRanges:
-        - {x: 16, y: -1}
-        condition:
-          rid: -2
-        checkInputSequence: 1
-        checkCondition: 0
-        targetType: 0
-        stateMovesetID: -1
-        state:
-          rid: 1219246319766863876
-        frame: 0
-    - rid: 1219246319766863876
-      type: {class: RubyRoseStateReference, ns: rwby.core, asm: rwby.core}
-      data:
-        state: 86
     - rid: 1219246319766863877
       type: {class: VarExternal, ns: rwby, asm: rwby.csharp}
       data:
