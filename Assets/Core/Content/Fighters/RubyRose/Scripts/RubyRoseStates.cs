@@ -19,6 +19,7 @@ namespace rwby.core
         AIR_5L = 55,
         AIR_5H = 56,
         AIR_8H = 68,
+        AIR_28H = 100,
         SCYTHE_SPECIAL_Buzzsaw_Ground = 58,
         SCYTHE_SPECIAL_Buzzsaw_Ground_L = 84,
         SCYTHE_SPECIAL_Buzzsaw_Ground_H = 85,

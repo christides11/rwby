@@ -20,6 +20,14 @@ MonoBehaviour:
     RefIds:
     - rid: -2
       type: {class: , ns: , asm: }
+    - rid: 387795909767069704
+      type: {class: RubyRoseStateReference, ns: rwby.core, asm: rwby.core}
+      data:
+        state: 100
+    - rid: 387795923794919430
+      type: {class: RubyRoseStateReference, ns: rwby.core, asm: rwby.core}
+      data:
+        state: 56
     - rid: 6951768528003006472
       type: {class: VarChangeStateList, ns: rwby, asm: rwby.csharp}
       data:
@@ -33,6 +41,12 @@ MonoBehaviour:
         checkInputSequence: 1
         checkCondition: 1
         states:
+        - movesetID: -1
+          state:
+            rid: 387795909767069704
+        - movesetID: -1
+          state:
+            rid: 387795923794919430
         - movesetID: -1
           state:
             rid: 6951768528003006473

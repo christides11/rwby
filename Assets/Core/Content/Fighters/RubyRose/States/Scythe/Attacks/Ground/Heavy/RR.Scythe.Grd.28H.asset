@@ -21,6 +21,7 @@ MonoBehaviour:
   autoLoopFrame: 1
   data:
   - rid: 2193520813467238401
+  - rid: 387795909767069696
   - rid: 2193520813467238403
   - rid: 2193520817874927616
   - rid: 8688056217396838433
@@ -29,6 +30,8 @@ MonoBehaviour:
   - rid: 7270848428946489353
   - rid: 7270848718906589184
   - rid: 7270848718906589187
+  - rid: 387795909767069697
+  - rid: 387795909767069698
   auraRequirement: 0
   initialGroundedState: 1
   stateType: 2
@@ -45,19 +48,19 @@ MonoBehaviour:
     - inputType: 1
       buttonID: 2
       stickDirection: {x: 0, y: 1}
-      directionDeviation: 0.85
+      directionDeviation: 0.8
     sequenceWindow: 8
     sequenceInputs:
     - inputType: 1
       buttonID: 0
       stickDirection: {x: 0, y: -1}
-      directionDeviation: 0.85
+      directionDeviation: 0.8
   inputSequenceAsHoldInputs: 0
   condition:
     rid: -2
   hitboxInfo:
   - ID: 0
-    groundedFoldoutGroup: 1
+    groundedFoldoutGroup: 0
     groundedCounterHitFoldoutGroup: 0
     hitStateGroundedGroups: -1
     hit:
@@ -76,14 +79,14 @@ MonoBehaviour:
       autolink: 0
       gravityAutolinkPercentage: 0
       movementAutolinkPercentage: 0
-      groundHitForce: {x: 0, y: 7, z: 0}
-      aerialHitForce: {x: 0, y: 7, z: 0}
+      groundHitForce: {x: 0, y: 0, z: 3}
+      aerialHitForce: {x: 0, y: 0, z: 3}
       pullPushMultiplier: 0
       pullPushMaxDistance: 10
       blockLift: 0
       attackerHitstop: 4
       hitstop: 4
-      hitstun: 40
+      hitstun: 30
       blockstun: 30
       untech: 30
       initialProration: 0
@@ -195,6 +198,71 @@ MonoBehaviour:
     RefIds:
     - rid: -2
       type: {class: , ns: , asm: }
+    - rid: 387795909767069696
+      type: {class: VarClearHitList, ns: rwby, asm: rwby.csharp}
+      data:
+        name: 
+        id: 18
+        parent: -1
+        children: 
+        frameRanges:
+        - {x: 10, y: 10}
+        - {x: 14, y: 14}
+        condition:
+          rid: -2
+        frameDivider: 0
+    - rid: 387795909767069697
+      type: {class: VarModifySoundSet, ns: rwby, asm: rwby.csharp}
+      data:
+        name: 
+        id: 19
+        parent: -1
+        children: 
+        frameRanges:
+        - {x: 6, y: 6}
+        - {x: 12, y: 12}
+        - {x: 18, y: 18}
+        - {x: 24, y: 24}
+        condition:
+          rid: -2
+        sounds:
+        - soundbank:
+            modGUID:
+              guid: 1d292c1f00000000
+            contentGUID:
+              guid: 2c2c000000000000
+          sound: swing15
+          parented: 0
+          offset: {x: 0, y: 0, z: 0}
+          volume: 0.2
+          minDist: 5
+          maxDist: 20
+    - rid: 387795909767069698
+      type: {class: VarModifySoundSet, ns: rwby, asm: rwby.csharp}
+      data:
+        name: 
+        id: 20
+        parent: -1
+        children: 
+        frameRanges:
+        - {x: 6, y: 6}
+        - {x: 12, y: 12}
+        - {x: 18, y: 18}
+        - {x: 24, y: 24}
+        condition:
+          rid: -2
+        sounds:
+        - soundbank:
+            modGUID:
+              guid: 1d292c1f00000000
+            contentGUID:
+              guid: 1d27280000000000
+          sound: swing8
+          parented: 0
+          offset: {x: 0, y: 0, z: 0}
+          volume: 0.3
+          minDist: 5
+          maxDist: 20
     - rid: 2193520813467238401
       type: {class: VarChangeState, ns: rwby, asm: rwby.csharp}
       data:
@@ -226,6 +294,8 @@ MonoBehaviour:
         children: 
         frameRanges:
         - {x: 7, y: 9}
+        - {x: 11, y: 13}
+        - {x: 15, y: 17}
         condition:
           rid: -2
         boxType: 1
@@ -287,7 +357,7 @@ MonoBehaviour:
         parent: -1
         children: 
         frameRanges:
-        - {x: 1, y: 9}
+        - {x: 1, y: 6}
         condition:
           rid: -2
     - rid: 7270848718906589187
@@ -350,7 +420,7 @@ MonoBehaviour:
         parent: 13
         children: 
         frameRanges:
-        - {x: 7, y: -1}
+        - {x: 20, y: -1}
         condition:
           rid: -2
         asset: {fileID: 11400000, guid: 38d47b53b1c6fa24580e163448503c28, type: 2}
