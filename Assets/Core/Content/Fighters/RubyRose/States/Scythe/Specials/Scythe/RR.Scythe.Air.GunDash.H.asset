@@ -38,6 +38,7 @@ MonoBehaviour:
   - rid: 387795875669737499
   - rid: 387795875669737515
   - rid: 387795875669737517
+  - rid: 387795942532186115
   auraRequirement: 0
   initialGroundedState: 2
   stateType: 2
@@ -398,6 +399,28 @@ MonoBehaviour:
       type: {class: ConditionExternal, ns: rwby, asm: rwby.csharp}
       data:
         externalCondition: {fileID: 11400000, guid: 2189fc021d598724393aee0290388637, type: 2}
+    - rid: 387795942532186115
+      type: {class: VarChangeState, ns: rwby, asm: rwby.csharp}
+      data:
+        name: Try Gundash - J
+        id: 25
+        parent: -1
+        children: 
+        frameRanges:
+        - {x: 12, y: -1}
+        condition:
+          rid: -2
+        checkInputSequence: 1
+        checkCondition: 1
+        targetType: 0
+        stateMovesetID: -1
+        state:
+          rid: 387795942532186116
+        frame: 0
+    - rid: 387795942532186116
+      type: {class: RubyRoseStateReference, ns: rwby.core, asm: rwby.core}
+      data:
+        state: 99
     - rid: 1219246315631804416
       type: {class: VarCreateBox, ns: rwby, asm: rwby.csharp}
       data:

@@ -46,7 +46,7 @@ namespace rwby
 
         public override bool Unload()
         {
-            if(songHandle.Status == AsyncOperationStatus.Succeeded) Addressables.Release(songHandle);
+            if(songHandle.IsValid() && songHandle.Status == AsyncOperationStatus.Succeeded) Addressables.Release(songHandle);
             return true;
         }
     }

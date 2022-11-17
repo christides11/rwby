@@ -219,6 +219,12 @@ namespace rwby.ui
 
         private async UniTask SetSong(ModGUIDContentReference modGuidContentReference)
         {
+            bool loadResult = await ContentManager.singleton.LoadContentDefinition(modGuidContentReference);
+            if (!loadResult)
+            {
+                Debug.LogError("Could not load given song definition.");
+                return;
+            }
             var ob = (ISongDefinition)ContentManager.singleton.GetContentDefinition(modGuidContentReference);
 
             await ob.Load();

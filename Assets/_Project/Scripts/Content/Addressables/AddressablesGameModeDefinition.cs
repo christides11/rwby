@@ -47,7 +47,10 @@ namespace rwby
 
         public override bool Unload()
         {
-            if(gamemodeHandle.Status == AsyncOperationStatus.Succeeded) Addressables.Release(gamemodeHandle);
+            if (gamemodeHandle.IsValid() && gamemodeHandle.Status == AsyncOperationStatus.Succeeded)
+            {
+                Addressables.Release(gamemodeHandle);
+            }
             return true;
         }
     }

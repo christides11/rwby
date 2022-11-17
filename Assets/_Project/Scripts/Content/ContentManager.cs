@@ -42,6 +42,19 @@ namespace rwby
             return parser.ContentExist(contentReference.contentIdx);
         }
 
+        public async UniTask<(bool, IContentDefinition)> TryGetContentDefinition(ModGUIDContentReference contentReference, bool load = true, bool track = true)
+        {
+            (bool, IContentDefinition) returnVals = (false, null);
+            if (load)
+            {
+                var loadResult = await LoadContentDefinition(contentReference, track);
+                if (!loadResult) return returnVals;
+            }
+            returnVals.Item2  = GetContentDefinition(contentReference);
+            if (returnVals.Item2 != null) returnVals.Item1 = true;
+            return returnVals;
+        }
+        
         #region Loading
         public async UniTask LoadContentDefinitions(int contentType, bool track = true)
         {
@@ -163,8 +176,9 @@ namespace rwby
             }
         }
         
-        public bool UnloadContentDefinition(ModGUIDContentReference contentReference)
+        public bool UnloadContentDefinition(ModGUIDContentReference contentReference, bool ignoreIfTracked = false)
         {
+            
             if (!modLoader.TryGetLoadedMod(contentReference.modGUID, out LoadedModDefinition mod))
             {
                 Debug.Log($"Get loaded mod Failure. {contentReference.modGUID.ToString()}.");
@@ -173,7 +187,9 @@ namespace rwby
 
             if (!mod.definition.ContentParsers.TryGetValue(contentReference.contentType, out IContentParser parser)){
                 Debug.Log($"Get content parser failure. {contentReference.ToString()}");
+                return false;
             }
+            if (ignoreIfTracked && IsItemTracked(contentReference)) return true;
             parser.UnloadContentDefinition(contentReference.contentIdx);
             UntrackItem(contentReference);
             return true;
@@ -181,7 +197,7 @@ namespace rwby
         #endregion
         
         #region Temporary Loading
-        public List<ModGUIDContentReference> GetPaginatedContent(int contentType, int amtPerPage, int page)
+        public async UniTask<List<ModGUIDContentReference>> GetPaginatedContent(int contentType, int amtPerPage, int page, HashSet<string> requiredTags)
         {
             var contentReferences = new List<ModGUIDContentReference>();
             int startAmt = page * amtPerPage;
@@ -198,7 +214,13 @@ namespace rwby
                         currAmt++;
                         continue;
                     }
-                    contentReferences.Add(new ModGUIDContentReference(m, contentType, v.Value));
+
+                    var contentReference = new ModGUIDContentReference(m, contentType, v.Value);
+                    var cLoadResult = await LoadContentDefinition(contentReference, false);
+                    if (!cLoadResult) continue;
+                    var contentDefinition = GetContentDefinition(contentReference);
+                    if (!requiredTags.IsSupersetOf(contentDefinition.Tags)) continue;
+                    contentReferences.Add(contentReference);
                     if (contentReferences.Count == amtPerPage) return contentReferences;
                 }
             }
@@ -218,6 +240,13 @@ namespace rwby
         {
             if (currentlyLoadedContent.ContainsKey(contentReference.modGUID) == false) return;
             currentlyLoadedContent[contentReference.modGUID].Remove((contentReference.contentType, contentReference.contentIdx));
+        }
+
+        private bool IsItemTracked(ModGUIDContentReference contentReference)
+        {
+            if (!currentlyLoadedContent.ContainsKey(contentReference.modGUID)) return false;
+            return currentlyLoadedContent[contentReference.modGUID]
+                .Contains((contentReference.contentType, contentReference.contentIdx));
         }
 
         public ModGUIDContentReference ConvertModContentGUIDReference(ModContentGUIDReference contentReference)

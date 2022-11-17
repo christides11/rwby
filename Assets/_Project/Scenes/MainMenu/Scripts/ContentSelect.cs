@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
@@ -24,7 +25,8 @@ namespace rwby
             singleton = this;
         }
 
-        public async UniTask<ContentSelectInstance> OpenMenu(int player, int contentType, UnityEngine.Events.UnityAction<int, ModGUIDContentReference> selectAction)
+        public async UniTask<ContentSelectInstance> OpenMenu(int player, int contentType, UnityEngine.Events.UnityAction<int, ModGUIDContentReference> selectAction,
+            string[] tags = null)
         {
             await UniTask.WaitForEndOfFrame(this);
             if (ContentSelectInstances.ContainsKey(player)) return null;
@@ -32,6 +34,7 @@ namespace rwby
             ContentSelectInstance instance = GameObject.Instantiate(instancePrefab, transform, false);
             ContentSelectInstances.Add(player, instance);
             instance.contentSelect = this;
+            instance.tagsToFind = new List<string>(tags ?? Array.Empty<string>());
             bool r = await instance.Open(player, contentType, selectAction);
             if (!r)
             {

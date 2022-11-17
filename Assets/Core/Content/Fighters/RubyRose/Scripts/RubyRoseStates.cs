@@ -17,6 +17,7 @@ namespace rwby.core
         GRD_2H_held = 66,
         GRD_28H = 57,
         AIR_5L = 55,
+        AIR_2L = 102,
         AIR_28L = 101,
         AIR_5H = 56,
         AIR_8H = 68,
