@@ -31,6 +31,7 @@ MonoBehaviour:
   - rid: 7270848718906589187
   - rid: 387795733835153457
   - rid: 387795733835153458
+  - rid: 387795983688269849
   auraRequirement: 0
   initialGroundedState: 1
   stateType: 2
@@ -47,7 +48,7 @@ MonoBehaviour:
     - inputType: 1
       buttonID: 2
       stickDirection: {x: 0, y: -1}
-      directionDeviation: 0.85
+      directionDeviation: 0.8
     sequenceWindow: 8
     sequenceInputs: []
   inputSequenceAsHoldInputs: 0
@@ -74,7 +75,7 @@ MonoBehaviour:
       autolink: 0
       gravityAutolinkPercentage: 0
       movementAutolinkPercentage: 0
-      groundHitForce: {x: 0, y: 0, z: -15}
+      groundHitForce: {x: 0, y: 0, z: -20}
       aerialHitForce: {x: 0, y: 5, z: -10}
       pullPushMultiplier: 0
       pullPushMaxDistance: 10
@@ -234,6 +235,18 @@ MonoBehaviour:
         inverse: 0
         statReference: 0
         value: -14
+    - rid: 387795983688269849
+      type: {class: VarExternal, ns: rwby, asm: rwby.csharp}
+      data:
+        name: Try Jump
+        id: 20
+        parent: 13
+        children: 
+        frameRanges:
+        - {x: 7, y: -1}
+        condition:
+          rid: -2
+        asset: {fileID: 11400000, guid: f103f0d58e560f448a4431a38a96fb76, type: 2}
     - rid: 2193520813467238401
       type: {class: VarChangeState, ns: rwby, asm: rwby.csharp}
       data:
@@ -368,10 +381,10 @@ MonoBehaviour:
     - rid: 8688056833868562432
       type: {class: VarEmpty, ns: rwby, asm: rwby.csharp}
       data:
-        name: On Hit or Block
+        name: On Hit
         id: 13
         parent: -1
-        children: 0e000000
+        children: 0e00000014000000
         frameRanges: []
         condition:
           rid: 8688056833868562433
@@ -380,7 +393,7 @@ MonoBehaviour:
       data:
         inverse: 0
         hitCount: 1
-        hitOrBlock: -1
+        hitOrBlock: 1
     - rid: 8688056833868562434
       type: {class: VarExternal, ns: rwby, asm: rwby.csharp}
       data:

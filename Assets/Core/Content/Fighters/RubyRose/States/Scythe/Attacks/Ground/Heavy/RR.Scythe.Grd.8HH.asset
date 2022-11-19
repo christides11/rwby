@@ -25,9 +25,9 @@ MonoBehaviour:
   - rid: 8688056331001921546
   - rid: 8688056331001921547
   - rid: 8688056331001921551
-  - rid: 8688056331001921552
   - rid: 8688056377568657424
   - rid: 8688056377568657426
+  - rid: 387795983688269873
   auraRequirement: 0
   initialGroundedState: 2
   stateType: 2
@@ -44,7 +44,7 @@ MonoBehaviour:
     - inputType: 1
       buttonID: 3
       stickDirection: {x: 0, y: 1}
-      directionDeviation: 0.85
+      directionDeviation: 0.8
     sequenceWindow: 8
     sequenceInputs: []
   inputSequenceAsHoldInputs: 0
@@ -188,6 +188,18 @@ MonoBehaviour:
     RefIds:
     - rid: -2
       type: {class: , ns: , asm: }
+    - rid: 387795983688269873
+      type: {class: VarExternal, ns: rwby, asm: rwby.csharp}
+      data:
+        name: Try Air Dash
+        id: 8
+        parent: 6
+        children: 
+        frameRanges:
+        - {x: 5, y: -1}
+        condition:
+          rid: -2
+        asset: {fileID: 11400000, guid: 280b115f7de70e2429fc1b2a1d4051f2, type: 2}
     - rid: 2193520832531922947
       type: {class: VarChangeState, ns: rwby, asm: rwby.csharp}
       data:
@@ -276,25 +288,13 @@ MonoBehaviour:
         ecbCenter: 1
         ecbRadius: 0.3
         ecbHeight: 1
-    - rid: 8688056331001921552
-      type: {class: VarExternal, ns: rwby, asm: rwby.csharp}
-      data:
-        name: Try Air Dash
-        id: 5
-        parent: -1
-        children: 
-        frameRanges:
-        - {x: 9, y: -1}
-        condition:
-          rid: -2
-        asset: {fileID: 11400000, guid: 280b115f7de70e2429fc1b2a1d4051f2, type: 2}
     - rid: 8688056377568657424
       type: {class: VarEmpty, ns: rwby, asm: rwby.csharp}
       data:
         name: On Hit or Block
         id: 6
         parent: -1
-        children: 07000000
+        children: 0700000008000000
         frameRanges: []
         condition:
           rid: 8688056377568657425

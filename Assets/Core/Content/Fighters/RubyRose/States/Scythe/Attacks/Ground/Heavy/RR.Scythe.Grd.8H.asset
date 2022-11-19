@@ -30,11 +30,15 @@ MonoBehaviour:
   - rid: 8688056738971123713
   - rid: 8688056738971123715
   - rid: 8688056740327194626
+  - rid: 387795983688269869
   - rid: 8688056833868562432
   - rid: 8688056833868562434
   - rid: 7270848428946489353
   - rid: 7270848718906589184
   - rid: 7270848718906589187
+  - rid: 387795983688269866
+  - rid: 387795983688269868
+  - rid: 387795983688269871
   auraRequirement: 0
   initialGroundedState: 1
   stateType: 2
@@ -51,7 +55,7 @@ MonoBehaviour:
     - inputType: 1
       buttonID: 2
       stickDirection: {x: 0, y: 1}
-      directionDeviation: 0.85
+      directionDeviation: 0.8
     sequenceWindow: 8
     sequenceInputs: []
   inputSequenceAsHoldInputs: 0
@@ -197,6 +201,78 @@ MonoBehaviour:
     RefIds:
     - rid: -2
       type: {class: , ns: , asm: }
+    - rid: 387795983688269866
+      type: {class: VarEmpty, ns: rwby, asm: rwby.csharp}
+      data:
+        name: On Hit
+        id: 18
+        parent: -1
+        children: 13000000
+        frameRanges: []
+        condition:
+          rid: 387795983688269867
+    - rid: 387795983688269867
+      type: {class: ConditionHitOrBlockCount, ns: rwby, asm: rwby.csharp}
+      data:
+        inverse: 0
+        hitCount: 1
+        hitOrBlock: 1
+    - rid: 387795983688269868
+      type: {class: VarExternal, ns: rwby, asm: rwby.csharp}
+      data:
+        name: Try Jump
+        id: 19
+        parent: 18
+        children: 
+        frameRanges:
+        - {x: 7, y: -1}
+        condition:
+          rid: -2
+        asset: {fileID: 11400000, guid: f103f0d58e560f448a4431a38a96fb76, type: 2}
+    - rid: 387795983688269869
+      type: {class: VarChangeState, ns: rwby, asm: rwby.csharp}
+      data:
+        name: Try 8HH
+        id: 20
+        parent: -1
+        children: 
+        frameRanges:
+        - {x: 10, y: -1}
+        condition:
+          rid: -2
+        checkInputSequence: 1
+        checkCondition: 0
+        targetType: 0
+        stateMovesetID: -1
+        state:
+          rid: 387795983688269870
+        frame: 0
+    - rid: 387795983688269870
+      type: {class: RubyRoseStateReference, ns: rwby.core, asm: rwby.core}
+      data:
+        state: 63
+    - rid: 387795983688269871
+      type: {class: VarChangeState, ns: rwby, asm: rwby.csharp}
+      data:
+        name: Try 8HH
+        id: 21
+        parent: 13
+        children: 
+        frameRanges:
+        - {x: 7, y: 9}
+        condition:
+          rid: -2
+        checkInputSequence: 1
+        checkCondition: 0
+        targetType: 0
+        stateMovesetID: -1
+        state:
+          rid: 387795983688269872
+        frame: 0
+    - rid: 387795983688269872
+      type: {class: RubyRoseStateReference, ns: rwby.core, asm: rwby.core}
+      data:
+        state: 63
     - rid: 2193520813467238401
       type: {class: VarChangeState, ns: rwby, asm: rwby.csharp}
       data:
@@ -443,7 +519,7 @@ MonoBehaviour:
         name: On Hit or Block
         id: 13
         parent: -1
-        children: 0e000000
+        children: 150000000e000000
         frameRanges: []
         condition:
           rid: 8688056833868562433

@@ -32,6 +32,9 @@ MonoBehaviour:
   - rid: 387795891450544154
   - rid: 387795891450544160
   - rid: 387795891450544162
+  - rid: 387795983688269840
+  - rid: 387795983688269843
+  - rid: 387795983688269844
   auraRequirement: 0
   initialGroundedState: 1
   stateType: 2
@@ -447,7 +450,7 @@ MonoBehaviour:
         parent: -1
         children: 
         frameRanges:
-        - {x: 9, y: 9}
+        - {x: 6, y: 6}
         condition:
           rid: -2
         sounds:
@@ -485,6 +488,46 @@ MonoBehaviour:
           volume: 0.5
           minDist: 5
           maxDist: 20
+    - rid: 387795983688269840
+      type: {class: VarEmpty, ns: rwby, asm: rwby.csharp}
+      data:
+        name: On Hit
+        id: 16
+        parent: -1
+        children: 1100000012000000
+        frameRanges: []
+        condition:
+          rid: 387795983688269841
+    - rid: 387795983688269841
+      type: {class: ConditionHitOrBlockCount, ns: rwby, asm: rwby.csharp}
+      data:
+        inverse: 0
+        hitCount: 1
+        hitOrBlock: 1
+    - rid: 387795983688269843
+      type: {class: VarExternal, ns: rwby, asm: rwby.csharp}
+      data:
+        name: Try Ground Atk
+        id: 17
+        parent: 16
+        children: 
+        frameRanges:
+        - {x: 1, y: 6}
+        condition:
+          rid: -2
+        asset: {fileID: 11400000, guid: 38d47b53b1c6fa24580e163448503c28, type: 2}
+    - rid: 387795983688269844
+      type: {class: VarExternal, ns: rwby, asm: rwby.csharp}
+      data:
+        name: Try Air Atk
+        id: 18
+        parent: 16
+        children: 
+        frameRanges:
+        - {x: 7, y: -1}
+        condition:
+          rid: -2
+        asset: {fileID: 11400000, guid: 852b081cfd9efbb449cca3171458f8cc, type: 2}
     - rid: 2193520813467238403
       type: {class: VarCreateBox, ns: rwby, asm: rwby.csharp}
       data:

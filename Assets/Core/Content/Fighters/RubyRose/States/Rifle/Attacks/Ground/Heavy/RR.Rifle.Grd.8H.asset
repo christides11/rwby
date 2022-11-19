@@ -10,9 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7789f25d17401bc4b915ca6fcecf2a29, type: 3}
-  m_Name: RR.Rifle.Grd.5H
+  m_Name: RR.Rifle.Grd.8H
   m_EditorClassIdentifier: 
-  stateName: 5H
+  stateName: 8H
   useBaseState: 0
   baseState: {fileID: 0}
   totalFrames: 26
@@ -32,6 +32,7 @@ MonoBehaviour:
   - rid: 7270848718906589187
   - rid: 387795964830941184
   - rid: 387795964830941186
+  - rid: 387795978025172994
   auraRequirement: 0
   initialGroundedState: 1
   stateType: 2
@@ -45,6 +46,10 @@ MonoBehaviour:
       buttonID: 3
       stickDirection: {x: 0, y: 0}
       directionDeviation: 0
+    - inputType: 1
+      buttonID: 3
+      stickDirection: {x: 0, y: 1}
+      directionDeviation: 0.8
     sequenceWindow: 8
     sequenceInputs: []
   inputSequenceAsHoldInputs: 0
@@ -53,7 +58,7 @@ MonoBehaviour:
   hitboxInfo:
   - ID: 0
     groundedFoldoutGroup: 1
-    groundedCounterHitFoldoutGroup: 0
+    groundedCounterHitFoldoutGroup: 1
     hitStateGroundedGroups: -1
     hit:
       groundHitState: 30
@@ -71,8 +76,8 @@ MonoBehaviour:
       autolink: 0
       gravityAutolinkPercentage: 0
       movementAutolinkPercentage: 0
-      groundHitForce: {x: 0, y: 0, z: 5}
-      aerialHitForce: {x: 0, y: 3, z: 2}
+      groundHitForce: {x: 0, y: 8, z: 1}
+      aerialHitForce: {x: 0, y: 8, z: 1}
       pullPushMultiplier: 0
       pullPushMaxDistance: 10
       blockLift: 0
@@ -134,8 +139,8 @@ MonoBehaviour:
       autolink: 0
       gravityAutolinkPercentage: 0
       movementAutolinkPercentage: 0
-      groundHitForce: {x: 0, y: 0, z: 5}
-      aerialHitForce: {x: 0, y: 3, z: 2}
+      groundHitForce: {x: 0, y: 8, z: 1}
+      aerialHitForce: {x: 0, y: 8, z: 1}
       pullPushMultiplier: 0
       pullPushMaxDistance: 0
       blockLift: 0
@@ -230,7 +235,38 @@ MonoBehaviour:
       data:
         inverse: 0
         statReference: 0
-        value: 6
+        value: 13
+    - rid: 387795978025172994
+      type: {class: VarChangeState, ns: rwby, asm: rwby.csharp}
+      data:
+        name: Try Jump
+        id: 20
+        parent: 13
+        children: 
+        frameRanges:
+        - {x: 7, y: -1}
+        condition:
+          rid: 387795978025172996
+        checkInputSequence: 0
+        checkCondition: 0
+        targetType: 0
+        stateMovesetID: -1
+        state:
+          rid: 387795978025172995
+        frame: 0
+    - rid: 387795978025172995
+      type: {class: FighterCmnStateReference, ns: rwby, asm: rwby.csharp}
+      data:
+        state: 6
+    - rid: 387795978025172996
+      type: {class: ConditionButton, ns: rwby, asm: rwby.csharp}
+      data:
+        inverse: 0
+        checkAbilityButton: 0
+        button: 0
+        buttonState: 1
+        offset: 0
+        buffer: 3
     - rid: 2193520813467238401
       type: {class: VarChangeState, ns: rwby, asm: rwby.csharp}
       data:
@@ -261,14 +297,14 @@ MonoBehaviour:
         parent: -1
         children: 
         frameRanges:
-        - {x: 7, y: 9}
+        - {x: 7, y: 10}
         condition:
           rid: -2
         boxType: 1
         attachedTo: 0
         shape: 0
-        offset: {x: 0, y: 1, z: 1}
-        boxExtents: {x: 1, y: 1, z: 1}
+        offset: {x: 0, y: 1, z: 0.5}
+        boxExtents: {x: 0.5, y: 1, z: 0.5}
         radius: 0
         definitionIndex: 0
     - rid: 2193520817874927616
@@ -279,7 +315,7 @@ MonoBehaviour:
         parent: -1
         children: 
         frameRanges:
-        - {x: 7, y: -1}
+        - {x: 8, y: -1}
         condition:
           rid: -2
         traction:
@@ -291,7 +327,7 @@ MonoBehaviour:
       data:
         inverse: 0
         statReference: 0
-        value: 30
+        value: 90
         variable: 0
     - rid: 7270848428946489353
       type: {class: VarRotateTowards, ns: rwby, asm: rwby.csharp}
@@ -391,7 +427,7 @@ MonoBehaviour:
         name: On Hit or Block
         id: 13
         parent: -1
-        children: 0e000000
+        children: 0e00000014000000
         frameRanges: []
         condition:
           rid: 8688056833868562433

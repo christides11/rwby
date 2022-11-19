@@ -10,9 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7789f25d17401bc4b915ca6fcecf2a29, type: 3}
-  m_Name: RR.Rifle.Grd.5H
+  m_Name: RR.Rifle.Grd.2H
   m_EditorClassIdentifier: 
-  stateName: 5H
+  stateName: 2H
   useBaseState: 0
   baseState: {fileID: 0}
   totalFrames: 26
@@ -45,6 +45,10 @@ MonoBehaviour:
       buttonID: 3
       stickDirection: {x: 0, y: 0}
       directionDeviation: 0
+    - inputType: 1
+      buttonID: 3
+      stickDirection: {x: 0, y: -1}
+      directionDeviation: 0.8
     sequenceWindow: 8
     sequenceInputs: []
   inputSequenceAsHoldInputs: 0
@@ -52,27 +56,27 @@ MonoBehaviour:
     rid: -2
   hitboxInfo:
   - ID: 0
-    groundedFoldoutGroup: 1
+    groundedFoldoutGroup: 0
     groundedCounterHitFoldoutGroup: 0
     hitStateGroundedGroups: -1
     hit:
-      groundHitState: 30
-      airHitState: 32
+      groundHitState: 34
+      airHitState: 34
       groundBounce: 0
       wallBounce: 0
       groundBounceForce: 0
       wallBounceForce: 0
       noKill: 0
       unblockable: 0
-      hardKnockdown: 0
+      hardKnockdown: 1
       hitForceType: 0
       hitForceRelation: 0
       hitForceRelationOffset: {x: 0, y: 0, z: 0}
       autolink: 0
       gravityAutolinkPercentage: 0
       movementAutolinkPercentage: 0
-      groundHitForce: {x: 0, y: 0, z: 5}
-      aerialHitForce: {x: 0, y: 3, z: 2}
+      groundHitForce: {x: 0, y: 5, z: 0}
+      aerialHitForce: {x: 0, y: 5, z: 0}
       pullPushMultiplier: 0
       pullPushMaxDistance: 10
       blockLift: 0
@@ -119,23 +123,23 @@ MonoBehaviour:
       ignoreHitstunScaling: 0
       ignorePushbackScaling: 0
     counterhit:
-      groundHitState: 30
-      airHitState: 32
+      groundHitState: 34
+      airHitState: 34
       groundBounce: 0
       wallBounce: 0
       groundBounceForce: 0
       wallBounceForce: 0
       noKill: 0
       unblockable: 0
-      hardKnockdown: 0
+      hardKnockdown: 1
       hitForceType: 0
       hitForceRelation: 0
       hitForceRelationOffset: {x: 0, y: 0, z: 0}
       autolink: 0
       gravityAutolinkPercentage: 0
       movementAutolinkPercentage: 0
-      groundHitForce: {x: 0, y: 0, z: 5}
-      aerialHitForce: {x: 0, y: 3, z: 2}
+      groundHitForce: {x: 0, y: 5, z: 0}
+      aerialHitForce: {x: 0, y: 5, z: 0}
       pullPushMultiplier: 0
       pullPushMaxDistance: 0
       blockLift: 0

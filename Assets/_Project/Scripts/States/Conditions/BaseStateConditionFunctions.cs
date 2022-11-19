@@ -231,7 +231,7 @@ namespace rwby
                 for (int i = 0; i < f.FCombatManager.HitboxManager.hitboxGroupHitCounts.Length; i++)
                 {
                     hitCount += f.FCombatManager.HitboxManager.hitboxGroupHitCounts[i];
-                    if (hitCount >= vars.hitCount) return true;
+                    if (hitCount >= vars.hitCount) return !vars.inverse;
                 }
             }
 
@@ -240,11 +240,11 @@ namespace rwby
                 for (int i = 0; i < f.FCombatManager.HitboxManager.hitboxGroupBlockedCounts.Length; i++)
                 {
                     hitCount += f.FCombatManager.HitboxManager.hitboxGroupBlockedCounts[i];
-                    if (hitCount >= vars.hitCount) return true;
+                    if (hitCount >= vars.hitCount) return !vars.inverse;
                 }
             }
 
-            return false;
+            return vars.inverse ? true : false;
         }
         
         public static bool FloorAngle(IFighterBase fighter, IConditionVariables variables, HnSF.StateTimeline arg3, int arg4)

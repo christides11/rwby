@@ -34,6 +34,8 @@ MonoBehaviour:
   - rid: 387795756708003845
   - rid: 387795756708003849
   - rid: 387795756708003850
+  - rid: 387795983688269832
+  - rid: 387795983688269834
   auraRequirement: 0
   initialGroundedState: 2
   stateType: 2
@@ -101,13 +103,13 @@ MonoBehaviour:
       blockEffect: shieldhit1
       hitSoundbank:
         modGUID:
-          guid: 
+          guid: 1d292c1f00000000
         contentGUID:
-          guid: 
-      hitSound: 
-      hitSoundVolume: 0
-      hitSoundMinDist: 0
-      hitSoundMaxDist: 0
+          guid: 1d27280000000000
+      hitSound: hit-punch-4
+      hitSoundVolume: 0.3
+      hitSoundMinDist: 5
+      hitSoundMaxDist: 20
       hitBlockSoundbank:
         modGUID:
           guid: 
@@ -141,8 +143,8 @@ MonoBehaviour:
       pullPushMultiplier: 0
       pullPushMaxDistance: 0
       blockLift: 0
-      attackerHitstop: 8
-      hitstop: 8
+      attackerHitstop: 4
+      hitstop: 4
       hitstun: 12
       blockstun: 12
       untech: 300
@@ -152,9 +154,9 @@ MonoBehaviour:
       chipDamage: 0
       hitEffectbank:
         modGUID:
-          guid: 
+          guid: 0000000000000000
         contentGUID:
-          guid: 
+          guid: 0000000000000000
       hitEffect: 
       blockEffectbank:
         modGUID:
@@ -164,13 +166,13 @@ MonoBehaviour:
       blockEffect: 
       hitSoundbank:
         modGUID:
-          guid: 
+          guid: 1d292c1f00000000
         contentGUID:
-          guid: 
-      hitSound: 
-      hitSoundVolume: 0
-      hitSoundMinDist: 0
-      hitSoundMaxDist: 0
+          guid: 1d27280000000000
+      hitSound: hit-punch-1
+      hitSoundVolume: 0.4
+      hitSoundMinDist: 5
+      hitSoundMaxDist: 20
       hitBlockSoundbank:
         modGUID:
           guid: 
@@ -259,7 +261,7 @@ MonoBehaviour:
       data:
         inverse: 0
         statReference: 0
-        value: 5
+        value: 1
     - rid: 387795756708003849
       type: {class: VarExternal, ns: rwby, asm: rwby.csharp}
       data:
@@ -284,6 +286,55 @@ MonoBehaviour:
         condition:
           rid: -2
         asset: {fileID: 11400000, guid: bc799e59dd7b59244a7f8dcbdcafabf0, type: 2}
+    - rid: 387795983688269832
+      type: {class: VarAddMovement, ns: rwby, asm: rwby.csharp}
+      data:
+        name: 
+        id: 22
+        parent: -1
+        children: 
+        frameRanges:
+        - {x: 4, y: 4}
+        condition:
+          rid: -2
+        inputSource: 1
+        normalizeInputSource: 0
+        useRotationIfInputZero: 0
+        force:
+          rid: 387795983688269833
+    - rid: 387795983688269833
+      type: {class: FighterStatReferenceFloatBase, ns: rwby, asm: rwby.csharp}
+      data:
+        inverse: 0
+        statReference: 0
+        value: 9
+    - rid: 387795983688269834
+      type: {class: VarClampGravity, ns: rwby, asm: rwby.csharp}
+      data:
+        name: 
+        id: 23
+        parent: -1
+        children: 
+        frameRanges:
+        - {x: 0, y: 0}
+        condition:
+          rid: -2
+        minValue:
+          rid: 387795983688269835
+        maxValue:
+          rid: 387795983688269836
+    - rid: 387795983688269835
+      type: {class: FighterStatReferenceFloatBase, ns: rwby, asm: rwby.csharp}
+      data:
+        inverse: 0
+        statReference: 0
+        value: -3
+    - rid: 387795983688269836
+      type: {class: FighterStatReferenceFloatBase, ns: rwby, asm: rwby.csharp}
+      data:
+        inverse: 0
+        statReference: 0
+        value: 5
     - rid: 2193520813467238401
       type: {class: VarChangeState, ns: rwby, asm: rwby.csharp}
       data:
@@ -332,7 +383,7 @@ MonoBehaviour:
         parent: -1
         children: 
         frameRanges:
-        - {x: 4, y: -1}
+        - {x: 6, y: -1}
         condition:
           rid: -2
         traction:

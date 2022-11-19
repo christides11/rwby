@@ -24,23 +24,19 @@ MonoBehaviour:
   - rid: 2193520813467238403
   - rid: 2193520817874927616
   - rid: 8688056217396838433
-  - rid: 8688056331001921542
-  - rid: 8688056331001921543
-  - rid: 8688056738971123712
-  - rid: 8688056738971123713
-  - rid: 8688056738971123715
   - rid: 8688056740327194626
   - rid: 8688056833868562432
   - rid: 8688056833868562434
   - rid: 7270848428946489353
   - rid: 7270848718906589184
   - rid: 7270848718906589187
-  - rid: 387795756708003851
+  - rid: 387795983688269874
+  - rid: 387795983688269876
   auraRequirement: 0
   initialGroundedState: 1
   stateType: 2
   maxUsesInString: 1
-  selfChainable: 0
+  selfChainable: 3
   allowBaseStateTransitions: 1
   inputSequence:
     executeWindow: 3
@@ -75,13 +71,13 @@ MonoBehaviour:
       autolink: 0
       gravityAutolinkPercentage: 0
       movementAutolinkPercentage: 0
-      groundHitForce: {x: 0, y: 0, z: 5}
+      groundHitForce: {x: 0, y: 0, z: 3}
       aerialHitForce: {x: 0, y: 3, z: 2}
       pullPushMultiplier: 0
       pullPushMaxDistance: 10
       blockLift: 0
-      attackerHitstop: 4
-      hitstop: 4
+      attackerHitstop: 2
+      hitstop: 2
       hitstun: 30
       blockstun: 30
       untech: 30
@@ -106,8 +102,8 @@ MonoBehaviour:
           guid: 1d292c1f00000000
         contentGUID:
           guid: 1d27280000000000
-      hitSound: hit-sword-1
-      hitSoundVolume: 0.3
+      hitSound: hit-punch-4
+      hitSoundVolume: 0.2
       hitSoundMinDist: 5
       hitSoundMaxDist: 20
       hitBlockSoundbank:
@@ -143,8 +139,8 @@ MonoBehaviour:
       pullPushMultiplier: 0
       pullPushMaxDistance: 0
       blockLift: 0
-      attackerHitstop: 8
-      hitstop: 8
+      attackerHitstop: 4
+      hitstop: 4
       hitstun: 12
       blockstun: 12
       untech: 300
@@ -194,29 +190,34 @@ MonoBehaviour:
     RefIds:
     - rid: -2
       type: {class: , ns: , asm: }
-    - rid: 387795756708003851
-      type: {class: VarModifySoundSet, ns: rwby, asm: rwby.csharp}
+    - rid: 387795983688269874
+      type: {class: VarEmpty, ns: rwby, asm: rwby.csharp}
       data:
-        name: 
+        name: On Hit
         id: 18
         parent: -1
+        children: 13000000
+        frameRanges: []
+        condition:
+          rid: 387795983688269875
+    - rid: 387795983688269875
+      type: {class: ConditionHitOrBlockCount, ns: rwby, asm: rwby.csharp}
+      data:
+        inverse: 0
+        hitCount: 1
+        hitOrBlock: 1
+    - rid: 387795983688269876
+      type: {class: VarExternal, ns: rwby, asm: rwby.csharp}
+      data:
+        name: Try Jump
+        id: 19
+        parent: 18
         children: 
         frameRanges:
-        - {x: 3, y: 3}
+        - {x: 5, y: -1}
         condition:
           rid: -2
-        sounds:
-        - soundbank:
-            modGUID:
-              guid: 1d292c1f00000000
-            contentGUID:
-              guid: 2c2c000000000000
-          sound: swing16
-          parented: 1
-          offset: {x: 0, y: 0, z: 0}
-          volume: 0.4
-          minDist: 5
-          maxDist: 20
+        asset: {fileID: 11400000, guid: f103f0d58e560f448a4431a38a96fb76, type: 2}
     - rid: 2193520813467238401
       type: {class: VarChangeState, ns: rwby, asm: rwby.csharp}
       data:
@@ -247,14 +248,14 @@ MonoBehaviour:
         parent: -1
         children: 
         frameRanges:
-        - {x: 7, y: 9}
+        - {x: 5, y: 7}
         condition:
           rid: -2
         boxType: 1
         attachedTo: 0
         shape: 0
-        offset: {x: 0, y: 1, z: 1}
-        boxExtents: {x: 1, y: 1, z: 1}
+        offset: {x: 0, y: 1, z: 0.5}
+        boxExtents: {x: 0.5, y: 0.5, z: 0.5}
         radius: 0
         definitionIndex: 0
     - rid: 2193520817874927616
@@ -348,92 +349,6 @@ MonoBehaviour:
         boxExtents: {x: 0.5, y: 1, z: 0.5}
         radius: 0
         definitionIndex: 0
-    - rid: 8688056331001921542
-      type: {class: VarModifyAnimationSet, ns: rwby, asm: rwby.csharp}
-      data:
-        name: 
-        id: 5
-        parent: -1
-        children: 
-        frameRanges:
-        - {x: 0, y: 0}
-        condition:
-          rid: -2
-        modifyType: 1
-        wantedAnimations:
-        - animationbank:
-            modGUID:
-              guid: 1d292c1f00000000
-            contentGUID:
-              guid: 2c2c000000000000
-          animation: scythe.grd.a
-        fadeTime: 0
-    - rid: 8688056331001921543
-      type: {class: VarModifyAnimationFrame, ns: rwby, asm: rwby.csharp}
-      data:
-        name: 
-        id: 6
-        parent: -1
-        children: 
-        frameRanges:
-        - {x: 1, y: 4}
-        - {x: 6, y: -1}
-        condition:
-          rid: -2
-        modifyType: 0
-        animations: 00000000
-        frame: 1
-    - rid: 8688056738971123712
-      type: {class: VarModifyEffectSet, ns: rwby, asm: rwby.csharp}
-      data:
-        name: 
-        id: 7
-        parent: -1
-        children: 
-        frameRanges:
-        - {x: 1, y: 1}
-        condition:
-          rid: -2
-        modifyType: 0
-        wantedEffects:
-        - effectbank:
-            modGUID:
-              guid: 1d292c1f00000000
-            contentGUID:
-              guid: 1d27280000000000
-          effect: slash
-          parented: 1
-          offset: {x: 0, y: 1, z: 0}
-          rotation: {x: 0, y: 0, z: 180}
-          scale: {x: 1, y: 0.2, z: 1}
-          autoIncrement: 0
-        doNotAddToSet: 0
-        OffsetStartAtFighter: 0
-    - rid: 8688056738971123713
-      type: {class: VarModifyEffectFrame, ns: rwby, asm: rwby.csharp}
-      data:
-        name: 
-        id: 8
-        parent: -1
-        children: 
-        frameRanges:
-        - {x: 6, y: -1}
-        condition:
-          rid: -2
-        modifyType: 0
-        effects: 00000000
-        frame: 1
-    - rid: 8688056738971123715
-      type: {class: VarClearCurrentEffects, ns: rwby, asm: rwby.csharp}
-      data:
-        name: 
-        id: 9
-        parent: -1
-        children: 
-        frameRanges:
-        - {x: -2, y: -2}
-        condition:
-          rid: -2
     - rid: 8688056740327194626
       type: {class: VarModifySoundSet, ns: rwby, asm: rwby.csharp}
       data:
@@ -442,7 +357,7 @@ MonoBehaviour:
         parent: -1
         children: 
         frameRanges:
-        - {x: 3, y: 3}
+        - {x: 4, y: 4}
         condition:
           rid: -2
         sounds:

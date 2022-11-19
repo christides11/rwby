@@ -29,6 +29,7 @@ MonoBehaviour:
   - rid: 8688056405345435660
   - rid: 7270848885102739471
   - rid: 7270848885102739472
+  - rid: 387795978025172997
   auraRequirement: 0
   initialGroundedState: 1
   stateType: 2
@@ -57,6 +58,29 @@ MonoBehaviour:
     RefIds:
     - rid: -2
       type: {class: , ns: , asm: }
+    - rid: 387795978025172997
+      type: {class: VarModifySoundSet, ns: rwby, asm: rwby.csharp}
+      data:
+        name: 
+        id: 11
+        parent: -1
+        children: 
+        frameRanges:
+        - {x: 1, y: 1}
+        condition:
+          rid: -2
+        sounds:
+        - soundbank:
+            modGUID:
+              guid: 1d292c1f00000000
+            contentGUID:
+              guid: 2c2c000000000000
+          sound: swing12
+          parented: 0
+          offset: {x: 0, y: 0, z: 0}
+          volume: 0.5
+          minDist: 5
+          maxDist: 20
     - rid: 7270848885102739471
       type: {class: VarSetGroundedState, ns: rwby, asm: rwby.csharp}
       data:

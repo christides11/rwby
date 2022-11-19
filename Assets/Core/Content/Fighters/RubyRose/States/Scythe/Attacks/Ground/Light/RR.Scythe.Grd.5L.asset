@@ -36,6 +36,8 @@ MonoBehaviour:
   - rid: 7270848718906589184
   - rid: 7270848718906589187
   - rid: 387795756708003851
+  - rid: 387795983688269854
+  - rid: 387795983688269856
   auraRequirement: 0
   initialGroundedState: 1
   stateType: 2
@@ -217,6 +219,34 @@ MonoBehaviour:
           volume: 0.4
           minDist: 5
           maxDist: 20
+    - rid: 387795983688269854
+      type: {class: VarEmpty, ns: rwby, asm: rwby.csharp}
+      data:
+        name: On Hit
+        id: 19
+        parent: -1
+        children: 14000000
+        frameRanges: []
+        condition:
+          rid: 387795983688269855
+    - rid: 387795983688269855
+      type: {class: ConditionHitOrBlockCount, ns: rwby, asm: rwby.csharp}
+      data:
+        inverse: 0
+        hitCount: 1
+        hitOrBlock: 1
+    - rid: 387795983688269856
+      type: {class: VarExternal, ns: rwby, asm: rwby.csharp}
+      data:
+        name: Try Jump
+        id: 20
+        parent: 19
+        children: 
+        frameRanges:
+        - {x: 7, y: -1}
+        condition:
+          rid: -2
+        asset: {fileID: 11400000, guid: f103f0d58e560f448a4431a38a96fb76, type: 2}
     - rid: 2193520813467238401
       type: {class: VarChangeState, ns: rwby, asm: rwby.csharp}
       data:
