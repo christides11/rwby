@@ -48,11 +48,6 @@ namespace rwby
         public virtual void Move()
         {
             transform.position += force * Runner.DeltaTime;
-            /*
-            var f = force * Runner.DeltaTime;
-            transform.position += transform.forward * f.z
-                                  + transform.right * f.x
-                                  + transform.up * f.y;*/
         }
 
         public bool IsHitHurtboxValid(CustomHitbox atackerHitbox, Hurtbox h)
@@ -100,7 +95,7 @@ namespace rwby
             return hurtInfo;
         }
 
-        public void DoHit(CustomHitbox hitbox, Hurtbox enemyHurtbox, HurtInfo hurtInfo)
+        public virtual void DoHit(CustomHitbox hitbox, Hurtbox enemyHurtbox, HurtInfo hurtInfo)
         {
             hitObjects.Add(new IDGroupCollisionInfo()
             {

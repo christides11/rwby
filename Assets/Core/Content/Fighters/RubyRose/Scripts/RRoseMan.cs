@@ -18,6 +18,8 @@ public class RRoseMan : FighterManager
 
     [Networked] public NetworkObject currentScythe { get; set; }
 
+    public float scytheCatchDistance = 3.0f;
+    
     public override async UniTask<bool> OnFighterLoaded()
     {
         for (int i = 0; i < animationbankReferences.Length; i++)
@@ -158,7 +160,7 @@ public class RRoseMan : FighterManager
             if (fighterWhiteboard.Ints[5] == 1)
             {
                 if (!currentScythe) return;
-                if (Vector3.Distance(transform.position, currentScythe.transform.position) < 5.0f)
+                if (Vector3.Distance(transform.position, currentScythe.transform.position) < scytheCatchDistance)
                 {
                     stateManager.SetMoveset(0);
                     stateManager.MarkForStateChange(physicsManager.IsGroundedNetworked ? (int)FighterCmnStates.IDLE : (int)FighterCmnStates.FALL);

@@ -67,6 +67,7 @@ namespace rwby
             functions.Add(typeof(VarSetGroundedState), BaseStateFunctions.SetGroundedState);
             functions.Add(typeof(VarModifyIntWhiteboard), BaseStateFunctions.ModifyIntWhiteboard);
             functions.Add(typeof(VarProjectileModifyForce), BaseStateFunctions.ProjectileModifyForce);
+            functions.Add(typeof(VarSetProjectileTarget), BaseStateFunctions.SetProjectileTarget);
         }
     }
 }

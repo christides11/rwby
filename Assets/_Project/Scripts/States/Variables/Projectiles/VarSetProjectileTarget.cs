@@ -3,8 +3,8 @@ using UnityEngine;
 
 namespace rwby
 {
-    [StateVariable("Projectile/Modify Force")]
-    public struct VarProjectileModifyForce : IStateVariables
+    [StateVariable("Projectile/Set Projectile Target")]
+    public struct VarSetProjectileTarget : IStateVariables
     {
         public string name;
         public string Name
@@ -41,7 +41,5 @@ namespace rwby
         public IConditionVariables Condition => condition;
 
         public int projectileOffset;
-        public Vector3 force;
-        public bool keepRawForce;
     }
 }

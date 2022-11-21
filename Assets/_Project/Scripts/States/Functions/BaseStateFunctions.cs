@@ -1049,9 +1049,24 @@ namespace rwby
             
             var p = fm.projectileManager.GetLatestProjectile(vars.projectileOffset);
 
+            if (vars.keepRawForce)
+            {
+                p.force = vars.force;
+                return;
+            }
             p.force = p.transform.forward * vars.force.z
                       + p.transform.right * vars.force.x
                       + p.transform.up * vars.force.y;
+        }
+        
+        public static void SetProjectileTarget(IFighterBase fighter, IStateVariables variables, HnSF.StateTimeline stateTimeline, int frame)
+        {
+            FighterManager fm = (FighterManager)fighter;
+            VarSetProjectileTarget vars = (VarSetProjectileTarget)variables;
+            
+            var p = fm.projectileManager.GetLatestProjectile(vars.projectileOffset);
+
+            ((ITargetingProjectile)p).Target = fm.CurrentTarget;
         }
     }
 }
