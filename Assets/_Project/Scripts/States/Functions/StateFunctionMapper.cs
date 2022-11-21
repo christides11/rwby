@@ -36,6 +36,7 @@ namespace rwby
             functions.Add(typeof(VarModifyEffectRotation), BaseStateFunctions.ModifyEffectRotation);
             functions.Add(typeof(VarTrySpecial), BaseStateFunctions.TrySpecial);
             functions.Add(typeof(VarCreateProjectile), BaseStateFunctions.CreateProjectile);
+            functions.Add(typeof(VarProjectilePointToTarget), BaseStateFunctions.ProjectilePointToTarget);
             functions.Add(typeof(VarClearHitList), BaseStateFunctions.ClearHitList);
             functions.Add(typeof(VarFindSoftTarget), BaseStateFunctions.FindSoftTarget);
             functions.Add(typeof(VarDebugLog), BaseStateFunctions.LogMessage);
@@ -65,6 +66,7 @@ namespace rwby
             functions.Add(typeof(VarMoveTowardsMagnitude), BaseStateFunctions.MoveTowardsMagnitude);
             functions.Add(typeof(VarSetGroundedState), BaseStateFunctions.SetGroundedState);
             functions.Add(typeof(VarModifyIntWhiteboard), BaseStateFunctions.ModifyIntWhiteboard);
+            functions.Add(typeof(VarProjectileModifyForce), BaseStateFunctions.ProjectileModifyForce);
         }
     }
 }

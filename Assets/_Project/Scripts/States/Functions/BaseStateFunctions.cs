@@ -1027,5 +1027,31 @@ namespace rwby
             
             fm.fighterWhiteboard.UpdateInt(vars.index, vars.modifyType, vars.val);
         }
+
+        public static void ProjectilePointToTarget(IFighterBase fighter, IStateVariables variables, HnSF.StateTimeline stateTimeline, int frame)
+        {
+            FighterManager fm = (FighterManager)fighter;
+            VarProjectilePointToTarget vars = (VarProjectilePointToTarget)variables;
+
+            if (!fm.CurrentTarget) return;
+
+            var p = fm.projectileManager.GetLatestProjectile(vars.projectileOffset);
+            
+            var dir = fm.CurrentTarget.GetComponent<ITargetable>().GetBounds().center - p.transform.position;
+            
+            p.SetRotation(Quaternion.LookRotation(dir.normalized));
+        }
+
+        public static void ProjectileModifyForce(IFighterBase fighter, IStateVariables variables, HnSF.StateTimeline stateTimeline, int frame)
+        {
+            FighterManager fm = (FighterManager)fighter;
+            VarProjectileModifyForce vars = (VarProjectileModifyForce)variables;
+            
+            var p = fm.projectileManager.GetLatestProjectile(vars.projectileOffset);
+
+            p.force = p.transform.forward * vars.force.z
+                      + p.transform.right * vars.force.x
+                      + p.transform.up * vars.force.y;
+        }
     }
 }

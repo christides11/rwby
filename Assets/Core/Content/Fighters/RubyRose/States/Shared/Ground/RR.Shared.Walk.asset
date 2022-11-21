@@ -31,6 +31,8 @@ MonoBehaviour:
   - rid: 7270848366746009600
   - rid: 7270848899719102477
   - rid: 7270848899719102479
+  - rid: 387796025889783855
+  - rid: 387796025889783857
   auraRequirement: 0
   initialGroundedState: 1
   stateType: 1
@@ -53,6 +55,32 @@ MonoBehaviour:
     RefIds:
     - rid: -2
       type: {class: , ns: , asm: }
+    - rid: 387796025889783855
+      type: {class: VarEmpty, ns: rwby, asm: rwby.csharp}
+      data:
+        name: Barehanded
+        id: 11
+        parent: -1
+        children: 0c000000
+        frameRanges: []
+        condition:
+          rid: 387796025889783856
+    - rid: 387796025889783856
+      type: {class: ConditionMoveset, ns: rwby, asm: rwby.csharp}
+      data:
+        moveset: 2
+    - rid: 387796025889783857
+      type: {class: VarExternal, ns: rwby, asm: rwby.csharp}
+      data:
+        name: Try Ground Atk
+        id: 12
+        parent: 11
+        children: 
+        frameRanges:
+        - {x: 1, y: -1}
+        condition:
+          rid: -2
+        asset: {fileID: 11400000, guid: dd623d7795614cc4ebc52c3e2bc7027f, type: 2}
     - rid: 2193520817874927619
       type: {class: VarEmpty, ns: rwby, asm: rwby.csharp}
       data:

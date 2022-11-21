@@ -1,0 +1,411 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7d2ab7f4c66cd7743a17e78e184b8c8e, type: 3}
+  m_Name: Moveset.Barehand
+  m_EditorClassIdentifier: 
+  fighterStats: {fileID: 11400000, guid: 9db018607e1c48c498ee3d8a7c4cefc3, type: 2}
+  specials:
+  - groundState:
+      rid: 387796025889783820
+    aerialState:
+      rid: 387796025889783821
+  - groundState:
+      rid: 387796025889783816
+    aerialState:
+      rid: 387796025889783815
+  - groundState:
+      rid: 387796025889783811
+    aerialState:
+      rid: 387796025889783812
+  - groundState:
+      rid: 387796025889783813
+    aerialState:
+      rid: 387796025889783814
+  clashCancelListGrd: {fileID: 11400000, guid: dd623d7795614cc4ebc52c3e2bc7027f, type: 2}
+  clashCancelListAir: {fileID: 11400000, guid: f2912e9d85718be4ea3ecf8f7e070b6b, type: 2}
+  groundActions:
+  - name: Idle
+    state:
+      rid: 387795932360736768
+    stateTimeline: {fileID: 11400000, guid: 42401e7a1d2a17d4eb2c9d4b600ab0bd, type: 2}
+  - name: walk
+    state:
+      rid: 387795932360736769
+    stateTimeline: {fileID: 11400000, guid: 7417c0a108bf57342842ea98133193eb, type: 2}
+  - name: run
+    state:
+      rid: 387795932360736770
+    stateTimeline: {fileID: 11400000, guid: 110994b9ad8df0f4a8d171638b78d334, type: 2}
+  - name: run (Init)
+    state:
+      rid: 387795932360736771
+    stateTimeline: {fileID: 11400000, guid: 634b0e79dfec7784bb3e1287bcfa0dc5, type: 2}
+  - name: run (Brake)
+    state:
+      rid: 387795932360736772
+    stateTimeline: {fileID: 11400000, guid: 67416eedc7f72b541b1334566e2cd0a2, type: 2}
+  - name: landing
+    state:
+      rid: 387795932360736773
+    stateTimeline: {fileID: 11400000, guid: 9eb8fb5761ed06540bf2e86cbc8c3a21, type: 2}
+  - name: block
+    state:
+      rid: 387795932360736774
+    stateTimeline: {fileID: 11400000, guid: c55bde52deab5c243a17278a40095af6, type: 2}
+  - name: shield
+    state:
+      rid: 387795932360736775
+    stateTimeline: {fileID: 11400000, guid: 5a8e6732426f4c540b1739094196a5d3, type: 2}
+  - name: run (Slide)
+    state:
+      rid: 387795932360736776
+    stateTimeline: {fileID: 11400000, guid: f1ec8186afd58b44cb46c88b0de3d245, type: 2}
+  groundAttacks:
+  - name: 5L
+    state:
+      rid: 387796025889783808
+    stateTimeline: {fileID: 11400000, guid: c80dc950c152d3b48b81f9b712ee3b87, type: 2}
+  - name: 5H
+    state:
+      rid: 387796025889783809
+    stateTimeline: {fileID: 11400000, guid: 27cd5442c5c1c1c478352d14b05cf57c, type: 2}
+  - name: 2H
+    state:
+      rid: 387796025889783810
+    stateTimeline: {fileID: 11400000, guid: 90465711ec9668d4d9e77deea37e035e, type: 2}
+  airActions:
+  - name: fall
+    state:
+      rid: 387795932360736777
+    stateTimeline: {fileID: 11400000, guid: df9e255e675cdb34ca0ed72d2b72fdff, type: 2}
+  - name: jump
+    state:
+      rid: 387795932360736778
+    stateTimeline: {fileID: 11400000, guid: c9c33ce6ced00924ea1e0743d90b74ee, type: 2}
+  - name: jump (End)
+    state:
+      rid: 387795932360736779
+    stateTimeline: {fileID: 11400000, guid: 127105de2b0f97d478b1a8ddccbf3992, type: 2}
+  - name: jump (Air)
+    state:
+      rid: 387795932360736780
+    stateTimeline: {fileID: 11400000, guid: aa4fe9ff01b8d9c4487ac16166092b26, type: 2}
+  - name: air dash
+    state:
+      rid: 387795932360736781
+    stateTimeline: {fileID: 11400000, guid: c84b448c3f19ddf4f9a40430ef817fb2, type: 2}
+  - name: jump squat
+    state:
+      rid: 387795932360736782
+    stateTimeline: {fileID: 11400000, guid: 4689e3afb3f281c4b9046e045e47b41c, type: 2}
+  - name: block
+    state:
+      rid: 387795932360736783
+    stateTimeline: {fileID: 11400000, guid: b22186eff31200548b81693d393e9870, type: 2}
+  - name: pole spin
+    state:
+      rid: 387795932360736784
+    stateTimeline: {fileID: 11400000, guid: b833a7f1bc4d71044894bc553dec3e40, type: 2}
+  - name: pole launch
+    state:
+      rid: 387795932360736785
+    stateTimeline: {fileID: 11400000, guid: fb1ab63132976ae4e8e47b0e5df08c26, type: 2}
+  - name: wall cling
+    state:
+      rid: 387795932360736786
+    stateTimeline: {fileID: 11400000, guid: 0f92ef91c43a9a84cbe086674096c63e, type: 2}
+  - name: wall run (Horizontal)
+    state:
+      rid: 387795932360736787
+    stateTimeline: {fileID: 11400000, guid: 0df664661b614944fb7d1e9cc62a4cf2, type: 2}
+  - name: wall run (Vertical)
+    state:
+      rid: 387795932360736788
+    stateTimeline: {fileID: 11400000, guid: 062b0c0d99e90ac40b2eeaf4d54c734e, type: 2}
+  - name: wall jump
+    state:
+      rid: 387795932360736789
+    stateTimeline: {fileID: 11400000, guid: e9a25c2b3e8f71941ad183b021ddbebf, type: 2}
+  - name: jump squat (M)
+    state:
+      rid: 387795932360736790
+    stateTimeline: {fileID: 11400000, guid: 64fe64489eef7f346b46521a6dd19b37, type: 2}
+  airAttacks:
+  - name: 5L
+    state:
+      rid: 387796025889783817
+    stateTimeline: {fileID: 11400000, guid: 97b8c1c4ad1571648b8ab6bbfe034b9b, type: 2}
+  - name: 5H
+    state:
+      rid: 387796025889783818
+    stateTimeline: {fileID: 11400000, guid: dbfff11229a2d6e4494327be6ca43fa7, type: 2}
+  - name: Change Moveset
+    state:
+      rid: 387796025889783867
+    stateTimeline: {fileID: 11400000, guid: 1ecca19f5b8a0fe4f9380a64a5e199a6, type: 2}
+  recovery:
+  - name: neutral tech (Ground)
+    state:
+      rid: 387795932360736791
+    stateTimeline: {fileID: 11400000, guid: dcf58a8731f62a0419c20f78d24f3961, type: 2}
+  - name: quick tech (Ground)
+    state:
+      rid: 387795932360736792
+    stateTimeline: {fileID: 11400000, guid: ab619fcd67868ca43af512a644b924dd, type: 2}
+  - name: tech roll (Ground)
+    state:
+      rid: 387795932360736793
+    stateTimeline: {fileID: 11400000, guid: e0b0a5b7a75001746a5693cdd80be786, type: 2}
+  - name: ground lay face up
+    state:
+      rid: 387795932360736794
+    stateTimeline: {fileID: 11400000, guid: 263c1bd4e292ea94ebe6f6fbb4f71364, type: 2}
+  - name: ground lay face down
+    state:
+      rid: 387795932360736795
+    stateTimeline: {fileID: 11400000, guid: 263c1bd4e292ea94ebe6f6fbb4f71364, type: 2}
+  hitstun:
+  - name: hit upper (Ground)
+    state:
+      rid: 387795932360736796
+    stateTimeline: {fileID: 11400000, guid: 069558629b4deae4895f5437ca4e21d4, type: 2}
+  - name: hit lower (Ground)
+    state:
+      rid: 387795932360736797
+    stateTimeline: {fileID: 11400000, guid: ab2502730fcd0cb4599e7e4ca2e5b9c9, type: 2}
+  - name: crumple
+    state:
+      rid: 387795932360736798
+    stateTimeline: {fileID: 11400000, guid: 563e45b88eb11b04489e1d0ceada5fad, type: 2}
+  - name: ground bounce
+    state:
+      rid: 387795932360736799
+    stateTimeline: {fileID: 11400000, guid: d561887228325ff4cb033896d5356f9e, type: 2}
+  - name: wall bounce
+    state:
+      rid: 387795932360736800
+    stateTimeline: {fileID: 11400000, guid: 6bceb3d90cc33f245ac13395ff0a1888, type: 2}
+  - name: 'hit (Aerial) '
+    state:
+      rid: 387795932360736801
+    stateTimeline: {fileID: 11400000, guid: af4f54f525d7024449865368ef6bf43e, type: 2}
+  - name: hit face up (Aerial)
+    state:
+      rid: 387795932360736802
+    stateTimeline: {fileID: 11400000, guid: aee25092ef518a6419f83dfa707f4bf7, type: 2}
+  - name: hit face down (Aerial)
+    state:
+      rid: 387795932360736803
+    stateTimeline: {fileID: 11400000, guid: aee25092ef518a6419f83dfa707f4bf7, type: 2}
+  references:
+    version: 2
+    RefIds:
+    - rid: 387795932360736768
+      type: {class: FighterCmnStateReference, ns: rwby, asm: rwby.csharp}
+      data:
+        state: 1
+    - rid: 387795932360736769
+      type: {class: FighterCmnStateReference, ns: rwby, asm: rwby.csharp}
+      data:
+        state: 2
+    - rid: 387795932360736770
+      type: {class: FighterCmnStateReference, ns: rwby, asm: rwby.csharp}
+      data:
+        state: 3
+    - rid: 387795932360736771
+      type: {class: FighterCmnStateReference, ns: rwby, asm: rwby.csharp}
+      data:
+        state: 27
+    - rid: 387795932360736772
+      type: {class: FighterCmnStateReference, ns: rwby, asm: rwby.csharp}
+      data:
+        state: 7
+    - rid: 387795932360736773
+      type: {class: FighterCmnStateReference, ns: rwby, asm: rwby.csharp}
+      data:
+        state: 28
+    - rid: 387795932360736774
+      type: {class: FighterCmnStateReference, ns: rwby, asm: rwby.csharp}
+      data:
+        state: 15
+    - rid: 387795932360736775
+      type: {class: FighterCmnStateReference, ns: rwby, asm: rwby.csharp}
+      data:
+        state: 45
+    - rid: 387795932360736776
+      type: {class: FighterCmnStateReference, ns: rwby, asm: rwby.csharp}
+      data:
+        state: 39
+    - rid: 387795932360736777
+      type: {class: FighterCmnStateReference, ns: rwby, asm: rwby.csharp}
+      data:
+        state: 5
+    - rid: 387795932360736778
+      type: {class: FighterCmnStateReference, ns: rwby, asm: rwby.csharp}
+      data:
+        state: 4
+    - rid: 387795932360736779
+      type: {class: FighterCmnStateReference, ns: rwby, asm: rwby.csharp}
+      data:
+        state: 26
+    - rid: 387795932360736780
+      type: {class: FighterCmnStateReference, ns: rwby, asm: rwby.csharp}
+      data:
+        state: 8
+    - rid: 387795932360736781
+      type: {class: FighterCmnStateReference, ns: rwby, asm: rwby.csharp}
+      data:
+        state: 9
+    - rid: 387795932360736782
+      type: {class: FighterCmnStateReference, ns: rwby, asm: rwby.csharp}
+      data:
+        state: 6
+    - rid: 387795932360736783
+      type: {class: FighterCmnStateReference, ns: rwby, asm: rwby.csharp}
+      data:
+        state: 17
+    - rid: 387795932360736784
+      type: {class: FighterCmnStateReference, ns: rwby, asm: rwby.csharp}
+      data:
+        state: 40
+    - rid: 387795932360736785
+      type: {class: FighterCmnStateReference, ns: rwby, asm: rwby.csharp}
+      data:
+        state: 41
+    - rid: 387795932360736786
+      type: {class: FighterCmnStateReference, ns: rwby, asm: rwby.csharp}
+      data:
+        state: 38
+    - rid: 387795932360736787
+      type: {class: FighterCmnStateReference, ns: rwby, asm: rwby.csharp}
+      data:
+        state: 19
+    - rid: 387795932360736788
+      type: {class: FighterCmnStateReference, ns: rwby, asm: rwby.csharp}
+      data:
+        state: 18
+    - rid: 387795932360736789
+      type: {class: FighterCmnStateReference, ns: rwby, asm: rwby.csharp}
+      data:
+        state: 20
+    - rid: 387795932360736790
+      type: {class: FighterCmnStateReference, ns: rwby, asm: rwby.csharp}
+      data:
+        state: 48
+    - rid: 387795932360736791
+      type: {class: FighterCmnStateReference, ns: rwby, asm: rwby.csharp}
+      data:
+        state: 24
+    - rid: 387795932360736792
+      type: {class: FighterCmnStateReference, ns: rwby, asm: rwby.csharp}
+      data:
+        state: 25
+    - rid: 387795932360736793
+      type: {class: FighterCmnStateReference, ns: rwby, asm: rwby.csharp}
+      data:
+        state: 21
+    - rid: 387795932360736794
+      type: {class: FighterCmnStateReference, ns: rwby, asm: rwby.csharp}
+      data:
+        state: 22
+    - rid: 387795932360736795
+      type: {class: FighterCmnStateReference, ns: rwby, asm: rwby.csharp}
+      data:
+        state: 29
+    - rid: 387795932360736796
+      type: {class: FighterCmnStateReference, ns: rwby, asm: rwby.csharp}
+      data:
+        state: 30
+    - rid: 387795932360736797
+      type: {class: FighterCmnStateReference, ns: rwby, asm: rwby.csharp}
+      data:
+        state: 31
+    - rid: 387795932360736798
+      type: {class: FighterCmnStateReference, ns: rwby, asm: rwby.csharp}
+      data:
+        state: 11
+    - rid: 387795932360736799
+      type: {class: FighterCmnStateReference, ns: rwby, asm: rwby.csharp}
+      data:
+        state: 14
+    - rid: 387795932360736800
+      type: {class: FighterCmnStateReference, ns: rwby, asm: rwby.csharp}
+      data:
+        state: 47
+    - rid: 387795932360736801
+      type: {class: FighterCmnStateReference, ns: rwby, asm: rwby.csharp}
+      data:
+        state: 32
+    - rid: 387795932360736802
+      type: {class: FighterCmnStateReference, ns: rwby, asm: rwby.csharp}
+      data:
+        state: 34
+    - rid: 387795932360736803
+      type: {class: FighterCmnStateReference, ns: rwby, asm: rwby.csharp}
+      data:
+        state: 35
+    - rid: 387796025889783808
+      type: {class: RubyRoseStateReference, ns: rwby.core, asm: rwby.core}
+      data:
+        state: 50
+    - rid: 387796025889783809
+      type: {class: RubyRoseStateReference, ns: rwby.core, asm: rwby.core}
+      data:
+        state: 51
+    - rid: 387796025889783810
+      type: {class: RubyRoseStateReference, ns: rwby.core, asm: rwby.core}
+      data:
+        state: 93
+    - rid: 387796025889783811
+      type: {class: FighterCmnStateReference, ns: rwby, asm: rwby.csharp}
+      data:
+        state: 0
+    - rid: 387796025889783812
+      type: {class: FighterCmnStateReference, ns: rwby, asm: rwby.csharp}
+      data:
+        state: 0
+    - rid: 387796025889783813
+      type: {class: FighterCmnStateReference, ns: rwby, asm: rwby.csharp}
+      data:
+        state: 0
+    - rid: 387796025889783814
+      type: {class: FighterCmnStateReference, ns: rwby, asm: rwby.csharp}
+      data:
+        state: 0
+    - rid: 387796025889783815
+      type: {class: FighterCmnStateReference, ns: rwby, asm: rwby.csharp}
+      data:
+        state: 0
+    - rid: 387796025889783816
+      type: {class: FighterCmnStateReference, ns: rwby, asm: rwby.csharp}
+      data:
+        state: 0
+    - rid: 387796025889783817
+      type: {class: RubyRoseStateReference, ns: rwby.core, asm: rwby.core}
+      data:
+        state: 55
+    - rid: 387796025889783818
+      type: {class: RubyRoseStateReference, ns: rwby.core, asm: rwby.core}
+      data:
+        state: 56
+    - rid: 387796025889783820
+      type: {class: FighterCmnStateReference, ns: rwby, asm: rwby.csharp}
+      data:
+        state: 0
+    - rid: 387796025889783821
+      type: {class: FighterCmnStateReference, ns: rwby, asm: rwby.csharp}
+      data:
+        state: 0
+    - rid: 387796025889783867
+      type: {class: RubyRoseStateReference, ns: rwby.core, asm: rwby.core}
+      data:
+        state: 87

@@ -25,6 +25,7 @@ MonoBehaviour:
   - rid: 2193520817874927618
   - rid: 2193520836063002646
   - rid: 8688056606344609829
+  - rid: 387796025889783850
   - rid: 2193520862594334720
   - rid: 8688056201677897732
   - rid: 8688056216264638478
@@ -34,6 +35,9 @@ MonoBehaviour:
   - rid: 8688056606344609831
   - rid: 8688056606344609832
   - rid: 8688056606344609833
+  - rid: 387796025889783852
+  - rid: 387796025889783853
+  - rid: 387796025889783854
   auraRequirement: 0
   initialGroundedState: 1
   stateType: 1
@@ -63,6 +67,68 @@ MonoBehaviour:
     RefIds:
     - rid: -2
       type: {class: , ns: , asm: }
+    - rid: 387796025889783850
+      type: {class: VarEmpty, ns: rwby, asm: rwby.csharp}
+      data:
+        name: Barehanded
+        id: 15
+        parent: -1
+        children: 100000001100000012000000
+        frameRanges: []
+        condition:
+          rid: 387796025889783851
+    - rid: 387796025889783851
+      type: {class: ConditionMoveset, ns: rwby, asm: rwby.csharp}
+      data:
+        moveset: 2
+    - rid: 387796025889783852
+      type: {class: VarExternal, ns: rwby, asm: rwby.csharp}
+      data:
+        name: Try Ground Atk
+        id: 16
+        parent: 15
+        children: 
+        frameRanges:
+        - {x: 1, y: -1}
+        condition:
+          rid: -2
+        asset: {fileID: 11400000, guid: dd623d7795614cc4ebc52c3e2bc7027f, type: 2}
+    - rid: 387796025889783853
+      type: {class: VarCreateBox, ns: rwby, asm: rwby.csharp}
+      data:
+        name: Hurtbox
+        id: 17
+        parent: 15
+        children: 
+        frameRanges:
+        - {x: 1, y: -1}
+        condition:
+          rid: -2
+        boxType: 0
+        attachedTo: 0
+        shape: 0
+        offset: {x: 0, y: 0.75, z: 0}
+        boxExtents: {x: 0.35, y: 0.75, z: 0.35}
+        radius: 0
+        definitionIndex: 0
+    - rid: 387796025889783854
+      type: {class: VarCreateBox, ns: rwby, asm: rwby.csharp}
+      data:
+        name: Throwablebox
+        id: 18
+        parent: 15
+        children: 
+        frameRanges:
+        - {x: 1, y: -1}
+        condition:
+          rid: -2
+        boxType: 3
+        attachedTo: 0
+        shape: 0
+        offset: {x: 0, y: 1, z: 0}
+        boxExtents: {x: 0.5, y: 1, z: 0.5}
+        radius: 0
+        definitionIndex: 0
     - rid: 2193520579074588673
       type: {class: VarSetECB, ns: rwby, asm: rwby.csharp}
       data:

@@ -48,6 +48,11 @@ namespace rwby
         public virtual void Move()
         {
             transform.position += force * Runner.DeltaTime;
+            /*
+            var f = force * Runner.DeltaTime;
+            transform.position += transform.forward * f.z
+                                  + transform.right * f.x
+                                  + transform.up * f.y;*/
         }
 
         public bool IsHitHurtboxValid(CustomHitbox atackerHitbox, Hurtbox h)
@@ -85,8 +90,12 @@ namespace rwby
             Vector3 hitPoint = hurtbox.transform.position;
             HitInfo hitInfo = this.HitboxInfo[hitbox.definitionIndex];
 
+            var f = transform.forward;
+            var r = transform.right;
+            f.y = 0;
+            r.y = 0;
             var hurtInfo = new HurtInfo(hitInfo, hurtbox.definitionIndex,
-                transform.position, transform.forward, transform.right,
+                transform.position, f.normalized, r.normalized,
                 force, hitPoint);
             return hurtInfo;
         }
@@ -167,6 +176,16 @@ namespace rwby
         {
             HitReaction hr = new HitReaction();
             return hr;
+        }
+
+        public void SetRotation(Vector3 rot)
+        {
+            transform.eulerAngles = rot;
+        }
+
+        public void SetRotation(Quaternion rot)
+        {
+            transform.rotation = rot;
         }
     }
 }

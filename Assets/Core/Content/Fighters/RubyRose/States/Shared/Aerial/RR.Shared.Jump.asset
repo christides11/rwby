@@ -27,6 +27,8 @@ MonoBehaviour:
   - rid: 2193520750553202689
   - rid: 8688056409313247237
   - rid: 7270848885102739461
+  - rid: 387796025889783858
+  - rid: 387796025889783860
   auraRequirement: 0
   initialGroundedState: 2
   stateType: 1
@@ -49,6 +51,32 @@ MonoBehaviour:
     RefIds:
     - rid: -2
       type: {class: , ns: , asm: }
+    - rid: 387796025889783858
+      type: {class: VarEmpty, ns: rwby, asm: rwby.csharp}
+      data:
+        name: Barehand
+        id: 8
+        parent: -1
+        children: 09000000
+        frameRanges: []
+        condition:
+          rid: 387796025889783859
+    - rid: 387796025889783859
+      type: {class: ConditionMoveset, ns: rwby, asm: rwby.csharp}
+      data:
+        moveset: 2
+    - rid: 387796025889783860
+      type: {class: VarExternal, ns: rwby, asm: rwby.csharp}
+      data:
+        name: Try Air Atks
+        id: 9
+        parent: 8
+        children: 
+        frameRanges:
+        - {x: 1, y: -1}
+        condition:
+          rid: -2
+        asset: {fileID: 11400000, guid: f2912e9d85718be4ea3ecf8f7e070b6b, type: 2}
     - rid: 2193520750553202689
       type: {class: VarChangeState, ns: rwby, asm: rwby.csharp}
       data:

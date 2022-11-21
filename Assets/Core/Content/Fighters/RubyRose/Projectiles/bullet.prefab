@@ -30,7 +30,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1847714786613047131}
-  m_RootOrder: 1
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &8786442159658011189
 MonoBehaviour:
@@ -94,6 +94,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 4411725941165856007}
   - {fileID: 2174921627532341274}
   - {fileID: 4230921407872981900}
   m_Father: {fileID: 0}
@@ -134,7 +135,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1847714786613047130}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7f3202993fe80cb4e8478de3e155641d, type: 3}
+  m_Script: {fileID: 11500000, guid: 889e33996674a074aa751795a5eef0e6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   _interpolationDataSource: 0
@@ -178,16 +179,16 @@ MonoBehaviour:
       autolink: 0
       gravityAutolinkPercentage: 0
       movementAutolinkPercentage: 0
-      groundHitForce: {x: 0, y: 10, z: 5}
-      aerialHitForce: {x: 0, y: 10, z: 5}
+      groundHitForce: {x: 0, y: 5, z: 3}
+      aerialHitForce: {x: 0, y: 5, z: 3}
       pullPushMultiplier: 0
       pullPushMaxDistance: 0
       blockLift: 0
-      attackerHitstop: 2
-      hitstop: 2
-      hitstun: 10
+      attackerHitstop: 1
+      hitstop: 1
+      hitstun: 15
       blockstun: 10
-      untech: 10
+      untech: 15
       initialProration: 0
       comboProration: 0
       damage: 100
@@ -210,6 +211,15 @@ MonoBehaviour:
         contentGUID:
           guid: 
       hitSound: 
+      hitSoundVolume: 0
+      hitSoundMinDist: 0
+      hitSoundMaxDist: 0
+      hitBlockSoundbank:
+        modGUID:
+          guid: 
+        contentGUID:
+          guid: 
+      hitBlockSound: 
       hitCameraShakeStrength: 0
       blockCameraShakeStrength: 0
       cameraShakeLength: 0
@@ -264,6 +274,15 @@ MonoBehaviour:
         contentGUID:
           guid: 
       hitSound: 
+      hitSoundVolume: 0
+      hitSoundMinDist: 0
+      hitSoundMaxDist: 0
+      hitBlockSoundbank:
+        modGUID:
+          guid: 
+        contentGUID:
+          guid: 
+      hitBlockSound: 
       hitCameraShakeStrength: 0
       blockCameraShakeStrength: 0
       cameraShakeLength: 0
@@ -313,11 +332,95 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _interpolationDataSource: 0
+  Config: 1
   BroadRadius: 1
   Offset: {x: 0, y: 0, z: 0}
   GizmosColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
   Hitboxes:
   - {fileID: 8786442159658011189}
+--- !u!1 &5717091262964503650
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4411725941165856007}
+  - component: {fileID: 8588737788802930435}
+  - component: {fileID: 8903647689646802750}
+  m_Layer: 0
+  m_Name: Sphere
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4411725941165856007
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5717091262964503650}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1847714786613047131}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!33 &8588737788802930435
+MeshFilter:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5717091262964503650}
+  m_Mesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!23 &8903647689646802750
+MeshRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5717091262964503650}
+  m_Enabled: 1
+  m_CastShadows: 1
+  m_ReceiveShadows: 1
+  m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 2
+  m_RayTraceProcedural: 0
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 2100000, guid: 810382bb0c031404ab4dd2702655d62a, type: 2}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 3
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_AdditionalVertexStreams: {fileID: 0}
 --- !u!1001 &1847714786672662513
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -327,7 +430,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: -8679921383154817045, guid: e235aa6f445b36440a0b7cca3ab5f2f8, type: 3}
       propertyPath: m_RootOrder
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: e235aa6f445b36440a0b7cca3ab5f2f8, type: 3}
       propertyPath: m_LocalScale.x
@@ -388,6 +491,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: e235aa6f445b36440a0b7cca3ab5f2f8, type: 3}
       propertyPath: m_Name
       value: bullet
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: e235aa6f445b36440a0b7cca3ab5f2f8, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e235aa6f445b36440a0b7cca3ab5f2f8, type: 3}

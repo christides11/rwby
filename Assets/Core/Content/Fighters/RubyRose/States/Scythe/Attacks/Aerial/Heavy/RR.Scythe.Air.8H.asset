@@ -36,6 +36,7 @@ MonoBehaviour:
   - rid: 387795932360736822
   - rid: 387795932360736823
   - rid: 387795932360736835
+  - rid: 387795991836491786
   auraRequirement: 0
   initialGroundedState: 2
   stateType: 2
@@ -60,7 +61,7 @@ MonoBehaviour:
     rid: -2
   hitboxInfo:
   - ID: 0
-    groundedFoldoutGroup: 0
+    groundedFoldoutGroup: 1
     groundedCounterHitFoldoutGroup: 0
     hitStateGroundedGroups: -1
     hit:
@@ -79,8 +80,8 @@ MonoBehaviour:
       autolink: 0
       gravityAutolinkPercentage: 0
       movementAutolinkPercentage: 0
-      groundHitForce: {x: 0, y: -20, z: 5}
-      aerialHitForce: {x: 0, y: -20, z: 5}
+      groundHitForce: {x: 0, y: -0.5, z: 2}
+      aerialHitForce: {x: 0, y: -0.5, z: 2}
       pullPushMultiplier: 0
       pullPushMaxDistance: 10
       blockLift: 0
@@ -395,7 +396,7 @@ MonoBehaviour:
       data:
         inverse: 0
         statReference: 0
-        value: 5
+        value: 10
     - rid: 387795932360736822
       type: {class: VarIncrementChargeLevel, ns: rwby, asm: rwby.csharp}
       data:
@@ -404,7 +405,7 @@ MonoBehaviour:
         parent: -1
         children: 
         frameRanges:
-        - {x: 6, y: 6}
+        - {x: 5, y: 5}
         condition:
           rid: -2
         increment: 1
@@ -418,8 +419,8 @@ MonoBehaviour:
         name: 
         id: 21
         frameRanges:
-        - {x: 1, y: 5}
-        - {x: 7, y: -1}
+        - {x: 1, y: 4}
+        - {x: 6, y: -1}
         condition:
           rid: -2
         modifyType: 0
@@ -480,6 +481,27 @@ MonoBehaviour:
       type: {class: ConditionIsGrounded, ns: rwby, asm: rwby.csharp}
       data:
         inverse: 0
+    - rid: 387795991836491786
+      type: {class: VarModifyFallSpeed, ns: rwby, asm: rwby.csharp}
+      data:
+        name: 
+        id: 24
+        parent: -1
+        children: 
+        frameRanges:
+        - {x: 6, y: 8}
+        condition:
+          rid: -2
+        targetType: 0
+        modifyType: 0
+        value:
+          rid: 387795991836491787
+    - rid: 387795991836491787
+      type: {class: FighterStatReferenceFloatBase, ns: rwby, asm: rwby.csharp}
+      data:
+        inverse: 0
+        statReference: 0
+        value: 1.5
     - rid: 2193520813467238401
       type: {class: VarChangeState, ns: rwby, asm: rwby.csharp}
       data:

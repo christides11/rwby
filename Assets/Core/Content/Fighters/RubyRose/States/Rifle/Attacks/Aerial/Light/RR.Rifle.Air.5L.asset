@@ -35,7 +35,7 @@ MonoBehaviour:
   - rid: 387795756708003849
   - rid: 387795756708003850
   - rid: 387795983688269832
-  - rid: 387795983688269834
+  - rid: 387795991836491776
   auraRequirement: 0
   initialGroundedState: 2
   stateType: 2
@@ -307,34 +307,33 @@ MonoBehaviour:
       data:
         inverse: 0
         statReference: 0
-        value: 9
-    - rid: 387795983688269834
-      type: {class: VarClampGravity, ns: rwby, asm: rwby.csharp}
+        value: 5
+    - rid: 387795991836491776
+      type: {class: VarChangeState, ns: rwby, asm: rwby.csharp}
       data:
-        name: 
+        name: Try Land
         id: 23
         parent: -1
         children: 
         frameRanges:
-        - {x: 0, y: 0}
+        - {x: 1, y: -1}
         condition:
-          rid: -2
-        minValue:
-          rid: 387795983688269835
-        maxValue:
-          rid: 387795983688269836
-    - rid: 387795983688269835
-      type: {class: FighterStatReferenceFloatBase, ns: rwby, asm: rwby.csharp}
+          rid: 387795991836491778
+        checkInputSequence: 0
+        checkCondition: 0
+        targetType: 0
+        stateMovesetID: -1
+        state:
+          rid: 387795991836491777
+        frame: 0
+    - rid: 387795991836491777
+      type: {class: FighterCmnStateReference, ns: rwby, asm: rwby.csharp}
+      data:
+        state: 28
+    - rid: 387795991836491778
+      type: {class: ConditionIsGrounded, ns: rwby, asm: rwby.csharp}
       data:
         inverse: 0
-        statReference: 0
-        value: -3
-    - rid: 387795983688269836
-      type: {class: FighterStatReferenceFloatBase, ns: rwby, asm: rwby.csharp}
-      data:
-        inverse: 0
-        statReference: 0
-        value: 5
     - rid: 2193520813467238401
       type: {class: VarChangeState, ns: rwby, asm: rwby.csharp}
       data:

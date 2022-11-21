@@ -33,10 +33,11 @@ MonoBehaviour:
   - rid: 387795756708003840
   - rid: 387795756708003845
   - rid: 387795909767069700
-  - rid: 387795909767069705
   - rid: 387795923794919424
   - rid: 387795923794919426
   - rid: 387795932360736837
+  - rid: 387795991836491779
+  - rid: 387795991836491782
   auraRequirement: 0
   initialGroundedState: 2
   stateType: 2
@@ -211,7 +212,7 @@ MonoBehaviour:
         parent: -1
         children: 
         frameRanges:
-        - {x: 26, y: -1}
+        - {x: 21, y: -1}
         condition:
           rid: -2
         useValue: 0
@@ -293,26 +294,7 @@ MonoBehaviour:
       data:
         inverse: 0
         statReference: 0
-        value: 25
-    - rid: 387795909767069705
-      type: {class: VarMultiplyGravity, ns: rwby, asm: rwby.csharp}
-      data:
-        name: 
-        id: 21
-        parent: -1
-        children: 
-        frameRanges:
-        - {x: 0, y: 0}
-        condition:
-          rid: -2
-        multiplier:
-          rid: 387795909767069706
-    - rid: 387795909767069706
-      type: {class: FighterStatReferenceFloatBase, ns: rwby, asm: rwby.csharp}
-      data:
-        inverse: 0
-        statReference: 0
-        value: 0
+        value: 20
     - rid: 387795923794919424
       type: {class: VarModifyFrame, ns: rwby, asm: rwby.csharp}
       data:
@@ -379,6 +361,54 @@ MonoBehaviour:
       type: {class: ConditionIsGrounded, ns: rwby, asm: rwby.csharp}
       data:
         inverse: 0
+    - rid: 387795991836491779
+      type: {class: VarClampGravity, ns: rwby, asm: rwby.csharp}
+      data:
+        name: 
+        id: 25
+        parent: -1
+        children: 
+        frameRanges:
+        - {x: 0, y: 0}
+        condition:
+          rid: -2
+        minValue:
+          rid: 387795991836491780
+        maxValue:
+          rid: 387795991836491781
+    - rid: 387795991836491780
+      type: {class: FighterStatReferenceFloatBase, ns: rwby, asm: rwby.csharp}
+      data:
+        inverse: 0
+        statReference: 0
+        value: -1
+    - rid: 387795991836491781
+      type: {class: FighterStatReferenceFloatBase, ns: rwby, asm: rwby.csharp}
+      data:
+        inverse: 0
+        statReference: 0
+        value: 1
+    - rid: 387795991836491782
+      type: {class: VarModifyFallSpeed, ns: rwby, asm: rwby.csharp}
+      data:
+        name: 
+        id: 26
+        parent: -1
+        children: 
+        frameRanges:
+        - {x: 1, y: 1}
+        condition:
+          rid: -2
+        targetType: 0
+        modifyType: 0
+        value:
+          rid: 387795991836491783
+    - rid: 387795991836491783
+      type: {class: FighterStatReferenceFloatBase, ns: rwby, asm: rwby.csharp}
+      data:
+        inverse: 0
+        statReference: 0
+        value: 3
     - rid: 2193520813467238401
       type: {class: VarChangeState, ns: rwby, asm: rwby.csharp}
       data:

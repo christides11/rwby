@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using rwby;
 using Cysharp.Threading.Tasks;
+using Fusion;
 using UnityEngine;
 
 public class RRoseMan : FighterManager
@@ -14,7 +15,9 @@ public class RRoseMan : FighterManager
     private ModGUIDContentReference[] effectbankRefs;
     private ModGUIDContentReference[] soundbankRefs;
     private ModGUIDContentReference[] projectilebankRefs;
-    
+
+    [Networked] public NetworkObject currentScythe { get; set; }
+
     public override async UniTask<bool> OnFighterLoaded()
     {
         for (int i = 0; i < animationbankReferences.Length; i++)
@@ -146,6 +149,26 @@ public class RRoseMan : FighterManager
         }
     }
 
+    public override void FixedUpdateNetwork()
+    {
+        base.FixedUpdateNetwork();
+        if (DisableUpdate) return;
+        if (stateManager.CurrentMoveset == 2)
+        {
+            if (fighterWhiteboard.Ints[5] == 1)
+            {
+                if (!currentScythe) return;
+                if (Vector3.Distance(transform.position, currentScythe.transform.position) < 5.0f)
+                {
+                    stateManager.SetMoveset(0);
+                    stateManager.MarkForStateChange(physicsManager.IsGroundedNetworked ? (int)FighterCmnStates.IDLE : (int)FighterCmnStates.FALL);
+                    Runner.Despawn(currentScythe);
+                    currentScythe = null;
+                }
+            }
+        }
+    }
+
     public override void Spawned()
     {
         base.Spawned();
@@ -171,6 +194,7 @@ public class RRoseMan : FighterManager
         fighterWhiteboard.UpdateInt(2, WhiteboardModifyTypes.SET,1); // Has Weapon
         fighterWhiteboard.UpdateInt(3, WhiteboardModifyTypes.SET,0); // Current Gundash
         fighterWhiteboard.UpdateInt(4, WhiteboardModifyTypes.SET,3); // Gundash Max
+        fighterWhiteboard.UpdateInt(5, WhiteboardModifyTypes.SET,0); // Detect Scythe
         FStateManager.ChangeState((int)FighterCmnStates.IDLE, 0);
     }
 

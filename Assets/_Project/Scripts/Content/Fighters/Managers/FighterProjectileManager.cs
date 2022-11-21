@@ -59,9 +59,9 @@ namespace rwby
             bp.transform.localScale = scale;
         }
 
-        public BaseProjectile GetLatestProjectile()
+        public BaseProjectile GetLatestProjectile(int offset = 0)
         {
-            return projectiles[latestProjectileIndex];
+            return projectiles[(latestProjectileIndex + offset) % 10];
         }
         
         public override void FixedUpdateNetwork()

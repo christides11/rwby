@@ -9,8 +9,8 @@ namespace rwby
 {
     public class FighterWhiteboard : NetworkBehaviour
     {
-        [Networked, Capacity(5)] public NetworkArray<int> Ints => default;
-        [Networked, Capacity(5)] public NetworkArray<float> Floats => default;
+        [Networked, Capacity(8)] public NetworkArray<int> Ints => default;
+        [Networked, Capacity(8)] public NetworkArray<float> Floats => default;
 
         public void UpdateInt(int index, WhiteboardModifyTypes modifyType, int value)
         {
