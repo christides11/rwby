@@ -32,6 +32,8 @@ namespace rwby
             parentHUD.playerFighter.FCombatManager.OnAuraIncreased += AuraIncreased;
             healthValue = parentHUD.playerFighter.HealthManager.Health;
             maxHealthValue = parentHUD.playerFighter.fighterDefinition.Health;
+            auraValue = parentHUD.playerFighter.FCombatManager.Aura;
+            maxAuraValue = parentHUD.playerFighter.fighterDefinition.Aura;
             lerpTime = -chipDelay;
         }
         

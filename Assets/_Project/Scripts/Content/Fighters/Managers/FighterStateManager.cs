@@ -22,6 +22,8 @@ namespace rwby
             get { return movesets.Length; }
         }
 
+        [Networked, Capacity(10)] public NetworkDictionary<MovesetStateIdentifier, int> airtimeMoveCounter => default;
+
         [Networked] public int CurrentMoveset { get; set; }
         [Networked(OnChanged = nameof(OnChangedState))] public int CurrentStateMoveset { get; set; }
         [Networked(OnChanged = nameof(OnChangedState))] public int CurrentState { get; set; }
@@ -47,6 +49,21 @@ namespace rwby
             changed.Behaviour.OnStateChanged?.Invoke(changed.Behaviour);
         }
 
+        public bool CheckStateAirUseCounter(int moveset, int state, int limit)
+        {
+            if (!airtimeMoveCounter.ContainsKey(new MovesetStateIdentifier(moveset, state))) return true;
+            if (airtimeMoveCounter[new MovesetStateIdentifier(moveset, state)] >= limit) return false;
+            return true;
+        }
+
+        public void IncrementStateAirUseCounter(int moveset, int state)
+        {
+            var key = new MovesetStateIdentifier(moveset, state);
+            var dict = airtimeMoveCounter;
+            dict.Add(key, 0);
+            dict[new MovesetStateIdentifier(moveset, state)] += 1;
+        }
+        
         public void Tick()
         {
             if (CurrentState == 0) return;
@@ -172,10 +189,32 @@ namespace rwby
         {
             return (rwby.Moveset)GetMoveset(CurrentStateMoveset);
         }
+
+        public rwby.Moveset GetCurrentMoveset()
+        {
+            return (rwby.Moveset)GetMoveset(CurrentMoveset);
+        }
         
         public HnSF.Combat.IMovesetDefinition GetMoveset(int index)
         {
             return movesets[index];
+        }
+
+        public bool CheckStateConditions(int movesetID, int stateID, int frame, bool checkInputSequence, bool checkCondition)
+        {
+            StateTimeline state = (StateTimeline)(GetState(movesetID, stateID));
+            
+            if (state.maxUsesPerAirtime != -1 &&
+                !CheckStateAirUseCounter(movesetID, stateID, state.maxUsesPerAirtime)) return false;
+            if (state.maxUsesInString != -1 && !manager.FCombatManager.MovePossible(
+                    new MovesetStateIdentifier(movesetID, stateID), state.maxUsesInString, state.selfChainable))
+                return false;
+            if (checkInputSequence &&
+                !manager.FCombatManager.CheckForInputSequence(state.inputSequence,
+                    holdInput: state.inputSequenceAsHoldInputs)) return false;
+            if (checkCondition && !manager.FStateManager.TryCondition(state, state.condition, frame)) return false;
+            
+            return true;
         }
 
         public void MarkForStateChange(int state, int moveset = -1, int frame = 0)
@@ -208,7 +247,7 @@ namespace rwby
             CurrentState = state;
             CurrentStateFrame = stateFrame;
             var currentStateTimeline = GetState();
-            CurrentGroundedState = currentStateTimeline.initialGroundedState;
+            if(currentStateTimeline.initialGroundedState != StateGroundedGroupType.NONE) CurrentGroundedState = currentStateTimeline.initialGroundedState;
             CurrentStateType = currentStateTimeline.stateType;
             if (CurrentStateFrame == 0)
             {
@@ -240,11 +279,17 @@ namespace rwby
                 if (CurrentGroundedState == StateGroundedGroupType.GROUND)
                 {
                     manager.ResetVariablesOnGround();
+                    airtimeMoveCounter.Clear();
                 }
                 else
                 {
-
+                    
                 }
+            }
+
+            if (CurrentGroundedState == StateGroundedGroupType.AERIAL)
+            {
+                if(currentState.maxUsesPerAirtime != -1) IncrementStateAirUseCounter(CurrentStateMoveset, CurrentState);
             }
 
             if (CurrentStateType is StateType.MOVEMENT or StateType.NONE)

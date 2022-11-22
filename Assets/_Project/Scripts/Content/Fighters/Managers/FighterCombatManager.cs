@@ -118,24 +118,28 @@ namespace rwby
         public virtual bool TrySpecial()
         {
             int bOff = 0;
-            //var currentState = stateManager.GetState();
+            int movesetID = stateManager.CurrentMoveset;
             if (assignedSpecials[0] != 0 && inputManager.GetAbility1(out bOff).firstPress)
             {
                 lastUsedSpecial = 0;
-                int s = stateManager.CurrentGroundedState == StateGroundedGroupType.GROUND
-                    ? stateManager.GetMoveset().specials[assignedSpecials[0] - 1].groundState.GetState()
-                    : stateManager.GetMoveset().specials[assignedSpecials[0] - 1].aerialState.GetState();
-                if (s == (int)FighterCmnStates.NULL) return false;
-                stateManager.MarkForStateChange(s);
+                int stateID = stateManager.CurrentGroundedState == StateGroundedGroupType.GROUND
+                    ? stateManager.GetCurrentMoveset().specials[assignedSpecials[0] - 1].groundState.GetState()
+                    : stateManager.GetCurrentMoveset().specials[assignedSpecials[0] - 1].aerialState.GetState();
+                if (stateID == (int)FighterCmnStates.NULL) return false;
+                if (!manager.FStateManager.CheckStateConditions(movesetID, stateID, stateManager.CurrentStateFrame,
+                        false, true)) return false;
+                stateManager.MarkForStateChange(stateID);
                 return true;
             }
             if (assignedSpecials[1] != 0 && inputManager.GetAbility2(out bOff).firstPress)
             {
                 lastUsedSpecial = 1;
                 int s = stateManager.CurrentGroundedState == StateGroundedGroupType.GROUND
-                    ? stateManager.GetMoveset().specials[assignedSpecials[1] - 1].groundState.GetState()
-                    : stateManager.GetMoveset().specials[assignedSpecials[1] - 1].aerialState.GetState();
+                    ? stateManager.GetCurrentMoveset().specials[assignedSpecials[1] - 1].groundState.GetState()
+                    : stateManager.GetCurrentMoveset().specials[assignedSpecials[1] - 1].aerialState.GetState();
                 if (s == (int)FighterCmnStates.NULL) return false;
+                if (!manager.FStateManager.CheckStateConditions(movesetID, s, stateManager.CurrentStateFrame,
+                        false, true)) return false;
                 stateManager.MarkForStateChange(s);
                 return true;
             }
@@ -143,9 +147,11 @@ namespace rwby
             {
                 lastUsedSpecial = 2;
                 int s = stateManager.CurrentGroundedState == StateGroundedGroupType.GROUND
-                    ? stateManager.GetMoveset().specials[assignedSpecials[2] - 1].groundState.GetState()
-                    : stateManager.GetMoveset().specials[assignedSpecials[2] - 1].aerialState.GetState();
+                    ? stateManager.GetCurrentMoveset().specials[assignedSpecials[2] - 1].groundState.GetState()
+                    : stateManager.GetCurrentMoveset().specials[assignedSpecials[2] - 1].aerialState.GetState();
                 if (s == (int)FighterCmnStates.NULL) return false;
+                if (!manager.FStateManager.CheckStateConditions(movesetID, s, stateManager.CurrentStateFrame,
+                        false, true)) return false;
                 stateManager.MarkForStateChange(s);
                 return true;
             }
@@ -153,9 +159,11 @@ namespace rwby
             {
                 lastUsedSpecial = 3;
                 int s = stateManager.CurrentGroundedState == StateGroundedGroupType.GROUND
-                    ? stateManager.GetMoveset().specials[assignedSpecials[3] - 1].groundState.GetState()
-                    : stateManager.GetMoveset().specials[assignedSpecials[3] - 1].aerialState.GetState();
+                    ? stateManager.GetCurrentMoveset().specials[assignedSpecials[3] - 1].groundState.GetState()
+                    : stateManager.GetCurrentMoveset().specials[assignedSpecials[3] - 1].aerialState.GetState();
                 if (s == (int)FighterCmnStates.NULL) return false;
+                if (!manager.FStateManager.CheckStateConditions(movesetID, s, stateManager.CurrentStateFrame,
+                        false, true)) return false;
                 stateManager.MarkForStateChange(s);
                 return true;
             }

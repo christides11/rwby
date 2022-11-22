@@ -15,14 +15,13 @@ MonoBehaviour:
   stateName: 5L (Air)
   useBaseState: 0
   baseState: {fileID: 0}
-  totalFrames: 26
+  totalFrames: 22
   autoIncrement: 1
   autoLoop: 0
   autoLoopFrame: 1
   data:
   - rid: 2193520813467238401
   - rid: 2193520813467238403
-  - rid: 2193520817874927616
   - rid: 8688056217396838433
   - rid: 8688056740327194626
   - rid: 8688056833868562432
@@ -39,6 +38,7 @@ MonoBehaviour:
   initialGroundedState: 2
   stateType: 2
   maxUsesInString: 1
+  maxUsesPerAirtime: -1
   selfChainable: 0
   allowBaseStateTransitions: 1
   inputSequence:
@@ -260,7 +260,7 @@ MonoBehaviour:
       data:
         inverse: 0
         statReference: 0
-        value: 5
+        value: 10
     - rid: 387795756708003849
       type: {class: VarExternal, ns: rwby, asm: rwby.csharp}
       data:
@@ -351,28 +351,6 @@ MonoBehaviour:
         boxExtents: {x: 1, y: 1, z: 1}
         radius: 0
         definitionIndex: 0
-    - rid: 2193520817874927616
-      type: {class: VarApplyTraction, ns: rwby, asm: rwby.csharp}
-      data:
-        name: 
-        id: 2
-        parent: -1
-        children: 
-        frameRanges:
-        - {x: 4, y: -1}
-        condition:
-          rid: -2
-        traction:
-          rid: 2193520817874927617
-        applyMovement: 1
-        applyGravity: 0
-    - rid: 2193520817874927617
-      type: {class: FighterBaseStatReferenceFloat, ns: rwby, asm: rwby.csharp}
-      data:
-        inverse: 0
-        statReference: 0
-        value: 30
-        variable: 0
     - rid: 7270848428946489353
       type: {class: VarRotateTowards, ns: rwby, asm: rwby.csharp}
       data:

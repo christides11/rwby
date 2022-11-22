@@ -37,10 +37,15 @@ namespace rwby
             int stateID = vars.state.GetState();
             StateTimeline state = (StateTimeline)(fm.FStateManager.GetState(movesetID, stateID));
 
-            //if (!fm.FCombatManager.MovePossible(new MovesetStateIdentifier(movesetID, stateID), state.maxUsesInString)) return;
+            if (!fm.FStateManager.CheckStateConditions(movesetID, stateID, arg4, vars.checkInputSequence,
+                    vars.checkCondition)) return;
+            /*
+            if (state.maxUsesPerAirtime != -1 &&
+                !fm.FStateManager.CheckStateAirUseCounter(movesetID, stateID, state.maxUsesPerAirtime)) return;
             if (fm.FCombatManager.Aura < state.auraRequirement) return;
             if (vars.checkInputSequence && !fm.FCombatManager.CheckForInputSequence(state.inputSequence, holdInput: state.inputSequenceAsHoldInputs)) return;
             if (vars.checkCondition && !fm.FStateManager.TryCondition(state, state.condition, arg4)) return;
+            if (state.maxUsesInString != -1 && !fm.FCombatManager.MovePossible(new MovesetStateIdentifier(movesetID, stateID), state.maxUsesInString)) return;*/
 
             switch (vars.targetType)
             {
@@ -67,9 +72,13 @@ namespace rwby
                 int stateID = vars.states[i].state.GetState();
                 StateTimeline state = (StateTimeline)(fm.FStateManager.GetState(movesetID, stateID));
 
-                if (!fm.FCombatManager.MovePossible(new MovesetStateIdentifier(movesetID, stateID), state.maxUsesInString, state.selfChainable)) continue;
+                if (!fm.FStateManager.CheckStateConditions(movesetID, stateID, arg4, vars.checkInputSequence, vars.checkCondition)) continue;
+                /*
+                if (state.maxUsesPerAirtime != -1 &&
+                    !fm.FStateManager.CheckStateAirUseCounter(movesetID, stateID, state.maxUsesPerAirtime)) continue;
+                if (state.maxUsesInString != -1 && !fm.FCombatManager.MovePossible(new MovesetStateIdentifier(movesetID, stateID), state.maxUsesInString, state.selfChainable)) continue;
                 if (vars.checkInputSequence && !fm.FCombatManager.CheckForInputSequence(state.inputSequence, holdInput: state.inputSequenceAsHoldInputs)) continue;
-                if (vars.checkCondition && !fm.FStateManager.TryCondition(state, state.condition, arg4)) continue;
+                if (vars.checkCondition && !fm.FStateManager.TryCondition(state, state.condition, arg4)) continue;*/
 
                 fm.FStateManager.MarkForStateChange(stateID, vars.states[i].movesetID);
                 return;

@@ -29,6 +29,7 @@ namespace rwby
         public StateType stateType;
         [EnableIf("stateType", StateType.ATTACK)]
         public int maxUsesInString = -1;
+        public int maxUsesPerAirtime = -1;
         public int selfChainable = 0;
         public bool allowBaseStateTransitions = true;
 
