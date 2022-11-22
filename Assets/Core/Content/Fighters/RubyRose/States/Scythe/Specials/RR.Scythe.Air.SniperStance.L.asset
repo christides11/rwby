@@ -26,12 +26,12 @@ MonoBehaviour:
   - rid: 387796001253490699
   - rid: 387796001253490700
   - rid: 387796001253490701
-  - rid: 387796001253490708
   - rid: 387796001253490709
   - rid: 387796025889783871
   - rid: 387796051391938571
   - rid: 387796051391938578
   - rid: 387796051391938580
+  - rid: 387796057753387009
   auraRequirement: 0
   initialGroundedState: 2
   stateType: 2
@@ -155,20 +155,6 @@ MonoBehaviour:
           volume: 0.1
           minDist: 5
           maxDist: 20
-    - rid: 387796001253490708
-      type: {class: VarProjectilePointToTarget, ns: rwby, asm: rwby.csharp}
-      data:
-        name: 
-        id: 22
-        parent: -1
-        children: 
-        frameRanges:
-        - {x: 6, y: 6}
-        condition:
-          rid: -2
-        projectileOffset: 0
-        maxAngle: 25
-        ignoreIfOutsideAngle: 0
     - rid: 387796001253490709
       type: {class: VarProjectileModifyForce, ns: rwby, asm: rwby.csharp}
       data:
@@ -293,6 +279,19 @@ MonoBehaviour:
       type: {class: FighterCmnStateReference, ns: rwby, asm: rwby.csharp}
       data:
         state: 28
+    - rid: 387796057753387009
+      type: {class: VarProjectileModifyHomingStrength, ns: rwby, asm: rwby.csharp}
+      data:
+        name: 
+        id: 28
+        parent: -1
+        children: 
+        frameRanges:
+        - {x: 6, y: 6}
+        condition:
+          rid: -2
+        projectileOffset: 0
+        homingStrength: 4
     - rid: 7270848718906589187
       type: {class: VarCreateBox, ns: rwby, asm: rwby.csharp}
       data:

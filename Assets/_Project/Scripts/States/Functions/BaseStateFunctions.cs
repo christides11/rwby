@@ -1068,5 +1068,15 @@ namespace rwby
 
             ((ITargetingProjectile)p).Target = fm.CurrentTarget;
         }
+
+        public static void ModifyProjectileHomingStrength(IFighterBase fighter, IStateVariables variables, HnSF.StateTimeline stateTimeline, int frame)
+        {
+            FighterManager fm = (FighterManager)fighter;
+            var vars = (VarProjectileModifyHomingStrength)variables;
+            
+            var p = fm.projectileManager.GetLatestProjectile(vars.projectileOffset);
+
+            ((IHomingProjectile)p).AutoTargetStrength = vars.homingStrength;
+        }
     }
 }

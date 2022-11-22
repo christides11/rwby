@@ -30,6 +30,7 @@ MonoBehaviour:
   - rid: 387796001253490708
   - rid: 387796001253490709
   - rid: 387796025889783870
+  - rid: 387796057753387012
   auraRequirement: 0
   initialGroundedState: 1
   stateType: 2
@@ -193,6 +194,19 @@ MonoBehaviour:
         condition:
           rid: -2
         projectileOffset: 0
+    - rid: 387796057753387012
+      type: {class: VarProjectileModifyHomingStrength, ns: rwby, asm: rwby.csharp}
+      data:
+        name: 
+        id: 25
+        parent: -1
+        children: 
+        frameRanges:
+        - {x: 4, y: 4}
+        condition:
+          rid: -2
+        projectileOffset: 0
+        homingStrength: 8
     - rid: 2193520817874927616
       type: {class: VarApplyTraction, ns: rwby, asm: rwby.csharp}
       data:

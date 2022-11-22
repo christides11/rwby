@@ -26,12 +26,12 @@ MonoBehaviour:
   - rid: 387796001253490699
   - rid: 387796001253490700
   - rid: 387796001253490701
-  - rid: 387796001253490708
   - rid: 387796001253490709
   - rid: 387796025889783871
   - rid: 387796051391938571
   - rid: 387796051391938580
   - rid: 387796051391938584
+  - rid: 387796057753387008
   auraRequirement: 0
   initialGroundedState: 2
   stateType: 2
@@ -102,7 +102,7 @@ MonoBehaviour:
           projectile: bullet
           parented: 0
           offset: {x: 0, y: 1, z: 1}
-          rotation: {x: 0, y: 0, z: 0}
+          rotation: {x: 90, y: 0, z: 0}
           scale: {x: 1, y: 1, z: 1}
           overrideMode: 0
         force: {x: 0, y: 0, z: 25}
@@ -155,20 +155,6 @@ MonoBehaviour:
           volume: 0.1
           minDist: 5
           maxDist: 20
-    - rid: 387796001253490708
-      type: {class: VarProjectilePointToTarget, ns: rwby, asm: rwby.csharp}
-      data:
-        name: 
-        id: 22
-        parent: -1
-        children: 
-        frameRanges:
-        - {x: 6, y: 6}
-        condition:
-          rid: -2
-        projectileOffset: 0
-        maxAngle: 25
-        ignoreIfOutsideAngle: 0
     - rid: 387796001253490709
       type: {class: VarProjectileModifyForce, ns: rwby, asm: rwby.csharp}
       data:
@@ -291,6 +277,19 @@ MonoBehaviour:
         inverse: 0
         statReference: 0
         value: 15
+    - rid: 387796057753387008
+      type: {class: VarProjectileModifyHomingStrength, ns: rwby, asm: rwby.csharp}
+      data:
+        name: 
+        id: 29
+        parent: -1
+        children: 
+        frameRanges:
+        - {x: 6, y: 6}
+        condition:
+          rid: -2
+        projectileOffset: 0
+        homingStrength: 4
     - rid: 7270848718906589187
       type: {class: VarCreateBox, ns: rwby, asm: rwby.csharp}
       data:

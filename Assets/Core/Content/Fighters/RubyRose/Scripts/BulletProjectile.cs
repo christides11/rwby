@@ -3,13 +3,18 @@ using UnityEngine;
 
 namespace rwby.core
 {
-    public class BulletProjectile : BaseProjectile, ITargetingProjectile
+    public class BulletProjectile : BaseProjectile, ITargetingProjectile, IHomingProjectile
     {
         [Networked] public NetworkObject NetworkedTarget { get; set; }
         public NetworkObject Target
         {
             get => NetworkedTarget;
             set => NetworkedTarget = value;
+        }
+        public float AutoTargetStrength
+        {
+            get => autoTargetTurnSpeed;
+            set => autoTargetTurnSpeed = value;
         }
         
         [Networked] public int startTick { get; set; }
