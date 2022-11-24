@@ -26,10 +26,12 @@ MonoBehaviour:
   - rid: 7270848428946489351
   - rid: 7270848428946489352
   - rid: 387795752378957824
+  - rid: 387796081084727296
   auraRequirement: 0
   initialGroundedState: 1
   stateType: 1
   maxUsesInString: -1
+  maxUsesPerAirtime: -1
   selfChainable: 0
   allowBaseStateTransitions: 1
   inputSequence:
@@ -82,6 +84,24 @@ MonoBehaviour:
         inverse: 0
         statReference: 0
         value: 3
+    - rid: 387796081084727296
+      type: {class: VarCreateBox, ns: rwby, asm: rwby.csharp}
+      data:
+        name: 
+        id: 6
+        parent: -1
+        children: 
+        frameRanges:
+        - {x: 1, y: -1}
+        condition:
+          rid: -2
+        boxType: 2
+        attachedTo: 0
+        shape: 0
+        offset: {x: 0, y: 1, z: 0}
+        boxExtents: {x: 0.5, y: 1, z: 0.5}
+        radius: 0
+        definitionIndex: 0
     - rid: 7270848428946489345
       type: {class: VarEmpty, ns: rwby, asm: rwby.csharp}
       data:

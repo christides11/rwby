@@ -537,7 +537,7 @@ namespace rwby
 
             if (ComboCounter == 0) ComboStartTick = Runner.Tick;
             
-            hurtboxHitCount.Set(hurtInfo.hurtboxHit, hurtboxHitCount[hurtInfo.hurtboxHit] + 1);
+            if(hurtInfo.hurtboxHit != -1) hurtboxHitCount.Set(hurtInfo.hurtboxHit, hurtboxHitCount[hurtInfo.hurtboxHit] + 1);
             manager.FPhysicsManager.SetRotation((hurtInfo.forward * -1).normalized);
             
             // Got hit, apply stun, damage, and forces.

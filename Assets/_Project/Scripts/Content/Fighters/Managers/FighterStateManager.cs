@@ -217,9 +217,9 @@ namespace rwby
             return true;
         }
 
-        public void MarkForStateChange(int state, int moveset = -1, int frame = 0)
+        public void MarkForStateChange(int state, int moveset = -1, int frame = 0, bool force = false)
         {
-            if (markedForStateChange) return;
+            if (markedForStateChange && !force) return;
             markedForStateChange = true;
             nextState = state;
             nextStateMoveset = moveset;

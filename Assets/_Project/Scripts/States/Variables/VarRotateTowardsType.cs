@@ -7,6 +7,7 @@ namespace rwby
         movement,
         target,
         custom,
-        wallDir
+        wallDir,
+        camera
     }
 }

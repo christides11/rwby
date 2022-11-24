@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using ExitGames.Client.Photon.StructWrapping;
 using Fusion;
 using HnSF;
+using HnSF.Combat;
 using HnSF.Fighters;
 using UnityEngine;
 using UnityEngine.Profiling;
@@ -37,15 +38,8 @@ namespace rwby
             int stateID = vars.state.GetState();
             StateTimeline state = (StateTimeline)(fm.FStateManager.GetState(movesetID, stateID));
 
-            if (!fm.FStateManager.CheckStateConditions(movesetID, stateID, arg4, vars.checkInputSequence,
-                    vars.checkCondition)) return;
-            /*
-            if (state.maxUsesPerAirtime != -1 &&
-                !fm.FStateManager.CheckStateAirUseCounter(movesetID, stateID, state.maxUsesPerAirtime)) return;
-            if (fm.FCombatManager.Aura < state.auraRequirement) return;
-            if (vars.checkInputSequence && !fm.FCombatManager.CheckForInputSequence(state.inputSequence, holdInput: state.inputSequenceAsHoldInputs)) return;
-            if (vars.checkCondition && !fm.FStateManager.TryCondition(state, state.condition, arg4)) return;
-            if (state.maxUsesInString != -1 && !fm.FCombatManager.MovePossible(new MovesetStateIdentifier(movesetID, stateID), state.maxUsesInString)) return;*/
+            if (vars.ignoreStateConditions && !fm.FStateManager.CheckStateConditions(movesetID, stateID, arg4, 
+                    vars.checkInputSequence, vars.checkCondition)) return;
 
             switch (vars.targetType)
             {
@@ -73,12 +67,6 @@ namespace rwby
                 StateTimeline state = (StateTimeline)(fm.FStateManager.GetState(movesetID, stateID));
 
                 if (!fm.FStateManager.CheckStateConditions(movesetID, stateID, arg4, vars.checkInputSequence, vars.checkCondition)) continue;
-                /*
-                if (state.maxUsesPerAirtime != -1 &&
-                    !fm.FStateManager.CheckStateAirUseCounter(movesetID, stateID, state.maxUsesPerAirtime)) continue;
-                if (state.maxUsesInString != -1 && !fm.FCombatManager.MovePossible(new MovesetStateIdentifier(movesetID, stateID), state.maxUsesInString, state.selfChainable)) continue;
-                if (vars.checkInputSequence && !fm.FCombatManager.CheckForInputSequence(state.inputSequence, holdInput: state.inputSequenceAsHoldInputs)) continue;
-                if (vars.checkCondition && !fm.FStateManager.TryCondition(state, state.condition, arg4)) continue;*/
 
                 fm.FStateManager.MarkForStateChange(stateID, vars.states[i].movesetID);
                 return;
@@ -283,7 +271,7 @@ namespace rwby
         public static void ModifyRotation(IFighterBase fighter, IStateVariables variables, HnSF.StateTimeline arg3, int arg4)
         {
             FighterManager f = (FighterManager)fighter;
-            VarModifyRotation vars = (VarModifyRotation)variables;
+            var vars = (VarModifyRotation)variables;
 
             
             Vector3 wantedDir = Vector3.zero;
@@ -296,7 +284,9 @@ namespace rwby
                     wantedDir = f.FPhysicsManager.forceMovement.normalized;
                     break;
                 case VarRotateTowardsType.target:
-                    
+                    wantedDir = (f.CurrentTarget.transform.position - f.myTransform.position);
+                    wantedDir.y = 0;
+                    wantedDir.Normalize();
                     break;
                 case VarRotateTowardsType.custom:
                     wantedDir = vars.eulerAngle;
@@ -305,6 +295,9 @@ namespace rwby
                     wantedDir = Vector3.Cross(-f.cWallNormal, Vector3.up) * f.cWallSide;
                     wantedDir.y = 0;
                     wantedDir.Normalize();
+                    break;
+                case VarRotateTowardsType.camera:
+                    wantedDir = f.GetMovementVector(0, 1.0f);
                     break;
             }
 
@@ -323,7 +316,7 @@ namespace rwby
         public static void RotateTowards(IFighterBase fighter, IStateVariables variables, HnSF.StateTimeline arg3, int arg4)
         {
             FighterManager f = (FighterManager)fighter;
-            VarRotateTowards vars = (VarRotateTowards)variables;
+            var vars = (VarRotateTowards)variables;
             
             Vector3 wantedDir = Vector3.zero;
             switch (vars.rotateTowards)
@@ -743,13 +736,13 @@ namespace rwby
                     fr.y = 0;
                     fr.Normalize();
                     var rght = -Vector3.Cross(fr, Vector3.up);
-                    rght.Normalize();
+                    //rght.Normalize();
                     dir = fr * vars.direction.z 
                           + rght * vars.direction.x 
                           + Vector3.up * vars.direction.y;
                     break;
                 case VarTeleportRaycast.RaycastDirSource.CUSTOM:
-                    dir = fm.GetMovementVector(vars.direction.x, vars.direction.y);
+                    dir = fm.GetMovementVector(vars.direction.x, vars.direction.z);
                     dir.y = vars.direction.y;
                     break;
             }
@@ -764,11 +757,15 @@ namespace rwby
             Vector3 bottomPoint = startPos + fm.FPhysicsManager.cc.center + Vector3.up * -fm.FPhysicsManager.cc.height * 0.5F;
             Vector3 topPoint = bottomPoint + Vector3.up * fm.FPhysicsManager.cc.height;
 
-            bool hit = fm.Runner.GetPhysicsScene().CapsuleCast(bottomPoint, topPoint, fm.FPhysicsManager.cc.radius * 0.9f, dir, out fm.wallHitResults[0], vars.distance, fm.wallLayerMask.value);
+            bool hit = fm.Runner.GetPhysicsScene().CapsuleCast(bottomPoint + (Vector3.up*vars.startUpOffset), 
+                topPoint + (Vector3.up*vars.startUpOffset), 
+                fm.FPhysicsManager.cc.radius * 0.9f, dir, out fm.wallHitResults[0], 
+                vars.distance, fm.wallLayerMask.value);
 
             if (hit)
             {
-                Vector3 newPos = fm.transform.position + (fm.wallHitResults[0].distance+0.1f) * dir;
+                Vector3 newPos = fm.transform.position + (fm.wallHitResults[0].distance) * dir;
+                fm.FPhysicsManager.ForceUnground();
                 fm.FPhysicsManager.SetPosition(newPos, vars.bypassInterpolation);
                 //Vector3 newPos = fm.wallHitResults[0].point 
                 //                 + (new Vector3(fm.wallHitResults[0].normal.x, 0, fm.wallHitResults[0].normal.z) * fm.FPhysicsManager.cc.radius)
@@ -1086,6 +1083,27 @@ namespace rwby
             var p = fm.projectileManager.GetLatestProjectile(vars.projectileOffset);
 
             ((IHomingProjectile)p).AutoTargetStrength = vars.homingStrength;
+        }
+
+        public static void DirectDamage(IFighterBase fighter, IStateVariables variables, HnSF.StateTimeline stateTimeline, int frame)
+        {
+            FighterManager fm = (FighterManager)fighter;
+            var vars = (VarDirectDamage)variables;
+
+            var hurtInfo = new HurtInfo(vars.hitboxInfo, -1,
+                fm.transform.position, fm.transform.forward, fm.transform.right,
+                fm.FPhysicsManager.GetOverallForce(), Vector3.zero);
+            
+            switch (vars.targetType)
+            {
+                case VarTargetType.Throwees:
+                    var throwee = fm.throwees[0];
+                    var hurtable = throwee.GetComponent<IHurtable>();
+                    hurtInfo.hitPosition = throwee.transform.position;
+                    HitReaction reaction = (HitReaction)hurtable.Hurt(hurtInfo);
+                    fm.FCombatManager.HitboxManager.HandleDirectHitReaction(vars.hitboxInfo, reaction);
+                    break;
+            }
         }
     }
 }

@@ -3,23 +3,9 @@ using UnityEngine;
 
 namespace rwby
 {
-    [StateVariable("Teleport/Raycast")]
-    public struct VarTeleportRaycast : IStateVariables
+    [StateVariable("Attack/Direct Damage")]
+    public struct VarDirectDamage : IStateVariables
     {
-        public enum StartPointTypes
-        {
-            Self,
-            Target
-        }
-
-        public enum RaycastDirSource
-        {
-            STICK,
-            ROTATION,
-            TARGET_VECTOR,
-            CUSTOM
-        }
-        
         public string name;
         public string Name
         {
@@ -54,12 +40,7 @@ namespace rwby
         public IConditionVariables condition;
         public IConditionVariables Condition => condition;
 
-        public RaycastDirSource raycastDirectionSource;
-        public Vector3 direction;
-        public float distance;
-        public bool goToPosOnNoHit;
-        public bool bypassInterpolation;
-        public StartPointTypes startPoint;
-        public float startUpOffset;
+        public VarTargetType targetType;
+        public HitInfo hitboxInfo;
     }
 }

@@ -82,6 +82,11 @@ namespace rwby
             kCC.Motor.SetPosition(position, bypassInterpolation);
         }
 
+        public void ForceUnground()
+        {
+            kCC.Motor.ForceUnground();
+        }
+
         public void SetRotation(Vector3 rot, bool bypassInterpolation = true)
         {
             rotationDir = rot;

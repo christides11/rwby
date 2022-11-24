@@ -41,6 +41,7 @@ namespace rwby
         public IConditionVariables condition;
         public IConditionVariables Condition => condition;
 
+        public bool ignoreStateConditions;
         public bool checkInputSequence;
         public bool checkCondition;
 

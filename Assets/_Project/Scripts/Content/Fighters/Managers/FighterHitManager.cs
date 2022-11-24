@@ -91,6 +91,45 @@ namespace rwby
             };
         }
 
+        public virtual void HandleDirectHitReaction(HitInfo hi, HitReaction hitReaction)
+        {
+            combatManager.SetHitStop(hitReaction.hitInfoGroup.attackerHitstop);
+            if (!string.IsNullOrEmpty(hitReaction.hitInfoGroup.hitEffect))
+            {
+                manager.fighterEffector.AddEffects(new []{ new EffectReference()
+                {
+                    effect = hitReaction.hitInfoGroup.hitEffect,
+                    effectbank = hitReaction.hitInfoGroup.hitEffectbank,
+                    offset = manager.myTransform.position,
+                    parented = false,
+                    rotation = manager.myTransform.eulerAngles,
+                    scale = new Vector3(1, 1, 1),
+                    autoIncrement = true
+                } });
+            }
+
+            if (!string.IsNullOrEmpty(hitReaction.hitInfoGroup.hitSound))
+            {
+                manager.fighterSounder.AddSFXs(new []{ new SoundReference()
+                {
+                    soundbank = hitReaction.hitInfoGroup.hitSoundbank,
+                    sound = hitReaction.hitInfoGroup.hitSound,
+                    maxDist = hitReaction.hitInfoGroup.hitSoundMaxDist,
+                    minDist = hitReaction.hitInfoGroup.hitSoundMinDist,
+                    offset = manager.myTransform.position,
+                    parented = false,
+                    volume = hitReaction.hitInfoGroup.hitSoundVolume
+                }});
+            }
+            
+            manager.shakeDefinition = new CmaeraShakeDefinition()
+            {
+                shakeStrength = hitReaction.hitInfoGroup.hitCameraShakeStrength,
+                startFrame = Runner.Tick,
+                endFrame = Runner.Tick + hitReaction.hitInfoGroup.cameraShakeLength
+            };
+        }
+
         public override void HandleBlockReaction(CustomHitbox hitbox, Hurtbox enemyHurtbox, HurtInfo hurtInfo,
             HitInfo hi, HitReaction hitReaction)
         {
@@ -188,7 +227,7 @@ namespace rwby
         {
             base.ThroweeInitilization(thrower);
             manager.thrower = thrower;
-            manager.FStateManager.MarkForStateChange((int)FighterCmnStates.THROWN);
+            manager.FStateManager.MarkForStateChange((int)FighterCmnStates.THROWN, force: true);
         }
     }
 }

@@ -45,6 +45,7 @@ MonoBehaviour:
   initialGroundedState: 2
   stateType: 2
   maxUsesInString: 1
+  maxUsesPerAirtime: -1
   selfChainable: 0
   allowBaseStateTransitions: 1
   inputSequence:
@@ -484,8 +485,8 @@ MonoBehaviour:
         boxType: 1
         attachedTo: 0
         shape: 0
-        offset: {x: 0, y: 1, z: 1}
-        boxExtents: {x: 1, y: 1, z: 1}
+        offset: {x: 0, y: 1, z: 0}
+        boxExtents: {x: 2, y: 2, z: 2}
         radius: 0
         definitionIndex: 0
     - rid: 1219246315631804418

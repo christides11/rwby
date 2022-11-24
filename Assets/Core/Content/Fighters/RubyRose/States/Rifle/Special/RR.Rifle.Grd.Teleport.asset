@@ -15,7 +15,7 @@ MonoBehaviour:
   stateName: Teleport
   useBaseState: 0
   baseState: {fileID: 0}
-  totalFrames: 26
+  totalFrames: 21
   autoIncrement: 1
   autoLoop: 0
   autoLoopFrame: 1
@@ -26,8 +26,6 @@ MonoBehaviour:
   - rid: 8688056740327194626
   - rid: 7270848718906589184
   - rid: 7270848718906589187
-  - rid: 387795987783221249
-  - rid: 387795987783221252
   - rid: 387795987783221256
   - rid: 387795987783221258
   - rid: 387795987783221259
@@ -35,10 +33,17 @@ MonoBehaviour:
   - rid: 387795987783221265
   - rid: 387795987783221267
   - rid: 387795987783221271
+  - rid: 387796069597577216
+  - rid: 387796069597577219
+  - rid: 387796069597577221
+  - rid: 387796069597577223
+  - rid: 387796069597577225
+  - rid: 387796069597577227
   auraRequirement: 0
   initialGroundedState: 1
   stateType: 2
   maxUsesInString: 1
+  maxUsesPerAirtime: -1
   selfChainable: 0
   allowBaseStateTransitions: 1
   inputSequence:
@@ -63,50 +68,6 @@ MonoBehaviour:
     RefIds:
     - rid: -2
       type: {class: , ns: , asm: }
-    - rid: 387795987783221249
-      type: {class: VarTeleportRaycast, ns: rwby, asm: rwby.csharp}
-      data:
-        name: Teleport (No Target)
-        id: 19
-        parent: -1
-        children: 
-        frameRanges:
-        - {x: 9, y: 9}
-        condition:
-          rid: 387795987783221250
-        raycastDirectionSource: 1
-        direction: {x: 0, y: 0, z: 1}
-        distance: 0
-        goToPosOnNoHit: 1
-        bypassInterpolation: 1
-        startPoint: 0
-    - rid: 387795987783221250
-      type: {class: ConditionLockedOn, ns: rwby, asm: rwby.csharp}
-      data:
-        inverse: 1
-        requireTarget: 1
-    - rid: 387795987783221252
-      type: {class: VarTeleportRaycast, ns: rwby, asm: rwby.csharp}
-      data:
-        name: Teleport (Target)
-        id: 21
-        parent: -1
-        children: 
-        frameRanges:
-        - {x: 9, y: 9}
-        condition:
-          rid: 387795987783221253
-        raycastDirectionSource: 2
-        direction: {x: 0, y: 0, z: -1}
-        distance: 2
-        goToPosOnNoHit: 1
-        bypassInterpolation: 1
-        startPoint: 1
-    - rid: 387795987783221253
-      type: {class: ConditionLockedOn, ns: rwby, asm: rwby.csharp}
-      data:
-        inverse: 0
-        requireTarget: 1
     - rid: 387795987783221256
       type: {class: VarEmpty, ns: rwby, asm: rwby.csharp}
       data:
@@ -134,7 +95,7 @@ MonoBehaviour:
         condition:
           rid: -2
         modifyType: 1
-        rotateTowards: 0
+        rotateTowards: 5
         useTargetWhenNoMovement: 0
         eulerAngle: {x: 0, y: 0, z: 0}
     - rid: 387795987783221259
@@ -161,6 +122,7 @@ MonoBehaviour:
         children: 
         frameRanges:
         - {x: 1, y: 1}
+        - {x: 14, y: 14}
         condition:
           rid: -2
         modifyType: 1
@@ -175,7 +137,7 @@ MonoBehaviour:
         parent: -1
         children: 
         frameRanges:
-        - {x: 9, y: 9}
+        - {x: 14, y: 14}
         condition:
           rid: -2
         targetType: 0
@@ -187,7 +149,7 @@ MonoBehaviour:
       data:
         inverse: 0
         statReference: 0
-        value: 2
+        value: 1
     - rid: 387795987783221267
       type: {class: VarApplyGravity, ns: rwby, asm: rwby.csharp}
       data:
@@ -196,7 +158,7 @@ MonoBehaviour:
         parent: -1
         children: 
         frameRanges:
-        - {x: 10, y: -1}
+        - {x: 21, y: -1}
         condition:
           rid: -2
         useValue: 1
@@ -237,7 +199,7 @@ MonoBehaviour:
         parent: -1
         children: 
         frameRanges:
-        - {x: 9, y: 9}
+        - {x: 14, y: 14}
         condition:
           rid: -2
         inputSource: 1
@@ -252,10 +214,140 @@ MonoBehaviour:
         inverse: 0
         statReference: 0
         value: 3
+    - rid: 387796069597577216
+      type: {class: VarEmpty, ns: rwby, asm: rwby.csharp}
+      data:
+        name: Hold Input
+        id: 30
+        parent: -1
+        children: 2200000023000000
+        frameRanges: []
+        condition:
+          rid: 387796069597577218
+    - rid: 387796069597577218
+      type: {class: ConditionButton, ns: rwby, asm: rwby.csharp}
+      data:
+        inverse: 0
+        checkAbilityButton: 1
+        button: 0
+        buttonState: 0
+        offset: 0
+        buffer: 0
+    - rid: 387796069597577219
+      type: {class: VarEmpty, ns: rwby, asm: rwby.csharp}
+      data:
+        name: No Input
+        id: 31
+        parent: -1
+        children: 2000000021000000
+        frameRanges: []
+        condition:
+          rid: 387796069597577220
+    - rid: 387796069597577220
+      type: {class: ConditionButton, ns: rwby, asm: rwby.csharp}
+      data:
+        inverse: 1
+        checkAbilityButton: 1
+        button: 0
+        buttonState: 0
+        offset: 0
+        buffer: 0
+    - rid: 387796069597577221
+      type: {class: VarTeleportRaycast, ns: rwby, asm: rwby.csharp}
+      data:
+        name: Teleport (No Target)
+        id: 32
+        parent: 31
+        children: 
+        frameRanges:
+        - {x: 13, y: 13}
+        condition:
+          rid: 387796069597577222
+        raycastDirectionSource: 3
+        direction: {x: 0, y: 0, z: 0.7}
+        distance: 8
+        goToPosOnNoHit: 1
+        bypassInterpolation: 1
+        startPoint: 0
+        startUpOffset: 0.2
+    - rid: 387796069597577222
+      type: {class: ConditionLockedOn, ns: rwby, asm: rwby.csharp}
+      data:
+        inverse: 1
+        requireTarget: 1
+    - rid: 387796069597577223
+      type: {class: VarTeleportRaycast, ns: rwby, asm: rwby.csharp}
+      data:
+        name: Teleport (Target)
+        id: 33
+        parent: 31
+        children: 
+        frameRanges:
+        - {x: 13, y: 13}
+        condition:
+          rid: 387796069597577224
+        raycastDirectionSource: 2
+        direction: {x: 0, y: 0.7, z: 0.3}
+        distance: 1
+        goToPosOnNoHit: 1
+        bypassInterpolation: 1
+        startPoint: 1
+        startUpOffset: 0.2
+    - rid: 387796069597577224
+      type: {class: ConditionLockedOn, ns: rwby, asm: rwby.csharp}
+      data:
+        inverse: 0
+        requireTarget: 1
+    - rid: 387796069597577225
+      type: {class: VarTeleportRaycast, ns: rwby, asm: rwby.csharp}
+      data:
+        name: Teleport (No Target)
+        id: 34
+        parent: 30
+        children: 
+        frameRanges:
+        - {x: 13, y: 13}
+        condition:
+          rid: 387796069597577226
+        raycastDirectionSource: 3
+        direction: {x: 0, y: 1, z: 0}
+        distance: 5
+        goToPosOnNoHit: 1
+        bypassInterpolation: 1
+        startPoint: 0
+        startUpOffset: 0.2
+    - rid: 387796069597577226
+      type: {class: ConditionLockedOn, ns: rwby, asm: rwby.csharp}
+      data:
+        inverse: 1
+        requireTarget: 1
+    - rid: 387796069597577227
+      type: {class: VarTeleportRaycast, ns: rwby, asm: rwby.csharp}
+      data:
+        name: Teleport (Target)
+        id: 35
+        parent: 30
+        children: 
+        frameRanges:
+        - {x: 13, y: 13}
+        condition:
+          rid: 387796069597577228
+        raycastDirectionSource: 2
+        direction: {x: 0, y: 0.7, z: 0.3}
+        distance: 1
+        goToPosOnNoHit: 1
+        bypassInterpolation: 1
+        startPoint: 1
+        startUpOffset: 0.2
+    - rid: 387796069597577228
+      type: {class: ConditionLockedOn, ns: rwby, asm: rwby.csharp}
+      data:
+        inverse: 0
+        requireTarget: 1
     - rid: 2193520813467238401
       type: {class: VarChangeState, ns: rwby, asm: rwby.csharp}
       data:
-        name: To Idle
+        name: To Fall
         id: 0
         parent: -1
         children: 
@@ -273,7 +365,7 @@ MonoBehaviour:
     - rid: 2193520813467238402
       type: {class: FighterCmnStateReference, ns: rwby, asm: rwby.csharp}
       data:
-        state: 1
+        state: 5
     - rid: 2193520817874927616
       type: {class: VarApplyTraction, ns: rwby, asm: rwby.csharp}
       data:
@@ -282,7 +374,7 @@ MonoBehaviour:
         parent: -1
         children: 
         frameRanges:
-        - {x: 1, y: 3}
+        - {x: 1, y: 12}
         condition:
           rid: -2
         traction:
@@ -304,7 +396,7 @@ MonoBehaviour:
         parent: -1
         children: 
         frameRanges:
-        - {x: 1, y: 4}
+        - {x: 1, y: 12}
         condition:
           rid: -2
     - rid: 7270848718906589187
@@ -351,7 +443,7 @@ MonoBehaviour:
         parent: -1
         children: 
         frameRanges:
-        - {x: 8, y: 8}
+        - {x: 2, y: 2}
         condition:
           rid: -2
         sounds:

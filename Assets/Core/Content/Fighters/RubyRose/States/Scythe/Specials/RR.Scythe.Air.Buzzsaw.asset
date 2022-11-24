@@ -39,6 +39,7 @@ MonoBehaviour:
   initialGroundedState: 2
   stateType: 2
   maxUsesInString: 1
+  maxUsesPerAirtime: -1
   selfChainable: 0
   allowBaseStateTransitions: 1
   inputSequence:
@@ -200,6 +201,13 @@ MonoBehaviour:
         - {x: 25, y: 25}
         - {x: 35, y: 35}
         - {x: 45, y: 45}
+        - {x: 55, y: 55}
+        - {x: 65, y: 65}
+        - {x: 75, y: 75}
+        - {x: 85, y: 85}
+        - {x: 95, y: 95}
+        - {x: 105, y: 105}
+        - {x: 115, y: 115}
         condition:
           rid: -2
         sounds:
@@ -233,7 +241,7 @@ MonoBehaviour:
     - rid: 7270848729635094530
       type: {class: VarExternal, ns: rwby, asm: rwby.csharp}
       data:
-        name: Try Atk
+        name: Try Air Special
         id: 13
         parent: 12
         children: 
@@ -241,7 +249,7 @@ MonoBehaviour:
         - {x: 5, y: -1}
         condition:
           rid: -2
-        asset: {fileID: 11400000, guid: 852b081cfd9efbb449cca3171458f8cc, type: 2}
+        asset: {fileID: 11400000, guid: e38b0fa35e04d9049862303c4ec51c99, type: 2}
     - rid: 7270848729635094541
       type: {class: VarExternal, ns: rwby, asm: rwby.csharp}
       data:
