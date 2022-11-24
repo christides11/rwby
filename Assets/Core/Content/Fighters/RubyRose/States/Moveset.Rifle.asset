@@ -21,7 +21,7 @@ MonoBehaviour:
   - groundState:
       rid: 387795932360736804
     aerialState:
-      rid: 387795932360736805
+      rid: 387796101564727332
   - groundState:
       rid: 387796093188440064
     aerialState:
@@ -126,6 +126,22 @@ MonoBehaviour:
     state:
       rid: 387796093188440067
     stateTimeline: {fileID: 11400000, guid: c99bd4bc0f5166b4f8928f4ba82b7402, type: 2}
+  - name: Rekka - XL
+    state:
+      rid: 387796101564727308
+    stateTimeline: {fileID: 11400000, guid: 21c0d4074eadc93428f461f226ef2b6d, type: 2}
+  - name: Rekka - XH
+    state:
+      rid: 387796101564727312
+    stateTimeline: {fileID: 11400000, guid: 6576ec2207d9c8a4b9fe866b1722ee5f, type: 2}
+  - name: Rekka - XXL
+    state:
+      rid: 387796101564727313
+    stateTimeline: {fileID: 11400000, guid: 273c3fbb9dde91e4699391ab85783989, type: 2}
+  - name: Rekka - XXH
+    state:
+      rid: 387796101564727314
+    stateTimeline: {fileID: 11400000, guid: 0e595545f377e294e94ab64cbd5699e2, type: 2}
   airActions:
   - name: fall
     state:
@@ -199,7 +215,7 @@ MonoBehaviour:
   - name: Teleport
     state:
       rid: 387796075454922757
-    stateTimeline: {fileID: 11400000, guid: af7ebb8289b082949b31fc5dbd671d00, type: 2}
+    stateTimeline: {fileID: 11400000, guid: f409bede1fc5f5a49b70de949b19b5cd, type: 2}
   - name: Rekka
     state:
       rid: 387796093188440066
@@ -424,7 +440,7 @@ MonoBehaviour:
     - rid: 387795932360736805
       type: {class: RubyRoseStateReference, ns: rwby.core, asm: rwby.core}
       data:
-        state: 92
+        state: 82
     - rid: 387795932360736808
       type: {class: RubyRoseStateReference, ns: rwby.core, asm: rwby.core}
       data:
@@ -529,3 +545,23 @@ MonoBehaviour:
       type: {class: FighterCmnStateReference, ns: rwby, asm: rwby.csharp}
       data:
         state: 42
+    - rid: 387796101564727308
+      type: {class: RubyRoseStateReference, ns: rwby.core, asm: rwby.core}
+      data:
+        state: 106
+    - rid: 387796101564727312
+      type: {class: RubyRoseStateReference, ns: rwby.core, asm: rwby.core}
+      data:
+        state: 107
+    - rid: 387796101564727313
+      type: {class: RubyRoseStateReference, ns: rwby.core, asm: rwby.core}
+      data:
+        state: 108
+    - rid: 387796101564727314
+      type: {class: RubyRoseStateReference, ns: rwby.core, asm: rwby.core}
+      data:
+        state: 109
+    - rid: 387796101564727332
+      type: {class: RubyRoseStateReference, ns: rwby.core, asm: rwby.core}
+      data:
+        state: 82

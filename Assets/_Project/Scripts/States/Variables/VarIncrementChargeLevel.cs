@@ -44,6 +44,7 @@ namespace rwby
         public int increment;
         public int chargePerLevel;
         public int maxLevel;
+        public bool checkAbilityButton;
         public PlayerInputType button;
         public bool canHold;
     }

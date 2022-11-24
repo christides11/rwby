@@ -10,25 +10,26 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7789f25d17401bc4b915ca6fcecf2a29, type: 3}
-  m_Name: RR.Rifle.Grd.CombatRoll.H
+  m_Name: RR.Rifle.Grd.Rekka.XXL
   m_EditorClassIdentifier: 
-  stateName: Combat Roll - H
+  stateName: Rekka - XXL
   useBaseState: 0
   baseState: {fileID: 0}
-  totalFrames: 18
+  totalFrames: 33
   autoIncrement: 1
   autoLoop: 0
   autoLoopFrame: 1
   data:
   - rid: 2193520813467238401
+  - rid: 2193520813467238403
   - rid: 2193520817874927616
   - rid: 8688056217396838433
   - rid: 8688056740327194626
+  - rid: 7270848428946489353
   - rid: 7270848718906589184
   - rid: 7270848718906589187
-  - rid: 387796079774793731
-  - rid: 387796079774793732
-  - rid: 387796079774793735
+  - rid: 387795983688269874
+  - rid: 387796101564727301
   auraRequirement: 0
   initialGroundedState: 1
   stateType: 2
@@ -40,7 +41,7 @@ MonoBehaviour:
     executeWindow: 3
     executeInputs:
     - inputType: 0
-      buttonID: 3
+      buttonID: 2
       stickDirection: {x: 0, y: 0}
       directionDeviation: 0
     sequenceWindow: 8
@@ -54,31 +55,31 @@ MonoBehaviour:
     groundedCounterHitFoldoutGroup: 0
     hitStateGroundedGroups: -1
     hit:
-      groundHitState: 30
-      airHitState: 32
+      groundHitState: 34
+      airHitState: 34
       groundBounce: 0
       wallBounce: 0
       groundBounceForce: 0
-      wallBounceForce: 0
+      wallBounceForce: 5
       noKill: 0
       unblockable: 0
-      hardKnockdown: 0
+      hardKnockdown: 1
       hitForceType: 0
       hitForceRelation: 0
       hitForceRelationOffset: {x: 0, y: 0, z: 0}
       autolink: 0
       gravityAutolinkPercentage: 0
       movementAutolinkPercentage: 0
-      groundHitForce: {x: 0, y: 0, z: 5}
-      aerialHitForce: {x: 0, y: 3, z: 2}
+      groundHitForce: {x: 0, y: 4, z: 10}
+      aerialHitForce: {x: 0, y: -5, z: 10}
       pullPushMultiplier: 0
       pullPushMaxDistance: 10
       blockLift: 0
       attackerHitstop: 4
       hitstop: 4
-      hitstun: 30
+      hitstun: 60
       blockstun: 30
-      untech: 30
+      untech: 60
       initialProration: 0
       comboProration: 0.2
       damage: 500
@@ -188,56 +189,32 @@ MonoBehaviour:
     RefIds:
     - rid: -2
       type: {class: , ns: , asm: }
-    - rid: 387796079774793731
-      type: {class: VarCreateBox, ns: rwby, asm: rwby.csharp}
+    - rid: 387795983688269874
+      type: {class: VarEmpty, ns: rwby, asm: rwby.csharp}
       data:
-        name: 
-        id: 19
+        name: On Hit
+        id: 18
         parent: -1
         children: 
-        frameRanges:
-        - {x: 8, y: 10}
+        frameRanges: []
         condition:
-          rid: -2
-        boxType: 1
-        attachedTo: 0
-        shape: 0
-        offset: {x: 0, y: 1, z: 1}
-        boxExtents: {x: 1, y: 1, z: 1}
-        radius: 0
-        definitionIndex: 0
-    - rid: 387796079774793732
-      type: {class: VarRotateTowards, ns: rwby, asm: rwby.csharp}
-      data:
-        name: 
-        id: 20
-        parent: -1
-        children: 
-        frameRanges:
-        - {x: 1, y: 3}
-        condition:
-          rid: 387796079774793734
-        rotateTowards: 0
-        eulerAngle: {x: 0, y: 0, z: 0}
-        rotateTowardsTarget: 1
-        rotationSpeed:
-          rid: 387796079774793733
-    - rid: 387796079774793733
-      type: {class: FighterStatReferenceFloatBase, ns: rwby, asm: rwby.csharp}
+          rid: 387795983688269875
+    - rid: 387795983688269875
+      type: {class: ConditionHitOrBlockCount, ns: rwby, asm: rwby.csharp}
       data:
         inverse: 0
-        statReference: 0
-        value: 60
-    - rid: 387796079774793734
-      type: {class: ConditionLockedOn, ns: rwby, asm: rwby.csharp}
+        hitCount: 1
+        hitOrBlock: 1
+    - rid: 387796101564727297
+      type: {class: ConditionChargeLevel, ns: rwby, asm: rwby.csharp}
       data:
-        inverse: 0
-        requireTarget: 1
-    - rid: 387796079774793735
+        minLevel: 0
+        maxLevel: 0
+    - rid: 387796101564727301
       type: {class: VarSetMovement, ns: rwby, asm: rwby.csharp}
       data:
         name: 
-        id: 21
+        id: 19
         parent: -1
         children: 
         frameRanges:
@@ -249,13 +226,13 @@ MonoBehaviour:
         useRotationIfInputZero: 0
         reverseInputSource: 0
         force:
-          rid: 387796079774793736
-    - rid: 387796079774793736
+          rid: 387796101564727302
+    - rid: 387796101564727302
       type: {class: FighterStatReferenceFloatBase, ns: rwby, asm: rwby.csharp}
       data:
         inverse: 0
         statReference: 0
-        value: 7
+        value: 6
     - rid: 2193520813467238401
       type: {class: VarChangeState, ns: rwby, asm: rwby.csharp}
       data:
@@ -281,6 +258,24 @@ MonoBehaviour:
       type: {class: FighterCmnStateReference, ns: rwby, asm: rwby.csharp}
       data:
         state: 1
+    - rid: 2193520813467238403
+      type: {class: VarCreateBox, ns: rwby, asm: rwby.csharp}
+      data:
+        name: Hitbox
+        id: 1
+        parent: -1
+        children: 
+        frameRanges:
+        - {x: 12, y: 14}
+        condition:
+          rid: 387796101564727297
+        boxType: 1
+        attachedTo: 0
+        shape: 0
+        offset: {x: 0, y: 1, z: 1}
+        boxExtents: {x: 1, y: 1, z: 1}
+        radius: 0
+        definitionIndex: 0
     - rid: 2193520817874927616
       type: {class: VarApplyTraction, ns: rwby, asm: rwby.csharp}
       data:
@@ -289,7 +284,7 @@ MonoBehaviour:
         parent: -1
         children: 
         frameRanges:
-        - {x: 1, y: -1}
+        - {x: 9, y: -1}
         condition:
           rid: -2
         traction:
@@ -301,8 +296,30 @@ MonoBehaviour:
       data:
         inverse: 0
         statReference: 0
-        value: 70
+        value: 15
         variable: 0
+    - rid: 7270848428946489353
+      type: {class: VarRotateTowards, ns: rwby, asm: rwby.csharp}
+      data:
+        name: 
+        id: 15
+        parent: -1
+        children: 
+        frameRanges:
+        - {x: 1, y: 3}
+        condition:
+          rid: -2
+        rotateTowards: 0
+        eulerAngle: {x: 0, y: 0, z: 0}
+        rotateTowardsTarget: 1
+        rotationSpeed:
+          rid: 7270848428946489354
+    - rid: 7270848428946489354
+      type: {class: FighterStatReferenceFloatBase, ns: rwby, asm: rwby.csharp}
+      data:
+        inverse: 0
+        statReference: 0
+        value: 15
     - rid: 7270848718906589184
       type: {class: VarSetCounterhitState, ns: rwby, asm: rwby.csharp}
       data:
@@ -311,7 +328,7 @@ MonoBehaviour:
         parent: -1
         children: 
         frameRanges:
-        - {x: 1, y: 7}
+        - {x: 1, y: 9}
         condition:
           rid: -2
     - rid: 7270848718906589187
@@ -328,8 +345,8 @@ MonoBehaviour:
         boxType: 0
         attachedTo: 0
         shape: 0
-        offset: {x: 0, y: 0.25, z: 0}
-        boxExtents: {x: 0.5, y: 0.25, z: 0.5}
+        offset: {x: 0, y: 1, z: 0}
+        boxExtents: {x: 0.5, y: 1, z: 0.5}
         radius: 0
         definitionIndex: 0
     - rid: 8688056217396838433
@@ -358,7 +375,7 @@ MonoBehaviour:
         parent: -1
         children: 
         frameRanges:
-        - {x: 1, y: 1}
+        - {x: 4, y: 4}
         condition:
           rid: -2
         sounds:

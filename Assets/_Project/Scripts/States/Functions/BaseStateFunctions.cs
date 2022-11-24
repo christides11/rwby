@@ -904,7 +904,29 @@ namespace rwby
             VarIncrementChargeLevel vars = (VarIncrementChargeLevel)variables;
             
             bool fResult = false;
-            var b = fm.InputManager.GetButton((int)vars.button, 0, 0);
+
+            var buttonInt = (int)vars.button;
+            if (vars.checkAbilityButton)
+            {
+                switch (fm.FCombatManager.lastUsedSpecial)
+                {
+                    case 0:
+                        buttonInt = (int)PlayerInputType.ABILITY_1;
+                        break;
+                    case 1:
+                        buttonInt = (int)PlayerInputType.ABILITY_2;
+                        break;
+                    case 2:
+                        buttonInt = (int)PlayerInputType.ABILITY_3;
+                        break;
+                    case 3:
+                        buttonInt = (int)PlayerInputType.ABILITY_4;
+                        break;
+                }
+            }
+            
+            var b = fm.InputManager.GetButton(buttonInt, 0, 0);
+            
             if (!b.isDown
                 || (fm.FCombatManager.CurrentChargeLevel == vars.maxLevel && !vars.canHold))
             {

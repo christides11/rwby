@@ -32,7 +32,7 @@ MonoBehaviour:
   stateType: 2
   maxUsesInString: 1
   maxUsesPerAirtime: -1
-  selfChainable: 3
+  selfChainable: 0
   allowBaseStateTransitions: 1
   inputSequence:
     executeWindow: 3
@@ -220,6 +220,9 @@ MonoBehaviour:
         - {x: -1, y: -1}
         condition:
           rid: -2
+        ignoreStateConditions: 0
+        ignoreAirtimeCheck: 0
+        ignoreStringUseCheck: 0
         checkInputSequence: 0
         checkCondition: 0
         targetType: 0
