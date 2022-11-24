@@ -112,7 +112,18 @@ namespace rwby
         public event EmptyDelegate OnCameraModeChanged;
         
         public float poleSpinLaunchForce = 10.0f;
-        
+
+        [Serializable]
+        public struct StringBoneReference
+        {
+            public string name;
+            public Transform bone;
+        }
+
+        public StringBoneReference[] boneRefs;
+
+        public Dictionary<string, Transform> boneReferences = new Dictionary<string, Transform>();
+
         public static void OnChangedCameraMode(Changed<FighterManager> changed)
         {
             changed.Behaviour.OnCameraModeChanged?.Invoke(changed.Behaviour);
@@ -127,6 +138,10 @@ namespace rwby
         {
             networkManager = NetworkManager.singleton;
             stateManager.movesets = fighterDefinition.GetMovesets();
+            foreach (var br in boneRefs)
+            {
+                boneReferences.Add(br.name, br.bone);
+            }
             foreach (var moveset in stateManager.movesets)
             {
                 (moveset as Moveset).Initialize();
