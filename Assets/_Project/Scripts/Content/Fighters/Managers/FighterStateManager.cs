@@ -200,13 +200,14 @@ namespace rwby
             return movesets[index];
         }
 
-        public bool CheckStateConditions(int movesetID, int stateID, int frame, bool checkInputSequence, bool checkCondition)
+        public bool CheckStateConditions(int movesetID, int stateID, int frame, bool checkInputSequence, bool checkCondition,
+            bool ignoreAirtimeCheck = false, bool ignoreStringUseCheck = false)
         {
             StateTimeline state = (StateTimeline)(GetState(movesetID, stateID));
             
-            if (state.maxUsesPerAirtime != -1 &&
+            if (!ignoreAirtimeCheck && state.maxUsesPerAirtime != -1 &&
                 !CheckStateAirUseCounter(movesetID, stateID, state.maxUsesPerAirtime)) return false;
-            if (state.maxUsesInString != -1 && !manager.FCombatManager.MovePossible(
+            if (!ignoreStringUseCheck && state.maxUsesInString != -1 && !manager.FCombatManager.MovePossible(
                     new MovesetStateIdentifier(movesetID, stateID), state.maxUsesInString, state.selfChainable))
                 return false;
             if (checkInputSequence &&

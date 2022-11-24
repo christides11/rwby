@@ -42,6 +42,8 @@ namespace rwby
         public IConditionVariables Condition => condition;
 
         public bool ignoreStateConditions;
+        public bool ignoreAirtimeCheck;
+        public bool ignoreStringUseCheck;
         public bool checkInputSequence;
         public bool checkCondition;
 

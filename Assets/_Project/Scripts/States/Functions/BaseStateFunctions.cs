@@ -38,8 +38,9 @@ namespace rwby
             int stateID = vars.state.GetState();
             StateTimeline state = (StateTimeline)(fm.FStateManager.GetState(movesetID, stateID));
 
-            if (vars.ignoreStateConditions && !fm.FStateManager.CheckStateConditions(movesetID, stateID, arg4, 
-                    vars.checkInputSequence, vars.checkCondition)) return;
+            if (!vars.ignoreStateConditions && !fm.FStateManager.CheckStateConditions(movesetID, stateID, arg4, 
+                    vars.checkInputSequence, vars.checkCondition, 
+                    vars.ignoreAirtimeCheck, vars.ignoreStringUseCheck)) return;
 
             switch (vars.targetType)
             {

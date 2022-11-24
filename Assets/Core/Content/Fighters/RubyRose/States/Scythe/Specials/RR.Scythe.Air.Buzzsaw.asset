@@ -23,7 +23,6 @@ MonoBehaviour:
   - rid: 8688056342057058304
   - rid: 8688056342057058310
   - rid: 8688056342057058309
-  - rid: 8688056342057058320
   - rid: 8688056342057058306
   - rid: 8688056342057058318
   - rid: 8688056342057058323
@@ -34,6 +33,7 @@ MonoBehaviour:
   - rid: 7270848729635094528
   - rid: 7270848729635094530
   - rid: 7270848729635094541
+  - rid: 8688056342057058320
   - rid: 387795891450544161
   auraRequirement: 0
   initialGroundedState: 2
@@ -295,6 +295,9 @@ MonoBehaviour:
         - {x: 5, y: -1}
         condition:
           rid: 8688056342057058307
+        ignoreStateConditions: 0
+        ignoreAirtimeCheck: 0
+        ignoreStringUseCheck: 0
         checkInputSequence: 0
         checkCondition: 0
         targetType: 0
@@ -390,6 +393,9 @@ MonoBehaviour:
         - {x: -1, y: -1}
         condition:
           rid: -2
+        ignoreStateConditions: 0
+        ignoreAirtimeCheck: 0
+        ignoreStringUseCheck: 0
         checkInputSequence: 0
         checkCondition: 0
         targetType: 0

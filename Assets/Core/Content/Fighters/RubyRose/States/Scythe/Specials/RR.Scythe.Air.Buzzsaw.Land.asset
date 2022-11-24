@@ -39,6 +39,7 @@ MonoBehaviour:
   initialGroundedState: 1
   stateType: 2
   maxUsesInString: 1
+  maxUsesPerAirtime: -1
   selfChainable: 0
   allowBaseStateTransitions: 1
   inputSequence:
@@ -55,8 +56,8 @@ MonoBehaviour:
     groundedCounterHitFoldoutGroup: 0
     hitStateGroundedGroups: -1
     hit:
-      groundHitState: 34
-      airHitState: 34
+      groundHitState: 32
+      airHitState: 32
       groundBounce: 0
       wallBounce: 0
       groundBounceForce: 0
@@ -70,16 +71,16 @@ MonoBehaviour:
       autolink: 0
       gravityAutolinkPercentage: 0
       movementAutolinkPercentage: 0
-      groundHitForce: {x: 0, y: 5, z: 0}
-      aerialHitForce: {x: 0, y: 5, z: 0}
+      groundHitForce: {x: 0, y: 8, z: 0}
+      aerialHitForce: {x: 0, y: 8, z: 0}
       pullPushMultiplier: 0
       pullPushMaxDistance: 10
       blockLift: 0
-      attackerHitstop: 8
-      hitstop: 8
-      hitstun: 60
+      attackerHitstop: 4
+      hitstop: 4
+      hitstun: 30
       blockstun: 15
-      untech: 60
+      untech: 30
       initialProration: 0
       comboProration: 0
       damage: 500
@@ -98,13 +99,13 @@ MonoBehaviour:
       blockEffect: 
       hitSoundbank:
         modGUID:
-          guid: 
+          guid: 1d292c1f00000000
         contentGUID:
-          guid: 
-      hitSound: 
-      hitSoundVolume: 0
-      hitSoundMinDist: 0
-      hitSoundMaxDist: 0
+          guid: 1d27280000000000
+      hitSound: swing1
+      hitSoundVolume: 1
+      hitSoundMinDist: 5
+      hitSoundMaxDist: 20
       hitBlockSoundbank:
         modGUID:
           guid: 
@@ -181,7 +182,7 @@ MonoBehaviour:
       ignoreHitstunScaling: 0
       ignorePushbackScaling: 0
   - ID: 1
-    groundedFoldoutGroup: 0
+    groundedFoldoutGroup: 1
     groundedCounterHitFoldoutGroup: 0
     hitStateGroundedGroups: -1
     hit:
@@ -205,8 +206,8 @@ MonoBehaviour:
       pullPushMultiplier: 0
       pullPushMaxDistance: 10
       blockLift: 0
-      attackerHitstop: 8
-      hitstop: 8
+      attackerHitstop: 12
+      hitstop: 12
       hitstun: 60
       blockstun: 15
       untech: 60
@@ -346,6 +347,9 @@ MonoBehaviour:
         - {x: -1, y: -1}
         condition:
           rid: -2
+        ignoreStateConditions: 0
+        ignoreAirtimeCheck: 0
+        ignoreStringUseCheck: 0
         checkInputSequence: 0
         checkCondition: 0
         targetType: 0
@@ -507,7 +511,7 @@ MonoBehaviour:
     - rid: 387795983688269843
       type: {class: VarExternal, ns: rwby, asm: rwby.csharp}
       data:
-        name: Try Ground Atk
+        name: Try Ground Special
         id: 17
         parent: 16
         children: 
@@ -515,7 +519,7 @@ MonoBehaviour:
         - {x: 1, y: 6}
         condition:
           rid: -2
-        asset: {fileID: 11400000, guid: 38d47b53b1c6fa24580e163448503c28, type: 2}
+        asset: {fileID: 11400000, guid: 3fcacb76d4c384943a095759ce984d6d, type: 2}
     - rid: 387795983688269844
       type: {class: VarExternal, ns: rwby, asm: rwby.csharp}
       data:
@@ -542,8 +546,8 @@ MonoBehaviour:
         boxType: 1
         attachedTo: 0
         shape: 0
-        offset: {x: 0, y: 1, z: 0}
-        boxExtents: {x: 1, y: 1, z: 1}
+        offset: {x: 0, y: 1, z: 1}
+        boxExtents: {x: 1, y: 1, z: 2}
         radius: 0
         definitionIndex: 0
     - rid: 2193520817874927616

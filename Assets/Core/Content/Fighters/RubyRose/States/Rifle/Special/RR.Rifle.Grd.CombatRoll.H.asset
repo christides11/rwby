@@ -26,7 +26,6 @@ MonoBehaviour:
   - rid: 8688056740327194626
   - rid: 7270848718906589184
   - rid: 7270848718906589187
-  - rid: 387796075454922752
   - rid: 387796079774793731
   - rid: 387796079774793732
   - rid: 387796079774793735
@@ -189,29 +188,6 @@ MonoBehaviour:
     RefIds:
     - rid: -2
       type: {class: , ns: , asm: }
-    - rid: 387796075454922752
-      type: {class: VarSetMovement, ns: rwby, asm: rwby.csharp}
-      data:
-        name: 
-        id: 18
-        parent: -1
-        children: 
-        frameRanges:
-        - {x: 1, y: 1}
-        condition:
-          rid: -2
-        inputSource: 1
-        normalizeInputSource: 0
-        useRotationIfInputZero: 0
-        reverseInputSource: 0
-        force:
-          rid: 387796075454922753
-    - rid: 387796075454922753
-      type: {class: FighterStatReferenceFloatBase, ns: rwby, asm: rwby.csharp}
-      data:
-        inverse: 0
-        statReference: 0
-        value: -15
     - rid: 387796079774793731
       type: {class: VarCreateBox, ns: rwby, asm: rwby.csharp}
       data:
@@ -291,6 +267,7 @@ MonoBehaviour:
         - {x: -1, y: -1}
         condition:
           rid: -2
+        ignoreStateConditions: 0
         checkInputSequence: 0
         checkCondition: 0
         targetType: 0
