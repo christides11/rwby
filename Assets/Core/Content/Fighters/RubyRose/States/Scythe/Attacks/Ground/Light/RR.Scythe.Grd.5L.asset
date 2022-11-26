@@ -27,7 +27,7 @@ MonoBehaviour:
   - rid: 8688056331001921542
   - rid: 8688056331001921543
   - rid: 8688056738971123712
-  - rid: 8688056738971123713
+  - rid: 387796143482339328
   - rid: 8688056738971123715
   - rid: 8688056740327194626
   - rid: 8688056833868562432
@@ -42,6 +42,7 @@ MonoBehaviour:
   initialGroundedState: 1
   stateType: 2
   maxUsesInString: 1
+  maxUsesPerAirtime: -1
   selfChainable: 0
   allowBaseStateTransitions: 1
   inputSequence:
@@ -247,6 +248,24 @@ MonoBehaviour:
         condition:
           rid: -2
         asset: {fileID: 11400000, guid: f103f0d58e560f448a4431a38a96fb76, type: 2}
+    - rid: 387796115928383488
+      type: {class: FighterBoneReferenceRaw, ns: rwby, asm: rwby.csharp}
+      data:
+        value: 1
+    - rid: 387796143482339328
+      type: {class: VarModifyEffectFrame, ns: rwby, asm: rwby.csharp}
+      data:
+        name: 
+        id: 22
+        parent: -1
+        children: 
+        frameRanges:
+        - {x: 1, y: -1}
+        condition:
+          rid: -2
+        modifyType: 0
+        effects: 00000000
+        frame: 1
     - rid: 2193520813467238401
       type: {class: VarChangeState, ns: rwby, asm: rwby.csharp}
       data:
@@ -258,6 +277,9 @@ MonoBehaviour:
         - {x: -1, y: -1}
         condition:
           rid: -2
+        ignoreStateConditions: 0
+        ignoreAirtimeCheck: 0
+        ignoreStringUseCheck: 0
         checkInputSequence: 0
         checkCondition: 0
         targetType: 0
@@ -406,8 +428,7 @@ MonoBehaviour:
         parent: -1
         children: 
         frameRanges:
-        - {x: 1, y: 4}
-        - {x: 6, y: -1}
+        - {x: 1, y: -1}
         condition:
           rid: -2
         modifyType: 0
@@ -424,35 +445,22 @@ MonoBehaviour:
         - {x: 1, y: 1}
         condition:
           rid: -2
-        modifyType: 0
+        modifyType: 1
         wantedEffects:
         - effectbank:
             modGUID:
               guid: 1d292c1f00000000
             contentGUID:
               guid: 1d27280000000000
-          effect: slash
-          parented: 1
-          offset: {x: 0, y: 1, z: 0}
-          rotation: {x: 0, y: 0, z: 180}
-          scale: {x: 1, y: 0.2, z: 1}
+          effect: rr.s.grd.5L
+          parent:
+            rid: 387796115928383488
+          offset: {x: 0, y: 0, z: 0}
+          rotation: {x: 0, y: 0, z: 0}
+          scale: {x: 1, y: 1, z: 1}
           autoIncrement: 0
         doNotAddToSet: 0
         OffsetStartAtFighter: 0
-    - rid: 8688056738971123713
-      type: {class: VarModifyEffectFrame, ns: rwby, asm: rwby.csharp}
-      data:
-        name: 
-        id: 8
-        parent: -1
-        children: 
-        frameRanges:
-        - {x: 6, y: -1}
-        condition:
-          rid: -2
-        modifyType: 0
-        effects: 00000000
-        frame: 1
     - rid: 8688056738971123715
       type: {class: VarClearCurrentEffects, ns: rwby, asm: rwby.csharp}
       data:
@@ -464,6 +472,7 @@ MonoBehaviour:
         - {x: -2, y: -2}
         condition:
           rid: -2
+        keepEffects: 0
     - rid: 8688056740327194626
       type: {class: VarModifySoundSet, ns: rwby, asm: rwby.csharp}
       data:

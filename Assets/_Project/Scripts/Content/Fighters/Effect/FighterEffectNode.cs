@@ -10,7 +10,7 @@ namespace rwby
         public int bank;
         public int effect;
         public int frame;
-        public NetworkBool parented;
+        public int parent;
         public Vector3 pos;
         public Vector3 rot;
         public Vector3 scale;
@@ -20,7 +20,7 @@ namespace rwby
             return bank == other.bank 
                    && effect == other.effect 
                    && frame == other.frame 
-                   && parented.Equals(other.parented) 
+                   && parent == other.parent
                    && pos.Equals(other.pos)
                    && rot.Equals(other.rot)
                    && scale.Equals(other.scale);
@@ -36,7 +36,7 @@ namespace rwby
             return a.bank == b.bank 
                    && a.effect == b.effect
                    && a.frame == b.frame
-                   && a.parented == b.parented
+                   && a.parent == b.parent
                    && a.pos == b.pos
                    && a.rot == b.rot
                    && a.scale == b.scale;
@@ -49,7 +49,7 @@ namespace rwby
 
         public override int GetHashCode()
         {
-            return HashCode.Combine(bank, effect, frame, parented, pos, rot, scale);
+            return HashCode.Combine(bank, effect, frame, parent, pos, rot, scale);
         }
     }
 }

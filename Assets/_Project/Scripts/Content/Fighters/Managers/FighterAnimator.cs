@@ -263,6 +263,7 @@ namespace rwby
 
             for (int i = 0; i < banks[^1].Animations.Count; i++)
             {
+                if (banks[^1].Animations[i].clip == null) continue;
                 animancer.Layers[0].CreateState(banks[^1].Animations[i].clip);
             }
         }

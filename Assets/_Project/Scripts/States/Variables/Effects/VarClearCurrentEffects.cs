@@ -39,5 +39,7 @@ namespace rwby
         [SelectImplementation(typeof(IConditionVariables))] [SerializeField, SerializeReference]
         public IConditionVariables condition;
         public IConditionVariables Condition => condition;
+
+        public bool keepEffects;
     }
 }

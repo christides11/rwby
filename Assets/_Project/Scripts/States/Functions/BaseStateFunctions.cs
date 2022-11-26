@@ -886,8 +886,9 @@ namespace rwby
         public static void ClearCurrentEffects(IFighterBase fighter, IStateVariables variables, HnSF.StateTimeline stateTimeline, int frame)
         {
             FighterManager fm = (FighterManager)fighter;
+            var vars = (VarClearCurrentEffects)variables;
 
-            fm.fighterEffector.ClearCurrentEffects(true);
+            fm.fighterEffector.ClearCurrentEffects(!vars.keepEffects);
         }
         
         public static void ModifySoundSet(IFighterBase fighter, IStateVariables variables, HnSF.StateTimeline stateTimeline, int frame)

@@ -22,6 +22,8 @@ namespace rwby
         private FighterEffectsRoot currentEffectsRepresentation;
 
         public BaseEffect[] effectObjects = new BaseEffect[10];
+
+        public FighterManager manager;
         
         private void Awake()
         {
@@ -43,7 +45,7 @@ namespace rwby
                     bank = bankMap[wantedEffects[i].effectbank]+1,
                     effect = banks[bankMap[wantedEffects[i].effectbank]].EffectMap[wantedEffects[i].effect]+1,
                     frame = 0,
-                    parented = wantedEffects[i].parented,
+                    parent = wantedEffects[i].parent == null ? 0 : wantedEffects[i].parent.GetBone(),
                     pos = posBase + wantedEffects[i].offset,
                     rot = wantedEffects[i].rotation,
                     scale = wantedEffects[i].scale
@@ -179,7 +181,8 @@ namespace rwby
                         effectObjects[i].bank = effects.effects[i].bank;
                         effectObjects[i].effect = effects.effects[i].effect;
                     }
-                    effectObjects[i].transform.SetParent(effects.effects[i].parented ? transform : null, false);
+                    effectObjects[i].transform.SetParent(effects.effects[i].parent == 0 ? null : 
+                        manager.boneRefs[effects.effects[i].parent-1], false);
                     effectObjects[i].transform.localPosition = effects.effects[i].pos;
                     effectObjects[i].transform.localRotation = Quaternion.Euler(effects.effects[i].rot);
                     effectObjects[i].transform.localScale = effects.effects[i].scale;

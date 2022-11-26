@@ -7,7 +7,8 @@ namespace rwby
     {
         public ModObjectSetContentReference effectbank;
         public string effect;
-        public bool parented;
+        [SelectImplementation(typeof(FighterBoneReferenceBase))] [SerializeField, SerializeReference]
+        public FighterBoneReferenceBase parent;
         public Vector3 offset;
         public Vector3 rotation;
         public Vector3 scale;

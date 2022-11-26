@@ -43,6 +43,7 @@ MonoBehaviour:
   initialGroundedState: 1
   stateType: 2
   maxUsesInString: 1
+  maxUsesPerAirtime: -1
   selfChainable: 0
   allowBaseStateTransitions: 1
   inputSequence:
@@ -240,6 +241,9 @@ MonoBehaviour:
         - {x: 10, y: -1}
         condition:
           rid: -2
+        ignoreStateConditions: 0
+        ignoreAirtimeCheck: 0
+        ignoreStringUseCheck: 0
         checkInputSequence: 1
         checkCondition: 0
         targetType: 0
@@ -262,6 +266,9 @@ MonoBehaviour:
         - {x: 7, y: 9}
         condition:
           rid: -2
+        ignoreStateConditions: 0
+        ignoreAirtimeCheck: 0
+        ignoreStringUseCheck: 0
         checkInputSequence: 1
         checkCondition: 0
         targetType: 0
@@ -273,6 +280,10 @@ MonoBehaviour:
       type: {class: RubyRoseStateReference, ns: rwby.core, asm: rwby.core}
       data:
         state: 63
+    - rid: 387796124348973056
+      type: {class: FighterBoneReferenceRaw, ns: rwby, asm: rwby.csharp}
+      data:
+        value: 1
     - rid: 2193520813467238401
       type: {class: VarChangeState, ns: rwby, asm: rwby.csharp}
       data:
@@ -284,6 +295,9 @@ MonoBehaviour:
         - {x: -1, y: -1}
         condition:
           rid: -2
+        ignoreStateConditions: 0
+        ignoreAirtimeCheck: 0
+        ignoreStringUseCheck: 0
         checkInputSequence: 0
         checkCondition: 0
         targetType: 0
@@ -422,7 +436,7 @@ MonoBehaviour:
               guid: 1d292c1f00000000
             contentGUID:
               guid: 2c2c000000000000
-          animation: scythe.grd.a
+          animation: scythe.grd.b
         fadeTime: 0
     - rid: 8688056331001921543
       type: {class: VarModifyAnimationFrame, ns: rwby, asm: rwby.csharp}
@@ -447,7 +461,7 @@ MonoBehaviour:
         parent: -1
         children: 
         frameRanges:
-        - {x: 1, y: 1}
+        - {x: 5, y: 5}
         condition:
           rid: -2
         modifyType: 0
@@ -458,10 +472,11 @@ MonoBehaviour:
             contentGUID:
               guid: 1d27280000000000
           effect: slash
-          parented: 1
+          parent:
+            rid: 387796124348973056
           offset: {x: 0, y: 1, z: 0}
-          rotation: {x: 0, y: 0, z: 180}
-          scale: {x: 1, y: 0.2, z: 1}
+          rotation: {x: 0, y: 45, z: 180}
+          scale: {x: 1, y: 1, z: 1}
           autoIncrement: 0
         doNotAddToSet: 0
         OffsetStartAtFighter: 0

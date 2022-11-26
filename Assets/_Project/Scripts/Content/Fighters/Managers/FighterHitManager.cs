@@ -62,7 +62,7 @@ namespace rwby
                     effect = hitReaction.hitInfoGroup.hitEffect,
                     effectbank = hitReaction.hitInfoGroup.hitEffectbank,
                     offset = enemyHurtbox.Position,
-                    parented = false,
+                    parent = new FighterBoneReferenceRaw(){ value = 0 },
                     rotation = manager.myTransform.eulerAngles,
                     scale = new Vector3(1, 1, 1),
                     autoIncrement = true
@@ -101,7 +101,7 @@ namespace rwby
                     effect = hitReaction.hitInfoGroup.hitEffect,
                     effectbank = hitReaction.hitInfoGroup.hitEffectbank,
                     offset = manager.myTransform.position,
-                    parented = false,
+                    parent = new FighterBoneReferenceRaw(){ value = 0 },
                     rotation = manager.myTransform.eulerAngles,
                     scale = new Vector3(1, 1, 1),
                     autoIncrement = true
@@ -142,7 +142,7 @@ namespace rwby
                     effect = hitReaction.hitInfoGroup.blockEffect,
                     effectbank = hitReaction.hitInfoGroup.blockEffectbank,
                     offset = enemyHurtbox.Position,
-                    parented = false,
+                    parent = new FighterBoneReferenceRaw(){ value = 0 },
                     rotation = enemyHurtbox.ownerNetworkObject.gameObject.transform.eulerAngles,
                     scale = new Vector3(1, 1, 1),
                     autoIncrement = true
