@@ -10,12 +10,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7789f25d17401bc4b915ca6fcecf2a29, type: 3}
-  m_Name: RR.Shared.Ground.QuickTech
+  m_Name: RR.Shared.Ground.TechRise
   m_EditorClassIdentifier: 
-  stateName: Quick Tech
+  stateName: Tech Rise
   useBaseState: 0
   baseState: {fileID: 0}
-  totalFrames: 19
+  totalFrames: 21
   autoIncrement: 1
   autoLoop: 0
   autoLoopFrame: 1
@@ -23,9 +23,13 @@ MonoBehaviour:
   - rid: 8688056249043648514
   - rid: 8688056249043648516
   - rid: 8688056249043648512
+  - rid: 387796161339850768
+  auraRequirement: 0
   initialGroundedState: 1
   stateType: 4
   maxUsesInString: -1
+  maxUsesPerAirtime: -1
+  selfChainable: 0
   allowBaseStateTransitions: 1
   inputSequence:
     executeWindow: 3
@@ -43,6 +47,26 @@ MonoBehaviour:
     RefIds:
     - rid: -2
       type: {class: , ns: , asm: }
+    - rid: 387796161339850768
+      type: {class: VarModifyAnimationSet, ns: rwby, asm: rwby.csharp}
+      data:
+        name: Scythe Animation
+        id: 3
+        parent: -1
+        children: 
+        frameRanges:
+        - {x: 0, y: 0}
+        condition:
+          rid: -2
+        modifyType: 1
+        wantedAnimations:
+        - animationbank:
+            modGUID:
+              guid: 1d292c1f00000000
+            contentGUID:
+              guid: 2c2c000000000000
+          animation: scythe.techrise
+        fadeTime: 0
     - rid: 8688056249043648512
       type: {class: VarChangeState, ns: rwby, asm: rwby.csharp}
       data:
@@ -54,12 +78,16 @@ MonoBehaviour:
         - {x: -1, y: -1}
         condition:
           rid: -2
+        ignoreStateConditions: 0
+        ignoreAirtimeCheck: 0
+        ignoreStringUseCheck: 0
         checkInputSequence: 0
         checkCondition: 0
         targetType: 0
         stateMovesetID: -1
         state:
           rid: 8688056249043648513
+        frame: 0
     - rid: 8688056249043648513
       type: {class: FighterCmnStateReference, ns: rwby, asm: rwby.csharp}
       data:
@@ -97,16 +125,20 @@ MonoBehaviour:
         - {x: 1, y: -1}
         condition:
           rid: 8688056249043648517
+        ignoreStateConditions: 0
+        ignoreAirtimeCheck: 0
+        ignoreStringUseCheck: 0
         checkInputSequence: 0
         checkCondition: 0
         targetType: 0
         stateMovesetID: -1
         state:
           rid: 8688056249043648518
+        frame: 0
     - rid: 8688056249043648517
       type: {class: ConditionIsGrounded, ns: rwby, asm: rwby.csharp}
       data:
-        inverse: 0
+        inverse: 1
     - rid: 8688056249043648518
       type: {class: FighterCmnStateReference, ns: rwby, asm: rwby.csharp}
       data:

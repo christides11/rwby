@@ -21,14 +21,15 @@ MonoBehaviour:
   autoLoopFrame: 1
   data:
   - rid: 1219246356780023813
-  - rid: 1219246356780023815
-  - rid: 8688056249043648523
   - rid: 8688056342057058327
   - rid: 8688056342057058329
+  - rid: 387796149032714244
+  - rid: 387796161339850766
   auraRequirement: 0
   initialGroundedState: 2
   stateType: 4
   maxUsesInString: -1
+  maxUsesPerAirtime: -1
   selfChainable: 0
   allowBaseStateTransitions: 1
   inputSequence:
@@ -49,6 +50,51 @@ MonoBehaviour:
     RefIds:
     - rid: -2
       type: {class: , ns: , asm: }
+    - rid: 387796149032714244
+      type: {class: VarModifyAnimationSet, ns: rwby, asm: rwby.csharp}
+      data:
+        name: Scythe Animation
+        id: 6
+        parent: -1
+        children: 
+        frameRanges:
+        - {x: 0, y: 0}
+        condition:
+          rid: 387796149032714245
+        modifyType: 1
+        wantedAnimations:
+        - animationbank:
+            modGUID:
+              guid: 1d292c1f00000000
+            contentGUID:
+              guid: 2c2c000000000000
+          animation: scythe.groundlay.faceup
+        fadeTime: 0
+    - rid: 387796149032714245
+      type: {class: ConditionMoveset, ns: rwby, asm: rwby.csharp}
+      data:
+        moveset: 0
+    - rid: 387796161339850766
+      type: {class: VarModifyFallSpeed, ns: rwby, asm: rwby.csharp}
+      data:
+        name: 
+        id: 7
+        parent: -1
+        children: 
+        frameRanges:
+        - {x: 0, y: 0}
+        condition:
+          rid: -2
+        targetType: 0
+        modifyType: 1
+        value:
+          rid: 387796161339850767
+    - rid: 387796161339850767
+      type: {class: FighterStatReferenceFloatBase, ns: rwby, asm: rwby.csharp}
+      data:
+        inverse: 0
+        statReference: 0
+        value: 0
     - rid: 1219246356780023813
       type: {class: VarCreateBox, ns: rwby, asm: rwby.csharp}
       data:
@@ -67,89 +113,6 @@ MonoBehaviour:
         boxExtents: {x: 1, y: 1, z: 1}
         radius: 0
         definitionIndex: 0
-    - rid: 1219246356780023815
-      type: {class: VarChangeState, ns: rwby, asm: rwby.csharp}
-      data:
-        name: Neutral Tech
-        id: 5
-        parent: -1
-        children: 
-        frameRanges:
-        - {x: 1, y: 8}
-        condition:
-          rid: 1219246356780023821
-        checkInputSequence: 0
-        checkCondition: 0
-        targetType: 0
-        stateMovesetID: -1
-        state:
-          rid: 1219246356780023816
-        frame: 0
-    - rid: 1219246356780023816
-      type: {class: FighterCmnStateReference, ns: rwby, asm: rwby.csharp}
-      data:
-        state: 24
-    - rid: 1219246356780023821
-      type: {class: ConditionAnd, ns: rwby, asm: rwby.csharp}
-      data:
-        conditions:
-        - rid: 1219246356780023822
-        - rid: 1219246356780023823
-    - rid: 1219246356780023822
-      type: {class: ConditionButton, ns: rwby, asm: rwby.csharp}
-      data:
-        inverse: 0
-        checkAbilityButton: 0
-        button: 2
-        buttonState: 0
-        offset: 0
-        buffer: 0
-    - rid: 1219246356780023823
-      type: {class: ConditionHardKnockdown, ns: rwby, asm: rwby.csharp}
-      data:
-        inverse: 1
-    - rid: 8688056249043648523
-      type: {class: VarChangeState, ns: rwby, asm: rwby.csharp}
-      data:
-        name: Try Neutral Tech
-        id: 1
-        parent: -1
-        children: 
-        frameRanges:
-        - {x: 24, y: 60}
-        condition:
-          rid: 8688056249043648525
-        checkInputSequence: 0
-        checkCondition: 0
-        targetType: 0
-        stateMovesetID: -1
-        state:
-          rid: 8688056249043648524
-        frame: 0
-    - rid: 8688056249043648524
-      type: {class: FighterCmnStateReference, ns: rwby, asm: rwby.csharp}
-      data:
-        state: 24
-    - rid: 8688056249043648525
-      type: {class: ConditionAnd, ns: rwby, asm: rwby.csharp}
-      data:
-        conditions:
-        - rid: 8688056249043648526
-        - rid: 8688056249043648527
-    - rid: 8688056249043648526
-      type: {class: ConditionButton, ns: rwby, asm: rwby.csharp}
-      data:
-        inverse: 0
-        checkAbilityButton: 0
-        button: 2
-        buttonState: 0
-        offset: 0
-        buffer: 0
-    - rid: 8688056249043648527
-      type: {class: ConditionMoveStickMagnitude, ns: rwby, asm: rwby.csharp}
-      data:
-        minValue: 0.1
-        maxValue: 2
     - rid: 8688056342057058327
       type: {class: VarMultiplyMovement, ns: rwby, asm: rwby.csharp}
       data:

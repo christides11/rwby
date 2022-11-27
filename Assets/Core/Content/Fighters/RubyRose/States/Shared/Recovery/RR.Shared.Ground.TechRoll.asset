@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: RR.Shared.Ground.TechRoll
   m_EditorClassIdentifier: 
   stateName: Tech Roll
-  useBaseState: 0
-  baseState: {fileID: 0}
+  useBaseState: 1
+  baseState: {fileID: 11400000, guid: dea2110b4f706b24a8814a3a82fadb7c, type: 2}
   totalFrames: 30
   autoIncrement: 1
   autoLoop: 0
@@ -24,6 +24,7 @@ MonoBehaviour:
   initialGroundedState: 1
   stateType: 4
   maxUsesInString: -1
+  maxUsesPerAirtime: -1
   selfChainable: 0
   allowBaseStateTransitions: 1
   inputSequence:

@@ -41,5 +41,6 @@ namespace rwby
         public IConditionVariables Condition => condition;
 
         public bool keepEffects;
+        public bool autoIncrementEffects;
     }
 }

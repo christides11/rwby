@@ -198,6 +198,7 @@ namespace rwby.ui.mainmenu
             lobbyMenuHandler.sessionManagerGamemode = smc;
             
             Debug.Log($"{fl._runner.SessionInfo.Name} ({fl._runner.SessionInfo.Region})");
+            GUIUtility.systemCopyBuffer = fl._runner.SessionInfo.Name;
 
             mainMenu.currentHandler.Forward((int)MainMenuType.LOBBY);
         }

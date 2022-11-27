@@ -1,6 +1,75 @@
+# 1.1.4
+
+## F
+
+### Build 609 (Nov 01, 2022)
+
+**Breaking Changes**
+
+- Restored `INetworkObjectPool.ReleaseInstance` being called when nested `NetworkObject` is despawned/destroyed explicitly (removed in 1.1.3 Nightly 586). The default pool implementation calls `UnityEngine.Object.Destroy` in such case. Custom pool implementation should check `NetworkObject.IsSpawnedPrefabRoot`/`NetworkObject.IsSpawnedPrefabNestedObject` properties to adjust its behaviour if despawning/destroying nested objects is used
+
+**What's New**
+
+- New `NetworkTransform` interpolation algorithm for Shared Mode, addressing known issues and limitations with the legacy one, which can still be used if configured like so in the NT behaviour
+
+**Bug Fixes**
+
+- Fixed: Issue with aoi after player leave sand rejoins on same slot
+
 # 1.1.3
 
+## F
+
+### Build 599 (Oct 18, 2022)
+
+- Releasing 1.1.3 Stable
+
 ## Nightly
+
+### Build 597 (Oct 18, 2022)
+
+**Bug Fixes**
+
+- Fixed: Change Session Flags to same value breaks updates
+
+### Build 596 (Oct 14, 2022)
+
+**Bug Fixes**
+
+- Fixed: "Failed to get user type word count" weaver error when referencing types from other weaved asmdefs
+
+### Build 594 (Oct 12, 2022)
+
+**Changes**
+
+- Cloud Resend and Disconnect Timeout Settings
+
+### Build 593 (Oct 11, 2022)
+
+**Bug Fixes**
+
+- Fixed: Invalid cached NetAddress
+
+### Build 591 (Oct 07, 2022)
+
+**Changes**
+
+- Reuse NetworkID from Resume NO on Host Migration
+- NetworkObject.CopyStateFrom now also copy State from nested NetworkObjects
+
+**Bug Fixes**
+
+- Fixed: Memory Access Violation when releasing Envelopes
+
+### Build 590 (Oct 06, 2022)
+
+**Changes**
+
+- Implicit cast of PlayerRef to bool is now marked as obsolete, will be removed in next stable release
+
+**Bug Fixes**
+
+- Fixed: An issue where mixing reliable and unreliable RPCs could prevent RPCs from being handled at all for a client with poor network conditions
 
 ### Build 589 (Oct 05, 2022)
 

@@ -888,7 +888,7 @@ namespace rwby
             FighterManager fm = (FighterManager)fighter;
             var vars = (VarClearCurrentEffects)variables;
 
-            fm.fighterEffector.ClearCurrentEffects(!vars.keepEffects);
+            fm.fighterEffector.ClearCurrentEffects(!vars.keepEffects, vars.autoIncrementEffects);
         }
         
         public static void ModifySoundSet(IFighterBase fighter, IStateVariables variables, HnSF.StateTimeline stateTimeline, int frame)

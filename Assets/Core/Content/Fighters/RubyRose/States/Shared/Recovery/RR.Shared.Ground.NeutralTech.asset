@@ -21,9 +21,13 @@ MonoBehaviour:
   autoLoopFrame: 1
   data:
   - rid: 8688056342057058331
+  - rid: 387796161339850769
+  auraRequirement: 0
   initialGroundedState: 2
   stateType: 4
   maxUsesInString: -1
+  maxUsesPerAirtime: -1
+  selfChainable: 0
   allowBaseStateTransitions: 1
   inputSequence:
     executeWindow: 3
@@ -41,6 +45,26 @@ MonoBehaviour:
     RefIds:
     - rid: -2
       type: {class: , ns: , asm: }
+    - rid: 387796161339850769
+      type: {class: VarModifyAnimationSet, ns: rwby, asm: rwby.csharp}
+      data:
+        name: Scythe Animation
+        id: 1
+        parent: -1
+        children: 
+        frameRanges:
+        - {x: 0, y: 0}
+        condition:
+          rid: -2
+        modifyType: 1
+        wantedAnimations:
+        - animationbank:
+            modGUID:
+              guid: 1d292c1f00000000
+            contentGUID:
+              guid: 2c2c000000000000
+          animation: scythe.neutraltech
+        fadeTime: 0
     - rid: 8688056342057058331
       type: {class: VarMultiplyMovement, ns: rwby, asm: rwby.csharp}
       data:

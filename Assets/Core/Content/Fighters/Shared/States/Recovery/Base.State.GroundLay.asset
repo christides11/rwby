@@ -21,9 +21,15 @@ MonoBehaviour:
   autoLoopFrame: 1
   data:
   - rid: 8688056272189390848
+  - rid: 387796161339850752
+  - rid: 387796161339850754
+  - rid: 387796161339850761
+  auraRequirement: 0
   initialGroundedState: 1
   stateType: 4
   maxUsesInString: -1
+  maxUsesPerAirtime: -1
+  selfChainable: 0
   allowBaseStateTransitions: 1
   inputSequence:
     executeWindow: 3
@@ -41,10 +47,133 @@ MonoBehaviour:
     RefIds:
     - rid: -2
       type: {class: , ns: , asm: }
+    - rid: 387796161339850752
+      type: {class: VarEmpty, ns: rwby, asm: rwby.csharp}
+      data:
+        name: Not HDK
+        id: 1
+        parent: -1
+        children: 0200000003000000
+        frameRanges: []
+        condition:
+          rid: 387796161339850753
+    - rid: 387796161339850753
+      type: {class: ConditionHardKnockdown, ns: rwby, asm: rwby.csharp}
+      data:
+        inverse: 1
+    - rid: 387796161339850754
+      type: {class: VarChangeState, ns: rwby, asm: rwby.csharp}
+      data:
+        name: Try Tech Roll
+        id: 2
+        parent: 1
+        children: 
+        frameRanges:
+        - {x: 1, y: 5}
+        condition:
+          rid: 387796161339850756
+        ignoreStateConditions: 1
+        ignoreAirtimeCheck: 1
+        ignoreStringUseCheck: 0
+        checkInputSequence: 0
+        checkCondition: 0
+        targetType: 0
+        stateMovesetID: -1
+        state:
+          rid: 387796161339850755
+        frame: 0
+    - rid: 387796161339850755
+      type: {class: FighterCmnStateReference, ns: rwby, asm: rwby.csharp}
+      data:
+        state: 21
+    - rid: 387796161339850756
+      type: {class: ConditionAnd, ns: rwby, asm: rwby.csharp}
+      data:
+        conditions:
+        - rid: 387796161339850757
+        - rid: 387796161339850760
+    - rid: 387796161339850757
+      type: {class: ConditionOr, ns: rwby, asm: rwby.csharp}
+      data:
+        conditions:
+        - rid: 387796161339850758
+        - rid: 387796161339850759
+    - rid: 387796161339850758
+      type: {class: ConditionButton, ns: rwby, asm: rwby.csharp}
+      data:
+        inverse: 0
+        checkAbilityButton: 0
+        button: 2
+        buttonState: 0
+        offset: 0
+        buffer: 0
+    - rid: 387796161339850759
+      type: {class: ConditionButton, ns: rwby, asm: rwby.csharp}
+      data:
+        inverse: 0
+        checkAbilityButton: 0
+        button: 3
+        buttonState: 0
+        offset: 0
+        buffer: 0
+    - rid: 387796161339850760
+      type: {class: ConditionMoveStickMagnitude, ns: rwby, asm: rwby.csharp}
+      data:
+        minValue: 0.1
+        maxValue: 2
+    - rid: 387796161339850761
+      type: {class: VarChangeState, ns: rwby, asm: rwby.csharp}
+      data:
+        name: Try Neutral Tech
+        id: 3
+        parent: 1
+        children: 
+        frameRanges:
+        - {x: 1, y: 5}
+        condition:
+          rid: 387796161339850762
+        ignoreStateConditions: 1
+        ignoreAirtimeCheck: 1
+        ignoreStringUseCheck: 0
+        checkInputSequence: 0
+        checkCondition: 0
+        targetType: 0
+        stateMovesetID: -1
+        state:
+          rid: 387796161339850765
+        frame: 0
+    - rid: 387796161339850762
+      type: {class: ConditionOr, ns: rwby, asm: rwby.csharp}
+      data:
+        conditions:
+        - rid: 387796161339850763
+        - rid: 387796161339850764
+    - rid: 387796161339850763
+      type: {class: ConditionButton, ns: rwby, asm: rwby.csharp}
+      data:
+        inverse: 0
+        checkAbilityButton: 0
+        button: 2
+        buttonState: 0
+        offset: 0
+        buffer: 0
+    - rid: 387796161339850764
+      type: {class: ConditionButton, ns: rwby, asm: rwby.csharp}
+      data:
+        inverse: 0
+        checkAbilityButton: 0
+        button: 3
+        buttonState: 0
+        offset: 0
+        buffer: 0
+    - rid: 387796161339850765
+      type: {class: FighterCmnStateReference, ns: rwby, asm: rwby.csharp}
+      data:
+        state: 24
     - rid: 8688056272189390848
       type: {class: VarChangeState, ns: rwby, asm: rwby.csharp}
       data:
-        name: Force Neutral Tech
+        name: Force Tech Rise
         id: 0
         parent: -1
         children: 
@@ -52,13 +181,17 @@ MonoBehaviour:
         - {x: -1, y: -1}
         condition:
           rid: -2
+        ignoreStateConditions: 0
+        ignoreAirtimeCheck: 0
+        ignoreStringUseCheck: 0
         checkInputSequence: 0
         checkCondition: 0
         targetType: 0
         stateMovesetID: -1
         state:
           rid: 8688056272189390849
+        frame: 0
     - rid: 8688056272189390849
       type: {class: FighterCmnStateReference, ns: rwby, asm: rwby.csharp}
       data:
-        state: 24
+        state: 25

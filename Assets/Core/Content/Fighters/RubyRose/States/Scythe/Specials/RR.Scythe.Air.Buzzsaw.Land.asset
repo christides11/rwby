@@ -182,7 +182,7 @@ MonoBehaviour:
       ignoreHitstunScaling: 0
       ignorePushbackScaling: 0
   - ID: 1
-    groundedFoldoutGroup: 1
+    groundedFoldoutGroup: 0
     groundedCounterHitFoldoutGroup: 0
     hitStateGroundedGroups: -1
     hit:
@@ -321,7 +321,7 @@ MonoBehaviour:
     - rid: 387795891450544149
       type: {class: VarCreateBox, ns: rwby, asm: rwby.csharp}
       data:
-        name: 
+        name: Hitbox
         id: 9
         parent: -1
         children: 
@@ -329,7 +329,7 @@ MonoBehaviour:
         - {x: 7, y: 9}
         condition:
           rid: -2
-        boxType: 0
+        boxType: 1
         attachedTo: 0
         shape: 0
         offset: {x: 0, y: 1, z: 1}

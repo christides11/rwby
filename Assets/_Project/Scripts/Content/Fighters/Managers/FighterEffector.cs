@@ -59,7 +59,7 @@ namespace rwby
             dirty = true;
         }
 
-        public void ClearCurrentEffects(bool removeEffects = false)
+        public void ClearCurrentEffects(bool removeEffects = false, bool autoIncrementEffects = true)
         {
             if (removeEffects)
             {
@@ -69,6 +69,16 @@ namespace rwby
                     temp.effects.Set((currentEffectIndex[i] % 10), new FighterEffectNode());
                 }
                 effects = temp;
+            }
+            else
+            {
+                for (int i = 0; i < currentEffectIndex.Count; i++)
+                {
+                    if (autoIncrementEffects)
+                    {
+                        autoIncrementEffect.Set((currentEffectIndex[i] % 10), true);
+                    }
+                }
             }
             currentEffectIndex.Clear();
             dirty = true;

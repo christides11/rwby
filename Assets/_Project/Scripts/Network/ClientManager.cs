@@ -23,16 +23,18 @@ namespace rwby
 		private FusionLauncher sessionHandler;
 
 		// INPUT //
-		[Networked] public NetworkClientInputData latestConfirmedInput { get; set; }
+		[Networked] public int latestConfirmedInput { get; set; } = 0;
 		[Networked, Capacity(10)] public NetworkArray<NetworkClientInputData> inputBuffer { get; }
-		[Networked] public int inputBufferPosition { get; set; }
-		public int setInputDelay = 3;
+		[Networked] public int inputBufferPosition { get; set; } = 0;
+		[Networked] public int setInputDelay { get; set; } = 0;
 
 		[Networked] public byte mapLoadPercent { get; set; } = 100;
 		[Networked] public NetworkBool ReadyStatus { get; set; } = false;
 
 		public List<string> profiles = new List<string>(4);
 
+		public int tempInputDelaySetter = 3;
+		
 		protected virtual void Awake()
 		{
 			gameManager = GameManager.singleton;
@@ -52,6 +54,7 @@ namespace rwby
 				Runner.AddCallbacks(this);
 				GameManager.singleton.localPlayerManager.OnPlayerCountChanged += WhenPlayerCountChanged;
 			}
+			setInputDelay = tempInputDelaySetter;
 			DontDestroyOnLoad(gameObject);
 		}
 
@@ -268,17 +271,27 @@ namespace rwby
 
 		public override void FixedUpdateNetwork()
 		{
+			inputBufferPosition++;
 			if (GetInput(out NetworkClientInputData input))
 			{
-				inputBuffer.Set((inputBufferPosition + setInputDelay) % (inputBuffer.Length), input);
+				inputBuffer.Set((inputBufferPosition + setInputDelay) % inputBuffer.Length, input);
+				RPC_SendInputToServer(inputBufferPosition + setInputDelay, input);
+				latestConfirmedInput = inputBufferPosition + setInputDelay;
 			}
-			
-			inputBufferPosition++;
 		}
-		
+
+		[Rpc(RpcSources.InputAuthority | RpcSources.StateAuthority, RpcTargets.StateAuthority)]
+		private void RPC_SendInputToServer(int index, NetworkClientInputData input)
+		{
+			latestConfirmedInput = index;
+			inputBuffer.Set(index % inputBuffer.Length, input);
+		}
+
 		public NetworkPlayerInputData GetInput(int inputIndex)
 		{
-			return inputBuffer[(inputBufferPosition) % inputBuffer.Length].players[inputIndex];
+			return inputBufferPosition <= latestConfirmedInput
+				? inputBuffer[inputBufferPosition % inputBuffer.Length].players[inputIndex]
+				: inputBuffer[latestConfirmedInput % inputBuffer.Length].players[inputIndex];
 		}
 
 		public void OnPlayerJoined(NetworkRunner runner, PlayerRef player) { }
