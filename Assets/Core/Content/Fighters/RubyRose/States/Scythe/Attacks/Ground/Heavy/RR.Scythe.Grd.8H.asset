@@ -26,9 +26,6 @@ MonoBehaviour:
   - rid: 8688056217396838433
   - rid: 8688056331001921542
   - rid: 8688056331001921543
-  - rid: 8688056738971123712
-  - rid: 8688056738971123713
-  - rid: 8688056738971123715
   - rid: 8688056740327194626
   - rid: 387795983688269869
   - rid: 8688056833868562432
@@ -280,10 +277,6 @@ MonoBehaviour:
       type: {class: RubyRoseStateReference, ns: rwby.core, asm: rwby.core}
       data:
         state: 63
-    - rid: 387796124348973056
-      type: {class: FighterBoneReferenceRaw, ns: rwby, asm: rwby.csharp}
-      data:
-        value: 1
     - rid: 2193520813467238401
       type: {class: VarChangeState, ns: rwby, asm: rwby.csharp}
       data:
@@ -453,58 +446,6 @@ MonoBehaviour:
         modifyType: 0
         animations: 00000000
         frame: 1
-    - rid: 8688056738971123712
-      type: {class: VarModifyEffectSet, ns: rwby, asm: rwby.csharp}
-      data:
-        name: 
-        id: 7
-        parent: -1
-        children: 
-        frameRanges:
-        - {x: 5, y: 5}
-        condition:
-          rid: -2
-        modifyType: 0
-        wantedEffects:
-        - effectbank:
-            modGUID:
-              guid: 1d292c1f00000000
-            contentGUID:
-              guid: 1d27280000000000
-          effect: slash
-          parent:
-            rid: 387796124348973056
-          offset: {x: 0, y: 1, z: 0}
-          rotation: {x: 0, y: 45, z: 180}
-          scale: {x: 1, y: 1, z: 1}
-          autoIncrement: 0
-        doNotAddToSet: 0
-        OffsetStartAtFighter: 0
-    - rid: 8688056738971123713
-      type: {class: VarModifyEffectFrame, ns: rwby, asm: rwby.csharp}
-      data:
-        name: 
-        id: 8
-        parent: -1
-        children: 
-        frameRanges:
-        - {x: 6, y: -1}
-        condition:
-          rid: -2
-        modifyType: 0
-        effects: 00000000
-        frame: 1
-    - rid: 8688056738971123715
-      type: {class: VarClearCurrentEffects, ns: rwby, asm: rwby.csharp}
-      data:
-        name: 
-        id: 9
-        parent: -1
-        children: 
-        frameRanges:
-        - {x: -2, y: -2}
-        condition:
-          rid: -2
     - rid: 8688056740327194626
       type: {class: VarModifySoundSet, ns: rwby, asm: rwby.csharp}
       data:
