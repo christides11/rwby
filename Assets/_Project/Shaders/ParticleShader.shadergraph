@@ -88,9 +88,6 @@
             "m_Id": "e0b7e2d02725458ea4011da8f10fced0"
         },
         {
-            "m_Id": "2f615673f4de4b2b9accbe0f0d386b23"
-        },
-        {
             "m_Id": "eed7f3af71e0415d8a2100fe8808e55f"
         },
         {
@@ -195,20 +192,6 @@
             "m_InputSlot": {
                 "m_Node": {
                     "m_Id": "4766a008a4e04252a8ec739cf7a33b98"
-                },
-                "m_SlotId": 0
-            }
-        },
-        {
-            "m_OutputSlot": {
-                "m_Node": {
-                    "m_Id": "2f615673f4de4b2b9accbe0f0d386b23"
-                },
-                "m_SlotId": 0
-            },
-            "m_InputSlot": {
-                "m_Node": {
-                    "m_Id": "8514eb7a078e43d5b263ced10461c821"
                 },
                 "m_SlotId": 0
             }
@@ -1203,41 +1186,6 @@
             "m_Id": "0f4bb25f7d1c40cda4b8892d87997699"
         }
     ]
-}
-
-{
-    "m_SGVersion": 0,
-    "m_Type": "UnityEditor.ShaderGraph.PropertyNode",
-    "m_ObjectId": "2f615673f4de4b2b9accbe0f0d386b23",
-    "m_Group": {
-        "m_Id": ""
-    },
-    "m_Name": "Property",
-    "m_DrawState": {
-        "m_Expanded": true,
-        "m_Position": {
-            "serializedVersion": "2",
-            "x": 3133.000244140625,
-            "y": 347.0000305175781,
-            "width": 141.0,
-            "height": 34.0
-        }
-    },
-    "m_Slots": [
-        {
-            "m_Id": "c939036618c74028a5236d2c8d75e236"
-        }
-    ],
-    "synonyms": [],
-    "m_Precision": 0,
-    "m_PreviewExpanded": true,
-    "m_PreviewMode": 0,
-    "m_CustomColors": {
-        "m_SerializableColors": []
-    },
-    "m_Property": {
-        "m_Id": "0007a39b22a34200baff0dfa0f108a16"
-    }
 }
 
 {
@@ -3032,7 +2980,7 @@
     "hlslDeclarationOverride": 0,
     "m_Hidden": false,
     "m_Value": {
-        "m_SerializedTexture": "{\"texture\":{\"fileID\":2800000,\"guid\":\"85de9ce2c2a4b5445ae6c332a78f52f6\",\"type\":3}}",
+        "m_SerializedTexture": "{\"texture\":{\"instanceID\":0}}",
         "m_Guid": ""
     },
     "isMainTexture": false,
@@ -3093,21 +3041,6 @@
         "z": 0.0,
         "w": 0.0
     }
-}
-
-{
-    "m_SGVersion": 0,
-    "m_Type": "UnityEditor.ShaderGraph.Vector1MaterialSlot",
-    "m_ObjectId": "c939036618c74028a5236d2c8d75e236",
-    "m_Id": 0,
-    "m_DisplayName": "Alpha Cutoff",
-    "m_SlotType": 1,
-    "m_Hidden": false,
-    "m_ShaderOutputName": "Out",
-    "m_StageCapability": 3,
-    "m_Value": 0.0,
-    "m_DefaultValue": 0.0,
-    "m_Labels": []
 }
 
 {
@@ -3515,12 +3448,12 @@
         "m_Id": "4bc829e6428846d6936af03a33e11f1b"
     },
     "m_AllowMaterialOverride": false,
-    "m_SurfaceType": 0,
+    "m_SurfaceType": 1,
     "m_ZTestMode": 4,
     "m_ZWriteControl": 0,
     "m_AlphaMode": 0,
     "m_RenderFace": 2,
-    "m_AlphaClip": true,
+    "m_AlphaClip": false,
     "m_CastShadows": false,
     "m_ReceiveShadows": true,
     "m_CustomEditorGUI": "",
