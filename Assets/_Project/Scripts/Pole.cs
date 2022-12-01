@@ -1,25 +1,19 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
+using UnityEngine.Splines;
 
 namespace rwby
 {
     public class Pole : MonoBehaviour
     {
         public Transform startTransform;
-        public Transform endTransform;
 
+        [FormerlySerializedAs("spine")] public SplineContainer spline;
+        
         public Vector3 GetNearestPoint(Vector3 point)
         {
-            var position = startTransform.position;
-            var line = (endTransform.position - position);
-            var len = line.magnitude;
-            line.Normalize();
-   
-            var v = point - position;
-            var d = Vector3.Dot(v, line);
-            d = Mathf.Clamp(d, 0f, len);
-            return position + line * d;
+            SplineUtility.GetNearestPoint(spline.Spline, spline.transform.InverseTransformPoint(point), out var nearest, out float t);
+            return spline.transform.TransformPoint(nearest);
         }
 
         public Vector3 GetNearestFaceDirection(Vector3 dir)

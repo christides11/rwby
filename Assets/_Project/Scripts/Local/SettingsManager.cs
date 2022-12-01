@@ -136,7 +136,7 @@ namespace rwby
             }
 
             Configuring.CurrentURPA.AntiAliasing(MsaaQuality.Disabled);
-            pipelineAsset.upscalingFilter = UpscalingFilterSelection.Linear;
+            /*pipelineAsset.upscalingFilter = UpscalingFilterSelection.Linear;
             switch (currentSettings.antiAliasing)
             {
                 case 1:
@@ -151,7 +151,7 @@ namespace rwby
                 case 4:
                     pipelineAsset.upscalingFilter = UpscalingFilterSelection.FSR;
                     break;
-            }
+            }*/
 
             pipelineAsset.renderScale = currentSettings.resolutionScale;
 
