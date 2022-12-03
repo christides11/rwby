@@ -53,5 +53,7 @@ namespace rwby
         public bool angleBasedOnWallDir;
 
         public bool clearWallIfNotFound;
+
+        public float rayDistance;
     }
 }

@@ -598,7 +598,7 @@ namespace rwby
             }
             
             FighterManager fm = (FighterManager)fighter;
-            VarFindWall vars = (VarFindWall)variables;
+            var vars = (VarFindWall)variables;
             
             if(vars.clearWallIfNotFound) fm.ClearWall();
             
@@ -617,7 +617,7 @@ namespace rwby
                 fm.wallHitResults[i] = new RaycastHit();
             }
 
-            var distance = fm.FPhysicsManager.ecbRadius + 0.2f;
+            var distance = fm.FPhysicsManager.ecbRadius + 0.2f + vars.rayDistance;
             float angle = vars.angleBasedOnWallDir ? (fm.cWallSide == 1 ? 90 : -90) : vars.startAngleOffset;
             for (int i = 0; i < vars.raycastCount; i++)
             {
@@ -629,6 +629,8 @@ namespace rwby
                               + fm.myTransform.forward * z;
                 fm.Runner.GetPhysicsScene().Raycast(fm.GetCenter(), dir.normalized, out fm.wallHitResults[i],
                     distance, fm.wallLayerMask, QueryTriggerInteraction.Ignore);
+                Debug.DrawRay(fm.GetCenter(), dir.normalized * distance, Color.red, 2.0f);
+                Debug.DrawRay(fm.GetCenter(), Vector3.up * 2.0f, Color.green, 2.0f);
             }
 
             float min = Mathf.Infinity;
@@ -671,7 +673,7 @@ namespace rwby
         public static void SnapToWall(IFighterBase fighter, IStateVariables variables, HnSF.StateTimeline arg3, int arg4)
         {
             FighterManager fm = (FighterManager)fighter;
-            VarSnapToWall vars = (VarSnapToWall)variables;
+            var vars = (VarSnapToWall)variables;
 
             if (!fm.IsWallValid()) return;
 
@@ -713,7 +715,7 @@ namespace rwby
         public static void TeleportRaycast(IFighterBase fighter, IStateVariables variables, HnSF.StateTimeline arg3, int arg4)
         {
             FighterManager fm = (FighterManager)fighter;
-            VarTeleportRaycast vars = (VarTeleportRaycast)variables;
+            var vars = (VarTeleportRaycast)variables;
 
             if ((vars.startPoint == VarTeleportRaycast.StartPointTypes.Target || vars.raycastDirectionSource ==
                     VarTeleportRaycast.RaycastDirSource.TARGET_VECTOR)

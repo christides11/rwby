@@ -34,6 +34,8 @@ MonoBehaviour:
   initialGroundedState: 2
   stateType: 1
   maxUsesInString: -1
+  maxUsesPerAirtime: -1
+  selfChainable: 0
   allowBaseStateTransitions: 1
   inputSequence:
     executeWindow: 3
@@ -103,12 +105,16 @@ MonoBehaviour:
         - {x: 1, y: -1}
         condition:
           rid: 8688056177854775298
+        ignoreStateConditions: 0
+        ignoreAirtimeCheck: 0
+        ignoreStringUseCheck: 0
         checkInputSequence: 0
         checkCondition: 0
         targetType: 0
         stateMovesetID: -1
         state:
           rid: 8688056177854775297
+        frame: 0
     - rid: 8688056177854775297
       type: {class: FighterCmnStateReference, ns: rwby, asm: rwby.csharp}
       data:
@@ -125,7 +131,7 @@ MonoBehaviour:
         parent: -1
         children: 
         frameRanges:
-        - {x: 0, y: 0}
+        - {x: 0, y: -1}
         condition:
           rid: 8688056635878539265
         useWallSide: 1
@@ -140,12 +146,16 @@ MonoBehaviour:
         - {x: 1, y: -1}
         condition:
           rid: 8688056195711238151
+        ignoreStateConditions: 0
+        ignoreAirtimeCheck: 0
+        ignoreStringUseCheck: 0
         checkInputSequence: 0
         checkCondition: 0
         targetType: 0
         stateMovesetID: -1
         state:
           rid: 8688056195711238150
+        frame: 0
     - rid: 8688056195711238150
       type: {class: FighterCmnStateReference, ns: rwby, asm: rwby.csharp}
       data:
@@ -154,6 +164,7 @@ MonoBehaviour:
       type: {class: ConditionButton, ns: rwby, asm: rwby.csharp}
       data:
         inverse: 0
+        checkAbilityButton: 0
         button: 0
         buttonState: 1
         offset: 0
@@ -187,12 +198,14 @@ MonoBehaviour:
         inputSource: 1
         normalizeInputSource: 0
         useRotationIfInputZero: 0
+        inputSourceOffset: 0
         minAngle: -180
         maxAngle: 180
         raycastCount: 1
         startAngleOffset: 0
         angleBasedOnWallDir: 1
         clearWallIfNotFound: 1
+        rayDistance: 0
     - rid: 8688056635878539268
       type: {class: ConditionWallValid, ns: rwby, asm: rwby.csharp}
       data:
@@ -208,12 +221,16 @@ MonoBehaviour:
         - {x: 1, y: -1}
         condition:
           rid: -2
+        ignoreStateConditions: 0
+        ignoreAirtimeCheck: 0
+        ignoreStringUseCheck: 0
         checkInputSequence: 0
         checkCondition: 0
         targetType: 0
         stateMovesetID: -1
         state:
           rid: 8688056635878539270
+        frame: 0
     - rid: 8688056635878539270
       type: {class: FighterCmnStateReference, ns: rwby, asm: rwby.csharp}
       data:

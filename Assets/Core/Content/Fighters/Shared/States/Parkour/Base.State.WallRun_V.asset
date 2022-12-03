@@ -34,6 +34,7 @@ MonoBehaviour:
   initialGroundedState: 2
   stateType: 1
   maxUsesInString: -1
+  maxUsesPerAirtime: -1
   selfChainable: 0
   allowBaseStateTransitions: 1
   inputSequence:
@@ -131,6 +132,9 @@ MonoBehaviour:
         - {x: 1, y: -1}
         condition:
           rid: 8688056177854775298
+        ignoreStateConditions: 0
+        ignoreAirtimeCheck: 0
+        ignoreStringUseCheck: 0
         checkInputSequence: 0
         checkCondition: 0
         targetType: 0
@@ -154,7 +158,7 @@ MonoBehaviour:
         parent: -1
         children: 
         frameRanges:
-        - {x: 0, y: 0}
+        - {x: 0, y: -1}
         condition:
           rid: 8688056635878539265
         useWallSide: 0
@@ -169,6 +173,9 @@ MonoBehaviour:
         - {x: 1, y: -1}
         condition:
           rid: 8688056195711238151
+        ignoreStateConditions: 0
+        ignoreAirtimeCheck: 0
+        ignoreStringUseCheck: 0
         checkInputSequence: 0
         checkCondition: 0
         targetType: 0
@@ -225,6 +232,7 @@ MonoBehaviour:
         startAngleOffset: 0
         angleBasedOnWallDir: 0
         clearWallIfNotFound: 1
+        rayDistance: 0
     - rid: 8688056635878539268
       type: {class: ConditionWallValid, ns: rwby, asm: rwby.csharp}
       data:
@@ -240,6 +248,9 @@ MonoBehaviour:
         - {x: 1, y: -1}
         condition:
           rid: -2
+        ignoreStateConditions: 0
+        ignoreAirtimeCheck: 0
+        ignoreStringUseCheck: 0
         checkInputSequence: 0
         checkCondition: 0
         targetType: 0
