@@ -134,7 +134,7 @@ namespace rwby
         public static void ApplyMovement(IFighterBase fighter, IStateVariables variables, HnSF.StateTimeline arg3, int arg4)
         {
             FighterManager f = (FighterManager)fighter;
-            VarApplyMovement vars = (VarApplyMovement)variables;
+            var vars = (VarApplyMovement)variables;
 
             float maxSpeed = vars.maxSpeed.GetValue(f);
             if (vars.inputSource == VarInputSourceType.slope)
@@ -158,7 +158,21 @@ namespace rwby
                     input += f.GetMovementVector() * vars.slopeinputModi;
                     break;
             }
-            
+
+            if (vars.useSlope)
+            {
+                var i= f.groundSlopeDir;
+                i.y = 0;
+                i.Normalize();
+                var s = Vector3.Dot(input, i);
+                if (s >= 0)
+                {
+                    maxSpeed *= Mathf.Clamp(
+                        (Mathf.Clamp(f.groundSlopeAngle, vars.slopeMinClamp, vars.slopeMaxClamp) / vars.slopeDivi) *
+                        vars.slopeMulti, vars.slopeMultiMin, vars.slopeMultiMax);
+                }
+            }
+
             f.FPhysicsManager.forceMovement += f.FPhysicsManager.HandleMovement(input, vars.baseAccel.GetValue(f), vars.movementAccel.GetValue(f), 
                 vars.deceleration.GetValue(f), vars.minSpeed.GetValue(f), 
                 maxSpeed, vars.accelerationFromDot.GetValue(f));

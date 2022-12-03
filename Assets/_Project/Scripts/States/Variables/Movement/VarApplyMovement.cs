@@ -44,6 +44,7 @@ namespace rwby
         public VarInputSourceType inputSource;
         public bool normalizeInputSource;
         public bool useRotationIfInputZero;
+        public bool useSlope;
         
         [SelectImplementation((typeof(FighterStatReferenceBase<float>)))] [SerializeReference]
         public FighterStatReferenceFloatBase baseAccel;
@@ -58,17 +59,18 @@ namespace rwby
         [SelectImplementation((typeof(FighterStatReferenceBase<AnimationCurve>)))] [SerializeReference]
         public FighterStatReferenceAnimationCurveBase accelerationFromDot;
 
-        [ShowIf("inputSource", VarInputSourceType.slope)]
+        //[ShowIf("inputSource", VarInputSourceType.slope)]
         public float slopeMinClamp;
-        [ShowIf("inputSource", VarInputSourceType.slope)]
+        //[ShowIf("inputSource", VarInputSourceType.slope)]
         public float slopeMaxClamp;
-        [ShowIf("inputSource", VarInputSourceType.slope)]
+        //[ShowIf("inputSource", VarInputSourceType.slope)]
         public float slopeDivi;
-        [ShowIf("inputSource", VarInputSourceType.slope)]
+        //[ShowIf("inputSource", VarInputSourceType.slope)]
         public float slopeMulti;
-        [ShowIf("inputSource", VarInputSourceType.slope)]
+        //[ShowIf("inputSource", VarInputSourceType.slope)]
+        public float slopeMultiMin;
         public float slopeMultiMax;
-        [ShowIf("inputSource", VarInputSourceType.slope)]
+        //[ShowIf("inputSource", VarInputSourceType.slope)]
         public float slopeinputModi;
     }
 }

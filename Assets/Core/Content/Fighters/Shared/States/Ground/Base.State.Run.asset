@@ -22,13 +22,14 @@ MonoBehaviour:
   data:
   - rid: 2193520716547358725
   - rid: 2193520716547358732
+  - rid: 5775511451776057346
   - rid: 2193520789975990277
   - rid: 2193520783924396046
-  - rid: 8688056473731203083
   auraRequirement: 0
   initialGroundedState: 1
   stateType: 0
   maxUsesInString: -1
+  maxUsesPerAirtime: -1
   selfChainable: 0
   allowBaseStateTransitions: 1
   inputSequence:
@@ -81,6 +82,7 @@ MonoBehaviour:
         inputSource: 0
         normalizeInputSource: 0
         useRotationIfInputZero: 0
+        useSlope: 1
         baseAccel:
           rid: 2193520716547358726
         movementAccel:
@@ -94,10 +96,11 @@ MonoBehaviour:
         accelerationFromDot:
           rid: 2193520716547358731
         slopeMinClamp: 0
-        slopeMaxClamp: 0
-        slopeDivi: 0
-        slopeMulti: 0
-        slopeMultiMax: 0
+        slopeMaxClamp: 70
+        slopeDivi: 10
+        slopeMulti: 5
+        slopeMultiMin: 1
+        slopeMultiMax: 2
         slopeinputModi: 0
     - rid: 2193520716547358726
       type: {class: FighterBaseStatReferenceFloat, ns: rwby, asm: rwby.csharp}
@@ -180,6 +183,9 @@ MonoBehaviour:
         - {x: 1, y: -1}
         condition:
           rid: 387795752378957829
+        ignoreStateConditions: 0
+        ignoreAirtimeCheck: 0
+        ignoreStringUseCheck: 0
         checkInputSequence: 0
         checkCondition: 0
         targetType: 0
@@ -203,41 +209,28 @@ MonoBehaviour:
         condition:
           rid: -2
         asset: {fileID: 11400000, guid: 42dc6338964d9494b9492888c730d00e, type: 2}
-    - rid: 8688056473731203083
+    - rid: 5775511451776057346
       type: {class: VarChangeState, ns: rwby, asm: rwby.csharp}
       data:
-        name: Try Run Slide
+        name: Try JumpSquat (M)
         id: 4
         parent: -1
         children: 
         frameRanges:
         - {x: 1, y: -1}
         condition:
-          rid: 8688056473731203093
-        checkInputSequence: 0
+          rid: -2
+        ignoreStateConditions: 0
+        ignoreAirtimeCheck: 0
+        ignoreStringUseCheck: 0
+        checkInputSequence: 1
         checkCondition: 0
         targetType: 0
         stateMovesetID: -1
         state:
-          rid: 8688056473731203084
+          rid: 5775511451776057347
         frame: 0
-    - rid: 8688056473731203084
+    - rid: 5775511451776057347
       type: {class: FighterCmnStateReference, ns: rwby, asm: rwby.csharp}
       data:
-        state: 39
-    - rid: 8688056473731203093
-      type: {class: ConditionAnd, ns: rwby, asm: rwby.csharp}
-      data:
-        conditions:
-        - rid: 8688056473731203094
-        - rid: 8688056473731203095
-    - rid: 8688056473731203094
-      type: {class: ConditionFloorAngle, ns: rwby, asm: rwby.csharp}
-      data:
-        minAngle: 5
-        maxAngle: 180
-    - rid: 8688056473731203095
-      type: {class: ConditionCompareSlopeDir, ns: rwby, asm: rwby.csharp}
-      data:
-        inputSource: 0
-        maxAngle: 45
+        state: 48
