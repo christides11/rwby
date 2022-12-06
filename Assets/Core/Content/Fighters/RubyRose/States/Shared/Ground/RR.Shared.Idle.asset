@@ -28,6 +28,7 @@ MonoBehaviour:
   - rid: 387796025889783850
   - rid: 2193520862594334720
   - rid: 8688056201677897732
+  - rid: 5775511466801889299
   - rid: 8688056216264638478
   - rid: 8688056216264638480
   - rid: 8688056216264638482
@@ -42,6 +43,7 @@ MonoBehaviour:
   initialGroundedState: 1
   stateType: 1
   maxUsesInString: -1
+  maxUsesPerAirtime: -1
   selfChainable: 0
   allowBaseStateTransitions: 1
   inputSequence:
@@ -202,17 +204,45 @@ MonoBehaviour:
         boxExtents: {x: 0.3, y: 0.75, z: 0.3}
         radius: 0
         definitionIndex: 0
+    - rid: 5775511466801889299
+      type: {class: VarModifyAnimationSet, ns: rwby, asm: rwby.csharp}
+      data:
+        name: Rifle Idle
+        id: 19
+        parent: -1
+        children: 
+        frameRanges:
+        - {x: 0, y: 0}
+        condition:
+          rid: 5775511466801889302
+        modifyType: 1
+        wantedAnimations:
+        - animationbank:
+            modGUID:
+              guid: 1d292c1f00000000
+            contentGUID:
+              guid: 2c2c000000000000
+          animation: rifle.idle
+        fadeTime: 0
+    - rid: 5775511466801889302
+      type: {class: ConditionMoveset, ns: rwby, asm: rwby.csharp}
+      data:
+        moveset: 1
+    - rid: 5775511466801889303
+      type: {class: ConditionMoveset, ns: rwby, asm: rwby.csharp}
+      data:
+        moveset: 0
     - rid: 8688056201677897732
       type: {class: VarModifyAnimationSet, ns: rwby, asm: rwby.csharp}
       data:
-        name: 
+        name: Scythe Idle
         id: 6
         parent: -1
         children: 
         frameRanges:
         - {x: 0, y: 0}
         condition:
-          rid: -2
+          rid: 5775511466801889303
         modifyType: 1
         wantedAnimations:
         - animationbank:

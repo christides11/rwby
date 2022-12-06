@@ -32,10 +32,13 @@ MonoBehaviour:
   - rid: 7270848718906589187
   - rid: 387795983688269874
   - rid: 387795983688269876
+  - rid: 5775511466801889304
+  - rid: 5775511466801889305
   auraRequirement: 0
   initialGroundedState: 1
   stateType: 2
   maxUsesInString: 1
+  maxUsesPerAirtime: -1
   selfChainable: 3
   allowBaseStateTransitions: 1
   inputSequence:
@@ -229,6 +232,9 @@ MonoBehaviour:
         - {x: -1, y: -1}
         condition:
           rid: -2
+        ignoreStateConditions: 0
+        ignoreAirtimeCheck: 0
+        ignoreStringUseCheck: 0
         checkInputSequence: 0
         checkCondition: 0
         targetType: 0
@@ -255,7 +261,7 @@ MonoBehaviour:
         attachedTo: 0
         shape: 0
         offset: {x: 0, y: 1, z: 0.5}
-        boxExtents: {x: 0.5, y: 0.5, z: 0.5}
+        boxExtents: {x: 0.5, y: 0.5, z: 0.7}
         radius: 0
         definitionIndex: 0
     - rid: 2193520817874927616
@@ -280,6 +286,40 @@ MonoBehaviour:
         statReference: 0
         value: 30
         variable: 0
+    - rid: 5775511466801889304
+      type: {class: VarModifyAnimationSet, ns: rwby, asm: rwby.csharp}
+      data:
+        name: 
+        id: 20
+        parent: -1
+        children: 
+        frameRanges:
+        - {x: 0, y: 0}
+        condition:
+          rid: -2
+        modifyType: 1
+        wantedAnimations:
+        - animationbank:
+            modGUID:
+              guid: 1d292c1f00000000
+            contentGUID:
+              guid: 2c2c000000000000
+          animation: rifle.atk.grd.5L
+        fadeTime: 0
+    - rid: 5775511466801889305
+      type: {class: VarModifyAnimationFrame, ns: rwby, asm: rwby.csharp}
+      data:
+        name: 
+        id: 21
+        parent: -1
+        children: 
+        frameRanges:
+        - {x: 1, y: -1}
+        condition:
+          rid: -2
+        modifyType: 0
+        animations: 00000000
+        frame: 1
     - rid: 7270848428946489353
       type: {class: VarRotateTowards, ns: rwby, asm: rwby.csharp}
       data:

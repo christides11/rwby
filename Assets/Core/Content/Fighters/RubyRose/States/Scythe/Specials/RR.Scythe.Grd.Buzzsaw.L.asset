@@ -37,6 +37,7 @@ MonoBehaviour:
   initialGroundedState: 1
   stateType: 2
   maxUsesInString: 1
+  maxUsesPerAirtime: -1
   selfChainable: 0
   allowBaseStateTransitions: 1
   inputSequence:
@@ -53,7 +54,7 @@ MonoBehaviour:
     rid: -2
   hitboxInfo:
   - ID: 0
-    groundedFoldoutGroup: 1
+    groundedFoldoutGroup: 0
     groundedCounterHitFoldoutGroup: 0
     hitStateGroundedGroups: -1
     hit:
@@ -72,8 +73,8 @@ MonoBehaviour:
       autolink: 0
       gravityAutolinkPercentage: 0
       movementAutolinkPercentage: 0
-      groundHitForce: {x: 0, y: 0, z: -25}
-      aerialHitForce: {x: 0, y: 5, z: -25}
+      groundHitForce: {x: 0, y: 0, z: 10}
+      aerialHitForce: {x: 0, y: 5, z: 10}
       pullPushMultiplier: 0
       pullPushMaxDistance: 10
       blockLift: 0
@@ -235,7 +236,7 @@ MonoBehaviour:
       data:
         inverse: 0
         statReference: 0
-        value: -15
+        value: 10
     - rid: 387795942532186121
       type: {class: VarClampMovement, ns: rwby, asm: rwby.csharp}
       data:
@@ -254,7 +255,7 @@ MonoBehaviour:
       data:
         inverse: 0
         statReference: 0
-        value: 3
+        value: 1
     - rid: 2193520813467238401
       type: {class: VarChangeState, ns: rwby, asm: rwby.csharp}
       data:
@@ -266,6 +267,9 @@ MonoBehaviour:
         - {x: -1, y: -1}
         condition:
           rid: -2
+        ignoreStateConditions: 0
+        ignoreAirtimeCheck: 0
+        ignoreStringUseCheck: 0
         checkInputSequence: 0
         checkCondition: 0
         targetType: 0

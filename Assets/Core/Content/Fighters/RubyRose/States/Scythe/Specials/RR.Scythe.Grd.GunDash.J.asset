@@ -39,6 +39,7 @@ MonoBehaviour:
   initialGroundedState: 2
   stateType: 2
   maxUsesInString: 1
+  maxUsesPerAirtime: -1
   selfChainable: 0
   allowBaseStateTransitions: 1
   inputSequence:
@@ -360,13 +361,13 @@ MonoBehaviour:
         parent: -1
         children: 
         frameRanges:
-        - {x: 9, y: 11}
+        - {x: 7, y: 9}
         condition:
           rid: -2
         boxType: 1
         attachedTo: 0
         shape: 0
-        offset: {x: 0, y: 1, z: 1}
+        offset: {x: 0, y: 1, z: 0}
         boxExtents: {x: 1, y: 1, z: 1}
         radius: 0
         definitionIndex: 0

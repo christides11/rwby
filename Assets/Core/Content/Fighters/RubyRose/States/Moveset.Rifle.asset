@@ -27,9 +27,9 @@ MonoBehaviour:
     aerialState:
       rid: 387796093188440065
   - groundState:
-      rid: 387795932360736804
+      rid: 5775511466801889290
     aerialState:
-      rid: 387795932360736805
+      rid: 5775511466801889291
   clashCancelListGrd: {fileID: 11400000, guid: ba688ef34edd2d84ea6a5b2e1e2af06e, type: 2}
   clashCancelListAir: {fileID: 11400000, guid: cc00d510ea2530d49bdc1b20fbaa26a5, type: 2}
   groundActions:
@@ -142,6 +142,10 @@ MonoBehaviour:
     state:
       rid: 387796101564727314
     stateTimeline: {fileID: 11400000, guid: 0e595545f377e294e94ab64cbd5699e2, type: 2}
+  - name: Rifle Shot
+    state:
+      rid: 5775511466801889287
+    stateTimeline: {fileID: 11400000, guid: 7bc9b5b9ff973ca478390e1d3dfe89cd, type: 2}
   airActions:
   - name: fall
     state:
@@ -437,10 +441,6 @@ MonoBehaviour:
       type: {class: RubyRoseStateReference, ns: rwby.core, asm: rwby.core}
       data:
         state: 92
-    - rid: 387795932360736805
-      type: {class: RubyRoseStateReference, ns: rwby.core, asm: rwby.core}
-      data:
-        state: 82
     - rid: 387795932360736808
       type: {class: RubyRoseStateReference, ns: rwby.core, asm: rwby.core}
       data:
@@ -565,3 +565,15 @@ MonoBehaviour:
       type: {class: RubyRoseStateReference, ns: rwby.core, asm: rwby.core}
       data:
         state: 82
+    - rid: 5775511466801889287
+      type: {class: RubyRoseStateReference, ns: rwby.core, asm: rwby.core}
+      data:
+        state: 113
+    - rid: 5775511466801889290
+      type: {class: RubyRoseStateReference, ns: rwby.core, asm: rwby.core}
+      data:
+        state: 113
+    - rid: 5775511466801889291
+      type: {class: RubyRoseStateReference, ns: rwby.core, asm: rwby.core}
+      data:
+        state: 113

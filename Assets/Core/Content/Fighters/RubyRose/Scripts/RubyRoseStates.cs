@@ -65,5 +65,7 @@ namespace rwby.core
         RIFLE_SPECIAL_Rekka_Air = 110,
         RIFLE_SPECIAL_Rekka_Air_XX = 111,
         RIFLE_SPECIAL_Rekka_Air_XXX = 112,
+        RIFLE_SPECIAL_RifleShot_Grd = 113,
+        RIFLE_SPECIAL_RifleShot_Air = 114,
     }
 }

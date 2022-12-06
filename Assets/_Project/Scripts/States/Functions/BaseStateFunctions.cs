@@ -643,8 +643,6 @@ namespace rwby
                               + fm.myTransform.forward * z;
                 fm.Runner.GetPhysicsScene().Raycast(fm.GetCenter(), dir.normalized, out fm.wallHitResults[i],
                     distance, fm.wallLayerMask, QueryTriggerInteraction.Ignore);
-                Debug.DrawRay(fm.GetCenter(), dir.normalized * distance, Color.red, 2.0f);
-                Debug.DrawRay(fm.GetCenter(), Vector3.up * 2.0f, Color.green, 2.0f);
             }
 
             float min = Mathf.Infinity;
@@ -815,7 +813,7 @@ namespace rwby
                 case VarModifyType.ADD:
                     fm.poleSpin += vars.value;
                     Vector3 rotatedVector = Quaternion.Euler(fm.poleSpin, 0, 0) * Vector3.forward;
-                    Debug.DrawRay(fm.myTransform.position, (fm.myTransform.forward * rotatedVector.z) + (fm.myTransform.right * rotatedVector.x)  + (Vector3.up * rotatedVector.y), Color.red, fm.Runner.DeltaTime);
+                    //Debug.DrawRay(fm.myTransform.position, (fm.myTransform.forward * rotatedVector.z) + (fm.myTransform.right * rotatedVector.x)  + (Vector3.up * rotatedVector.y), Color.red, fm.Runner.DeltaTime);
                     break;
                 case VarModifyType.SET:
                     

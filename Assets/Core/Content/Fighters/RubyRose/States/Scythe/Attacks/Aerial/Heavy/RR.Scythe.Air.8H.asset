@@ -41,6 +41,7 @@ MonoBehaviour:
   initialGroundedState: 2
   stateType: 2
   maxUsesInString: 1
+  maxUsesPerAirtime: -1
   selfChainable: 0
   allowBaseStateTransitions: 1
   inputSequence:
@@ -411,6 +412,7 @@ MonoBehaviour:
         increment: 1
         chargePerLevel: 12
         maxLevel: 1
+        checkAbilityButton: 0
         button: 3
         canHold: 0
     - rid: 387795932360736823
@@ -466,6 +468,9 @@ MonoBehaviour:
         - {x: 1, y: -1}
         condition:
           rid: 387795932360736839
+        ignoreStateConditions: 0
+        ignoreAirtimeCheck: 0
+        ignoreStringUseCheck: 0
         checkInputSequence: 0
         checkCondition: 0
         targetType: 0
@@ -501,7 +506,7 @@ MonoBehaviour:
       data:
         inverse: 0
         statReference: 0
-        value: 1.5
+        value: 0
     - rid: 2193520813467238401
       type: {class: VarChangeState, ns: rwby, asm: rwby.csharp}
       data:
@@ -513,6 +518,9 @@ MonoBehaviour:
         - {x: -1, y: -1}
         condition:
           rid: -2
+        ignoreStateConditions: 0
+        ignoreAirtimeCheck: 0
+        ignoreStringUseCheck: 0
         checkInputSequence: 0
         checkCondition: 0
         targetType: 0

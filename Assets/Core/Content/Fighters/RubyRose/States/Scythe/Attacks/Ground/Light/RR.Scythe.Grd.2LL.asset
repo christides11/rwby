@@ -32,6 +32,8 @@ MonoBehaviour:
   - rid: 387795733835153457
   - rid: 387795733835153458
   - rid: 387795983688269849
+  - rid: 5775511522355183619
+  - rid: 5775511522355183620
   auraRequirement: 0
   initialGroundedState: 1
   stateType: 2
@@ -281,7 +283,7 @@ MonoBehaviour:
         parent: -1
         children: 
         frameRanges:
-        - {x: 7, y: 9}
+        - {x: 3, y: 5}
         condition:
           rid: -2
         boxType: 1
@@ -313,6 +315,40 @@ MonoBehaviour:
         statReference: 0
         value: 45
         variable: 0
+    - rid: 5775511522355183619
+      type: {class: VarModifyAnimationSet, ns: rwby, asm: rwby.csharp}
+      data:
+        name: 
+        id: 21
+        parent: -1
+        children: 
+        frameRanges:
+        - {x: 0, y: 0}
+        condition:
+          rid: -2
+        modifyType: 1
+        wantedAnimations:
+        - animationbank:
+            modGUID:
+              guid: 1d292c1f00000000
+            contentGUID:
+              guid: 2c2c000000000000
+          animation: scythe.grd.2LL
+        fadeTime: 0
+    - rid: 5775511522355183620
+      type: {class: VarModifyAnimationFrame, ns: rwby, asm: rwby.csharp}
+      data:
+        name: 
+        id: 22
+        parent: -1
+        children: 
+        frameRanges:
+        - {x: 1, y: -1}
+        condition:
+          rid: -2
+        modifyType: 0
+        animations: 00000000
+        frame: 1
     - rid: 7270848428946489353
       type: {class: VarRotateTowards, ns: rwby, asm: rwby.csharp}
       data:
