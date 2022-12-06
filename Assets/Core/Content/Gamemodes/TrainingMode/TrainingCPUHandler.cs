@@ -1,9 +1,7 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using Fusion;
-using rwby.core.training;
 using UnityEngine;
 
 namespace rwby.core.training

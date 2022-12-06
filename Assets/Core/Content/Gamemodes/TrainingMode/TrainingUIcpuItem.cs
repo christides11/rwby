@@ -41,7 +41,6 @@ namespace rwby.core.training
         {
             this.cpuHandler = cpuHandler;
             this.index = index;
-            /*
             // BASICS
             status.options = new[] { "Standing", "Jumping", "CPU", "Controller" };
             status.SetOption(cpuHandler.cpuSettings[index].status);
@@ -61,6 +60,7 @@ namespace rwby.core.training
             shield.options = new[] { "Off", "On" };
             shield.SetOption(cpuHandler.cpuSettings[index].shield);
             shield.OnValueChanged += OnOptionChanged;
+            
             // RECOVERY
             staggerRecovery.options = new[] { "Disabled", "Enabled" };
             staggerRecovery.SetOption(cpuHandler.cpuSettings[index].staggerRecovery);
@@ -71,6 +71,8 @@ namespace rwby.core.training
             groundRecovery.options = new[] { "Off", "In Place", "Forwards", "Backwards", "Left", "Right", "Random" };
             groundRecovery.SetOption(cpuHandler.cpuSettings[index].groundRecovery);
             groundRecovery.OnValueChanged += OnOptionChanged;
+            
+            /*
             // COUNTER-ATTACK
             List<string> aOpts = new List<string>();
             aOpts.Add("None");
@@ -96,8 +98,10 @@ namespace rwby.core.training
             trainingCPUSettingsDefinition.techThrow = techThrow.currentOption;
             trainingCPUSettingsDefinition.counterHit = counterHit.currentOption;
             trainingCPUSettingsDefinition.shield = shield.currentOption;
+            // RECOVERY
             trainingCPUSettingsDefinition.staggerRecovery = staggerRecovery.currentOption;
-            trainingCPUSettingsDefinition.staggerRecovery = staggerRecovery.currentOption;
+            trainingCPUSettingsDefinition.airRecovery = aerialRecovery.currentOption;
+            trainingCPUSettingsDefinition.groundRecovery = groundRecovery.currentOption;
             // COUNTER-ATTACK
             trainingCPUSettingsDefinition.afterBlock = afterBlock.currentOption;
             trainingCPUSettingsDefinition.afterHit = afterHit.currentOption;
