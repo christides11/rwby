@@ -180,6 +180,15 @@ namespace rwby
             return vars.inverse ? !result : result;
         }
         
+        public static bool InHitstun(IFighterBase fighter, IConditionVariables variables, HnSF.StateTimeline arg3, int arg4)
+        {
+            FighterManager f = fighter as FighterManager;
+            var vars = (ConditionInHitstun )variables;
+
+            var result = f.FCombatManager.HitStun > 0;
+            return vars.inverse ? !result : result;
+        }
+        
         public static bool LockedOn(IFighterBase fighter, IConditionVariables variables, HnSF.StateTimeline arg3, int arg4)
         {
             FighterManager f = fighter as FighterManager;

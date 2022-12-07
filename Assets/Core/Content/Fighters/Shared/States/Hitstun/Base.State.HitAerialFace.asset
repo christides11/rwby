@@ -1,0 +1,198 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7789f25d17401bc4b915ca6fcecf2a29, type: 3}
+  m_Name: Base.State.HitAerialFace
+  m_EditorClassIdentifier: 
+  stateName: Hit Aerial Face
+  useBaseState: 1
+  baseState: {fileID: 11400000, guid: da375c2c1e9149e458db1552d1065b8f, type: 2}
+  totalFrames: 30
+  autoIncrement: 1
+  autoLoop: 0
+  autoLoopFrame: 2
+  data:
+  - rid: 7270848878803943435
+  - rid: 7270848878803943436
+  - rid: 7270848697680265237
+  - rid: 5775511544003297295
+  auraRequirement: 0
+  initialGroundedState: 2
+  stateType: 8
+  maxUsesInString: -1
+  maxUsesPerAirtime: -1
+  selfChainable: 0
+  allowBaseStateTransitions: 1
+  inputSequence:
+    executeWindow: 3
+    executeInputs: []
+    sequenceWindow: 8
+    sequenceInputs: []
+  inputSequenceAsHoldInputs: 0
+  condition:
+    rid: -2
+  hitboxInfo: []
+  throwboxInfo: []
+  hurtboxInfo: []
+  references:
+    version: 2
+    RefIds:
+    - rid: -2
+      type: {class: , ns: , asm: }
+    - rid: 5775511544003297295
+      type: {class: VarChangeState, ns: rwby, asm: rwby.csharp}
+      data:
+        name: Try Air Tech
+        id: 4
+        parent: -1
+        children: 
+        frameRanges:
+        - {x: 1, y: -1}
+        condition:
+          rid: 5775511544003297297
+        ignoreStateConditions: 0
+        ignoreAirtimeCheck: 0
+        ignoreStringUseCheck: 0
+        checkInputSequence: 0
+        checkCondition: 0
+        targetType: 0
+        stateMovesetID: -1
+        state:
+          rid: 5775511544003297296
+        frame: 0
+    - rid: 5775511544003297296
+      type: {class: FighterCmnStateReference, ns: rwby, asm: rwby.csharp}
+      data:
+        state: 23
+    - rid: 5775511544003297297
+      type: {class: ConditionAnd, ns: rwby, asm: rwby.csharp}
+      data:
+        conditions:
+        - rid: 5775511544003297304
+        - rid: 5775511544003297298
+    - rid: 5775511544003297298
+      type: {class: ConditionOr, ns: rwby, asm: rwby.csharp}
+      data:
+        conditions:
+        - rid: 5775511544003297299
+        - rid: 5775511544003297300
+    - rid: 5775511544003297299
+      type: {class: ConditionButton, ns: rwby, asm: rwby.csharp}
+      data:
+        inverse: 0
+        checkAbilityButton: 0
+        button: 2
+        buttonState: 0
+        offset: 0
+        buffer: 0
+    - rid: 5775511544003297300
+      type: {class: ConditionButton, ns: rwby, asm: rwby.csharp}
+      data:
+        inverse: 0
+        checkAbilityButton: 0
+        button: 3
+        buttonState: 0
+        offset: 0
+        buffer: 0
+    - rid: 5775511544003297304
+      type: {class: ConditionInHitstun, ns: rwby, asm: rwby.csharp}
+      data:
+        inverse: 1
+    - rid: 7270848697680265237
+      type: {class: VarChangeState, ns: rwby, asm: rwby.csharp}
+      data:
+        name: To Ground Bounce
+        id: 1
+        parent: -1
+        children: 
+        frameRanges:
+        - {x: 2, y: -1}
+        condition:
+          rid: 7270848697680265239
+        ignoreStateConditions: 0
+        ignoreAirtimeCheck: 0
+        ignoreStringUseCheck: 0
+        checkInputSequence: 0
+        checkCondition: 0
+        targetType: 0
+        stateMovesetID: -1
+        state:
+          rid: 7270848697680265238
+        frame: 0
+    - rid: 7270848697680265238
+      type: {class: FighterCmnStateReference, ns: rwby, asm: rwby.csharp}
+      data:
+        state: 14
+    - rid: 7270848697680265239
+      type: {class: ConditionAnd, ns: rwby, asm: rwby.csharp}
+      data:
+        conditions:
+        - rid: 7270848697680265243
+        - rid: 7270848697680265240
+    - rid: 7270848697680265240
+      type: {class: ConditionIsGrounded, ns: rwby, asm: rwby.csharp}
+      data:
+        inverse: 0
+    - rid: 7270848697680265243
+      type: {class: ConditionCanGroundBounce, ns: rwby, asm: rwby.csharp}
+      data:
+        inverse: 0
+    - rid: 7270848878803943435
+      type: {class: VarFindWall, ns: rwby, asm: rwby.csharp}
+      data:
+        name: 
+        id: 2
+        parent: -1
+        children: 
+        frameRanges:
+        - {x: 2, y: -1}
+        condition:
+          rid: -2
+        inputSource: 1
+        normalizeInputSource: 0
+        useRotationIfInputZero: 0
+        inputSourceOffset: 180
+        minAngle: -25
+        maxAngle: 25
+        raycastCount: 2
+        startAngleOffset: 0
+        angleBasedOnWallDir: 0
+        clearWallIfNotFound: 1
+        rayDistance: 0
+    - rid: 7270848878803943436
+      type: {class: VarChangeState, ns: rwby, asm: rwby.csharp}
+      data:
+        name: To Wall Bounce
+        id: 3
+        parent: -1
+        children: 
+        frameRanges:
+        - {x: 2, y: -1}
+        condition:
+          rid: 7270848878803943437
+        ignoreStateConditions: 0
+        ignoreAirtimeCheck: 0
+        ignoreStringUseCheck: 0
+        checkInputSequence: 0
+        checkCondition: 0
+        targetType: 0
+        stateMovesetID: -1
+        state:
+          rid: 7270848878803943438
+        frame: 0
+    - rid: 7270848878803943437
+      type: {class: ConditionWallValid, ns: rwby, asm: rwby.csharp}
+      data:
+        inverse: 0
+    - rid: 7270848878803943438
+      type: {class: FighterCmnStateReference, ns: rwby, asm: rwby.csharp}
+      data:
+        state: 47

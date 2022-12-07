@@ -193,6 +193,73 @@ namespace rwby.core.training
 
                     disabledUntil = Runner.Tick + opt.inputs.Length+1;
                 }
+
+                if (cpuSettings[i].groundRecovery != 0
+                    && (fm.FStateManager.CurrentState == (int)FighterCmnStates.GROUND_LAY_FACE_UP
+                        || fm.FStateManager.CurrentState == (int)FighterCmnStates.GROUND_LAY_FACE_DOWN))
+                {
+                    var t = new NetworkPlayerInputData();
+                    t.buttons.Set((int)PlayerInputType.A, true);
+                    t.forward = fm.myTransform.forward;
+                    t.right = fm.myTransform.right;
+                    switch (cpuSettings[i].groundRecovery)
+                    {
+                        case 2:
+                            t.movement = new Vector2(0, 1);
+                            break;
+                        case 3:
+                            t.movement = new Vector2(0, -1);
+                            break;
+                        case 4:
+                            t.movement = new Vector2(-1, 0);
+                            break;
+                        case 5:
+                            t.movement = new Vector2(1, 0);
+                            break;
+                        case 6:
+                            t.movement = new Vector2(-1, 1);
+                            break;
+                        default:
+                            break;
+                    }
+                    
+                    testData[i][(Runner.Tick) % 10] = t;
+                }
+
+                if (cpuSettings[i].airRecovery != 0
+                    && fm.FStateManager.CurrentState is (int)FighterCmnStates.HIT_AERIAL_FACE_UP 
+                        or (int)FighterCmnStates.HIT_AERIAL_LAUNCH 
+                        or (int)FighterCmnStates.HIT_AERIAL_REELING 
+                        or (int)FighterCmnStates.HIT_AERIAL_FACE_DOWN 
+                        or (int)FighterCmnStates.HIT_AERIAL_SOMERSAULT)
+                {
+                    var t = new NetworkPlayerInputData();
+                    t.buttons.Set((int)PlayerInputType.A, true);
+                    t.forward = fm.myTransform.forward;
+                    t.right = fm.myTransform.right;
+                    switch (cpuSettings[i].airRecovery)
+                    {
+                        case 2:
+                            t.movement = new Vector2(0, 1);
+                            break;
+                        case 3:
+                            t.movement = new Vector2(0, -1);
+                            break;
+                        case 4:
+                            t.movement = new Vector2(-1, 0);
+                            break;
+                        case 5:
+                            t.movement = new Vector2(1, 0);
+                            break;
+                        case 6:
+                            t.movement = new Vector2(-1, 1);
+                            break;
+                        default:
+                            break;
+                    }
+                    
+                    testData[i][(Runner.Tick) % 10] = t;
+                }
             }
         }
 

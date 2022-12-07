@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   stateName: Hit Aerial Face Down
   useBaseState: 1
-  baseState: {fileID: 11400000, guid: da375c2c1e9149e458db1552d1065b8f, type: 2}
+  baseState: {fileID: 11400000, guid: 1ce2d35ca8b36c94abd94b69d78d2a79, type: 2}
   totalFrames: 30
   autoIncrement: 1
   autoLoop: 0
@@ -25,6 +25,7 @@ MonoBehaviour:
   initialGroundedState: 2
   stateType: 8
   maxUsesInString: -1
+  maxUsesPerAirtime: -1
   selfChainable: 0
   allowBaseStateTransitions: 1
   inputSequence:
@@ -54,6 +55,9 @@ MonoBehaviour:
         - {x: 1, y: -1}
         condition:
           rid: 8688056272189390855
+        ignoreStateConditions: 0
+        ignoreAirtimeCheck: 0
+        ignoreStringUseCheck: 0
         checkInputSequence: 0
         checkCondition: 0
         targetType: 0

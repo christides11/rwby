@@ -19,7 +19,8 @@ MonoBehaviour:
   autoIncrement: 1
   autoLoop: 0
   autoLoopFrame: 1
-  data: []
+  data:
+  - rid: 5775511544003297288
   auraRequirement: 0
   initialGroundedState: 1
   stateType: 4
@@ -45,3 +46,22 @@ MonoBehaviour:
     RefIds:
     - rid: -2
       type: {class: , ns: , asm: }
+    - rid: 5775511544003297288
+      type: {class: VarClampMovement, ns: rwby, asm: rwby.csharp}
+      data:
+        name: 
+        id: 0
+        parent: -1
+        children: 
+        frameRanges:
+        - {x: -2, y: -2}
+        condition:
+          rid: -2
+        magnitude:
+          rid: 5775511544003297289
+    - rid: 5775511544003297289
+      type: {class: FighterStatReferenceFloatBase, ns: rwby, asm: rwby.csharp}
+      data:
+        inverse: 0
+        statReference: 0
+        value: 1

@@ -35,6 +35,7 @@ MonoBehaviour:
   initialGroundedState: 1
   stateType: 2
   maxUsesInString: 1
+  maxUsesPerAirtime: -1
   selfChainable: 0
   allowBaseStateTransitions: 1
   inputSequence:
@@ -59,8 +60,8 @@ MonoBehaviour:
     groundedCounterHitFoldoutGroup: 0
     hitStateGroundedGroups: -1
     hit:
-      groundHitState: 30
-      airHitState: 32
+      groundHitState: 34
+      airHitState: 34
       groundBounce: 0
       wallBounce: 0
       groundBounceForce: 0
@@ -204,6 +205,9 @@ MonoBehaviour:
         - {x: 6, y: -1}
         condition:
           rid: 387795733835153431
+        ignoreStateConditions: 0
+        ignoreAirtimeCheck: 0
+        ignoreStringUseCheck: 0
         checkInputSequence: 0
         checkCondition: 0
         targetType: 0
@@ -233,6 +237,9 @@ MonoBehaviour:
         - {x: -1, y: -1}
         condition:
           rid: -2
+        ignoreStateConditions: 0
+        ignoreAirtimeCheck: 0
+        ignoreStringUseCheck: 0
         checkInputSequence: 0
         checkCondition: 0
         targetType: 0
