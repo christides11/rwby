@@ -94,7 +94,6 @@ namespace rwby
                 if (pair.Value.result == CombatPairFinder.HitboxCombatResult.HitHurtbox && oppositePair.result == CombatPairFinder.HitboxCombatResult.HitHurtbox)
                 {
                     // Trade.
-                    Debug.Log("Trade.");
                     var objOneHitInfo = pair.Key.Item1.GetComponent<IAttacker>().BuildHurtInfo(pair.Value.attackerHitbox, pair.Value.attackeeHurtbox);
                     var objTwoHitInfo = pair.Key.Item2.GetComponent<IAttacker>().BuildHurtInfo(oppositePair.attackerHitbox, oppositePair.attackeeHurtbox);
                     pair.Key.Item1.GetComponent<IAttacker>().DoHit(pair.Value.attackerHitbox, pair.Value.attackeeHurtbox, objOneHitInfo);
@@ -104,20 +103,21 @@ namespace rwby
                 }
                 else if (pair.Value.result == CombatPairFinder.HitboxCombatResult.HitHurtbox)
                 {
-                    Debug.Log("P1 Win.");
+                    // P1 win.
                     var objHitInfo = pair.Key.Item1.GetComponent<IAttacker>().BuildHurtInfo(pair.Value.attackerHitbox, pair.Value.attackeeHurtbox);
                     pair.Key.Item1.GetComponent<IAttacker>().DoHit(pair.Value.attackerHitbox, pair.Value.attackeeHurtbox, objHitInfo);
                     receiversResolved.Add(pair.Key.Item2);
                 }
                 else if (oppositePair.result == CombatPairFinder.HitboxCombatResult.HitHurtbox)
                 {
-                    Debug.Log("P2 Win.");
+                    // P2 win.
                     var objHitInfo = pair.Key.Item2.GetComponent<IAttacker>().BuildHurtInfo(oppositePair.attackerHitbox, oppositePair.attackeeHurtbox);
                     pair.Key.Item2.GetComponent<IAttacker>().DoHit(oppositePair.attackerHitbox, oppositePair.attackeeHurtbox, objHitInfo);
                     receiversResolved.Add(pair.Key.Item1);
                 }
                 else
                 {
+                    // Clash.
                     pair.Key.Item1.GetComponent<IAttacker>().DoClash(pair.Value.attackerHitbox, pair.Value.attackeeHitbox);
                     pair.Key.Item2.GetComponent<IAttacker>().DoClash(oppositePair.attackerHitbox, oppositePair.attackeeHitbox);
                     receiversResolved.Add(pair.Key.Item1);

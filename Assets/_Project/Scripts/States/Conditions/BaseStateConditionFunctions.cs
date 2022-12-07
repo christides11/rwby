@@ -165,9 +165,19 @@ namespace rwby
         public static bool BlockstunValue(IFighterBase fighter, IConditionVariables variables, HnSF.StateTimeline arg3, int arg4)
         {
             FighterManager f = fighter as FighterManager;
-            ConditionBlockstunValue vars = (ConditionBlockstunValue)variables;
+            var vars = (ConditionBlockstunValue)variables;
 
-            return f.FCombatManager.BlockStun >= vars.minValue && f.FCombatManager.BlockStun <= vars.maxValue;
+            var result =(f.FCombatManager.BlockStun >= vars.minValue && f.FCombatManager.BlockStun <= vars.maxValue);
+            return vars.inverse ? !result : result;
+        }
+        
+        public static bool InBlockstun(IFighterBase fighter, IConditionVariables variables, HnSF.StateTimeline arg3, int arg4)
+        {
+            FighterManager f = fighter as FighterManager;
+            var vars = (ConditionInBlockstun)variables;
+
+            var result = f.FCombatManager.BlockStun > 0;
+            return vars.inverse ? !result : result;
         }
         
         public static bool LockedOn(IFighterBase fighter, IConditionVariables variables, HnSF.StateTimeline arg3, int arg4)

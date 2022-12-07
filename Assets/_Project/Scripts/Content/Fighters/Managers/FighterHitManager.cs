@@ -171,6 +171,7 @@ namespace rwby
             };
         }
 
+        // TODO: Visual effects, better handling.
         public override void DoClash(CustomHitbox hitbox, CustomHitbox enemyHitbox)
         {
             base.DoClash(hitbox, enemyHitbox);
@@ -185,36 +186,6 @@ namespace rwby
             hi.team = combatManager.GetTeam();
             hi.attackerVelocity = manager.FPhysicsManager.GetOverallForce();
             return hi;
-            /*
-            Vector3 hitPoint = hurtbox.transform.position;
-            HitInfo hitInfo = hitbox.definition.HitboxInfo[hitbox.definitionIndex];
-            HurtInfo hurtInfo;
-            
-            // TODO: Attack origin point.
-            switch (hitInfo.hitForceRelation)
-            {
-                case HitboxForceRelation.ATTACKER:
-                    hurtInfo = new HurtInfo(hitInfo, hurtbox.definitionIndex,
-                        manager.myTransform.position, manager.myTransform.forward, manager.myTransform.right,
-                        manager.FPhysicsManager.GetOverallForce(), hitPoint);
-                    break;
-                case HitboxForceRelation.HITBOX:
-                    hurtInfo = new HurtInfo(hitInfo, hurtbox.definitionIndex,
-                         hitbox.Position, manager.myTransform.forward, manager.myTransform.right,
-                         manager.FPhysicsManager.GetOverallForce(), hitPoint);
-                    break;
-                case HitboxForceRelation.WORLD:
-                    hurtInfo = new HurtInfo(hitInfo, hurtbox.definitionIndex,
-                        manager.myTransform.position, Vector3.forward, Vector3.right,
-                        (manager.FPhysicsManager as FighterPhysicsManager).GetOverallForce(), hitPoint);
-                    break;
-                default:
-                    hurtInfo = new HurtInfo(hitInfo, hurtbox.definitionIndex,
-                        manager.myTransform.position, manager.myTransform.forward, manager.myTransform.right,
-                        manager.FPhysicsManager.GetOverallForce(), hitPoint);
-                    break;
-            }
-            return hurtInfo;*/
         }
 
         public override void ThrowerInitilization(NetworkObject throwee)

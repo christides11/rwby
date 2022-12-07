@@ -21,11 +21,11 @@ MonoBehaviour:
   autoLoopFrame: 5
   data:
   - rid: 8688056601973620736
-  - rid: 8688056605814030340
   auraRequirement: 0
   initialGroundedState: 1
   stateType: 1
   maxUsesInString: -1
+  maxUsesPerAirtime: -1
   selfChainable: 0
   allowBaseStateTransitions: 1
   inputSequence:
@@ -59,16 +59,3 @@ MonoBehaviour:
         rotateTowards: 0
         useTargetWhenNoMovement: 0
         eulerAngle: {x: 0, y: 0, z: 0}
-    - rid: 8688056605814030340
-      type: {class: VarModifyBlockstun, ns: rwby, asm: rwby.csharp}
-      data:
-        name: 
-        id: 5
-        parent: -1
-        children: 
-        frameRanges:
-        - {x: 1, y: -1}
-        condition:
-          rid: -2
-        modifyType: 0
-        value: -1

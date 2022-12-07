@@ -160,7 +160,7 @@ namespace rwby
             base.Render();
             shieldVisual.SetActive(combatManager.BlockState != BlockStateType.NONE);
             physicsManager.kCC.Motor.visualExtraOffset = Vector3.zero;
-            if (FCombatManager.HitStop == 0 || (FCombatManager.HitStun == 0 && FCombatManager.BlockStun == 0) ) return;
+            if (FCombatManager.HitStop <= 0 || (FCombatManager.HitStun <= 0 && FCombatManager.BlockStun <= 0) ) return;
             Vector3 dir = shakeDirs[currentShakeDirection].z * transform.forward
                           + shakeDirs[currentShakeDirection].x * transform.right;
             physicsManager.kCC.Motor.visualExtraOffset = dir * hitstopShakeDistance * hitstopDir;
@@ -200,28 +200,24 @@ namespace rwby
             HitstopShake();
             HandleLockon();
 
-            if (FCombatManager.HitStop == 0)
+            if (FCombatManager.HitStop > 0)
             {
-                if (FCombatManager.BlockStun > 0)
-                {
-                    FCombatManager.BlockStun--;
-                }
-                FPhysicsManager.CheckIfGrounded();
-                FStateManager.Tick();
-                FPhysicsManager.Tick();
-                FCombatManager.Tick();
-            }
-            else
-            {
-                FCombatManager.hitstopCounter++;
+                FCombatManager.HitStop--;
                 FPhysicsManager.Freeze();
-                if(FCombatManager.hitstopCounter == FCombatManager.HitStop)
+                if(FCombatManager.HitStop == 0)
                 {
-                    FCombatManager.HitStop = 0;
                     currentShakeDirection = 0;
-                    FCombatManager.hitstopCounter = 0;
                 }
+                return;
             }
+            if(FCombatManager.HitStop > -600) FCombatManager.HitStop--;
+            if(FCombatManager.BlockStun > -600) FCombatManager.BlockStun--;
+            if(FCombatManager.HitStun > -600) FCombatManager.HitStun--;
+            
+            FPhysicsManager.CheckIfGrounded();
+            FStateManager.Tick();
+            FPhysicsManager.Tick();
+            FCombatManager.Tick();
         }
 
         private void GetFloorAngle()

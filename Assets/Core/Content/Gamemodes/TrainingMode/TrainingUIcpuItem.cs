@@ -72,7 +72,6 @@ namespace rwby.core.training
             groundRecovery.SetOption(cpuHandler.cpuSettings[index].groundRecovery);
             groundRecovery.OnValueChanged += OnOptionChanged;
             
-            /*
             // COUNTER-ATTACK
             List<string> aOpts = new List<string>();
             aOpts.Add("None");
@@ -86,7 +85,7 @@ namespace rwby.core.training
             afterBlock.OnValueChanged += OnOptionChanged;
             afterHit.options = aOpts.ToArray();
             afterHit.SetOption(cpuHandler.cpuSettings[index].afterHit);
-            afterHit.OnValueChanged += OnOptionChanged;*/
+            afterHit.OnValueChanged += OnOptionChanged;
         }
 
         private void OnOptionChanged(int value)

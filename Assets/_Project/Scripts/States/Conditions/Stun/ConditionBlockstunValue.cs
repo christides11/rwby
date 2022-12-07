@@ -7,6 +7,7 @@ namespace rwby
     {
         public int FunctionMap => (int)BaseStateConditionEnum.NONE;
 
+        public bool inverse;
         public int minValue;
         public int maxValue;
     }

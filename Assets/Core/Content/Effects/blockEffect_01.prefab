@@ -48,7 +48,7 @@ ParticleSystem:
   ringBufferMode: 0
   ringBufferLoopRange: {x: 0, y: 1}
   emitterVelocityMode: 1
-  looping: 1
+  looping: 0
   prewarm: 0
   playOnAwake: 1
   useUnscaledTime: 0
@@ -109,7 +109,7 @@ ParticleSystem:
   moveWithTransform: 0
   moveWithCustomTransform: {fileID: 0}
   scalingMode: 1
-  randomSeed: 1
+  randomSeed: 453795075
   InitialModule:
     serializedVersion: 3
     enabled: 1
@@ -601,6 +601,7 @@ ParticleSystem:
         m_PostInfinity: 2
         m_RotationOrder: 4
     randomizeRotationDirection: 0
+    gravitySource: 0
     maxNumParticles: 1000
     customEmitterVelocity: {x: 0, y: 0, z: 0}
     size3D: 1
@@ -4052,6 +4053,7 @@ ParticleSystem:
         m_RotationOrder: 4
     minVertexDistance: 0.2
     textureMode: 0
+    textureScale: {x: 1, y: 1}
     ribbonCount: 1
     shadowBias: 0.5
     worldSpace: 0
@@ -4924,6 +4926,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 618f023f1e0fe7844b5a6e7241a82784, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  bank: 0
+  effect: 0
   childEffects:
   - {fileID: 6902596517041635482}
 --- !u!1 &6902596517041635481
@@ -4971,5 +4975,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b1b5d4ab8b0e47a438b92b147fe43a48, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  bank: 0
+  effect: 0
   particleSystems:
   - {fileID: 6902596515249530201}

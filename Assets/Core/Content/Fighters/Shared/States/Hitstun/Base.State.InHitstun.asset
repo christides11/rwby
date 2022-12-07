@@ -19,12 +19,12 @@ MonoBehaviour:
   autoIncrement: 1
   autoLoop: 1
   autoLoopFrame: 1
-  data:
-  - rid: 2193520836063002624
+  data: []
   auraRequirement: 0
   initialGroundedState: 0
   stateType: 8
   maxUsesInString: -1
+  maxUsesPerAirtime: -1
   selfChainable: 0
   allowBaseStateTransitions: 1
   inputSequence:
@@ -43,21 +43,3 @@ MonoBehaviour:
     RefIds:
     - rid: -2
       type: {class: , ns: , asm: }
-    - rid: 2193520836063002624
-      type: {class: VarModifyHitstun, ns: rwby, asm: rwby.csharp}
-      data:
-        name: 
-        id: 0
-        parent: -1
-        children: 
-        frameRanges:
-        - {x: 1, y: -1}
-        condition:
-          rid: 2193520836063002625
-        modifyType: 0
-        value: -1
-    - rid: 2193520836063002625
-      type: {class: ConditionHitstunValue, ns: rwby, asm: rwby.csharp}
-      data:
-        minValue: 1
-        maxValue: 2147483647

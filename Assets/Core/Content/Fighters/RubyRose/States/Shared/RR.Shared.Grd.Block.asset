@@ -36,6 +36,7 @@ MonoBehaviour:
   initialGroundedState: 1
   stateType: 1
   maxUsesInString: -1
+  maxUsesPerAirtime: -1
   selfChainable: 0
   allowBaseStateTransitions: 1
   inputSequence:
@@ -104,6 +105,10 @@ MonoBehaviour:
         boxExtents: {x: 0.4, y: 1, z: 0.4}
         radius: 0
         definitionIndex: 0
+    - rid: 5775511537229496344
+      type: {class: ConditionInBlockstun, ns: rwby, asm: rwby.csharp}
+      data:
+        inverse: 1
     - rid: 7270848342715531265
       type: {class: VarCreateBox, ns: rwby, asm: rwby.csharp}
       data:
@@ -133,12 +138,16 @@ MonoBehaviour:
         - {x: 1, y: -1}
         condition:
           rid: 7270848342715531267
+        ignoreStateConditions: 0
+        ignoreAirtimeCheck: 0
+        ignoreStringUseCheck: 0
         checkInputSequence: 0
         checkCondition: 0
         targetType: 0
         stateMovesetID: -1
         state:
           rid: 7270848342715531268
+        frame: 0
     - rid: 7270848342715531267
       type: {class: ConditionIsGrounded, ns: rwby, asm: rwby.csharp}
       data:
@@ -180,17 +189,13 @@ MonoBehaviour:
       type: {class: ConditionAnd, ns: rwby, asm: rwby.csharp}
       data:
         conditions:
-        - rid: 8688056606344609797
+        - rid: 5775511537229496344
         - rid: 8688056606344609798
-    - rid: 8688056606344609797
-      type: {class: ConditionBlockstunValue, ns: rwby, asm: rwby.csharp}
-      data:
-        minValue: 0
-        maxValue: 0
     - rid: 8688056606344609798
       type: {class: ConditionButton, ns: rwby, asm: rwby.csharp}
       data:
         inverse: 1
+        checkAbilityButton: 0
         button: 1
         buttonState: 0
         offset: 0
@@ -238,15 +243,20 @@ MonoBehaviour:
         - {x: 5, y: -1}
         condition:
           rid: 8688056606344609805
+        ignoreStateConditions: 0
+        ignoreAirtimeCheck: 0
+        ignoreStringUseCheck: 0
         checkInputSequence: 1
         checkCondition: 0
         targetType: 0
         stateMovesetID: -1
         state:
           rid: 8688056606344609806
+        frame: 0
     - rid: 8688056606344609805
       type: {class: ConditionBlockstunValue, ns: rwby, asm: rwby.csharp}
       data:
+        inverse: 0
         minValue: 0
         maxValue: 0
     - rid: 8688056606344609806
@@ -283,12 +293,16 @@ MonoBehaviour:
         - {x: 1, y: -1}
         condition:
           rid: -2
+        ignoreStateConditions: 0
+        ignoreAirtimeCheck: 0
+        ignoreStringUseCheck: 0
         checkInputSequence: 1
         checkCondition: 0
         targetType: 0
         stateMovesetID: -1
         state:
           rid: 8688056606344609838
+        frame: 0
     - rid: 8688056606344609838
       type: {class: FighterCmnStateReference, ns: rwby, asm: rwby.csharp}
       data:

@@ -25,9 +25,9 @@ namespace rwby
         }
         
         [Networked] public BlockStateType BlockState { get; set; }
-        [Networked] public int HitStun { get; set; }
-        [Networked] public int HitStop { get; set; }
-        [Networked] public int BlockStun { get; set; }
+        [Networked] public int HitStun { get; set; } = -1;
+        [Networked] public int HitStop { get; set; } = -1;
+        [Networked] public int BlockStun { get; set; } = -1;
         [Networked] public NetworkBool Charging { get; set; }
         [Networked] public int CurrentChargeLevel { get; set; }
         [Networked] public int CurrentChargeLevelCharge { get; set; }
@@ -47,8 +47,7 @@ namespace rwby
 
         [Networked] public int Team { get; set; }
         [Networked, Capacity(20)] public NetworkLinkedList<MovesetStateIdentifier> movesUsedInString => default;
-
-        [Networked] public int hitstopCounter { get; set; }
+        
         [Networked] public bool WallBounce { get; set; }
         [Networked] public float WallBounceForce { get; set; }
         [Networked] public bool GroundBounce { get; set; }
@@ -228,7 +227,6 @@ namespace rwby
         
         public virtual void SetHitStop(int value)
         {
-            hitstopCounter = 0;
             HitStop = value;
         }
 
@@ -239,7 +237,6 @@ namespace rwby
 
         public virtual void AddHitStop(int value)
         {
-            hitstopCounter = 0;
             HitStop += value;
         }
 

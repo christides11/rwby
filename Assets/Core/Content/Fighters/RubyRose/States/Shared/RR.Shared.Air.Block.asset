@@ -35,6 +35,7 @@ MonoBehaviour:
   initialGroundedState: 2
   stateType: 1
   maxUsesInString: -1
+  maxUsesPerAirtime: -1
   selfChainable: 0
   allowBaseStateTransitions: 1
   inputSequence:
@@ -103,6 +104,10 @@ MonoBehaviour:
         boxExtents: {x: 0.4, y: 1, z: 0.4}
         radius: 0
         definitionIndex: 0
+    - rid: 5775511537229496345
+      type: {class: ConditionInBlockstun, ns: rwby, asm: rwby.csharp}
+      data:
+        inverse: 1
     - rid: 8688056409313247233
       type: {class: ConditionMoveset, ns: rwby, asm: rwby.csharp}
       data:
@@ -136,17 +141,13 @@ MonoBehaviour:
       type: {class: ConditionAnd, ns: rwby, asm: rwby.csharp}
       data:
         conditions:
-        - rid: 8688056606344609797
+        - rid: 5775511537229496345
         - rid: 8688056606344609798
-    - rid: 8688056606344609797
-      type: {class: ConditionBlockstunValue, ns: rwby, asm: rwby.csharp}
-      data:
-        minValue: 0
-        maxValue: 0
     - rid: 8688056606344609798
       type: {class: ConditionButton, ns: rwby, asm: rwby.csharp}
       data:
         inverse: 1
+        checkAbilityButton: 0
         button: 1
         buttonState: 0
         offset: 0

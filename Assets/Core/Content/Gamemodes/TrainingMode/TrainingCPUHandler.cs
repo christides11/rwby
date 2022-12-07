@@ -124,7 +124,7 @@ namespace rwby.core.training
 
                 testData[i][Runner.Tick % 10] = id;
                 
-                if (cpuSettings[i].afterHit != 0 && fm.FCombatManager.HitStun == 1)
+                if (cpuSettings[i].afterHit != 0 && fm.FCombatManager.HitStun == 0)
                 {
                     var opt = cpuAtkOptions[i][cpuSettings[i].afterHit - 1];
                     
@@ -159,7 +159,7 @@ namespace rwby.core.training
                     disabledUntil = Runner.Tick + opt.inputs.Length+1;
                 }
 
-                if (cpuSettings[i].afterBlock != 0 && fm.FCombatManager.BlockStun == 1)
+                if (cpuSettings[i].afterBlock != 0 && fm.FCombatManager.BlockStun == 0)
                 {
                     var opt = cpuAtkOptions[i][cpuSettings[i].afterBlock - 1];
                     

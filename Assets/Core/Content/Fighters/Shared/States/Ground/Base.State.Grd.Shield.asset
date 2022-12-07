@@ -27,6 +27,7 @@ MonoBehaviour:
   initialGroundedState: 1
   stateType: 1
   maxUsesInString: -1
+  maxUsesPerAirtime: -1
   selfChainable: 0
   allowBaseStateTransitions: 1
   inputSequence:
@@ -52,7 +53,7 @@ MonoBehaviour:
     - rid: 7270848607039258630
       type: {class: VarChangeState, ns: rwby, asm: rwby.csharp}
       data:
-        name: 
+        name: to Guard (Success)
         id: 0
         parent: -1
         children: 
@@ -60,6 +61,9 @@ MonoBehaviour:
         - {x: 1, y: 1}
         condition:
           rid: 7270848607039258632
+        ignoreStateConditions: 0
+        ignoreAirtimeCheck: 0
+        ignoreStringUseCheck: 0
         checkInputSequence: 0
         checkCondition: 0
         targetType: 0
@@ -79,7 +83,7 @@ MonoBehaviour:
     - rid: 7270848607039258633
       type: {class: VarChangeState, ns: rwby, asm: rwby.csharp}
       data:
-        name: Fall
+        name: Try Fall
         id: 1
         parent: -1
         children: 
@@ -87,6 +91,9 @@ MonoBehaviour:
         - {x: 1, y: -1}
         condition:
           rid: 7270848607039258635
+        ignoreStateConditions: 0
+        ignoreAirtimeCheck: 0
+        ignoreStringUseCheck: 0
         checkInputSequence: 0
         checkCondition: 0
         targetType: 0
@@ -105,7 +112,7 @@ MonoBehaviour:
     - rid: 7270848607039258639
       type: {class: VarChangeState, ns: rwby, asm: rwby.csharp}
       data:
-        name: 
+        name: to Guard
         id: 2
         parent: -1
         children: 
@@ -113,6 +120,9 @@ MonoBehaviour:
         - {x: -1, y: -1}
         condition:
           rid: -2
+        ignoreStateConditions: 0
+        ignoreAirtimeCheck: 0
+        ignoreStringUseCheck: 0
         checkInputSequence: 0
         checkCondition: 0
         targetType: 0
