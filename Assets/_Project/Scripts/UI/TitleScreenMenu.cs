@@ -1,4 +1,5 @@
 using System;
+using Animancer;
 using Cysharp.Threading.Tasks;
 using Rewired;
 using UnityEngine;
@@ -14,14 +15,15 @@ namespace rwby.ui.mainmenu
         public int[] validActions;
 
         public ModObjectItemReference menuSound;
-
-        public Animation animation;
+        
+        public AnimancerComponent animancer;
+        public AnimationClip clip;
         
         public override void Open(MenuDirection direction, IMenuHandler menuHandler)
         {
             base.Open(direction, menuHandler);
             gameObject.SetActive(true);
-            animation.enabled = true;
+            animancer.enabled = true;
         }
 
         public override bool TryClose(MenuDirection direction, bool forceClose = false)
@@ -29,7 +31,7 @@ namespace rwby.ui.mainmenu
             if (forceClose)
             {
                 gameObject.SetActive(false);
-                animation.enabled = false;
+                animancer.enabled = false;
             }
             return true;
         }
@@ -61,15 +63,21 @@ namespace rwby.ui.mainmenu
             _ = PlayExitAnimation();
         }
 
-        public float exitAnimBlack = 0.10f;
-        public float exitAnimEnd = 0.10f;
+        public float exitAnimBlack = 0.37f;
         private async UniTask PlayExitAnimation()
         {
-            animation.Play();
-            await UniTask.Delay(TimeSpan.FromSeconds(exitAnimBlack));
-            currentHandler.Forward((int)MainMenuType.MAIN_MENU);
-            await UniTask.Delay(TimeSpan.FromSeconds(exitAnimEnd));
+            transitioning = true;
+            animancer.Play(clip);
+            var state = animancer.States.GetOrCreate(clip);
+            state.Events.EndEvent = new AnimancerEvent(1.0f, OnAnimEnd);
+            await UniTask.WaitUntil(() => state.Time >= exitAnimBlack);
+            currentHandler.Forward((int)MainMenuType.MAIN_MENU, false);
+        }
+
+        private void OnAnimEnd()
+        {
             transitioning = false;
+            animancer.enabled = false;
             gameObject.SetActive(false);
         }
     }

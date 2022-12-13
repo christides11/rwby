@@ -15,12 +15,7 @@ namespace rwby.ui.mainmenu
         
         [SerializeField] private TitleScreenMenu titleScreen;
         [SerializeField] private MainMenu main;
-        //[SerializeField] private LocalMenu local;
-        //[SerializeField] private OnlineMenu online;
-        //[SerializeField] private OptionsMenu options;
-        //[SerializeField] private HostLobbyMenu hostLobby;
         [SerializeField] private LobbyMenuHandler lobbyMenu;
-        //[SerializeField] private FindLobbyMenu findLobby;
         
         
         private void Awake()
