@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Cysharp.Threading.Tasks;
 using UnityEngine.EventSystems;
+using UnityEngine.Rendering.Universal;
 using UnityEngine.SceneManagement;
 
 namespace rwby.ui.mainmenu
@@ -15,6 +16,7 @@ namespace rwby.ui.mainmenu
 
         public SessionManagerGamemode sessionManagerGamemode;
 
+        [SerializeField] private Camera mainMenuCamera;
         [SerializeField] private GameObject defaultSelectedUIItem;
         private EventSystem eventSystem;
         private LocalPlayerManager localPlayerManager;
@@ -172,9 +174,13 @@ namespace rwby.ui.mainmenu
                 {
                     var temp = localplayermanager.localPlayers[i];
                     temp.camera = Instantiate(lobbyPlayerCameraPrefab, Vector3.zero, Quaternion.identity);
+                    temp.camera.GetComponent<UniversalAdditionalCameraData>().renderPostProcessing = false;
+                    temp.camera.transform.position = mainMenuCamera.transform.position;
+                    temp.camera.transform.rotation = mainMenuCamera.transform.rotation;
                     localplayermanager.localPlayers[i] = temp;
                 }
                 if(menuInstances[i] == null) menuInstances[i] = InitializeMenuInstance(i);
+                menuInstances[i].canvas.planeDistance = 0.5f;
             }
             
             localplayermanager.ApplyCameraLayout();
