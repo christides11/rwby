@@ -15,7 +15,7 @@ MonoBehaviour:
   stateName: Walk
   useBaseState: 1
   baseState: {fileID: 11400000, guid: f56f3b8269a1d364b8ffce5b1636054d, type: 2}
-  totalFrames: 79
+  totalFrames: 90
   autoIncrement: 1
   autoLoop: 1
   autoLoopFrame: 1
@@ -28,15 +28,16 @@ MonoBehaviour:
   - rid: 8688056217003884544
   - rid: 8688056217003884545
   - rid: 8688056409313247232
-  - rid: 7270848366746009600
   - rid: 7270848899719102477
   - rid: 7270848899719102479
   - rid: 387796025889783855
   - rid: 387796025889783857
+  - rid: 5775511760438034432
   auraRequirement: 0
   initialGroundedState: 1
   stateType: 1
   maxUsesInString: -1
+  maxUsesPerAirtime: -1
   selfChainable: 0
   allowBaseStateTransitions: 1
   inputSequence:
@@ -126,35 +127,19 @@ MonoBehaviour:
         boxExtents: {x: 0.3, y: 1, z: 0.3}
         radius: 0
         definitionIndex: 0
-    - rid: 7270848366746009600
-      type: {class: VarModifyEffectSet, ns: rwby, asm: rwby.csharp}
+    - rid: 5775511760438034432
+      type: {class: VarFootstepSFX, ns: rwby, asm: rwby.csharp}
       data:
         name: 
-        id: 8
+        id: 13
         parent: -1
         children: 
         frameRanges:
-        - {x: 5, y: 5}
-        - {x: 25, y: 25}
-        - {x: 45, y: 45}
-        - {x: 65, y: 65}
+        - {x: 10, y: 10}
+        - {x: 40, y: 40}
+        - {x: 70, y: 70}
         condition:
           rid: -2
-        modifyType: 0
-        wantedEffects:
-        - effectbank:
-            modGUID:
-              guid: 1d292c1f00000000
-            contentGUID:
-              guid: 1d27280000000000
-          effect: dust
-          parented: 0
-          offset: {x: 0, y: 0, z: 0}
-          rotation: {x: 0, y: 0, z: 0}
-          scale: {x: 1, y: 1, z: 1}
-          autoIncrement: 1
-        doNotAddToSet: 1
-        OffsetStartAtFighter: 1
     - rid: 7270848899719102477
       type: {class: VarEmpty, ns: rwby, asm: rwby.csharp}
       data:

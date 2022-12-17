@@ -8,5 +8,6 @@ namespace rwby
         //[HideInInspector] public int index;
         public string id;
         public AnimationClip clip;
+        public bool footIK;
     }
 }

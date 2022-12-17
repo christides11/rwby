@@ -913,6 +913,46 @@ namespace rwby
             fm.fighterSounder.AddSFXs(vars.sounds);
         }
         
+        public static void FootstepSFX(IFighterBase fighter, IStateVariables variables, HnSF.StateTimeline stateTimeline, int frame)
+        {
+            FighterManager fm = (FighterManager)fighter;
+
+            if (!fm.Runner.GetPhysicsScene().Raycast(fm.myTransform.position + Vector3.up, Vector3.down, out var hit,
+                    5.0f, fm.wallLayerMask)) return;
+
+                Renderer rend = hit.transform.GetComponent<Renderer>();
+            MeshCollider meshCollider = hit.collider as MeshCollider;
+
+            if (rend == null || rend.sharedMaterial == null || rend.sharedMaterial.mainTexture == null ||
+                meshCollider == null || rend.sharedMaterial.HasTexture(ExtDebug.MATERIAL_TEXTURE_IDENTIFIER) == false)
+            {
+                return;
+            }
+            
+            Texture2D tex = rend.material.GetTexture(ExtDebug.MATERIAL_TEXTURE_IDENTIFIER) as Texture2D;
+            Vector2 pixelUV = hit.textureCoord;
+            pixelUV.x *= tex.width;
+            pixelUV.y *= tex.height;
+
+            var c = tex.GetPixel((int)pixelUV.x, (int)pixelUV.y);
+            var temp = fm.fighterSounder.rng;
+            if (c == Color.red)
+            {
+                fm.fighterSounder.AddSFX(fm.footstepsWood[temp.RangeExclusive(0, fm.footstepsWood.Length)]);
+            }else if (c == Color.blue)
+            {
+                fm.fighterSounder.AddSFX(fm.footstepsSnow[temp.RangeExclusive(0, fm.footstepsSnow.Length)]);
+            }else if (c == Color.green)
+            {
+                fm.fighterSounder.AddSFX(fm.footstepsLeaves[temp.RangeExclusive(0, fm.footstepsLeaves.Length)]);
+            }
+            else
+            {
+                fm.fighterSounder.AddSFX(fm.footstepsDirt[temp.RangeExclusive(0, fm.footstepsDirt.Length)]);
+            }
+            fm.fighterSounder.rng = temp;
+        }
+        
         public static void IncrementChargeLevel(IFighterBase fighter, IStateVariables variables, HnSF.StateTimeline stateTimeline, int frame)
         {
             FighterManager fm = (FighterManager)fighter;

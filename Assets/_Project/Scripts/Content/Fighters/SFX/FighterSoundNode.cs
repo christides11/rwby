@@ -15,6 +15,7 @@ namespace rwby
         public float volume;
         public float minDist;
         public float maxDist;
+        public float pitch;
 
         public bool Equals(FighterSoundNode other)
         {
@@ -25,7 +26,8 @@ namespace rwby
                    && pos.Equals(other.pos)
                    && volume.Equals(other.volume)
                    && minDist.Equals(other.minDist)
-                   && maxDist.Equals(other.maxDist);
+                   && maxDist.Equals(other.maxDist)
+                   && pitch.Equals(other.pitch);
         }
 
         public override bool Equals(object obj)
@@ -42,7 +44,8 @@ namespace rwby
                    && a.pos == b.pos
                    && a.volume == b.volume
                    && a.minDist == b.minDist
-                   && a.maxDist == b.maxDist;
+                   && a.maxDist == b.maxDist
+                   && a.pitch == b.pitch;
         }
 
         public static bool operator !=(rwby.FighterSoundNode a, rwby.FighterSoundNode b)

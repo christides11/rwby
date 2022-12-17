@@ -114,6 +114,13 @@ namespace rwby
         public float poleSpinLaunchForce = 10.0f;
 
         public Transform[] boneRefs;
+        
+        [Header("FOOTSTEP SOUNDS")]
+        public SoundReference[] footstepsDirt;
+        public SoundReference[] footstepsSnow;
+        public SoundReference[] footstepsWood;
+        public SoundReference[] footstepsLeaves;
+        
 
         public static void OnChangedCameraMode(Changed<FighterManager> changed)
         {

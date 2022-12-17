@@ -17,20 +17,25 @@ namespace rwby.ui
         
         [Header("Content")] 
         public Selectable readyButton;
-        public Selectable configureButton;
-        public Selectable profileButton;
         public Selectable characterSelectButton;
+        public Selectable profileButton;
+        public Selectable configureButton;
         public Selectable settingsButton;
         public Selectable exitButton;
         public Transform characterContentTransform;
         public GameObject characterContentPrefab;
         public CharacterSelectMenu characterSelectMenu;
+        public TextMeshProUGUI gamemodeNameText;
+        public TextMeshProUGUI mapNameText;
+
 
         [Header("Lobby Players")] 
-        public Transform teamListContentHolder;
-        public GameObject teamListHorizontalHolder;
-        public GameObject teamHolder;
-        public GameObject teamPlayerHeader;
+        public Transform lobbyPlayerContentHolder;
+        public GameObject lobbyPlayerHeader;
+        //public Transform teamListContentHolder;
+        //public GameObject teamListHorizontalHolder;
+        //public GameObject teamHolder;
+        //public GameObject teamPlayerHeader;
         public TextMeshProUGUI songText;
         
         private int currentSelectingCharacterIndex = 0;
@@ -111,9 +116,15 @@ namespace rwby.ui
                 {
                     IFighterDefinition fighterDefinition = ContentManager.singleton.
                         GetContentDefinition<IFighterDefinition>(clientInfo.players[lobbyMenuInstance.playerID].characterReferences[i]);
-                    if(fighterDefinition) chara.GetComponentInChildren<TextMeshProUGUI>().text = fighterDefinition.Name;
+                    if(fighterDefinition) chara.GetComponentInChildren<TextMeshProUGUI>().text = fighterDefinition.Name[0].ToString();
                 }
                 int selectIndex = i;
+            }
+
+            var cGamemode = lobbyMenuInstance.lobbyMenuHandler.sessionManagerGamemode.CurrentGameMode;
+            if (cGamemode != null)
+            {
+                gamemodeNameText.text = cGamemode.definition.Name;
             }
 
             UpdatePlayerList();
@@ -125,24 +136,24 @@ namespace rwby.ui
             var smg = lobbyMenuInstance.lobbyMenuHandler.sessionManagerGamemode;
             var playerList = smg.GetPlayerList();
 
-            foreach (Transform child in teamListContentHolder)
+            foreach (Transform child in lobbyPlayerContentHolder)
             {
                 Destroy(child.gameObject);
             }
-            
-            teamHolders.Clear();
 
             if (smg.teamDefinitions.Count == 1)
             {
+                /*
                 var singleHorizontalHolder = GameObject.Instantiate(teamListHorizontalHolder, teamListContentHolder, false);
                 singleHorizontalHolder.GetComponent<LayoutElement>().preferredHeight = 480;
 
                 var singleTeamHolder = GameObject.Instantiate(teamHolder, singleHorizontalHolder.transform, false);
                 teamHolders.Add(1, singleTeamHolder);
-                singleTeamHolder.GetComponent<rwby.ui.Selectable>().onSubmit.AddListener(() => SetTeam(1));
+                singleTeamHolder.GetComponent<rwby.ui.Selectable>().onSubmit.AddListener(() => SetTeam(1));*/
             }
             else if(smg.teamDefinitions.Count != 0)
             {
+                /*
                 byte ts = 0;
                 for (int i = 0; i < (smg.teamDefinitions.Count / 4)+1; i++)
                 {
@@ -159,20 +170,25 @@ namespace rwby.ui
                         singleTeamHolder.GetComponent<rwby.ui.Selectable>().onSubmit.AddListener(() => SetTeam(teamIndx));
                         ts++;
                     }
-                }
+                }*/
             }
 
             var players = lobbyMenuInstance.lobbyMenuHandler.sessionManagerGamemode.GetPlayerList();
 
             for (int w = 0; w < players.Count; w++)
             {
+                var playerHeader = GameObject.Instantiate(lobbyPlayerHeader, 
+                    lobbyPlayerContentHolder, 
+                    false);
+                playerHeader.GetComponentInChildren<TextMeshProUGUI>().text = players[w].clientManager.nickname;
+                /*
                 var pInfo = lobbyMenuInstance.lobbyMenuHandler.sessionManagerGamemode
                     .ClientDefinitions[players[w].clientIndex]
                     .players[players[w].playerIndex];
                 if (!teamHolders.ContainsKey(pInfo.team)) return;
                 var playerHeader = GameObject.Instantiate(teamPlayerHeader, 
                     teamHolders[pInfo.team].transform.Find("Scroll View").Find("Viewport").Find("Content"), 
-                    false);
+                    false);*/
             }
         }
 

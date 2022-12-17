@@ -11,9 +11,11 @@ namespace rwby
         [HideInInspector] public Dictionary<ModObjectSetContentReference, int> bankMap = new Dictionary<ModObjectSetContentReference, int>();
         [HideInInspector] public List<ISoundbankDefinition> banks = new List<ISoundbankDefinition>();
 
+        [Networked] public NetworkRNG rng { get; set; } = new NetworkRNG(0);
         [Networked, Capacity(10)] public FighterSoundsRoot sounds { get; set; }
         [Networked] public int soundBufferPos { get; set; } = 0;
-        [Networked, Capacity(10)] public NetworkLinkedList<int> currentSoundIndex => default;
+        [Networked, Capacity(10)] public NetworkArray<NetworkBool> isCurrentSound => default;
+        //[Networked, Capacity(10)] public NetworkLinkedList<int> currentSoundIndex => default;
 
         private bool dirty;
 
@@ -29,28 +31,41 @@ namespace rwby
         {
             dirty = true;
         }
-        
+
+        public override void Spawned()
+        {
+            base.Spawned();
+            if(Object.HasStateAuthority) rng = new NetworkRNG(327);
+        }
+
         public void AddSFXs(SoundReference[] wantedSounds)
         {
-            var temp = sounds;
-            for (int i = 0; i < wantedSounds.Length; i++)
+            foreach (var sRef in wantedSounds)
             {
-                temp.sounds.Set(soundBufferPos % 10, new FighterSoundNode()
-                {
-                    bank = bankMap[wantedSounds[i].soundbank]+1,
-                    sound = banks[bankMap[wantedSounds[i].soundbank]].SoundMap[wantedSounds[i].sound]+1,
-                    createFrame = Runner.Tick,
-                    parented = wantedSounds[i].parented,
-                    pos = wantedSounds[i].offset,
-                    volume = wantedSounds[i].volume,
-                    minDist = wantedSounds[i].minDist,
-                    maxDist = wantedSounds[i].maxDist
-                });
-
-                currentSoundIndex.Add(soundBufferPos);
-                soundBufferPos++;
+                AddSFX(sRef);
             }
+        }
+
+        public void AddSFX(SoundReference wantedSound)
+        {
+            var tempRNG = rng;
+            var temp = sounds;
+            temp.sounds.Set(soundBufferPos % 10, new FighterSoundNode()
+            {
+                bank = bankMap[wantedSound.soundbank]+1,
+                sound = banks[bankMap[wantedSound.soundbank]].SoundMap[wantedSound.sound]+1,
+                createFrame = Runner.Tick,
+                parented = wantedSound.parented,
+                pos = wantedSound.offset,
+                volume = wantedSound.volume,
+                minDist = wantedSound.minDist,
+                maxDist = wantedSound.maxDist,
+                pitch = 1.0f + tempRNG.RangeInclusive(wantedSound.pitchDeviMin, wantedSound.pitchDeviMax)
+            });
+            isCurrentSound.Set(soundBufferPos % 10, true);
+            soundBufferPos++;
             sounds = temp;
+            rng = tempRNG;
             dirty = true;
         }
 
@@ -59,13 +74,13 @@ namespace rwby
             if (removeSounds)
             {
                 var temp = sounds;
-                for (int i = 0; i < currentSoundIndex.Count; i++)
+                for (int i = 0; i < temp.sounds.Length; i++)
                 {
-                    temp.sounds.Set((currentSoundIndex[i] % 10), new FighterSoundNode());
+                    if (isCurrentSound[i]) temp.sounds.Set(i, new FighterSoundNode());
+                    isCurrentSound.Set(i, false);
                 }
                 sounds = temp;
             }
-            currentSoundIndex.Clear();
             dirty = true;
         }
 
@@ -112,6 +127,7 @@ namespace rwby
                     soundObjects[i].minDistance = sounds.sounds[i].minDist;
                     soundObjects[i].maxDistance = sounds.sounds[i].maxDist;
                     soundObjects[i].outputAudioMixerGroup = sfxMixerGroup;
+                    soundObjects[i].pitch = sounds.sounds[i].pitch;
                     soundObjects[i].Play();
                 }
 

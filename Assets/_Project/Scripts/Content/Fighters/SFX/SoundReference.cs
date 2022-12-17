@@ -12,5 +12,7 @@ namespace rwby
         public float volume;
         public float minDist;
         public float maxDist;
+        public float pitchDeviMin;
+        public float pitchDeviMax;
     }
 }

@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using rwby.ui;
 using UnityEngine;
+using Random = System.Random;
 
 namespace rwby
 {
@@ -21,6 +22,8 @@ namespace rwby
 
 		private bool sessionHandlerSet = false;
 		private FusionLauncher sessionHandler;
+
+		[Networked] public string nickname { get; set; } = "User";
 
 		// INPUT //
 		[Networked] public int latestConfirmedInput { get; set; } = 0;
@@ -53,6 +56,11 @@ namespace rwby
 			{
 				Runner.AddCallbacks(this);
 				GameManager.singleton.localPlayerManager.OnPlayerCountChanged += WhenPlayerCountChanged;
+			}
+
+			if (Object.HasStateAuthority)
+			{
+				nickname = $"User {UnityEngine.Random.Range(0, 10000)}";
 			}
 			setInputDelay = tempInputDelaySetter;
 			DontDestroyOnLoad(gameObject);

@@ -5,6 +5,8 @@ using UnityEngine;
 
 public static class ExtDebug
 {
+    public static string MATERIAL_TEXTURE_IDENTIFIER = "_MaterialMap";
+    
     public static Vector2 DeadZoner(Vector2 raw, float dead)
     {
         float d2 = raw.x * raw.x + raw.y * raw.y;

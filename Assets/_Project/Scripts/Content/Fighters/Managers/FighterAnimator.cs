@@ -264,7 +264,9 @@ namespace rwby
             for (int i = 0; i < banks[^1].Animations.Count; i++)
             {
                 if (banks[^1].Animations[i].clip == null) continue;
-                animancer.Layers[0].CreateState(banks[^1].Animations[i].clip);
+                var state = animancer.Layers[0].CreateState(banks[^1].Animations[i].clip);
+                //state.ApplyAnimatorIK = banks[^1].Animations[i].footIK;
+                //state.ApplyFootIK = banks[^1].Animations[i].footIK;
             }
         }
     }
