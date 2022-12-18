@@ -34,6 +34,7 @@ MonoBehaviour:
   initialGroundedState: 1
   stateType: 2
   maxUsesInString: 1
+  maxUsesPerAirtime: -1
   selfChainable: 0
   allowBaseStateTransitions: 1
   inputSequence:
@@ -72,9 +73,9 @@ MonoBehaviour:
       blockLift: 0
       attackerHitstop: 4
       hitstop: 4
-      hitstun: 60
+      hitstun: 32
       blockstun: 25
-      untech: 60
+      untech: 32
       initialProration: 0
       comboProration: 0
       damage: 100
@@ -335,6 +336,9 @@ MonoBehaviour:
         - {x: 16, y: -1}
         condition:
           rid: -2
+        ignoreStateConditions: 0
+        ignoreAirtimeCheck: 0
+        ignoreStringUseCheck: 0
         checkInputSequence: 1
         checkCondition: 0
         targetType: 0
@@ -357,6 +361,9 @@ MonoBehaviour:
         - {x: 16, y: -1}
         condition:
           rid: -2
+        ignoreStateConditions: 0
+        ignoreAirtimeCheck: 0
+        ignoreStringUseCheck: 0
         checkInputSequence: 1
         checkCondition: 0
         targetType: 0

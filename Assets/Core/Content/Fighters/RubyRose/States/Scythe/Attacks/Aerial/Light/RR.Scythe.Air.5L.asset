@@ -60,7 +60,7 @@ MonoBehaviour:
     hitStateGroundedGroups: -1
     hit:
       groundHitState: 30
-      airHitState: 32
+      airHitState: 34
       groundBounce: 0
       wallBounce: 0
       groundBounceForce: 0
@@ -81,9 +81,9 @@ MonoBehaviour:
       blockLift: 0
       attackerHitstop: 4
       hitstop: 4
-      hitstun: 30
+      hitstun: 20
       blockstun: 30
-      untech: 30
+      untech: 20
       initialProration: 0
       comboProration: 0.2
       damage: 300
@@ -296,6 +296,9 @@ MonoBehaviour:
         - {x: 1, y: -1}
         condition:
           rid: 387795932360736830
+        ignoreStateConditions: 0
+        ignoreAirtimeCheck: 0
+        ignoreStringUseCheck: 0
         checkInputSequence: 0
         checkCondition: 0
         targetType: 0
@@ -322,6 +325,9 @@ MonoBehaviour:
         - {x: -1, y: -1}
         condition:
           rid: -2
+        ignoreStateConditions: 0
+        ignoreAirtimeCheck: 0
+        ignoreStringUseCheck: 0
         checkInputSequence: 0
         checkCondition: 0
         targetType: 0
@@ -443,6 +449,8 @@ MonoBehaviour:
           volume: 1
           minDist: 5
           maxDist: 20
+          pitchDeviMin: 0
+          pitchDeviMax: 0
     - rid: 8688056833868562432
       type: {class: VarEmpty, ns: rwby, asm: rwby.csharp}
       data:

@@ -18,7 +18,7 @@ MonoBehaviour:
   totalFrames: 10
   autoIncrement: 1
   autoLoop: 1
-  autoLoopFrame: 2
+  autoLoopFrame: 5
   data:
   - rid: 2193520697185665024
   - rid: 2193520697185665027
@@ -34,6 +34,7 @@ MonoBehaviour:
   initialGroundedState: 2
   stateType: 0
   maxUsesInString: -1
+  maxUsesPerAirtime: -1
   selfChainable: 0
   allowBaseStateTransitions: 1
   inputSequence:
@@ -107,6 +108,7 @@ MonoBehaviour:
         inputSource: 0
         normalizeInputSource: 0
         useRotationIfInputZero: 0
+        useSlope: 0
         baseAccel:
           rid: 2193520697185665028
         movementAccel:
@@ -123,6 +125,7 @@ MonoBehaviour:
         slopeMaxClamp: 0
         slopeDivi: 0
         slopeMulti: 0
+        slopeMultiMin: 0
         slopeMultiMax: 0
         slopeinputModi: 0
     - rid: 2193520697185665028

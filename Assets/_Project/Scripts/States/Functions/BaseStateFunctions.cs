@@ -29,8 +29,8 @@ namespace rwby
         public static void ChangeState(IFighterBase fighter, IStateVariables variables, HnSF.StateTimeline arg3, int arg4)
         {
             FighterManager fm = (FighterManager)fighter;
-            if (fm.FStateManager.markedForStateChange) return;
             VarChangeState vars = (VarChangeState)variables;
+            if (!vars.overrideStateChange && fm.FStateManager.markedForStateChange) return;
             
             int movesetID = vars.stateMovesetID == -1
                 ? fm.FStateManager.CurrentMoveset
@@ -41,14 +41,16 @@ namespace rwby
             if (!vars.ignoreStateConditions && !fm.FStateManager.CheckStateConditions(movesetID, stateID, arg4, 
                     vars.checkInputSequence, vars.checkCondition, 
                     vars.ignoreAirtimeCheck, vars.ignoreStringUseCheck)) return;
+            
+            if(vars.checkInputSequence) fm.InputManager.ClearBuffer();
 
             switch (vars.targetType)
             {
                 case VarTargetType.Self:
-                    fighter.StateManager.MarkForStateChange(vars.state.GetState(), vars.stateMovesetID, vars.frame);
+                    fighter.StateManager.MarkForStateChange(vars.state.GetState(), vars.stateMovesetID, vars.frame, vars.overrideStateChange);
                     break;
                 case VarTargetType.Throwees:
-                    fm.throwees[0].GetBehaviour<FighterManager>().FStateManager.MarkForStateChange(vars.state.GetState(), vars.stateMovesetID, vars.frame);
+                    fm.throwees[0].GetBehaviour<FighterManager>().FStateManager.MarkForStateChange(vars.state.GetState(), vars.stateMovesetID, vars.frame, vars.overrideStateChange);
                     break;
             }
         }
@@ -68,7 +70,7 @@ namespace rwby
                 StateTimeline state = (StateTimeline)(fm.FStateManager.GetState(movesetID, stateID));
 
                 if (!fm.FStateManager.CheckStateConditions(movesetID, stateID, arg4, vars.checkInputSequence, vars.checkCondition)) continue;
-
+                if(vars.checkInputSequence) fm.InputManager.ClearBuffer();
                 fm.FStateManager.MarkForStateChange(stateID, vars.states[i].movesetID);
                 return;
             }
@@ -1182,6 +1184,13 @@ namespace rwby
                     fm.FCombatManager.HitboxManager.HandleDirectHitReaction(vars.hitboxInfo, reaction);
                     break;
             }
+        }
+        
+        public static void ClearBuffer(IFighterBase fighter, IStateVariables variables, HnSF.StateTimeline stateTimeline, int frame)
+        {
+            FighterManager fm = (FighterManager)fighter;
+            
+            fm.InputManager.ClearBuffer();
         }
     }
 }

@@ -60,7 +60,7 @@ MonoBehaviour:
     hitStateGroundedGroups: -1
     hit:
       groundHitState: 30
-      airHitState: 32
+      airHitState: 34
       groundBounce: 0
       wallBounce: 0
       groundBounceForce: 0
@@ -106,7 +106,7 @@ MonoBehaviour:
         contentGUID:
           guid: 1d27280000000000
       hitSound: hit-sword-1
-      hitSoundVolume: 0.3
+      hitSoundVolume: 0.2
       hitSoundMinDist: 5
       hitSoundMaxDist: 20
       hitBlockSoundbank:
@@ -413,6 +413,8 @@ MonoBehaviour:
           volume: 1
           minDist: 5
           maxDist: 20
+          pitchDeviMin: 0
+          pitchDeviMax: 0
     - rid: 8688056833868562432
       type: {class: VarEmpty, ns: rwby, asm: rwby.csharp}
       data:

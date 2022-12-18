@@ -1,3 +1,4 @@
+using Animancer;
 using Animancer.Units;
 using Fusion;
 using UnityEngine;
@@ -8,46 +9,26 @@ namespace rwby
     {
         [SerializeField] private NetworkObject networkObject;
         [SerializeField] private Animator anim;
+        [SerializeField] private AnimancerComponent animancer;
 
         public LayerMask layerMask; // Select all layers that foot placement applies to.
-        [Range (0f, 2f)]
-        public float DistanceToGround; // Distance from where the foot transform is to the lowest possible position of the foot.
 
-        public Vector3 offsetFoot;
-        
         private Transform _LeftFoot;
         private Transform _RightFoot;
+        
+        private AnimatedFloat _FootWeights;
+        
         private void Awake()
         {
-            _LeftFoot = anim.GetBoneTransform(HumanBodyBones.LeftFoot);
-            _RightFoot = anim.GetBoneTransform(HumanBodyBones.RightFoot);
+            //_FootWeights = new AnimatedFloat(animancer, "LeftFootIK", "RightFootIK");
+            //_LeftFoot = anim.GetBoneTransform(HumanBodyBones.LeftFoot);
+            //_RightFoot = anim.GetBoneTransform(HumanBodyBones.RightFoot);
         }
         
         private void OnAnimatorIK(int layerIndex)
         {
-            //UpdateFootIK(_LeftFoot, AvatarIKGoal.LeftFoot, 1.0f, anim.leftFeetBottomHeight);
-            //UpdateFootIK(_RightFoot, AvatarIKGoal.RightFoot, 1.0f, anim.rightFeetBottomHeight);
-            /*
-            // Left Foot
-            RaycastHit hit;
-            if (networkObject.Runner.GetPhysicsScene().Raycast(anim.GetIKPosition(AvatarIKGoal.LeftFoot) + Vector3.up,
-                    Vector3.down, out hit, DistanceToGround, layerMask)) {
-                Vector3 footPosition = hit.point;
-                anim.SetIKPositionWeight(AvatarIKGoal.LeftFoot, 1f);
-                anim.SetIKRotationWeight(AvatarIKGoal.LeftFoot, 1f);
-                anim.SetIKPosition(AvatarIKGoal.LeftFoot, footPosition + offsetFoot);
-                anim.SetIKRotation(AvatarIKGoal.LeftFoot, Quaternion.LookRotation(transform.forward, hit.normal));
-            }
-
-            // Right Foot
-            if (networkObject.Runner.GetPhysicsScene().Raycast(anim.GetIKPosition(AvatarIKGoal.RightFoot) + Vector3.up, 
-                    Vector3.down, out hit, DistanceToGround, layerMask)) {
-                Vector3 footPosition = hit.point;
-                anim.SetIKPositionWeight(AvatarIKGoal.RightFoot, 1f);
-                anim.SetIKRotationWeight(AvatarIKGoal.RightFoot, 1f);
-                anim.SetIKPosition(AvatarIKGoal.RightFoot, footPosition + offsetFoot);
-                anim.SetIKRotation(AvatarIKGoal.RightFoot, Quaternion.LookRotation(transform.forward, hit.normal));
-            }*/
+            //UpdateFootIK(_LeftFoot, AvatarIKGoal.LeftFoot, _FootWeights[0], anim.leftFeetBottomHeight);
+            //UpdateFootIK(_RightFoot, AvatarIKGoal.RightFoot, _FootWeights[1], anim.rightFeetBottomHeight);
         }
 
         [SerializeField, Meters] private float _RaycastOriginY = 0.5f;
@@ -69,7 +50,7 @@ namespace rwby
 
             var distance = _RaycastOriginY - _RaycastEndY;
         
-            if (Physics.Raycast(position, Vector3.down, out var hit, distance))
+            if (Physics.Raycast(position, -localUp, out var hit, distance, layerMask))
             {
                 position = hit.point;
                 position += localUp * footBottomHeight;

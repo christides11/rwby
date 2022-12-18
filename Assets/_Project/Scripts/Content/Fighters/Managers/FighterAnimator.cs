@@ -265,8 +265,8 @@ namespace rwby
             {
                 if (banks[^1].Animations[i].clip == null) continue;
                 var state = animancer.Layers[0].CreateState(banks[^1].Animations[i].clip);
-                //state.ApplyAnimatorIK = banks[^1].Animations[i].footIK;
-                //state.ApplyFootIK = banks[^1].Animations[i].footIK;
+                state.ApplyAnimatorIK = banks[^1].Animations[i].footIK;
+                state.ApplyFootIK = banks[^1].Animations[i].footIK;
             }
         }
     }

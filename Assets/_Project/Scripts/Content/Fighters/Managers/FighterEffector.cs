@@ -139,6 +139,7 @@ namespace rwby
 
         public override void FixedUpdateNetwork()
         {
+            return;
             for (int i = 0; i < 10; i++)
             {
                 if (autoIncrementEffect[i])

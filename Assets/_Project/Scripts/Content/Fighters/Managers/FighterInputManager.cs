@@ -208,5 +208,10 @@ namespace rwby
             if (buttons[frame % inputCapacity].IsSet(button)) return true;
             return false;
         }
+
+        public virtual void ClearBuffer()
+        {
+            BufferLimit = (uint)Runner.Simulation.Tick.Raw;
+        }
     }
 }

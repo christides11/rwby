@@ -3,10 +3,9 @@ using UnityEngine;
 
 namespace rwby
 {
-    [StateVariable("State/Change State")]
-    public struct VarChangeState : IStateVariables
+    [StateVariable("Input/Clear Buffer")]
+    public struct VarClearBuffer : IStateVariables
     {
-        
         public string name;
         public string Name
         {
@@ -40,19 +39,5 @@ namespace rwby
         [SelectImplementation(typeof(IConditionVariables))] [SerializeField, SerializeReference]
         public IConditionVariables condition;
         public IConditionVariables Condition => condition;
-
-        public bool ignoreStateConditions;
-        public bool ignoreAirtimeCheck;
-        public bool ignoreStringUseCheck;
-        public bool checkInputSequence;
-        public bool checkCondition;
-        public bool overrideStateChange;
-
-        public VarTargetType targetType;
-        
-        public int stateMovesetID;
-        [SelectImplementation(typeof(FighterStateReferenceBase))] [SerializeField, SerializeReference]
-        public FighterStateReferenceBase state;
-        public int frame;
     }
 }

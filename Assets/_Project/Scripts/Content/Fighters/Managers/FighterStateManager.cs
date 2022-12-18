@@ -214,7 +214,6 @@ namespace rwby
                 !manager.FCombatManager.CheckForInputSequence(state.inputSequence,
                     holdInput: state.inputSequenceAsHoldInputs)) return false;
             if (checkCondition && !manager.FStateManager.TryCondition(state, state.condition, frame)) return false;
-            
             return true;
         }
 

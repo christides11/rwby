@@ -22,15 +22,20 @@ MonoBehaviour:
   data:
   - rid: 2193520817874927622
   - rid: 2193520817874927624
-  stateGroundedGroup: 1
+  - rid: 5775511787940085760
+  auraRequirement: 0
+  initialGroundedState: 1
   stateType: 1
   maxUsesInString: -1
+  maxUsesPerAirtime: -1
+  selfChainable: 0
   allowBaseStateTransitions: 1
   inputSequence:
     executeWindow: 3
     executeInputs: []
     sequenceWindow: 8
     sequenceInputs: []
+  inputSequenceAsHoldInputs: 0
   condition:
     rid: -2
   hitboxInfo: []
@@ -67,3 +72,15 @@ MonoBehaviour:
         condition:
           rid: -2
         asset: {fileID: 11400000, guid: 38d47b53b1c6fa24580e163448503c28, type: 2}
+    - rid: 5775511787940085760
+      type: {class: VarFootstepSFX, ns: rwby, asm: rwby.csharp}
+      data:
+        name: 
+        id: 2
+        parent: -1
+        children: 
+        frameRanges:
+        - {x: 10, y: 10}
+        - {x: 25, y: 25}
+        condition:
+          rid: -2

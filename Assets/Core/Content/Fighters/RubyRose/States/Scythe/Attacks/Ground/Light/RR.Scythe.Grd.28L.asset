@@ -39,6 +39,7 @@ MonoBehaviour:
   initialGroundedState: 1
   stateType: 2
   maxUsesInString: 1
+  maxUsesPerAirtime: -1
   selfChainable: 0
   allowBaseStateTransitions: 1
   inputSequence:
@@ -345,6 +346,7 @@ MonoBehaviour:
         increment: 1
         chargePerLevel: 13
         maxLevel: 1
+        checkAbilityButton: 0
         button: 2
         canHold: 0
     - rid: 387795733835153450
@@ -450,6 +452,9 @@ MonoBehaviour:
         - {x: -1, y: -1}
         condition:
           rid: -2
+        ignoreStateConditions: 0
+        ignoreAirtimeCheck: 0
+        ignoreStringUseCheck: 0
         checkInputSequence: 0
         checkCondition: 0
         targetType: 0

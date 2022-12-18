@@ -24,6 +24,7 @@ MonoBehaviour:
   - rid: 8688056360164655106
   - rid: 8688056817054646273
   - rid: 7270848366746009601
+  - rid: 5775511807202426881
   auraRequirement: 0
   initialGroundedState: 1
   stateType: 1
@@ -47,6 +48,22 @@ MonoBehaviour:
     RefIds:
     - rid: -2
       type: {class: , ns: , asm: }
+    - rid: 5775511807202426881
+      type: {class: VarExternal, ns: rwby, asm: rwby.csharp}
+      data:
+        name: Scythe Try Atk
+        id: 4
+        parent: -1
+        children: 
+        frameRanges:
+        - {x: 3, y: 3}
+        condition:
+          rid: 5775511807202426882
+        asset: {fileID: 11400000, guid: 38d47b53b1c6fa24580e163448503c28, type: 2}
+    - rid: 5775511807202426882
+      type: {class: ConditionMoveset, ns: rwby, asm: rwby.csharp}
+      data:
+        moveset: 0
     - rid: 7270848366746009601
       type: {class: VarModifyEffectSet, ns: rwby, asm: rwby.csharp}
       data:
