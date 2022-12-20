@@ -20,7 +20,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: RadialBlur_01 3
+  m_Name: NewHitEffect_OrangeBurst
   m_Shader: {fileID: -6465566751694194690, guid: 384a9ecb0e92bcb4a9161ba8ca1f6f79, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
@@ -37,7 +37,7 @@ Material:
     serializedVersion: 3
     m_TexEnvs:
     - _BaseMap:
-        m_Texture: {fileID: 10300, guid: 0000000000000000f000000000000000, type: 0}
+        m_Texture: {fileID: 2800000, guid: afd786dc8e458a141870d63abc89cd70, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _BumpMap:
@@ -61,7 +61,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MainTex:
-        m_Texture: {fileID: 10300, guid: 0000000000000000f000000000000000, type: 0}
+        m_Texture: {fileID: 2800000, guid: 82e0bb20e477f7041ba3462fd8a3fd4d, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MetallicGlossMap:
@@ -105,7 +105,7 @@ Material:
     - _CameraNearFadeDistance: 1
     - _ClearCoatMask: 0
     - _ClearCoatSmoothness: 0
-    - _ColorMode: 0
+    - _ColorMode: 1
     - _Cull: 2
     - _Cutoff: 0.5
     - _DetailAlbedoMapScale: 1
@@ -121,7 +121,7 @@ Material:
     - _GlossMapScale: 0
     - _Glossiness: 0
     - _GlossyReflections: 0
-    - _Intensity: 1
+    - _Intensity: 1.72
     - _MKGlowColor: 1
     - _Metallic: 0
     - _Mode: 0
@@ -137,19 +137,19 @@ Material:
     - _SoftParticlesNearFadeDistance: 0
     - _SpecularHighlights: 1
     - _SrcBlend: 5
-    - _Step1: 0.523
+    - _Step1: 0
     - _Surface: 1
     - _WorkflowMode: 1
     - _ZWrite: 0
     m_Colors:
-    - _BaseColor: {r: 22.363522, g: 22.363522, b: 22.363522, a: 1}
+    - _BaseColor: {r: 0.7490196, g: 0.7490196, b: 0.7490196, a: 1}
     - _BaseColorAddSubDiff: {r: 1, g: 0, b: 0, a: 0}
     - _CameraFadeParams: {r: 0, g: Infinity, b: 0, a: 0}
     - _Color: {r: 1, g: 1, b: 1, a: 1}
-    - _Color1: {r: 5.548094, g: 5.548094, b: 5.548094, a: 1}
-    - _Color2: {r: 6.2067976, g: 2.9896617, b: 0, a: 1}
+    - _Color1: {r: 2.670157, g: 0.5220501, b: 0, a: 0.29803923}
+    - _Color2: {r: 2.670157, g: 0.5220501, b: 0, a: 0.29803923}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
-    - _MKGlowPower: {r: 5.3403134, g: 5.3403134, b: 5.3403134, a: 1}
+    - _MKGlowPower: {r: 4, g: 4, b: 4, a: 1}
     - _SoftParticleFadeParams: {r: 0, g: 0, b: 0, a: 0}
     - _SpecColor: {r: 0.19999996, g: 0.19999996, b: 0.19999996, a: 1}
     - _Texture_Offset: {r: 0, g: 0, b: 0, a: 0}

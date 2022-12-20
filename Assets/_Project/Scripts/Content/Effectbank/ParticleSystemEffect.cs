@@ -15,5 +15,13 @@ namespace rwby
                 particleSystems[i].Simulate(time, true, true);
             }
         }
+
+        public override void SetRandomSeed(uint seed)
+        {
+            for (int i = 0; i < particleSystems.Length; i++)
+            {
+                particleSystems[i].randomSeed = seed;
+            }
+        }
     }
 }

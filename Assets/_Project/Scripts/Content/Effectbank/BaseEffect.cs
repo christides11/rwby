@@ -31,5 +31,10 @@ namespace rwby
         {
             
         }
+
+        public virtual void SetRandomSeed(uint seed)
+        {
+            
+        }
     }
 }
