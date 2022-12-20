@@ -27,6 +27,7 @@ namespace rwby
         [Networked] public BlockStateType BlockState { get; set; }
         [Networked] public int HitStun { get; set; } = -1;
         [Networked] public int HitStop { get; set; } = -1;
+        [Networked] public int LastHitStop { get; set; } = -1;
         [Networked] public int BlockStun { get; set; } = -1;
         [Networked] public NetworkBool Charging { get; set; }
         [Networked] public int CurrentChargeLevel { get; set; }
@@ -227,6 +228,7 @@ namespace rwby
         
         public virtual void SetHitStop(int value)
         {
+            LastHitStop = value;
             HitStop = value;
         }
 

@@ -156,21 +156,40 @@ namespace rwby
         }
 
         [Header("Hitstop")]
-        public float hitstopShakeDistance = 0.5f;
-        public int hitstopDir = 1;
-        public int hitstopShakeFrames = 1;
-        public Vector3[] shakeDirs;
-        [Networked] public sbyte currentShakeDirection { get; set; }
+        public AnimationCurve xShakeCurve;
+        public AnimationCurve yShakeCurve;
+        public AnimationCurve falloffCurve;
+        public int zShakeOffset = 2;
+        public float HorizontalShakeBaseMultiplier = 0.2f;
+        public float VerticalShakeBaseMultiplier = 0.1f;
+        public int shakeCurveDivi = 4;
         
         public override void Render()
         {
             base.Render();
             shieldVisual.SetActive(combatManager.BlockState != BlockStateType.NONE);
             physicsManager.kCC.Motor.visualExtraOffset = Vector3.zero;
-            if (FCombatManager.HitStop <= 0 || (FCombatManager.HitStun <= 0 && FCombatManager.BlockStun <= 0) ) return;
-            Vector3 dir = shakeDirs[currentShakeDirection].z * transform.forward
-                          + shakeDirs[currentShakeDirection].x * transform.right;
-            physicsManager.kCC.Motor.visualExtraOffset = dir * hitstopShakeDistance * hitstopDir;
+            if (FCombatManager.HitStop > 0 && FCombatManager.HitStun > 0)
+            {
+                shakeCurveDivi = FCombatManager.LastHitStop / 5;
+                shakeCurveDivi = Mathf.Clamp(shakeCurveDivi, 4, int.MaxValue);
+                var hst = (FCombatManager.LastHitStop - FCombatManager.HitStop);
+                var xCalcOffset = xShakeCurve.Evaluate((float)(hst % shakeCurveDivi) / (float)shakeCurveDivi) 
+                                  * falloffCurve.Evaluate(hst / (float)FCombatManager.LastHitStop)
+                                  * HorizontalShakeBaseMultiplier;
+                var zCalcOffset = xShakeCurve.Evaluate(((float)(hst+zShakeOffset) % shakeCurveDivi) / (float)shakeCurveDivi) 
+                                  * falloffCurve.Evaluate(hst / (float)FCombatManager.LastHitStop)
+                                  * HorizontalShakeBaseMultiplier;
+                var yCalcOffset = yShakeCurve.Evaluate((float)(hst % shakeCurveDivi) / (float)shakeCurveDivi) 
+                                  * falloffCurve.Evaluate(hst / (float)FCombatManager.LastHitStop)
+                                  * VerticalShakeBaseMultiplier;
+
+                Vector3 dir = zCalcOffset * transform.forward
+                              + xCalcOffset * transform.right
+                              + (physicsManager.IsGrounded ? Vector3.zero : yCalcOffset * transform.up);
+
+                physicsManager.kCC.Motor.visualExtraOffset = dir;
+            }
         }
 
         public float groundSlopeAngle;
@@ -204,17 +223,13 @@ namespace rwby
             boxManager.ResetAllBoxes();
             visualTransform.gameObject.SetActive(Visible);
 
-            HitstopShake();
+            //HitstopShake();
             HandleLockon();
 
             if (FCombatManager.HitStop > 0)
             {
                 FCombatManager.HitStop--;
                 FPhysicsManager.Freeze();
-                if(FCombatManager.HitStop == 0)
-                {
-                    currentShakeDirection = 0;
-                }
                 return;
             }
             if(FCombatManager.HitStop > -600) FCombatManager.HitStop--;
@@ -250,6 +265,7 @@ namespace rwby
 
         protected void HitstopShake()
         {
+            /*
             // Shake during hitstop.
             if (FCombatManager.HitStop != 0
                 && (FCombatManager.HitStun > 0 || FCombatManager.BlockStun > 0)
@@ -267,7 +283,7 @@ namespace rwby
                         currentShakeDirection = 0;
                     }
                 }
-            }
+            }*/
         }
         
         private void HandleLockon()

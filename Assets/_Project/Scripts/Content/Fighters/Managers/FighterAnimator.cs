@@ -31,7 +31,8 @@ namespace rwby
 
         public void SetAnimationSet(int layer, AnimationReference[] wantedAnimations, float fadeTime = 0.0f)
         {
-            UpdateFadeSet(fadeTime);
+            // TODO: Relook at fading out old animations.
+            //UpdateFadeSet(fadeTime);
             ClearAnimationSet(layer);
             AddAnimationToSet(layer, wantedAnimations);
         }
