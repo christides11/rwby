@@ -40,6 +40,7 @@ namespace rwby
             functions.Add(typeof(ConditionNextState), BaseStateConditionFunctions.NextState);
             functions.Add(typeof(ConditionHardKnockdown), BaseStateConditionFunctions.HardKnockdown);
             functions.Add(typeof(ConditionExternal), BaseStateConditionFunctions.External);
+            functions.Add(typeof(ConditionStickDir), BaseStateConditionFunctions.StickDir);
         }
     }
 }

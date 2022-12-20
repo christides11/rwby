@@ -42,6 +42,7 @@ MonoBehaviour:
   - rid: 387796100015718403
   - rid: 387796100015718410
   - rid: 387796100015718414
+  - rid: 5775511833989087233
   auraRequirement: 0
   initialGroundedState: 1
   stateType: 2
@@ -152,7 +153,7 @@ MonoBehaviour:
       data:
         inverse: 0
         statReference: 0
-        value: 1
+        value: 0.5
     - rid: 387795987783221267
       type: {class: VarApplyGravity, ns: rwby, asm: rwby.csharp}
       data:
@@ -161,7 +162,7 @@ MonoBehaviour:
         parent: -1
         children: 
         frameRanges:
-        - {x: 21, y: -1}
+        - {x: 15, y: -1}
         condition:
           rid: -2
         useValue: 1
@@ -216,7 +217,7 @@ MonoBehaviour:
       data:
         inverse: 0
         statReference: 0
-        value: 3
+        value: 1
     - rid: 387796069597577216
       type: {class: VarEmpty, ns: rwby, asm: rwby.csharp}
       data:
@@ -445,8 +446,11 @@ MonoBehaviour:
         condition:
           rid: 387796100015718416
         ignoreStateConditions: 0
+        ignoreAirtimeCheck: 0
+        ignoreStringUseCheck: 0
         checkInputSequence: 0
         checkCondition: 0
+        overrideStateChange: 0
         targetType: 0
         stateMovesetID: -1
         state:
@@ -472,8 +476,11 @@ MonoBehaviour:
         condition:
           rid: -2
         ignoreStateConditions: 0
+        ignoreAirtimeCheck: 0
+        ignoreStringUseCheck: 0
         checkInputSequence: 0
         checkCondition: 0
+        overrideStateChange: 0
         targetType: 0
         stateMovesetID: -1
         state:
@@ -505,6 +512,25 @@ MonoBehaviour:
         statReference: 0
         value: 30
         variable: 0
+    - rid: 5775511833989087233
+      type: {class: VarCreateBox, ns: rwby, asm: rwby.csharp}
+      data:
+        name: Colbox
+        id: 39
+        parent: -1
+        children: 
+        frameRanges:
+        - {x: 1, y: 5}
+        - {x: 13, y: -1}
+        condition:
+          rid: -2
+        boxType: 2
+        attachedTo: 0
+        shape: 0
+        offset: {x: 0, y: 1, z: 0}
+        boxExtents: {x: 0.5, y: 1, z: 0.5}
+        radius: 0
+        definitionIndex: 0
     - rid: 7270848718906589184
       type: {class: VarSetCounterhitState, ns: rwby, asm: rwby.csharp}
       data:
@@ -575,3 +601,5 @@ MonoBehaviour:
           volume: 0.5
           minDist: 5
           maxDist: 20
+          pitchDeviMin: 0
+          pitchDeviMax: 0

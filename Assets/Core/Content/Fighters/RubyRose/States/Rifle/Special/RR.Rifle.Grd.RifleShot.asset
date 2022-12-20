@@ -26,6 +26,8 @@ MonoBehaviour:
   - rid: 5775511466801889284
   - rid: 5775511466801889293
   - rid: 5775511466801889286
+  - rid: 5775511833989087234
+  - rid: 5775511833989087237
   auraRequirement: 0
   initialGroundedState: 1
   stateType: 2
@@ -220,7 +222,7 @@ MonoBehaviour:
               guid: 1d292c1f00000000
             contentGUID:
               guid: 2c2c000000000000
-          projectile: bullet
+          projectile: bullet_rifle
           parented: 0
           offset: {x: 0, y: 1, z: 0.5}
           rotation: {x: 0, y: 0, z: 0}
@@ -281,3 +283,34 @@ MonoBehaviour:
         projectileOffset: 0
         force: {x: 0, y: 0, z: 60}
         keepRawForce: 1
+    - rid: 5775511833989087234
+      type: {class: VarEmpty, ns: rwby, asm: rwby.csharp}
+      data:
+        name: Hold Back
+        id: 6
+        parent: -1
+        children: 07000000
+        frameRanges: []
+        condition:
+          rid: 5775511833989087236
+    - rid: 5775511833989087236
+      type: {class: ConditionStickDir, ns: rwby, asm: rwby.csharp}
+      data:
+        stickDirection: {x: 0, y: -1}
+        directionDeviation: 0.8
+        framesBack: 0
+        inverse: 0
+    - rid: 5775511833989087237
+      type: {class: VarProjectileSetRotation, ns: rwby, asm: rwby.csharp}
+      data:
+        name: 
+        id: 7
+        parent: 6
+        children: 
+        frameRanges:
+        - {x: 8, y: 8}
+        condition:
+          rid: -2
+        projectileOffset: 0
+        rotationSource: 0
+        rotation: {x: -75, y: 0, z: 0}

@@ -72,6 +72,7 @@ namespace rwby
             functions.Add(typeof(VarProjectileModifyHomingStrength), BaseStateFunctions.ModifyProjectileHomingStrength);
             functions.Add(typeof(VarDirectDamage), BaseStateFunctions.DirectDamage);
             functions.Add(typeof(VarClearBuffer), BaseStateFunctions.ClearBuffer);
+            functions.Add(typeof(VarProjectileSetRotation), BaseStateFunctions.ModifyProjectileRotation);
         }
     }
 }

@@ -316,7 +316,7 @@ namespace rwby
                     case HnSF.Input.InputDefinitionType.Stick:
                         if (!inputManager.GetButton((int)PlayerInputType.LOCK_ON, out int loOffset, baseOffset, 0)
                                 .isDown) return false;
-                        if (CheckStickDirection(sequence.executeInputs[e], baseOffset) == false)
+                        if (CheckStickDirection(sequence.executeInputs[e].stickDirection, sequence.executeInputs[e].directionDeviation, baseOffset) == false)
                         {
                             return false;
                         }
@@ -346,7 +346,7 @@ namespace rwby
                     case HnSF.Input.InputDefinitionType.Stick:
                         for (uint f = currentOffset; f < currentOffset + sequence.sequenceWindow; f++)
                         {
-                            if (CheckStickDirection(sequence.sequenceInputs[s], (int)f))
+                            if (CheckStickDirection(sequence.sequenceInputs[s].stickDirection, sequence.sequenceInputs[s].directionDeviation, (int)f))
                             {
                                 foundInput = true;
                                 currentOffset = f;
@@ -405,7 +405,7 @@ namespace rwby
         }
 
         public LockonDirType stickDirectionCheck;
-        protected virtual bool CheckStickDirection(HnSF.Input.InputDefinition sequenceInput, int framesBack)
+        public virtual bool CheckStickDirection(Vector2 stickDirection, float directionDeviation, int framesBack)
         {
             Vector2 stickDir = inputManager.GetMovement(framesBack);
             if (stickDir.magnitude < InputConstants.movementDeadzone)
@@ -416,23 +416,23 @@ namespace rwby
             switch (stickDirectionCheck)
             {
                 case LockonDirType.TargetRelative:
-                    if (!manager.HardTargeting || manager.CurrentTarget == null) return CheckAttackerForwardDir(stickDir, sequenceInput);
+                    if (!manager.HardTargeting || manager.CurrentTarget == null) return CheckAttackerForwardDir(stickDir, stickDirection, directionDeviation);
                     Vector3 aForwardDir = manager.GetMovementVector(stickDir.x, stickDir.y);
                     Vector3 targetDirForward = manager.CurrentTarget.transform.position - manager.transform.position;
                     targetDirForward.y = 0;
                     Vector3 targetRight = Vector3.Cross(targetDirForward, Vector3.up);
-                    Vector3 wantedDir = targetDirForward * sequenceInput.stickDirection.y +
-                                        targetRight * sequenceInput.stickDirection.x;
+                    Vector3 wantedDir = targetDirForward * stickDirection.y +
+                                        targetRight * stickDirection.x;
                     
-                    if (Vector3.Dot(aForwardDir, wantedDir) >= sequenceInput.directionDeviation)
+                    if (Vector3.Dot(aForwardDir, wantedDir) >= directionDeviation)
                     {
                         return true;
                     }
                     return false;
                 case LockonDirType.AttackerForward:
-                    return CheckAttackerForwardDir(stickDir, sequenceInput);
+                    return CheckAttackerForwardDir(stickDir, stickDirection, directionDeviation);
                 case LockonDirType.Absolute:
-                    if (Vector2.Dot(stickDir, sequenceInput.stickDirection) >= sequenceInput.directionDeviation)
+                    if (Vector2.Dot(stickDir, stickDirection) >= directionDeviation)
                     {
                         return true;
                     }
@@ -442,11 +442,11 @@ namespace rwby
             }
         }
 
-        private bool CheckAttackerForwardDir(Vector2 stickDir, HnSF.Input.InputDefinition sequenceInput)
+        protected virtual bool CheckAttackerForwardDir(Vector2 stickDir, Vector2 stickDirection, float directionDeviation)
         {
             Vector3 aForwardDir = manager.GetMovementVector(stickDir.x, stickDir.y).normalized;
-            Vector3 aWantedDir = manager.GetVisualMovementVector(sequenceInput.stickDirection.x, sequenceInput.stickDirection.y).normalized;
-            if (Vector3.Dot(aForwardDir, aWantedDir) >= sequenceInput.directionDeviation)
+            Vector3 aWantedDir = manager.GetVisualMovementVector(stickDirection.x, stickDirection.y).normalized;
+            if (Vector3.Dot(aForwardDir, aWantedDir) >= directionDeviation)
             {
                 return true;
             }

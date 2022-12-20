@@ -58,7 +58,7 @@ MonoBehaviour:
     hitStateGroundedGroups: -1
     hit:
       groundHitState: 30
-      airHitState: 32
+      airHitState: 34
       groundBounce: 0
       wallBounce: 0
       groundBounceForce: 0
@@ -251,6 +251,7 @@ MonoBehaviour:
         ignoreStringUseCheck: 0
         checkInputSequence: 1
         checkCondition: 0
+        overrideStateChange: 0
         targetType: 0
         stateMovesetID: -1
         state:
@@ -276,6 +277,7 @@ MonoBehaviour:
         ignoreStringUseCheck: 0
         checkInputSequence: 1
         checkCondition: 0
+        overrideStateChange: 0
         targetType: 0
         stateMovesetID: -1
         state:
@@ -301,6 +303,7 @@ MonoBehaviour:
         ignoreStringUseCheck: 0
         checkInputSequence: 0
         checkCondition: 0
+        overrideStateChange: 0
         targetType: 0
         stateMovesetID: -1
         state:
@@ -442,3 +445,5 @@ MonoBehaviour:
           volume: 0.5
           minDist: 5
           maxDist: 20
+          pitchDeviMin: 0
+          pitchDeviMax: 0

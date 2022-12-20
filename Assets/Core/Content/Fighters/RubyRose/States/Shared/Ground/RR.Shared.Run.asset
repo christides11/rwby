@@ -22,7 +22,9 @@ MonoBehaviour:
   data:
   - rid: 2193520817874927622
   - rid: 2193520817874927624
+  - rid: 5775511813973344256
   - rid: 5775511787940085760
+  - rid: 5775511813973344258
   auraRequirement: 0
   initialGroundedState: 1
   stateType: 1
@@ -84,3 +86,29 @@ MonoBehaviour:
         - {x: 25, y: 25}
         condition:
           rid: -2
+    - rid: 5775511813973344256
+      type: {class: VarEmpty, ns: rwby, asm: rwby.csharp}
+      data:
+        name: Rifle
+        id: 3
+        parent: -1
+        children: 04000000
+        frameRanges: []
+        condition:
+          rid: 5775511813973344257
+    - rid: 5775511813973344257
+      type: {class: ConditionMoveset, ns: rwby, asm: rwby.csharp}
+      data:
+        moveset: 1
+    - rid: 5775511813973344258
+      type: {class: VarExternal, ns: rwby, asm: rwby.csharp}
+      data:
+        name: Try Ground Attack
+        id: 4
+        parent: 3
+        children: 
+        frameRanges:
+        - {x: 1, y: -1}
+        condition:
+          rid: -2
+        asset: {fileID: 11400000, guid: ba688ef34edd2d84ea6a5b2e1e2af06e, type: 2}

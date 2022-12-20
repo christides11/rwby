@@ -524,5 +524,16 @@ namespace rwby
                     f.FStateManager.CurrentStateFrame)) return false;
             return true;
         }
+        
+        public static bool StickDir(IFighterBase fighter, IConditionVariables variables, HnSF.StateTimeline arg3,
+            int arg4)
+        {
+            FighterManager f = fighter as FighterManager;
+            var vars = (ConditionStickDir)variables;
+
+            var r = f.FCombatManager.CheckStickDirection(vars.stickDirection, vars.directionDeviation, vars.framesBack);
+
+            return vars.inverse ? !r : r;
+        }
     }
 }

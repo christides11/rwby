@@ -33,6 +33,7 @@ MonoBehaviour:
   - rid: 387795756708003840
   - rid: 387795756708003845
   - rid: 387795932360736832
+  - rid: 5775511833989087232
   auraRequirement: 0
   initialGroundedState: 2
   stateType: 2
@@ -74,15 +75,15 @@ MonoBehaviour:
       gravityAutolinkPercentage: 0
       movementAutolinkPercentage: 0
       groundHitForce: {x: 0, y: 0, z: 5}
-      aerialHitForce: {x: 0, y: 3, z: 2}
+      aerialHitForce: {x: 0, y: 4, z: 2}
       pullPushMultiplier: 0
       pullPushMaxDistance: 10
       blockLift: 0
       attackerHitstop: 4
       hitstop: 4
-      hitstun: 30
+      hitstun: 40
       blockstun: 30
-      untech: 30
+      untech: 40
       initialProration: 0
       comboProration: 0.2
       damage: 300
@@ -276,6 +277,7 @@ MonoBehaviour:
         ignoreStringUseCheck: 0
         checkInputSequence: 0
         checkCondition: 0
+        overrideStateChange: 0
         targetType: 0
         stateMovesetID: -1
         state:
@@ -305,6 +307,7 @@ MonoBehaviour:
         ignoreStringUseCheck: 0
         checkInputSequence: 0
         checkCondition: 0
+        overrideStateChange: 0
         targetType: 0
         stateMovesetID: -1
         state:
@@ -354,6 +357,18 @@ MonoBehaviour:
         statReference: 0
         value: 30
         variable: 0
+    - rid: 5775511833989087232
+      type: {class: VarExternal, ns: rwby, asm: rwby.csharp}
+      data:
+        name: Try Air Action
+        id: 21
+        parent: 13
+        children: 
+        frameRanges:
+        - {x: 7, y: -1}
+        condition:
+          rid: -2
+        asset: {fileID: 11400000, guid: 60616eb90e93a5644a1f15ae2743f165, type: 2}
     - rid: 7270848428946489353
       type: {class: VarRotateTowards, ns: rwby, asm: rwby.csharp}
       data:
@@ -454,7 +469,7 @@ MonoBehaviour:
         name: On Hit or Block
         id: 13
         parent: -1
-        children: 0e000000
+        children: 0e00000015000000
         frameRanges: []
         condition:
           rid: 8688056833868562433

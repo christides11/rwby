@@ -753,7 +753,6 @@ namespace rwby
                     fr.y = 0;
                     fr.Normalize();
                     var rght = -Vector3.Cross(fr, Vector3.up);
-                    //rght.Normalize();
                     dir = fr * vars.direction.z 
                           + rght * vars.direction.x 
                           + Vector3.up * vars.direction.y;
@@ -1191,6 +1190,27 @@ namespace rwby
             FighterManager fm = (FighterManager)fighter;
             
             fm.InputManager.ClearBuffer();
+        }
+        
+        public static void ModifyProjectileRotation(IFighterBase fighter, IStateVariables variables, HnSF.StateTimeline stateTimeline, int frame)
+        {
+            FighterManager fm = (FighterManager)fighter;
+            var vars = (VarProjectileSetRotation)variables;
+            
+            var p = fm.projectileManager.GetLatestProjectile(vars.projectileOffset);
+
+            Vector3 rot = fm.myTransform.eulerAngles;
+            switch (vars.rotationSource)
+            {
+                case VarInputSourceType.rotation:
+                    break;
+                case VarInputSourceType.custom:
+                    break;
+            }
+
+            rot += vars.rotation;
+            
+            p.SetRotation(rot);
         }
     }
 }

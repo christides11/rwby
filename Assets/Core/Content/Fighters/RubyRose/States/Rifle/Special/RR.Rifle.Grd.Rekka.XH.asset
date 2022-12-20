@@ -78,9 +78,9 @@ MonoBehaviour:
       blockLift: 0
       attackerHitstop: 2
       hitstop: 2
-      hitstun: 40
+      hitstun: 60
       blockstun: 30
-      untech: 40
+      untech: 60
       initialProration: 0
       comboProration: 0.2
       damage: 500
@@ -234,6 +234,7 @@ MonoBehaviour:
         ignoreStringUseCheck: 0
         checkInputSequence: 1
         checkCondition: 0
+        overrideStateChange: 0
         targetType: 0
         stateMovesetID: -1
         state:
@@ -259,6 +260,7 @@ MonoBehaviour:
         ignoreStringUseCheck: 0
         checkInputSequence: 1
         checkCondition: 0
+        overrideStateChange: 0
         targetType: 0
         stateMovesetID: -1
         state:
@@ -284,6 +286,7 @@ MonoBehaviour:
         ignoreStringUseCheck: 0
         checkInputSequence: 0
         checkCondition: 0
+        overrideStateChange: 0
         targetType: 0
         stateMovesetID: -1
         state:
@@ -425,3 +428,5 @@ MonoBehaviour:
           volume: 0.5
           minDist: 5
           maxDist: 20
+          pitchDeviMin: 0
+          pitchDeviMax: 0
