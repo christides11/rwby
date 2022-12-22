@@ -1,5 +1,3 @@
-using System;
-using System.Collections;
 using System.Collections.Generic;
 using Fusion;
 using UnityEngine;
@@ -13,21 +11,24 @@ namespace rwby
         [HideInInspector] public List<IEffectbankDefinition> banks = new List<IEffectbankDefinition>();
 
         [Networked, Capacity(10)] public FighterEffectsRoot effects { get; set; }
-        [Networked, Capacity(10)] public NetworkArray<NetworkBool> autoIncrementEffect => default;
+        [Networked, Capacity(10)] public NetworkArray<NetworkBool> isCurrentEffect => default;
         [Networked] public int effectBufferPos { get; set; } = 0;
-        [Networked, Capacity(10)] public NetworkLinkedList<int> currentEffectIndex => default;
+        [Networked] public NetworkRNG rng { get; set; } = new NetworkRNG(0);
 
         private bool dirty;
-
         private FighterEffectsRoot currentEffectsRepresentation;
-
         public BaseEffect[] effectObjects = new BaseEffect[10];
-
         public FighterManager manager;
         
         private void Awake()
         {
             dirty = true;
+        }
+        
+        public override void Spawned()
+        {
+            base.Spawned();
+            if(Object.HasStateAuthority) rng = new NetworkRNG(327);
         }
 
         public void SetEffects(EffectReference[] wantedEffects)
@@ -40,19 +41,18 @@ namespace rwby
             var temp = effects;
             for (int i = 0; i < wantedEffects.Length; i++)
             {
-                temp.effects.Set(effectBufferPos % 10, new FighterEffectNode()
+                temp.effects.Set(effectBufferPos % effects.effects.Length, new FighterEffectNode()
                 {
                     bank = bankMap[wantedEffects[i].effectbank]+1,
                     effect = banks[bankMap[wantedEffects[i].effectbank]].EffectMap[wantedEffects[i].effect]+1,
-                    frame = 0,
+                    frame = Runner.Tick,
                     parent = wantedEffects[i].parent == null ? 0 : wantedEffects[i].parent.GetBone(),
                     pos = posBase + wantedEffects[i].offset,
                     rot = wantedEffects[i].rotation,
                     scale = wantedEffects[i].scale
                 });
-                autoIncrementEffect.Set((effectBufferPos % 10), wantedEffects[i].autoIncrement);
-
-                if(addToEffectSet) currentEffectIndex.Add(effectBufferPos);
+                
+                if (addToEffectSet) isCurrentEffect.Set((effectBufferPos % effects.effects.Length), true);
                 effectBufferPos++;
             }
             effects = temp;
@@ -61,31 +61,22 @@ namespace rwby
 
         public void ClearCurrentEffects(bool removeEffects = false, bool autoIncrementEffects = true)
         {
-            if (removeEffects)
+            var temp = effects;
+            for (int i = 0; i < isCurrentEffect.Length; i++)
             {
-                var temp = effects;
-                for (int i = 0; i < currentEffectIndex.Count; i++)
-                {
-                    temp.effects.Set((currentEffectIndex[i] % 10), new FighterEffectNode());
-                }
-                effects = temp;
+                if (!isCurrentEffect[i]) continue;
+                if(removeEffects) temp.effects.Set(i, new FighterEffectNode());
+                //if (autoIncrementEffects) autoIncrementEffect.Set(i, true);
+                isCurrentEffect.Set(i, false);
             }
-            else
-            {
-                for (int i = 0; i < currentEffectIndex.Count; i++)
-                {
-                    if (autoIncrementEffects)
-                    {
-                        autoIncrementEffect.Set((currentEffectIndex[i] % 10), true);
-                    }
-                }
-            }
-            currentEffectIndex.Clear();
+            effects = temp;
+            
             dirty = true;
         }
 
         public void SetEffectTime(int[] effectToModify, int frame)
         {
+            /*
             for (int i = 0; i < effectToModify.Length; i++)
             {
                 var temp = effects;
@@ -94,21 +85,22 @@ namespace rwby
                 temp.effects.Set(effectToModify[i], t);
                 effects = temp;
             }
-            dirty = true;
+            dirty = true;*/
         }
         
         public void AddEffectTime(int[] effectToModify, int frame)
         {
+            /*
             for (int i = 0; i < effectToModify.Length; i++)
             {
-                if (effectToModify[i] >= currentEffectIndex.Count) return;
+                if (effectToModify[i] >= isCurrentEffect.Length) return;
                 var temp = effects;
-                var t = temp.effects[currentEffectIndex[effectToModify[i]] % 10];
+                var t = temp.effects[isCurrentEffect[effectToModify[i]] % effects.effects.Length];
                 t.frame += frame;
-                temp.effects.Set(currentEffectIndex[effectToModify[i]] % 10, t);
+                temp.effects.Set(isCurrentEffect[effectToModify[i]] % effects.effects.Length, t);
                 effects = temp;
             }
-            dirty = true;
+            dirty = true;*/
         }
         
         public void SetEffectRotation(int[] effectToModify, Vector3 rot)
@@ -139,20 +131,6 @@ namespace rwby
 
         public override void FixedUpdateNetwork()
         {
-            return;
-            for (int i = 0; i < 10; i++)
-            {
-                if (autoIncrementEffect[i])
-                {
-                    var temp = effects;
-                    var t = temp.effects[i];
-                    t.frame += 1;
-                    temp.effects.Set(i, t);
-                    effects = temp;
-                    dirty = true;
-                }
-            }
-            
             if (Runner.IsResimulation)
             {
                 if (Runner.IsLastTick && !AreEffectsUpToDate())
@@ -191,6 +169,8 @@ namespace rwby
                         effectObjects[i] = GameObject.Instantiate(e, transform, false);
                         effectObjects[i].bank = effects.effects[i].bank;
                         effectObjects[i].effect = effects.effects[i].effect;
+                        effectObjects[i].StopEffect(ParticleSystemStopBehavior.StopEmittingAndClear);
+                        effectObjects[i].SetRandomSeed((uint)UnityEngine.Random.Range(0, 900));
                     }
                     effectObjects[i].transform.SetParent(effects.effects[i].parent == 0 ? null : 
                         manager.boneRefs[effects.effects[i].parent-1], false);
@@ -199,7 +179,7 @@ namespace rwby
                     effectObjects[i].transform.localScale = effects.effects[i].scale;
                 }
                 
-                effectObjects[i].SetFrame(effects.effects[i].frame * Runner.DeltaTime);
+                effectObjects[i].SetFrame((float)(Runner.Tick - effects.effects[i].frame - 1) * Runner.DeltaTime);
             }
             
             currentEffectsRepresentation = effects;

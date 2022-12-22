@@ -65,6 +65,12 @@ namespace rwby
             {
                 v.runner = Runner;
             }
+
+            virtualCameras[0].GetCinemachineComponent<CinemachineFramingTransposer>().m_GroupFramingMode =
+                CinemachineFramingTransposer.FramingMode.None;
+            virtualCameras[1].GetCinemachineComponent<CinemachineFramingTransposer>().m_MaximumDistance = 15;
+            virtualCameras[1].GetCinemachineComponent<CinemachineFramingTransposer>().m_MaximumFOV = 50;
+            virtualCameras[1].GetCinemachineComponent<CinemachineFramingTransposer>().m_MinimumFOV = 50;
         }
         
         public override void AssignControlTo(ClientManager clientManager, int playerID)
@@ -198,12 +204,13 @@ namespace rwby
             LockOnToTarget(followTarget.CurrentTarget.gameObject);
         }
 
+        public float targetWeight = 1.0f;
         private void LockOnToTarget(GameObject target)
         {
             LockOnTarget = target;
             lockOnTargetable = target.GetComponent<ITargetable>();
             targetGroup.m_Targets[1].target = lockOnTargetable.TargetOrigin;
-            targetGroup.m_Targets[1].weight = 0.6f;
+            targetGroup.m_Targets[1].weight = targetWeight;
             targetGroup.m_Targets[1].radius = 2.0f;
             SetVirtualCameraInputs(0);
             virtualCameraAnimator.Play("Target");

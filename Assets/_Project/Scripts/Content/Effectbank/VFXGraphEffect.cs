@@ -8,11 +8,12 @@ namespace rwby
     public class VFXGraphEffect : BaseEffect
     {
         public VisualEffect visualEffect;
+        public float totalTime = 5.0f;
         
         private void Awake()
         {
             visualEffect.Play();
-            visualEffect.pause = true;
+            //visualEffect.pause = true;
             /*
             animancer.Layers[0].Weight = 1.0f;
             animancer.Layers[0].Speed = 0;
@@ -23,9 +24,12 @@ namespace rwby
 
         public override void SetFrame(float time)
         {
+            //if (time > totalTime) return;
+            /*
             visualEffect.Reinit();
             visualEffect.pause = true;
-            visualEffect.Simulate(time);
+            visualEffect.Simulate(time);*/
+            
             //visualEffect.Stop();
             //visualEffect.Play();
             //visualEffect.pause = true;

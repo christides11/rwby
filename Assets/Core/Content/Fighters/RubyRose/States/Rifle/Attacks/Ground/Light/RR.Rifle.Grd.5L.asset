@@ -93,7 +93,7 @@ MonoBehaviour:
           guid: 1d292c1f00000000
         contentGUID:
           guid: 1d27280000000000
-      hitEffect: hit1
+      hitEffect: hit_slash1
       blockEffectbank:
         modGUID:
           guid: 1d292c1f00000000
@@ -237,6 +237,7 @@ MonoBehaviour:
         ignoreStringUseCheck: 0
         checkInputSequence: 0
         checkCondition: 0
+        overrideStateChange: 0
         targetType: 0
         stateMovesetID: -1
         state:
@@ -412,6 +413,8 @@ MonoBehaviour:
           volume: 0.5
           minDist: 5
           maxDist: 20
+          pitchDeviMin: 0
+          pitchDeviMax: 0
     - rid: 8688056833868562432
       type: {class: VarEmpty, ns: rwby, asm: rwby.csharp}
       data:
