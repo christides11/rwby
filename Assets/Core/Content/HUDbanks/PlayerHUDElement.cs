@@ -23,6 +23,11 @@ namespace rwby
         [ReadOnly] public int maxAuraValue;
         public float chipSpeed = 1.0f;
         public float chipDelay = 0.1f;
+
+        public float healthMinFill;
+        public float healthMaxFill;
+        public float auraMinFill;
+        public float auraMaxFill;
         
         public override void InitializeElement(BaseHUD parentHUD)
         {
@@ -71,7 +76,7 @@ namespace rwby
         {
             float fillF = healthBarFront.fillAmount;
             float fillB = healthBarBack.fillAmount;
-            float hFraction = (float)healthValue / (float)maxHealthValue;
+            float hFraction = healthMinFill + ( (healthMaxFill-healthMinFill) * ((float)healthValue / (float)maxHealthValue ));
             if (fillB > hFraction)
             {
                 healthBarFront.fillAmount = hFraction;
@@ -95,7 +100,7 @@ namespace rwby
 
         private void UpdateAurabar()
         {
-            auraBarFront.fillAmount = (float)auraValue / (float)maxAuraValue;
+            auraBarFront.fillAmount = auraMinFill + ( (auraMaxFill-auraMinFill) * ((float)auraValue / (float)maxAuraValue) );
         }
     }
 }

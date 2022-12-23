@@ -510,7 +510,7 @@ namespace rwby
             FighterManager f = fighter as FighterManager;
             ConditionHardKnockdown vars = (ConditionHardKnockdown)variables;
 
-            bool r = f.FCombatManager.hardKnockdown;
+            bool r = f.FCombatManager.shouldHardKnockdown && f.FCombatManager.hardKnockdownCounter <= FighterCombatManager.MAX_HARDKNOCKDOWNS;
             return vars.inverse ? !r : r;
         }
 

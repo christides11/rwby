@@ -24,6 +24,7 @@ MonoBehaviour:
   - rid: 387796161339850752
   - rid: 387796161339850754
   - rid: 387796161339850761
+  - rid: 5775511919097282560
   auraRequirement: 0
   initialGroundedState: 1
   stateType: 4
@@ -77,6 +78,7 @@ MonoBehaviour:
         ignoreStringUseCheck: 0
         checkInputSequence: 0
         checkCondition: 0
+        overrideStateChange: 0
         targetType: 0
         stateMovesetID: -1
         state:
@@ -137,6 +139,7 @@ MonoBehaviour:
         ignoreStringUseCheck: 0
         checkInputSequence: 0
         checkCondition: 0
+        overrideStateChange: 0
         targetType: 0
         stateMovesetID: -1
         state:
@@ -170,6 +173,17 @@ MonoBehaviour:
       type: {class: FighterCmnStateReference, ns: rwby, asm: rwby.csharp}
       data:
         state: 24
+    - rid: 5775511919097282560
+      type: {class: VarConsumeHardKnockdown, ns: rwby, asm: rwby.csharp}
+      data:
+        name: 
+        id: 4
+        parent: -1
+        children: 
+        frameRanges:
+        - {x: 0, y: 0}
+        condition:
+          rid: -2
     - rid: 8688056272189390848
       type: {class: VarChangeState, ns: rwby, asm: rwby.csharp}
       data:
@@ -186,6 +200,7 @@ MonoBehaviour:
         ignoreStringUseCheck: 0
         checkInputSequence: 0
         checkCondition: 0
+        overrideStateChange: 0
         targetType: 0
         stateMovesetID: -1
         state:

@@ -10,6 +10,7 @@ namespace rwby
 {
     public class FighterCombatManager : NetworkBehaviour, IHurtable, IFighterCombatManager, ITeamable
     {
+        public static readonly int MAX_HARDKNOCKDOWNS = 2;
         [System.Serializable]
         public class IntIntMap
         {
@@ -76,7 +77,8 @@ namespace rwby
         [Networked] public int LastPushblockAttempt { get; set; } = 0;
         
         [Networked] public int lastUsedSpecial { get; set; }
-        [Networked] public NetworkBool hardKnockdown { get; set; }
+        [Networked] public NetworkBool shouldHardKnockdown { get; set; }
+        [Networked] public int hardKnockdownCounter { get; set; }
 
         public static void OnChangedAura(Changed<FighterCombatManager> changed)
         {
@@ -546,7 +548,7 @@ namespace rwby
             ApplyHitForces(hurtInfo, currentState, hitInfoGroup.hitForceType, isGrounded ?  hitInfoGroup.groundHitForce : hitInfoGroup.aerialHitForce, hitInfoGroup.pullPushMultiplier, hitInfoGroup.pullPushMaxDistance, hitInfoGroup.hitForceRelationOffset,
                 hitInfoGroup.ignorePushbackScaling);
 
-            hardKnockdown = hitInfoGroup.hardKnockdown;
+            shouldHardKnockdown = hardKnockdownCounter > MAX_HARDKNOCKDOWNS ? false : hitInfoGroup.hardKnockdown;
             WallBounce = hitInfoGroup.wallBounce;
             WallBounceForce = hitInfoGroup.wallBounceForce;
             GroundBounce = hitInfoGroup.groundBounce;

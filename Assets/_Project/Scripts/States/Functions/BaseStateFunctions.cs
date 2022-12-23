@@ -1212,5 +1212,14 @@ namespace rwby
             
             p.SetRotation(rot);
         }
+        
+        public static void ConsumeHardKnockdown(IFighterBase fighter, IStateVariables variables, HnSF.StateTimeline stateTimeline, int frame)
+        {
+            FighterManager fm = (FighterManager)fighter;
+
+            fm.FCombatManager.hardKnockdownCounter++;
+            if (fm.FCombatManager.hardKnockdownCounter > FighterCombatManager.MAX_HARDKNOCKDOWNS)
+                fm.FCombatManager.shouldHardKnockdown = false;
+        }
     }
 }

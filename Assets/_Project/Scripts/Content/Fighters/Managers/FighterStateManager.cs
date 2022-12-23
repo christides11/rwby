@@ -302,6 +302,8 @@ namespace rwby
                     combatManager.ComboCounter = 0;
                     combatManager.CurrentGroundBounces = 0;
                     combatManager.CurrentWallBounces = 0;
+                    combatManager.hardKnockdownCounter = 0;
+                    combatManager.shouldHardKnockdown = false;
                 }
             }else if (CurrentStateType == StateType.ATTACK)
             {
