@@ -240,6 +240,8 @@ namespace rwby
                 ProcessState(previousStateTimeline, true);
             }
             
+            manager.BoxManager.ResetAllBoxes();
+            
             var previousGroundedState = CurrentGroundedState;
             var previousStateType = CurrentStateType;
             

@@ -422,7 +422,7 @@ namespace rwby
         public static void CreateBox(IFighterBase fighter, IStateVariables variables, HnSF.StateTimeline arg3, int arg4)
         {
             FighterManager f = (FighterManager)fighter;
-            VarCreateBox vars = (VarCreateBox)variables;
+            var vars = (VarCreateBox)variables;
             
             f.BoxManager.AddBox(vars.boxType, vars.attachedTo, vars.shape, vars.offset, vars.boxExtents, vars.radius, vars.definitionIndex, (StateTimeline)arg3);
         }

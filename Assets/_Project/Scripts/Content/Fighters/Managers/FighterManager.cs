@@ -219,11 +219,8 @@ namespace rwby
                 FPhysicsManager.Freeze();
                 return;
             }
-
-            boxManager.ResetAllBoxes();
+            
             visualTransform.gameObject.SetActive(Visible);
-
-            //HitstopShake();
             HandleLockon();
 
             if (FCombatManager.HitStop > 0)
@@ -236,6 +233,7 @@ namespace rwby
             if(FCombatManager.BlockStun > -600) FCombatManager.BlockStun--;
             if(FCombatManager.HitStun > -600) FCombatManager.HitStun--;
             
+            BoxManager.ResetAllBoxes();
             FPhysicsManager.CheckIfGrounded();
             FStateManager.Tick();
             FPhysicsManager.Tick();

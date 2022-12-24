@@ -28,10 +28,16 @@ namespace rwby
         [Header("BoxDefinition")]
         [SerializeField] private HitInfo[] hitboxInfo;
 
+        public override void Spawned()
+        {
+            base.Spawned();
+            boxManager.AddBox(cb.boxType, cb.attachedTo, cb.shape, cb.offset, cb.boxExtents, cb.radius, cb.definitionIndex, this);
+        }
+
         public override void FixedUpdateNetwork()
         {
-            boxManager.ResetAllBoxes();
-            boxManager.AddBox(cb.boxType, cb.attachedTo, cb.shape, cb.offset, cb.boxExtents, cb.radius, cb.definitionIndex, this);
+            //boxManager.ResetAllBoxes();
+            //boxManager.AddBox(cb.boxType, cb.attachedTo, cb.shape, cb.offset, cb.boxExtents, cb.radius, cb.definitionIndex, this);
         }
 
         public bool IsHitHurtboxValid(CustomHitbox atackerHitbox, Hurtbox h)
