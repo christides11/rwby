@@ -15,10 +15,60 @@ MonoBehaviour:
   data:
   - rid: 6951768367642443808
   - rid: 6951768358483656704
+  - rid: 5775511995771256834
   - rid: 8688056606344609823
   references:
     version: 2
     RefIds:
+    - rid: 5775511995771256834
+      type: {class: VarChangeState, ns: rwby, asm: rwby.csharp}
+      data:
+        name: Try Shield
+        id: 0
+        parent: 0
+        children: 
+        frameRanges: []
+        condition:
+          rid: 5775511995771256836
+        ignoreStateConditions: 0
+        ignoreAirtimeCheck: 0
+        ignoreStringUseCheck: 0
+        checkInputSequence: 0
+        checkCondition: 0
+        overrideStateChange: 0
+        targetType: 0
+        stateMovesetID: -1
+        state:
+          rid: 5775511995771256835
+        frame: 0
+    - rid: 5775511995771256835
+      type: {class: FighterCmnStateReference, ns: rwby, asm: rwby.csharp}
+      data:
+        state: 45
+    - rid: 5775511995771256836
+      type: {class: ConditionAnd, ns: rwby, asm: rwby.csharp}
+      data:
+        conditions:
+        - rid: 5775511995771256837
+        - rid: 5775511995771256838
+    - rid: 5775511995771256837
+      type: {class: ConditionButton, ns: rwby, asm: rwby.csharp}
+      data:
+        inverse: 0
+        checkAbilityButton: 0
+        button: 1
+        buttonState: 0
+        offset: 0
+        buffer: 0
+    - rid: 5775511995771256838
+      type: {class: ConditionButton, ns: rwby, asm: rwby.csharp}
+      data:
+        inverse: 0
+        checkAbilityButton: 0
+        button: 3
+        buttonState: 1
+        offset: 0
+        buffer: 3
     - rid: 6951768358483656704
       type: {class: VarChangeState, ns: rwby, asm: rwby.csharp}
       data:
@@ -29,16 +79,22 @@ MonoBehaviour:
         frameRanges: []
         condition:
           rid: 6951768358483656705
+        ignoreStateConditions: 0
+        ignoreAirtimeCheck: 0
+        ignoreStringUseCheck: 0
         checkInputSequence: 0
         checkCondition: 0
+        overrideStateChange: 0
         targetType: 0
         stateMovesetID: -1
         state:
           rid: 6951768358483656706
+        frame: 0
     - rid: 6951768358483656705
       type: {class: ConditionButton, ns: rwby, asm: rwby.csharp}
       data:
         inverse: 0
+        checkAbilityButton: 0
         button: 0
         buttonState: 0
         offset: 0
@@ -57,12 +113,17 @@ MonoBehaviour:
         frameRanges: []
         condition:
           rid: 6951768367642443809
+        ignoreStateConditions: 0
+        ignoreAirtimeCheck: 0
+        ignoreStringUseCheck: 0
         checkInputSequence: 0
         checkCondition: 0
+        overrideStateChange: 0
         targetType: 0
         stateMovesetID: -1
         state:
           rid: 6951768367642443810
+        frame: 0
     - rid: 6951768367642443809
       type: {class: ConditionIsGrounded, ns: rwby, asm: rwby.csharp}
       data:
@@ -81,12 +142,17 @@ MonoBehaviour:
         frameRanges: []
         condition:
           rid: 8688056606344609825
+        ignoreStateConditions: 0
+        ignoreAirtimeCheck: 0
+        ignoreStringUseCheck: 0
         checkInputSequence: 0
         checkCondition: 0
+        overrideStateChange: 0
         targetType: 0
         stateMovesetID: -1
         state:
           rid: 8688056606344609824
+        frame: 0
     - rid: 8688056606344609824
       type: {class: FighterCmnStateReference, ns: rwby, asm: rwby.csharp}
       data:
@@ -95,6 +161,7 @@ MonoBehaviour:
       type: {class: ConditionButton, ns: rwby, asm: rwby.csharp}
       data:
         inverse: 0
+        checkAbilityButton: 0
         button: 1
         buttonState: 0
         offset: 0

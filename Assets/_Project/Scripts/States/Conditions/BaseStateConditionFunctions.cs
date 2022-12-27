@@ -317,7 +317,7 @@ namespace rwby
         {
             FighterManager f = fighter as FighterManager;
 
-            return f.throwees[0] != null ? true : false;
+            return f.FCombatManager.throwees[0] != null ? true : false;
         }
         
         public static bool CompareInputDir(IFighterBase fighter, IConditionVariables variables, HnSF.StateTimeline arg3, int arg4)

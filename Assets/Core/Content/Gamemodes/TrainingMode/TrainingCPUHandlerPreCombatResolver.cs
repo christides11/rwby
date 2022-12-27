@@ -61,6 +61,13 @@ namespace rwby.core.training
 
                                 break;
                         }
+
+                        switch (cpuHandlerCore.cpuSettings[i].shield)
+                        {
+                            case 1:
+                                id.buttons.Set(PlayerInputType.B, true);
+                                break;
+                        }
                         break;
                 }
 

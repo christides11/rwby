@@ -22,14 +22,21 @@ namespace rwby
             animancer.Playable.PauseGraph();*/
         }
 
+        public override void PauseEffect()
+        {
+            base.PauseEffect();
+            visualEffect.pause = true;
+        }
+
         public override void SetFrame(float time)
         {
+            visualEffect.pause = false;
             //if (time > totalTime) return;
             /*
             visualEffect.Reinit();
             visualEffect.pause = true;
             visualEffect.Simulate(time);*/
-            
+
             //visualEffect.Stop();
             //visualEffect.Play();
             //visualEffect.pause = true;

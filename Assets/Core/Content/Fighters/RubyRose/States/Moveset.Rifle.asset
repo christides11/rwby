@@ -69,6 +69,10 @@ MonoBehaviour:
     state:
       rid: 387795932360736776
     stateTimeline: {fileID: 11400000, guid: f1ec8186afd58b44cb46c88b0de3d245, type: 2}
+  - name: taunt
+    state:
+      rid: 5775511990160850951
+    stateTimeline: {fileID: 11400000, guid: 12e6b44b2fab83e4eb297de6c73db804, type: 2}
   groundAttacks:
   - name: throw (attempt)
     state:
@@ -444,11 +448,11 @@ MonoBehaviour:
     - rid: 387795932360736808
       type: {class: RubyRoseStateReference, ns: rwby.core, asm: rwby.core}
       data:
-        state: 50
+        state: 115
     - rid: 387795932360736809
       type: {class: RubyRoseStateReference, ns: rwby.core, asm: rwby.core}
       data:
-        state: 51
+        state: 116
     - rid: 387795932360736810
       type: {class: RubyRoseStateReference, ns: rwby.core, asm: rwby.core}
       data:
@@ -472,7 +476,7 @@ MonoBehaviour:
     - rid: 387795967775604736
       type: {class: RubyRoseStateReference, ns: rwby.core, asm: rwby.core}
       data:
-        state: 53
+        state: 118
     - rid: 387795978025172992
       type: {class: RubyRoseStateReference, ns: rwby.core, asm: rwby.core}
       data:
@@ -577,3 +581,7 @@ MonoBehaviour:
       type: {class: RubyRoseStateReference, ns: rwby.core, asm: rwby.core}
       data:
         state: 113
+    - rid: 5775511990160850951
+      type: {class: FighterCmnStateReference, ns: rwby, asm: rwby.csharp}
+      data:
+        state: 50

@@ -50,7 +50,8 @@ namespace rwby
                     fighter.StateManager.MarkForStateChange(vars.state.GetState(), vars.stateMovesetID, vars.frame, vars.overrideStateChange);
                     break;
                 case VarTargetType.Throwees:
-                    fm.throwees[0].GetBehaviour<FighterManager>().FStateManager.MarkForStateChange(vars.state.GetState(), vars.stateMovesetID, vars.frame, vars.overrideStateChange);
+                    fm.FCombatManager.throwees[0].GetBehaviour<FighterManager>()
+                        .FStateManager.MarkForStateChange(vars.state.GetState(), vars.stateMovesetID, vars.frame, vars.overrideStateChange);
                     break;
             }
         }
@@ -465,7 +466,7 @@ namespace rwby
                             f.FPhysicsManager.forceGravity = vars.value.GetValue(f);
                             break;
                         case VarTargetType.Throwees:
-                            f.throwees[0].GetBehaviour<FighterManager>().FPhysicsManager.forceGravity = vars.value.GetValue(f);
+                            f.FCombatManager.throwees[0].GetBehaviour<FighterManager>().FPhysicsManager.forceGravity = vars.value.GetValue(f);
                             break;
                     }
                     break;
@@ -476,7 +477,7 @@ namespace rwby
                             f.FPhysicsManager.forceGravity += vars.value.GetValue(f);
                             break;
                         case VarTargetType.Throwees:
-                            f.throwees[0].GetBehaviour<FighterManager>().FPhysicsManager.forceGravity += vars.value.GetValue(f);
+                            f.FCombatManager.throwees[0].GetBehaviour<FighterManager>().FPhysicsManager.forceGravity += vars.value.GetValue(f);
                             break;
                     }
                     break;
@@ -842,10 +843,7 @@ namespace rwby
         {
             FighterManager fm = (FighterManager)fighter;
 
-            for (int i = 0; i < fm.throwees.Length; i++)
-            {
-                fm.throwees.Set(i, null);
-            }
+            fm.FCombatManager.ReleaseThrowee(fm.FCombatManager.throwees[0]);
         }
         
         public static void ModifyBlockstun(IFighterBase fighter, IStateVariables variables, HnSF.StateTimeline stateTimeline, int frame)
@@ -1176,7 +1174,7 @@ namespace rwby
             switch (vars.targetType)
             {
                 case VarTargetType.Throwees:
-                    var throwee = fm.throwees[0];
+                    var throwee = fm.FCombatManager.throwees[0];
                     var hurtable = throwee.GetComponent<IHurtable>();
                     hurtInfo.hitPosition = throwee.transform.position;
                     HitReaction reaction = (HitReaction)hurtable.Hurt(hurtInfo);
@@ -1220,6 +1218,20 @@ namespace rwby
             fm.FCombatManager.hardKnockdownCounter++;
             if (fm.FCombatManager.hardKnockdownCounter > FighterCombatManager.MAX_HARDKNOCKDOWNS)
                 fm.FCombatManager.shouldHardKnockdown = false;
+        }
+        
+        public static void SetThrowTechTime(IFighterBase fighter, IStateVariables variables, HnSF.StateTimeline stateTimeline, int frame)
+        {
+            FighterManager fm = (FighterManager)fighter;
+            var vars = (VarSetThrowTechTime)variables;
+
+            switch (vars.targetType)
+            {
+                case VarTargetType.Throwees:
+                    var throwee = fm.FCombatManager.throwees[0];
+                    throwee.GetComponent<IThrowable>().ThrowTechTimer = vars.techTime;
+                    break;
+            }
         }
     }
 }

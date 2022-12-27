@@ -74,6 +74,7 @@ namespace rwby
             functions.Add(typeof(VarClearBuffer), BaseStateFunctions.ClearBuffer);
             functions.Add(typeof(VarProjectileSetRotation), BaseStateFunctions.ModifyProjectileRotation);
             functions.Add(typeof(VarConsumeHardKnockdown), BaseStateFunctions.ConsumeHardKnockdown);
+            functions.Add(typeof(VarSetThrowTechTime), BaseStateFunctions.SetThrowTechTime);
         }
     }
 }

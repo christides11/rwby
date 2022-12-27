@@ -123,6 +123,15 @@ namespace rwby.core.training
                 }
 
                 testData[i][Runner.Tick % 10] = id;
+
+                if (cpuSettings[i].techThrow == 1 && fm.FCombatManager.ThrowTechTimer > 0)
+                {
+                    var t = new NetworkPlayerInputData();
+                    
+                    t.buttons.Set((int)PlayerInputType.A, true);
+                    
+                    testData[i][(Runner.Tick) % 10] = t;
+                }
                 
                 if (cpuSettings[i].afterHit != 0 && fm.FCombatManager.HitStun == 0)
                 {

@@ -22,10 +22,12 @@ MonoBehaviour:
   data:
   - rid: 7270848697680265216
   - rid: 7270848697680265217
+  - rid: 5775511995771256832
   auraRequirement: 0
   initialGroundedState: 1
   stateType: 1
   maxUsesInString: -1
+  maxUsesPerAirtime: -1
   selfChainable: 0
   allowBaseStateTransitions: 1
   inputSequence:
@@ -55,6 +57,18 @@ MonoBehaviour:
     RefIds:
     - rid: -2
       type: {class: , ns: , asm: }
+    - rid: 5775511995771256832
+      type: {class: VarDebugLog, ns: rwby, asm: rwby.csharp}
+      data:
+        name: 
+        id: 2
+        parent: -1
+        children: 
+        frameRanges:
+        - {x: 0, y: 0}
+        condition:
+          rid: -2
+        message: Entered Shield State
     - rid: 7270848697680265216
       type: {class: VarCreateBox, ns: rwby, asm: rwby.csharp}
       data:

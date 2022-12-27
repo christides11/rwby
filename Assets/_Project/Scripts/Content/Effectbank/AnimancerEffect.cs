@@ -11,7 +11,8 @@ namespace rwby
         
         private void Awake()
         {
-            animancer.Play(clip);
+            animancer.Play(clip).Time = 0;
+            animancer.Playable.UnpauseGraph();
             /*
             animancer.Playable.PauseGraph();
             animancer.Layers[0].Weight = 1.0f;
@@ -20,8 +21,15 @@ namespace rwby
             animancer.Layers[0].GetOrCreateState(clip).Weight = 1.0f;*/
         }
 
+        public override void PauseEffect()
+        {
+            base.PauseEffect();
+            animancer.Playable.PauseGraph();
+        }
+
         public override void SetFrame(float time)
         {
+            animancer.Playable.UnpauseGraph();
             /*
             var s = animancer.Layers[0].GetOrCreateState(clip);
             s.Time = time;

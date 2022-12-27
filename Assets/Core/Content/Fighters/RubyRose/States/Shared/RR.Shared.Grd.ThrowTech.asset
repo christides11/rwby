@@ -1,0 +1,257 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7789f25d17401bc4b915ca6fcecf2a29, type: 3}
+  m_Name: RR.Shared.Grd.ThrowTech
+  m_EditorClassIdentifier: 
+  stateName: Throw Tech
+  useBaseState: 0
+  baseState: {fileID: 0}
+  totalFrames: 30
+  autoIncrement: 1
+  autoLoop: 1
+  autoLoopFrame: 1
+  data:
+  - rid: 2193520579074588673
+  - rid: 2193520791838261265
+  - rid: 8688056606344609829
+  - rid: 387796025889783850
+  - rid: 2193520862594334720
+  - rid: 8688056201677897732
+  - rid: 5775511466801889299
+  - rid: 5775511945482600449
+  - rid: 5775511945482600452
+  - rid: 5775511945482600454
+  auraRequirement: 0
+  initialGroundedState: 1
+  stateType: 1
+  maxUsesInString: -1
+  maxUsesPerAirtime: -1
+  selfChainable: 0
+  allowBaseStateTransitions: 1
+  inputSequence:
+    executeWindow: 3
+    executeInputs: []
+    sequenceWindow: 8
+    sequenceInputs: []
+  inputSequenceAsHoldInputs: 0
+  condition:
+    rid: -2
+  hitboxInfo: []
+  throwboxInfo:
+  - airOnly: 0
+    groundOnly: 1
+    damageOnGrab: 0
+    confirmState:
+      rid: -2
+  hurtboxInfo:
+  - hitInvincible: 0
+    projectileInvincible: 0
+  references:
+    version: 2
+    RefIds:
+    - rid: -2
+      type: {class: , ns: , asm: }
+    - rid: 387796025889783850
+      type: {class: VarEmpty, ns: rwby, asm: rwby.csharp}
+      data:
+        name: Barehanded
+        id: 15
+        parent: -1
+        children: 
+        frameRanges: []
+        condition:
+          rid: 387796025889783851
+    - rid: 387796025889783851
+      type: {class: ConditionMoveset, ns: rwby, asm: rwby.csharp}
+      data:
+        moveset: 2
+    - rid: 2193520579074588673
+      type: {class: VarSetECB, ns: rwby, asm: rwby.csharp}
+      data:
+        name: Set ECB
+        id: 1
+        parent: -1
+        children: 
+        frameRanges:
+        - {x: 0, y: 0}
+        condition:
+          rid: -2
+        ecbCenter: 0.825
+        ecbRadius: 0.3
+        ecbHeight: 1.65
+    - rid: 2193520791838261265
+      type: {class: VarEmpty, ns: rwby, asm: rwby.csharp}
+      data:
+        name: Scythe
+        id: 2
+        parent: -1
+        children: 
+        frameRanges:
+        - {x: 1, y: -1}
+        condition:
+          rid: 8688056409313247233
+    - rid: 2193520862594334720
+      type: {class: VarCreateBox, ns: rwby, asm: rwby.csharp}
+      data:
+        name: Colbox
+        id: 5
+        parent: -1
+        children: 
+        frameRanges:
+        - {x: 1, y: -1}
+        condition:
+          rid: -2
+        boxType: 2
+        attachedTo: 0
+        shape: 0
+        offset: {x: 0, y: 0.75, z: 0}
+        boxExtents: {x: 0.3, y: 0.75, z: 0.3}
+        radius: 0
+        definitionIndex: 0
+    - rid: 5775511466801889299
+      type: {class: VarModifyAnimationSet, ns: rwby, asm: rwby.csharp}
+      data:
+        name: Rifle Idle
+        id: 19
+        parent: -1
+        children: 
+        frameRanges:
+        - {x: 0, y: 0}
+        condition:
+          rid: 5775511466801889302
+        modifyType: 1
+        wantedAnimations:
+        - animationbank:
+            modGUID:
+              guid: 1d292c1f00000000
+            contentGUID:
+              guid: 2c2c000000000000
+          animation: rifle.idle
+        fadeTime: 0
+    - rid: 5775511466801889302
+      type: {class: ConditionMoveset, ns: rwby, asm: rwby.csharp}
+      data:
+        moveset: 1
+    - rid: 5775511466801889303
+      type: {class: ConditionMoveset, ns: rwby, asm: rwby.csharp}
+      data:
+        moveset: 0
+    - rid: 5775511945482600449
+      type: {class: VarChangeState, ns: rwby, asm: rwby.csharp}
+      data:
+        name: To Idle
+        id: 20
+        parent: -1
+        children: 
+        frameRanges:
+        - {x: -1, y: -1}
+        condition:
+          rid: -2
+        ignoreStateConditions: 0
+        ignoreAirtimeCheck: 0
+        ignoreStringUseCheck: 0
+        checkInputSequence: 0
+        checkCondition: 0
+        overrideStateChange: 0
+        targetType: 0
+        stateMovesetID: -1
+        state:
+          rid: 5775511945482600450
+        frame: 0
+    - rid: 5775511945482600450
+      type: {class: FighterCmnStateReference, ns: rwby, asm: rwby.csharp}
+      data:
+        state: 1
+    - rid: 5775511945482600452
+      type: {class: VarSetMovement, ns: rwby, asm: rwby.csharp}
+      data:
+        name: 
+        id: 21
+        parent: -1
+        children: 
+        frameRanges:
+        - {x: 1, y: 1}
+        condition:
+          rid: -2
+        inputSource: 1
+        normalizeInputSource: 0
+        useRotationIfInputZero: 0
+        reverseInputSource: 0
+        force:
+          rid: 5775511945482600453
+    - rid: 5775511945482600453
+      type: {class: FighterStatReferenceFloatBase, ns: rwby, asm: rwby.csharp}
+      data:
+        inverse: 0
+        statReference: 0
+        value: -10
+    - rid: 5775511945482600454
+      type: {class: VarApplyTraction, ns: rwby, asm: rwby.csharp}
+      data:
+        name: 
+        id: 22
+        parent: -1
+        children: 
+        frameRanges:
+        - {x: 2, y: -1}
+        condition:
+          rid: -2
+        traction:
+          rid: 5775511945482600455
+        applyMovement: 1
+        applyGravity: 0
+    - rid: 5775511945482600455
+      type: {class: FighterBaseStatReferenceFloat, ns: rwby, asm: rwby.csharp}
+      data:
+        inverse: 0
+        statReference: 1
+        value: 0
+        variable: 0
+    - rid: 8688056201677897732
+      type: {class: VarModifyAnimationSet, ns: rwby, asm: rwby.csharp}
+      data:
+        name: Scythe Idle
+        id: 6
+        parent: -1
+        children: 
+        frameRanges:
+        - {x: 0, y: 0}
+        condition:
+          rid: 5775511466801889303
+        modifyType: 1
+        wantedAnimations:
+        - animationbank:
+            modGUID:
+              guid: 1d292c1f00000000
+            contentGUID:
+              guid: 2c2c000000000000
+          animation: idle
+        fadeTime: 0
+    - rid: 8688056409313247233
+      type: {class: ConditionMoveset, ns: rwby, asm: rwby.csharp}
+      data:
+        moveset: 0
+    - rid: 8688056606344609829
+      type: {class: VarEmpty, ns: rwby, asm: rwby.csharp}
+      data:
+        name: Rifle
+        id: 11
+        parent: -1
+        children: 
+        frameRanges:
+        - {x: 1, y: -1}
+        condition:
+          rid: 8688056606344609830
+    - rid: 8688056606344609830
+      type: {class: ConditionMoveset, ns: rwby, asm: rwby.csharp}
+      data:
+        moveset: 1

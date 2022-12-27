@@ -69,6 +69,10 @@ MonoBehaviour:
     state:
       rid: 387795932360736776
     stateTimeline: {fileID: 11400000, guid: f1ec8186afd58b44cb46c88b0de3d245, type: 2}
+  - name: Taunt
+    state:
+      rid: 5775511990160850952
+    stateTimeline: {fileID: 11400000, guid: 12e6b44b2fab83e4eb297de6c73db804, type: 2}
   groundAttacks:
   - name: 5L
     state:
@@ -360,11 +364,11 @@ MonoBehaviour:
     - rid: 387796025889783808
       type: {class: RubyRoseStateReference, ns: rwby.core, asm: rwby.core}
       data:
-        state: 50
+        state: 115
     - rid: 387796025889783809
       type: {class: RubyRoseStateReference, ns: rwby.core, asm: rwby.core}
       data:
-        state: 51
+        state: 116
     - rid: 387796025889783810
       type: {class: RubyRoseStateReference, ns: rwby.core, asm: rwby.core}
       data:
@@ -417,3 +421,7 @@ MonoBehaviour:
       type: {class: FighterCmnStateReference, ns: rwby, asm: rwby.csharp}
       data:
         state: 42
+    - rid: 5775511990160850952
+      type: {class: FighterCmnStateReference, ns: rwby, asm: rwby.csharp}
+      data:
+        state: 50

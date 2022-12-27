@@ -27,6 +27,7 @@ MonoBehaviour:
   - rid: 8688056588631801875
   - rid: 387796093188440092
   - rid: 8688056588631801877
+  - rid: 5775511945482600448
   auraRequirement: 0
   initialGroundedState: 1
   stateType: 1
@@ -64,7 +65,7 @@ MonoBehaviour:
         targetType: 2
         hitboxInfo:
           ID: 0
-          groundedFoldoutGroup: 1
+          groundedFoldoutGroup: 0
           groundedCounterHitFoldoutGroup: 0
           hitStateGroundedGroups: -1
           hit:
@@ -225,6 +226,19 @@ MonoBehaviour:
         boxExtents: {x: 0.4, y: 1, z: 0.4}
         radius: 0
         definitionIndex: 0
+    - rid: 5775511945482600448
+      type: {class: VarSetThrowTechTime, ns: rwby, asm: rwby.csharp}
+      data:
+        name: 
+        id: 13
+        parent: -1
+        children: 
+        frameRanges:
+        - {x: 0, y: 0}
+        condition:
+          rid: -2
+        targetType: 2
+        techTime: 5
     - rid: 8688056588631801860
       type: {class: VarExternal, ns: rwby, asm: rwby.csharp}
       data:
@@ -245,7 +259,7 @@ MonoBehaviour:
         parent: -1
         children: 
         frameRanges:
-        - {x: 1, y: 19}
+        - {x: 6, y: 19}
         condition:
           rid: -2
         targetType: 2

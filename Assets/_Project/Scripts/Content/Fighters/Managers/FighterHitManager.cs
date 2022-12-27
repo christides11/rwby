@@ -1,6 +1,3 @@
-using Fusion;
-using HnSF.Combat;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace rwby
@@ -66,7 +63,7 @@ namespace rwby
                     rotation = manager.myTransform.eulerAngles,
                     scale = new Vector3(1, 1, 1),
                     autoIncrement = true
-                } });
+                } }, addToEffectSet: false);
             }
 
             if (!string.IsNullOrEmpty(hitReaction.hitInfoGroup.hitSound))
@@ -105,7 +102,7 @@ namespace rwby
                     rotation = manager.myTransform.eulerAngles,
                     scale = new Vector3(1, 1, 1),
                     autoIncrement = true
-                } });
+                } }, addToEffectSet: false);
             }
 
             if (!string.IsNullOrEmpty(hitReaction.hitInfoGroup.hitSound))
@@ -146,7 +143,7 @@ namespace rwby
                     rotation = enemyHurtbox.ownerNetworkObject.gameObject.transform.eulerAngles,
                     scale = new Vector3(1, 1, 1),
                     autoIncrement = true
-                } });
+                } }, addToEffectSet: false);
             }
             
             if (!string.IsNullOrEmpty(hitReaction.hitInfoGroup.hitBlockSound))
@@ -178,6 +175,13 @@ namespace rwby
             combatManager.ResetString();
             combatManager.ClashState = true;
             combatManager.SetHitStop(17);
+            
+            manager.shakeDefinition = new CmaeraShakeDefinition()
+            {
+                shakeStrength = CameraShakeStrength.Medium,
+                startFrame = Runner.Tick,
+                endFrame = Runner.Tick + 17
+            };
         }
 
         public override HurtInfo BuildHurtInfo(CustomHitbox hitbox, Hurtbox hurtbox)
@@ -186,19 +190,6 @@ namespace rwby
             hi.team = combatManager.GetTeam();
             hi.attackerVelocity = manager.FPhysicsManager.GetOverallForce();
             return hi;
-        }
-
-        public override void ThrowerInitilization(NetworkObject throwee)
-        {
-            base.ThrowerInitilization(throwee);
-            manager.throwees.Set(0, throwee);
-        }
-
-        public override void ThroweeInitilization(NetworkObject thrower)
-        {
-            base.ThroweeInitilization(thrower);
-            manager.thrower = thrower;
-            manager.FStateManager.MarkForStateChange((int)FighterCmnStates.THROWN, force: true);
         }
     }
 }

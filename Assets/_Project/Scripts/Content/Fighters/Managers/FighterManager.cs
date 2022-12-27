@@ -100,10 +100,6 @@ namespace rwby
         [HideInInspector] public Collider[] colliderBuffer = new Collider[1];
         [Networked] public float poleMagnitude { get; set; }
         [Networked] public float poleSpin { get; set; }
-        
-        // Throwing
-        [Networked] public NetworkObject thrower { get; set; }
-        [Networked, Capacity(4)] public NetworkArray<NetworkObject> throwees => default;
 
         [Networked] public CmaeraShakeDefinition shakeDefinition { get; set; }
         [Networked(OnChanged = nameof(OnChangedCameraMode))] public int cameraMode { get; set; }
@@ -146,13 +142,6 @@ namespace rwby
         {
             base.Spawned();
             HandleRespawn();
-            /*
-            TargetableNetworked = true;
-            Visible = true;
-            combatManager.Cleanup();
-            stateManager.SetMoveset(0);
-            statManager.SetupStats((stateManager.movesets[0] as Moveset).fighterStats);
-            combatManager.Aura = fighterDefinition.Aura;*/
         }
 
         [Header("Hitstop")]
@@ -222,13 +211,27 @@ namespace rwby
             
             visualTransform.gameObject.SetActive(Visible);
             HandleLockon();
-
             if (FCombatManager.HitStop > 0)
             {
                 FCombatManager.HitStop--;
                 FPhysicsManager.Freeze();
+                //fighterEffector.PauseCurrentEffects();
                 return;
             }
+
+            if (FCombatManager.throwLocked)
+            {
+                if (combatManager.ThrowTechTimer > 0)
+                {
+                    if (InputManager.GetA(out int boff, 0, 0).firstPress)
+                    {
+                        FCombatManager.TechThrow();
+                    }
+                }
+                combatManager.ThrowTechTimer--;
+                return;
+            }
+            //if(FCombatManager.HitStop == 0) fighterEffector.ResumeCurrentEffects();
             if(FCombatManager.HitStop > -600) FCombatManager.HitStop--;
             if(FCombatManager.BlockStun > -600) FCombatManager.BlockStun--;
             if(FCombatManager.HitStun > -600) FCombatManager.HitStun--;

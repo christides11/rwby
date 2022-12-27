@@ -33,6 +33,7 @@ MonoBehaviour:
   - rid: 387796025889783855
   - rid: 387796025889783857
   - rid: 5775511760438034432
+  - rid: 5775511990160850947
   auraRequirement: 0
   initialGroundedState: 1
   stateType: 1
@@ -140,6 +141,41 @@ MonoBehaviour:
         - {x: 70, y: 70}
         condition:
           rid: -2
+    - rid: 5775511990160850947
+      type: {class: VarChangeState, ns: rwby, asm: rwby.csharp}
+      data:
+        name: Try Taunt
+        id: 14
+        parent: -1
+        children: 
+        frameRanges:
+        - {x: 1, y: -1}
+        condition:
+          rid: 5775511990160850948
+        ignoreStateConditions: 0
+        ignoreAirtimeCheck: 0
+        ignoreStringUseCheck: 0
+        checkInputSequence: 0
+        checkCondition: 0
+        overrideStateChange: 0
+        targetType: 0
+        stateMovesetID: -1
+        state:
+          rid: 5775511990160850949
+        frame: 0
+    - rid: 5775511990160850948
+      type: {class: ConditionButton, ns: rwby, asm: rwby.csharp}
+      data:
+        inverse: 0
+        checkAbilityButton: 0
+        button: 11
+        buttonState: 1
+        offset: 0
+        buffer: 0
+    - rid: 5775511990160850949
+      type: {class: FighterCmnStateReference, ns: rwby, asm: rwby.csharp}
+      data:
+        state: 50
     - rid: 7270848899719102477
       type: {class: VarEmpty, ns: rwby, asm: rwby.csharp}
       data:

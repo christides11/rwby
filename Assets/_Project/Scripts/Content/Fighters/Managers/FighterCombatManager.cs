@@ -8,7 +8,7 @@ using HnSF;
 
 namespace rwby
 {
-    public class FighterCombatManager : NetworkBehaviour, IHurtable, IFighterCombatManager, ITeamable
+    public class FighterCombatManager : NetworkBehaviour, IHurtable, IFighterCombatManager, ITeamable, IThrowable, IThrower
     {
         public static readonly int MAX_HARDKNOCKDOWNS = 2;
         [System.Serializable]
@@ -24,7 +24,11 @@ namespace rwby
             public int item1;
             public float item2;
         }
-        
+
+        [Networked] public bool throwLocked { get; set; }
+        [Networked] public NetworkObject thrower { get; set; }
+        [Networked, Capacity(4)] public NetworkArray<NetworkObject> throwees => default;
+        [Networked] public int ThrowTechTimer { get; set; } = 0;
         [Networked] public BlockStateType BlockState { get; set; }
         [Networked] public int HitStun { get; set; } = -1;
         [Networked] public int HitStop { get; set; } = -1;
@@ -670,5 +674,69 @@ namespace rwby
                     break;
             }
         }
+        
+        #region Throwable
+        public void ThroweeInitilization(NetworkObject throwerObject)
+        {
+            throwLocked = true;
+            thrower = throwerObject;
+            manager.FStateManager.MarkForStateChange((int)FighterCmnStates.THROWN, force: true);
+        }
+
+        public void TechThrow()
+        {
+            throwLocked = false;
+            ThrowTechTimer = 0;
+            manager.FStateManager.ForceStateChange((int)FighterCmnStates.THROW_TECH, clearMarkedState: true);
+            thrower.GetComponent<IThrower>().OnThrowTeched(Object);
+        }
+
+        public void SetThroweePosition(Vector3 position)
+        {
+            
+        }
+
+        public void SetThroweeRotation(Vector3 rotation)
+        {
+            
+        }
+        #endregion
+        
+        #region Thrower
+
+        public bool IsThroweeValid(CustomHitbox attackerThrowbox, Throwablebox attackeeThrowablebox)
+        {
+            if (attackeeThrowablebox.ownerNetworkObject == Object || throwLocked == true) return false;
+            return true;
+        }
+
+        public void ThrowerInitilization(NetworkObject throwee)
+        {
+            throwees.Set(0, throwee);
+        }
+
+        public void OnThrowTeched(NetworkObject throwee)
+        {
+            for (int i = 0; i < throwees.Length; i++)
+            {
+                throwees.Set(i, null);
+            }
+            manager.FStateManager.ForceStateChange((int)FighterCmnStates.THROW_TECH, clearMarkedState: true);
+        }
+
+        public void ReleaseThrowee(NetworkObject throwee)
+        {
+            if (throwee)
+            {
+                var t = throwee.GetComponent<IThrowable>();
+                t.throwLocked = false;
+            }
+
+            for (int i = 0; i < throwees.Length; i++)
+            {
+                throwees.Set(i, null);
+            }
+        }
+        #endregion
     }
 }

@@ -1,0 +1,68 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d4d62b28b52db7d459dd2f283317c705, type: 3}
+  m_Name: Base.External.GroundTopInterrupts
+  m_EditorClassIdentifier: 
+  data:
+  - rid: 5775511995771256834
+  references:
+    version: 2
+    RefIds:
+    - rid: 5775511995771256834
+      type: {class: VarChangeState, ns: rwby, asm: rwby.csharp}
+      data:
+        name: Try Shield
+        id: 0
+        parent: 0
+        children: 
+        frameRanges: []
+        condition:
+          rid: 5775511995771256836
+        ignoreStateConditions: 0
+        ignoreAirtimeCheck: 0
+        ignoreStringUseCheck: 0
+        checkInputSequence: 0
+        checkCondition: 0
+        overrideStateChange: 0
+        targetType: 0
+        stateMovesetID: -1
+        state:
+          rid: 5775511995771256835
+        frame: 0
+    - rid: 5775511995771256835
+      type: {class: FighterCmnStateReference, ns: rwby, asm: rwby.csharp}
+      data:
+        state: 45
+    - rid: 5775511995771256836
+      type: {class: ConditionAnd, ns: rwby, asm: rwby.csharp}
+      data:
+        conditions:
+        - rid: 5775511995771256837
+        - rid: 5775511995771256838
+    - rid: 5775511995771256837
+      type: {class: ConditionButton, ns: rwby, asm: rwby.csharp}
+      data:
+        inverse: 0
+        checkAbilityButton: 0
+        button: 1
+        buttonState: 0
+        offset: 0
+        buffer: 0
+    - rid: 5775511995771256838
+      type: {class: ConditionButton, ns: rwby, asm: rwby.csharp}
+      data:
+        inverse: 0
+        checkAbilityButton: 0
+        button: 3
+        buttonState: 0
+        offset: 0
+        buffer: 3

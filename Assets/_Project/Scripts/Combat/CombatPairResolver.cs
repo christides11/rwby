@@ -29,7 +29,7 @@ namespace rwby
             {
                 if(receiversResolved.Contains(pair.Key.Item2)) continue;
                 
-                pair.Key.Item2.GetComponent<IThrowee>().ThroweeInitilization(pair.Key.Item1);
+                pair.Key.Item2.GetComponent<IThrowable>().ThroweeInitilization(pair.Key.Item1);
                 pair.Key.Item1.GetComponent<IThrower>().ThrowerInitilization(pair.Key.Item2);
             }
             

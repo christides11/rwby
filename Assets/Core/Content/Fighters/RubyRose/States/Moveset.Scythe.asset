@@ -69,6 +69,10 @@ MonoBehaviour:
     state:
       rid: 387795715308912641
     stateTimeline: {fileID: 11400000, guid: f1ec8186afd58b44cb46c88b0de3d245, type: 2}
+  - name: taunt
+    state:
+      rid: 5775511990160850950
+    stateTimeline: {fileID: 11400000, guid: 12e6b44b2fab83e4eb297de6c73db804, type: 2}
   groundAttacks:
   - name: throw (Attempt)
     state:
@@ -337,6 +341,10 @@ MonoBehaviour:
     state:
       rid: 5775511544003297313
     stateTimeline: {fileID: 11400000, guid: bd331825966d0c443bdf3944afc28433, type: 2}
+  - name: Throw Tech (Grd)
+    state:
+      rid: 5775511945482600451
+    stateTimeline: {fileID: 11400000, guid: 53da88608fe6b47418bb4e6fc13bf68c, type: 2}
   hitstun:
   - name: hit upper (Ground)
     state:
@@ -412,7 +420,7 @@ MonoBehaviour:
     - rid: 387795712240254983
       type: {class: RubyRoseStateReference, ns: rwby.core, asm: rwby.core}
       data:
-        state: 50
+        state: 115
     - rid: 387795712240254984
       type: {class: RubyRoseStateReference, ns: rwby.core, asm: rwby.core}
       data:
@@ -568,11 +576,11 @@ MonoBehaviour:
     - rid: 387795733835153411
       type: {class: RubyRoseStateReference, ns: rwby.core, asm: rwby.core}
       data:
-        state: 51
+        state: 116
     - rid: 387795733835153412
       type: {class: RubyRoseStateReference, ns: rwby.core, asm: rwby.core}
       data:
-        state: 53
+        state: 118
     - rid: 387795733835153413
       type: {class: RubyRoseStateReference, ns: rwby.core, asm: rwby.core}
       data:
@@ -729,6 +737,14 @@ MonoBehaviour:
       type: {class: FighterCmnStateReference, ns: rwby, asm: rwby.csharp}
       data:
         state: 23
+    - rid: 5775511945482600451
+      type: {class: FighterCmnStateReference, ns: rwby, asm: rwby.csharp}
+      data:
+        state: 12
+    - rid: 5775511990160850950
+      type: {class: FighterCmnStateReference, ns: rwby, asm: rwby.csharp}
+      data:
+        state: 50
     - rid: 7270848718906589197
       type: {class: RubyRoseStateReference, ns: rwby.core, asm: rwby.core}
       data:

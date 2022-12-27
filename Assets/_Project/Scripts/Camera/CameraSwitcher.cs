@@ -45,16 +45,24 @@ namespace rwby
                     return;
                 }
 
+                var currentValue = (Runner.Tick - target.shakeDefinition.startFrame);
+                var targetValue = (target.shakeDefinition.endFrame - target.shakeDefinition.startFrame);
+
+                var alpha = Runner.Simulation.StateAlpha;
+                var t1 = currentValue / targetValue;
+                var t2 = (currentValue + 1) / targetValue;
+
+                var t = (t2 * alpha + t1 * (1.0f - alpha));
                 switch (target.shakeDefinition.shakeStrength)
                 {
                     case CameraShakeStrength.Low:
-                        ShakeCamera(lowStrength, (float)(Runner.Tick-target.shakeDefinition.startFrame) / (float)(target.shakeDefinition.endFrame-target.shakeDefinition.startFrame));
+                        ShakeCamera(lowStrength, t);
                         break;
                     case CameraShakeStrength.Medium:
-                        ShakeCamera(mediumStrength, (float)(Runner.Tick-target.shakeDefinition.startFrame) / (float)(target.shakeDefinition.endFrame-target.shakeDefinition.startFrame));
+                        ShakeCamera(mediumStrength, t);
                         break;
                     case CameraShakeStrength.High:
-                        ShakeCamera(highStrength, (float)(Runner.Tick-target.shakeDefinition.startFrame) / (float)(target.shakeDefinition.endFrame-target.shakeDefinition.startFrame));
+                        ShakeCamera(highStrength, t);
                         break;
                 }
             }

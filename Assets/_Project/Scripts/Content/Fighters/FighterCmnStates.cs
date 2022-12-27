@@ -15,8 +15,6 @@ namespace rwby
         AIR_DASH = 9,
         STAGGER = 10,
         CRUMPLE = 11,
-        //FLINCH_AIR = 12,
-        //TUMBLE = 13,
         GROUND_BOUNCE = 14,
         BLOCK_HIGH = 15,
         BLOCK_LOW = 16,
@@ -52,6 +50,10 @@ namespace rwby
         SHIELD_AIR,
         WALL_BOUNCE,
         JUMPSQUAT_MOMENTUM,
-        DEATH
+        DEATH,
+        THROW_TECH = 12,
+        THROW_TECH_AIR = 13,
+        TAUNT = 50,
+        TAUNT_AIR
     }
 }

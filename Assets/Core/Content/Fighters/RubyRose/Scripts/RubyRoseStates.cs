@@ -2,16 +2,16 @@ namespace rwby.core
 {
     public enum RubyRoseStates : ushort
     {
-        GRD_5L = 50,
+        GRD_5L = 115,
         GRD_8L = 61,
         GRD_8LL = 62,
         GRD_2L = 64,
         GRD_2LL = 65,
         GRD_28L = 54,
         GRD_28L_Charged = 67,
-        GRD_5H = 51,
-        GRD_5HH = 52,
-        GRD_8H = 53,
+        GRD_5H = 116,
+        GRD_5HH = 117,
+        GRD_8H = 118,
         GRD_8HH = 63,
         GRD_2H = 93,
         GRD_2H_held = 66,

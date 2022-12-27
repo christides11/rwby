@@ -226,6 +226,12 @@ namespace rwby
             nextStateFrame = frame;
         }
 
+        public void ForceStateChange(int state, int moveset = -1, int frame = 0, bool clearMarkedState = false, bool callOnInterrupt = true)
+        {
+            if (clearMarkedState) markedForStateChange = false;
+            ChangeState(state, moveset, frame, callOnInterrupt);
+        }
+
         public bool ChangeState(int state, int moveset = -1, int stateFrame = 0, bool callOnInterrupt = true)
         {
             markedForStateChange = false;

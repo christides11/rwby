@@ -12,6 +12,7 @@ namespace rwby
 
         [Networked, Capacity(10)] public FighterEffectsRoot effects { get; set; }
         [Networked, Capacity(10)] public NetworkArray<NetworkBool> isCurrentEffect => default;
+        [Networked, Capacity(10)] public NetworkArray<NetworkBool> effectPaused => default;
         [Networked] public int effectBufferPos { get; set; } = 0;
         [Networked] public NetworkRNG rng { get; set; } = new NetworkRNG(0);
 
@@ -61,12 +62,12 @@ namespace rwby
 
         public void ClearCurrentEffects(bool removeEffects = false, bool autoIncrementEffects = true)
         {
+            ResumeCurrentEffects();
             var temp = effects;
             for (int i = 0; i < isCurrentEffect.Length; i++)
             {
                 if (!isCurrentEffect[i]) continue;
                 if(removeEffects) temp.effects.Set(i, new FighterEffectNode());
-                //if (autoIncrementEffects) autoIncrementEffect.Set(i, true);
                 isCurrentEffect.Set(i, false);
             }
             effects = temp;
@@ -76,31 +77,10 @@ namespace rwby
 
         public void SetEffectTime(int[] effectToModify, int frame)
         {
-            /*
-            for (int i = 0; i < effectToModify.Length; i++)
-            {
-                var temp = effects;
-                var t = temp.effects[effectToModify[i]];
-                t.frame = frame;
-                temp.effects.Set(effectToModify[i], t);
-                effects = temp;
-            }
-            dirty = true;*/
         }
         
         public void AddEffectTime(int[] effectToModify, int frame)
         {
-            /*
-            for (int i = 0; i < effectToModify.Length; i++)
-            {
-                if (effectToModify[i] >= isCurrentEffect.Length) return;
-                var temp = effects;
-                var t = temp.effects[isCurrentEffect[effectToModify[i]] % effects.effects.Length];
-                t.frame += frame;
-                temp.effects.Set(isCurrentEffect[effectToModify[i]] % effects.effects.Length, t);
-                effects = temp;
-            }
-            dirty = true;*/
         }
         
         public void SetEffectRotation(int[] effectToModify, Vector3 rot)
@@ -129,6 +109,34 @@ namespace rwby
             dirty = true;
         }
 
+        public void PauseCurrentEffects()
+        {
+            for (int i = 0; i < effectPaused.Length; i++)
+            {
+                if(isCurrentEffect[i]) PauseEffect(i);
+            }
+        }
+        
+        public void ResumeCurrentEffects()
+        {
+            for (int i = 0; i < effectPaused.Length; i++)
+            {
+                ResumeEffect(i);
+            }
+        }
+
+        public void PauseEffect(int index)
+        {
+            effectPaused.Set(index, true);
+            dirty = true;
+        }
+
+        public void ResumeEffect(int index)
+        {
+            effectPaused.Set(index, false);
+            dirty = true;
+        }
+
         public override void FixedUpdateNetwork()
         {
             if (Runner.IsResimulation)
@@ -145,7 +153,16 @@ namespace rwby
                 SyncEffects();
                 dirty = false;
             }
-            
+
+            for (int i = 0; i < effectPaused.Length; i++)
+            {
+                if (!effectPaused[i]) continue;
+                var temp = effects;
+                var t = temp.effects[i];
+                t.frame += 1;
+                temp.effects.Set(i, t);
+                effects = temp;
+            }
         }
 
         private void SyncEffects()
@@ -177,6 +194,12 @@ namespace rwby
                     effectObjects[i].transform.localPosition = effects.effects[i].pos;
                     effectObjects[i].transform.localRotation = Quaternion.Euler(effects.effects[i].rot);
                     effectObjects[i].transform.localScale = effects.effects[i].scale;
+                }
+
+                if (effectPaused[i])
+                {
+                    effectObjects[i].PauseEffect();
+                    continue;
                 }
                 
                 effectObjects[i].SetFrame((float)(Runner.Tick - effects.effects[i].frame - 1) * Runner.DeltaTime);

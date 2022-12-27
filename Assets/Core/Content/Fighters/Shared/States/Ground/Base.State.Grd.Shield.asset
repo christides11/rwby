@@ -23,6 +23,7 @@ MonoBehaviour:
   - rid: 7270848607039258630
   - rid: 7270848607039258633
   - rid: 7270848607039258639
+  - rid: 5775511995771256833
   auraRequirement: 0
   initialGroundedState: 1
   stateType: 1
@@ -50,13 +51,25 @@ MonoBehaviour:
     RefIds:
     - rid: -2
       type: {class: , ns: , asm: }
+    - rid: 5775511995771256833
+      type: {class: VarDebugLog, ns: rwby, asm: rwby.csharp}
+      data:
+        name: 
+        id: 3
+        parent: 0
+        children: 
+        frameRanges:
+        - {x: 1, y: 1}
+        condition:
+          rid: -2
+        message: Shield Success
     - rid: 7270848607039258630
       type: {class: VarChangeState, ns: rwby, asm: rwby.csharp}
       data:
         name: to Guard (Success)
         id: 0
         parent: -1
-        children: 
+        children: 03000000
         frameRanges:
         - {x: 1, y: 1}
         condition:
@@ -66,6 +79,7 @@ MonoBehaviour:
         ignoreStringUseCheck: 0
         checkInputSequence: 0
         checkCondition: 0
+        overrideStateChange: 0
         targetType: 0
         stateMovesetID: -1
         state:
@@ -96,6 +110,7 @@ MonoBehaviour:
         ignoreStringUseCheck: 0
         checkInputSequence: 0
         checkCondition: 0
+        overrideStateChange: 0
         targetType: 0
         stateMovesetID: -1
         state:
@@ -125,6 +140,7 @@ MonoBehaviour:
         ignoreStringUseCheck: 0
         checkInputSequence: 0
         checkCondition: 0
+        overrideStateChange: 0
         targetType: 0
         stateMovesetID: -1
         state:
