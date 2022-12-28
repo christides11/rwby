@@ -28,6 +28,7 @@ MonoBehaviour:
   initialGroundedState: 1
   stateType: 1
   maxUsesInString: -1
+  maxUsesPerAirtime: -1
   selfChainable: 0
   allowBaseStateTransitions: 1
   inputSequence:
@@ -68,6 +69,12 @@ MonoBehaviour:
         statReference: 1
         value: 0
         variable: 0
+    - rid: 5775511995771256840
+      type: {class: ConditionBlockstunValue, ns: rwby, asm: rwby.csharp}
+      data:
+        inverse: 0
+        minValue: 1
+        maxValue: 2147483647
     - rid: 7270848607039258637
       type: {class: VarChangeState, ns: rwby, asm: rwby.csharp}
       data:
@@ -78,9 +85,13 @@ MonoBehaviour:
         frameRanges:
         - {x: 1, y: -1}
         condition:
-          rid: -2
+          rid: 5775511995771256840
+        ignoreStateConditions: 0
+        ignoreAirtimeCheck: 0
+        ignoreStringUseCheck: 0
         checkInputSequence: 1
         checkCondition: 0
+        overrideStateChange: 0
         targetType: 0
         stateMovesetID: -1
         state:

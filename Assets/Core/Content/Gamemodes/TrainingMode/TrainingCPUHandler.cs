@@ -269,6 +269,17 @@ namespace rwby.core.training
                     
                     testData[i][(Runner.Tick) % 10] = t;
                 }
+
+                if (cpuSettings[i].shield == 1
+                    && fm.FCombatManager.BlockStun > 0
+                    && fm.FCombatManager.HitStop <= 0
+                    && fm.FStateManager.CurrentState is (int)FighterCmnStates.BLOCK_HIGH
+                        or (int)FighterCmnStates.BLOCK_AIR)
+                {
+                    var t = testData[i][(Runner.Tick) % 10];
+                    t.buttons.Set((int)PlayerInputType.B, true);
+                    testData[i][(Runner.Tick) % 10] = t;
+                }
             }
         }
 

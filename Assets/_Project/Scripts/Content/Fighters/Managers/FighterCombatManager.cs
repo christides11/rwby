@@ -77,9 +77,9 @@ namespace rwby
         public event AuraDelegate OnAuraDecreased;
 
         [Networked] public int LastSuccessfulBlockTick { get; set; }
-        [Networked] public PushblockState CurrentPushblockState { get; set; } = PushblockState.NONE;
-        [Networked] public int LastPushblockAttempt { get; set; } = 0;
-        
+        [Networked] public int LastSuccessfulPushblockTick { get; set; }
+        [Networked] public bool CurrentlyPushblocking { get; set; }
+
         [Networked] public int lastUsedSpecial { get; set; }
         [Networked] public NetworkBool shouldHardKnockdown { get; set; }
         [Networked] public int hardKnockdownCounter { get; set; }
@@ -473,7 +473,7 @@ namespace rwby
         
         [Networked, Capacity(10)] public NetworkArray<int> hurtboxHitCount { get; }
 
-        public float pushF = 2.0f;
+        public float pushBlockForce = 5.0f;
         public HitReactionBase Hurt(HurtInfoBase hurtInfoBase)
         {
             HurtInfo hurtInfo = hurtInfoBase as HurtInfo;
@@ -506,23 +506,16 @@ namespace rwby
 
                     Vector3 hForce = isGrounded ? hitInfoGroup.groundHitForce : hitInfoGroup.aerialHitForce;
                     if (!hitInfoGroup.blockLift) hForce.y = 0;
-                    
-                    switch (CurrentPushblockState)
+
+                    if (CurrentlyPushblocking)
                     {
-                        case PushblockState.PERFECT:
-                            BlockStun = Mathf.Clamp(BlockStun-3, 0, int.MaxValue);
-                            break;
-                        case PushblockState.GUARD:
-                            if ((Runner.Tick - LastPushblockAttempt) < 7)
-                            {
-                                Vector3 temp = manager.myTransform.position - hurtInfo.center;
-                                temp.y = 0;
-                                temp.Normalize();
-                                temp *= hForce.magnitude * pushF;
-                                CurrentPushblockState = PushblockState.NONE;
-                                LastPushblockAttempt = -1;
-                            }
-                            break;
+                        LastSuccessfulPushblockTick = Runner.Tick + hitInfoGroup.hitstop;
+                        
+                        Vector3 temp = hurtInfo.center - manager.myTransform.position;
+                        temp.y = 0;
+                        temp.Normalize();
+                        temp *= pushBlockForce;
+                        hitReaction.pushback = temp;
                     }
                     
                     manager.HealthManager.ModifyHealth((int)-(hitInfoGroup.chipDamage));
@@ -533,7 +526,6 @@ namespace rwby
                         startFrame = Runner.Tick,
                         endFrame = Runner.Tick + hitInfoGroup.cameraShakeLength
                     };
-                    // TODO: Account for blockstun
                     LastSuccessfulBlockTick = Runner.Tick;
                     
                     return hitReaction;

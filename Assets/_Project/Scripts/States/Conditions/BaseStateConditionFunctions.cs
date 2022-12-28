@@ -535,5 +535,15 @@ namespace rwby
 
             return vars.inverse ? !r : r;
         }
+        
+        public static bool CheckSuccessfulPushblock(IFighterBase fighter, IConditionVariables variables, HnSF.StateTimeline arg3,
+            int arg4)
+        {
+            FighterManager f = fighter as FighterManager;
+            var vars = (ConditionCheckSuccessfulPushblock)variables;
+
+            bool r = (f.Runner.Tick - f.FCombatManager.LastSuccessfulPushblockTick) <= vars.checkLength;
+            return vars.inverse ? !r : r;
+        }
     }
 }

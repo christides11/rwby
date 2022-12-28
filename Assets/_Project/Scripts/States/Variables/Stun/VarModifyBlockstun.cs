@@ -1,4 +1,5 @@
 using HnSF;
+using NaughtyAttributes;
 using UnityEngine;
 
 namespace rwby
@@ -42,5 +43,8 @@ namespace rwby
 
         public VarModifyType modifyType;
         public int value;
+        public bool clamp;
+        [ShowIf("clamp")] public int clampMin;
+        [ShowIf("clamp")] public int clampMax;
     }
 }

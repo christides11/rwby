@@ -41,7 +41,11 @@ MonoBehaviour:
   allowBaseStateTransitions: 1
   inputSequence:
     executeWindow: 3
-    executeInputs: []
+    executeInputs:
+    - inputType: 0
+      buttonID: 1
+      stickDirection: {x: 0, y: 0}
+      directionDeviation: 0
     sequenceWindow: 8
     sequenceInputs: []
   inputSequenceAsHoldInputs: 0
@@ -143,6 +147,7 @@ MonoBehaviour:
         ignoreStringUseCheck: 0
         checkInputSequence: 0
         checkCondition: 0
+        overrideStateChange: 0
         targetType: 0
         stateMovesetID: -1
         state:
@@ -248,6 +253,7 @@ MonoBehaviour:
         ignoreStringUseCheck: 0
         checkInputSequence: 1
         checkCondition: 0
+        overrideStateChange: 0
         targetType: 0
         stateMovesetID: -1
         state:
@@ -298,6 +304,7 @@ MonoBehaviour:
         ignoreStringUseCheck: 0
         checkInputSequence: 1
         checkCondition: 0
+        overrideStateChange: 0
         targetType: 0
         stateMovesetID: -1
         state:

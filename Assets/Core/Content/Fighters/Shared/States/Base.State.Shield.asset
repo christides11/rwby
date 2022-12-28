@@ -15,20 +15,21 @@ MonoBehaviour:
   stateName: Shield
   useBaseState: 0
   baseState: {fileID: 0}
-  totalFrames: 6
-  autoIncrement: 0
-  autoLoop: 1
-  autoLoopFrame: 5
+  totalFrames: 30
+  autoIncrement: 1
+  autoLoop: 0
+  autoLoopFrame: 30
   data:
   - rid: 7270848607039258629
+  - rid: 5775512009793077255
   - rid: 7270848607039258624
   - rid: 7270848607039258625
-  - rid: 7270848604663709696
-  - rid: 7270848604663709698
+  - rid: 5775511995771256841
   auraRequirement: 0
   initialGroundedState: 1
   stateType: 1
   maxUsesInString: -1
+  maxUsesPerAirtime: -1
   selfChainable: 0
   allowBaseStateTransitions: 1
   inputSequence:
@@ -47,40 +48,34 @@ MonoBehaviour:
     RefIds:
     - rid: -2
       type: {class: , ns: , asm: }
-    - rid: 7270848604663709696
-      type: {class: VarModifyFrame, ns: rwby, asm: rwby.csharp}
+    - rid: 5775511995771256841
+      type: {class: VarModifyBlockstun, ns: rwby, asm: rwby.csharp}
       data:
         name: 
-        id: 0
-        frameRanges:
-        - {x: 1, y: 1}
-        condition:
-          rid: 7270848604663709697
-        modifyType: 0
-        value: 1
+        id: 5
         parent: -1
         children: 
-    - rid: 7270848604663709697
-      type: {class: ConditionButton, ns: rwby, asm: rwby.csharp}
-      data:
-        inverse: 1
-        button: 3
-        buttonState: 0
-        offset: 0
-        buffer: 0
-    - rid: 7270848604663709698
-      type: {class: VarModifyFrame, ns: rwby, asm: rwby.csharp}
-      data:
-        name: 
-        id: 1
         frameRanges:
-        - {x: 2, y: -1}
+        - {x: 0, y: 0}
         condition:
           rid: -2
         modifyType: 0
-        value: 1
+        value: 13
+        clamp: 0
+        clampMin: 0
+        clampMax: 0
+    - rid: 5775512009793077255
+      type: {class: VarSetBlockState, ns: rwby, asm: rwby.csharp}
+      data:
+        name: 
+        id: 6
         parent: -1
         children: 
+        frameRanges:
+        - {x: -2, y: -2}
+        condition:
+          rid: -2
+        state: 0
     - rid: 7270848607039258624
       type: {class: VarSetPushblockState, ns: rwby, asm: rwby.csharp}
       data:
@@ -89,11 +84,10 @@ MonoBehaviour:
         parent: -1
         children: 
         frameRanges:
-        - {x: 1, y: 1}
+        - {x: 0, y: 0}
         condition:
           rid: -2
-        pushblockState: 1
-        length: 0
+        pushblocking: 1
     - rid: 7270848607039258625
       type: {class: VarSetPushblockState, ns: rwby, asm: rwby.csharp}
       data:
@@ -102,11 +96,10 @@ MonoBehaviour:
         parent: -1
         children: 
         frameRanges:
-        - {x: 2, y: 2}
+        - {x: -2, y: -2}
         condition:
           rid: -2
-        pushblockState: 0
-        length: 0
+        pushblocking: 0
     - rid: 7270848607039258629
       type: {class: VarSetBlockState, ns: rwby, asm: rwby.csharp}
       data:
@@ -115,7 +108,7 @@ MonoBehaviour:
         parent: -1
         children: 
         frameRanges:
-        - {x: 0, y: 1}
+        - {x: 0, y: -1}
         condition:
           rid: -2
         state: 2

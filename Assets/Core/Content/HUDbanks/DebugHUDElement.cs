@@ -19,6 +19,9 @@ namespace rwby
         public TextMeshProUGUI velocityTotal;
         public TextMeshProUGUI velocityMovement;
         public TextMeshProUGUI speed;
+        public TextMeshProUGUI hitstun;
+        public TextMeshProUGUI hitstop;
+        public TextMeshProUGUI blockstun;
 
         [Header("Input Viewer")]
         [FormerlySerializedAs("stickMaxRange")] public int stickRadius = 49;
@@ -60,6 +63,9 @@ namespace rwby
             temp.x = Remap(movement.x, -1.0f, 1.0f, -stickRadius, stickRadius);
             temp.y = Remap(movement.y, -1.0f, 1.0f, -stickRadius, stickRadius);
             stickRect.localPosition = temp;
+            //hitstun.text = parentHUD.playerFighter.FCombatManager.HitStun.ToString();
+            //hitstop.text = parentHUD.playerFighter.FCombatManager.HitStop.ToString();
+            //blockstun.text = parentHUD.playerFighter.FCombatManager.BlockStun.ToString();
 
             UpdateCircle(parentHUD.playerFighter.InputManager.GetButton((int)PlayerInputType.A, 0), aCircle);
             UpdateCircle(parentHUD.playerFighter.InputManager.GetButton((int)PlayerInputType.B, 0), bCircle);

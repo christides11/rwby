@@ -40,7 +40,6 @@ namespace rwby
         public IConditionVariables condition;
         public IConditionVariables Condition => condition;
 
-        public PushblockState pushblockState;
-        public int length;
+        public bool pushblocking;
     }
 }

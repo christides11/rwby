@@ -166,6 +166,8 @@ namespace rwby
                 startFrame = Runner.Tick,
                 endFrame = Runner.Tick + hitReaction.hitInfoGroup.cameraShakeLength
             };
+
+            manager.FPhysicsManager.forceMovement += hitReaction.pushback;
         }
 
         // TODO: Visual effects, better handling.

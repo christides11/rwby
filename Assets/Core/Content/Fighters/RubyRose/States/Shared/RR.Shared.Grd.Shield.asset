@@ -16,13 +16,19 @@ MonoBehaviour:
   useBaseState: 1
   baseState: {fileID: 11400000, guid: e57032e066a25b04388b51be4c43f751, type: 2}
   totalFrames: 24
-  autoIncrement: 0
+  autoIncrement: 1
   autoLoop: 0
-  autoLoopFrame: 1
+  autoLoopFrame: 0
   data:
   - rid: 7270848697680265216
   - rid: 7270848697680265217
-  - rid: 5775511995771256832
+  - rid: 5775512009793077250
+  - rid: 5775512009793077252
+  - rid: 5775512009793077253
+  - rid: 5775512009793077259
+  - rid: 5775512009793077261
+  - rid: 5775512009793077263
+  - rid: 5775512009793077265
   auraRequirement: 0
   initialGroundedState: 1
   stateType: 1
@@ -57,18 +63,138 @@ MonoBehaviour:
     RefIds:
     - rid: -2
       type: {class: , ns: , asm: }
-    - rid: 5775511995771256832
-      type: {class: VarDebugLog, ns: rwby, asm: rwby.csharp}
+    - rid: 5775512009793077250
+      type: {class: VarEmpty, ns: rwby, asm: rwby.csharp}
       data:
-        name: 
-        id: 2
+        name: No Blockstun
+        id: 3
         parent: -1
+        children: 0a0000000400000005000000
+        frameRanges: []
+        condition:
+          rid: 5775512009793077251
+    - rid: 5775512009793077251
+      type: {class: ConditionBlockstunValue, ns: rwby, asm: rwby.csharp}
+      data:
+        inverse: 0
+        minValue: -2147483647
+        maxValue: 0
+    - rid: 5775512009793077252
+      type: {class: VarExternal, ns: rwby, asm: rwby.csharp}
+      data:
+        name: Grd States (Scythe)
+        id: 4
+        parent: 3
         children: 
         frameRanges:
-        - {x: 0, y: 0}
+        - {x: -1, y: -1}
         condition:
           rid: -2
-        message: Entered Shield State
+        asset: {fileID: 11400000, guid: c8d832c162e368d439cbe63210340e04, type: 2}
+    - rid: 5775512009793077253
+      type: {class: VarExternal, ns: rwby, asm: rwby.csharp}
+      data:
+        name: Grd States (Rifle)
+        id: 5
+        parent: 3
+        children: 
+        frameRanges:
+        - {x: -1, y: -1}
+        condition:
+          rid: -2
+        asset: {fileID: 11400000, guid: 5269f0aeb5faad94eb0261b24ba47332, type: 2}
+    - rid: 5775512009793077259
+      type: {class: VarEmpty, ns: rwby, asm: rwby.csharp}
+      data:
+        name: On Successful Shield
+        id: 6
+        parent: -1
+        children: 0800000007000000
+        frameRanges: []
+        condition:
+          rid: 5775512009793077260
+    - rid: 5775512009793077260
+      type: {class: ConditionCheckSuccessfulPushblock, ns: rwby, asm: rwby.csharp}
+      data:
+        checkLength: 1
+        inverse: 0
+    - rid: 5775512009793077261
+      type: {class: VarChangeState, ns: rwby, asm: rwby.csharp}
+      data:
+        name: To Block
+        id: 7
+        parent: 6
+        children: 
+        frameRanges:
+        - {x: 1, y: -1}
+        condition:
+          rid: -2
+        ignoreStateConditions: 0
+        ignoreAirtimeCheck: 0
+        ignoreStringUseCheck: 0
+        checkInputSequence: 0
+        checkCondition: 0
+        overrideStateChange: 1
+        targetType: 0
+        stateMovesetID: -1
+        state:
+          rid: 5775512009793077262
+        frame: 0
+    - rid: 5775512009793077262
+      type: {class: FighterCmnStateReference, ns: rwby, asm: rwby.csharp}
+      data:
+        state: 15
+    - rid: 5775512009793077263
+      type: {class: VarModifyBlockstun, ns: rwby, asm: rwby.csharp}
+      data:
+        name: 
+        id: 8
+        parent: 6
+        children: 
+        frameRanges:
+        - {x: 1, y: -1}
+        condition:
+          rid: -2
+        modifyType: 0
+        value: -15
+        clamp: 1
+        clampMin: 1
+        clampMax: 2147483647
+    - rid: 5775512009793077265
+      type: {class: VarChangeState, ns: rwby, asm: rwby.csharp}
+      data:
+        name: To Block
+        id: 10
+        parent: 3
+        children: 
+        frameRanges:
+        - {x: -1, y: -1}
+        condition:
+          rid: 5775512009793077269
+        ignoreStateConditions: 0
+        ignoreAirtimeCheck: 0
+        ignoreStringUseCheck: 0
+        checkInputSequence: 0
+        checkCondition: 0
+        overrideStateChange: 0
+        targetType: 0
+        stateMovesetID: -1
+        state:
+          rid: 5775512009793077266
+        frame: 0
+    - rid: 5775512009793077266
+      type: {class: FighterCmnStateReference, ns: rwby, asm: rwby.csharp}
+      data:
+        state: 15
+    - rid: 5775512009793077269
+      type: {class: ConditionButton, ns: rwby, asm: rwby.csharp}
+      data:
+        inverse: 0
+        checkAbilityButton: 0
+        button: 1
+        buttonState: 0
+        offset: 0
+        buffer: 0
     - rid: 7270848697680265216
       type: {class: VarCreateBox, ns: rwby, asm: rwby.csharp}
       data:

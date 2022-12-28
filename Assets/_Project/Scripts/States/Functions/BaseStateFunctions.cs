@@ -849,7 +849,7 @@ namespace rwby
         public static void ModifyBlockstun(IFighterBase fighter, IStateVariables variables, HnSF.StateTimeline stateTimeline, int frame)
         {
             FighterManager fm = (FighterManager)fighter;
-            VarModifyBlockstun vars = (VarModifyBlockstun)variables;
+            var vars = (VarModifyBlockstun)variables;
 
             switch (vars.modifyType)
             {
@@ -861,7 +861,10 @@ namespace rwby
                     break;
             }
 
-            fm.FCombatManager.BlockStun = Mathf.Clamp(fm.FCombatManager.BlockStun, 0, int.MaxValue);
+            if (vars.clamp)
+            {
+                fm.FCombatManager.BlockStun = Mathf.Clamp(fm.FCombatManager.BlockStun, vars.clampMin, vars.clampMax);
+            }
         }
         
         public static void SetGuardState(IFighterBase fighter, IStateVariables variables, HnSF.StateTimeline stateTimeline, int frame)
@@ -1034,18 +1037,7 @@ namespace rwby
             FighterManager fm = (FighterManager)fighter;
             VarSetPushblockState vars = (VarSetPushblockState)variables;
 
-            switch (vars.pushblockState)
-            {
-                case PushblockState.PERFECT:
-                    fm.FCombatManager.CurrentPushblockState = PushblockState.PERFECT;
-                    break;
-                case PushblockState.GUARD:
-                    if (fm.FCombatManager.LastPushblockAttempt != 0 &&
-                        (fm.Runner.Tick - fm.FCombatManager.LastPushblockAttempt) < 30) return;
-                    fm.FCombatManager.CurrentPushblockState = PushblockState.GUARD;
-                    fm.FCombatManager.LastPushblockAttempt = fm.Runner.Tick;
-                    break;
-            }
+            fm.FCombatManager.CurrentlyPushblocking = vars.pushblocking;
         }
         
         public static void ConsumeWallBounce(IFighterBase fighter, IStateVariables variables, HnSF.StateTimeline stateTimeline, int frame)
