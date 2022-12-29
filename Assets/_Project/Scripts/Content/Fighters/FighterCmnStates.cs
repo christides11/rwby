@@ -54,6 +54,7 @@ namespace rwby
         THROW_TECH = 12,
         THROW_TECH_AIR = 13,
         TAUNT = 50,
-        TAUNT_AIR
+        TAUNT_AIR,
+        BURST
     }
 }

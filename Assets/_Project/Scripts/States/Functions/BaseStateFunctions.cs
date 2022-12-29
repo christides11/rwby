@@ -40,7 +40,8 @@ namespace rwby
 
             if (!vars.ignoreStateConditions && !fm.FStateManager.CheckStateConditions(movesetID, stateID, arg4, 
                     vars.checkInputSequence, vars.checkCondition, 
-                    vars.ignoreAirtimeCheck, vars.ignoreStringUseCheck)) return;
+                    vars.ignoreAirtimeCheck, vars.ignoreStringUseCheck,
+                    vars.ignoreAuraRequirement)) return;
             
             if(vars.checkInputSequence) fm.InputManager.ClearBuffer();
 
@@ -70,7 +71,8 @@ namespace rwby
                 int stateID = vars.states[i].state.GetState();
                 StateTimeline state = (StateTimeline)(fm.FStateManager.GetState(movesetID, stateID));
 
-                if (!fm.FStateManager.CheckStateConditions(movesetID, stateID, arg4, vars.checkInputSequence, vars.checkCondition)) continue;
+                if (!fm.FStateManager.CheckStateConditions(movesetID, stateID, arg4, vars.checkInputSequence, vars.checkCondition,
+                        ignoreAuraCheck: vars.ignoreAuraRequirement)) continue;
                 if(vars.checkInputSequence) fm.InputManager.ClearBuffer();
                 fm.FStateManager.MarkForStateChange(stateID, vars.states[i].movesetID);
                 return;
@@ -1222,6 +1224,22 @@ namespace rwby
                 case VarTargetType.Throwees:
                     var throwee = fm.FCombatManager.throwees[0];
                     throwee.GetComponent<IThrowable>().ThrowTechTimer = vars.techTime;
+                    break;
+            }
+        }
+        
+        public static void ModifyBurst(IFighterBase fighter, IStateVariables variables, HnSF.StateTimeline stateTimeline, int frame)
+        {
+            FighterManager fm = (FighterManager)fighter;
+            var vars = (VarModifyBurst)variables;
+
+            switch (vars.modifyType)
+            {
+                case VarModifyType.SET:
+                    fm.FCombatManager.BurstMeter = vars.value.GetValue(fm);
+                    break;
+                case VarModifyType.ADD:
+                    fm.FCombatManager.BurstMeter += vars.value.GetValue(fm);
                     break;
             }
         }

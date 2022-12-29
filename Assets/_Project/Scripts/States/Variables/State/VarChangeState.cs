@@ -44,6 +44,7 @@ namespace rwby
         public bool ignoreStateConditions;
         public bool ignoreAirtimeCheck;
         public bool ignoreStringUseCheck;
+        public bool ignoreAuraRequirement;
         public bool checkInputSequence;
         public bool checkCondition;
         public bool overrideStateChange;

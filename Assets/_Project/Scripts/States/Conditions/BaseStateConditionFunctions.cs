@@ -545,5 +545,27 @@ namespace rwby
             bool r = (f.Runner.Tick - f.FCombatManager.LastSuccessfulPushblockTick) <= vars.checkLength;
             return vars.inverse ? !r : r;
         }
+        
+        public static bool HasHitstun(IFighterBase fighter, IConditionVariables variables, HnSF.StateTimeline arg3,
+            int arg4)
+        {
+            FighterManager f = fighter as FighterManager;
+            var vars = (ConditionHasHitstun)variables;
+
+            var r = f.FCombatManager.HitStun > 0;
+
+            return vars.inverse ? !r : r;
+        }
+        
+        public static bool CanBurst(IFighterBase fighter, IConditionVariables variables, HnSF.StateTimeline arg3,
+            int arg4)
+        {
+            FighterManager f = fighter as FighterManager;
+            var vars = (ConditionCanBurst)variables;
+
+            var r = f.FCombatManager.BurstMeter >= FighterCombatManager.MAX_BURST;
+
+            return vars.inverse ? !r : r;
+        }
     }
 }

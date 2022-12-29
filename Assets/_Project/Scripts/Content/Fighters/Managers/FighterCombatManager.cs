@@ -11,6 +11,8 @@ namespace rwby
     public class FighterCombatManager : NetworkBehaviour, IHurtable, IFighterCombatManager, ITeamable, IThrowable, IThrower
     {
         public static readonly int MAX_HARDKNOCKDOWNS = 2;
+        public static readonly int MAX_BURST = 15000;
+        public static readonly int AURALOCKOUTTIME = 300;
         [System.Serializable]
         public class IntIntMap
         {
@@ -34,6 +36,7 @@ namespace rwby
         [Networked] public int HitStop { get; set; } = -1;
         [Networked] public int LastHitStop { get; set; } = -1;
         [Networked] public int BlockStun { get; set; } = -1;
+        [Networked] public int BurstMeter { get; set; } = MAX_BURST;
         [Networked] public NetworkBool Charging { get; set; }
         [Networked] public int CurrentChargeLevel { get; set; }
         [Networked] public int CurrentChargeLevelCharge { get; set; }
@@ -41,7 +44,7 @@ namespace rwby
         [Networked] public int ComboStartTick { get; set; }
         [Networked] public float Proration { get; set; } = 1.0f;
         [Networked(OnChanged = nameof(OnChangedAura))] public int Aura { get; set; }
-        public int AuraRegenDelay { get; set; }
+        public int AuraRegenDelay { get; set; } = 0;
         public FighterHitManager HitboxManager { get { return hitboxManager; } }
 
         [SerializeField] protected HealthManager healthManager;
@@ -262,12 +265,14 @@ namespace rwby
         {
             Aura += value;
             Aura = Mathf.Clamp(Aura, 0, manager.fighterDefinition.Aura);
+            if (Aura == 0) AuraRegenDelay = AURALOCKOUTTIME;
         }
 
         public virtual void SetAura(int value)
         {
             Aura = value;
             Aura = Mathf.Clamp(Aura, 0, manager.fighterDefinition.Aura);
+            if (Aura == 0) AuraRegenDelay = AURALOCKOUTTIME;
         }
 
         public void Cleanup()
@@ -474,6 +479,8 @@ namespace rwby
         [Networked, Capacity(10)] public NetworkArray<int> hurtboxHitCount { get; }
 
         public float pushBlockForce = 5.0f;
+        public float burstScaler1 = 50;
+        public float burstScaler2 = 0.03f;
         public HitReactionBase Hurt(HurtInfoBase hurtInfoBase)
         {
             HurtInfo hurtInfo = hurtInfoBase as HurtInfo;
@@ -579,6 +586,9 @@ namespace rwby
             {
                 Proration *= (1.0f - hitInfoGroup.comboProration);
             }
+            
+            BurstMeter += (int)((burstScaler1 + dmg * 3) * (1.0f + ComboCounter * burstScaler2));
+            BurstMeter = Mathf.Clamp(BurstMeter, 0, MAX_BURST);
             
             manager.shakeDefinition = new CmaeraShakeDefinition()
             {

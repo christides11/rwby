@@ -201,10 +201,11 @@ namespace rwby
         }
 
         public bool CheckStateConditions(int movesetID, int stateID, int frame, bool checkInputSequence, bool checkCondition,
-            bool ignoreAirtimeCheck = false, bool ignoreStringUseCheck = false)
+            bool ignoreAirtimeCheck = false, bool ignoreStringUseCheck = false, bool ignoreAuraCheck = false)
         {
             StateTimeline state = (StateTimeline)(GetState(movesetID, stateID));
-            
+
+            if (!ignoreAuraCheck && combatManager.Aura < state.auraRequirement) return false;
             if (!ignoreAirtimeCheck && state.maxUsesPerAirtime != -1 &&
                 !CheckStateAirUseCounter(movesetID, stateID, state.maxUsesPerAirtime)) return false;
             if (!ignoreStringUseCheck && state.maxUsesInString != -1 && !manager.FCombatManager.MovePossible(

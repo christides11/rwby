@@ -42,6 +42,8 @@ namespace rwby
             functions.Add(typeof(ConditionExternal), BaseStateConditionFunctions.External);
             functions.Add(typeof(ConditionStickDir), BaseStateConditionFunctions.StickDir);
             functions.Add(typeof(ConditionCheckSuccessfulPushblock), BaseStateConditionFunctions.CheckSuccessfulPushblock);
+            functions.Add(typeof(ConditionHasHitstun), BaseStateConditionFunctions.HasHitstun);
+            functions.Add(typeof(ConditionCanBurst), BaseStateConditionFunctions.CanBurst);
         }
     }
 }

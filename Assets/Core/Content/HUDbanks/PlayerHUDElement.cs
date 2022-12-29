@@ -15,6 +15,7 @@ namespace rwby
         public Image healthBarBack;
         public Image healthBarFront;
         public Image auraBarFront;
+        public Image burstBarFront;
         
         [ReadOnly] public int healthValue;
         [ReadOnly] public int maxHealthValue;
@@ -70,6 +71,8 @@ namespace rwby
         {
             UpdateHealthbar();
             UpdateAurabar();
+            burstBarFront.fillAmount = (float)(parentHUD.playerFighter.FCombatManager.BurstMeter)
+                                       / (float)(FighterCombatManager.MAX_BURST);
         }
 
         private void UpdateHealthbar()

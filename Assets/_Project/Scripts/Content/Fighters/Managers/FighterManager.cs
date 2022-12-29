@@ -219,6 +219,11 @@ namespace rwby
                 return;
             }
 
+            if (FCombatManager.BurstMeter < FighterCombatManager.MAX_BURST)
+            {
+                FCombatManager.BurstMeter += 1;
+            }
+
             if (FCombatManager.throwLocked)
             {
                 if (combatManager.ThrowTechTimer > 0)
@@ -546,6 +551,7 @@ namespace rwby
             stateManager.SetMoveset(0);
             statManager.SetupStats((stateManager.movesets[0] as Moveset).fighterStats);
             combatManager.Aura = fighterDefinition.Aura;
+            combatManager.BurstMeter = FighterCombatManager.MAX_BURST;
         }
 
         public GameObject GetGameObject()

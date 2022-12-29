@@ -1,20 +1,11 @@
 using HnSF;
-using NaughtyAttributes;
 using UnityEngine;
 
 namespace rwby
 {
-    [StateVariable("State/Change State List")]
-    public struct VarChangeStateList : IStateVariables
+    [StateVariable("Meter/Modify Burst")]
+    public struct VarModifyBurst : IStateVariables
     {
-        [System.Serializable]
-        public struct StateListEntry
-        {
-            public int movesetID;
-            [SelectImplementation(typeof(FighterStateReferenceBase))] [SerializeField, SerializeReference] [AllowNesting]
-            public FighterStateReferenceBase state;
-        }
-        
         public string name;
         public string Name
         {
@@ -48,11 +39,11 @@ namespace rwby
         [SelectImplementation(typeof(IConditionVariables))] [SerializeField, SerializeReference]
         public IConditionVariables condition;
         public IConditionVariables Condition => condition;
-
-        public bool ignoreAuraRequirement;
-        public bool checkInputSequence;
-        public bool checkCondition;
-
-        public StateListEntry[] states;
+        
+        public VarTargetType targetType;
+        
+        public VarModifyType modifyType;
+        [SelectImplementation((typeof(FighterStatReferenceBase<int>)))] [SerializeReference]
+        public FighterStatReferenceIntBase value;
     }
 }
