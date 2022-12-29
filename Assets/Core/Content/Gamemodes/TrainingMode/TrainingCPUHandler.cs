@@ -273,8 +273,8 @@ namespace rwby.core.training
                 if (cpuSettings[i].shield == 1
                     && fm.FCombatManager.BlockStun > 0
                     && fm.FCombatManager.HitStop <= 0
-                    && fm.FStateManager.CurrentState is (int)FighterCmnStates.BLOCK_HIGH
-                        or (int)FighterCmnStates.BLOCK_AIR)
+                    && fm.FStateManager.CurrentState is (int)FighterCmnStates.GUARD
+                        or (int)FighterCmnStates.GUARD_AIR)
                 {
                     var t = testData[i][(Runner.Tick) % 10];
                     t.buttons.Set((int)PlayerInputType.B, true);

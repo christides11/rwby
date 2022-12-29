@@ -567,5 +567,16 @@ namespace rwby
 
             return vars.inverse ? !r : r;
         }
+        
+        public static bool AuraPercentage(IFighterBase fighter, IConditionVariables variables, HnSF.StateTimeline arg3,
+            int arg4)
+        {
+            FighterManager f = fighter as FighterManager;
+            var vars = (ConditionAuraPercentage)variables;
+
+            var r = ((float)f.FCombatManager.Aura / (float)f.fighterDefinition.Aura) >= vars.percentage;
+
+            return vars.inverse ? !r : r;
+        }
     }
 }

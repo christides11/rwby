@@ -526,7 +526,8 @@ namespace rwby
                     }
                     
                     manager.HealthManager.ModifyHealth((int)-(hitInfoGroup.chipDamage));
-                    ApplyHitForces(hurtInfo, currentState, hitInfoGroup.hitForceType, hForce, hitInfoGroup.pullPushMultiplier, hitInfoGroup.pullPushMaxDistance, hitInfoGroup.hitForceRelationOffset, true);
+                    ApplyHitForces(hurtInfo, currentState, hitInfoGroup.hitForceType, hForce, hitInfoGroup.pullPushMultiplier, 
+                        hitInfoGroup.pullPushMaxDistance, hitInfoGroup.hitForceRelationOffset, true, liftOffGround: hitInfoGroup.blockLift);
                     manager.shakeDefinition = new CmaeraShakeDefinition()
                     {
                         shakeStrength = hitInfoGroup.blockCameraShakeStrength,
@@ -644,14 +645,15 @@ namespace rwby
         }
 
         protected void ApplyHitForces(HurtInfo hurtInfo, StateTimeline currentState, HitboxForceType forceType, Vector3 force = default, float pullPushMulti = default,
-            float pullPushMaxDistance = default, Vector3 offset = default, bool ignorePushbackScaling = false, bool ignoreGravityScaling = false)
+            float pullPushMaxDistance = default, Vector3 offset = default, bool ignorePushbackScaling = false, bool ignoreGravityScaling = false, 
+            bool liftOffGround = true)
         {
             
             switch (forceType)
             {
                 case HitboxForceType.SET:
                     Vector3 forces = (force.x * hurtInfo.right) + (force.z * hurtInfo.forward);
-                    physicsManager.forceGravity = ignoreGravityScaling ? force.y : ApplyGravityScaling(force.y);
+                    if(liftOffGround) physicsManager.forceGravity = ignoreGravityScaling ? force.y : ApplyGravityScaling(force.y);
                     physicsManager.forceMovement = ignorePushbackScaling ? forces : ApplyPushbackScaling(forces);
                     break;
                 case HitboxForceType.PULL:
@@ -660,7 +662,7 @@ namespace rwby
 
                     float gIntensity = Vector3.Distance(position, centerPos) / pullPushMaxDistance;
                     var pF = (centerPos - position) * gIntensity * pullPushMulti;
-                    physicsManager.forceGravity = pF.y;
+                    if(liftOffGround) physicsManager.forceGravity = pF.y;
                     pF.y = 0;
                     physicsManager.forceMovement = pF;
                     break;
@@ -670,7 +672,7 @@ namespace rwby
                     
                     var forcePush = (pPush - Vector3.MoveTowards(pPush, centerPosPush, pullPushMaxDistance)) * pullPushMulti;
 
-                    physicsManager.forceGravity = forcePush.y;
+                    if(liftOffGround) physicsManager.forceGravity = forcePush.y;
                     forcePush.y = 0;
                     physicsManager.forceMovement = forcePush;
                     break;

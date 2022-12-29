@@ -880,15 +880,17 @@ namespace rwby
         public static void ModifyAura(IFighterBase fighter, IStateVariables variables, HnSF.StateTimeline stateTimeline, int frame)
         {
             FighterManager fm = (FighterManager)fighter;
-            VarModifyAura vars = (VarModifyAura)variables;
+            var vars = (VarModifyAura)variables;
 
+            var v = vars.value.GetValue(fm);
+            if (vars.valueIsPercentage) v = (int)((Mathf.Abs(v)/100.0f) * fm.fighterDefinition.Aura * Mathf.Sign(v));
             switch (vars.modifyType)
             {
                 case VarModifyType.ADD:
-                    fm.FCombatManager.AddAura(vars.value.GetValue(fm));
+                    fm.FCombatManager.AddAura(v);
                     break;
                 case VarModifyType.SET:
-                    fm.FCombatManager.SetAura(vars.value.GetValue(fm));
+                    fm.FCombatManager.SetAura(v);
                     break;
             }
         }

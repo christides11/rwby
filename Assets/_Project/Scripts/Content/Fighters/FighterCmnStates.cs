@@ -16,9 +16,9 @@ namespace rwby
         STAGGER = 10,
         CRUMPLE = 11,
         GROUND_BOUNCE = 14,
-        BLOCK_HIGH = 15,
+        GUARD = 15,
         BLOCK_LOW = 16,
-        BLOCK_AIR = 17,
+        GUARD_AIR = 17,
         WALL_RUN_V = 18,
         WALL_RUN_H = 19,
         WALL_JUMP = 20,
@@ -55,6 +55,7 @@ namespace rwby
         THROW_TECH_AIR = 13,
         TAUNT = 50,
         TAUNT_AIR,
-        BURST
+        BURST,
+        GUARD_COUNTER
     }
 }

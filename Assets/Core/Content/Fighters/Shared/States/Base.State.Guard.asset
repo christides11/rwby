@@ -21,6 +21,7 @@ MonoBehaviour:
   autoLoopFrame: 5
   data:
   - rid: 8688056601973620736
+  - rid: 5775512056252071947
   auraRequirement: 0
   initialGroundedState: 1
   stateType: 1
@@ -44,6 +45,37 @@ MonoBehaviour:
     RefIds:
     - rid: -2
       type: {class: , ns: , asm: }
+    - rid: 5775512056252071947
+      type: {class: VarChangeState, ns: rwby, asm: rwby.csharp}
+      data:
+        name: Try Burst
+        id: 5
+        parent: -1
+        children: 
+        frameRanges:
+        - {x: 1, y: -1}
+        condition:
+          rid: 5775512056252071948
+        ignoreStateConditions: 0
+        ignoreAirtimeCheck: 0
+        ignoreStringUseCheck: 0
+        ignoreAuraRequirement: 0
+        checkInputSequence: 1
+        checkCondition: 1
+        overrideStateChange: 0
+        targetType: 0
+        stateMovesetID: -1
+        state:
+          rid: 5775512056252071949
+        frame: 0
+    - rid: 5775512056252071948
+      type: {class: ConditionInBlockstun, ns: rwby, asm: rwby.csharp}
+      data:
+        inverse: 0
+    - rid: 5775512056252071949
+      type: {class: FighterCmnStateReference, ns: rwby, asm: rwby.csharp}
+      data:
+        state: 52
     - rid: 8688056601973620736
       type: {class: VarModifyRotation, ns: rwby, asm: rwby.csharp}
       data:

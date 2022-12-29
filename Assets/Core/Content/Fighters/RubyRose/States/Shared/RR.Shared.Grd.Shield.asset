@@ -22,6 +22,7 @@ MonoBehaviour:
   data:
   - rid: 7270848697680265216
   - rid: 7270848697680265217
+  - rid: 5775512056252071937
   - rid: 5775512009793077250
   - rid: 5775512009793077252
   - rid: 5775512009793077253
@@ -132,6 +133,7 @@ MonoBehaviour:
         ignoreStateConditions: 0
         ignoreAirtimeCheck: 0
         ignoreStringUseCheck: 0
+        ignoreAuraRequirement: 0
         checkInputSequence: 0
         checkCondition: 0
         overrideStateChange: 1
@@ -174,6 +176,7 @@ MonoBehaviour:
         ignoreStateConditions: 0
         ignoreAirtimeCheck: 0
         ignoreStringUseCheck: 0
+        ignoreAuraRequirement: 0
         checkInputSequence: 0
         checkCondition: 0
         overrideStateChange: 0
@@ -195,6 +198,24 @@ MonoBehaviour:
         buttonState: 0
         offset: 0
         buffer: 0
+    - rid: 5775512056252071937
+      type: {class: VarCreateBox, ns: rwby, asm: rwby.csharp}
+      data:
+        name: Throwablebox
+        id: 11
+        parent: -1
+        children: 
+        frameRanges:
+        - {x: 1, y: -1}
+        condition:
+          rid: -2
+        boxType: 3
+        attachedTo: 0
+        shape: 0
+        offset: {x: 0, y: 1, z: 0}
+        boxExtents: {x: 0.5, y: 1, z: 0.5}
+        radius: 0
+        definitionIndex: 0
     - rid: 7270848697680265216
       type: {class: VarCreateBox, ns: rwby, asm: rwby.csharp}
       data:

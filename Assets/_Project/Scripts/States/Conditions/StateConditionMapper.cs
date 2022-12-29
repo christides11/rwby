@@ -44,6 +44,7 @@ namespace rwby
             functions.Add(typeof(ConditionCheckSuccessfulPushblock), BaseStateConditionFunctions.CheckSuccessfulPushblock);
             functions.Add(typeof(ConditionHasHitstun), BaseStateConditionFunctions.HasHitstun);
             functions.Add(typeof(ConditionCanBurst), BaseStateConditionFunctions.CanBurst);
+            functions.Add(typeof(ConditionAuraPercentage), BaseStateConditionFunctions.AuraPercentage);
         }
     }
 }

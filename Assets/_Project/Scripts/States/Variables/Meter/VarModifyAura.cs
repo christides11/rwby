@@ -43,6 +43,7 @@ namespace rwby
         public VarTargetType targetType;
         
         public VarModifyType modifyType;
+        public bool valueIsPercentage;
         [SelectImplementation((typeof(FighterStatReferenceBase<int>)))] [SerializeReference]
         public FighterStatReferenceIntBase value;
     }
