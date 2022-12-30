@@ -35,6 +35,8 @@ namespace rwby
         public override bool IsHitHitboxValid(CustomHitbox attackerHitbox, CustomHitbox h)
         {
             if (h.ownerNetworkObject == Object) return false;
+            if (attackerHitbox.definition.HitboxInfo[attackerHitbox.definitionIndex].clashLevel
+                != h.definition.HitboxInfo[h.definitionIndex].clashLevel) return false;
             for (int i = 0; i < hitObjects.Count; i++)
             {
                 if (hitObjects[i].collisionType == IDGroupCollisionType.Hitbox

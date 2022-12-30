@@ -73,6 +73,7 @@ namespace rwby
         [SerializeField] private bool groundedFoldoutGroup;
         [SerializeField] private bool groundedCounterHitFoldoutGroup;
 
+        public int clashLevel;
         public StateGroundedGroupType hitStateGroundedGroups;
         [FormerlySerializedAs("groundGroup")] public HitInfoGroup hit;
         public HitInfoGroup counterhit;

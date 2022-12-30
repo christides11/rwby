@@ -15,7 +15,7 @@ namespace rwby
         public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
         {
             float lineValue = EditorGUIUtility.singleLineHeight;
-            float val = lineValue * 4;
+            float val = lineValue * 5;
 
             int windowsOpen = 0;
 
@@ -44,6 +44,7 @@ namespace rwby
         {
             EditorGUI.PropertyField(new Rect(position.x, GetLineY(), position.width, lineHeight), property.FindPropertyRelative("ID"));
             EditorGUI.PropertyField(new Rect(position.x, GetLineY(), position.width, lineHeight), property.FindPropertyRelative("hitStateGroundedGroups"));
+            EditorGUI.PropertyField(new Rect(position.x, GetLineY(), position.width, lineHeight), property.FindPropertyRelative("clashLevel"));
             
             
             property.FindPropertyRelative("groundedFoldoutGroup").boolValue = EditorGUI.BeginFoldoutHeaderGroup(
