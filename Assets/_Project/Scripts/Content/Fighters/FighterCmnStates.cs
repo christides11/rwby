@@ -54,8 +54,10 @@ namespace rwby
         THROW_TECH = 12,
         THROW_TECH_AIR = 13,
         TAUNT = 50,
-        TAUNT_AIR,
-        BURST,
-        GUARD_COUNTER
+        TAUNT_AIR = 51,
+        BURST = 52,
+        GUARD_COUNTER = 53,
+        THROW_AIR = 54,
+        THROW_ATTEMPT_AIR = 55
     }
 }

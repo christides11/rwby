@@ -272,7 +272,7 @@ namespace rwby
                     for (int f = 0; f < numHit; f++)
                     {
                         Throwablebox h = hitsList[f].GameObject.GetComponent<Throwablebox>();
-                        if (h.HitboxActive == true && broadphaseObjects[i].GetComponent<IThrower>().IsThroweeValid(boxCollection.Hitboxes[a], h))
+                        if (h.HitboxActive == true && broadphaseObjects[i].GetComponent<IThrower>().IsThroweeValid(boxCollection.Throwboxes[a], h))
                         {
                             var tuple = (broadphaseObjects[i].GetBehaviour<NetworkObject>(), h.ownerNetworkObject);
                             //TODO: Remove.

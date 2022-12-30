@@ -711,6 +711,11 @@ namespace rwby
         public bool IsThroweeValid(CustomHitbox attackerThrowbox, Throwablebox attackeeThrowablebox)
         {
             if (attackeeThrowablebox.ownerNetworkObject == Object || throwLocked == true) return false;
+            var attackeeF = attackeeThrowablebox.ownerNetworkObject.gameObject.GetComponent<FighterManager>();
+            if (attackeeF.FPhysicsManager.IsGrounded &&
+                attackerThrowbox.definition.ThrowboxInfo[attackerThrowbox.definitionIndex].airOnly
+                || !attackeeF.FPhysicsManager.IsGrounded && attackerThrowbox.definition
+                    .ThrowboxInfo[attackerThrowbox.definitionIndex].groundOnly) return false;
             return true;
         }
 

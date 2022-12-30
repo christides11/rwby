@@ -320,6 +320,14 @@ MonoBehaviour:
     state:
       rid: 387796051391938590
     stateTimeline: {fileID: 11400000, guid: 72467bfe0a02e7f47bfc873ee94b7103, type: 2}
+  - name: throw (attempt)
+    state:
+      rid: 5775512061220225037
+    stateTimeline: {fileID: 11400000, guid: 4ca113aed1842c147ac9cd4081ca718d, type: 2}
+  - name: throw
+    state:
+      rid: 5775512061220225038
+    stateTimeline: {fileID: 11400000, guid: 80e3e77dfa021244d8173cb051441be2, type: 2}
   recovery:
   - name: neutral tech (Ground)
     state:
@@ -516,7 +524,7 @@ MonoBehaviour:
     - rid: 387795712240255005
       type: {class: RubyRoseStateReference, ns: rwby.core, asm: rwby.core}
       data:
-        state: 55
+        state: 120
     - rid: 387795712240255006
       type: {class: RubyRoseStateReference, ns: rwby.core, asm: rwby.core}
       data:
@@ -580,7 +588,7 @@ MonoBehaviour:
     - rid: 387795733835153410
       type: {class: RubyRoseStateReference, ns: rwby.core, asm: rwby.core}
       data:
-        state: 54
+        state: 119
     - rid: 387795733835153411
       type: {class: RubyRoseStateReference, ns: rwby.core, asm: rwby.core}
       data:
@@ -761,6 +769,14 @@ MonoBehaviour:
       type: {class: FighterCmnStateReference, ns: rwby, asm: rwby.csharp}
       data:
         state: 53
+    - rid: 5775512061220225037
+      type: {class: FighterCmnStateReference, ns: rwby, asm: rwby.csharp}
+      data:
+        state: 55
+    - rid: 5775512061220225038
+      type: {class: FighterCmnStateReference, ns: rwby, asm: rwby.csharp}
+      data:
+        state: 54
     - rid: 7270848718906589197
       type: {class: RubyRoseStateReference, ns: rwby.core, asm: rwby.core}
       data:
