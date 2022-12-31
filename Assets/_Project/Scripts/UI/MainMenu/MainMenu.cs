@@ -38,6 +38,11 @@ namespace rwby.ui.mainmenu
         public CreateLobbyMenu createLobbyMenu;
         public rwby.ui.mainmenu.SettingsMenu settingsMenu;
 
+        [Header("Sounds")]
+        public AudioSource audioSource;
+        public AudioClip buttonSelectSFX;
+        public AudioClip buttonClickedSFX;
+
         private void Awake()
         {
             localPlayerManager = GameManager.singleton.localPlayerManager;
@@ -92,10 +97,15 @@ namespace rwby.ui.mainmenu
 
         private void Update()
         {
-            if (UIHelpers.SelectDefaultSelectable(eventSystem, localPlayerManager.systemPlayer))
+            if (UIHelpers.SelectDefaultSelectable(eventSystem, localPlayerManager.localPlayers[0]))
             {
                 eventSystem.SetSelectedGameObject(defaultSelectedUIItem);
             }
+        }
+
+        public void PlayButtonSelectSound()
+        {
+            audioSource.PlayOneShot(buttonSelectSFX);
         }
 
         public void BUTTON_QuickMatch()
@@ -105,6 +115,7 @@ namespace rwby.ui.mainmenu
             menuLabel.text = "MAIN MENU";
             menuDescription.text = "";
             Forward((int)MainMenusType.QUICK_MATCH);
+            audioSource.PlayOneShot(buttonClickedSFX);
         }
 
         public void BUTTON_FindLobby()

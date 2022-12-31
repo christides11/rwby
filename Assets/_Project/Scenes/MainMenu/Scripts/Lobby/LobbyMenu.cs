@@ -18,6 +18,7 @@ namespace rwby.ui
         [Header("Content")] 
         public Selectable readyButton;
         public Selectable characterSelectButton;
+        public Selectable selectTeamButton;
         public Selectable profileButton;
         public Selectable configureButton;
         public Selectable settingsButton;
@@ -28,14 +29,12 @@ namespace rwby.ui
         public TextMeshProUGUI gamemodeNameText;
         public TextMeshProUGUI mapNameText;
 
+        public GameObject lobbyOptionsContentHolder;
+        public GameObject teamSelectContentHolder;
 
         [Header("Lobby Players")] 
         public Transform lobbyPlayerContentHolder;
         public GameObject lobbyPlayerHeader;
-        //public Transform teamListContentHolder;
-        //public GameObject teamListHorizontalHolder;
-        //public GameObject teamHolder;
-        //public GameObject teamPlayerHeader;
         public TextMeshProUGUI songText;
         
         private int currentSelectingCharacterIndex = 0;

@@ -8,7 +8,7 @@ namespace rwby
         public static bool SelectDefaultSelectable(EventSystem eventSystem, LocalPlayerData player)
         {
             if (eventSystem.currentSelectedGameObject == null
-                && player.controllerType == PlayerControllerType.GAMEPAD
+                //&& player.controllerType == PlayerControllerType.GAMEPAD
                 && player.rewiredPlayer.GetAxis2D(rwby.Action.UIMovement_X, rwby.Action.UIMovement_Y).sqrMagnitude > 0)
             {
                 return true;
