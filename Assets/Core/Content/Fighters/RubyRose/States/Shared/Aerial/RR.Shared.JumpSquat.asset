@@ -27,10 +27,12 @@ MonoBehaviour:
   - rid: 387795733835153470
   - rid: 387795733835153472
   - rid: 387795733835153474
+  - rid: 5775512102425853952
   auraRequirement: 0
   initialGroundedState: 2
   stateType: 1
   maxUsesInString: -1
+  maxUsesPerAirtime: -1
   selfChainable: 0
   allowBaseStateTransitions: 1
   inputSequence:
@@ -135,6 +137,31 @@ MonoBehaviour:
       data:
         inverse: 1
         requireTarget: 0
+    - rid: 5775512102425853952
+      type: {class: VarModifySoundSet, ns: rwby, asm: rwby.csharp}
+      data:
+        name: 
+        id: 7
+        parent: -1
+        children: 
+        frameRanges:
+        - {x: 1, y: 1}
+        condition:
+          rid: -2
+        sounds:
+        - soundbank:
+            modGUID:
+              guid: 1d292c1f00000000
+            contentGUID:
+              guid: 1d27280000000000
+          sound: jump
+          parented: 0
+          offset: {x: 0, y: 0, z: 0}
+          volume: 1
+          minDist: 3
+          maxDist: 10
+          pitchDeviMin: -0.1
+          pitchDeviMax: 0.1
     - rid: 8688056217396838403
       type: {class: VarModifyAnimationSet, ns: rwby, asm: rwby.csharp}
       data:

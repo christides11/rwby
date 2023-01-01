@@ -31,7 +31,8 @@ namespace rwby.ui.mainmenu
         
         public TextMeshProUGUI menuLabel;
         public TextMeshProUGUI menuDescription;
-        
+
+        public MenuOverlay menuOverlay;
         [Header("Menus")] public QuickMatchMenu quickMatchMenu;
         public FindLobbyMenu findLobbyMenu;
         public JoinLobbyMenu joinLobbyMenu;
@@ -97,25 +98,29 @@ namespace rwby.ui.mainmenu
 
         private void Update()
         {
-            if (UIHelpers.SelectDefaultSelectable(eventSystem, localPlayerManager.localPlayers[0]))
+            if (history.Count == 0 && UIHelpers.SelectDefaultSelectable(eventSystem, localPlayerManager.localPlayers[0]))
             {
                 eventSystem.SetSelectedGameObject(defaultSelectedUIItem);
             }
         }
 
+        public string confirmActionString;
         public void PlayButtonSelectSound()
         {
             audioSource.PlayOneShot(buttonSelectSFX);
+            menuOverlay.buttonPrompter.Clear();
+            menuOverlay.buttonPrompter.AddPrompt(confirmActionString, "Confirm");
         }
 
         public void BUTTON_QuickMatch()
         {
+            /*
             bool closeResult = TryCloseAll();
             if (!closeResult) return;
             menuLabel.text = "MAIN MENU";
             menuDescription.text = "";
             Forward((int)MainMenusType.QUICK_MATCH);
-            audioSource.PlayOneShot(buttonClickedSFX);
+            audioSource.PlayOneShot(buttonClickedSFX);*/
         }
 
         public void BUTTON_FindLobby()

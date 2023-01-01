@@ -14,6 +14,7 @@ namespace rwby.ui
         public LobbyMenuInstance lobbyMenuInstance;
 
         public GameObject defaultSelectedUIItem;
+        public CanvasGroup canvasGroup;
         
         [Header("Content")] 
         public Selectable readyButton;
@@ -86,7 +87,7 @@ namespace rwby.ui
         
         private void Update()
         {
-            if (UIHelpers.SelectDefaultSelectable(EventSystem.current, GameManager.singleton.localPlayerManager.localPlayers[lobbyMenuInstance.playerID]))
+            if (canvasGroup.interactable && UIHelpers.SelectDefaultSelectable(EventSystem.current, GameManager.singleton.localPlayerManager.localPlayers[lobbyMenuInstance.playerID]))
             {
                 EventSystem.current.SetSelectedGameObject(defaultSelectedUIItem);
             }
@@ -199,6 +200,7 @@ namespace rwby.ui
 
         public void OpenCharacterSelect()
         {
+            canvasGroup.interactable = false;
             characterSelectMenu.OnCharactersSelected += OnCharactersSelected;
             characterSelectMenu.charactersToSelect = 1;
             currentHandler.Forward((int)LobbyMenuType.CHARACTER_SELECT);
@@ -220,6 +222,8 @@ namespace rwby.ui
                     .CLIENT_SetPlayerCharacter(lobbyMenuInstance.playerID, i,
                         characterSelectMenu.charactersSelected[i]);
             }
+            canvasGroup.interactable = true;
+            EventSystem.current.SetSelectedGameObject(defaultSelectedUIItem);
         }
 
         public async void OpenSongSelector()

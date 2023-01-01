@@ -32,10 +32,12 @@ MonoBehaviour:
   - rid: 7270848899719102488
   - rid: 7270848899719102490
   - rid: 387795729903517697
+  - rid: 5775512102425853954
   auraRequirement: 0
   initialGroundedState: 2
   stateType: 1
   maxUsesInString: -1
+  maxUsesPerAirtime: -1
   selfChainable: 0
   allowBaseStateTransitions: 1
   inputSequence:
@@ -120,8 +122,13 @@ MonoBehaviour:
         - {x: -1, y: -1}
         condition:
           rid: -2
+        ignoreStateConditions: 0
+        ignoreAirtimeCheck: 0
+        ignoreStringUseCheck: 0
+        ignoreAuraRequirement: 0
         checkInputSequence: 0
         checkCondition: 0
+        overrideStateChange: 0
         targetType: 0
         stateMovesetID: -1
         state:
@@ -131,6 +138,31 @@ MonoBehaviour:
       type: {class: FighterCmnStateReference, ns: rwby, asm: rwby.csharp}
       data:
         state: 5
+    - rid: 5775512102425853954
+      type: {class: VarModifySoundSet, ns: rwby, asm: rwby.csharp}
+      data:
+        name: 
+        id: 14
+        parent: -1
+        children: 
+        frameRanges:
+        - {x: 1, y: 1}
+        condition:
+          rid: -2
+        sounds:
+        - soundbank:
+            modGUID:
+              guid: 1d292c1f00000000
+            contentGUID:
+              guid: 1d27280000000000
+          sound: airdash
+          parented: 0
+          offset: {x: 0, y: 0, z: 0}
+          volume: 1
+          minDist: 2
+          maxDist: 10
+          pitchDeviMin: -0.1
+          pitchDeviMax: 0.1
     - rid: 7270848729635094542
       type: {class: VarClampMovement, ns: rwby, asm: rwby.csharp}
       data:
@@ -217,8 +249,13 @@ MonoBehaviour:
         - {x: 5, y: -1}
         condition:
           rid: -2
+        ignoreStateConditions: 0
+        ignoreAirtimeCheck: 0
+        ignoreStringUseCheck: 0
+        ignoreAuraRequirement: 0
         checkInputSequence: 1
         checkCondition: 0
+        overrideStateChange: 0
         targetType: 0
         stateMovesetID: -1
         state:

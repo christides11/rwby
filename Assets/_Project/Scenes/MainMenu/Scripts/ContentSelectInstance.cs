@@ -1,8 +1,10 @@
+using System;
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using rwby.ui;
 using TMPro;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 namespace rwby
 {
@@ -53,6 +55,14 @@ namespace rwby
             selectAction = null;
         }
 
+        private void Update()
+        {
+            if (contentTransform.childCount > 0 && UIHelpers.SelectDefaultSelectable(EventSystem.current, GameManager.singleton.localPlayerManager.localPlayers[0]))
+            {
+                EventSystem.current.SetSelectedGameObject(contentTransform.GetChild(0).gameObject);
+            }
+        }
+
         private void UnloadCurrentPage()
         {
             foreach (var contentReference in pageContent)
@@ -71,6 +81,7 @@ namespace rwby
                 contentItemGameobject.GetComponent<Selectable>().onSubmit.AddListener(() => { selectAction.Invoke(player, contentReference); });
                 contentItemGameobject.GetComponentInChildren<TextMeshProUGUI>().text = contentDefinition.Name;
             }
+            EventSystem.current.SetSelectedGameObject(contentTransform.GetChild(0).gameObject);
         }
         
         public void ChangePage(int modifier)

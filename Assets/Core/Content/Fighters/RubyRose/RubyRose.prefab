@@ -504,7 +504,7 @@ MonoBehaviour:
     sound: footstep-snow-1
     parented: 0
     offset: {x: 0, y: 0, z: 0}
-    volume: 0.2
+    volume: 0.8
     minDist: 2
     maxDist: 10
     pitchDeviMin: -0.2
@@ -517,7 +517,7 @@ MonoBehaviour:
     sound: footstep-snow-2
     parented: 0
     offset: {x: 0, y: 0, z: 0}
-    volume: 0.2
+    volume: 0.8
     minDist: 2
     maxDist: 10
     pitchDeviMin: -0.2
@@ -530,7 +530,7 @@ MonoBehaviour:
     sound: footstep-snow-3
     parented: 0
     offset: {x: 0, y: 0, z: 0}
-    volume: 0.2
+    volume: 0.8
     minDist: 2
     maxDist: 10
     pitchDeviMin: -0.2
@@ -763,6 +763,7 @@ MonoBehaviour:
   _HitStop: 0
   _LastHitStop: -1
   _BlockStun: 0
+  _BurstMeter: 15000
   _Charging:
     _value: 0
   _CurrentChargeLevel: 0
@@ -824,6 +825,8 @@ MonoBehaviour:
   stickDirectionCheck: 0
   _hurtboxHitCount: 
   pushBlockForce: 5
+  burstScaler1: 50
+  burstScaler2: 0.03
 --- !u!114 &8508573390081789594
 MonoBehaviour:
   m_ObjectHideFlags: 0

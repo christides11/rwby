@@ -15,7 +15,7 @@ namespace rwby.ui.mainmenu
         [SerializeField] private MainMenu mainMenu;
         [SerializeField] private LobbyMenuHandler lobbyMenuHandler;
         [SerializeField] private LobbySettingsMenu lobbySettings;
-        public CanvasGroup canvasGroup;
+        public CanvasGroup[] canvasGroups;
         
         private EventSystem eventSystem;
         private LocalPlayerManager localPlayerManager;
@@ -31,6 +31,8 @@ namespace rwby.ui.mainmenu
 
         public TextMeshProUGUI menuLabel;
         public TextMeshProUGUI menuDescription;
+
+        private GameObject defaultSelectedUIItem;
         
         private void Awake()
         {
@@ -60,17 +62,18 @@ namespace rwby.ui.mainmenu
         
         private void Update()
         {
-            /*
-            if (canvasGroup.interactable && UIHelpers.SelectDefaultSelectable(eventSystem, localPlayerManager.systemPlayer))
+            if (canvasGroups[0].interactable && UIHelpers.SelectDefaultSelectable(eventSystem, localPlayerManager.localPlayers[0]) 
+                && defaultSelectedUIItem != null)
             {
                 eventSystem.SetSelectedGameObject(defaultSelectedUIItem);
-            }*/
+            }
         }
 
         public void SetupOptions()
         {
             var regionOptionSlider = lobbySettings.AddOptionSlider("region", "Region", new []{ "United States", "South Korea", "South America", "Europe", "Japan", "Asia" }, 0);
             regionOptionSlider.OnValueChanged += UpdateRegion;
+            defaultSelectedUIItem = regionOptionSlider.gameObject;
             var lobbyNameInputField = lobbySettings.AddInputField("LobbyName", "Lobby Name", $"Lobby {Random.Range(1, 1000)}");
             lobbyNameInputField.inputField.onValueChanged.AddListener(UpdateLobbyName);
             var playerCountButtons = lobbySettings.AddIntValueOption("PlayerCount", "Lobby Size", playerCount);
@@ -133,18 +136,27 @@ namespace rwby.ui.mainmenu
 
         public async void Button_GameMode()
         {
-            canvasGroup.interactable = false;
+            foreach (var cg in canvasGroups)
+            {
+                cg.interactable = false;
+            }
             var csMenu = await ContentSelect.singleton.OpenMenu(0, (int)ContentType.Gamemode, async (a, b) => { await WhenGamemodeSelected(a, b); });
             if (csMenu == null)
             {
-                canvasGroup.interactable = true;
+                foreach (var cg in canvasGroups)
+                {
+                    cg.interactable = true;
+                }
                 return;
             }
         }
         
         private async UniTask WhenGamemodeSelected(int player, ModGUIDContentReference arg1)
         {
-            canvasGroup.interactable = true;
+            foreach (var cg in canvasGroups)
+            {
+                cg.interactable = true;
+            }
             ContentSelect.singleton.CloseMenu(0);
 
             _selectedGamemodeContentReference = arg1;

@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using rwby.ui.mainmenu;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 namespace rwby.ui
 {
@@ -13,6 +14,8 @@ namespace rwby.ui
             [SerializeField] public ModGUIDContentReference characterContentReference 
                 = new ModGUIDContentReference(new ContentGUID(8), 0, 0);
         }
+        
+        public GameObject defaultSelectedUIItem;
         
         public List<CSSConnection> cssConnections = new List<CSSConnection>();
         public Selectable cssCustomButton;
@@ -40,6 +43,7 @@ namespace rwby.ui
             base.Open(direction, menuHandler);
             charactersSelected.Clear();
             gameObject.SetActive(true);
+            EventSystem.current.SetSelectedGameObject(defaultSelectedUIItem);
         }
 
         public override bool TryClose(MenuDirection direction, bool forceClose = false)

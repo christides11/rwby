@@ -120,10 +120,17 @@ namespace rwby
                 //Profiler.EndSample();
                 return;
             }
-            if(CurrentStateFrame < state.totalFrames) IncrementFrame(1);
-            if (autoLoop && CurrentStateFrame > state.totalFrames)
+            IncrementFrame(1);
+            if (CurrentStateFrame > state.totalFrames)
             {
-                SetFrame(1);
+                if (autoLoop)
+                {
+                    SetFrame(state.autoLoopFrame);
+                }
+                else
+                {
+                    SetFrame(state.totalFrames);
+                }
             }
             //Profiler.EndSample();
         }

@@ -27,6 +27,7 @@ MonoBehaviour:
   - rid: 7270848428946489352
   - rid: 387795752378957824
   - rid: 387796081084727296
+  - rid: 5775512102425853955
   auraRequirement: 0
   initialGroundedState: 1
   stateType: 1
@@ -102,6 +103,31 @@ MonoBehaviour:
         boxExtents: {x: 0.5, y: 1, z: 0.5}
         radius: 0
         definitionIndex: 0
+    - rid: 5775512102425853955
+      type: {class: VarModifySoundSet, ns: rwby, asm: rwby.csharp}
+      data:
+        name: 
+        id: 7
+        parent: -1
+        children: 
+        frameRanges:
+        - {x: 1, y: 1}
+        condition:
+          rid: -2
+        sounds:
+        - soundbank:
+            modGUID:
+              guid: 1d292c1f00000000
+            contentGUID:
+              guid: 1d27280000000000
+          sound: dash
+          parented: 0
+          offset: {x: 0, y: 0, z: 0}
+          volume: 1
+          minDist: 2
+          maxDist: 10
+          pitchDeviMin: -0.1
+          pitchDeviMax: 0.1
     - rid: 7270848428946489345
       type: {class: VarEmpty, ns: rwby, asm: rwby.csharp}
       data:

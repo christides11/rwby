@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using rwby.ui;
@@ -21,6 +22,9 @@ namespace rwby
 
         [SerializeField] private List<int> history = new List<int>();
         public Dictionary<int, MenuBase> menus = new Dictionary<int, MenuBase>();
+
+        private LocalPlayerManager localPlayerManager;
+        private EventSystem eventSystem;
         
         public void Initialize(LobbyMenuHandler menuHandler)
         {
@@ -35,6 +39,9 @@ namespace rwby
             menus[(int)LobbyMenuType.LOBBY].Open(MenuDirection.FORWARDS, this);
             
             this.lobbyMenuHandler = menuHandler;
+            
+            localPlayerManager = GameManager.singleton.localPlayerManager;
+            eventSystem = EventSystem.current;
         }
 
         public void Refresh()
