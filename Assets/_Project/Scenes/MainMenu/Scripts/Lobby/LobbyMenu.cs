@@ -11,12 +11,23 @@ namespace rwby.ui
 {
     public class LobbyMenu : MenuBase
     {
+        public enum LobbySubMenuType
+        {
+            MAIN,
+            TEAM_SELECT,
+            PROFILE_SELECT,
+            LOBBY_SETTINGS
+        }
+        
+        [SerializeField] private List<int> history = new List<int>();
+        
         public LobbyMenuInstance lobbyMenuInstance;
 
         public GameObject defaultSelectedUIItem;
         public CanvasGroup canvasGroup;
-        
+
         [Header("Content")] 
+        public GameObject lobbyOptionsMenu;
         public Selectable readyButton;
         public Selectable characterSelectButton;
         public Selectable selectTeamButton;
@@ -31,12 +42,20 @@ namespace rwby.ui
         public TextMeshProUGUI mapNameText;
 
         public GameObject lobbyOptionsContentHolder;
-        public GameObject teamSelectContentHolder;
 
         [Header("Lobby Players")] 
+        public GameObject lobbyPlayerTeamHolder;
         public Transform lobbyPlayerContentHolder;
         public GameObject lobbyPlayerHeader;
         public TextMeshProUGUI songText;
+
+        [Header("Team Select")]
+        public GameObject teamSelectContentHolder;
+        public GameObject teamSelectButtonPrefab;
+
+        [Header("Submenus")] 
+        public GameObject lobbyMainMenu;
+        public GameObject teamSelectMenu;
         
         private int currentSelectingCharacterIndex = 0;
         
@@ -64,6 +83,65 @@ namespace rwby.ui
             Refresh();
         }
 
+        public override bool TryClose(MenuDirection direction, bool forceClose = false)
+        {
+            gameObject.SetActive(false);
+            return true;
+        }
+        
+        private void Update()
+        {
+            if (UIHelpers.SelectDefaultSelectable(EventSystem.current, GameManager.singleton.localPlayerManager.localPlayers[lobbyMenuInstance.playerID]))
+            {
+                if (canvasGroup.interactable && history.Count == 0)
+                {
+                    EventSystem.current.SetSelectedGameObject(defaultSelectedUIItem);
+                }
+            }
+        }
+
+        public void BUTTON_ChangeTeam()
+        {
+            history.Add((int)LobbySubMenuType.TEAM_SELECT);
+            lobbyMainMenu.SetActive(false);
+            teamSelectMenu.SetActive(true);
+
+            foreach (Transform child in teamSelectContentHolder.transform)
+            {
+                Destroy(child.gameObject);
+            }
+            
+            var smgm = lobbyMenuInstance.lobbyMenuHandler.sessionManagerGamemode;
+            for (int i = 0; i < smgm.teamDefinitions.Count; i++)
+            {
+                int index = i;
+                var g = GameObject.Instantiate(teamSelectButtonPrefab, teamSelectContentHolder.transform, false);
+                g.GetComponent<rwby.ui.Selectable>().onSubmit.AddListener(() => OnTeamSelectButton(index));
+            }
+
+            var backButton = GameObject.Instantiate(teamSelectButtonPrefab, teamSelectContentHolder.transform, false);
+            backButton.GetComponentInChildren<TextMeshProUGUI>().text = "Back";
+            backButton.GetComponent<rwby.ui.Selectable>().onSubmit.AddListener(() =>
+            {
+                history.Clear();
+                lobbyMainMenu.SetActive(true);
+                teamSelectMenu.SetActive(false);
+            });
+        }
+
+        private void OnTeamSelectButton(int index)
+        {
+            SetTeam((byte)index);
+            history.Clear();
+            lobbyMainMenu.SetActive(true);
+            teamSelectMenu.SetActive(false);
+        }
+
+        public void BUTTON_ChangeProfile()
+        {
+            
+        } 
+
         private void ExitLobby()
         {
             lobbyMenuInstance.lobbyMenuHandler.ExitLobby();
@@ -77,20 +155,6 @@ namespace rwby.ui
             if (clientInfo.players.Count <= lobbyMenuInstance.playerID) return;
             ClientManager cm = lobbyMenuInstance.lobbyMenuHandler.sessionManagerGamemode.Runner.GetPlayerObject(localPlayerRef).GetComponent<ClientManager>();
             cm.CLIENT_SetReadyStatus(!cm.ReadyStatus);
-        }
-
-        public override bool TryClose(MenuDirection direction, bool forceClose = false)
-        {
-            gameObject.SetActive(false);
-            return true;
-        }
-        
-        private void Update()
-        {
-            if (canvasGroup.interactable && UIHelpers.SelectDefaultSelectable(EventSystem.current, GameManager.singleton.localPlayerManager.localPlayers[lobbyMenuInstance.playerID]))
-            {
-                EventSystem.current.SetSelectedGameObject(defaultSelectedUIItem);
-            }
         }
 
         public void Refresh()
@@ -134,11 +198,22 @@ namespace rwby.ui
         private void UpdatePlayerList()
         {
             var smg = lobbyMenuInstance.lobbyMenuHandler.sessionManagerGamemode;
-            var playerList = smg.GetPlayerList();
+            //var playerList = smg.GetPlayerList();
 
             foreach (Transform child in lobbyPlayerContentHolder)
             {
                 Destroy(child.gameObject);
+            }
+
+            foreach (var th in teamHolders)
+            {
+                Destroy(th.Value);
+            }
+            teamHolders.Clear();
+
+            for (int i = 0; i < smg.teamDefinitions.Count; i++)
+            {
+                teamHolders.Add(i, GameObject.Instantiate(lobbyPlayerTeamHolder, lobbyPlayerContentHolder, false));
             }
 
             if (smg.teamDefinitions.Count == 1)
@@ -177,18 +252,15 @@ namespace rwby.ui
 
             for (int w = 0; w < players.Count; w++)
             {
-                var playerHeader = GameObject.Instantiate(lobbyPlayerHeader, 
-                    lobbyPlayerContentHolder, 
-                    false);
-                playerHeader.GetComponentInChildren<TextMeshProUGUI>().text = players[w].clientManager.nickname;
-                /*
                 var pInfo = lobbyMenuInstance.lobbyMenuHandler.sessionManagerGamemode
                     .ClientDefinitions[players[w].clientIndex]
                     .players[players[w].playerIndex];
-                if (!teamHolders.ContainsKey(pInfo.team)) return;
-                var playerHeader = GameObject.Instantiate(teamPlayerHeader, 
-                    teamHolders[pInfo.team].transform.Find("Scroll View").Find("Viewport").Find("Content"), 
-                    false);*/
+                
+                var playerHeader = GameObject.Instantiate(lobbyPlayerHeader, 
+                    smg.teamDefinitions.Count > 1 ? teamHolders[pInfo.team].transform : lobbyPlayerContentHolder.transform, 
+                    false);
+                playerHeader.GetComponent<Image>().color = ExtDebug.TEAM_COLORS[pInfo.team % ExtDebug.TEAM_COLORS.Length];
+                playerHeader.GetComponentInChildren<TextMeshProUGUI>().text = players[w].clientManager.nickname;
             }
         }
 
@@ -228,6 +300,7 @@ namespace rwby.ui
 
         public async void OpenSongSelector()
         {
+            canvasGroup.interactable = false;
             int player = lobbyMenuInstance.playerID;
             await ContentSelect.singleton.OpenMenu(lobbyMenuInstance.playerID, (int)ContentType.Song,(a, b) =>
             {
@@ -238,6 +311,7 @@ namespace rwby.ui
 
         private async UniTask SetSong(ModGUIDContentReference modGuidContentReference)
         {
+            canvasGroup.interactable = true;
             bool loadResult = await ContentManager.singleton.LoadContentDefinition(modGuidContentReference);
             if (!loadResult)
             {

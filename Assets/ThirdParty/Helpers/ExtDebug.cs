@@ -1,11 +1,17 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public static class ExtDebug
 {
     public static string MATERIAL_TEXTURE_IDENTIFIER = "_MaterialMap";
+
+    public static Color[] TEAM_COLORS = new[]
+    {
+        Color.red,
+        Color.blue,
+        Color.green,
+        Color.magenta,
+        Color.yellow,
+    };
     
     public static Vector2 DeadZoner(Vector2 raw, float dead)
     {

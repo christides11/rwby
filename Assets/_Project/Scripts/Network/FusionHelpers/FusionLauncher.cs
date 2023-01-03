@@ -99,6 +99,7 @@ namespace rwby
 			customProps["gamemode"] = "";
 			customProps["modhash"] = "";
 			customProps["password"] = String.IsNullOrEmpty(password) ? 0 : 1;
+			customProps["addr"] = "";
 
 			this.password = this.password;
 
@@ -131,6 +132,7 @@ namespace rwby
 			customProps["gamemode"] = "";
 			customProps["modhash"] = "";
 			customProps["password"] = String.IsNullOrEmpty(password) ? 0 : 1;
+			customProps["addr"] = "";
 
 			this.password = password;
 			

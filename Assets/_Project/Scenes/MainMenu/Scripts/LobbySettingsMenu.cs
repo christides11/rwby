@@ -42,7 +42,7 @@ namespace rwby
         public void ClearOption(string id)
         {
             if (!idContentDictionary.ContainsKey(id)) return;
-            Destroy(idContentDictionary[id]);
+            Destroy(idContentDictionary[id].gameObject);
             idContentDictionary.Remove(id);
         }
 

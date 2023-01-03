@@ -10,6 +10,13 @@ namespace rwby.core.versus
     {
         public GamemodeVersus gamemode;
         
+        public void ClearGamemodeSettings(int player, LobbySettingsMenu settingsMenu, bool local = false)
+        {
+            settingsMenu.ClearOption("Map");
+            settingsMenu.ClearOption("points");
+            settingsMenu.ClearOption("timelimit");
+        }
+        
         public void AddGamemodeSettings(int player, LobbySettingsMenu settingsMenu, bool local = false)
         {
             ModGUIDContentReference mapRef = local ? gamemode.localMap : gamemode.Map;
@@ -76,11 +83,6 @@ namespace rwby.core.versus
                 gamemode.localPointsRequired += p0;
                 gamemode.WhenGamemodeSettingsChanged(local:true);
             }
-        }
-
-        public void ClearGamemodeSettings(int player, LobbySettingsMenu settingsMenu, bool local = false)
-        {
-            settingsMenu.ClearOption("Map");
         }
 
         private async UniTask OpenMapSelection(int player, bool local = false)
