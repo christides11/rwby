@@ -23,6 +23,7 @@ namespace rwby.ui.mainmenu
         // Options.
         private int region = 0;
         private string lobbyName = "";
+        private string lobbyPassword = "";
         private int playerCount = 8;
         private int maxPlayersPerClient = 1;
         private ModGUIDContentReference _selectedGamemodeContentReference;
@@ -76,6 +77,8 @@ namespace rwby.ui.mainmenu
             defaultSelectedUIItem = regionOptionSlider.gameObject;
             var lobbyNameInputField = lobbySettings.AddInputField("LobbyName", "Lobby Name", $"Lobby {Random.Range(1, 1000)}");
             lobbyNameInputField.inputField.onValueChanged.AddListener(UpdateLobbyName);
+            var lobbyPasswordInputField = lobbySettings.AddInputField("Password", "Password", $"");
+            lobbyPasswordInputField.inputField.onValueChanged.AddListener(UpdateLobbyPassword);
             var playerCountButtons = lobbySettings.AddIntValueOption("PlayerCount", "Lobby Size", playerCount);
             playerCountButtons.subtractButton.onSubmit.AddListener(DecrementPlayerCount);
             playerCountButtons.addButton.onSubmit.AddListener(IncrementPlayerCount);
@@ -90,6 +93,11 @@ namespace rwby.ui.mainmenu
             //teamButtons.addButton.onSubmit.AddListener(() => { ChangeTeamCount(1); });
             
             lobbySettings.AddOption("Host", "Host").onSubmit.AddListener(async () => await TryHostLobby());
+        }
+
+        private void UpdateLobbyPassword(string arg0)
+        {
+            lobbyPassword = arg0;
         }
 
         private void UpdateRegion(int value)
@@ -190,7 +198,7 @@ namespace rwby.ui.mainmenu
             appSettings.FixedRegion = NetworkManager.regionCodes[region];
             
             GameManager.singleton.loadingMenu.OpenMenu(0, "Attempting host...");
-            int sessionHandlerID = await GameManager.singleton.HostGamemodeSession(lobbyName, playerCount, "");
+            int sessionHandlerID = await GameManager.singleton.HostGamemodeSession(lobbyName, playerCount, lobbyPassword);
             GameManager.singleton.loadingMenu.CloseMenu(0);
             if (sessionHandlerID == -1) return;
 

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using Cysharp.Threading.Tasks;
 using Fusion;
 using Fusion.Sockets;
@@ -97,7 +98,7 @@ namespace rwby
 			customProps["map"] = "";
 			customProps["gamemode"] = "";
 			customProps["modhash"] = "";
-			customProps["password"] = String.IsNullOrEmpty(password) ? "f" : "t";
+			customProps["password"] = String.IsNullOrEmpty(password) ? 0 : 1;
 
 			this.password = this.password;
 
@@ -129,7 +130,7 @@ namespace rwby
 			customProps["map"] = "";
 			customProps["gamemode"] = "";
 			customProps["modhash"] = "";
-			customProps["password"] = String.IsNullOrEmpty(password) ? "f" : "t";
+			customProps["password"] = String.IsNullOrEmpty(password) ? 0 : 1;
 
 			this.password = password;
 			
@@ -150,12 +151,12 @@ namespace rwby
 			return result;
 		}
 
-		public async UniTask<StartGameResult> JoinSession(SessionInfo session)
+		public async UniTask<StartGameResult> JoinSession(SessionInfo session, string password = "")
 		{
-			return await JoinSession(session.Name);
+			return await JoinSession(session.Name, password);
 		}
 
-		public async UniTask<StartGameResult> JoinSession(string sessionName)
+		public async UniTask<StartGameResult> JoinSession(string sessionName, string password = "")
 		{
 			_connectionCallback = OnConnectionStatusUpdate;
 
@@ -167,7 +168,8 @@ namespace rwby
 				SessionName = sessionName, 
 				ObjectPool = _pool,
 				SceneManager = netSceneManager,
-				DisableClientSessionCreation = true
+				DisableClientSessionCreation = true,
+				ConnectionToken = string.IsNullOrEmpty(password) ? null : Encoding.ASCII.GetBytes(password)
 			});
 			return result;
 		}
@@ -195,6 +197,24 @@ namespace rwby
 		public void OnConnectRequest(NetworkRunner runner, NetworkRunnerCallbackArgs.ConnectRequest request, byte[] token)
 		{
 			Debug.Log("Client requested connection.");
+			if (string.IsNullOrEmpty(password))
+			{
+				request.Accept();
+				return;
+			}
+
+			if (token == null || token.Length == 0)
+			{
+				request.Refuse();
+				return;
+			}
+			string someString = Encoding.ASCII.GetString(token);
+			if (someString != password)
+			{
+				request.Refuse();
+				return;
+			}
+			request.Accept();
 		}
 
 		public void OnConnectedToServer(NetworkRunner runner)
