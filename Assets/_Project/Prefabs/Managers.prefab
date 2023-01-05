@@ -3922,6 +3922,24 @@ MonoBehaviour:
       _behaviorId: 0
       _userAssignable: 1
       _categoryId: 2
+    - _id: 29
+      _name: Page Left
+      _type: 1
+      _descriptiveName: Page Left
+      _positiveDescriptiveName: 
+      _negativeDescriptiveName: 
+      _behaviorId: 0
+      _userAssignable: 1
+      _categoryId: 2
+    - _id: 30
+      _name: Page Right
+      _type: 1
+      _descriptiveName: Page Right
+      _positiveDescriptiveName: 
+      _negativeDescriptiveName: 
+      _behaviorId: 0
+      _userAssignable: 1
+      _categoryId: 2
     actionCategories:
     - _name: Default
       _descriptiveName: Default
@@ -3945,7 +3963,7 @@ MonoBehaviour:
       - categoryId: 1
         actionIds: 010000000200000003000000040000000500000006000000070000000a00000008000000090000000b0000000d0000000e0000000f000000100000001100000012000000130000001400000015000000160000001b000000
       - categoryId: 2
-        actionIds: 17000000190000001a000000180000001c000000
+        actionIds: 17000000190000001a000000180000001c0000001d0000001e000000
     inputBehaviors:
     - _id: 0
       _name: Default
@@ -4320,6 +4338,28 @@ MonoBehaviour:
         _modifierKey1: 0
         _modifierKey2: 0
         _modifierKey3: 0
+      - _actionCategoryId: 0
+        _actionId: 29
+        _elementType: 1
+        _elementIdentifierId: 10
+        _axisRange: 0
+        _invert: 0
+        _axisContribution: 0
+        _keyboardKeyCode: 0
+        _modifierKey1: 0
+        _modifierKey2: 0
+        _modifierKey3: 0
+      - _actionCategoryId: 0
+        _actionId: 30
+        _elementType: 1
+        _elementIdentifierId: 12
+        _axisRange: 0
+        _invert: 0
+        _axisContribution: 0
+        _keyboardKeyCode: 0
+        _modifierKey1: 0
+        _modifierKey2: 0
+        _modifierKey3: 0
     keyboardMaps:
     - id: 2
       categoryId: 1
@@ -4663,7 +4703,7 @@ MonoBehaviour:
     controllerMapLayoutManagerRuleSets: []
     controllerMapEnablerRuleSets: []
     playerIdCounter: 7
-    actionIdCounter: 29
+    actionIdCounter: 31
     actionCategoryIdCounter: 3
     inputBehaviorIdCounter: 1
     mapCategoryIdCounter: 3

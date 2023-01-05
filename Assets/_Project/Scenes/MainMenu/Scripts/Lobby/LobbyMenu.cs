@@ -139,8 +139,46 @@ namespace rwby.ui
 
         public void BUTTON_ChangeProfile()
         {
+            history.Add((int)LobbySubMenuType.PROFILE_SELECT);
+            lobbyMainMenu.SetActive(false);
+            teamSelectMenu.SetActive(true);
             
-        } 
+            foreach (Transform child in teamSelectContentHolder.transform)
+            {
+                Destroy(child.gameObject);
+            }
+
+            var pManager = GameManager.singleton.profilesManager;
+            for (int i = 0; i < pManager.Profiles.Count; i++)
+            {
+                int index = i;
+                var g = GameObject.Instantiate(teamSelectButtonPrefab, teamSelectContentHolder.transform, false);
+                g.GetComponentInChildren<TextMeshProUGUI>().text = pManager.Profiles[i].profileName;
+                g.GetComponent<rwby.ui.Selectable>().onSubmit.AddListener(() => OnProfileSelectButton(index));
+            }
+            
+            var backButton = GameObject.Instantiate(teamSelectButtonPrefab, teamSelectContentHolder.transform, false);
+            backButton.GetComponentInChildren<TextMeshProUGUI>().text = "Back";
+            backButton.GetComponent<rwby.ui.Selectable>().onSubmit.AddListener(() =>
+            {
+                history.Clear();
+                lobbyMainMenu.SetActive(true);
+                teamSelectMenu.SetActive(false);
+            });
+        }
+
+        private void OnProfileSelectButton(int index)
+        {
+            GameManager.singleton.profilesManager.ApplyProfileToPlayer(0, index);
+            history.Clear();
+            lobbyMainMenu.SetActive(true);
+            teamSelectMenu.SetActive(false);
+            
+            PlayerRef localPlayerRef = lobbyMenuInstance.lobbyMenuHandler.sessionManagerGamemode.Runner.LocalPlayer;
+            ClientManager cm = lobbyMenuInstance.lobbyMenuHandler.sessionManagerGamemode.Runner.GetPlayerObject(localPlayerRef).GetComponent<ClientManager>();
+            cm.profiles[lobbyMenuInstance.playerID] = GameManager.singleton.profilesManager.Profiles[index].profileName;
+            Refresh();
+        }
 
         private void ExitLobby()
         {

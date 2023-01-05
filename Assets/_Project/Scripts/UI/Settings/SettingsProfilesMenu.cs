@@ -4,73 +4,98 @@ using System.Collections.Generic;
 using rwby.ui.mainmenu;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.EventSystems;
 
 namespace rwby.ui
 {
-    public class SettingsProfilesMenu : MenuBase
+    public class SettingsProfilesMenu : MenuBase, IMenuHandler
     {
-        public GameObject profilesListMenu;
+        public enum ProfilesSubMenuTypes
+        {
+            PROFILE_SELECT,
+            PROFILE_CUSTOMIZATION,
+            REMAP_CONTROLS
+        }
+
+        [HideInInspector] public int currentSelectedProfile = -1;
+        
+        public Dictionary<int, MenuBase> menus = new Dictionary<int, MenuBase>();
+        [SerializeField] private List<int> history = new List<int>();
+
         public GameObject rebindMenu;
 
         public Transform profilesContentHolder;
         public ContentButtonBase profilePrefab;
         
         public SettingsMenu settingsMenu;
-        
+
+        [Header("SubMenus")]
+        public SettingsProfileSelectMenu profileSelectMenu;
+        public SettingsProfileCustomizationMenu profileCustomizationMenu;
+
+        private void Awake()
+        {
+            menus.Add((int)ProfilesSubMenuTypes.PROFILE_SELECT, profileSelectMenu);
+            menus.Add((int)ProfilesSubMenuTypes.PROFILE_CUSTOMIZATION, profileCustomizationMenu);
+            profileSelectMenu.gameObject.SetActive(false);
+            profileCustomizationMenu.gameObject.SetActive(false);
+        }
+
         public override void Open(MenuDirection direction, IMenuHandler menuHandler)
         {
             base.Open(direction, menuHandler);
-            profilesListMenu.SetActive(true);
+            TryCloseAll();
             gameObject.SetActive(true);
-
-            RefreshProfilesList();
+            Forward((int)ProfilesSubMenuTypes.PROFILE_SELECT);
         }
 
         public override bool TryClose(MenuDirection direction, bool forceClose = false)
         {
+            TryCloseAll();
             gameObject.SetActive(false);
             return true;
         }
+
         
-        private void RefreshProfilesList()
+        public bool TryCloseAll()
         {
-            foreach (Transform child in profilesContentHolder)
+            while (history.Count > 0)
             {
-                Destroy(child.gameObject);
+                bool closeResult = Back();
+                if (!closeResult) return false;
             }
-
-            for(int i = 0; i < GameManager.singleton.profilesManager.Profiles.Count; i++)
-            {
-                var profile = GameManager.singleton.profilesManager.Profiles[i];
-                var profileIndex = i;
-                var p = GameObject.Instantiate(profilePrefab, profilesContentHolder, false);
-                p.label.text = profile.profileName;
-                p.onSubmit.AddListener(() => OnProfileSelected(profileIndex));
-            }
+            return true;
+        }
+        
+        public bool Forward(int menu, bool autoClose = true)
+        {
+            if (!menus.ContainsKey(menu)) return false;
+            EventSystem.current.SetSelectedGameObject(null);
+            if (autoClose && history.Count != 0) GetCurrentMenu().TryClose(MenuDirection.FORWARDS, true);
+            menus[menu].Open(MenuDirection.FORWARDS, this);
+            history.Add(menu);
+            return true;
         }
 
-        UnityAction screenClosedEvent;
-        private void OnProfileSelected(int profileIndex)
+        public bool Back()
         {
-            //GameManager.singleton.localPlayerManager.AutoAssignControllers();
-            int index = profileIndex;
-            var profilesManager = GameManager.singleton.profilesManager;
-            profilesManager.ApplyProfileToPlayer(settingsMenu.playerID, profileIndex);
-            screenClosedEvent = () => ApplyProfileChanges(index);
-            GameManager.singleton.cMapper.onScreenClosed += screenClosedEvent;
-            GameManager.singleton.cMapper.Open();
+            if (history.Count <= 0) return false;
+            bool menuClosed = GetCurrentMenu().TryClose(MenuDirection.BACKWARDS);
+            if (!menuClosed) return false;
+            history.RemoveAt(history.Count-1);
+            if(history.Count != 0) GetCurrentMenu().Open(MenuDirection.BACKWARDS, this);
+            return true;
         }
 
-        private void ApplyProfileChanges(int profileIndex)
+        public IList GetHistory()
         {
-            var playerID = settingsMenu.playerID;
-            GameManager.singleton.profilesManager.ApplyControlsToProfile(playerID, profileIndex);
-            GameManager.singleton.profilesManager.SaveProfiles();
-            GameManager.singleton.profilesManager.RestoreDefaultControls(playerID);
-            GameManager.singleton.profilesManager.ApplyProfileToPlayer(playerID,
-                GameManager.singleton.localPlayerManager.GetPlayer(playerID).profile);
-            GameManager.singleton.cMapper.onScreenClosed -= screenClosedEvent;
-            Debug.Log($"Applied profile changes. Reapplied {GameManager.singleton.localPlayerManager.GetPlayer(playerID).profile} to player {playerID}.");
+            return history;
+        }
+
+        public IMenu GetCurrentMenu()
+        {
+            if (history.Count == 0) return null;
+            return menus[history[^1]];
         }
     }
 }

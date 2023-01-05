@@ -25,6 +25,7 @@ namespace rwby
         [SerializeField] public List<string> joystickMaps;
         [SerializeField] public List<string> keyboardMaps;
         [SerializeField] public List<string> mouseMaps;
+        [SerializeField] public int lockOnType;
         [SerializeField] public CameraVariables controllerCam;
         [SerializeField] public CameraVariables keyboardCam;
 

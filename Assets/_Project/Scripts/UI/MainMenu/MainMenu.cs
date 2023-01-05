@@ -17,7 +17,8 @@ namespace rwby.ui.mainmenu
             FIND_LOBBY,
             JOIN_LOBBY,
             CREATE_LOBBY,
-            SETTINGS
+            SETTINGS,
+            CREDITS
         }
         public LobbyMenuHandler lobbyMenuHandler;
         public GameObject defaultSelectedUIItem;
@@ -38,7 +39,9 @@ namespace rwby.ui.mainmenu
         public JoinLobbyMenu joinLobbyMenu;
         public CreateLobbyMenu createLobbyMenu;
         public rwby.ui.mainmenu.SettingsMenu settingsMenu;
+        public CreditsMenu creditsMenu;
 
+        
         [Header("Sounds")]
         public AudioSource audioSource;
         public AudioClip buttonSelectSFX;
@@ -52,6 +55,7 @@ namespace rwby.ui.mainmenu
             menus.Add((int)MainMenusType.JOIN_LOBBY, joinLobbyMenu);
             menus.Add((int)MainMenusType.CREATE_LOBBY, createLobbyMenu);
             menus.Add((int)MainMenusType.SETTINGS, settingsMenu);
+            menus.Add((int)MainMenusType.CREDITS, creditsMenu);
         }
 
         public override void Open(MenuDirection direction, IMenuHandler menuHandler)
@@ -174,6 +178,15 @@ namespace rwby.ui.mainmenu
             menuLabel.text = "SETTINGS";
             menuDescription.text = "";
             Forward((int)MainMenusType.SETTINGS);
+        }
+
+        public void BUTTON_Credits()
+        {
+            bool closeResult = TryCloseAll();
+            if (!closeResult) return;
+            menuLabel.text = "CREDITS";
+            menuDescription.text = "";
+            Forward((int)MainMenusType.CREDITS);
         }
 
         public void BUTTON_Exit()

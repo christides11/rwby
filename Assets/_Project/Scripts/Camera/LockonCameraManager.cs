@@ -32,7 +32,6 @@ namespace rwby
         private ClientManager clientManager;
         private int playerID;
         private Rewired.Player p;
-        [SerializeField] private ProfileDefinition currentProfile;
         private PlayerControllerType currentControllerType;
         private bool lockon2DMode = false;
 

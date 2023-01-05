@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Cinemachine;
@@ -13,7 +14,15 @@ namespace rwby
         private Rewired.Player p;
         [SerializeField] private ProfileDefinition currentProfile;
         private PlayerControllerType currentControllerType;
-        
+
+        private void Awake()
+        {
+            GameManager.singleton.profilesManager.onProfileUpdated += (pm, index) =>
+            {
+                SetProfile(pm.Profiles[index]);
+            };
+        }
+
         public void AssignControlTo(ClientManager clientManager, int playerID)
         {
             this.clientManager = clientManager;
@@ -49,46 +58,13 @@ namespace rwby
         private void SetProfile(ProfileDefinition profile)
         {
             currentProfile = profile;
+            GameManager.singleton.profilesManager.ApplyProfileToPlayer(playerID, profile.profileName);
         }
         
         private void OnControllerTypeChanged(int playerid, PlayerControllerType controllertype)
         {
             if (playerid != playerID) return;
             currentControllerType = controllertype;
-            /*
-            switch (currentControllerType)
-            {
-                case PlayerControllerType.GAMEPAD:
-                    foreach (var vcam in virtualCameras)
-                    {
-                        CinemachinePOV pov = vcam.GetCinemachineComponent<CinemachinePOV>();
-                        if (!pov) return;
-                        pov.m_HorizontalAxis.m_SpeedMode = AxisState.SpeedMode.MaxSpeed;
-                        pov.m_HorizontalAxis.m_MaxSpeed = 300;
-                        pov.m_HorizontalAxis.m_AccelTime = 0.1f;
-                        pov.m_HorizontalAxis.m_DecelTime = 0.1f;
-                        pov.m_VerticalAxis.m_SpeedMode = AxisState.SpeedMode.MaxSpeed;
-                        pov.m_VerticalAxis.m_MaxSpeed = 300;
-                        pov.m_VerticalAxis.m_AccelTime = 0.1f;
-                        pov.m_VerticalAxis.m_DecelTime = 0.1f;
-                    }
-                    break;
-                case PlayerControllerType.MOUSE_AND_KEYBOARD:
-                    foreach (var vcam in virtualCameras)
-                    {
-                        CinemachinePOV pov = vcam.GetCinemachineComponent<CinemachinePOV>();
-                        if (!pov) return;
-                        pov.m_HorizontalAxis.m_SpeedMode = AxisState.SpeedMode.InputValueGain;
-                        pov.m_HorizontalAxis.m_MaxSpeed = 1.0f;
-                        pov.m_HorizontalAxis.m_AccelTime = 0;
-                        pov.m_HorizontalAxis.m_DecelTime = 0;
-                        pov.m_VerticalAxis.m_SpeedMode = AxisState.SpeedMode.InputValueGain;
-                        pov.m_VerticalAxis.m_MaxSpeed = 1.0f;
-                        pov.m_VerticalAxis.m_AccelTime = 0;
-                        pov.m_VerticalAxis.m_DecelTime = 0;
-                    }
-                    break;
-            }*/
         }
     }
 }

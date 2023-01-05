@@ -12,8 +12,10 @@ namespace rwby
     {
         public static string defaultProfileIdentifier = "Default";
         public delegate void ProfileAction(ProfilesManager profilesManager);
+        public delegate void ProfileChangeAction(ProfilesManager profilesManager, int index);
         public event ProfileAction onProfileAdded;
         public event ProfileAction onProfileRemoved;
+        public event ProfileChangeAction onProfileUpdated;
         
         private readonly byte version = 0;
         [SerializeField] protected List<ProfileDefinition> profiles = new List<ProfileDefinition>();
@@ -86,6 +88,12 @@ namespace rwby
                 if (p.profileName.ToLower() == name.ToLower()) return p;
             }
             return new ProfileDefinition();
+        }
+
+        public void ApplyProfile(ProfileDefinition profileDefinition, int index)
+        {
+            profiles[index] = profileDefinition;
+            onProfileUpdated?.Invoke(this, index);
         }
 
         public void RestoreDefaultControls(int playerID)
