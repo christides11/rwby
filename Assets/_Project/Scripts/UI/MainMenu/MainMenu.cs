@@ -17,6 +17,7 @@ namespace rwby.ui.mainmenu
             FIND_LOBBY,
             JOIN_LOBBY,
             CREATE_LOBBY,
+            MODDING,
             SETTINGS,
             CREDITS
         }
@@ -34,10 +35,12 @@ namespace rwby.ui.mainmenu
         public TextMeshProUGUI menuDescription;
 
         public MenuOverlay menuOverlay;
-        [Header("Menus")] public QuickMatchMenu quickMatchMenu;
+        [Header("Menus")] 
+        public QuickMatchMenu quickMatchMenu;
         public FindLobbyMenu findLobbyMenu;
         public JoinLobbyMenu joinLobbyMenu;
         public CreateLobbyMenu createLobbyMenu;
+        public ModdingMenu moddingMenu;
         public rwby.ui.mainmenu.SettingsMenu settingsMenu;
         public CreditsMenu creditsMenu;
 
@@ -54,6 +57,7 @@ namespace rwby.ui.mainmenu
             menus.Add((int)MainMenusType.FIND_LOBBY, findLobbyMenu);
             menus.Add((int)MainMenusType.JOIN_LOBBY, joinLobbyMenu);
             menus.Add((int)MainMenusType.CREATE_LOBBY, createLobbyMenu);
+            menus.Add((int)MainMenusType.MODDING, moddingMenu);
             menus.Add((int)MainMenusType.SETTINGS, settingsMenu);
             menus.Add((int)MainMenusType.CREDITS, creditsMenu);
         }
@@ -168,7 +172,11 @@ namespace rwby.ui.mainmenu
         
         public void BUTTON_Modding()
         {
-            
+            bool closeResult = TryCloseAll();
+            if (!closeResult) return;
+            menuLabel.text = "MODDING";
+            menuDescription.text = "";
+            Forward((int)MainMenusType.MODDING);
         }
         
         public void BUTTON_Options()

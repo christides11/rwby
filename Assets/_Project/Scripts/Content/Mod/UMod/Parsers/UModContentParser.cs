@@ -99,7 +99,10 @@ namespace rwby
 
             if(contentHandles[index].IsSuccessful)
             {
-                (contentHandles[index].Result as IUModModHostRef).modHost = umodModDefinition.host;
+                if (contentHandles[index].Result.GetType().IsAssignableFrom(typeof(IUModModHostRef)))
+                {
+                    ((IUModModHostRef)contentHandles[index].Result).modHost = umodModDefinition.host;
+                }
                 contentHandles[index].Result.Identifier = index;
                 return true;
             }
