@@ -5,5 +5,7 @@ namespace rwby
     {
         public UModAssetLookupTable lookupTable;
         public int tableID;
+        
+        public string Reference => lookupTable[tableID];
     }
 }

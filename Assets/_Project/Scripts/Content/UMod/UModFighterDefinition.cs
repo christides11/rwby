@@ -39,8 +39,8 @@ namespace rwby
         [SerializeField] private int aura;
         [SerializeField] private int auraGainPerFrame;
 
-        [SerializeField] private string fighterReference = "";
-        [SerializeField] private string[] movesetReferences = Array.Empty<string>();
+        [SerializeField] private UModAssetReference fighterReference;
+        [SerializeField] private UModAssetReference[] movesetReferences = Array.Empty<UModAssetReference>();
         
         [NonSerialized] private ModAsyncOperation<Moveset>[] movesetHandles = null;
         [NonSerialized] private ModAsyncOperation<GameObject> fighterHandle = null;
@@ -62,7 +62,7 @@ namespace rwby
         {
             if (movesetHandles[index] != null && movesetHandles[index].IsSuccessful) return true;
 
-            if (movesetHandles[index] == null) movesetHandles[index] = modHost.Assets.LoadAsync<Moveset>(movesetReferences[index]);
+            if (movesetHandles[index] == null) movesetHandles[index] = modHost.Assets.LoadAsync<Moveset>(movesetReferences[index].Reference);
 
             if (movesetHandles[index].IsDone == false || !movesetHandles[index].IsSuccessful) await movesetHandles[index];
 
@@ -76,7 +76,7 @@ namespace rwby
         {
             if (fighterHandle != null && fighterHandle.IsSuccessful) return true;
 
-            if (fighterHandle == null) fighterHandle = modHost.Assets.LoadAsync<GameObject>(fighterReference);
+            if (fighterHandle == null) fighterHandle = modHost.Assets.LoadAsync<GameObject>(fighterReference.Reference);
 
             if (fighterHandle.IsDone == false || !fighterHandle.IsSuccessful) await fighterHandle;
 

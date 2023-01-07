@@ -47,6 +47,14 @@ namespace rwby
 
             int packagesInstalled = 0;
             GUILayout.Label("1. Install Packages");
+            if (GUILayout.Button("INSTALL ALL"))
+            {
+                for (int i = 0; i < RwbyDependencies.packages.Length; i++)
+                {
+                    Client.Add(RwbyDependencies.packages[i].Item2);
+                }
+            }
+            
             for (int i = 0; i < RwbyDependencies.packages.Length; i++)
             {
                 var pName = RwbyDependencies.packages[i];
@@ -55,7 +63,7 @@ namespace rwby
                 {
                     if (GUILayout.Button($"{pName.Item1}"))
                     {
-                        AddRequest currentRequest = Client.Add(RwbyDependencies.packages[i].Item2);
+                        Client.Add(RwbyDependencies.packages[i].Item2);
                     }
                 }
                 else

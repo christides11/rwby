@@ -8,6 +8,8 @@ namespace rwby
     [OrderAfter(typeof(FighterStateManager))]
     public class FighterSounder : NetworkBehaviour
     {
+        private Settings gameSettings;
+        
         [HideInInspector] public Dictionary<ModObjectSetContentReference, int> bankMap = new Dictionary<ModObjectSetContentReference, int>();
         [HideInInspector] public List<ISoundbankDefinition> banks = new List<ISoundbankDefinition>();
 
@@ -15,7 +17,6 @@ namespace rwby
         [Networked, Capacity(10)] public FighterSoundsRoot sounds { get; set; }
         [Networked] public int soundBufferPos { get; set; } = 0;
         [Networked, Capacity(10)] public NetworkArray<NetworkBool> isCurrentSound => default;
-        //[Networked, Capacity(10)] public NetworkLinkedList<int> currentSoundIndex => default;
 
         private bool dirty;
 
@@ -23,13 +24,13 @@ namespace rwby
 
         public AudioSource[] soundObjects = new AudioSource[10];
 
-        public AudioSource audioSourceGOPrefab;
-
-        public AudioMixerGroup sfxMixerGroup;
+        private AudioMixerGroup sfxMixerGroup;
         
         private void Awake()
         {
             dirty = true;
+            gameSettings = GameManager.singleton.settings;
+            sfxMixerGroup = gameSettings.audioMixer.FindMatchingGroups("sfx")[0];
         }
 
         public override void Spawned()
@@ -119,7 +120,7 @@ namespace rwby
                 if (currentSoundsRepresentation.sounds[i] != sounds.sounds[i])
                 {
                     var e = GetEffect(sounds.sounds[i]);
-                    if (!soundObjects[i]) soundObjects[i] = GameObject.Instantiate(audioSourceGOPrefab);
+                    if (!soundObjects[i]) soundObjects[i] = GameObject.Instantiate(gameSettings.audioSourcePrefab);
                     if(sounds.sounds[i].parented) soundObjects[i].transform.SetParent(transform, false);    
                     soundObjects[i].clip = e;
                     soundObjects[i].transform.localPosition = sounds.sounds[i].pos;

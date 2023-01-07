@@ -12,6 +12,7 @@ namespace rwby
         public string mainMenuSceneName = "MainMenu";
         public AddressablesModDefinition baseMod;
         public Hurtbox hurtboxPrefab;
+        public AudioSource audioSourcePrefab;
         public bool showHitboxes;
         public BaseHUD baseUI;
         public AudioMixer audioMixer;

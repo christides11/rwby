@@ -1,6 +1,4 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using UMod;
 using UnityEngine;
@@ -17,19 +15,15 @@ namespace rwby
         [SerializeField] private string songName;
         [SerializeField] [TextArea] private string description;
 
-        [SerializeField] private string songReference = "";
+        [SerializeField] private UModAssetReference songReference;
         [NonSerialized] private ModAsyncOperation<SongAudio> songHandle = null;
         
         public override async UniTask<bool> Load()
         {
             if (songHandle != null && songHandle.IsSuccessful) return true;
-
-            if (songHandle == null) songHandle = modHost.Assets.LoadAsync<SongAudio>(songReference);
-
+            if (songHandle == null) songHandle = modHost.Assets.LoadAsync<SongAudio>(songReference.Reference);
             if (songHandle.IsDone == false || !songHandle.IsSuccessful) await songHandle;
-
             if (songHandle.IsSuccessful) return true;
-                
             Debug.LogError($"Error loading song {songName}.");
             return false;
         }

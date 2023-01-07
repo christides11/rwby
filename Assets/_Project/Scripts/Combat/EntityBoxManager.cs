@@ -32,7 +32,6 @@ namespace rwby
         
         public virtual void Awake()
         {
-            manager = GetComponent<FighterManager>();
             settings = GameManager.singleton.settings;
             foreach (var hitbox in hitboxes)
             {

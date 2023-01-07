@@ -428,6 +428,8 @@ MonoBehaviour:
   _Process:
     _value: 1
   _callbacks: {fileID: 0}
+  _lastHurtByTeam: 0
+  _lastHealByTeam: 0
   _StoredRun:
     _value: 0
   _CurrentJump: 0
@@ -704,10 +706,6 @@ MonoBehaviour:
   shakeCurveDivi: 4
   groundSlopeAngle: 0
   groundSlopeDir: {x: 0, y: 0, z: 0}
-  testStrength: 0
-  testShakeLength: 0
-  _lastHurtByTeam: 0
-  _lastHealByTeam: 0
   animationbankReferences:
   - modGUID:
       guid: 1d292c1f00000000
@@ -866,7 +864,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _interpolationDataSource: 2
-  manager: {fileID: 0}
+  manager: {fileID: 3846760401122892541}
   networkObject: {fileID: 2824089167830894127}
   hRoot: {fileID: 8828466035712802024}
   settings: {fileID: 11400000, guid: fa9f7c1fd91f42e4087fa739f9dd3614, type: 2}
@@ -1218,7 +1216,6 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   audioSourceGOPrefab: {fileID: 5334101577290352513, guid: 4f7ed8383350df04fae09ad41b2409ac, type: 3}
-  sfxMixerGroup: {fileID: -215054419403138311, guid: b38be7e18c2b4a340a8c98e86a8c5dcd, type: 2}
 --- !u!114 &7571584989760676080
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -24,6 +24,7 @@ namespace rwby
 
         private void Awake()
         {
+            if (animancer == null) return;
             animancer.Playable.PauseGraph();
             animancer.Layers[0].Weight = 1.0f;
             animDirty = true;

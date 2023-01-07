@@ -15,13 +15,13 @@ namespace rwby
         [SerializeField] private string gamemodeName;
         [SerializeField] [TextArea] private string description;
 
-        [SerializeField] private string gamemodeReference = "";
+        [SerializeField] private UModAssetReference gamemodeReference;
         [NonSerialized] private ModAsyncOperation<GameObject> gamemodeHandle;
 
         public override async UniTask<bool> Load()
         {
             if (gamemodeHandle != null && gamemodeHandle.IsSuccessful) return true;
-            if (gamemodeHandle == null) gamemodeHandle = modHost.Assets.LoadAsync<GameObject>(gamemodeReference);
+            if (gamemodeHandle == null) gamemodeHandle = modHost.Assets.LoadAsync<GameObject>(gamemodeReference.lookupTable[gamemodeReference.tableID]);
             if (gamemodeHandle.IsDone == false || gamemodeHandle.IsSuccessful == false) await gamemodeHandle;
             if (gamemodeHandle.IsSuccessful)
             {

@@ -37,19 +37,21 @@ namespace rwby
             get { return GetLoadedContentList(); }
         }
         
-        [Networked] public bool TargetableNetworked { get; set; }
+        [Networked][field: HideInInspector] public bool TargetableNetworked { get; set; }
         public bool Targetable { get { return TargetableNetworked; } }
 
-        [Networked] public NetworkBool HardTargeting { get; set; }
-        [Networked] public NetworkObject CurrentTarget { get; set; }
-        [Networked] public NetworkBool Visible { get; set; }
-        [Networked] public NetworkBool Process { get; set; } = true;
-        [Networked] public NetworkBehaviour callbacks { get; set; }
+        [Networked][field: HideInInspector] public NetworkBool HardTargeting { get; set; }
+        [Networked][field: HideInInspector] public NetworkObject CurrentTarget { get; set; }
+        [Networked][field: HideInInspector] public NetworkBool Visible { get; set; }
+        [Networked][field: HideInInspector] public NetworkBool Process { get; set; } = true;
+        [Networked][field: HideInInspector] public NetworkBehaviour callbacks { get; set; }
+        [Networked][field: HideInInspector] public int lastHurtByTeam { get; set; }
+        [Networked][field: HideInInspector] public int lastHealByTeam { get; set; }
         
         // Stats
-        [Networked] public NetworkBool StoredRun { get; set; }
-        [Networked] public int CurrentJump { get; set; }
-        [Networked] public int CurrentAirDash { get; set; }
+        [Networked][field: HideInInspector] public NetworkBool StoredRun { get; set; }
+        [Networked][field: HideInInspector] public int CurrentJump { get; set; }
+        [Networked][field: HideInInspector] public int CurrentAirDash { get; set; }
 
         [Header("Debug")] 
         public bool FRAMEBYFRAME = false;
@@ -91,26 +93,26 @@ namespace rwby
         public LayerMask poleLayerMask;
         [HideInInspector] public RaycastHit[] wallHitResults = new RaycastHit[8];
 
-        [Networked] public Vector3 cWallNormal { get; set; }
-        [Networked] public Vector3 cWallPoint { get; set; }
-        [Networked] public int cWallSide { get; set; }
+        [Networked][field: HideInInspector] public Vector3 cWallNormal { get; set; }
+        [Networked][field: HideInInspector] public Vector3 cWallPoint { get; set; }
+        [Networked][field: HideInInspector] public int cWallSide { get; set; }
 
         [Header("Pole")]
         [HideInInspector] public Pole foundPole;
         [HideInInspector] public Collider[] colliderBuffer = new Collider[1];
-        [Networked] public float poleMagnitude { get; set; }
-        [Networked] public float poleSpin { get; set; }
+        [Networked][field: HideInInspector] public float poleMagnitude { get; set; }
+        [Networked][field: HideInInspector] public float poleSpin { get; set; }
 
         [Networked] public CmaeraShakeDefinition shakeDefinition { get; set; }
-        [Networked(OnChanged = nameof(OnChangedCameraMode))] public int cameraMode { get; set; }
-        
+        [Networked(OnChanged = nameof(OnChangedCameraMode))][field: HideInInspector] public int cameraMode { get; set; }
+
         public delegate void EmptyDelegate(FighterManager fighterManager);
         public event EmptyDelegate OnCameraModeChanged;
         
         public float poleSpinLaunchForce = 10.0f;
 
         public Transform[] boneRefs;
-        
+
         [Header("FOOTSTEP SOUNDS")]
         public SoundReference[] footstepsDirt;
         public SoundReference[] footstepsSnow;
@@ -149,7 +151,7 @@ namespace rwby
         public AnimationCurve yShakeCurve;
         public AnimationCurve falloffCurve;
         public int zShakeOffset = 2;
-        public float HorizontalShakeBaseMultiplier = 0.2f;
+        public float HorizontalShakeBaseMultiplier = 0.15f;
         public float VerticalShakeBaseMultiplier = 0.1f;
         public int shakeCurveDivi = 4;
         
@@ -181,11 +183,9 @@ namespace rwby
             }
         }
 
-        public float groundSlopeAngle;
-        public Vector3 groundSlopeDir;
+        [HideInInspector] public float groundSlopeAngle;
+        [HideInInspector] public Vector3 groundSlopeDir;
 
-        public CameraShakeStrength testStrength;
-        public int testShakeLength;
         public override void FixedUpdateNetwork()
         {
             if (DisableUpdate) return;
@@ -509,9 +509,6 @@ namespace rwby
         {
             TargetableNetworked = value;
         }
-
-        [Networked] public int lastHurtByTeam { get; set; }
-        [Networked] public int lastHealByTeam { get; set; }
 
         public virtual void Hurt(int hurterTeam, int amt)
         {
