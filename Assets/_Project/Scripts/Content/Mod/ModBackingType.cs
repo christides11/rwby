@@ -4,6 +4,7 @@ namespace rwby
     {
         Addressables = 0,
         UMod = 1,
-        Local = 2
+        BepInEx,
+        Local,
     }
 }

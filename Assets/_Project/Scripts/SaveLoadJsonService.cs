@@ -8,13 +8,13 @@ namespace rwby
     public static class SaveLoadJsonService
     {
 
-        public static bool Save(string fileName, string jsonObject)
+        public static bool Save(string fileName, string text)
         {
             try
             {
                 using (StreamWriter streamWriter = File.CreateText(Path.Combine(Application.persistentDataPath, fileName)))
                 {
-                    streamWriter.Write(jsonObject);
+                    streamWriter.Write(text);
                 }
             }
             catch
@@ -80,6 +80,27 @@ namespace rwby
             catch
             {
                 result = default(T);
+                return false;
+            }
+        }
+
+        public static bool TryLoadFile(string path, out string result)
+        {
+            try
+            {
+                string p = Path.Combine(Application.persistentDataPath, path);
+                if (!File.Exists(p)) throw new Exception($"File {p} does not exist.");
+                string str = String.Empty;
+                using (StreamReader streamReader = File.OpenText(p))
+                {
+                    str = streamReader.ReadToEnd();
+                }
+                result = str;
+                return true;
+            }
+            catch
+            {
+                result = null;
                 return false;
             }
         }

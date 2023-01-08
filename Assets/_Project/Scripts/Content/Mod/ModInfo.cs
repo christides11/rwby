@@ -15,5 +15,7 @@ namespace rwby
         public string fileName;
         public string identifier;
         public bool commandLine;
+        public bool disableRequiresRestart;
+        public bool enableRequiresRestart;
     }
 }
