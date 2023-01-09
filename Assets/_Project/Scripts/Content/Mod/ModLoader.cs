@@ -29,18 +29,26 @@ namespace rwby
         /// A list of all currently enabled mods.
         /// </summary>
         public Dictionary<ContentGUID, LoadedModDefinition> loadedModsByGUID = new Dictionary<ContentGUID, LoadedModDefinition>();
-
-        public HashSet<string> loadedBepInExMods = new HashSet<string>();
+        public Dictionary<string, ModInfo> loadedModsByIdentifier = new Dictionary<string, ModInfo>();
         /// <summary>
         /// The path where mods are installed.
         /// </summary>
-        private string modInstallPath = "";
+        public string modInstallPath = "";
         private ModDirectory modDirectory = null;
 
         public async UniTask Initialize()
         {
             instance = this;
 
+            modList.Add(new ModInfo()
+            {
+                backingType = ModBackingType.Local,
+                fileName = "",
+                identifier = "christides11.rwby.core",
+                modName = "core",
+                path = new Uri("/")
+            });
+            
             // Initialize paths.
             modInstallPath = Path.Combine(Application.persistentDataPath, "Mods");
             
@@ -51,7 +59,7 @@ namespace rwby
             UpdateModList();
             await LoadLocalMod();
             await LoadModConfiguration();
-            Debug.Log($"{loadedModsByGUID.Count} mods loaded");
+            Debug.Log($"{loadedModsByIdentifier.Count} mods loaded");
         }
 
         private void UpdateModList()
@@ -159,8 +167,8 @@ namespace rwby
 
         public void SaveModConfiguration()
         {
-            SaveLoadJsonService.Save(modsLoadedFileName, JsonUtility.ToJson(loadedModsByGUID.Keys.ToList()));
-            SaveLoadJsonService.Save(bepinModsLoadedFileName, string.Join('\n', loadedBepInExMods));
+            SaveLoadJsonService.Save(modsLoadedFileName, JsonUtility.ToJson(loadedModsByIdentifier.Keys.ToList()));
+            //SaveLoadJsonService.Save(bepinModsLoadedFileName, string.Join('\n', loadedBepInExMods));
         }
 
         public async UniTask LoadModConfiguration()
@@ -173,16 +181,16 @@ namespace rwby
                 savedLoadedMods.Remove(um);
             }
 
+            /*
             if (!SaveLoadJsonService.TryLoadFile(bepinModsLoadedFileName, out string bepinModsString)) bepinModsString = "";
             var strSeparated = bepinModsString.Split('\n');
 
-            loadedBepInExMods = new HashSet<string>(strSeparated);
+            loadedBepInExMods = new HashSet<string>(strSeparated);*/
         }
 
         #region Loading
         public async UniTask LoadAllMods()
         {
-            int startValue = loadedModsByGUID.Count;
             foreach (ModInfo mi in modList)
             {
                 await LoadMod(mi);
@@ -235,7 +243,8 @@ namespace rwby
 
         private bool LoadBepInExMod(ModInfo modInfo)
         {
-            loadedBepInExMods.Add( modInfo.path.Segments[^1] );
+            loadedModsByIdentifier.Add(modInfo.identifier, modInfo);
+            //loadedBepInExMods.Add( modInfo.path.Segments[^1] );
             return true;
         }
 
@@ -250,6 +259,7 @@ namespace rwby
                 definition = handle.Result,
                 handle = handle
             };
+            loadedModsByIdentifier.Add(modList[0].identifier, modList[0]);
             loadedModsByGUID.Add(handle.Result.ModGUID, loadedModDefinition);
         }
 
@@ -269,6 +279,7 @@ namespace rwby
                     definition = mao.Result as IModDefinition,
                     host = mod
                 };
+                loadedModsByIdentifier.Add(modInfo.identifier, modInfo);
                 loadedModsByGUID.Add(loadedModDefinition.definition.ModGUID, loadedModDefinition);
                 await CheckForLoadedUModDependencies();
                 return true;
@@ -308,6 +319,7 @@ namespace rwby
                     resourceLocatorHandle = handle,
                     resourceLocationMap = loadResult
                 };
+                loadedModsByIdentifier.Add(modInfo.identifier, modInfo);
                 loadedModsByGUID.Add(loadedModDefinition.definition.ModGUID, loadedModDefinition);
                 return true;
             }
@@ -320,7 +332,12 @@ namespace rwby
         #endregion
 
         #region Unloading
-        public void UnloadMod(ContentGUID modGUID)
+
+        public void UnloadMod(string identifier)
+        {
+            if (!loadedModsByIdentifier.ContainsKey(identifier)) return;
+        }
+        /*public void UnloadMod(ContentGUID modGUID)
         {
             if (loadedModsByGUID.ContainsKey(modGUID)) return;
 
@@ -336,7 +353,7 @@ namespace rwby
                 loadedModsByGUID[k].Unload();
             }
             loadedModsByGUID.Clear();
-        }
+        }*/
         #endregion
 
         public bool TryGetLoadedMod(ContentGUID modGUID, out LoadedModDefinition loadedMod)

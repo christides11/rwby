@@ -3,11 +3,10 @@ using System;
 namespace rwby
 {
     /// <summary>
-    /// Info that is stored for any currently loaded mod.
-    /// The identifier follows the format of "author.modName".
+    /// Info that is stored for any mods found.
     /// </summary>
     [System.Serializable]
-    public class ModInfo
+    public class  ModInfo
     {
         public ModBackingType backingType;
         public Uri path;
