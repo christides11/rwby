@@ -1,5 +1,6 @@
 using System;
 using Cysharp.Threading.Tasks;
+using Fusion;
 using UMod;
 using UnityEngine;
 
@@ -27,7 +28,9 @@ namespace rwby
         {
             get { return hudContentReferences; }
         }
-        
+
+        public override SerializableGuid FighterGUID => fighterGUID;
+
         public override CameraDef[] cameras => cams;
 
         [SerializeField] private string fighterName;
@@ -39,6 +42,7 @@ namespace rwby
         [SerializeField] private int aura;
         [SerializeField] private int auraGainPerFrame;
 
+        [SerializeField] private SerializableGuid fighterGUID;
         [SerializeField] private UModAssetReference fighterReference;
         [SerializeField] private UModAssetReference[] movesetReferences = Array.Empty<UModAssetReference>();
         
@@ -55,6 +59,8 @@ namespace rwby
                 bool movesetLoadResult = await TryLoadMoveset(i);
                 if (!movesetLoadResult) return false;
             }
+
+            NetworkManager.singleton.TryRegisterNetworkObject(fighterGUID, fighterHandle.Result.GetComponent<NetworkObject>());
             return true;
         }
 
@@ -97,11 +103,6 @@ namespace rwby
         public override GameObject GetFighter()
         {
             return fighterHandle.Result;
-        }
-
-        public override string GetFighterGUID()
-        {
-            throw new System.NotImplementedException();
         }
 
         public override Moveset[] GetMovesets()

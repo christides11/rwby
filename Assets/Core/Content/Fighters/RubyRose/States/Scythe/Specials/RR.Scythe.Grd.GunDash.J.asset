@@ -58,6 +58,7 @@ MonoBehaviour:
   - ID: 0
     groundedFoldoutGroup: 0
     groundedCounterHitFoldoutGroup: 0
+    clashLevel: 0
     hitStateGroundedGroups: -1
     hit:
       groundHitState: 34
@@ -89,32 +90,16 @@ MonoBehaviour:
       comboProration: 0
       damage: 100
       chipDamage: 50
-      hitEffectbank:
-        modGUID:
-          guid: 
-        contentGUID:
-          guid: 
+      hitEffectbank: {fileID: 0}
       hitEffect: 
-      blockEffectbank:
-        modGUID:
-          guid: 
-        contentGUID:
-          guid: 
+      blockEffectbank: {fileID: 0}
       blockEffect: 
-      hitSoundbank:
-        modGUID:
-          guid: 
-        contentGUID:
-          guid: 
+      hitSoundbank: {fileID: 0}
       hitSound: 
       hitSoundVolume: 0
       hitSoundMinDist: 0
       hitSoundMaxDist: 0
-      hitBlockSoundbank:
-        modGUID:
-          guid: 
-        contentGUID:
-          guid: 
+      hitBlockSoundbank: {fileID: 0}
       hitBlockSound: 
       hitCameraShakeStrength: 1
       blockCameraShakeStrength: 0
@@ -152,32 +137,16 @@ MonoBehaviour:
       comboProration: 0
       damage: 100
       chipDamage: 50
-      hitEffectbank:
-        modGUID:
-          guid: 
-        contentGUID:
-          guid: 
+      hitEffectbank: {fileID: 0}
       hitEffect: 
-      blockEffectbank:
-        modGUID:
-          guid: 
-        contentGUID:
-          guid: 
+      blockEffectbank: {fileID: 0}
       blockEffect: 
-      hitSoundbank:
-        modGUID:
-          guid: 
-        contentGUID:
-          guid: 
+      hitSoundbank: {fileID: 0}
       hitSound: 
       hitSoundVolume: 0
       hitSoundMinDist: 0
       hitSoundMaxDist: 0
-      hitBlockSoundbank:
-        modGUID:
-          guid: 
-        contentGUID:
-          guid: 
+      hitBlockSoundbank: {fileID: 0}
       hitBlockSound: 
       hitCameraShakeStrength: 0
       blockCameraShakeStrength: 0
@@ -206,17 +175,15 @@ MonoBehaviour:
         condition:
           rid: -2
         sounds:
-        - soundbank:
-            modGUID:
-              guid: 1d292c1f00000000
-            contentGUID:
-              guid: 2c2c000000000000
+        - soundbank: {fileID: 11400000, guid: 46cf32b8cf1903a428cb8802d2539eca, type: 2}
           sound: swing13
           parented: 0
           offset: {x: 0, y: 0, z: 0}
           volume: 0.2
           minDist: 5
           maxDist: 20
+          pitchDeviMin: 0
+          pitchDeviMax: 0
     - rid: 387795852084117509
       type: {class: VarClampMovement, ns: rwby, asm: rwby.csharp}
       data:

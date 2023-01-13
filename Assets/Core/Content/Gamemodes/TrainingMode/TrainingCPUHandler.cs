@@ -60,7 +60,7 @@ namespace rwby.core.training
             
             for(int i = 0; i < cpus.Length; i++)
             {
-                ModGUIDContentReference contentReference = cpus[i].characterReference;
+                ModIDContentReference contentReference = cpus[i].characterReference;
                 if(contentReference.IsValid() && !cpus[i].objectId.IsValid)
                 {
                     List<PlayerRef> failedLoadPlayers = await gamemode.sessionManager.clientContentLoaderService.TellClientsToLoad<IFighterDefinition>(contentReference);

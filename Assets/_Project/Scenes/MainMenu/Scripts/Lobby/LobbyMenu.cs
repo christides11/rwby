@@ -347,16 +347,16 @@ namespace rwby.ui
             });
         }
 
-        private async UniTask SetSong(ModGUIDContentReference modGuidContentReference)
+        private async UniTask SetSong(ModIDContentReference modIDContentReference)
         {
             canvasGroup.interactable = true;
-            bool loadResult = await ContentManager.singleton.LoadContentDefinition(modGuidContentReference);
+            bool loadResult = await ContentManager.singleton.LoadContentDefinition(modIDContentReference);
             if (!loadResult)
             {
                 Debug.LogError("Could not load given song definition.");
                 return;
             }
-            var ob = (ISongDefinition)ContentManager.singleton.GetContentDefinition(modGuidContentReference);
+            var ob = (ISongDefinition)ContentManager.singleton.GetContentDefinition(modIDContentReference);
 
             await ob.Load();
             songText.text = ob.Name;

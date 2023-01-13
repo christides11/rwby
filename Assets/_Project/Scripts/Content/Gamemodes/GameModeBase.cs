@@ -27,7 +27,7 @@ namespace rwby
 
         [Networked(OnChanged = nameof(GamemodeStateChanged))] public GameModeState GamemodeState { get; set; }
         
-        [Networked] public SessionManagerGamemode sessionManager { get; set; }
+        [Networked, HideInInspector] public SessionManagerGamemode sessionManager { get; set; }
         [Networked] public NetworkRNG rngGenerator { get; set; } = new NetworkRNG(0);
 
         public static void GamemodeStateChanged(Changed<GameModeBase> changed)
@@ -97,7 +97,7 @@ namespace rwby
             return true;
         }*/
 
-        public virtual bool VerifyReference(ModGUIDContentReference contentReference)
+        public virtual bool VerifyReference(ModIDContentReference contentReference)
         {
             return false;
         }

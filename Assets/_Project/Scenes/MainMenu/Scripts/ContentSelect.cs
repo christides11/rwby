@@ -25,7 +25,7 @@ namespace rwby
             singleton = this;
         }
 
-        public async UniTask<ContentSelectInstance> OpenMenu(int player, int contentType, UnityEngine.Events.UnityAction<int, ModGUIDContentReference> selectAction,
+        public async UniTask<ContentSelectInstance> OpenMenu(int player, int contentType, UnityEngine.Events.UnityAction<int, ModIDContentReference> selectAction,
             string[] tags = null)
         {
             await UniTask.WaitForEndOfFrame(this);

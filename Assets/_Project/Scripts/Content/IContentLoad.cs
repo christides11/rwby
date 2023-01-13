@@ -5,5 +5,5 @@ using UnityEngine;
 
 public interface IContentLoad
 {
-    IEnumerable<ModGUIDContentReference> loadedContent { get; }
+    IEnumerable<ModIDContentReference> loadedContent { get; }
 }

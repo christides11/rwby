@@ -7,15 +7,15 @@ namespace rwby
     [System.Serializable]
     public struct NetworkModObjectGUIDReference : INetworkStruct, IEquatable<NetworkModObjectGUIDReference>
     {
-        public NetworkedContentGUID modGUID;
+        public uint modGUID;
         public byte contentType;
-        public int contentIdx;
+        public ushort contentIdx;
 
-        public NetworkModObjectGUIDReference(ContentGUID modGUID, int contentType, int contentIdx)
+        public NetworkModObjectGUIDReference(uint modGUID, int contentType, int contentIdx)
         {
-            this.modGUID = new NetworkedContentGUID(modGUID.guid);
+            this.modGUID = modGUID;
             this.contentType = (byte)contentType;
-            this.contentIdx = contentIdx;
+            this.contentIdx = (ushort)contentIdx;
         }
         
         public bool IsValid()
@@ -29,9 +29,9 @@ namespace rwby
             return $"{modGUID.ToString()}:{contentType}:{contentIdx}";
         }
 
-        public bool Equals(ModGUIDContentReference other)
+        public bool Equals(ModIDContentReference other)
         {
-            return contentType == other.contentType && modGUID.Equals(other.modGUID) && contentIdx.Equals(other.contentIdx);
+            return contentType == other.contentType && modGUID.Equals(other.modID) && contentIdx.Equals(other.contentIdx);
         }
         
         public bool Equals(NetworkModObjectGUIDReference other)
@@ -54,12 +54,12 @@ namespace rwby
             return x.Equals(y);
         }
         
-        public static bool operator ==(NetworkModObjectGUIDReference x,ModGUIDContentReference y)
+        public static bool operator ==(NetworkModObjectGUIDReference x,ModIDContentReference y)
         {
             return x.Equals(y);
         }
 
-        public static bool operator !=(NetworkModObjectGUIDReference x, ModGUIDContentReference y)
+        public static bool operator !=(NetworkModObjectGUIDReference x, ModIDContentReference y)
         {
             return !(x == y);
         }
@@ -69,7 +69,7 @@ namespace rwby
             return !(x == y);
         }
 
-        public static implicit operator ModGUIDContentReference(NetworkModObjectGUIDReference nmo) =>
-            new ModGUIDContentReference(nmo.modGUID.guid.ToArray(), nmo.contentType, nmo.contentIdx);
+        public static implicit operator ModIDContentReference(NetworkModObjectGUIDReference nmo) =>
+            new ModIDContentReference(nmo.modGUID, nmo.contentType, nmo.contentIdx);
     }
 }

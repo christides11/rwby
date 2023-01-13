@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Cysharp.Threading.Tasks;
@@ -131,7 +130,7 @@ namespace rwby
                 return false;
             }
             
-            HashSet<ModGUIDContentReference> fightersToLoad = new HashSet<ModGUIDContentReference>();
+            HashSet<ModIDContentReference> fightersToLoad = new HashSet<ModIDContentReference>();
 
             for (int i = 0; i < ClientDefinitions.Count; i++)
             {
@@ -182,7 +181,7 @@ namespace rwby
             return true;
         }
         
-        public async UniTask<bool> TrySetGamemode(ModGUIDContentReference gamemodeContentReference)
+        public async UniTask<bool> TrySetGamemode(ModIDContentReference gamemodeContentReference)
         {
             if (Object.HasStateAuthority == false) return false;
 
@@ -355,7 +354,7 @@ namespace rwby
             Debug.LogError("Could not find client.");
         }
         
-        public void CLIENT_SetPlayerCharacter(int playerID, int characterIndex, ModGUIDContentReference characterContentReference)
+        public void CLIENT_SetPlayerCharacter(int playerID, int characterIndex, ModIDContentReference characterContentReference)
         {
             RPC_SetPlayerCharacter(playerID, characterIndex, characterContentReference);
         }
@@ -398,9 +397,9 @@ namespace rwby
             return default;
         }
 
-        protected override HashSet<ModGUIDContentReference> BuildLoadedContentList()
+        protected override HashSet<ModIDContentReference> BuildLoadedContentList()
         {
-            HashSet<ModGUIDContentReference> references =  base.BuildLoadedContentList();
+            HashSet<ModIDContentReference> references =  base.BuildLoadedContentList();
 
             // Loaded Characters
             for (int i = 0; i < ClientDefinitions.Count; i++)

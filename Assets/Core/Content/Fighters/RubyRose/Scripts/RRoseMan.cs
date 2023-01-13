@@ -6,15 +6,15 @@ using UnityEngine;
 
 public class RRoseMan : FighterManager
 {
-    public ModObjectSetContentReference[] animationbankReferences;
-    public ModObjectSetContentReference[] effectbankReferences;
-    public ModObjectSetContentReference[] soundbankReferences;
-    public ModObjectSetContentReference[] projectilebankReferences;
+    public SharedModSetContentReference[] animationbankReferences;
+    public SharedModSetContentReference[] effectbankReferences;
+    public SharedModSetContentReference[] soundbankReferences;
+    public SharedModSetContentReference[] projectilebankReferences;
 
-    private ModGUIDContentReference[] animationbankRefs;
-    private ModGUIDContentReference[] effectbankRefs;
-    private ModGUIDContentReference[] soundbankRefs;
-    private ModGUIDContentReference[] projectilebankRefs;
+    private ModIDContentReference[] animationbankRefs;
+    private ModIDContentReference[] effectbankRefs;
+    private ModIDContentReference[] soundbankRefs;
+    private ModIDContentReference[] projectilebankRefs;
 
     [Networked] public NetworkObject currentScythe { get; set; }
 
@@ -24,11 +24,11 @@ public class RRoseMan : FighterManager
     {
         for (int i = 0; i < animationbankReferences.Length; i++)
         {
-            bool animationbankLoadResult = await ContentManager.singleton.LoadContentDefinition(ContentManager.singleton.ConvertModContentGUIDReference(new ModContentGUIDReference()
+            bool animationbankLoadResult = await ContentManager.singleton.LoadContentDefinition(ContentManager.singleton.ConvertStringToGUIDReference(new ModContentStringReference()
                 {
-                    contentGUID = animationbankReferences[i].contentGUID,
-                    contentType = (int)ContentType.Animationbank,
-                    modGUID = animationbankReferences[i].modGUID
+                    contentGUID = animationbankReferences[i].reference.contentGUID,
+                    contentType = ContentType.Animationbank,
+                    modGUID = animationbankReferences[i].reference.modGUID
                 }
             ));
             if (animationbankLoadResult == false)
@@ -40,11 +40,11 @@ public class RRoseMan : FighterManager
         
         for (int i = 0; i < effectbankReferences.Length; i++)
         {
-            bool animationbankLoadResult = await ContentManager.singleton.LoadContentDefinition(ContentManager.singleton.ConvertModContentGUIDReference(new ModContentGUIDReference()
+            bool animationbankLoadResult = await ContentManager.singleton.LoadContentDefinition(ContentManager.singleton.ConvertStringToGUIDReference(new ModContentStringReference()
                 {
-                    contentGUID = effectbankReferences[i].contentGUID,
-                    contentType = (int)ContentType.Effectbank,
-                    modGUID = effectbankReferences[i].modGUID
+                    contentGUID = effectbankReferences[i].reference.contentGUID,
+                    contentType = ContentType.Effectbank,
+                    modGUID = effectbankReferences[i].reference.modGUID
                 }
             ));
             if (animationbankLoadResult == false)
@@ -56,11 +56,11 @@ public class RRoseMan : FighterManager
         
         for (int i = 0; i < soundbankReferences.Length; i++)
         {
-            bool soundbankLoadResult = await ContentManager.singleton.LoadContentDefinition(ContentManager.singleton.ConvertModContentGUIDReference(new ModContentGUIDReference()
+            bool soundbankLoadResult = await ContentManager.singleton.LoadContentDefinition(ContentManager.singleton.ConvertStringToGUIDReference(new ModContentStringReference()
                 {
-                    contentGUID = soundbankReferences[i].contentGUID,
-                    contentType = (int)ContentType.Soundbank,
-                    modGUID = soundbankReferences[i].modGUID
+                    contentGUID = soundbankReferences[i].reference.contentGUID,
+                    contentType = ContentType.Soundbank,
+                    modGUID = soundbankReferences[i].reference.modGUID
                 }
             ));
             if (soundbankLoadResult == false)
@@ -72,11 +72,11 @@ public class RRoseMan : FighterManager
         
         for (int i = 0; i < projectilebankReferences.Length; i++)
         {
-            bool projectilebankLoadResult = await ContentManager.singleton.LoadContentDefinition(ContentManager.singleton.ConvertModContentGUIDReference(new ModContentGUIDReference()
+            bool projectilebankLoadResult = await ContentManager.singleton.LoadContentDefinition(ContentManager.singleton.ConvertStringToGUIDReference(new ModContentStringReference()
                 {
-                    contentGUID = projectilebankReferences[i].contentGUID,
-                    contentType = (int)ContentType.Projectilebank,
-                    modGUID = projectilebankReferences[i].modGUID
+                    contentGUID = projectilebankReferences[i].reference.contentGUID,
+                    contentType = ContentType.Projectilebank,
+                    modGUID = projectilebankReferences[i].reference.modGUID
                 }
             ));
             if (projectilebankLoadResult == false)
@@ -93,61 +93,61 @@ public class RRoseMan : FighterManager
     {
         base.Awake();
         
-        animationbankRefs = new ModGUIDContentReference[animationbankReferences.Length];
-        effectbankRefs = new ModGUIDContentReference[effectbankReferences.Length];
-        soundbankRefs = new ModGUIDContentReference[soundbankReferences.Length];
-        projectilebankRefs = new ModGUIDContentReference[projectilebankReferences.Length];
+        animationbankRefs = new ModIDContentReference[animationbankReferences.Length];
+        effectbankRefs = new ModIDContentReference[effectbankReferences.Length];
+        soundbankRefs = new ModIDContentReference[soundbankReferences.Length];
+        projectilebankRefs = new ModIDContentReference[projectilebankReferences.Length];
         
         for (int i = 0; i < animationbankRefs.Length; i++)
         {
-            animationbankRefs[i] = ContentManager.singleton.ConvertModContentGUIDReference(new ModContentGUIDReference()
+            animationbankRefs[i] = ContentManager.singleton.ConvertStringToGUIDReference(new ModContentStringReference()
                 {
-                    contentGUID = animationbankReferences[i].contentGUID,
-                    contentType = (int)ContentType.Animationbank,
-                    modGUID = animationbankReferences[i].modGUID
+                    contentGUID = animationbankReferences[i].reference.contentGUID,
+                    contentType = ContentType.Animationbank,
+                    modGUID = animationbankReferences[i].reference.modGUID
                 }
             );
             
-            fighterAnimator.RegisterBank(animationbankReferences[i]);
+            fighterAnimator.RegisterBank(animationbankReferences[i].reference);
         }
         
         for (int i = 0; i < effectbankRefs.Length; i++)
         {
-            effectbankRefs[i] = ContentManager.singleton.ConvertModContentGUIDReference(new ModContentGUIDReference()
+            effectbankRefs[i] = ContentManager.singleton.ConvertStringToGUIDReference(new ModContentStringReference()
                 {
-                    contentGUID = effectbankReferences[i].contentGUID,
-                    contentType = (int)ContentType.Effectbank,
-                    modGUID = effectbankReferences[i].modGUID
+                    contentGUID = effectbankReferences[i].reference.contentGUID,
+                    contentType = ContentType.Effectbank,
+                    modGUID = effectbankReferences[i].reference.modGUID
                 }
             );
             
-            fighterEffector.RegisterBank(effectbankReferences[i]);
+            fighterEffector.RegisterBank(effectbankReferences[i].reference);
         }
         
         for (int i = 0; i < soundbankRefs.Length; i++)
         {
-            soundbankRefs[i] = ContentManager.singleton.ConvertModContentGUIDReference(new ModContentGUIDReference()
+            soundbankRefs[i] = ContentManager.singleton.ConvertStringToGUIDReference(new ModContentStringReference()
                 {
-                    contentGUID = soundbankReferences[i].contentGUID,
-                    contentType = (int)ContentType.Soundbank,
-                    modGUID = soundbankReferences[i].modGUID
+                    contentGUID = soundbankReferences[i].reference.contentGUID,
+                    contentType = ContentType.Soundbank,
+                    modGUID = soundbankReferences[i].reference.modGUID
                 }
             );
             
-            fighterSounder.RegisterBank(soundbankReferences[i]);
+            fighterSounder.RegisterBank(soundbankReferences[i].reference);
         }
         
         for (int i = 0; i < projectilebankRefs.Length; i++)
         {
-            projectilebankRefs[i] = ContentManager.singleton.ConvertModContentGUIDReference(new ModContentGUIDReference()
+            projectilebankRefs[i] = ContentManager.singleton.ConvertStringToGUIDReference(new ModContentStringReference()
                 {
-                    contentGUID = projectilebankReferences[i].contentGUID,
-                    contentType = (int)ContentType.Projectilebank,
-                    modGUID = projectilebankReferences[i].modGUID
+                    contentGUID = projectilebankReferences[i].reference.contentGUID,
+                    contentType = ContentType.Projectilebank,
+                    modGUID = projectilebankReferences[i].reference.modGUID
                 }
             );
             
-            projectileManager.RegisterBank(projectilebankReferences[i]);
+            projectileManager.RegisterBank(projectilebankReferences[i].reference);
         }
     }
 
@@ -200,7 +200,7 @@ public class RRoseMan : FighterManager
         FStateManager.ChangeState((int)FighterCmnStates.IDLE, 0);
     }
 
-    public override List<ModGUIDContentReference> GetLoadedContentList()
+    public override List<ModIDContentReference> GetLoadedContentList()
     {
         return base.GetLoadedContentList();
     }

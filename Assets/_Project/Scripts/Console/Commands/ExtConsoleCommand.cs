@@ -63,14 +63,14 @@ namespace rwby.Debugging
                     string[] gamemodeRefStr = gamemode.Split(',');
                     ModObjectSetContentReference gamemodeSetReference = new ModObjectSetContentReference(gamemodeRefStr[0], gamemodeRefStr[1]);
 
-                    ModContentGUIDReference gamemodeGUIDReference = new ModContentGUIDReference()
+                    ModContentStringReference gamemodeGUIDReference = new ModContentStringReference()
                     {
                         modGUID = gamemodeSetReference.modGUID,
-                        contentType = (int)ContentType.Gamemode,
+                        contentType = ContentType.Gamemode,
                         contentGUID = gamemodeSetReference.contentGUID
                     };
                     var gamemodeGUIDContentReference =
-                        ContentManager.singleton.ConvertModContentGUIDReference(gamemodeGUIDReference);
+                        ContentManager.singleton.ConvertStringToGUIDReference(gamemodeGUIDReference);
 
                     var r = await ContentManager.singleton.LoadContentDefinition(gamemodeGUIDContentReference);
 
@@ -125,13 +125,13 @@ namespace rwby.Debugging
             string[] gamemodeRefStr = gamemode.Split(',');
             ModObjectSetContentReference gamemodeSetReference = new ModObjectSetContentReference(gamemodeRefStr[0], gamemodeRefStr[1]);
 
-            ModContentGUIDReference gamemodeGUIDReference = new ModContentGUIDReference()
+            ModContentStringReference gamemodeGUIDReference = new ModContentStringReference()
             {
                 modGUID = gamemodeSetReference.modGUID,
-                contentType = (int)ContentType.Gamemode,
+                contentType = ContentType.Gamemode,
                 contentGUID = gamemodeSetReference.contentGUID
             };
-            var gamemodeGUIDContentReference = ContentManager.singleton.ConvertModContentGUIDReference(gamemodeGUIDReference);
+            var gamemodeGUIDContentReference = ContentManager.singleton.ConvertStringToGUIDReference(gamemodeGUIDReference);
             var r = await ContentManager.singleton.LoadContentDefinition(gamemodeGUIDContentReference);
 
             if (!r)
@@ -180,7 +180,7 @@ namespace rwby.Debugging
             await smc.CurrentGameMode.SetGamemodeSettings(gamemodeSettings);
 
             await SceneManager.UnloadSceneAsync(SceneManager.GetActiveScene());
-            await UniTask.WaitForEndOfFrame();
+            await UniTask.Yield(PlayerLoopTiming.LastPostLateUpdate);
             
             var playerRef = fl._runner.LocalPlayer;
             ClientManager localClient = fl._runner.GetPlayerObject(playerRef).GetBehaviour<ClientManager>();
@@ -193,13 +193,13 @@ namespace rwby.Debugging
             string[] charaRefStr = playerCharacter.Split(',');
             ModObjectSetContentReference charSetRef = new ModObjectSetContentReference(charaRefStr[0], charaRefStr[1]);
 
-            ModContentGUIDReference charaGUIDReference = new ModContentGUIDReference()
+            ModContentStringReference charaGUIDReference = new ModContentStringReference()
             {
                 modGUID = charSetRef.modGUID,
-                contentType = (int)ContentType.Fighter,
+                contentType = ContentType.Fighter,
                 contentGUID = charSetRef.contentGUID
             };
-            var charaGUIDContentReference = ContentManager.singleton.ConvertModContentGUIDReference(charaGUIDReference);
+            var charaGUIDContentReference = ContentManager.singleton.ConvertStringToGUIDReference(charaGUIDReference);
             var charaLoadResult = await ContentManager.singleton.LoadContentDefinition(charaGUIDContentReference);
             if (!charaLoadResult)
             {
@@ -227,8 +227,8 @@ namespace rwby.Debugging
                 }
             }
 
-            await UniTask.WaitForEndOfFrame();
-            await UniTask.WaitForEndOfFrame();
+            await UniTask.Yield(PlayerLoopTiming.LastPostLateUpdate);
+            await UniTask.Yield(PlayerLoopTiming.LastPostLateUpdate);
 
             bool startMatchResult = await smc.TryStartMatch();
             if (!startMatchResult)

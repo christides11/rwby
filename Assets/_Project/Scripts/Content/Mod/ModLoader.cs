@@ -18,6 +18,10 @@ namespace rwby
     public class ModLoader : MonoBehaviour
     {
         public static ModLoader instance;
+        
+        public delegate void ModActionDelegate(ModLoader modLoader, string modNamespace);
+        public static event ModActionDelegate OnModLoaded;
+        public static event ModActionDelegate OnModLoadUnsuccessful;
 
         public static string modsLoadedFileName = "loadedmods.json";
         public static readonly string bepinModsLoadedFileName = "enabled.txt";
@@ -25,30 +29,26 @@ namespace rwby
         /// A list of all mods in the Mods folder.
         /// </summary>
         public List<ModInfo> modList = new List<ModInfo>();
+        public Dictionary<string, ModInfo> modListByNamespace = new Dictionary<string, ModInfo>();
         /// <summary>
         /// A list of all currently enabled mods.
         /// </summary>
-        public Dictionary<ContentGUID, LoadedModDefinition> loadedModsByGUID = new Dictionary<ContentGUID, LoadedModDefinition>();
-        public Dictionary<string, ModInfo> loadedModsByIdentifier = new Dictionary<string, ModInfo>();
+        public Dictionary<uint, LoadedModDefinition> loadedModsByID = new Dictionary<uint, LoadedModDefinition>();
         /// <summary>
         /// The path where mods are installed.
         /// </summary>
         public string modInstallPath = "";
         private ModDirectory modDirectory = null;
 
+        public Dictionary<uint, string> modIDToNamespace = new Dictionary<uint, string>();
+        public Dictionary<string, uint> modNamespaceToID = new Dictionary<string, uint>();
+
+        public bool restartRequired = false;
+
         public async UniTask Initialize()
         {
             instance = this;
 
-            modList.Add(new ModInfo()
-            {
-                backingType = ModBackingType.Local,
-                fileName = "",
-                identifier = "christides11.rwby.core",
-                modName = "core",
-                path = new Uri("/")
-            });
-            
             // Initialize paths.
             modInstallPath = Path.Combine(Application.persistentDataPath, "Mods");
             
@@ -57,14 +57,74 @@ namespace rwby
             Mod.DefaultDirectory = modDirectory;
 
             UpdateModList();
-            await LoadLocalMod();
+            await LoadLocalMod(modList[0]);
             await LoadModConfiguration();
-            Debug.Log($"{loadedModsByIdentifier.Count} mods loaded");
+            Debug.Log($"{loadedModsByID.Count} mods loaded");
+        }
+
+        private void Update()
+        {
+            if (Input.GetKeyDown(KeyCode.F4))
+            {
+                foreach (var lm in loadedModsByID)
+                {
+                    if (lm.Value.definition == null) continue;
+                    foreach (var cp in lm.Value.definition.ContentParsers)
+                    {
+                        foreach (var cpc in cp.Value.GUIDToInt)
+                        {
+                            Debug.Log(cpc.Key);
+                        }
+                    }
+                }
+            }
+
+            if (Input.GetKeyDown(KeyCode.F3))
+            {
+                _ = LoadAllMods();
+            }
+        }
+
+        public void SaveModConfiguration()
+        {
+            var loadedModListByNamespace = new HashSet<string>();
+            var loadedModListFolderNames = new HashSet<string>();
+
+            foreach(var l in loadedModsByID)
+            {
+                var modNamespace = modIDToNamespace[l.Key];
+                loadedModListByNamespace.Add(modNamespace);
+
+                var modPath = modListByNamespace[modNamespace].path;
+                if (modPath != null)
+                {
+                    loadedModListFolderNames.Add(modPath.Segments.LastOrDefault());
+                }
+            }
+            SaveLoadJsonService.Save<List<string>>(modsLoadedFileName, loadedModListByNamespace.ToList(), true);
+            SaveLoadJsonService.Save(bepinModsLoadedFileName, string.Join('\n', loadedModListFolderNames));
         }
 
         private void UpdateModList()
         {
             modList.Clear();
+            modListByNamespace.Clear();
+            modIDToNamespace.Clear();
+            modNamespaceToID.Clear();
+            
+            ModInfo modInfo = new ModInfo()
+            {
+                backingType = ModBackingType.Local,
+                modNamespace = "christides11.rwby.core",
+                modIdentifier = 1,
+                modName = "core",
+                path = null
+            };
+            modList.Add(modInfo);
+            modListByNamespace.Add(modInfo.modNamespace, modInfo);
+            modIDToNamespace.Add(modInfo.modIdentifier, modInfo.modNamespace);
+            modNamespaceToID.Add(modInfo.modNamespace, modInfo.modIdentifier);
+            
             FindUModMods();
             FindOtherMods();
         }
@@ -76,7 +136,7 @@ namespace rwby
             {
                 foreach (string modName in modDirectory.GetModNames())
                 {
-                    string infoFilePath = Path.Combine(Path.GetDirectoryName(modDirectory.GetModPath(modName).AbsolutePath), "info.json");
+                    string infoFilePath = Path.Combine(Path.GetDirectoryName(modDirectory.GetModPath(modName).AbsolutePath)!, "info.json");
                     if (File.Exists(infoFilePath) == false) continue;
                     if (!SaveLoadJsonService.TryLoad(infoFilePath, out AddressablesInfoFile aif)) continue;
                     
@@ -85,14 +145,17 @@ namespace rwby
                     {
                         backingType = ModBackingType.UMod,
                         commandLine = false,
-                        path = new Uri(Path.GetDirectoryName(modDirectory.GetModPath(modName).AbsolutePath)),
-                        fileName = modName,
+                        path = modDirectory.GetModPath(modName),
                         modName = modInfo.NameInfo.ModName,
-                        identifier = $"{aif.modIdentifier}",
+                        modNamespace = $"{aif.modIdentifier}",
+                        modIdentifier = aif.modID,
                         disableRequiresRestart = aif.disableRequiresRestart,
                         enableRequiresRestart = aif.enableRequiresRestart
                     };
                     modList.Add(mi);
+                    modListByNamespace.Add(mi.modNamespace, mi);
+                    modIDToNamespace.Add(aif.modID, aif.modIdentifier);
+                    modNamespaceToID.Add(aif.modIdentifier, aif.modID);
                 }
             }
 
@@ -101,7 +164,7 @@ namespace rwby
             {
                 foreach (Uri modPath in Mod.CommandLine.AllMods)
                 {
-                    string infoFilePath = Path.Combine(Path.GetDirectoryName(modPath.AbsolutePath), "info.json");
+                    string infoFilePath = Path.Combine(Path.GetDirectoryName(modPath.AbsolutePath)!, "info.json");
                     if (File.Exists(infoFilePath) == false) continue;
                     if (!SaveLoadJsonService.TryLoad(infoFilePath, out AddressablesInfoFile aif)) continue;
                     IModInfo modInfo = ModDirectory.GetMod(new FileInfo(modPath.LocalPath));
@@ -109,14 +172,17 @@ namespace rwby
                     {
                         backingType = ModBackingType.UMod,
                         commandLine = true,
-                        path = new Uri(Path.GetDirectoryName(modPath.AbsolutePath)),
-                        fileName = System.IO.Path.GetFileName(modPath.LocalPath),
+                        path = new Uri(modPath.AbsolutePath),
                         modName = modInfo.NameInfo.ModName,
-                        identifier = $"{aif.modIdentifier}",
+                        modNamespace = $"{aif.modIdentifier}",
+                        modIdentifier = aif.modID,
                         disableRequiresRestart = aif.disableRequiresRestart,
                         enableRequiresRestart = aif.enableRequiresRestart
                     };
                     modList.Add(mi);
+                    modListByNamespace.Add(mi.modNamespace, mi);
+                    modIDToNamespace.Add(aif.modID, aif.modIdentifier);
+                    modNamespaceToID.Add(aif.modIdentifier, aif.modID);
                 }
             }
         }
@@ -136,13 +202,16 @@ namespace rwby
                     backingType = aif.backingType,
                     commandLine = false,
                     path = new Uri(folderPath),
-                    fileName = "info.json",
                     modName = $"{aif.modName}",
-                    identifier = $"{aif.modIdentifier}",
+                    modNamespace = $"{aif.modIdentifier}",
+                    modIdentifier = aif.modID,
                     disableRequiresRestart = aif.disableRequiresRestart,
                     enableRequiresRestart = aif.enableRequiresRestart
                 };
                 modList.Add(mi);
+                modListByNamespace.Add(mi.modNamespace, mi);
+                modIDToNamespace.Add(aif.modID, aif.modIdentifier);
+                modNamespaceToID.Add(aif.modIdentifier, aif.modID);
             }
         }
 
@@ -165,12 +234,6 @@ namespace rwby
             }*/
         }
 
-        public void SaveModConfiguration()
-        {
-            SaveLoadJsonService.Save(modsLoadedFileName, JsonUtility.ToJson(loadedModsByIdentifier.Keys.ToList()));
-            //SaveLoadJsonService.Save(bepinModsLoadedFileName, string.Join('\n', loadedBepInExMods));
-        }
-
         public async UniTask LoadModConfiguration()
         {
             if(!SaveLoadJsonService.TryLoad(modsLoadedFileName, out List<string> savedLoadedMods)) savedLoadedMods = new List<string>();
@@ -180,12 +243,6 @@ namespace rwby
             {
                 savedLoadedMods.Remove(um);
             }
-
-            /*
-            if (!SaveLoadJsonService.TryLoadFile(bepinModsLoadedFileName, out string bepinModsString)) bepinModsString = "";
-            var strSeparated = bepinModsString.Split('\n');
-
-            loadedBepInExMods = new HashSet<string>(strSeparated);*/
         }
 
         #region Loading
@@ -215,16 +272,19 @@ namespace rwby
             return notLoaded;
         }
 
-        public async UniTask<bool> LoadMod(string identifier)
+        public async UniTask<bool> LoadMod(string modNamespace)
         {
-            if (modList.Exists(x => x.identifier == identifier))
+            if (modList.Exists(x => x.modNamespace == modNamespace))
             {
-                return await LoadMod(modList.Find(x => x.identifier == identifier));
+                var r = await LoadMod(modList.Find(x => x.modNamespace == modNamespace));
+                OnModLoaded?.Invoke(this, modNamespace);
+                return r;
             }
+            OnModLoadUnsuccessful?.Invoke(this, modNamespace);
             return false;
         }
 
-        public async UniTask<bool> LoadMod(ModInfo modInfo)
+        private async UniTask<bool> LoadMod(ModInfo modInfo)
         {
             switch (modInfo.backingType)
             {
@@ -235,7 +295,7 @@ namespace rwby
                 case ModBackingType.BepInEx:
                     return LoadBepInExMod(modInfo);
                 case ModBackingType.Local:
-                    return false;
+                    return true;
             }
 
             return false;
@@ -243,12 +303,15 @@ namespace rwby
 
         private bool LoadBepInExMod(ModInfo modInfo)
         {
-            loadedModsByIdentifier.Add(modInfo.identifier, modInfo);
-            //loadedBepInExMods.Add( modInfo.path.Segments[^1] );
+            if (loadedModsByID.ContainsKey(modInfo.modIdentifier)) return true;
+            loadedModsByID.Add(modInfo.modIdentifier, new LoadedBepInExModDefinition()
+            {
+                definition = null
+            });
             return true;
         }
 
-        private async UniTask LoadLocalMod()
+        private async UniTask LoadLocalMod(ModInfo modInfo)
         {
             var handle = Addressables.LoadAssetAsync<AddressablesModDefinition>("moddefinition");
             await handle;
@@ -259,15 +322,15 @@ namespace rwby
                 definition = handle.Result,
                 handle = handle
             };
-            loadedModsByIdentifier.Add(modList[0].identifier, modList[0]);
-            loadedModsByGUID.Add(handle.Result.ModGUID, loadedModDefinition);
+            loadedModsByID.Add(modInfo.modIdentifier, loadedModDefinition);
         }
 
         private async UniTask<bool> LoadUModMod(ModInfo modInfo)
         {
-            ModHost mod = Mod.Load(modInfo.path);
+            ModHost mod = null;
             try
             {
+                mod = Mod.Load(modInfo.path);
                 if (mod.IsModLoaded == false) throw new Exception($"UMod mod failed to load: {mod.LoadResult.Error}");
 
                 ModAsyncOperation mao = mod.Assets.LoadAsync("ModDefinition");
@@ -279,14 +342,13 @@ namespace rwby
                     definition = mao.Result as IModDefinition,
                     host = mod
                 };
-                loadedModsByIdentifier.Add(modInfo.identifier, modInfo);
-                loadedModsByGUID.Add(loadedModDefinition.definition.ModGUID, loadedModDefinition);
+                loadedModsByID.Add(loadedModDefinition.definition.ModID, loadedModDefinition);
                 await CheckForLoadedUModDependencies();
                 return true;
             }
             catch (Exception e)
             {
-                Debug.LogError($"Failed loading UMod mod {modInfo.identifier}: {e.Message}");
+                Debug.LogError($"Failed loading UMod mod {mod} {modInfo.modNamespace} {modInfo.path}: {e.Message}");
                 if (mod.IsModLoaded)
                 {
                     mod.UnloadMod();
@@ -308,7 +370,7 @@ namespace rwby
                     if (typeof(IModDefinition).IsAssignableFrom(loadResult.Locations[key][0].ResourceType))
                     {
                         imd = await Addressables.LoadAssetAsync<IModDefinition>(loadResult.Locations[key][0]);
-                        Debug.Log($"Test: {imd.ModGUID}");
+                        Debug.Log($"Test: {imd.ModID}");
                         break;
                     }
                 }
@@ -319,13 +381,12 @@ namespace rwby
                     resourceLocatorHandle = handle,
                     resourceLocationMap = loadResult
                 };
-                loadedModsByIdentifier.Add(modInfo.identifier, modInfo);
-                loadedModsByGUID.Add(loadedModDefinition.definition.ModGUID, loadedModDefinition);
+                loadedModsByID.Add(loadedModDefinition.definition.ModID, loadedModDefinition);
                 return true;
             }
             catch (Exception e)
             {
-                Debug.LogError($"Failed loading Addressables mod {modInfo.identifier}: {e.Message}");
+                Debug.LogError($"Failed loading Addressables mod {modInfo.modNamespace}: {e.Message}");
                 return false;
             }
         }
@@ -333,43 +394,49 @@ namespace rwby
 
         #region Unloading
 
-        public void UnloadMod(string identifier)
+        public void UnloadMod(string modNamespace)
         {
-            if (!loadedModsByIdentifier.ContainsKey(identifier)) return;
-        }
-        /*public void UnloadMod(ContentGUID modGUID)
-        {
-            if (loadedModsByGUID.ContainsKey(modGUID)) return;
-
-            // Unload mod
-            loadedModsByGUID[modGUID].Unload();
-            loadedModsByGUID.Remove(modGUID);
+            if (!modNamespaceToID.ContainsKey(modNamespace)) return;
+            UnloadMod(modNamespaceToID[modNamespace]);
         }
 
-        public virtual void UnloadAllMods()
+        public void UnloadMod(uint modID)
         {
-            foreach (var k in loadedModsByGUID.Keys)
-            {
-                loadedModsByGUID[k].Unload();
-            }
-            loadedModsByGUID.Clear();
-        }*/
+            if (!loadedModsByID.ContainsKey(modID)) return;
+            loadedModsByID[modID].Unload();
+            loadedModsByID.Remove(modID);
+        }
         #endregion
 
-        public bool TryGetLoadedMod(ContentGUID modGUID, out LoadedModDefinition loadedMod)
+        public bool TryGetLoadedMod(string modID, out LoadedModDefinition loadedMod)
         {
-            if (!loadedModsByGUID.TryGetValue(modGUID, out loadedMod)) return false;
+            loadedMod = null;
+            if (!modNamespaceToID.ContainsKey(modID)) return false;
+            if (!TryGetLoadedMod(modNamespaceToID[modID], out loadedMod)) return false;
+            return true;
+        }
+        
+        public bool TryGetLoadedMod(uint modID, out LoadedModDefinition loadedMod)
+        {
+            if (!loadedModsByID.TryGetValue(modID, out loadedMod)) return false;
             return true;
         }
 
-        public bool IsLoaded(ContentGUID modGUID)
+        public bool IsLoaded(uint modID)
         {
-            return loadedModsByGUID.ContainsKey(modGUID);
+            return loadedModsByID.ContainsKey(modID);
         }
 
-        public IModInfo GetModInfo(ModInfo modInfo)
+        public ModInfo GetModInfo(uint modID)
         {
-            return ModDirectory.GetMod(new FileInfo(modInfo.path.LocalPath));
+            if (!modIDToNamespace.ContainsKey(modID)) return null;
+            return GetModInfo(modIDToNamespace[modID]);
+        }
+        
+        public ModInfo GetModInfo(string modNamespace)
+        {
+            if (!modListByNamespace.ContainsKey(modNamespace)) return null;
+            return modListByNamespace[modNamespace];
         }
     }
 }

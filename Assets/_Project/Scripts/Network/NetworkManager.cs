@@ -1,3 +1,4 @@
+using System;
 using Fusion;
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
@@ -97,6 +98,31 @@ namespace rwby
                 if (sessions[sessionsKey]._runner == runner) return sessions[sessionsKey];
             }
             return null;
+        }
+
+        public bool TryRegisterNetworkObject(Guid prefabGUID, NetworkObject networkObject)
+        {
+            foreach (var session in sessions)
+            {
+                var r = session.Value._runner.Config.PrefabTable.TryAdd(
+                    new NetworkObjectGuid(prefabGUID.ToString()), 
+                    new NetworkPrefabSourceStatic()
+                    {
+                        PrefabReference = networkObject
+                    }, 
+                    out var id);
+                if(!r) Debug.LogError($"Error adding {prefabGUID}:{networkObject} to prefab table.");
+                
+            }
+            return true;
+        }
+
+        public void UnregisterNetworkObject()
+        {
+            foreach (var session in sessions)
+            {
+                
+            }
         }
     }
 }

@@ -12,13 +12,13 @@ namespace rwby
 
         public void Play(ModObjectItemReference audioClip, float volume, float pitch, Vector3 position)
         {
-            var guidRef = new ModContentGUIDReference()
+            var guidRef = new ModContentStringReference()
             {
-                contentGUID = audioClip.contentReference.contentGUID,
-                contentType = (int)ContentType.Soundbank,
-                modGUID = audioClip.contentReference.modGUID
+                contentGUID = audioClip.contentReference.reference.contentGUID,
+                contentType = ContentType.Soundbank,
+                modGUID = audioClip.contentReference.reference.modGUID
             };
-            var rawRef = ContentManager.singleton.ConvertModContentGUIDReference(guidRef);
+            var rawRef = ContentManager.singleton.ConvertStringToGUIDReference(guidRef);
 
             var soundbank = ContentManager.singleton.GetContentDefinition(rawRef);
             if (soundbank == null) return;

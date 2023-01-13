@@ -69,8 +69,8 @@ namespace rwby
                 var temp = animationSet;
                 temp.layer0.Set(i, new FighterAnimationNode()
                 {
-                    bank = bankMap[wantedAnimations[i].animationbank]+1,
-                    animation = banks[bankMap[wantedAnimations[i].animationbank]].AnimationMap[wantedAnimations[i].animation]+1,
+                    bank = bankMap[wantedAnimations[i].animationbank.reference]+1,
+                    animation = banks[bankMap[wantedAnimations[i].animationbank.reference]].AnimationMap[wantedAnimations[i].animation]+1,
                     frame = 0,
                     weight = 1.0f
                 });
@@ -220,7 +220,7 @@ namespace rwby
 
         public AnimationClip GetClip(AnimationReference animation)
         {
-            return banks[bankMap[animation.animationbank]].GetAnimation(animation.animation).clip;
+            return banks[bankMap[animation.animationbank.reference]].GetAnimation(animation.animation).clip;
         }
 
         private void ClearWeights(int layer)
@@ -260,7 +260,7 @@ namespace rwby
         {
             if (bankMap.ContainsKey(bank)) return;
             banks.Add(ContentManager.singleton.GetContentDefinition<IAnimationbankDefinition>(
-                ContentManager.singleton.ConvertModContentGUIDReference(new ModContentGUIDReference(bank.modGUID, (int)ContentType.Animationbank, bank.contentGUID))));
+                ContentManager.singleton.ConvertStringToGUIDReference(new ModContentStringReference(bank.modGUID, (int)ContentType.Animationbank, bank.contentGUID))));
             bankMap.Add(bank, banks.Count-1);
 
             for (int i = 0; i < banks[^1].Animations.Count; i++)

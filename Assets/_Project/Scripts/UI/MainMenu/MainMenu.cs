@@ -49,6 +49,8 @@ namespace rwby.ui.mainmenu
         public AudioSource audioSource;
         public AudioClip buttonSelectSFX;
         public AudioClip buttonClickedSFX;
+        public ModContentStringReference menuThemeReference;
+        [Range(0.0f, 1.0f)]public float menuThemeVolume = 1.0f;
 
         private void Awake()
         {
@@ -71,17 +73,10 @@ namespace rwby.ui.mainmenu
 
             _ = PlayMenuTheme();
         }
-
-        public ModObjectSetContentReference menuThemeReference;
+        
         private async UniTask PlayMenuTheme()
         {
-            var guidRef = new ModContentGUIDReference()
-            {
-                contentGUID = menuThemeReference.contentGUID,
-                contentType = (int)ContentType.Song,
-                modGUID = menuThemeReference.modGUID
-            };
-            var rawRef = ContentManager.singleton.ConvertModContentGUIDReference(guidRef);
+            var rawRef = ContentManager.singleton.ConvertStringToGUIDReference(menuThemeReference);
             
             bool result = await GameManager.singleton.contentManager.LoadContentDefinition(rawRef);
 
@@ -93,7 +88,7 @@ namespace rwby.ui.mainmenu
 
             if (!songResult) return;
             
-            GameManager.singleton.musicManager.Play(songRef.Song);
+            GameManager.singleton.musicManager.Play(songRef.Song, menuThemeVolume);
         }
 
         public override bool TryClose(MenuDirection direction, bool forceClose = false)

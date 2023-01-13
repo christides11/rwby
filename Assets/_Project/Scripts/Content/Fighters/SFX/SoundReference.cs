@@ -5,7 +5,7 @@ namespace rwby
     [System.Serializable]
     public struct SoundReference
     {
-        public ModObjectSetContentReference soundbank;
+        public SharedModSetContentReference soundbank;
         public string sound;
         public bool parented;
         public Vector3 offset;

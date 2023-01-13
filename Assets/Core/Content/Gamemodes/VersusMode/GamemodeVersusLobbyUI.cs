@@ -19,7 +19,7 @@ namespace rwby.core.versus
         
         public void AddGamemodeSettings(int player, LobbySettingsMenu settingsMenu, bool local = false)
         {
-            ModGUIDContentReference mapRef = local ? gamemode.localMap : gamemode.Map;
+            ModIDContentReference mapRef = local ? gamemode.localMap : gamemode.Map;
 
             IMapDefinition mapDefinition = ContentManager.singleton.GetContentDefinition<IMapDefinition>(mapRef);
             string mapName = mapDefinition != null ? mapDefinition.Name : "None";
@@ -94,7 +94,7 @@ namespace rwby.core.versus
             });
         }
 
-        private async UniTask SelectMap(ModGUIDContentReference mapReference, bool local)
+        private async UniTask SelectMap(ModIDContentReference mapReference, bool local)
         {
             if (local)
             {

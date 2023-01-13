@@ -6,25 +6,13 @@ namespace rwby
     [System.Serializable]
     public struct ModObjectSetContentReference : IEquatable<ModObjectSetContentReference>
     {
-        [SerializeField] public ContentGUID modGUID;
-        [SerializeField] public ContentGUID contentGUID;
-
-        public ModObjectSetContentReference(ContentGUID modGUID, ContentGUID contentGUID)
+        [SerializeField] public string modGUID;
+        [SerializeField] public string contentGUID;
+        
+        public ModObjectSetContentReference(string modGUID, string contentGUID)
         {
             this.modGUID = modGUID;
             this.contentGUID = contentGUID;
-        }
-
-        public ModObjectSetContentReference(byte[] modGUID, byte[] contentGUID)
-        {
-            this.modGUID = new ContentGUID(modGUID);
-            this.contentGUID = new ContentGUID(contentGUID);
-        }
-
-        public ModObjectSetContentReference(string modGUID, string contentGUID)
-        {
-            this.modGUID = ContentGUID.StringToContentGUID(modGUID);
-            this.contentGUID = ContentGUID.StringToContentGUID(contentGUID);
         }
         
         public override string ToString()
@@ -56,8 +44,5 @@ namespace rwby
         {
             return !(x == y);
         }
-        
-        //public static implicit operator NetworkModObjectSetContentReference(ModObjectGUIDReference nmo) =>
-        //    new NetworkModObjectGUIDReference(nmo.modGUID, nmo.contentType, nmo.contentGUID);
     }
 }

@@ -12,12 +12,12 @@ namespace rwby
         [SerializeField, HideInInspector] private string name = "Generic Parser";
         [SerializeField] public virtual int parserType { get; }
         
-        [NonSerialized] public Dictionary<ContentGUID, int> GUIDToInt = new Dictionary<ContentGUID, int>();
-        [NonSerialized] public Dictionary<int, ContentGUID> IntToGUID = new Dictionary<int, ContentGUID>();
+        [NonSerialized] public Dictionary<string, int> GUIDToInt = new Dictionary<string, int>();
+        [NonSerialized] public Dictionary<int, string> IntToGUID = new Dictionary<int, string>();
 
         public abstract void Initialize();
 
-        public virtual bool ContentExist(ContentGUID contentIdentfier)
+        public virtual bool ContentExist(string contentIdentfier)
         {
             return false;
         }
@@ -29,14 +29,14 @@ namespace rwby
 
         public abstract UniTask<List<int>> LoadContentDefinitions(LoadedModDefinition modDefinition);
         
-        public abstract UniTask<bool> LoadContentDefinition(LoadedModDefinition modDefinition, ContentGUID contentIdentifier);
+        public abstract UniTask<bool> LoadContentDefinition(LoadedModDefinition modDefinition, string contentIdentifier);
         public abstract UniTask<bool> LoadContentDefinition(LoadedModDefinition modDefinition, int index);
 
         public virtual List<IContentDefinition> GetContentDefinitions()
         {
             return null;
         }
-        public virtual IContentDefinition GetContentDefinition(ContentGUID contentIdentifier)
+        public virtual IContentDefinition GetContentDefinition(string contentIdentifier)
         {
             return null;
         }
@@ -49,7 +49,7 @@ namespace rwby
         {
 
         }
-        public virtual void UnloadContentDefinition(ContentGUID contentIdentifier)
+        public virtual void UnloadContentDefinition(string contentIdentifier)
         {
 
         }

@@ -17,10 +17,8 @@ namespace rwby.core.training
 
         public TrainingSettingsMenu settingsMenu;
 
-        [Networked] public NetworkModObjectGUIDReference Map { get; set; }
-        public ModGUIDContentReference localMap;
-        
-        [FormerlySerializedAs("hudBankReference")] [FormerlySerializedAs("testReference")] public ModGUIDContentReference hudBankContentReference;
+        [Networked] [HideInInspector] public NetworkModObjectGUIDReference Map { get; set; }
+        [HideInInspector] public ModIDContentReference localMap;
 
         public GamemodeTrainingInitialization initialization;
         public GamemodeTrainingTeardown teardown;
@@ -32,10 +30,16 @@ namespace rwby.core.training
         public List<List<GameObject>> startingPoints = new List<List<GameObject>>();
         public List<int> startingPointCurr = new List<int>();
         public List<GameObject> respawnPoints = new List<GameObject>();
+
+        [Header("HUD")] 
+        public ModContentStringReference hudbankStringReference;
+
+        [HideInInspector] public ContentManager contentManager;
         
         public override void Awake()
         {
             base.Awake();
+            contentManager = GameManager.singleton.contentManager;
             settingsMenu.gameObject.SetActive(false);
         }
 
@@ -76,14 +80,14 @@ namespace rwby.core.training
             string[] gamemodeRefStr = r.input[0].Split(',');
             ModObjectSetContentReference mapSetReference = new ModObjectSetContentReference(gamemodeRefStr[0], gamemodeRefStr[1]);
 
-            ModContentGUIDReference mapGUIDReference = new ModContentGUIDReference()
+            ModContentStringReference mapGUIDReference = new ModContentStringReference()
             {
                 modGUID = mapSetReference.modGUID,
-                contentType = (int)ContentType.Map,
+                contentType = ContentType.Map,
                 contentGUID = mapSetReference.contentGUID
             };
             var mapGUIDContentReference =
-                ContentManager.singleton.ConvertModContentGUIDReference(mapGUIDReference);
+                ContentManager.singleton.ConvertStringToGUIDReference(mapGUIDReference);
 
             var loadResult = await ContentManager.singleton.LoadContentDefinition(mapGUIDContentReference);
             if (!loadResult)
@@ -101,9 +105,9 @@ namespace rwby.core.training
             Map = train.localMap;
         }
 
-        public override bool VerifyReference(ModGUIDContentReference contentReference)
+        public override bool VerifyReference(ModIDContentReference contentReference)
         {
-            if (contentReference == (ModGUIDContentReference)Map) return true;
+            if (contentReference == (ModIDContentReference)Map) return true;
             return false;
         }
 
@@ -178,10 +182,12 @@ namespace rwby.core.training
             Runner.AddSimulationBehaviour(baseHUD, null);
             
             GameManager.singleton.localPlayerManager.SetPlayerHUD(playerIndex, baseHUD);
+
+            var hudbankRawReference = contentManager.ConvertStringToGUIDReference(hudbankStringReference);
             
-            await GameManager.singleton.contentManager.LoadContentDefinition(hudBankContentReference);
+            await GameManager.singleton.contentManager.LoadContentDefinition(hudbankRawReference);
             
-            IHUDElementbankDefinition HUDElementbank = GameManager.singleton.contentManager.GetContentDefinition<IHUDElementbankDefinition>(hudBankContentReference);
+            IHUDElementbankDefinition HUDElementbank = GameManager.singleton.contentManager.GetContentDefinition<IHUDElementbankDefinition>(hudbankRawReference);
                 
             await HUDElementbank.Load();
             
@@ -194,13 +200,13 @@ namespace rwby.core.training
 
             foreach (var hbank in fm.fighterDefinition.huds)
             {
-                var convertedRef = new ModContentGUIDReference()
+                var convertedRef = new ModContentStringReference()
                 {
-                    contentGUID = hbank.contentReference.contentGUID,
-                    contentType = (int)ContentType.HUDElementbank,
-                    modGUID = hbank.contentReference.modGUID
+                    contentGUID = hbank.contentReference.reference.contentGUID,
+                    contentType = ContentType.HUDElementbank,
+                    modGUID = hbank.contentReference.reference.modGUID
                 };
-                var lResult = await GameManager.singleton.contentManager.LoadContentDefinition(GameManager.singleton.contentManager.ConvertModContentGUIDReference(convertedRef));
+                var lResult = await GameManager.singleton.contentManager.LoadContentDefinition(GameManager.singleton.contentManager.ConvertStringToGUIDReference(convertedRef));
 
                 if (!lResult)
                 {
@@ -208,7 +214,7 @@ namespace rwby.core.training
                     continue;
                 }
                 
-                var hebank = GameManager.singleton.contentManager.GetContentDefinition<IHUDElementbankDefinition>(GameManager.singleton.contentManager.ConvertModContentGUIDReference(convertedRef));
+                var hebank = GameManager.singleton.contentManager.GetContentDefinition<IHUDElementbankDefinition>(GameManager.singleton.contentManager.ConvertStringToGUIDReference(convertedRef));
                 
                 var hEle = GameObject.Instantiate(hebank.GetHUDElement(hbank.item), baseHUD.transform, false);
                 baseHUD.AddHUDElement(pHUD.GetComponent<HUDElement>());

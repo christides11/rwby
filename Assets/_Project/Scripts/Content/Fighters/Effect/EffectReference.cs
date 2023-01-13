@@ -5,7 +5,7 @@ namespace rwby
     [System.Serializable]
     public struct EffectReference
     {
-        public ModObjectSetContentReference effectbank;
+        public SharedModSetContentReference effectbank;
         public string effect;
         [SelectImplementation(typeof(FighterBoneReferenceBase))] [SerializeField, SerializeReference]
         public FighterBoneReferenceBase parent;

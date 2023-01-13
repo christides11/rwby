@@ -29,7 +29,7 @@ namespace rwby
         public Dictionary<int, List<ClientLoadRequestTracker>> loadRequests = new Dictionary<int, List<ClientLoadRequestTracker>>();
 
         // TODO: Tuple with load failure reason.
-        public async UniTask<List<PlayerRef>> TellClientsToLoad<T>(ModGUIDContentReference contentReference, bool loadContent = true) where T : IContentDefinition
+        public async UniTask<List<PlayerRef>> TellClientsToLoad<T>(ModIDContentReference contentReference, bool loadContent = true) where T : IContentDefinition
         {
             bool localLoadResult = await ContentManager.singleton.LoadContentDefinition(contentReference);
             if (localLoadResult == false)
@@ -54,7 +54,7 @@ namespace rwby
             loadRequestCounter++;
             loadRequests.Add(loadRequestNumber, new List<ClientLoadRequestTracker>());
             // Tell clients to load the content.
-            RPC_ClientTryLoad(loadRequestNumber, new NetworkModObjectGUIDReference(contentReference.modGUID, contentReference.contentType, contentReference.contentIdx), loadContent);
+            RPC_ClientTryLoad(loadRequestNumber, new NetworkModObjectGUIDReference(contentReference.modID, contentReference.contentType, contentReference.contentIdx), loadContent);
 
             // Wait until all other clients report their results, or until the timeout period.
             float startTime = Time.realtimeSinceStartup;

@@ -9,7 +9,7 @@ namespace rwby
         [FormerlySerializedAs("mapReference")] public NetworkModObjectGUIDReference mapContentReference;
         public sbyte sceneIdentifier;
 
-        public CustomSceneRef(ModGUIDContentReference mapContentReference, sbyte sceneID)
+        public CustomSceneRef(ModIDContentReference mapContentReference, sbyte sceneID)
         {
             this.mapContentReference = mapContentReference;
             sceneIdentifier = sceneID;
@@ -21,10 +21,10 @@ namespace rwby
             sceneIdentifier = sceneID;
         }
 
-        public CustomSceneRef(ContentGUID modGUID, int contentIdx, sbyte sceneID)
+        public CustomSceneRef(uint modGUID, int contentIdx, sbyte sceneID)
         {
             mapContentReference = new NetworkModObjectGUIDReference()
-                { modGUID = modGUID, contentType = (int)ContentType.Map, contentIdx = contentIdx };
+                { modGUID = modGUID, contentType = (int)ContentType.Map, contentIdx = (ushort)contentIdx };
             sceneIdentifier = sceneID;
         }
         

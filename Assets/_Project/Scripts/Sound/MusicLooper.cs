@@ -18,12 +18,12 @@ namespace rwby
 
         private float currentVolume;
 
-        public void Play(SongAudio wantedSong)
+        public void Play(SongAudio wantedSong, float volume = 1.0f)
         {
             this.song = wantedSong;
             ClearTracks();
             currentVolume = wantedSong.volume;
-            referenceAudioSource.volume = wantedSong.volume;
+            referenceAudioSource.volume = wantedSong.volume * volume;
             referenceAudioSource.pitch = wantedSong.pitch;
             for (int i = 0; i < song.audioClips.Length; i++)
             {

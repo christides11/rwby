@@ -26,7 +26,7 @@ namespace rwby.ui.mainmenu
         private string lobbyPassword = "";
         private int playerCount = 8;
         private int maxPlayersPerClient = 1;
-        private ModGUIDContentReference _selectedGamemodeContentReference;
+        private ModIDContentReference _selectedGamemodeContentReference;
         private IGameModeDefinition selectedGamemodeDefinition;
         private GameModeBase selectedGamemode;
 
@@ -159,7 +159,7 @@ namespace rwby.ui.mainmenu
             }
         }
         
-        private async UniTask WhenGamemodeSelected(int player, ModGUIDContentReference arg1)
+        private async UniTask WhenGamemodeSelected(int player, ModIDContentReference arg1)
         {
             foreach (var cg in canvasGroups)
             {

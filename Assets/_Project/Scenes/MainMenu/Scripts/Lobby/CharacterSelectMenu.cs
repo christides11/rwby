@@ -11,8 +11,9 @@ namespace rwby.ui
         public class CSSConnection
         {
             public Selectable cssSelectable;
-            [SerializeField] public ModGUIDContentReference characterContentReference 
-                = new ModGUIDContentReference(new ContentGUID(8), 0, 0);
+
+            [SerializeField] public ModContentStringReference characterContentReference
+                = new ModContentStringReference();
         }
         
         public GameObject defaultSelectedUIItem;
@@ -22,7 +23,7 @@ namespace rwby.ui
         public Selectable endButton;
 
         public int charactersToSelect = 1;
-        public List<ModGUIDContentReference> charactersSelected = new List<ModGUIDContentReference>();
+        public List<ModIDContentReference> charactersSelected = new List<ModIDContentReference>();
         
         public delegate void EmptyDelegate();
         public event EmptyDelegate OnCharactersSelected;
@@ -63,9 +64,9 @@ namespace rwby.ui
             currentHandler.Back();
         }
         
-        public void SelectCharacter(ModGUIDContentReference characterContentReference)
+        public void SelectCharacter(ModContentStringReference characterContentReference)
         {
-            charactersSelected.Add(characterContentReference);
+            charactersSelected.Add(ContentManager.singleton.ConvertStringToGUIDReference(characterContentReference));
             if (charactersSelected.Count == charactersToSelect) EndSelection();
         }
 

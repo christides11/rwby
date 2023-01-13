@@ -53,8 +53,8 @@ namespace rwby
             var temp = sounds;
             temp.sounds.Set(soundBufferPos % 10, new FighterSoundNode()
             {
-                bank = bankMap[wantedSound.soundbank]+1,
-                sound = banks[bankMap[wantedSound.soundbank]].SoundMap[wantedSound.sound]+1,
+                bank = bankMap[wantedSound.soundbank.reference]+1,
+                sound = banks[bankMap[wantedSound.soundbank.reference]].SoundMap[wantedSound.sound]+1,
                 createFrame = Runner.Tick,
                 parented = wantedSound.parented,
                 pos = wantedSound.offset,
@@ -180,7 +180,7 @@ namespace rwby
         {
             if (bankMap.ContainsKey(bank)) return;
             banks.Add(ContentManager.singleton.GetContentDefinition<ISoundbankDefinition>(
-                ContentManager.singleton.ConvertModContentGUIDReference(new ModContentGUIDReference(bank.modGUID, (int)ContentType.Soundbank, bank.contentGUID))));
+                ContentManager.singleton.ConvertStringToGUIDReference(new ModContentStringReference(bank.modGUID, (int)ContentType.Soundbank, bank.contentGUID))));
             bankMap.Add(bank, banks.Count-1);
         }
     }

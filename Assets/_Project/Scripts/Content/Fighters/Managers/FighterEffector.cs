@@ -44,8 +44,8 @@ namespace rwby
             {
                 temp.effects.Set(effectBufferPos % effects.effects.Length, new FighterEffectNode()
                 {
-                    bank = bankMap[wantedEffects[i].effectbank]+1,
-                    effect = banks[bankMap[wantedEffects[i].effectbank]].EffectMap[wantedEffects[i].effect]+1,
+                    bank = bankMap[wantedEffects[i].effectbank.reference]+1,
+                    effect = banks[bankMap[wantedEffects[i].effectbank.reference]].EffectMap[wantedEffects[i].effect]+1,
                     frame = Runner.Tick,
                     parent = wantedEffects[i].parent == null ? 0 : wantedEffects[i].parent.GetBone(),
                     pos = posBase + wantedEffects[i].offset,
@@ -234,14 +234,14 @@ namespace rwby
         
         public BaseEffect GetEffect(EffectReference animation)
         {
-            return banks[bankMap[animation.effectbank]].GetEffect(animation.effect).effect;
+            return banks[bankMap[animation.effectbank.reference]].GetEffect(animation.effect).effect;
         }
         
         public void RegisterBank(ModObjectSetContentReference bank)
         {
             if (bankMap.ContainsKey(bank)) return;
             banks.Add(ContentManager.singleton.GetContentDefinition<IEffectbankDefinition>(
-                ContentManager.singleton.ConvertModContentGUIDReference(new ModContentGUIDReference(bank.modGUID, (int)ContentType.Effectbank, bank.contentGUID))));
+                ContentManager.singleton.ConvertStringToGUIDReference(new ModContentStringReference(bank.modGUID, (int)ContentType.Effectbank, bank.contentGUID))));
             bankMap.Add(bank, banks.Count-1);
         }
     }

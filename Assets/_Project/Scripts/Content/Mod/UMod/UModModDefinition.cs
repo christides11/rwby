@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace rwby
 {
@@ -10,19 +11,28 @@ namespace rwby
         [System.Serializable]
         public class IdentifierAssetStringRelation
         {
-            public ContentGUID identifier;
+            public string identifier;
             public UModAssetReference asset;
         }
         public string Description { get { return description; } }
-        public ContentGUID ModGUID { get { return guid; } }
-        public string ModID {
-            get { return guid.ToString(); }
+        [SerializeField] public uint ModID
+        {
+            get { return modID; }
+        }
+        public string ModNamespace
+        {
+            get => modNamespace;
+            set => modNamespace = value;
         }
         public Dictionary<int, IContentParser> ContentParsers { get { return contentParserDictionary; } }
-        [field: SerializeField] public ModCompatibilityLevel CompatibilityLevel { get; } = ModCompatibilityLevel.OnlyIfContentSelected;
-        [field: SerializeField] public ModVersionStrictness VersionStrictness { get; } = ModVersionStrictness.NeedSameVersion;
+        public ModCompatibilityLevel CompatibilityLevel => compatibilityLevel;
+        public ModVersionStrictness VersionStrictness => versionStrictness;
         
-        [SerializeField] private ContentGUID guid = new ContentGUID(8);
+        
+        [SerializeField] private ModCompatibilityLevel compatibilityLevel = ModCompatibilityLevel.OnlyIfContentSelected;
+        [SerializeField] private ModVersionStrictness versionStrictness = ModVersionStrictness.NeedSameVersion;
+        [FormerlySerializedAs("realGUID")] [SerializeField] private uint modID;
+        [SerializeField] private string modNamespace;
         [TextArea] [SerializeField] private string description;
         [SerializeReference] public List<IContentParser> contentParsers = new List<IContentParser>();
         [NonSerialized] public Dictionary<int, IContentParser> contentParserDictionary = new Dictionary<int, IContentParser>();

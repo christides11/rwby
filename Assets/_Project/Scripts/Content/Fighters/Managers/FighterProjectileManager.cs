@@ -92,7 +92,7 @@ namespace rwby
         {
             if (bankMap.ContainsKey(bank)) return;
             banks.Add(ContentManager.singleton.GetContentDefinition<IProjectilebankDefinition>(
-                ContentManager.singleton.ConvertModContentGUIDReference(new ModContentGUIDReference(bank.modGUID, (int)ContentType.Projectilebank, bank.contentGUID))));
+                ContentManager.singleton.ConvertStringToGUIDReference(new ModContentStringReference(bank.modGUID, (int)ContentType.Projectilebank, bank.contentGUID))));
             bankMap.Add(bank, banks.Count-1);
         }
     }

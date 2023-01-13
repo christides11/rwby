@@ -13,11 +13,11 @@ namespace rwby
 
         public List<MusicLooper> currentlyFading = new List<MusicLooper>();
         
-        public void Play(SongAudio song)
+        public void Play(SongAudio song, float volume = 1.0f)
         {
             var musicLooper = GameObject.Instantiate(musicLooperPrefab, transform, false);
             currentlyPlaying.Add(musicLooper);
-            musicLooper.Play(song);
+            musicLooper.Play(song, volume);
         }
 
         public void FadeAll(float timeToFade = 0.5f)

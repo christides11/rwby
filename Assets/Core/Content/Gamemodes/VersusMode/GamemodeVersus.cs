@@ -25,13 +25,13 @@ namespace rwby.core.versus
         [Networked] public int PointsRequired { get; set; } = 20;
         [Networked] public int TimeLimitMinutes { get; set; } = 10;
         [Networked, Capacity(8)] public NetworkLinkedList<int> teamScores => default;
-        public ModGUIDContentReference localMap;
+        public ModIDContentReference localMap;
         public int localPointsRequired = 20;
         public int localTimeLimitMinutes = 10;
 
         [Networked] public TickTimer TimeLimitTimer { get; set; }
 
-        public ModGUIDContentReference hudBankContentReference;
+        public ModIDContentReference hudBankContentReference;
 
         public GamemodeVersusInitialization initialization;
         public GamemodeVersusTeardown teardown;
@@ -95,14 +95,14 @@ namespace rwby.core.versus
             string[] gamemodeRefStr = r.input[0].Split(',');
             ModObjectSetContentReference mapSetReference = new ModObjectSetContentReference(gamemodeRefStr[0], gamemodeRefStr[1]);
 
-            ModContentGUIDReference mapGUIDReference = new ModContentGUIDReference()
+            ModContentStringReference mapGUIDReference = new ModContentStringReference()
             {
                 modGUID = mapSetReference.modGUID,
-                contentType = (int)ContentType.Map,
+                contentType = ContentType.Map,
                 contentGUID = mapSetReference.contentGUID
             };
             var mapGUIDContentReference =
-                ContentManager.singleton.ConvertModContentGUIDReference(mapGUIDReference);
+                ContentManager.singleton.ConvertStringToGUIDReference(mapGUIDReference);
 
             var loadResult = await ContentManager.singleton.LoadContentDefinition(mapGUIDContentReference);
             if (!loadResult)
@@ -218,13 +218,13 @@ namespace rwby.core.versus
 
             foreach (var hbank in fm.fighterDefinition.huds)
             {
-                var convertedRef = new ModContentGUIDReference()
+                var convertedRef = new ModContentStringReference()
                 {
-                    contentGUID = hbank.contentReference.contentGUID,
-                    contentType = (int)ContentType.HUDElementbank,
-                    modGUID = hbank.contentReference.modGUID
+                    contentGUID = hbank.contentReference.reference.contentGUID,
+                    contentType = ContentType.HUDElementbank,
+                    modGUID = hbank.contentReference.reference.modGUID
                 };
-                var lResult = await GameManager.singleton.contentManager.LoadContentDefinition(GameManager.singleton.contentManager.ConvertModContentGUIDReference(convertedRef));
+                var lResult = await GameManager.singleton.contentManager.LoadContentDefinition(GameManager.singleton.contentManager.ConvertStringToGUIDReference(convertedRef));
 
                 if (!lResult)
                 {
@@ -232,7 +232,7 @@ namespace rwby.core.versus
                     continue;
                 }
                 
-                var hebank = GameManager.singleton.contentManager.GetContentDefinition<IHUDElementbankDefinition>(GameManager.singleton.contentManager.ConvertModContentGUIDReference(convertedRef));
+                var hebank = GameManager.singleton.contentManager.GetContentDefinition<IHUDElementbankDefinition>(GameManager.singleton.contentManager.ConvertStringToGUIDReference(convertedRef));
                 
                 var hEle = GameObject.Instantiate(hebank.GetHUDElement(hbank.item), baseHUD.transform, false);
                 baseHUD.AddHUDElement(pHUD.GetComponent<HUDElement>());

@@ -22,7 +22,7 @@ namespace rwby.core.training
             
             gamemode.startingPoints.Clear();
             gamemode.respawnPoints.Clear();
-            gamemode.sessionManager.clientContentUnloaderService.TellClientsToUnload(gamemode.hudBankContentReference);
+            gamemode.sessionManager.clientContentUnloaderService.TellClientsToUnload(gamemode.contentManager.ConvertStringToGUIDReference(gamemode.hudbankStringReference));
             gamemode.sessionManager.clientContentUnloaderService.TellClientsToUnload(gamemode.Map);
 
             var loadedContentList = gamemode.sessionManager.loadedContent;

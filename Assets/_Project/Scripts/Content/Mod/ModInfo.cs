@@ -1,4 +1,5 @@
 using System;
+using UnityEngine.Serialization;
 
 namespace rwby
 {
@@ -11,8 +12,9 @@ namespace rwby
         public ModBackingType backingType;
         public Uri path;
         public string modName;
-        public string fileName;
-        public string identifier;
+        //public string fileName;
+        public string modNamespace;
+        public uint modIdentifier;
         public bool commandLine;
         public bool disableRequiresRestart;
         public bool enableRequiresRestart;

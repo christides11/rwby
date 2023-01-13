@@ -63,8 +63,9 @@ MonoBehaviour:
     rid: -2
   hitboxInfo:
   - ID: 0
-    groundedFoldoutGroup: 1
+    groundedFoldoutGroup: 0
     groundedCounterHitFoldoutGroup: 0
+    clashLevel: 0
     hitStateGroundedGroups: -1
     hit:
       groundHitState: 30
@@ -97,31 +98,19 @@ MonoBehaviour:
       damage: 500
       chipDamage: 100
       hitEffectbank:
-        modGUID:
-          guid: 1d292c1f00000000
-        contentGUID:
-          guid: 1d27280000000000
+        modGUID: 
+        contentGUID: 
       hitEffect: hit1
       blockEffectbank:
-        modGUID:
-          guid: 1d292c1f00000000
-        contentGUID:
-          guid: 1d27280000000000
+        modGUID: 
+        contentGUID: 
       blockEffect: shieldhit1
-      hitSoundbank:
-        modGUID:
-          guid: 1d292c1f00000000
-        contentGUID:
-          guid: 1d27280000000000
+      hitSoundbank: {fileID: 11400000, guid: 2f4063bd6a5418f4a9c4e61c84752271, type: 2}
       hitSound: hit-sword-1
       hitSoundVolume: 0.2
       hitSoundMinDist: 5
       hitSoundMaxDist: 20
-      hitBlockSoundbank:
-        modGUID:
-          guid: 1d292c1f00000000
-        contentGUID:
-          guid: 1d27280000000000
+      hitBlockSoundbank: {fileID: 11400000, guid: 2f4063bd6a5418f4a9c4e61c84752271, type: 2}
       hitBlockSound: hit-guard-1
       hitCameraShakeStrength: 0
       blockCameraShakeStrength: 0
@@ -160,31 +149,19 @@ MonoBehaviour:
       damage: 350
       chipDamage: 0
       hitEffectbank:
-        modGUID:
-          guid: 
-        contentGUID:
-          guid: 
+        modGUID: 
+        contentGUID: 
       hitEffect: 
       blockEffectbank:
-        modGUID:
-          guid: 
-        contentGUID:
-          guid: 
+        modGUID: 
+        contentGUID: 
       blockEffect: 
-      hitSoundbank:
-        modGUID:
-          guid: 
-        contentGUID:
-          guid: 
+      hitSoundbank: {fileID: 11400000, guid: 2f4063bd6a5418f4a9c4e61c84752271, type: 2}
       hitSound: 
       hitSoundVolume: 0
       hitSoundMinDist: 0
       hitSoundMaxDist: 0
-      hitBlockSoundbank:
-        modGUID:
-          guid: 
-        contentGUID:
-          guid: 
+      hitBlockSoundbank: {fileID: 11400000, guid: 2f4063bd6a5418f4a9c4e61c84752271, type: 2}
       hitBlockSound: 
       hitCameraShakeStrength: 2
       blockCameraShakeStrength: 2
@@ -286,11 +263,7 @@ MonoBehaviour:
         condition:
           rid: -2
         sounds:
-        - soundbank:
-            modGUID:
-              guid: 1d292c1f00000000
-            contentGUID:
-              guid: 1d27280000000000
+        - soundbank: {fileID: 11400000, guid: 46cf32b8cf1903a428cb8802d2539eca, type: 2}
           sound: swing1
           parented: 0
           offset: {x: 0, y: 0, z: 0}
@@ -311,11 +284,7 @@ MonoBehaviour:
         condition:
           rid: -2
         sounds:
-        - soundbank:
-            modGUID:
-              guid: 1d292c1f00000000
-            contentGUID:
-              guid: 2c2c000000000000
+        - soundbank: {fileID: 11400000, guid: 46cf32b8cf1903a428cb8802d2539eca, type: 2}
           sound: swing14
           parented: 0
           offset: {x: 0, y: 0, z: 0}
@@ -432,11 +401,7 @@ MonoBehaviour:
           rid: -2
         modifyType: 1
         wantedAnimations:
-        - animationbank:
-            modGUID:
-              guid: 1d292c1f00000000
-            contentGUID:
-              guid: 2c2c000000000000
+        - animationbank: {fileID: 11400000, guid: 2f728dafc0068ab45a19c79cbfc04bdd, type: 2}
           animation: scythe.grd.2L
         fadeTime: 0
     - rid: 5775511522355183618

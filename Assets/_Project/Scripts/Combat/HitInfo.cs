@@ -49,16 +49,16 @@ namespace rwby
             public int damage;
             public int chipDamage;
 
-            public ModObjectSetContentReference hitEffectbank;
+            public SharedModSetContentReference hitEffectbank;
             public string hitEffect;
-            public ModObjectSetContentReference blockEffectbank;
+            public SharedModSetContentReference blockEffectbank;
             public string blockEffect;
-            public ModObjectSetContentReference hitSoundbank;
+            public SharedModSetContentReference hitSoundbank;
             public string hitSound;
             public float hitSoundVolume;
             public float hitSoundMinDist;
             public float hitSoundMaxDist;
-            public ModObjectSetContentReference hitBlockSoundbank;
+            public SharedModSetContentReference hitBlockSoundbank;
             public string hitBlockSound;
 
             public CameraShakeStrength hitCameraShakeStrength;

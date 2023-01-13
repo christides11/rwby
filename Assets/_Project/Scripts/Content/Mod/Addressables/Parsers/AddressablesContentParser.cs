@@ -30,7 +30,7 @@ namespace rwby
             }
         }
 
-        public override bool ContentExist(ContentGUID contentIdentfier)
+        public override bool ContentExist(string contentIdentfier)
         {
             return ContentExist(GUIDToInt[contentIdentfier]);
         }
@@ -65,7 +65,8 @@ namespace rwby
             return results;
         }
 
-        public override async UniTask<bool> LoadContentDefinition(LoadedModDefinition modDefinition, ContentGUID contentIdentifier)
+        public override async UniTask<bool> LoadContentDefinition(LoadedModDefinition modDefinition,
+            string contentIdentifier)
         {
             return await LoadContentDefinition(modDefinition, GUIDToInt[contentIdentifier]);
         }
@@ -117,7 +118,7 @@ namespace rwby
             return contentList;
         }
 
-        public override IContentDefinition GetContentDefinition(ContentGUID contentIdentifier)
+        public override IContentDefinition GetContentDefinition(string contentIdentifier)
         {
             // Content does not exist, or was not loaded.
             if (contentHandles.ContainsKey(GUIDToInt[contentIdentifier]) == false)
@@ -145,7 +146,7 @@ namespace rwby
             contentHandles.Clear();
         }
 
-        public override void UnloadContentDefinition(ContentGUID contentIdentifier)
+        public override void UnloadContentDefinition(string contentIdentifier)
         {
             if (contentHandles.ContainsKey(GUIDToInt[contentIdentifier]) == false) return;
 

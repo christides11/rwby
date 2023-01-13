@@ -1337,20 +1337,12 @@ MonoBehaviour:
   _sessionManager: {fileID: 0}
   settingsMenu: {fileID: 6921723952494433063}
   _Map:
-    modGUID:
-      _guid:
-        Data: 0000000000000000000000000000000000000000000000000000000000000000
+    modGUID: 0
     contentType: 0
     contentIdx: 0
   localMap:
-    modGUID:
-      guid: 0000000000000000
+    modID: 0
     contentType: 0
-    contentIdx: 0
-  hudBankContentReference:
-    modGUID:
-      guid: 1d292c1f00000000
-    contentType: 8
     contentIdx: 0
   initialization: {fileID: -2617727156019503314}
   teardown: {fileID: 2687303091783519930}
@@ -1360,6 +1352,11 @@ MonoBehaviour:
   cpuHandler: {fileID: 1780266029459074878}
   startingPointCurr: 
   respawnPoints: []
+  hudbankStringReference:
+    modGUID: christides11.rwby.core
+    contentType: 8
+    contentGUID: cmn
+  contentManager: {fileID: 0}
 --- !u!114 &-2617727156019503314
 MonoBehaviour:
   m_ObjectHideFlags: 0

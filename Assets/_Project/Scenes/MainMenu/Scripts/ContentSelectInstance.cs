@@ -22,13 +22,13 @@ namespace rwby
         public int amtPerPage = 15;
 
         private int player = 0;
-        private List<ModGUIDContentReference> pageContent;
-        private UnityEngine.Events.UnityAction<int, ModGUIDContentReference> selectAction;
+        private List<ModIDContentReference> pageContent;
+        private UnityEngine.Events.UnityAction<int, ModIDContentReference> selectAction;
 
         public List<string> tagsToFind = new List<string>();
         
         
-        public async UniTask<bool> Open(int player, int contentType, UnityEngine.Events.UnityAction<int, ModGUIDContentReference> selectAction)
+        public async UniTask<bool> Open(int player, int contentType, UnityEngine.Events.UnityAction<int, ModIDContentReference> selectAction)
         {
             this.player = player;
             this.contentType = contentType;
@@ -73,11 +73,11 @@ namespace rwby
 
         public async UniTask FillPage()
         {
-            foreach (ModGUIDContentReference con in pageContent)
+            foreach (ModIDContentReference con in pageContent)
             {
                 var contentDefinition = ContentManager.singleton.GetContentDefinition(con);
                 GameObject contentItemGameobject = GameObject.Instantiate(this.contentItem, contentTransform, false);
-                ModGUIDContentReference contentReference = con;
+                ModIDContentReference contentReference = con;
                 contentItemGameobject.GetComponent<Selectable>().onSubmit.AddListener(() => { selectAction.Invoke(player, contentReference); });
                 contentItemGameobject.GetComponentInChildren<TextMeshProUGUI>().text = contentDefinition.Name;
             }

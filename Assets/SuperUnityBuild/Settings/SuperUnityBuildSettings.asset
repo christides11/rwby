@@ -1,5 +1,51 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!114 &-6501439117593309190
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 86e19aa5315bf4a409c07e84ca8c4248, type: 3}
+  m_Name: FileOperation
+  m_EditorClassIdentifier: 
+  actionType: 1
+  actionName: FileOperation
+  note: 
+  actionEnabled: 1
+  filter:
+    condition: 0
+    clauses: []
+  inputPath: bepinexconfig\winhttp.dll
+  outputPath: Builds/$VERSION.$BUILD/$RELEASE_TYPE/$PLATFORM/$ARCHITECTURE/$DISTRIBUTION/winhttp.dll
+  recursiveSearch: 1
+  operation: 1
+--- !u!114 &-4823468343876670257
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 86e19aa5315bf4a409c07e84ca8c4248, type: 3}
+  m_Name: FileOperation
+  m_EditorClassIdentifier: 
+  actionType: 1
+  actionName: FileOperation
+  note: 
+  actionEnabled: 1
+  filter:
+    condition: 0
+    clauses: []
+  inputPath: rwby-mod-tool.unitypackage
+  outputPath: Builds/$VERSION.$BUILD/$RELEASE_TYPE/$PLATFORM/$ARCHITECTURE/$DISTRIBUTION/Modding/rwby-mod-tool.unitypackage
+  recursiveSearch: 1
+  operation: 1
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -68,8 +114,15 @@ MonoBehaviour:
   _preBuildActions:
     buildActions:
     - {fileID: 5276092195832768191}
+    - {fileID: 5245526928192965995}
   _postBuildActions:
-    buildActions: []
+    buildActions:
+    - {fileID: 7812633874932574984}
+    - {fileID: 766284626063742475}
+    - {fileID: -6501439117593309190}
+    - {fileID: 2337165946428554889}
+    - {fileID: 5973571513312108486}
+    - {fileID: -4823468343876670257}
 --- !u!114 &12252119849156343
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -98,6 +151,73 @@ MonoBehaviour:
   platformName: PC
   dataDirNameFormat: '{0}_Data'
   targetGroup: 1
+--- !u!114 &766284626063742475
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 54626104f6c7de94f9976e1672abc45b, type: 3}
+  m_Name: FolderOperation
+  m_EditorClassIdentifier: 
+  actionType: 1
+  actionName: FolderOperation
+  note: 
+  actionEnabled: 1
+  filter:
+    condition: 0
+    clauses: []
+  inputPath: bepinexconfig\Modding
+  outputPath: Builds/$VERSION.$BUILD/$RELEASE_TYPE/$PLATFORM/$ARCHITECTURE/$DISTRIBUTION/Modding
+  operation: 1
+--- !u!114 &2337165946428554889
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 86e19aa5315bf4a409c07e84ca8c4248, type: 3}
+  m_Name: FileOperation
+  m_EditorClassIdentifier: 
+  actionType: 1
+  actionName: FileOperation
+  note: 
+  actionEnabled: 1
+  filter:
+    condition: 0
+    clauses: []
+  inputPath: bepinexconfig\doorstop_config.ini
+  outputPath: Builds/$VERSION.$BUILD/$RELEASE_TYPE/$PLATFORM/$ARCHITECTURE/$DISTRIBUTION/doorstop_config.ini
+  recursiveSearch: 1
+  operation: 1
+--- !u!114 &5245526928192965995
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e8483817f7916a40ae31b4571f169c0, type: 3}
+  m_Name: ExportPackage
+  m_EditorClassIdentifier: 
+  actionType: 0
+  actionName: ExportPackage
+  note: 
+  actionEnabled: 1
+  filter:
+    condition: 0
+    clauses: []
+  packageName: rwby-mod-init
+  folderPath: Assets/ModTools
+  exportOptions: 2
 --- !u!114 &5276092195832768191
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -117,3 +237,48 @@ MonoBehaviour:
   filter:
     condition: 0
     clauses: []
+--- !u!114 &5973571513312108486
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 86e19aa5315bf4a409c07e84ca8c4248, type: 3}
+  m_Name: FileOperation
+  m_EditorClassIdentifier: 
+  actionType: 1
+  actionName: FileOperation
+  note: 
+  actionEnabled: 1
+  filter:
+    condition: 0
+    clauses: []
+  inputPath: rwby-mod-init.unitypackage
+  outputPath: Builds/$VERSION.$BUILD/$RELEASE_TYPE/$PLATFORM/$ARCHITECTURE/$DISTRIBUTION/Modding/rwby-mod-init.unitypackage
+  recursiveSearch: 1
+  operation: 1
+--- !u!114 &7812633874932574984
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 54626104f6c7de94f9976e1672abc45b, type: 3}
+  m_Name: FolderOperation
+  m_EditorClassIdentifier: 
+  actionType: 1
+  actionName: FolderOperation
+  note: 
+  actionEnabled: 1
+  filter:
+    condition: 0
+    clauses: []
+  inputPath: bepinexconfig\BepInEx
+  outputPath: Builds/$VERSION.$BUILD/$RELEASE_TYPE/$PLATFORM/$ARCHITECTURE/$DISTRIBUTION/BepInEx
+  operation: 1

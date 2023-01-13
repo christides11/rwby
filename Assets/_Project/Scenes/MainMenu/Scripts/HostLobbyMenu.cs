@@ -24,7 +24,7 @@ namespace rwby.ui.mainmenu
         private int playerCount = 8;
         private int maxPlayersPerClient = 1;
         private byte teamCount = 0;
-        private ModGUIDContentReference _selectedGamemodeContentReference;
+        private ModIDContentReference _selectedGamemodeContentReference;
         private IGameModeDefinition selectedGamemodeDefinition;
         private GameModeBase selectedGamemode;
 

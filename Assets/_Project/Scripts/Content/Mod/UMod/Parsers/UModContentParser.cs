@@ -30,7 +30,7 @@ namespace rwby
             }
         }
         
-        public override bool ContentExist(ContentGUID contentIdentfier)
+        public override bool ContentExist(string contentIdentfier)
         {
             return ContentExist(GUIDToInt[contentIdentfier]);
         }
@@ -65,7 +65,7 @@ namespace rwby
             return results;
         }
 
-        public override async UniTask<bool> LoadContentDefinition(LoadedModDefinition modDefinition, ContentGUID contentIdentifier)
+        public override async UniTask<bool> LoadContentDefinition(LoadedModDefinition modDefinition, string contentIdentifier)
         {
             return await LoadContentDefinition(modDefinition, GUIDToInt[contentIdentifier]);
         }

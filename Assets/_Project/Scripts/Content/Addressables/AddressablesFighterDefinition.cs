@@ -28,6 +28,8 @@ namespace rwby
             get { return hudContentReferences; }
         }
         
+        public override SerializableGuid FighterGUID => fighterGUID;
+        
         public override CameraDef[] cameras => cams;
 
         [SerializeField] private string fighterName;
@@ -41,6 +43,7 @@ namespace rwby
         [SerializeField] private int aura;
         [SerializeField] private int auraGainPerFrame;
 
+        [SerializeField] private SerializableGuid fighterGUID;
         [NonSerialized] private AsyncOperationHandle<Moveset>[] movesetHandles;
         [NonSerialized] private AsyncOperationHandle<GameObject> fighterHandle;
 
@@ -95,12 +98,6 @@ namespace rwby
             return fighterHandle.Result;
         }
 
-        public override string GetFighterGUID()
-        {
-            return fighterReference.AssetGUID;
-        }
-
-        
         public override Moveset[] GetMovesets()
         {
             Moveset[] m = new Moveset[movesetHandles.Length];

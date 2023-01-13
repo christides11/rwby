@@ -14,6 +14,7 @@ namespace rwby
 {
     public class GameManager : MonoBehaviour
     {
+        public static readonly uint INTERNAL_MODGUID = 0;
         public static GameManager singleton;
 
         [SerializeField] private ModLoader modLoader;
@@ -32,7 +33,6 @@ namespace rwby
         public SoundManager soundManager;
 
         public Settings settings;
-        public ContentGUID internalModGUID = new ContentGUID(8, "");
 
         public async UniTask Initialize()
         {
@@ -99,7 +99,7 @@ namespace rwby
 
         public virtual async UniTask<Scene> LoadScene(CustomSceneRef sceneReference, LoadSceneParameters parameters)
         {
-            if (sceneReference.mapContentReference.modGUID == internalModGUID)
+            if (sceneReference.mapContentReference.modGUID == INTERNAL_MODGUID)
             {
                 var scenePath = SceneUtility.GetScenePathByBuildIndex(sceneReference.sceneIdentifier);
                 var s = SceneManager.LoadSceneAsync(sceneReference.sceneIdentifier, parameters);
@@ -131,7 +131,7 @@ namespace rwby
         }
 
         public virtual string[] GetSceneNames(CustomSceneRef sceneReference){
-            if (sceneReference.mapContentReference.modGUID == internalModGUID)
+            if (sceneReference.mapContentReference.modGUID == INTERNAL_MODGUID)
             {
                 return new string[] { SceneManager.GetSceneByBuildIndex(sceneReference.sceneIdentifier).name };
             }
@@ -143,7 +143,7 @@ namespace rwby
 
         public virtual string GetSceneName(CustomSceneRef sceneReference)
         {
-            if (sceneReference.mapContentReference.modGUID == internalModGUID)
+            if (sceneReference.mapContentReference.modGUID == INTERNAL_MODGUID)
             {
                 return SceneManager.GetSceneByBuildIndex(sceneReference.sceneIdentifier).name;
             }
