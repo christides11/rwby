@@ -2,6 +2,7 @@ using Fusion;
 
 namespace rwby
 {
+    [System.Serializable]
     public struct MovesetStateIdentifier : INetworkStruct
     {
         public int movesetIdentifier;

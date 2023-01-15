@@ -29,7 +29,7 @@ namespace rwby
 
             overrideMode.Set(latestProjectileIndex, projectileCreateDefinition.overrideMode);
 
-            int bank = bankMap[projectileCreateDefinition.projectilebank];
+            int bank = bankMap[projectileCreateDefinition.projectilebank.reference];
             int projectileInx = banks[bank].ProjectileMap[projectileCreateDefinition.projectile] + 1;
             Vector3 s = projectileCreateDefinition.scale;
             
@@ -40,7 +40,7 @@ namespace rwby
             Vector3 spawnRot = transform.eulerAngles + projectileCreateDefinition.rotation;
             var predictionKey = new NetworkObjectPredictionKey() { Byte0 = (byte) Runner.Simulation.Tick, Byte1 = (byte)Object.InputAuthority.PlayerId, Byte2 = (byte)latestProjectileIndex, Byte3 = (byte)(bank+projectileInx) };
             
-            var projectileObj = Runner.Spawn<BaseProjectile>(GetProjectile(projectileCreateDefinition.projectilebank, projectileCreateDefinition.projectile), spawnPos, Quaternion.Euler(spawnRot),
+            var projectileObj = Runner.Spawn<BaseProjectile>(GetProjectile(projectileCreateDefinition.projectilebank.reference, projectileCreateDefinition.projectile), spawnPos, Quaternion.Euler(spawnRot),
                 Object.InputAuthority, predictionKey: predictionKey, onBeforeSpawned: (runner, o) =>
                 {
                     InitializeProjectile(runner, o, bank, projectileInx, s); 

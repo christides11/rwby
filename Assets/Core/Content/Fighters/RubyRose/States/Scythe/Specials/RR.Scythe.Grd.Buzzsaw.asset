@@ -49,6 +49,7 @@ MonoBehaviour:
   - ID: 0
     groundedFoldoutGroup: 1
     groundedCounterHitFoldoutGroup: 0
+    clashLevel: 0
     hitStateGroundedGroups: -1
     hit:
       groundHitState: 30
@@ -80,32 +81,16 @@ MonoBehaviour:
       comboProration: 0
       damage: 100
       chipDamage: 50
-      hitEffectbank:
-        modGUID:
-          guid: 
-        contentGUID:
-          guid: 
+      hitEffectbank: {fileID: 11400000, guid: 5d1086999fc610e4290407b33cce3ff1, type: 2}
       hitEffect: 
-      blockEffectbank:
-        modGUID:
-          guid: 
-        contentGUID:
-          guid: 
+      blockEffectbank: {fileID: 11400000, guid: 5d1086999fc610e4290407b33cce3ff1, type: 2}
       blockEffect: 
-      hitSoundbank:
-        modGUID:
-          guid: 1d292c1f00000000
-        contentGUID:
-          guid: 1d27280000000000
+      hitSoundbank: {fileID: 11400000, guid: 2f4063bd6a5418f4a9c4e61c84752271, type: 2}
       hitSound: hit-sword-1
       hitSoundVolume: 0.3
       hitSoundMinDist: 5
       hitSoundMaxDist: 20
-      hitBlockSoundbank:
-        modGUID:
-          guid: 
-        contentGUID:
-          guid: 
+      hitBlockSoundbank: {fileID: 11400000, guid: 2f4063bd6a5418f4a9c4e61c84752271, type: 2}
       hitBlockSound: 
       hitCameraShakeStrength: 1
       blockCameraShakeStrength: 0
@@ -143,32 +128,16 @@ MonoBehaviour:
       comboProration: 0
       damage: 100
       chipDamage: 50
-      hitEffectbank:
-        modGUID:
-          guid: 
-        contentGUID:
-          guid: 
+      hitEffectbank: {fileID: 0}
       hitEffect: 
-      blockEffectbank:
-        modGUID:
-          guid: 
-        contentGUID:
-          guid: 
+      blockEffectbank: {fileID: 0}
       blockEffect: 
-      hitSoundbank:
-        modGUID:
-          guid: 
-        contentGUID:
-          guid: 
+      hitSoundbank: {fileID: 0}
       hitSound: 
       hitSoundVolume: 0
       hitSoundMinDist: 0
       hitSoundMaxDist: 0
-      hitBlockSoundbank:
-        modGUID:
-          guid: 
-        contentGUID:
-          guid: 
+      hitBlockSoundbank: {fileID: 0}
       hitBlockSound: 
       hitCameraShakeStrength: 0
       blockCameraShakeStrength: 0
@@ -339,8 +308,10 @@ MonoBehaviour:
         ignoreStateConditions: 0
         ignoreAirtimeCheck: 0
         ignoreStringUseCheck: 0
+        ignoreAuraRequirement: 0
         checkInputSequence: 1
         checkCondition: 0
+        overrideStateChange: 0
         targetType: 0
         stateMovesetID: -1
         state:
@@ -364,8 +335,10 @@ MonoBehaviour:
         ignoreStateConditions: 0
         ignoreAirtimeCheck: 0
         ignoreStringUseCheck: 0
+        ignoreAuraRequirement: 0
         checkInputSequence: 1
         checkCondition: 0
+        overrideStateChange: 0
         targetType: 0
         stateMovesetID: -1
         state:

@@ -61,6 +61,7 @@ MonoBehaviour:
   - ID: 0
     groundedFoldoutGroup: 1
     groundedCounterHitFoldoutGroup: 0
+    clashLevel: 0
     hitStateGroundedGroups: -1
     hit:
       groundHitState: 30
@@ -92,32 +93,16 @@ MonoBehaviour:
       comboProration: 0.2
       damage: 300
       chipDamage: 100
-      hitEffectbank:
-        modGUID:
-          guid: 1d292c1f00000000
-        contentGUID:
-          guid: 1d27280000000000
+      hitEffectbank: {fileID: 11400000, guid: 5d1086999fc610e4290407b33cce3ff1, type: 2}
       hitEffect: hit1
-      blockEffectbank:
-        modGUID:
-          guid: 1d292c1f00000000
-        contentGUID:
-          guid: 1d27280000000000
+      blockEffectbank: {fileID: 11400000, guid: 5d1086999fc610e4290407b33cce3ff1, type: 2}
       blockEffect: shieldhit1
-      hitSoundbank:
-        modGUID:
-          guid: 1d292c1f00000000
-        contentGUID:
-          guid: 1d27280000000000
+      hitSoundbank: {fileID: 11400000, guid: 2f4063bd6a5418f4a9c4e61c84752271, type: 2}
       hitSound: hit-punch-4
       hitSoundVolume: 0.3
       hitSoundMinDist: 5
       hitSoundMaxDist: 20
-      hitBlockSoundbank:
-        modGUID:
-          guid: 
-        contentGUID:
-          guid: 
+      hitBlockSoundbank: {fileID: 11400000, guid: 2f4063bd6a5418f4a9c4e61c84752271, type: 2}
       hitBlockSound: 
       hitCameraShakeStrength: 1
       blockCameraShakeStrength: 1
@@ -155,32 +140,16 @@ MonoBehaviour:
       comboProration: 0
       damage: 350
       chipDamage: 0
-      hitEffectbank:
-        modGUID:
-          guid: 0000000000000000
-        contentGUID:
-          guid: 0000000000000000
+      hitEffectbank: {fileID: 0}
       hitEffect: 
-      blockEffectbank:
-        modGUID:
-          guid: 
-        contentGUID:
-          guid: 
+      blockEffectbank: {fileID: 0}
       blockEffect: 
-      hitSoundbank:
-        modGUID:
-          guid: 1d292c1f00000000
-        contentGUID:
-          guid: 1d27280000000000
+      hitSoundbank: {fileID: 0}
       hitSound: hit-punch-1
       hitSoundVolume: 0.4
       hitSoundMinDist: 5
       hitSoundMaxDist: 20
-      hitBlockSoundbank:
-        modGUID:
-          guid: 
-        contentGUID:
-          guid: 
+      hitBlockSoundbank: {fileID: 0}
       hitBlockSound: 
       hitCameraShakeStrength: 2
       blockCameraShakeStrength: 2
@@ -322,8 +291,13 @@ MonoBehaviour:
         - {x: 1, y: -1}
         condition:
           rid: 387795991836491778
+        ignoreStateConditions: 0
+        ignoreAirtimeCheck: 0
+        ignoreStringUseCheck: 0
+        ignoreAuraRequirement: 0
         checkInputSequence: 0
         checkCondition: 0
+        overrideStateChange: 0
         targetType: 0
         stateMovesetID: -1
         state:
@@ -381,8 +355,13 @@ MonoBehaviour:
         - {x: 10, y: -1}
         condition:
           rid: 387796093188440080
+        ignoreStateConditions: 0
+        ignoreAirtimeCheck: 0
+        ignoreStringUseCheck: 0
+        ignoreAuraRequirement: 0
         checkInputSequence: 0
         checkCondition: 0
+        overrideStateChange: 0
         targetType: 0
         stateMovesetID: -1
         state:
@@ -448,8 +427,13 @@ MonoBehaviour:
         - {x: -1, y: -1}
         condition:
           rid: -2
+        ignoreStateConditions: 0
+        ignoreAirtimeCheck: 0
+        ignoreStringUseCheck: 0
+        ignoreAuraRequirement: 0
         checkInputSequence: 0
         checkCondition: 0
+        overrideStateChange: 0
         targetType: 0
         stateMovesetID: -1
         state:
@@ -580,17 +564,15 @@ MonoBehaviour:
         condition:
           rid: -2
         sounds:
-        - soundbank:
-            modGUID:
-              guid: 1d292c1f00000000
-            contentGUID:
-              guid: 1d27280000000000
+        - soundbank: {fileID: 11400000, guid: 2f4063bd6a5418f4a9c4e61c84752271, type: 2}
           sound: swing1
           parented: 1
           offset: {x: 0, y: 0, z: 0}
           volume: 1
           minDist: 5
           maxDist: 20
+          pitchDeviMin: 0
+          pitchDeviMax: 0
     - rid: 8688056833868562432
       type: {class: VarEmpty, ns: rwby, asm: rwby.csharp}
       data:

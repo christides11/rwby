@@ -325,7 +325,7 @@ namespace rwby
             {
                 if (currentState.maxUsesInString != -1)
                 {
-                    combatManager.AddMoveToString();
+                    combatManager.AddMoveToString(CurrentStateMoveset, CurrentState);
                 }
             }
         }

@@ -16,6 +16,8 @@ namespace rwby
         public List<string> args = new List<string>();
 
         public ModObjectSetContentReference menuSoundseference;
+
+        public int delayFrames = 5;
         
         async UniTask Awake()
         {
@@ -36,7 +38,11 @@ namespace rwby
             
             await gameManager.contentManager.LoadContentDefinition(rawRef);
 
-            await UniTask.WaitForEndOfFrame(this);
+            for (int i = 0; i < delayFrames; i++)
+            {
+                await UniTask.Yield(PlayerLoopTiming.LastPostLateUpdate);
+            }
+            
             if (useArgs && Application.isEditor)
             {
                 foreach (string s in args)

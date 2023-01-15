@@ -91,11 +91,11 @@ MonoBehaviour:
       damage: 500
       chipDamage: 100
       hitEffectbank: {fileID: 11400000, guid: 5d1086999fc610e4290407b33cce3ff1, type: 2}
-      hitEffect: hit1
+      hitEffect: hit_slash1
       blockEffectbank: {fileID: 11400000, guid: 5d1086999fc610e4290407b33cce3ff1, type: 2}
       blockEffect: shieldhit1
-      hitSoundbank: {fileID: 0}
-      hitSound: 
+      hitSoundbank: {fileID: 11400000, guid: 2f4063bd6a5418f4a9c4e61c84752271, type: 2}
+      hitSound: hit-sword-1
       hitSoundVolume: 0
       hitSoundMinDist: 0
       hitSoundMaxDist: 0
@@ -345,7 +345,7 @@ MonoBehaviour:
         condition:
           rid: -2
         sounds:
-        - soundbank: {fileID: 0}
+        - soundbank: {fileID: 11400000, guid: 2f4063bd6a5418f4a9c4e61c84752271, type: 2}
           sound: swing1
           parented: 1
           offset: {x: 0, y: 0, z: 0}

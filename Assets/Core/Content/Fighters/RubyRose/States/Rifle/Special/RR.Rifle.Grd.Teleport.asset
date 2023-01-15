@@ -448,6 +448,7 @@ MonoBehaviour:
         ignoreStateConditions: 0
         ignoreAirtimeCheck: 0
         ignoreStringUseCheck: 0
+        ignoreAuraRequirement: 0
         checkInputSequence: 0
         checkCondition: 0
         overrideStateChange: 0
@@ -478,6 +479,7 @@ MonoBehaviour:
         ignoreStateConditions: 0
         ignoreAirtimeCheck: 0
         ignoreStringUseCheck: 0
+        ignoreAuraRequirement: 0
         checkInputSequence: 0
         checkCondition: 0
         overrideStateChange: 0
@@ -590,11 +592,7 @@ MonoBehaviour:
         condition:
           rid: -2
         sounds:
-        - soundbank:
-            modGUID:
-              guid: 1d292c1f00000000
-            contentGUID:
-              guid: 1d27280000000000
+        - soundbank: {fileID: 11400000, guid: 2f4063bd6a5418f4a9c4e61c84752271, type: 2}
           sound: swing1
           parented: 1
           offset: {x: 0, y: 0, z: 0}

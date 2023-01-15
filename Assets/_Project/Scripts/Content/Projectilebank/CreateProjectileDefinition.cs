@@ -5,7 +5,7 @@ namespace rwby
     [System.Serializable]
     public struct CreateProjectileDefinition
     {
-        public ModObjectSetContentReference projectilebank;
+        public SharedModSetContentReference projectilebank;
         public string projectile;
         public bool parented;
         public Vector3 offset;

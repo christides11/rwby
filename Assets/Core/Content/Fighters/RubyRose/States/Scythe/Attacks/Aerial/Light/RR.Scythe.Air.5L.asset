@@ -34,6 +34,7 @@ MonoBehaviour:
   - rid: 387795756708003849
   - rid: 387795756708003850
   - rid: 387795932360736829
+  - rid: 4154528114452987905
   auraRequirement: 0
   initialGroundedState: 2
   stateType: 2
@@ -330,6 +331,33 @@ MonoBehaviour:
         boxExtents: {x: 1, y: 1, z: 1}
         radius: 0
         definitionIndex: 0
+    - rid: 4154528114452987905
+      type: {class: VarChangeState, ns: rwby, asm: rwby.csharp}
+      data:
+        name: Try 5LL
+        id: 23
+        parent: 13
+        children: 
+        frameRanges:
+        - {x: 7, y: -1}
+        condition:
+          rid: -2
+        ignoreStateConditions: 0
+        ignoreAirtimeCheck: 0
+        ignoreStringUseCheck: 0
+        ignoreAuraRequirement: 0
+        checkInputSequence: 1
+        checkCondition: 0
+        overrideStateChange: 0
+        targetType: 0
+        stateMovesetID: -1
+        state:
+          rid: 4154528114452987906
+        frame: 0
+    - rid: 4154528114452987906
+      type: {class: RubyRoseStateReference, ns: rwby.core, asm: rwby.core}
+      data:
+        state: 121
     - rid: 7270848428946489353
       type: {class: VarRotateTowards, ns: rwby, asm: rwby.csharp}
       data:
@@ -411,7 +439,7 @@ MonoBehaviour:
         condition:
           rid: -2
         sounds:
-        - soundbank: {fileID: 0}
+        - soundbank: {fileID: 11400000, guid: 2f4063bd6a5418f4a9c4e61c84752271, type: 2}
           sound: swing1
           parented: 1
           offset: {x: 0, y: 0, z: 0}
@@ -426,7 +454,7 @@ MonoBehaviour:
         name: On Hit or Block
         id: 13
         parent: -1
-        children: 0e0000001400000015000000
+        children: 170000000e0000001400000015000000
         frameRanges: []
         condition:
           rid: 8688056833868562433

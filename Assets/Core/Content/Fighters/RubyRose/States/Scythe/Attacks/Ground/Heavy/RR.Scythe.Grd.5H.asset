@@ -90,7 +90,7 @@ MonoBehaviour:
       damage: 500
       chipDamage: 100
       hitEffectbank: {fileID: 11400000, guid: 5d1086999fc610e4290407b33cce3ff1, type: 2}
-      hitEffect: hit1
+      hitEffect: hit_slash1
       blockEffectbank: {fileID: 11400000, guid: 5d1086999fc610e4290407b33cce3ff1, type: 2}
       blockEffect: shieldhit1
       hitSoundbank: {fileID: 11400000, guid: 2f4063bd6a5418f4a9c4e61c84752271, type: 2}
@@ -339,7 +339,7 @@ MonoBehaviour:
           rid: -2
         modifyType: 1
         wantedAnimations:
-        - animationbank: {fileID: 0}
+        - animationbank: {fileID: 11400000, guid: 2f728dafc0068ab45a19c79cbfc04bdd, type: 2}
           animation: scythe.grd.5H
         fadeTime: 0
     - rid: 8688056331001921543
@@ -369,7 +369,7 @@ MonoBehaviour:
         condition:
           rid: -2
         sounds:
-        - soundbank: {fileID: 0}
+        - soundbank: {fileID: 11400000, guid: 2f4063bd6a5418f4a9c4e61c84752271, type: 2}
           sound: swing1
           parented: 1
           offset: {x: 0, y: 0, z: 0}

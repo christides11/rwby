@@ -137,7 +137,6 @@ namespace rwby.Debugging
             if (!r)
             {
                 Debug.Log($"Could not load gamemode {gamemodeRefStr}.");
-                //ConsoleWindow.current.WriteLine($"Could not load gamemode {gamemodeRefStr}.", ConsoleMessageType.Error);
                 return;
             }
             
@@ -147,7 +146,6 @@ namespace rwby.Debugging
             if (gameModeDefinition == null)
             {
                 Debug.Log("Invalid gamemode.");
-                //ConsoleWindow.current.WriteLine("Invalid gamemode.", ConsoleMessageType.Error);
                 return;
             }
                     
@@ -155,7 +153,6 @@ namespace rwby.Debugging
             if (!loadResult)
             {
                 Debug.LogError("Error loading gamemode.");
-                //ConsoleWindow.current.WriteLine("Error loading gamemode.", ConsoleMessageType.Error);
                 return;
             }
             
@@ -163,19 +160,17 @@ namespace rwby.Debugging
             if (sessionHandlerID == -1)
             {
                 Debug.LogError("Error starting session.");
-                //ConsoleWindow.current.WriteLine("Error starting session.", ConsoleMessageType.Error);
                 return;
             }
                     
             FusionLauncher fl = GameManager.singleton.networkManager.GetSessionHandler(sessionHandlerID);
 
             await UniTask.WaitUntil(() => fl.sessionManager != null);
-            
+
             SessionManagerGamemode smc = (SessionManagerGamemode)fl.sessionManager;
             
             bool setGamemodeResult = await smc.TrySetGamemode(gamemodeGUIDContentReference);
-
-            //smc.SetTeamCount(0);
+            
             smc.SetMaxPlayersPerClient(localPlayers);
             await smc.CurrentGameMode.SetGamemodeSettings(gamemodeSettings);
 
@@ -187,7 +182,6 @@ namespace rwby.Debugging
             localClient.CLIENT_SetPlayerCount((uint)localPlayers);
             localClient.profiles.Add(ProfilesManager.defaultProfileIdentifier);
             GameManager.singleton.localPlayerManager.AutoAssignControllers();
-            //GameManager.singleton.localPlayerManager.systemPlayer.camera.enabled = false;
             
 
             string[] charaRefStr = playerCharacter.Split(',');

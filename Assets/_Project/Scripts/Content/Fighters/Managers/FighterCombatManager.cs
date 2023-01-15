@@ -203,6 +203,7 @@ namespace rwby
 
         public virtual bool MovePossible(MovesetStateIdentifier movesetState, int maxUsesInString = 1, int selfChainable = 0)
         {
+            if (movesUsedInString.Count == 0) return true;
             if (selfChainable > 0)
             {
                 int c = 0;
@@ -309,7 +310,7 @@ namespace rwby
             {
                 return false;
             }
-            ClearBuffer();
+            //ClearBuffer();
 
             bool sequenceInputsSuccessful = CheckSequenceInputs(sequence, holdInput, ref currentOffset);
 
@@ -421,8 +422,9 @@ namespace rwby
         public virtual bool CheckStickDirection(Vector2 stickDirection, float directionDeviation, int framesBack)
         {
             Vector2 stickDir = inputManager.GetMovement(framesBack);
-            if (stickDir.magnitude < InputConstants.movementDeadzone)
+            if (stickDirection == Vector2.zero)
             {
+                if (stickDir.magnitude < InputConstants.movementDeadzone) return true;
                 return false;
             }
 

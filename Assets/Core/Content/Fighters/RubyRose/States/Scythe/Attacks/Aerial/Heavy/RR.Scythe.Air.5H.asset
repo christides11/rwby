@@ -34,6 +34,8 @@ MonoBehaviour:
   - rid: 387795756708003845
   - rid: 387795932360736832
   - rid: 5775511833989087232
+  - rid: 4154528114452987908
+  - rid: 4154528114452987911
   auraRequirement: 0
   initialGroundedState: 2
   stateType: 2
@@ -76,7 +78,7 @@ MonoBehaviour:
       gravityAutolinkPercentage: 0
       movementAutolinkPercentage: 0
       groundHitForce: {x: 0, y: 0, z: 5}
-      aerialHitForce: {x: 0, y: 4, z: 2}
+      aerialHitForce: {x: 0, y: 2, z: 2}
       pullPushMultiplier: 0
       pullPushMaxDistance: 10
       blockLift: 0
@@ -314,7 +316,7 @@ MonoBehaviour:
         parent: -1
         children: 
         frameRanges:
-        - {x: 4, y: -1}
+        - {x: 3, y: -1}
         condition:
           rid: -2
         traction:
@@ -326,8 +328,57 @@ MonoBehaviour:
       data:
         inverse: 0
         statReference: 0
-        value: 30
+        value: 20
         variable: 0
+    - rid: 4154528114452987908
+      type: {class: VarChangeState, ns: rwby, asm: rwby.csharp}
+      data:
+        name: Try 5HH
+        id: 22
+        parent: 13
+        children: 
+        frameRanges:
+        - {x: 7, y: -1}
+        condition:
+          rid: -2
+        ignoreStateConditions: 0
+        ignoreAirtimeCheck: 0
+        ignoreStringUseCheck: 0
+        ignoreAuraRequirement: 0
+        checkInputSequence: 1
+        checkCondition: 0
+        overrideStateChange: 0
+        targetType: 0
+        stateMovesetID: -1
+        state:
+          rid: 4154528114452987909
+        frame: 0
+    - rid: 4154528114452987909
+      type: {class: RubyRoseStateReference, ns: rwby.core, asm: rwby.core}
+      data:
+        state: 122
+    - rid: 4154528114452987911
+      type: {class: VarAddMovement, ns: rwby, asm: rwby.csharp}
+      data:
+        name: 
+        id: 23
+        parent: -1
+        children: 
+        frameRanges:
+        - {x: 1, y: 1}
+        condition:
+          rid: -2
+        inputSource: 1
+        normalizeInputSource: 0
+        useRotationIfInputZero: 0
+        force:
+          rid: 4154528114452987912
+    - rid: 4154528114452987912
+      type: {class: FighterStatReferenceFloatBase, ns: rwby, asm: rwby.csharp}
+      data:
+        inverse: 0
+        statReference: 0
+        value: 3
     - rid: 5775511833989087232
       type: {class: VarExternal, ns: rwby, asm: rwby.csharp}
       data:
@@ -421,7 +472,7 @@ MonoBehaviour:
         condition:
           rid: -2
         sounds:
-        - soundbank: {fileID: 0}
+        - soundbank: {fileID: 11400000, guid: 2f4063bd6a5418f4a9c4e61c84752271, type: 2}
           sound: swing1
           parented: 1
           offset: {x: 0, y: 0, z: 0}
@@ -436,7 +487,7 @@ MonoBehaviour:
         name: On Hit or Block
         id: 13
         parent: -1
-        children: 0e00000015000000
+        children: 160000000e00000015000000
         frameRanges: []
         condition:
           rid: 8688056833868562433

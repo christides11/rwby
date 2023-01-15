@@ -89,7 +89,6 @@ namespace rwby
 
 		public async UniTask<StartGameResult> DedicateHostSession(string roomName, int playerCount, string password)
 		{
-			//clientPrefab = playerPrefab;
 			_connectionCallback = OnConnectionStatusUpdate;
 			InitSingletions(false);
 			

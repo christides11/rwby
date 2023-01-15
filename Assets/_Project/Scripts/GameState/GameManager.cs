@@ -50,36 +50,6 @@ namespace rwby
             debugLogManager.gameObject.SetActive(false);
         }
 
-        private void Update()
-        { 
-            /*
-            if (Input.GetKeyDown(KeyCode.F4))
-            {
-                var player = ReInput.players.GetPlayer(0);
-                
-                // Disable all Rule Sets
-                foreach(var ruleSet in player.controllers.maps.layoutManager.ruleSets) {
-                    ruleSet.enabled = false;
-                }
-                player.controllers.maps.layoutManager.ruleSets.Find(item => item.tag == "k&m_default").enabled = true;
-                player.controllers.maps.layoutManager.ruleSets.Find(item => item.tag == "js_default").enabled = true;
-                player.controllers.maps.layoutManager.Apply();
-            }
-            if (Input.GetKeyDown(KeyCode.F5))
-            {
-                var player = ReInput.players.GetPlayer(0);
-                
-                // Disable all Rule Sets
-                foreach(var ruleSet in player.controllers.maps.layoutManager.ruleSets) {
-                    ruleSet.enabled = false;
-                }
-
-                player.controllers.maps.layoutManager.ruleSets.Find(item => item.tag == "k&m_keyboard").enabled = true;
-                player.controllers.maps.layoutManager.ruleSets.Find(item => item.tag == "js_default").enabled = true;
-                player.controllers.maps.layoutManager.Apply();
-            }*/
-        }
-
         public SessionManagerGamemode gamemodeSessionHandlerPrefab;
         public virtual async UniTask<int> HostGamemodeSession(string lobbyName, int playerCount, string password, bool hostMode = true, bool localMatch = false)
         {

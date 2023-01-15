@@ -32,7 +32,7 @@ MonoBehaviour:
   - rid: 387795978025172998
   auraRequirement: 0
   initialGroundedState: 1
-  stateType: 2
+  stateType: 1
   maxUsesInString: -1
   maxUsesPerAirtime: -1
   selfChainable: 0
@@ -71,17 +71,15 @@ MonoBehaviour:
         condition:
           rid: -2
         sounds:
-        - soundbank:
-            modGUID:
-              guid: 1d292c1f00000000
-            contentGUID:
-              guid: 2c2c000000000000
+        - soundbank: {fileID: 11400000, guid: 46cf32b8cf1903a428cb8802d2539eca, type: 2}
           sound: swing12
           parented: 0
           offset: {x: 0, y: 0, z: 0}
           volume: 0.5
           minDist: 5
           maxDist: 20
+          pitchDeviMin: 0
+          pitchDeviMax: 0
     - rid: 7270848885102739473
       type: {class: VarSetGroundedState, ns: rwby, asm: rwby.csharp}
       data:
@@ -114,7 +112,7 @@ MonoBehaviour:
         parent: -1
         children: 
         frameRanges:
-        - {x: 1, y: 1}
+        - {x: 2, y: 2}
         condition:
           rid: -2
         modifyType: 1

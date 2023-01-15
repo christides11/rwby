@@ -13,7 +13,7 @@ namespace rwby
 {
     public class CustomNetworkSceneManager : CustomNetworkSceneManagerBase
     {
-        [Header("Single Peer Options")] public int PostLoadDelayFrames = 1;
+        public int PostLoadDelayFrames = 1;
         
         public Dictionary<CustomSceneRef, Scene> scenesLoaded = new Dictionary<CustomSceneRef, Scene>();
 
@@ -149,6 +149,11 @@ namespace rwby
             {
                 LogTrace($"Unloading temp scene {tempScene}");
                 await SceneManager.UnloadSceneAsync(tempScene);
+            }
+            
+            for (int i = PostLoadDelayFrames; i > 0; --i)
+            {
+                await UniTask.Yield(PlayerLoopTiming.LastPostLateUpdate);
             }
 
             finished(sceneObjects);
