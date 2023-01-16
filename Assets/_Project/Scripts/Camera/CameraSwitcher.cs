@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -68,6 +69,14 @@ namespace rwby
             }
         }
 
+        private void LateUpdate()
+        {
+            if (targetAudioListener)
+            {
+                targetAudioListener.transform.rotation = cam.transform.rotation;
+            }
+        }
+
         public virtual void ResetCameraShake()
         {
             for (int i = 0; i < playerCameras.Count; i++)
@@ -110,6 +119,7 @@ namespace rwby
             }
         }
 
+        [SerializeField] private AudioListener targetAudioListener;
         public virtual void SetTarget(FighterManager fighterManager)
         {
             for (int i = 0; i < playerCameras.Count; i++)
@@ -117,6 +127,11 @@ namespace rwby
                 playerCameras[i].SetTarget(fighterManager);
             }
             target = fighterManager;
+            targetAudioListener = new GameObject("AudioListener", typeof(AudioListener)).GetComponent<AudioListener>();
+            Transform transform1;
+            (transform1 = targetAudioListener.transform).SetParent(target.myTransform);
+            transform1.position = fighterManager.GetCenter();
+            transform1.rotation = cam.transform.rotation;
         }
     }
 }

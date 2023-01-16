@@ -25,6 +25,9 @@ namespace rwby
         [ReadOnly] public int maxAuraValue;
         public float chipSpeed = 1.0f;
         public float chipDelay = 0.1f;
+
+        [ReadOnly] public int hitstunValue;
+        [ReadOnly] public int maxHitstunValue;
         
         public virtual void Setup(FighterManager fighter)
         {
@@ -33,16 +36,38 @@ namespace rwby
             fighter.HealthManager.OnHealthIncreased += HealthIncreased;
             fighter.FCombatManager.OnAuraDecreased += AuraDecreased;
             fighter.FCombatManager.OnAuraIncreased += AuraIncreased;
+            fighter.FCombatManager.OnHitstunDecreased += HitstunDecreased;
+            fighter.FCombatManager.OnHitstunIncreased += HitstunIncreased;
             healthValue = fighter.HealthManager.Health;
             maxHealthValue = fighter.fighterDefinition.Health;
+            hitstunValue = 0;
+            maxHitstunValue = 1;
         }
-        
+
+        private void HitstunIncreased(FighterCombatManager combatmanager, int value)
+        {
+            maxHitstunValue = value;
+            hitstunValue = value;
+        }
+
+        private void HitstunDecreased(FighterCombatManager combatmanager, int value)
+        {
+            if (value < 0)
+            {
+                hitstunValue = 0;
+                maxHitstunValue = 1;
+                return;
+            }
+            hitstunValue = value;
+        }
+
         public virtual void UpdateHUD()
         {
             UpdateHealthbar();
             UpdateAurabar();
+            UpdateHitstunbar();
         }
-        
+
         private void HealthIncreased(HealthManager healthmanager)
         {
             healthValue = healthmanager.Health;
@@ -96,6 +121,11 @@ namespace rwby
         private void UpdateAurabar()
         {
             aurabar.fillAmount = (float)auraValue / (float)maxAuraValue;
+        }
+        
+        private void UpdateHitstunbar()
+        {
+            hitstunbar.fillAmount = (float)hitstunValue / (float)maxHitstunValue;
         }
     }
 }

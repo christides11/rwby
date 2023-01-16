@@ -32,7 +32,7 @@ namespace rwby
         [Networked, Capacity(4)] public NetworkArray<NetworkObject> throwees => default;
         [Networked] public int ThrowTechTimer { get; set; } = 0;
         [Networked] public BlockStateType BlockState { get; set; }
-        [Networked] public int HitStun { get; set; } = -1;
+        [Networked(OnChanged = nameof(OnChangedHitstun))] public int HitStun { get; set; } = -1;
         [Networked] public int HitStop { get; set; } = -1;
         [Networked] public int LastHitStop { get; set; } = -1;
         [Networked] public int BlockStun { get; set; } = -1;
@@ -74,10 +74,12 @@ namespace rwby
         public IntFloatMap[] pushbackScalingMap = new IntFloatMap[4];
         public IntFloatMap[] gravityScalingMap = new IntFloatMap[4];
 
-        public delegate void AuraDelegate(FighterCombatManager combatManager, int maxAura);
+        public delegate void ValueDelegate(FighterCombatManager combatManager, int maxValue);
 
-        public event AuraDelegate OnAuraIncreased;
-        public event AuraDelegate OnAuraDecreased;
+        public event ValueDelegate OnAuraIncreased;
+        public event ValueDelegate OnAuraDecreased;
+        public event ValueDelegate OnHitstunIncreased;
+        public event ValueDelegate OnHitstunDecreased;
 
         [Networked] public int LastSuccessfulBlockTick { get; set; }
         [Networked] public int LastSuccessfulPushblockTick { get; set; }
@@ -102,7 +104,21 @@ namespace rwby
                 changed.Behaviour.OnAuraDecreased?.Invoke(changed.Behaviour, changed.Behaviour.manager.fighterDefinition.Aura);
             }
         }
-        
+
+        public static void OnChangedHitstun(Changed<FighterCombatManager> changed)
+        {
+            changed.LoadOld();
+            int oldHitstun = changed.Behaviour.HitStun;
+            changed.LoadNew();
+            if (changed.Behaviour.HitStun > oldHitstun)
+            {
+                changed.Behaviour.OnHitstunIncreased?.Invoke(changed.Behaviour, changed.Behaviour.HitStun);
+            }else if (changed.Behaviour.HitStun < oldHitstun)
+            {
+                changed.Behaviour.OnHitstunDecreased?.Invoke(changed.Behaviour, changed.Behaviour.HitStun);
+            }
+        }
+
         public override void Spawned()
         {
             base.Spawned();

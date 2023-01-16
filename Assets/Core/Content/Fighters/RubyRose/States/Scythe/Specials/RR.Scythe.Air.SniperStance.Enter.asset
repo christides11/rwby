@@ -29,6 +29,8 @@ MonoBehaviour:
   - rid: 7270848718906589187
   - rid: 387795756708003851
   - rid: 387796051391938560
+  - rid: 4154528139750408192
+  - rid: 4154528139750408195
   auraRequirement: 50
   initialGroundedState: 2
   stateType: 2
@@ -80,16 +82,16 @@ MonoBehaviour:
       comboProration: 0.2
       damage: 500
       chipDamage: 100
-      hitEffectbank: {fileID: 0}
+      hitEffectbank: {fileID: 11400000, guid: 5d1086999fc610e4290407b33cce3ff1, type: 2}
       hitEffect: hit1
-      blockEffectbank: {fileID: 0}
+      blockEffectbank: {fileID: 11400000, guid: 5d1086999fc610e4290407b33cce3ff1, type: 2}
       blockEffect: shieldhit1
-      hitSoundbank: {fileID: 0}
+      hitSoundbank: {fileID: 11400000, guid: 2f4063bd6a5418f4a9c4e61c84752271, type: 2}
       hitSound: hit-sword-1
       hitSoundVolume: 0.3
       hitSoundMinDist: 5
       hitSoundMaxDist: 20
-      hitBlockSoundbank: {fileID: 0}
+      hitBlockSoundbank: {fileID: 11400000, guid: 2f4063bd6a5418f4a9c4e61c84752271, type: 2}
       hitBlockSound: hit-guard-1
       hitCameraShakeStrength: 1
       blockCameraShakeStrength: 1
@@ -268,6 +270,58 @@ MonoBehaviour:
         boxExtents: {x: 1, y: 1, z: 1}
         radius: 0
         definitionIndex: 0
+    - rid: 4154528139750408192
+      type: {class: VarModifyFallSpeed, ns: rwby, asm: rwby.csharp}
+      data:
+        name: 
+        id: 21
+        parent: -1
+        children: 
+        frameRanges:
+        - {x: 10, y: 10}
+        condition:
+          rid: 4154528139750408194
+        targetType: 0
+        modifyType: 1
+        value:
+          rid: 4154528139750408193
+    - rid: 4154528139750408193
+      type: {class: FighterStatReferenceFloatBase, ns: rwby, asm: rwby.csharp}
+      data:
+        inverse: 0
+        statReference: 0
+        value: 2
+    - rid: 4154528139750408194
+      type: {class: ConditionHitOrBlockCount, ns: rwby, asm: rwby.csharp}
+      data:
+        inverse: 0
+        hitCount: 1
+        hitOrBlock: 1
+    - rid: 4154528139750408195
+      type: {class: VarClampMovement, ns: rwby, asm: rwby.csharp}
+      data:
+        name: 
+        id: 22
+        parent: -1
+        children: 
+        frameRanges:
+        - {x: 7, y: -1}
+        condition:
+          rid: 4154528139750408197
+        magnitude:
+          rid: 4154528139750408196
+    - rid: 4154528139750408196
+      type: {class: FighterStatReferenceFloatBase, ns: rwby, asm: rwby.csharp}
+      data:
+        inverse: 0
+        statReference: 0
+        value: 1
+    - rid: 4154528139750408197
+      type: {class: ConditionHitOrBlockCount, ns: rwby, asm: rwby.csharp}
+      data:
+        inverse: 0
+        hitCount: 1
+        hitOrBlock: 1
     - rid: 7270848428946489353
       type: {class: VarRotateTowards, ns: rwby, asm: rwby.csharp}
       data:
