@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.18362994, g: 0.22788033, b: 0.2980507, a: 1}
+  m_IndirectSpecularColor: {r: 0.18181148, g: 0.2238742, b: 0.28648692, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -401,7 +401,7 @@ MonoBehaviour:
   renderSettingsForceRebuildGeometry: 1
   renderSettingsPerformRendering: 1
   renderSettingsUserRenderMode: 0
-  renderSettingsDistanceShadowmask: 0
+  renderSettingsDistanceShadowmask: 1
   renderSettingsSettingsMode: 0
   renderSettingsFixSeams: 1
   renderSettingsDenoise: 1
@@ -423,7 +423,7 @@ MonoBehaviour:
   renderSettingsHackEmissiveBoost: 1
   renderSettingsHackIndirectBoost: 1
   renderSettingsTempPath: C:/GL_FRender
-  renderSettingsOutPath: 
+  renderSettingsOutPath: BakeryLightmaps
   renderSettingsUseScenePath: 0
   renderSettingsHackAOIntensity: 0
   renderSettingsHackAOSamples: 16
@@ -596,6 +596,14 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -8497560149359131996, guid: 44c519a61880978458186c67fe658596, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: b68ae41b28431db4ab9ad11a490d5711, type: 2}
+    - target: {fileID: -5645733468544236259, guid: 44c519a61880978458186c67fe658596, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: b68ae41b28431db4ab9ad11a490d5711, type: 2}
     - target: {fileID: -4908526375238494173, guid: 44c519a61880978458186c67fe658596, type: 3}
       propertyPath: m_RenderingLayerMask
       value: 1
@@ -5412,14 +5420,14 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2107955760}
-  m_LocalRotation: {x: -0.13955824, y: -0.74624074, z: 0.16543756, w: -0.62950665}
+  m_LocalRotation: {x: -0, y: 0.986372, z: -0.1645305, w: 0}
   m_LocalPosition: {x: 0, y: 2, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 23
-  m_LocalEulerAnglesHint: {x: 25, y: -260.3, z: 0}
+  m_LocalEulerAnglesHint: {x: 18.94, y: 180, z: 0}
 --- !u!114 &2107955763
 MonoBehaviour:
   m_ObjectHideFlags: 0
