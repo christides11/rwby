@@ -20,8 +20,6 @@ MonoBehaviour:
   autoLoop: 1
   autoLoopFrame: 1
   data:
-  - rid: 8688056217396838403
-  - rid: 8688056217396838404
   - rid: 8688056817054646274
   - rid: 387795733835153463
   - rid: 387795733835153470
@@ -158,36 +156,6 @@ MonoBehaviour:
           maxDist: 10
           pitchDeviMin: -0.1
           pitchDeviMax: 0.1
-    - rid: 8688056217396838403
-      type: {class: VarModifyAnimationSet, ns: rwby, asm: rwby.csharp}
-      data:
-        name: 
-        id: 0
-        parent: -1
-        children: 
-        frameRanges:
-        - {x: 0, y: 0}
-        condition:
-          rid: -2
-        modifyType: 1
-        wantedAnimations:
-        - animationbank: {fileID: 11400000, guid: 2f728dafc0068ab45a19c79cbfc04bdd, type: 2}
-          animation: jumpsquat
-        fadeTime: 0
-    - rid: 8688056217396838404
-      type: {class: VarModifyAnimationFrame, ns: rwby, asm: rwby.csharp}
-      data:
-        name: 
-        id: 1
-        parent: -1
-        children: 
-        frameRanges:
-        - {x: 1, y: -1}
-        condition:
-          rid: -2
-        modifyType: 0
-        animations: 00000000
-        frame: 1
     - rid: 8688056817054646274
       type: {class: VarCreateBox, ns: rwby, asm: rwby.csharp}
       data:

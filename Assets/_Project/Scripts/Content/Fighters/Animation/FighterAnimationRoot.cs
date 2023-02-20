@@ -3,6 +3,7 @@ using UnityEngine;
 
 namespace rwby
 {
+    [System.Serializable]
     public struct FighterAnimationRoot : INetworkStruct
     {
         public float layerFadeWeight;

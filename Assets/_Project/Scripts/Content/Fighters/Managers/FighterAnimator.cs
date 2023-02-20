@@ -14,7 +14,7 @@ namespace rwby
         [HideInInspector] public List<IAnimationbankDefinition> banks = new List<IAnimationbankDefinition>();
         [SerializeField] private AnimancerComponent animancer;
         
-        [Networked] private FighterAnimationRoot animationSet { get; set; }
+        [SerializeField, Networked] private FighterAnimationRoot animationSet { get; set; }
         [Networked] public bool animateInResimulation { get; set; }
         private bool animDirty = true;
         public bool smoothAnimate = true;
@@ -266,6 +266,7 @@ namespace rwby
             for (int i = 0; i < banks[^1].Animations.Count; i++)
             {
                 if (banks[^1].Animations[i].clip == null) continue;
+                banks[^1].Animations[i].clip.wrapMode = WrapMode.ClampForever;
                 var state = animancer.Layers[0].CreateState(banks[^1].Animations[i].clip);
                 state.ApplyAnimatorIK = banks[^1].Animations[i].footIK;
                 state.ApplyFootIK = banks[^1].Animations[i].footIK;

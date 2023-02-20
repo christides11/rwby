@@ -15,7 +15,7 @@ MonoBehaviour:
   stateName: 5L
   useBaseState: 0
   baseState: {fileID: 0}
-  totalFrames: 26
+  totalFrames: 30
   autoIncrement: 1
   autoLoop: 0
   autoLoopFrame: 1
@@ -24,12 +24,9 @@ MonoBehaviour:
   - rid: 2193520813467238403
   - rid: 2193520817874927616
   - rid: 8688056217396838433
-  - rid: 8688056331001921542
-  - rid: 8688056331001921543
   - rid: 8688056738971123712
   - rid: 387796143482339328
   - rid: 8688056738971123715
-  - rid: 8688056740327194626
   - rid: 8688056833868562432
   - rid: 8688056833868562434
   - rid: 7270848428946489353
@@ -38,6 +35,9 @@ MonoBehaviour:
   - rid: 387795756708003851
   - rid: 387795983688269854
   - rid: 387795983688269856
+  - rid: 1200828577779548167
+  - rid: 1200828715613814784
+  - rid: 1200828715613814785
   auraRequirement: 0
   initialGroundedState: 1
   stateType: 2
@@ -59,7 +59,7 @@ MonoBehaviour:
     rid: -2
   hitboxInfo:
   - ID: 0
-    groundedFoldoutGroup: 1
+    groundedFoldoutGroup: 0
     groundedCounterHitFoldoutGroup: 0
     clashLevel: 0
     hitStateGroundedGroups: -1
@@ -86,15 +86,15 @@ MonoBehaviour:
       blockLift: 0
       attackerHitstop: 4
       hitstop: 4
-      hitstun: 30
-      blockstun: 30
-      untech: 30
+      hitstun: 25
+      blockstun: 18
+      untech: 25
       initialProration: 0
       comboProration: 0.2
       damage: 500
       chipDamage: 100
       hitEffectbank: {fileID: 11400000, guid: 5d1086999fc610e4290407b33cce3ff1, type: 2}
-      hitEffect: hit2
+      hitEffect: hit4
       blockEffectbank: {fileID: 11400000, guid: 5d1086999fc610e4290407b33cce3ff1, type: 2}
       blockEffect: shieldhit1
       hitSoundbank: {fileID: 11400000, guid: 2f4063bd6a5418f4a9c4e61c84752271, type: 2}
@@ -174,15 +174,15 @@ MonoBehaviour:
         parent: -1
         children: 
         frameRanges:
-        - {x: 3, y: 3}
+        - {x: 6, y: 6}
         condition:
           rid: -2
         sounds:
         - soundbank: {fileID: 11400000, guid: 46cf32b8cf1903a428cb8802d2539eca, type: 2}
-          sound: swing16
+          sound: swing14
           parented: 1
           offset: {x: 0, y: 0, z: 0}
-          volume: 0.4
+          volume: 0.3
           minDist: 5
           maxDist: 20
           pitchDeviMin: 0
@@ -227,11 +227,68 @@ MonoBehaviour:
         parent: -1
         children: 
         frameRanges:
-        - {x: 1, y: -1}
+        - {x: -1, y: -1}
         condition:
           rid: -2
         modifyType: 0
         effects: 00000000
+        frame: 1
+    - rid: 1200828577779548167
+      type: {class: VarChangeState, ns: rwby, asm: rwby.csharp}
+      data:
+        name: Try 5LL
+        id: 23
+        parent: 13
+        children: 
+        frameRanges:
+        - {x: 7, y: -1}
+        condition:
+          rid: -2
+        ignoreStateConditions: 0
+        ignoreAirtimeCheck: 0
+        ignoreStringUseCheck: 0
+        ignoreAuraRequirement: 0
+        checkInputSequence: 1
+        checkCondition: 0
+        overrideStateChange: 0
+        targetType: 0
+        stateMovesetID: -1
+        state:
+          rid: 1200828577779548168
+        frame: 0
+    - rid: 1200828577779548168
+      type: {class: FighterAttackStateReference, ns: rwby, asm: rwby.csharp}
+      data:
+        state: 101
+    - rid: 1200828715613814784
+      type: {class: VarModifyAnimationSet, ns: rwby, asm: rwby.csharp}
+      data:
+        name: 
+        id: 24
+        parent: -1
+        children: 
+        frameRanges:
+        - {x: 0, y: 0}
+        condition:
+          rid: -2
+        modifyType: 1
+        wantedAnimations:
+        - animationbank: {fileID: 11400000, guid: 2f728dafc0068ab45a19c79cbfc04bdd, type: 2}
+          animation: scythe.grd.5L
+        fadeTime: 0
+    - rid: 1200828715613814785
+      type: {class: VarModifyAnimationFrame, ns: rwby, asm: rwby.csharp}
+      data:
+        name: 
+        id: 25
+        parent: -1
+        children: 
+        frameRanges:
+        - {x: 1, y: 6}
+        condition:
+          rid: -2
+        modifyType: 0
+        animations: 00000000
         frame: 1
     - rid: 2193520813467238401
       type: {class: VarChangeState, ns: rwby, asm: rwby.csharp}
@@ -369,36 +426,6 @@ MonoBehaviour:
         boxExtents: {x: 0.5, y: 1, z: 0.5}
         radius: 0
         definitionIndex: 0
-    - rid: 8688056331001921542
-      type: {class: VarModifyAnimationSet, ns: rwby, asm: rwby.csharp}
-      data:
-        name: 
-        id: 5
-        parent: -1
-        children: 
-        frameRanges:
-        - {x: 0, y: 0}
-        condition:
-          rid: -2
-        modifyType: 1
-        wantedAnimations:
-        - animationbank: {fileID: 11400000, guid: 2f728dafc0068ab45a19c79cbfc04bdd, type: 2}
-          animation: scythe.grd.a
-        fadeTime: 0
-    - rid: 8688056331001921543
-      type: {class: VarModifyAnimationFrame, ns: rwby, asm: rwby.csharp}
-      data:
-        name: 
-        id: 6
-        parent: -1
-        children: 
-        frameRanges:
-        - {x: 1, y: -1}
-        condition:
-          rid: -2
-        modifyType: 0
-        animations: 00000000
-        frame: 1
     - rid: 8688056738971123712
       type: {class: VarModifyEffectSet, ns: rwby, asm: rwby.csharp}
       data:
@@ -407,7 +434,7 @@ MonoBehaviour:
         parent: -1
         children: 
         frameRanges:
-        - {x: 1, y: 1}
+        - {x: 6, y: 6}
         condition:
           rid: -2
         modifyType: 1
@@ -416,7 +443,7 @@ MonoBehaviour:
           effect: rr.s.grd.5L
           parent:
             rid: 387796115928383488
-          offset: {x: 0, y: 0, z: 0}
+          offset: {x: 0, y: 1, z: 0}
           rotation: {x: 0, y: 0, z: 0}
           scale: {x: 1, y: 1, z: 1}
           autoIncrement: 0
@@ -435,34 +462,13 @@ MonoBehaviour:
           rid: -2
         keepEffects: 1
         autoIncrementEffects: 1
-    - rid: 8688056740327194626
-      type: {class: VarModifySoundSet, ns: rwby, asm: rwby.csharp}
-      data:
-        name: 
-        id: 10
-        parent: -1
-        children: 
-        frameRanges:
-        - {x: 3, y: 3}
-        condition:
-          rid: -2
-        sounds:
-        - soundbank: {fileID: 11400000, guid: 2f4063bd6a5418f4a9c4e61c84752271, type: 2}
-          sound: swing1
-          parented: 1
-          offset: {x: 0, y: 0, z: 0}
-          volume: 0.5
-          minDist: 5
-          maxDist: 20
-          pitchDeviMin: 0
-          pitchDeviMax: 0
     - rid: 8688056833868562432
       type: {class: VarEmpty, ns: rwby, asm: rwby.csharp}
       data:
         name: On Hit or Block
         id: 13
         parent: -1
-        children: 0e000000
+        children: 170000000e000000
         frameRanges: []
         condition:
           rid: 8688056833868562433

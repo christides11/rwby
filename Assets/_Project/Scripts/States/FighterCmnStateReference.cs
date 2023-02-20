@@ -2,7 +2,7 @@ namespace rwby
 {
     public class FighterCmnStateReference : HnSF.FighterStateReferenceBase
     {
-        public FighterCmnStates state = FighterCmnStates.IDLE;
+        public FighterCmnStates state = FighterCmnStates.NULL;
         
         public override int GetState()
         {

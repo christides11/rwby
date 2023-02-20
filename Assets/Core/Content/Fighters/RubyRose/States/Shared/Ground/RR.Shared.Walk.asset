@@ -23,11 +23,9 @@ MonoBehaviour:
   - rid: 2193520817874927619
   - rid: 2193520817874927621
   - rid: 2193520879941976064
-  - rid: 8688056216264638483
   - rid: 8688056216264638484
   - rid: 8688056217003884544
   - rid: 8688056217003884545
-  - rid: 8688056409313247232
   - rid: 7270848899719102477
   - rid: 7270848899719102479
   - rid: 387796025889783855
@@ -89,7 +87,7 @@ MonoBehaviour:
         name: Scythe
         id: 0
         parent: -1
-        children: 0100000007000000
+        children: 01000000
         frameRanges: []
         condition:
           rid: 2193520817874927620
@@ -202,22 +200,6 @@ MonoBehaviour:
         condition:
           rid: -2
         asset: {fileID: 11400000, guid: ba688ef34edd2d84ea6a5b2e1e2af06e, type: 2}
-    - rid: 8688056216264638483
-      type: {class: VarModifyAnimationSet, ns: rwby, asm: rwby.csharp}
-      data:
-        name: 
-        id: 3
-        parent: -1
-        children: 
-        frameRanges:
-        - {x: 0, y: 0}
-        condition:
-          rid: -2
-        modifyType: 1
-        wantedAnimations:
-        - animationbank: {fileID: 11400000, guid: 2f728dafc0068ab45a19c79cbfc04bdd, type: 2}
-          animation: walk.f
-        fadeTime: 0
     - rid: 8688056216264638484
       type: {class: VarEmpty, ns: rwby, asm: rwby.csharp}
       data:
@@ -262,19 +244,3 @@ MonoBehaviour:
       data:
         inverse: 1
         requireTarget: 0
-    - rid: 8688056409313247232
-      type: {class: VarModifyAnimationSet, ns: rwby, asm: rwby.csharp}
-      data:
-        name: 
-        id: 7
-        parent: 0
-        children: 
-        frameRanges:
-        - {x: 0, y: 0}
-        condition:
-          rid: -2
-        modifyType: 1
-        wantedAnimations:
-        - animationbank: {fileID: 11400000, guid: 2f728dafc0068ab45a19c79cbfc04bdd, type: 2}
-          animation: walk.f
-        fadeTime: 0

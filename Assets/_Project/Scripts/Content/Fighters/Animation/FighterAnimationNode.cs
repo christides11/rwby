@@ -4,6 +4,7 @@ using UnityEngine;
 
 namespace rwby
 {
+    [System.Serializable]
     public struct FighterAnimationNode : INetworkStruct, IEquatable<rwby.FighterAnimationNode>
     {
         public int bank;

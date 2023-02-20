@@ -82,74 +82,6 @@ MonoBehaviour:
     state:
       rid: 387795932360736816
     stateTimeline: {fileID: 11400000, guid: 98f51ed91603b8a4186cbb0c574c235f, type: 2}
-  - name: 5L
-    state:
-      rid: 387795932360736808
-    stateTimeline: {fileID: 11400000, guid: bda5b1beba175cf46a9a1b31aaf61a57, type: 2}
-  - name: 5H
-    state:
-      rid: 387795932360736809
-    stateTimeline: {fileID: 11400000, guid: c2c15858083a2b549af7eda6b9a3a06c, type: 2}
-  - name: 8H
-    state:
-      rid: 387795967775604736
-    stateTimeline: {fileID: 11400000, guid: 224da0aa364607045ac3e816e0b689cf, type: 2}
-  - name: 2H
-    state:
-      rid: 387795978025172992
-    stateTimeline: {fileID: 11400000, guid: a9af0cac5029cf748a6d065154c013c0, type: 2}
-  - name: 28H
-    state:
-      rid: 387795978025173000
-    stateTimeline: {fileID: 11400000, guid: 1052644c1c5e78742a98d53fa1875e0c, type: 2}
-  - name: 5U
-    state:
-      rid: 387795932360736813
-    stateTimeline: {fileID: 11400000, guid: 0f575d9e8700cd648b388ae228dd3d6a, type: 2}
-  - name: Teleport
-    state:
-      rid: 387795987783221255
-    stateTimeline: {fileID: 11400000, guid: af7ebb8289b082949b31fc5dbd671d00, type: 2}
-  - name: Combat Roll
-    state:
-      rid: 387796075454922754
-    stateTimeline: {fileID: 11400000, guid: ac232bff87d16f4438e5c864344be07e, type: 2}
-  - name: Combat Roll - L
-    state:
-      rid: 387796079774793728
-    stateTimeline: {fileID: 11400000, guid: b69a39c0b365248419330002aeaf813c, type: 2}
-  - name: Combat Roll - H
-    state:
-      rid: 387796079774793737
-    stateTimeline: {fileID: 11400000, guid: 203d4199a5016ab42be995b256d10b80, type: 2}
-  - name: Combat Roll - U
-    state:
-      rid: 387796079774793740
-    stateTimeline: {fileID: 11400000, guid: 61898544afdb1f94c8bbff07fe5531f2, type: 2}
-  - name: Rekka
-    state:
-      rid: 387796093188440067
-    stateTimeline: {fileID: 11400000, guid: c99bd4bc0f5166b4f8928f4ba82b7402, type: 2}
-  - name: Rekka - XL
-    state:
-      rid: 387796101564727308
-    stateTimeline: {fileID: 11400000, guid: 21c0d4074eadc93428f461f226ef2b6d, type: 2}
-  - name: Rekka - XH
-    state:
-      rid: 387796101564727312
-    stateTimeline: {fileID: 11400000, guid: 6576ec2207d9c8a4b9fe866b1722ee5f, type: 2}
-  - name: Rekka - XXL
-    state:
-      rid: 387796101564727313
-    stateTimeline: {fileID: 11400000, guid: 273c3fbb9dde91e4699391ab85783989, type: 2}
-  - name: Rekka - XXH
-    state:
-      rid: 387796101564727314
-    stateTimeline: {fileID: 11400000, guid: 0e595545f377e294e94ab64cbd5699e2, type: 2}
-  - name: Rifle Shot
-    state:
-      rid: 5775511466801889287
-    stateTimeline: {fileID: 11400000, guid: 7bc9b5b9ff973ca478390e1d3dfe89cd, type: 2}
   airActions:
   - name: fall
     state:
@@ -207,35 +139,7 @@ MonoBehaviour:
     state:
       rid: 387795932360736790
     stateTimeline: {fileID: 11400000, guid: 64fe64489eef7f346b46521a6dd19b37, type: 2}
-  airAttacks:
-  - name: 5L
-    state:
-      rid: 387795932360736810
-    stateTimeline: {fileID: 11400000, guid: 255255466269afe448b68516e283a67e, type: 2}
-  - name: 5H
-    state:
-      rid: 387795932360736811
-    stateTimeline: {fileID: 11400000, guid: 1849aedf780e90c4fb8fb1dd3d49845c, type: 2}
-  - name: 8H
-    state:
-      rid: 387795983688269830
-    stateTimeline: {fileID: 11400000, guid: 68525ed6b5df38142aff02ddf86e356b, type: 2}
-  - name: Teleport
-    state:
-      rid: 387796075454922757
-    stateTimeline: {fileID: 11400000, guid: f409bede1fc5f5a49b70de949b19b5cd, type: 2}
-  - name: Rekka
-    state:
-      rid: 387796093188440066
-    stateTimeline: {fileID: 11400000, guid: cc201438049ed8a41b9448a7c7dac212, type: 2}
-  - name: Rekka - XX
-    state:
-      rid: 387796093188440069
-    stateTimeline: {fileID: 11400000, guid: f85335e839354404da7c1fd375889016, type: 2}
-  - name: Rekka - XXX
-    state:
-      rid: 387796093188440070
-    stateTimeline: {fileID: 11400000, guid: b62288f9cbafaf949af9f2aacadd49a3, type: 2}
+  airAttacks: []
   recovery:
   - name: neutral tech (Ground)
     state:
@@ -445,26 +349,6 @@ MonoBehaviour:
       type: {class: RubyRoseStateReference, ns: rwby.core, asm: rwby.core}
       data:
         state: 92
-    - rid: 387795932360736808
-      type: {class: RubyRoseStateReference, ns: rwby.core, asm: rwby.core}
-      data:
-        state: 115
-    - rid: 387795932360736809
-      type: {class: RubyRoseStateReference, ns: rwby.core, asm: rwby.core}
-      data:
-        state: 116
-    - rid: 387795932360736810
-      type: {class: RubyRoseStateReference, ns: rwby.core, asm: rwby.core}
-      data:
-        state: 120
-    - rid: 387795932360736811
-      type: {class: RubyRoseStateReference, ns: rwby.core, asm: rwby.core}
-      data:
-        state: 56
-    - rid: 387795932360736813
-      type: {class: RubyRoseStateReference, ns: rwby.core, asm: rwby.core}
-      data:
-        state: 87
     - rid: 387795932360736815
       type: {class: FighterCmnStateReference, ns: rwby, asm: rwby.csharp}
       data:
@@ -473,30 +357,6 @@ MonoBehaviour:
       type: {class: FighterCmnStateReference, ns: rwby, asm: rwby.csharp}
       data:
         state: 44
-    - rid: 387795967775604736
-      type: {class: RubyRoseStateReference, ns: rwby.core, asm: rwby.core}
-      data:
-        state: 118
-    - rid: 387795978025172992
-      type: {class: RubyRoseStateReference, ns: rwby.core, asm: rwby.core}
-      data:
-        state: 93
-    - rid: 387795978025173000
-      type: {class: RubyRoseStateReference, ns: rwby.core, asm: rwby.core}
-      data:
-        state: 57
-    - rid: 387795983688269830
-      type: {class: RubyRoseStateReference, ns: rwby.core, asm: rwby.core}
-      data:
-        state: 68
-    - rid: 387795987783221255
-      type: {class: RubyRoseStateReference, ns: rwby.core, asm: rwby.core}
-      data:
-        state: 92
-    - rid: 387796075454922754
-      type: {class: RubyRoseStateReference, ns: rwby.core, asm: rwby.core}
-      data:
-        state: 88
     - rid: 387796075454922755
       type: {class: RubyRoseStateReference, ns: rwby.core, asm: rwby.core}
       data:
@@ -505,22 +365,6 @@ MonoBehaviour:
       type: {class: RubyRoseStateReference, ns: rwby.core, asm: rwby.core}
       data:
         state: 88
-    - rid: 387796075454922757
-      type: {class: RubyRoseStateReference, ns: rwby.core, asm: rwby.core}
-      data:
-        state: 82
-    - rid: 387796079774793728
-      type: {class: RubyRoseStateReference, ns: rwby.core, asm: rwby.core}
-      data:
-        state: 89
-    - rid: 387796079774793737
-      type: {class: RubyRoseStateReference, ns: rwby.core, asm: rwby.core}
-      data:
-        state: 90
-    - rid: 387796079774793740
-      type: {class: RubyRoseStateReference, ns: rwby.core, asm: rwby.core}
-      data:
-        state: 91
     - rid: 387796093188440064
       type: {class: RubyRoseStateReference, ns: rwby.core, asm: rwby.core}
       data:
@@ -529,50 +373,14 @@ MonoBehaviour:
       type: {class: RubyRoseStateReference, ns: rwby.core, asm: rwby.core}
       data:
         state: 110
-    - rid: 387796093188440066
-      type: {class: RubyRoseStateReference, ns: rwby.core, asm: rwby.core}
-      data:
-        state: 110
-    - rid: 387796093188440067
-      type: {class: RubyRoseStateReference, ns: rwby.core, asm: rwby.core}
-      data:
-        state: 105
-    - rid: 387796093188440069
-      type: {class: RubyRoseStateReference, ns: rwby.core, asm: rwby.core}
-      data:
-        state: 111
-    - rid: 387796093188440070
-      type: {class: RubyRoseStateReference, ns: rwby.core, asm: rwby.core}
-      data:
-        state: 112
     - rid: 387796093188440090
       type: {class: FighterCmnStateReference, ns: rwby, asm: rwby.csharp}
       data:
         state: 42
-    - rid: 387796101564727308
-      type: {class: RubyRoseStateReference, ns: rwby.core, asm: rwby.core}
-      data:
-        state: 106
-    - rid: 387796101564727312
-      type: {class: RubyRoseStateReference, ns: rwby.core, asm: rwby.core}
-      data:
-        state: 107
-    - rid: 387796101564727313
-      type: {class: RubyRoseStateReference, ns: rwby.core, asm: rwby.core}
-      data:
-        state: 108
-    - rid: 387796101564727314
-      type: {class: RubyRoseStateReference, ns: rwby.core, asm: rwby.core}
-      data:
-        state: 109
     - rid: 387796101564727332
       type: {class: RubyRoseStateReference, ns: rwby.core, asm: rwby.core}
       data:
         state: 82
-    - rid: 5775511466801889287
-      type: {class: RubyRoseStateReference, ns: rwby.core, asm: rwby.core}
-      data:
-        state: 113
     - rid: 5775511466801889290
       type: {class: RubyRoseStateReference, ns: rwby.core, asm: rwby.core}
       data:

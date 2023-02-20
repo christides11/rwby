@@ -21,11 +21,11 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: Snow
-  m_Shader: {fileID: 4800000, guid: d2ba5d3bd6d47fb46b5ea9258ed36fcd, type: 3}
+  m_Shader: {fileID: 4800000, guid: 06aa19b87b8aa174485b5a0ed989e1cb, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords:
-  - USE_LS
+  - USE_AL
   m_InvalidKeywords: []
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
@@ -106,11 +106,11 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _LittleSpec:
-        m_Texture: {fileID: 2800000, guid: e88fb958582e9ee4fb6cba708f211a94, type: 3}
+        m_Texture: {fileID: 2800000, guid: 360cf43bca5afc04d9489a575c808274, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MainTex:
-        m_Texture: {fileID: 2800000, guid: f5f644a1c96c02148a13a96b65b4f1a2, type: 3}
+        m_Texture: {fileID: 2800000, guid: 61e80c9f17a46d840bfe3797359ad88e, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _Mask0:
@@ -312,10 +312,10 @@ Material:
     - _IceScale: 0.7
     - _IndentDepth: 0.21
     - _IndentStrength: 1.18
-    - _LightHardness: 0.963
+    - _LightHardness: 0.9
     - _LightIntensity: 1
-    - _LightOffset: 0.011
-    - _LittleSpecForce: 1.48
+    - _LightOffset: 0.07
+    - _LittleSpecForce: 0.17
     - _MainTexMult: 0.339
     - _Metallic: 0
     - _Metallic0: 0
@@ -328,7 +328,7 @@ Material:
     - _Metallic7: 0
     - _Mode: 0
     - _NoiseSize: 50
-    - _NormalMultiplier: 0.798
+    - _NormalMultiplier: 0.903
     - _NormalRTDepth: 0.18
     - _NormalRTStrength: 2.2
     - _NormalScale: 0.075
@@ -344,14 +344,14 @@ Material:
     - _NormalVector: 0
     - _OcclusionStrength: 1
     - _OffsetScale: 0.15
-    - _OverallScale: 90
+    - _OverallScale: 200
     - _ParalaxColorScale: -0.4
     - _Parallax: 0.02
     - _ParallaxColorScale: 0
     - _ParallaxStrength: 0
     - _QueueControl: 0
     - _QueueOffset: 0
-    - _ReflectionOpacity: 0.3
+    - _ReflectionOpacity: 0.67
     - _ReflectionStrength: 0.239
     - _RemoveSnowStrength: 0.5
     - _RoughnessStrength: 0.2
@@ -366,7 +366,7 @@ Material:
     - _SnowColorNoiseStrength: 0.5
     - _SnowNormalScale: 0.155
     - _SnowScale: 1
-    - _SpecForce: 3
+    - _SpecForce: 0.8
     - _SpecGlossMap: 1
     - _Specular: -7.29
     - _SpecularHighlights: 1
@@ -383,8 +383,8 @@ Material:
     - _USEWC: 0
     - _UVSec: 0
     - _UpVector: 0
-    - _UseAmbientLight: 0
-    - _UseSunReflection: 1
+    - _UseAmbientLight: 1
+    - _UseSunReflection: 0
     - _UseVR: 0
     - _WireframeSmoothing: 1
     - _WireframeThickness: 1
@@ -392,7 +392,7 @@ Material:
     m_Colors:
     - _BaseColor: {r: 1, g: 1, b: 1, a: 1}
     - _BotColor: {r: 0.744129, g: 0.88841856, b: 0.929, a: 1}
-    - _Color: {r: 0.851, g: 0.9461063, b: 1, a: 1}
+    - _Color: {r: 0.8577465, g: 0.8873239, b: 0.9, a: 1}
     - _CracksStrength: {r: -0.1, g: 0.01, b: -0.05, a: -0.08}
     - _CutoutPos: {r: 0.5, g: 0.5, b: 0, a: 0}
     - _Emission: {r: 0, g: 0, b: 0, a: 1}
@@ -405,7 +405,7 @@ Material:
     - _ParalaxColor: {r: 0, g: 0.045685723, b: 0.184, a: 1}
     - _ParallaxColor: {r: 1, g: 1, b: 1, a: 1}
     - _ParallaxStrength: {r: 0, g: 0.01, b: -0.05, a: -0.08}
-    - _ProjectedShadowColor: {r: 0.752, g: 0.86773336, b: 1, a: 1}
+    - _ProjectedShadowColor: {r: 0.674, g: 0.8188889, b: 1, a: 1}
     - _ReflectionColor: {r: 0, g: 0.099333376, b: 0.14899999, a: 0.8}
     - _RimColor: {r: 0, g: 0, b: 0, a: 0}
     - _SnowColor: {r: 1, g: 1, b: 1, a: 1}

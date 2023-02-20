@@ -196,13 +196,7 @@ namespace rwby
                     effectObjects[i].transform.localScale = effects.effects[i].scale;
                 }
 
-                if (effectPaused[i])
-                {
-                    effectObjects[i].PauseEffect();
-                    continue;
-                }
-                
-                effectObjects[i].SetFrame((float)(Runner.Tick - effects.effects[i].frame - 1) * Runner.DeltaTime);
+                effectObjects[i].SyncEffect((float)(Runner.Tick - effects.effects[i].frame - 1) * Runner.DeltaTime, effectPaused[i]);
             }
             
             currentEffectsRepresentation = effects;

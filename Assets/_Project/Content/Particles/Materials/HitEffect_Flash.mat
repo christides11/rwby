@@ -24,7 +24,8 @@ Material:
   m_Shader: {fileID: -6465566751694194690, guid: 384a9ecb0e92bcb4a9161ba8ca1f6f79, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
-  m_ValidKeywords: []
+  m_ValidKeywords:
+  - _USEVERTEXCOLOR
   m_InvalidKeywords: []
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
@@ -61,7 +62,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MainTex:
-        m_Texture: {fileID: 2800000, guid: 3ab519f02379e44468f76e22ee894947, type: 3}
+        m_Texture: {fileID: 2800000, guid: ab1adbce8893ffe4691dcdff4cde2b74, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MetallicGlossMap:
@@ -94,6 +95,7 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
+    - _ALPHAASCUTOFF: 0
     - _AlphaClip: 0
     - _AlphaCutoff: 0.01
     - _AlphaInfluence: 1
@@ -125,15 +127,16 @@ Material:
     - _SpecularHighlights: 1
     - _SrcBlend: 1
     - _SrcBlendAlpha: 1
-    - _Step1: 1.477
+    - _Step1: 1.518
     - _Surface: 0
+    - _USEVERTEXCOLOR: 1
     - _WorkflowMode: 1
     - _ZWrite: 1
     m_Colors:
     - _BaseColor: {r: 1, g: 1, b: 1, a: 1}
     - _Color: {r: 1, g: 1, b: 1, a: 1}
-    - _Color1: {r: 4, g: 4, b: 4, a: 1}
-    - _Color2: {r: 6.6235256, g: 3.502493, b: 0, a: 1}
+    - _Color1: {r: 6.134409, g: 6.134409, b: 6.134409, a: 1}
+    - _Color2: {r: 0.6755882, g: 1.614243, b: 5.278032, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
     - _SpecColor: {r: 0.19999996, g: 0.19999996, b: 0.19999996, a: 1}
     - _Texture_Offset: {r: 0, g: 0, b: 0, a: 0}

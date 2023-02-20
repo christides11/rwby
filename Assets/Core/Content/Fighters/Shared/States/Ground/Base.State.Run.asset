@@ -95,12 +95,12 @@ MonoBehaviour:
           rid: 2193520716547358730
         accelerationFromDot:
           rid: 2193520716547358731
-        slopeMinClamp: 0
+        slopeMinClamp: 5
         slopeMaxClamp: 70
         slopeDivi: 10
         slopeMulti: 5
         slopeMultiMin: 1
-        slopeMultiMax: 2
+        slopeMultiMax: 1.2
         slopeinputModi: 0
     - rid: 2193520716547358726
       type: {class: FighterBaseStatReferenceFloat, ns: rwby, asm: rwby.csharp}
@@ -186,8 +186,10 @@ MonoBehaviour:
         ignoreStateConditions: 0
         ignoreAirtimeCheck: 0
         ignoreStringUseCheck: 0
+        ignoreAuraRequirement: 0
         checkInputSequence: 0
         checkCondition: 0
+        overrideStateChange: 0
         targetType: 0
         stateMovesetID: -1
         state:
@@ -223,8 +225,10 @@ MonoBehaviour:
         ignoreStateConditions: 0
         ignoreAirtimeCheck: 0
         ignoreStringUseCheck: 0
+        ignoreAuraRequirement: 0
         checkInputSequence: 1
         checkCondition: 0
+        overrideStateChange: 0
         targetType: 0
         stateMovesetID: -1
         state:

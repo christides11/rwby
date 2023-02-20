@@ -22,7 +22,6 @@ MonoBehaviour:
   data:
   - rid: 8688056409313247234
   - rid: 8688056409313247238
-  - rid: 8688056217396838405
   - rid: 8688056331001921556
   - rid: 2193520750553202689
   - rid: 8688056409313247237
@@ -123,22 +122,6 @@ MonoBehaviour:
         condition:
           rid: -2
         asset: {fileID: 11400000, guid: cc00d510ea2530d49bdc1b20fbaa26a5, type: 2}
-    - rid: 8688056217396838405
-      type: {class: VarModifyAnimationSet, ns: rwby, asm: rwby.csharp}
-      data:
-        name: 
-        id: 1
-        parent: -1
-        children: 
-        frameRanges:
-        - {x: 0, y: 0}
-        condition:
-          rid: -2
-        modifyType: 1
-        wantedAnimations:
-        - animationbank: {fileID: 11400000, guid: 2f728dafc0068ab45a19c79cbfc04bdd, type: 2}
-          animation: jump
-        fadeTime: 0
     - rid: 8688056331001921556
       type: {class: VarCreateBox, ns: rwby, asm: rwby.csharp}
       data:
