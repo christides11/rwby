@@ -4,6 +4,7 @@ namespace rwby.core
     {
         moveset_change = 200,
         GRD_5LL_L,
+        AIR_5LL_L,
         SPECIAL_Grd_Buzzsaw = 210,
         SPECIAL_Grd_Buzzsaw_L,
         SPECIAL_Grd_Buzzsaw_H,

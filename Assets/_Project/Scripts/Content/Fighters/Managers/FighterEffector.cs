@@ -11,7 +11,8 @@ namespace rwby
         [HideInInspector] public List<IEffectbankDefinition> banks = new List<IEffectbankDefinition>();
 
         [Networked, Capacity(10)] public FighterEffectsRoot effects { get; set; }
-        [Networked, Capacity(10)] public NetworkArray<NetworkBool> isCurrentEffect => default;
+        [Networked, Capacity(10)] public NetworkArray<NetworkBool> isTemporary => default;
+        [Networked, Capacity(10)] public NetworkArray<NetworkBool> isHitstopPaused => default;
         [Networked, Capacity(10)] public NetworkArray<NetworkBool> effectPaused => default;
         [Networked] public int effectBufferPos { get; set; } = 0;
         [Networked] public NetworkRNG rng { get; set; } = new NetworkRNG(0);
@@ -53,7 +54,8 @@ namespace rwby
                     scale = wantedEffects[i].scale
                 });
                 
-                if (addToEffectSet) isCurrentEffect.Set((effectBufferPos % effects.effects.Length), true);
+                if (wantedEffects[i].isTemporary) isTemporary.Set((effectBufferPos % effects.effects.Length), true);
+                if (wantedEffects[i].hitstopAffected) isHitstopPaused.Set((effectBufferPos % effects.effects.Length), true);
                 effectBufferPos++;
             }
             effects = temp;
@@ -64,11 +66,11 @@ namespace rwby
         {
             ResumeCurrentEffects();
             var temp = effects;
-            for (int i = 0; i < isCurrentEffect.Length; i++)
+            for (int i = 0; i < isTemporary.Length; i++)
             {
-                if (!isCurrentEffect[i]) continue;
+                if (!isTemporary[i]) continue;
                 if(removeEffects) temp.effects.Set(i, new FighterEffectNode());
-                isCurrentEffect.Set(i, false);
+                isTemporary.Set(i, false);
             }
             effects = temp;
             
@@ -113,7 +115,7 @@ namespace rwby
         {
             for (int i = 0; i < effectPaused.Length; i++)
             {
-                if(isCurrentEffect[i]) PauseEffect(i);
+                if(isTemporary[i] && isHitstopPaused[i]) PauseEffect(i);
             }
         }
         

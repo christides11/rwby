@@ -77,6 +77,7 @@ namespace rwby
         public FighterProjectileManager projectileManager;
         [SerializeField] protected Transform targetOrigin;
         public Transform visualTransform;
+        public Transform visualModelTransform;
         public Transform myTransform;
         [SerializeReference] public IContentLoad[] contentLoaders = new IContentLoad[0];
         public GameObject shieldVisual;
@@ -159,7 +160,7 @@ namespace rwby
         {
             base.Render();
             shieldVisual.SetActive(combatManager.BlockState != BlockStateType.NONE);
-            physicsManager.kCC.Motor.visualExtraOffset = Vector3.zero;
+            visualModelTransform.localPosition = Vector3.zero;
             if (FCombatManager.HitStop > 0 && FCombatManager.HitStun > 0)
             {
                 shakeCurveDivi = FCombatManager.LastHitStop / 5;
@@ -179,7 +180,8 @@ namespace rwby
                               + xCalcOffset * transform.right
                               + (physicsManager.IsGrounded ? Vector3.zero : yCalcOffset * transform.up);
 
-                physicsManager.kCC.Motor.visualExtraOffset = dir;
+                visualModelTransform.localPosition = dir;
+                //physicsManager.kCC.Motor.visualExtraOffset = dir;
             }
         }
 
@@ -215,7 +217,7 @@ namespace rwby
             {
                 FCombatManager.HitStop--;
                 FPhysicsManager.Freeze();
-                //fighterEffector.PauseCurrentEffects();
+                fighterEffector.PauseCurrentEffects();
                 return;
             }
 
@@ -236,7 +238,7 @@ namespace rwby
                 combatManager.ThrowTechTimer--;
                 return;
             }
-            //if(FCombatManager.HitStop == 0) fighterEffector.ResumeCurrentEffects();
+            if(FCombatManager.HitStop == 0) fighterEffector.ResumeCurrentEffects();
             if(FCombatManager.HitStop > -600) FCombatManager.HitStop--;
             if(FCombatManager.BlockStun > -600) FCombatManager.BlockStun--;
             if(FCombatManager.HitStun > -600) FCombatManager.HitStun--;

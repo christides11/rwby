@@ -2,11 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using Cinemachine;
 using Fusion;
+using KinematicCharacterController;
 using UnityEngine;
 using UnityEngine.Rendering.Universal;
 
 namespace rwby
 {
+    [OrderAfter(typeof(KinematicCharacterMotor))]
     public class DummyCamera : SimulationBehaviour
     {
         public Camera camera;

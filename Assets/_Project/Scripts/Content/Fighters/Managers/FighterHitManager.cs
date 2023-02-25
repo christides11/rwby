@@ -64,7 +64,7 @@ namespace rwby
                     parent = new FighterBoneReferenceRaw(){ value = 0 },
                     rotation = manager.myTransform.eulerAngles,
                     scale = new Vector3(1, 1, 1),
-                    autoIncrement = true
+                    isTemporary = false
                 } }, addToEffectSet: false);
             }
 
@@ -103,7 +103,7 @@ namespace rwby
                     parent = new FighterBoneReferenceRaw(){ value = 0 },
                     rotation = manager.myTransform.eulerAngles,
                     scale = new Vector3(1, 1, 1),
-                    autoIncrement = true
+                    isTemporary = false
                 } }, addToEffectSet: false);
             }
 
@@ -144,7 +144,8 @@ namespace rwby
                     parent = new FighterBoneReferenceRaw(){ value = 0 },
                     rotation = enemyHurtbox.ownerNetworkObject.gameObject.transform.eulerAngles,
                     scale = new Vector3(1, 1, 1),
-                    autoIncrement = true
+                    isTemporary = false,
+                    hitstopAffected = false
                 } }, addToEffectSet: false);
             }
             

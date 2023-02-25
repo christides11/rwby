@@ -3,12 +3,14 @@ using System.Collections;
 using System.Collections.Generic;
 using Cinemachine;
 using Fusion;
+using KinematicCharacterController;
 using Rewired;
 using UnityEngine;
 
 namespace rwby
 {
     //[OrderBefore(typeof(FighterInputManager), typeof(FighterManager))]
+    [OrderAfter(typeof(KinematicCharacterMotor))]
     public class LockonCameraManager : BaseCameraManager
     {
         public enum CameraState

@@ -23,12 +23,13 @@ MonoBehaviour:
   - rid: 387795733835153426
   - rid: 387795733835153428
   - rid: 387795733835153442
-  - rid: 387795733835153432
   - rid: 387795733835153437
   - rid: 387795733835153439
   - rid: 387795733835153441
+  - rid: 1200828822363832348
   - rid: 387795733835153447
   - rid: 5775511807202426880
+  - rid: 1200828822363832343
   auraRequirement: 0
   initialGroundedState: 2
   stateType: 2
@@ -81,7 +82,7 @@ MonoBehaviour:
       damage: 500
       chipDamage: 100
       hitEffectbank: {fileID: 11400000, guid: 5d1086999fc610e4290407b33cce3ff1, type: 2}
-      hitEffect: hit_slash1
+      hitEffect: hit4
       blockEffectbank: {fileID: 11400000, guid: 5d1086999fc610e4290407b33cce3ff1, type: 2}
       blockEffect: shieldhit1
       hitSoundbank: {fileID: 11400000, guid: 2f4063bd6a5418f4a9c4e61c84752271, type: 2}
@@ -189,55 +190,6 @@ MonoBehaviour:
           rid: -2
         jumpHeight:
           rid: -2
-    - rid: 387795733835153432
-      type: {class: VarApplyGravity, ns: rwby, asm: rwby.csharp}
-      data:
-        name: 
-        id: 2
-        parent: -1
-        children: 
-        frameRanges:
-        - {x: 5, y: -1}
-        condition:
-          rid: -2
-        useValue: 0
-        value:
-          rid: -2
-        jumpHeight:
-          rid: 387795733835153433
-        jumpTime:
-          rid: 387795733835153434
-        multi:
-          rid: 387795733835153435
-        maxFallSpeed:
-          rid: 387795733835153436
-    - rid: 387795733835153433
-      type: {class: FighterBaseStatReferenceFloat, ns: rwby, asm: rwby.csharp}
-      data:
-        inverse: 0
-        statReference: 1
-        value: 0
-        variable: 13
-    - rid: 387795733835153434
-      type: {class: FighterBaseStatReferenceFloat, ns: rwby, asm: rwby.csharp}
-      data:
-        inverse: 0
-        statReference: 1
-        value: 0
-        variable: 12
-    - rid: 387795733835153435
-      type: {class: FighterStatReferenceFloatBase, ns: rwby, asm: rwby.csharp}
-      data:
-        inverse: 0
-        statReference: 0
-        value: 1
-    - rid: 387795733835153436
-      type: {class: FighterBaseStatReferenceFloat, ns: rwby, asm: rwby.csharp}
-      data:
-        inverse: 0
-        statReference: 1
-        value: 0
-        variable: 23
     - rid: 387795733835153437
       type: {class: VarExternal, ns: rwby, asm: rwby.csharp}
       data:
@@ -318,6 +270,63 @@ MonoBehaviour:
         inverse: 0
         statReference: 0
         value: 1
+    - rid: 1200828822363832343
+      type: {class: VarApplyGravitySimple, ns: rwby, asm: rwby.csharp}
+      data:
+        name: 
+        id: 10
+        parent: -1
+        children: 
+        frameRanges:
+        - {x: 5, y: -1}
+        condition:
+          rid: -2
+        affectedByGravityMulti: 0
+        value:
+          rid: 1200828822363832345
+        multi:
+          rid: 1200828822363832346
+        maxFallSpeed:
+          rid: 1200828822363832347
+    - rid: 1200828822363832345
+      type: {class: FighterBaseStatReferenceFloat, ns: rwby, asm: rwby.csharp}
+      data:
+        inverse: 0
+        statReference: 1
+        value: 0
+        variable: 39
+    - rid: 1200828822363832346
+      type: {class: FighterStatReferenceFloatBase, ns: rwby, asm: rwby.csharp}
+      data:
+        inverse: 0
+        statReference: 0
+        value: 1
+    - rid: 1200828822363832347
+      type: {class: FighterBaseStatReferenceFloat, ns: rwby, asm: rwby.csharp}
+      data:
+        inverse: 0
+        statReference: 1
+        value: 0
+        variable: 23
+    - rid: 1200828822363832348
+      type: {class: VarClampMovement, ns: rwby, asm: rwby.csharp}
+      data:
+        name: 
+        id: 11
+        parent: -1
+        children: 
+        frameRanges:
+        - {x: 0, y: 0}
+        condition:
+          rid: -2
+        magnitude:
+          rid: 1200828822363832349
+    - rid: 1200828822363832349
+      type: {class: FighterStatReferenceFloatBase, ns: rwby, asm: rwby.csharp}
+      data:
+        inverse: 0
+        statReference: 0
+        value: 0.5
     - rid: 5775511807202426880
       type: {class: VarExternal, ns: rwby, asm: rwby.csharp}
       data:

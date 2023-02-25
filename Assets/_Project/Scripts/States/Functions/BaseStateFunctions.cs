@@ -13,12 +13,12 @@ namespace rwby
 {
     public static class BaseStateFunctions
     {
-        public static void Null(IFighterBase fighter, IStateVariables variables, HnSF.StateTimeline arg3, int arg4)
+        public static void Null(IFighterBase fighter, IStateVariables variables, HnSF.StateTimeline arg3, int arg4, float frameRangePercentage)
         {
             
         }
         
-        public static void TrySpecial(IFighterBase fighter, IStateVariables variables, HnSF.StateTimeline arg3, int arg4)
+        public static void TrySpecial(IFighterBase fighter, IStateVariables variables, HnSF.StateTimeline arg3, int arg4, float frameRangePercentage)
         {
             FighterManager fm = (FighterManager)fighter;
             VarTrySpecial vars = (VarTrySpecial)variables;
@@ -26,7 +26,7 @@ namespace rwby
             fm.FCombatManager.TrySpecial();
         }
         
-        public static void ChangeState(IFighterBase fighter, IStateVariables variables, HnSF.StateTimeline arg3, int arg4)
+        public static void ChangeState(IFighterBase fighter, IStateVariables variables, HnSF.StateTimeline arg3, int arg4, float frameRangePercentage)
         {
             FighterManager fm = (FighterManager)fighter;
             VarChangeState vars = (VarChangeState)variables;
@@ -57,7 +57,7 @@ namespace rwby
             }
         }
         
-        public static void ChangeStateList(IFighterBase fighter, IStateVariables variables, HnSF.StateTimeline arg3, int arg4)
+        public static void ChangeStateList(IFighterBase fighter, IStateVariables variables, HnSF.StateTimeline arg3, int arg4, float frameRangePercentage)
         {
             FighterManager fm = (FighterManager)fighter;
             if (fm.FStateManager.markedForStateChange) return;
@@ -79,7 +79,7 @@ namespace rwby
             }
         }
         
-        public static void ApplyTraction(IFighterBase fighter, IStateVariables variables, HnSF.StateTimeline arg3, int arg4)
+        public static void ApplyTraction(IFighterBase fighter, IStateVariables variables, HnSF.StateTimeline arg3, int arg4, float frameRangePercentage)
         {
             VarApplyTraction vars = (VarApplyTraction)variables;
             FighterManager fm = (FighterManager)fighter;
@@ -95,7 +95,7 @@ namespace rwby
             }
         }
 
-        public static void SetMovement(IFighterBase fighter, IStateVariables variables, HnSF.StateTimeline arg3, int arg4)
+        public static void SetMovement(IFighterBase fighter, IStateVariables variables, HnSF.StateTimeline arg3, int arg4, float frameRangePercentage)
         {
             FighterManager f = (FighterManager)fighter;
             VarSetMovement vars = (VarSetMovement)variables;
@@ -107,7 +107,7 @@ namespace rwby
             f.FPhysicsManager.forceMovement = input * vars.force.GetValue(f);
         }
         
-        public static void AddMovement(IFighterBase fighter, IStateVariables variables, HnSF.StateTimeline arg3, int arg4)
+        public static void AddMovement(IFighterBase fighter, IStateVariables variables, HnSF.StateTimeline arg3, int arg4, float frameRangePercentage)
         {
             FighterManager f = (FighterManager)fighter;
             VarAddMovement vars = (VarAddMovement)variables;
@@ -118,7 +118,7 @@ namespace rwby
             f.FPhysicsManager.forceMovement += input * vars.force.GetValue(f);
         }
 
-        public static void SetFallSpeed(IFighterBase fighter, IStateVariables variables, HnSF.StateTimeline arg3, int arg4)
+        public static void SetFallSpeed(IFighterBase fighter, IStateVariables variables, HnSF.StateTimeline arg3, int arg4, float frameRangePercentage)
         {
             FighterManager f = (FighterManager)fighter;
             VarSetFallSpeed vars = (VarSetFallSpeed)variables;
@@ -126,7 +126,7 @@ namespace rwby
             f.FPhysicsManager.forceGravity = vars.value;
         }
 
-        public static void ApplyGravity(IFighterBase fighter, IStateVariables variables, HnSF.StateTimeline arg3, int arg4)
+        public static void ApplyGravity(IFighterBase fighter, IStateVariables variables, HnSF.StateTimeline arg3, int arg4, float frameRangePercentage)
         {
             FighterManager f = (FighterManager)fighter;
             VarApplyGravity vars = (VarApplyGravity)variables;
@@ -135,8 +135,16 @@ namespace rwby
             gravity *= vars.multi.GetValue(f);
             f.FPhysicsManager.HandleGravity(vars.maxFallSpeed.GetValue(f), gravity);
         }
-        
-        public static void ApplyMovement(IFighterBase fighter, IStateVariables variables, HnSF.StateTimeline arg3, int arg4)
+
+        public static void ApplyGravitySimple(IFighterBase fighter, IStateVariables variables, HnSF.StateTimeline arg3, int arg4, float frameRangePercentage)
+        {
+            FighterManager f = (FighterManager)fighter;
+            var vars = (VarApplyGravitySimple)variables;
+
+            f.FPhysicsManager.HandleGravity(vars.maxFallSpeed.GetValue(f), vars.value.GetValue(f) * vars.multi.GetValue(f) * (vars.useCurve ? vars.applyCurve.Evaluate(frameRangePercentage) : 1.0f));
+        }
+
+        public static void ApplyMovement(IFighterBase fighter, IStateVariables variables, HnSF.StateTimeline arg3, int arg4, float frameRangePercentage)
         {
             FighterManager f = (FighterManager)fighter;
             var vars = (VarApplyMovement)variables;
@@ -183,7 +191,7 @@ namespace rwby
                 maxSpeed, vars.accelerationFromDot.GetValue(f));
         }
 
-        public static void ModifyAirDashCount(IFighterBase fighter, IStateVariables variables, HnSF.StateTimeline arg3, int arg4)
+        public static void ModifyAirDashCount(IFighterBase fighter, IStateVariables variables, HnSF.StateTimeline arg3, int arg4, float frameRangePercentage)
         {
             FighterManager f = (FighterManager)fighter;
             VarModifyAirDashCount vars = (VarModifyAirDashCount)variables;
@@ -199,7 +207,7 @@ namespace rwby
             }
         }
         
-        public static void ModifyJumpCount(IFighterBase fighter, IStateVariables variables, HnSF.StateTimeline arg3, int arg4)
+        public static void ModifyJumpCount(IFighterBase fighter, IStateVariables variables, HnSF.StateTimeline arg3, int arg4, float frameRangePercentage)
         {
             FighterManager f = (FighterManager)fighter;
             VarModifyJumpCount vars = (VarModifyJumpCount)variables;
@@ -215,7 +223,7 @@ namespace rwby
             }
         }
 
-        public static void ModifyHitstun(IFighterBase fighter, IStateVariables variables, HnSF.StateTimeline arg3, int arg4)
+        public static void ModifyHitstun(IFighterBase fighter, IStateVariables variables, HnSF.StateTimeline arg3, int arg4, float frameRangePercentage)
         {
             FighterManager f = (FighterManager)fighter;
             VarModifyHitstun vars = (VarModifyHitstun)variables;
@@ -231,7 +239,7 @@ namespace rwby
             }
         }
 
-        public static void SetECB(IFighterBase fighter, IStateVariables variables, HnSF.StateTimeline arg3, int arg4)
+        public static void SetECB(IFighterBase fighter, IStateVariables variables, HnSF.StateTimeline arg3, int arg4, float frameRangePercentage)
         {
             FighterManager f = (FighterManager)fighter;
             VarSetECB vars = (VarSetECB)variables;
@@ -239,13 +247,13 @@ namespace rwby
             f.FPhysicsManager.SetECB(vars.ecbCenter, vars.ecbRadius, vars.ecbHeight);
         }
         
-        public static void SnapECB(IFighterBase fighter, IStateVariables variables, HnSF.StateTimeline arg3, int arg4)
+        public static void SnapECB(IFighterBase fighter, IStateVariables variables, HnSF.StateTimeline arg3, int arg4, float frameRangePercentage)
         {
             FighterManager f = (FighterManager)fighter;
             f.FPhysicsManager.SnapECB();
         }
 
-        public static void ModifyFrame(IFighterBase fighter, IStateVariables variables, HnSF.StateTimeline arg3, int arg4)
+        public static void ModifyFrame(IFighterBase fighter, IStateVariables variables, HnSF.StateTimeline arg3, int arg4, float frameRangePercentage)
         {
             FighterManager f = (FighterManager)fighter;
             VarModifyFrame vars = (VarModifyFrame)variables;
@@ -261,7 +269,7 @@ namespace rwby
             }
         }
 
-        public static void ApplyJumpForce(IFighterBase fighter, IStateVariables variables, HnSF.StateTimeline arg3, int arg4)
+        public static void ApplyJumpForce(IFighterBase fighter, IStateVariables variables, HnSF.StateTimeline arg3, int arg4, float frameRangePercentage)
         {
             FighterManager f = (FighterManager)fighter;
             VarApplyJumpForce vars = (VarApplyJumpForce)variables;
@@ -277,7 +285,7 @@ namespace rwby
             }
         }
 
-        public static void External(IFighterBase fighter, IStateVariables variables, HnSF.StateTimeline arg3, int arg4)
+        public static void External(IFighterBase fighter, IStateVariables variables, HnSF.StateTimeline arg3, int arg4, float frameRangePercentage)
         {
             FighterManager f = (FighterManager)fighter;
             VarExternal vars = (VarExternal)variables;
@@ -288,7 +296,7 @@ namespace rwby
             }
         }
 
-        public static void ModifyRotation(IFighterBase fighter, IStateVariables variables, HnSF.StateTimeline arg3, int arg4)
+        public static void ModifyRotation(IFighterBase fighter, IStateVariables variables, HnSF.StateTimeline arg3, int arg4, float frameRangePercentage)
         {
             FighterManager f = (FighterManager)fighter;
             var vars = (VarModifyRotation)variables;
@@ -333,7 +341,7 @@ namespace rwby
             f.SetRotation(wantedDir);
         }
         
-        public static void RotateTowards(IFighterBase fighter, IStateVariables variables, HnSF.StateTimeline arg3, int arg4)
+        public static void RotateTowards(IFighterBase fighter, IStateVariables variables, HnSF.StateTimeline arg3, int arg4, float frameRangePercentage)
         {
             FighterManager f = (FighterManager)fighter;
             var vars = (VarRotateTowards)variables;
@@ -372,7 +380,7 @@ namespace rwby
         }
 
         public static void ModifyAnimationSet(IFighterBase fighter, IStateVariables variables, HnSF.StateTimeline arg3,
-            int arg4)
+            int arg4, float frameRangePercentage)
         {
             FighterManager f = (FighterManager)fighter;
             VarModifyAnimationSet vars = (VarModifyAnimationSet)variables;
@@ -389,7 +397,7 @@ namespace rwby
         }
         
         public static void ModifyAnimationFrame(IFighterBase fighter, IStateVariables variables, HnSF.StateTimeline arg3,
-            int arg4)
+            int arg4, float frameRangePercentage)
         {
             FighterManager f = (FighterManager)fighter;
             VarModifyAnimationFrame vars = (VarModifyAnimationFrame)variables;
@@ -406,7 +414,7 @@ namespace rwby
         }
         
         public static void ModifyAnimationWeight(IFighterBase fighter, IStateVariables variables, HnSF.StateTimeline arg3,
-            int arg4)
+            int arg4, float frameRangePercentage)
         {
             FighterManager f = (FighterManager)fighter;
             VarModifyAnimationWeight vars = (VarModifyAnimationWeight)variables;
@@ -422,7 +430,7 @@ namespace rwby
             }
         }
 
-        public static void CreateBox(IFighterBase fighter, IStateVariables variables, HnSF.StateTimeline arg3, int arg4)
+        public static void CreateBox(IFighterBase fighter, IStateVariables variables, HnSF.StateTimeline arg3, int arg4, float frameRangePercentage)
         {
             FighterManager f = (FighterManager)fighter;
             var vars = (VarCreateBox)variables;
@@ -430,7 +438,7 @@ namespace rwby
             f.BoxManager.AddBox(vars.boxType, vars.attachedTo, vars.shape, vars.offset, vars.boxExtents, vars.radius, vars.definitionIndex, (StateTimeline)arg3);
         }
 
-        public static void MultiplyMovement(IFighterBase fighter, IStateVariables variables, HnSF.StateTimeline arg3, int arg4)
+        public static void MultiplyMovement(IFighterBase fighter, IStateVariables variables, HnSF.StateTimeline arg3, int arg4, float frameRangePercentage)
         {
             FighterManager f = (FighterManager)fighter;
             VarMultiplyMovement vars = (VarMultiplyMovement)variables;
@@ -438,7 +446,7 @@ namespace rwby
             f.FPhysicsManager.forceMovement *= vars.multiplier.GetValue(f);
         }
 
-        public static void ClampGravity(IFighterBase fighter, IStateVariables variables, HnSF.StateTimeline arg3, int arg4)
+        public static void ClampGravity(IFighterBase fighter, IStateVariables variables, HnSF.StateTimeline arg3, int arg4, float frameRangePercentage)
         {
             FighterManager f = (FighterManager)fighter;
             VarClampGravity vars = (VarClampGravity)variables;
@@ -446,7 +454,7 @@ namespace rwby
             f.FPhysicsManager.forceGravity = Mathf.Clamp(f.FPhysicsManager.forceGravity, vars.minValue.GetValue(f), vars.maxValue.GetValue(f));
         }
 
-        public static void MultiplyGravity(IFighterBase fighter, IStateVariables variables, HnSF.StateTimeline arg3, int arg4)
+        public static void MultiplyGravity(IFighterBase fighter, IStateVariables variables, HnSF.StateTimeline arg3, int arg4, float frameRangePercentage)
         {
             FighterManager f = (FighterManager)fighter;
             VarMultiplyGravity vars = (VarMultiplyGravity)variables;
@@ -454,7 +462,7 @@ namespace rwby
             f.FPhysicsManager.forceGravity *= vars.multiplier.GetValue(f);
         }
 
-        public static void ModifyFallSpeed(IFighterBase fighter, IStateVariables variables, HnSF.StateTimeline arg3, int arg4)
+        public static void ModifyFallSpeed(IFighterBase fighter, IStateVariables variables, HnSF.StateTimeline arg3, int arg4, float frameRangePercentage)
         {
             FighterManager f = (FighterManager)fighter;
             VarModifyFallSpeed vars = (VarModifyFallSpeed)variables;
@@ -486,7 +494,7 @@ namespace rwby
             }
         }
 
-        public static void ModifyEffectSet(IFighterBase fighter, IStateVariables variables, HnSF.StateTimeline arg3, int arg4)
+        public static void ModifyEffectSet(IFighterBase fighter, IStateVariables variables, HnSF.StateTimeline arg3, int arg4, float frameRangePercentage)
         {
             FighterManager f = (FighterManager)fighter;
             VarModifyEffectSet vars = (VarModifyEffectSet)variables;
@@ -504,7 +512,7 @@ namespace rwby
             }
         }
 
-        public static void ModifyEffectFrame(IFighterBase fighter, IStateVariables variables, HnSF.StateTimeline arg3, int arg4)
+        public static void ModifyEffectFrame(IFighterBase fighter, IStateVariables variables, HnSF.StateTimeline arg3, int arg4, float frameRangePercentage)
         {
             FighterManager f = (FighterManager)fighter;
             VarModifyEffectFrame vars = (VarModifyEffectFrame)variables;
@@ -520,7 +528,7 @@ namespace rwby
             }
         }
         
-        public static void ModifyEffectRotation(IFighterBase fighter, IStateVariables variables, HnSF.StateTimeline arg3, int arg4)
+        public static void ModifyEffectRotation(IFighterBase fighter, IStateVariables variables, HnSF.StateTimeline arg3, int arg4, float frameRangePercentage)
         {
             FighterManager f = (FighterManager)fighter;
             VarModifyEffectRotation vars = (VarModifyEffectRotation)variables;
@@ -536,7 +544,7 @@ namespace rwby
             }
         }
         
-        public static void CreateProjectile(IFighterBase fighter, IStateVariables variables, HnSF.StateTimeline arg3, int arg4)
+        public static void CreateProjectile(IFighterBase fighter, IStateVariables variables, HnSF.StateTimeline arg3, int arg4, float frameRangePercentage)
         {
             FighterManager fm = (FighterManager)fighter;
             VarCreateProjectile vars = (VarCreateProjectile)variables;
@@ -575,7 +583,7 @@ namespace rwby
             p.force = f;
         }
         
-        public static void ClearHitList(IFighterBase fighter, IStateVariables variables, HnSF.StateTimeline arg3, int arg4)
+        public static void ClearHitList(IFighterBase fighter, IStateVariables variables, HnSF.StateTimeline arg3, int arg4, float frameRangePercentage)
         {
             FighterManager fm = (FighterManager)fighter;
             VarClearHitList vars = (VarClearHitList)variables;
@@ -586,7 +594,7 @@ namespace rwby
             }
         }
         
-        public static void FindSoftTarget(IFighterBase fighter, IStateVariables variables, HnSF.StateTimeline arg3, int arg4)
+        public static void FindSoftTarget(IFighterBase fighter, IStateVariables variables, HnSF.StateTimeline arg3, int arg4, float frameRangePercentage)
         {
             FighterManager fm = (FighterManager)fighter;
             if (fm.HardTargeting) return;
@@ -600,7 +608,7 @@ namespace rwby
             }
         }
         
-        public static void LogMessage(IFighterBase fighter, IStateVariables variables, HnSF.StateTimeline arg3, int arg4)
+        public static void LogMessage(IFighterBase fighter, IStateVariables variables, HnSF.StateTimeline arg3, int arg4, float frameRangePercentage)
         {
             FighterManager fm = (FighterManager)fighter;
             VarDebugLog vars = (VarDebugLog)variables;
@@ -608,7 +616,7 @@ namespace rwby
             Debug.Log(vars.message);
         }
         
-        public static void FindWall(IFighterBase fighter, IStateVariables variables, HnSF.StateTimeline arg3, int arg4)
+        public static void FindWall(IFighterBase fighter, IStateVariables variables, HnSF.StateTimeline arg3, int arg4, float frameRangePercentage)
         {
             bool IsHitValid(FighterManager fm, VarFindWall vars, RaycastHit hitResult, Vector3 inputAngle)
             {
@@ -667,7 +675,7 @@ namespace rwby
             fm.AssignWall(input, fm.wallHitResults[lowestIndex]);
         }
         
-        public static void FindPole(IFighterBase fighter, IStateVariables variables, HnSF.StateTimeline arg3, int arg4)
+        public static void FindPole(IFighterBase fighter, IStateVariables variables, HnSF.StateTimeline arg3, int arg4, float frameRangePercentage)
         {
             FighterManager fm = (FighterManager)fighter;
             VarFindPole vars = (VarFindPole)variables;
@@ -687,7 +695,7 @@ namespace rwby
             fm.foundPole = fm.colliderBuffer[0].gameObject.GetComponent<Pole>();
         }
         
-        public static void SnapToWall(IFighterBase fighter, IStateVariables variables, HnSF.StateTimeline arg3, int arg4)
+        public static void SnapToWall(IFighterBase fighter, IStateVariables variables, HnSF.StateTimeline arg3, int arg4, float frameRangePercentage)
         {
             FighterManager fm = (FighterManager)fighter;
             var vars = (VarSnapToWall)variables;
@@ -710,7 +718,7 @@ namespace rwby
             }
         }
         
-        public static void SnapToPole(IFighterBase fighter, IStateVariables variables, HnSF.StateTimeline arg3, int arg4)
+        public static void SnapToPole(IFighterBase fighter, IStateVariables variables, HnSF.StateTimeline arg3, int arg4, float frameRangePercentage)
         {
             FighterManager fm = (FighterManager)fighter;
             VarSnapToPole vars = (VarSnapToPole)variables;
@@ -721,7 +729,7 @@ namespace rwby
             fm.poleMagnitude = fm.poleSpinLaunchForce; //(fm.FPhysicsManager.forceMovement + new Vector3(0, fm.FPhysicsManager.forceGravity, 0)).magnitude;
         }
         
-        public static void ClampMovement(IFighterBase fighter, IStateVariables variables, HnSF.StateTimeline arg3, int arg4)
+        public static void ClampMovement(IFighterBase fighter, IStateVariables variables, HnSF.StateTimeline arg3, int arg4, float frameRangePercentage)
         {
             FighterManager fm = (FighterManager)fighter;
             VarClampMovement vars = (VarClampMovement)variables;
@@ -729,7 +737,7 @@ namespace rwby
             fm.FPhysicsManager.forceMovement = Vector3.ClampMagnitude(fm.FPhysicsManager.forceMovement, vars.magnitude.GetValue(fm));
         }
         
-        public static void TeleportRaycast(IFighterBase fighter, IStateVariables variables, HnSF.StateTimeline arg3, int arg4)
+        public static void TeleportRaycast(IFighterBase fighter, IStateVariables variables, HnSF.StateTimeline arg3, int arg4, float frameRangePercentage)
         {
             FighterManager fm = (FighterManager)fighter;
             var vars = (VarTeleportRaycast)variables;
@@ -799,7 +807,7 @@ namespace rwby
             }
         }
         
-        public static void ModifyMoveset(IFighterBase fighter, IStateVariables variables, HnSF.StateTimeline arg3, int arg4)
+        public static void ModifyMoveset(IFighterBase fighter, IStateVariables variables, HnSF.StateTimeline arg3, int arg4, float frameRangePercentage)
         {
             FighterManager fm = (FighterManager)fighter;
             VarModifyMoveset vars = (VarModifyMoveset)variables;
@@ -807,7 +815,7 @@ namespace rwby
             fm.StateManager.SetMoveset(vars.modifyType == VarModifyType.SET ? vars.value : fm.StateManager.CurrentStateMoveset + vars.value);
         }
         
-        public static void ModifyPoleAngle(IFighterBase fighter, IStateVariables variables, HnSF.StateTimeline stateTimeline, int frame)
+        public static void ModifyPoleAngle(IFighterBase fighter, IStateVariables variables, HnSF.StateTimeline stateTimeline, int frame, float frameRangePercentage)
         {
             FighterManager fm = (FighterManager)fighter;
             VarModifyPoleAngle vars = (VarModifyPoleAngle)variables;
@@ -825,7 +833,7 @@ namespace rwby
             }
         }
         
-        public static void TransferPoleMomentum(IFighterBase fighter, IStateVariables variables, HnSF.StateTimeline stateTimeline, int frame)
+        public static void TransferPoleMomentum(IFighterBase fighter, IStateVariables variables, HnSF.StateTimeline stateTimeline, int frame, float frameRangePercentage)
         {
             FighterManager fm = (FighterManager)fighter;
             VarTransferPoleMomentum vars = (VarTransferPoleMomentum)variables;
@@ -841,14 +849,14 @@ namespace rwby
             fm.poleSpin = 0;
         }
         
-        public static void ClearThrowee(IFighterBase fighter, IStateVariables variables, HnSF.StateTimeline stateTimeline, int frame)
+        public static void ClearThrowee(IFighterBase fighter, IStateVariables variables, HnSF.StateTimeline stateTimeline, int frame, float frameRangePercentage)
         {
             FighterManager fm = (FighterManager)fighter;
 
             fm.FCombatManager.ReleaseThrowee(fm.FCombatManager.throwees[0]);
         }
         
-        public static void ModifyBlockstun(IFighterBase fighter, IStateVariables variables, HnSF.StateTimeline stateTimeline, int frame)
+        public static void ModifyBlockstun(IFighterBase fighter, IStateVariables variables, HnSF.StateTimeline stateTimeline, int frame, float frameRangePercentage)
         {
             FighterManager fm = (FighterManager)fighter;
             var vars = (VarModifyBlockstun)variables;
@@ -869,7 +877,7 @@ namespace rwby
             }
         }
         
-        public static void SetGuardState(IFighterBase fighter, IStateVariables variables, HnSF.StateTimeline stateTimeline, int frame)
+        public static void SetGuardState(IFighterBase fighter, IStateVariables variables, HnSF.StateTimeline stateTimeline, int frame, float frameRangePercentage)
         {
             FighterManager fm = (FighterManager)fighter;
             VarSetGuardState vars = (VarSetGuardState)variables;
@@ -877,7 +885,7 @@ namespace rwby
             fm.FCombatManager.BlockState = vars.state;
         }
         
-        public static void ModifyAura(IFighterBase fighter, IStateVariables variables, HnSF.StateTimeline stateTimeline, int frame)
+        public static void ModifyAura(IFighterBase fighter, IStateVariables variables, HnSF.StateTimeline stateTimeline, int frame, float frameRangePercentage)
         {
             FighterManager fm = (FighterManager)fighter;
             var vars = (VarModifyAura)variables;
@@ -895,7 +903,7 @@ namespace rwby
             }
         }
         
-        public static void SetBlockState(IFighterBase fighter, IStateVariables variables, HnSF.StateTimeline stateTimeline, int frame)
+        public static void SetBlockState(IFighterBase fighter, IStateVariables variables, HnSF.StateTimeline stateTimeline, int frame, float frameRangePercentage)
         {
             FighterManager fm = (FighterManager)fighter;
             VarSetBlockState vars = (VarSetBlockState)variables;
@@ -903,7 +911,7 @@ namespace rwby
             fm.FCombatManager.BlockState = vars.state;
         }
         
-        public static void ClearCurrentEffects(IFighterBase fighter, IStateVariables variables, HnSF.StateTimeline stateTimeline, int frame)
+        public static void ClearCurrentEffects(IFighterBase fighter, IStateVariables variables, HnSF.StateTimeline stateTimeline, int frame, float frameRangePercentage)
         {
             FighterManager fm = (FighterManager)fighter;
             var vars = (VarClearCurrentEffects)variables;
@@ -911,7 +919,7 @@ namespace rwby
             fm.fighterEffector.ClearCurrentEffects(!vars.keepEffects, vars.autoIncrementEffects);
         }
         
-        public static void ModifySoundSet(IFighterBase fighter, IStateVariables variables, HnSF.StateTimeline stateTimeline, int frame)
+        public static void ModifySoundSet(IFighterBase fighter, IStateVariables variables, HnSF.StateTimeline stateTimeline, int frame, float frameRangePercentage)
         {
             FighterManager fm = (FighterManager)fighter;
             VarModifySoundSet vars = (VarModifySoundSet)variables;
@@ -919,7 +927,7 @@ namespace rwby
             fm.fighterSounder.AddSFXs(vars.sounds);
         }
         
-        public static void FootstepSFX(IFighterBase fighter, IStateVariables variables, HnSF.StateTimeline stateTimeline, int frame)
+        public static void FootstepSFX(IFighterBase fighter, IStateVariables variables, HnSF.StateTimeline stateTimeline, int frame, float frameRangePercentage)
         {
             FighterManager fm = (FighterManager)fighter;
 
@@ -959,7 +967,7 @@ namespace rwby
             fm.fighterSounder.rng = temp;
         }
         
-        public static void IncrementChargeLevel(IFighterBase fighter, IStateVariables variables, HnSF.StateTimeline stateTimeline, int frame)
+        public static void IncrementChargeLevel(IFighterBase fighter, IStateVariables variables, HnSF.StateTimeline stateTimeline, int frame, float frameRangePercentage)
         {
             FighterManager fm = (FighterManager)fighter;
             VarIncrementChargeLevel vars = (VarIncrementChargeLevel)variables;
@@ -1000,7 +1008,7 @@ namespace rwby
             fm.FCombatManager.IncrementChargeLevelCharge(vars.chargePerLevel);
         }
         
-        public static void ModifyCameraMode(IFighterBase fighter, IStateVariables variables, HnSF.StateTimeline stateTimeline, int frame)
+        public static void ModifyCameraMode(IFighterBase fighter, IStateVariables variables, HnSF.StateTimeline stateTimeline, int frame, float frameRangePercentage)
         {
             FighterManager fm = (FighterManager)fighter;
             VarModifyCameraMode vars = (VarModifyCameraMode)variables;
@@ -1016,7 +1024,7 @@ namespace rwby
             }
         }
         
-        public static void ModifyAttackStringList(IFighterBase fighter, IStateVariables variables, HnSF.StateTimeline stateTimeline, int frame)
+        public static void ModifyAttackStringList(IFighterBase fighter, IStateVariables variables, HnSF.StateTimeline stateTimeline, int frame, float frameRangePercentage)
         {
             FighterManager fm = (FighterManager)fighter;
             VarModifyAttackStringList vars = (VarModifyAttackStringList)variables;
@@ -1029,14 +1037,14 @@ namespace rwby
             }
         }
         
-        public static void SetCounterhitState(IFighterBase fighter, IStateVariables variables, HnSF.StateTimeline stateTimeline, int frame)
+        public static void SetCounterhitState(IFighterBase fighter, IStateVariables variables, HnSF.StateTimeline stateTimeline, int frame, float frameRangePercentage)
         {
             FighterManager fm = (FighterManager)fighter;
 
             fm.FCombatManager.CounterhitState = true;
         }
         
-        public static void SetPushblockState(IFighterBase fighter, IStateVariables variables, HnSF.StateTimeline stateTimeline, int frame)
+        public static void SetPushblockState(IFighterBase fighter, IStateVariables variables, HnSF.StateTimeline stateTimeline, int frame, float frameRangePercentage)
         {
             FighterManager fm = (FighterManager)fighter;
             VarSetPushblockState vars = (VarSetPushblockState)variables;
@@ -1044,7 +1052,7 @@ namespace rwby
             fm.FCombatManager.CurrentlyPushblocking = vars.pushblocking;
         }
         
-        public static void ConsumeWallBounce(IFighterBase fighter, IStateVariables variables, HnSF.StateTimeline stateTimeline, int frame)
+        public static void ConsumeWallBounce(IFighterBase fighter, IStateVariables variables, HnSF.StateTimeline stateTimeline, int frame, float frameRangePercentage)
         {
             FighterManager fm = (FighterManager)fighter;
             VarConsumeWallBounce vars = (VarConsumeWallBounce)variables;
@@ -1057,7 +1065,7 @@ namespace rwby
             fm.FPhysicsManager.forceMovement = f;
         }
         
-        public static void ConsumeGroundBounce(IFighterBase fighter, IStateVariables variables, HnSF.StateTimeline stateTimeline, int frame)
+        public static void ConsumeGroundBounce(IFighterBase fighter, IStateVariables variables, HnSF.StateTimeline stateTimeline, int frame, float frameRangePercentage)
         {
             FighterManager fm = (FighterManager)fighter;
             VarConsumeGroundBounce vars = (VarConsumeGroundBounce)variables;
@@ -1068,7 +1076,7 @@ namespace rwby
             fm.FPhysicsManager.forceMovement = Vector3.zero;
         }
         
-        public static void MoveTowardsMagnitude(IFighterBase fighter, IStateVariables variables, HnSF.StateTimeline stateTimeline, int frame)
+        public static void MoveTowardsMagnitude(IFighterBase fighter, IStateVariables variables, HnSF.StateTimeline stateTimeline, int frame, float frameRangePercentage)
         {
             FighterManager fm = (FighterManager)fighter;
             VarMoveTowardsMagnitude vars = (VarMoveTowardsMagnitude)variables;
@@ -1091,7 +1099,7 @@ namespace rwby
             if(vars.applyMovement) fm.FPhysicsManager.forceMovement = m;
         }
         
-        public static void SetGroundedState(IFighterBase fighter, IStateVariables variables, HnSF.StateTimeline stateTimeline, int frame)
+        public static void SetGroundedState(IFighterBase fighter, IStateVariables variables, HnSF.StateTimeline stateTimeline, int frame, float frameRangePercentage)
         {
             FighterManager fm = (FighterManager)fighter;
             VarSetGroundedState vars = (VarSetGroundedState)variables;
@@ -1099,7 +1107,7 @@ namespace rwby
             fm.FStateManager.CurrentGroundedState = vars.groundedGroup;
         }
         
-        public static void ModifyIntWhiteboard(IFighterBase fighter, IStateVariables variables, HnSF.StateTimeline stateTimeline, int frame)
+        public static void ModifyIntWhiteboard(IFighterBase fighter, IStateVariables variables, HnSF.StateTimeline stateTimeline, int frame, float frameRangePercentage)
         {
             FighterManager fm = (FighterManager)fighter;
             VarModifyIntWhiteboard vars = (VarModifyIntWhiteboard)variables;
@@ -1107,7 +1115,7 @@ namespace rwby
             fm.fighterWhiteboard.UpdateInt(vars.index, vars.modifyType, vars.val);
         }
 
-        public static void ProjectilePointToTarget(IFighterBase fighter, IStateVariables variables, HnSF.StateTimeline stateTimeline, int frame)
+        public static void ProjectilePointToTarget(IFighterBase fighter, IStateVariables variables, HnSF.StateTimeline stateTimeline, int frame, float frameRangePercentage)
         {
             FighterManager fm = (FighterManager)fighter;
             VarProjectilePointToTarget vars = (VarProjectilePointToTarget)variables;
@@ -1121,7 +1129,7 @@ namespace rwby
             p.SetRotation(Quaternion.LookRotation(dir.normalized));
         }
 
-        public static void ProjectileModifyForce(IFighterBase fighter, IStateVariables variables, HnSF.StateTimeline stateTimeline, int frame)
+        public static void ProjectileModifyForce(IFighterBase fighter, IStateVariables variables, HnSF.StateTimeline stateTimeline, int frame, float frameRangePercentage)
         {
             FighterManager fm = (FighterManager)fighter;
             VarProjectileModifyForce vars = (VarProjectileModifyForce)variables;
@@ -1138,7 +1146,7 @@ namespace rwby
                       + p.transform.up * vars.force.y;
         }
         
-        public static void SetProjectileTarget(IFighterBase fighter, IStateVariables variables, HnSF.StateTimeline stateTimeline, int frame)
+        public static void SetProjectileTarget(IFighterBase fighter, IStateVariables variables, HnSF.StateTimeline stateTimeline, int frame, float frameRangePercentage)
         {
             FighterManager fm = (FighterManager)fighter;
             VarSetProjectileTarget vars = (VarSetProjectileTarget)variables;
@@ -1148,7 +1156,7 @@ namespace rwby
             ((ITargetingProjectile)p).Target = fm.CurrentTarget;
         }
 
-        public static void ModifyProjectileHomingStrength(IFighterBase fighter, IStateVariables variables, HnSF.StateTimeline stateTimeline, int frame)
+        public static void ModifyProjectileHomingStrength(IFighterBase fighter, IStateVariables variables, HnSF.StateTimeline stateTimeline, int frame, float frameRangePercentage)
         {
             FighterManager fm = (FighterManager)fighter;
             var vars = (VarProjectileModifyHomingStrength)variables;
@@ -1158,7 +1166,7 @@ namespace rwby
             ((IHomingProjectile)p).AutoTargetStrength = vars.homingStrength;
         }
 
-        public static void DirectDamage(IFighterBase fighter, IStateVariables variables, HnSF.StateTimeline stateTimeline, int frame)
+        public static void DirectDamage(IFighterBase fighter, IStateVariables variables, HnSF.StateTimeline stateTimeline, int frame, float frameRangePercentage)
         {
             FighterManager fm = (FighterManager)fighter;
             var vars = (VarDirectDamage)variables;
@@ -1179,14 +1187,14 @@ namespace rwby
             }
         }
         
-        public static void ClearBuffer(IFighterBase fighter, IStateVariables variables, HnSF.StateTimeline stateTimeline, int frame)
+        public static void ClearBuffer(IFighterBase fighter, IStateVariables variables, HnSF.StateTimeline stateTimeline, int frame, float frameRangePercentage)
         {
             FighterManager fm = (FighterManager)fighter;
             
             fm.InputManager.ClearBuffer();
         }
         
-        public static void ModifyProjectileRotation(IFighterBase fighter, IStateVariables variables, HnSF.StateTimeline stateTimeline, int frame)
+        public static void ModifyProjectileRotation(IFighterBase fighter, IStateVariables variables, HnSF.StateTimeline stateTimeline, int frame, float frameRangePercentage)
         {
             FighterManager fm = (FighterManager)fighter;
             var vars = (VarProjectileSetRotation)variables;
@@ -1207,7 +1215,7 @@ namespace rwby
             p.SetRotation(rot);
         }
         
-        public static void ConsumeHardKnockdown(IFighterBase fighter, IStateVariables variables, HnSF.StateTimeline stateTimeline, int frame)
+        public static void ConsumeHardKnockdown(IFighterBase fighter, IStateVariables variables, HnSF.StateTimeline stateTimeline, int frame, float frameRangePercentage)
         {
             FighterManager fm = (FighterManager)fighter;
 
@@ -1216,7 +1224,7 @@ namespace rwby
                 fm.FCombatManager.shouldHardKnockdown = false;
         }
         
-        public static void SetThrowTechTime(IFighterBase fighter, IStateVariables variables, HnSF.StateTimeline stateTimeline, int frame)
+        public static void SetThrowTechTime(IFighterBase fighter, IStateVariables variables, HnSF.StateTimeline stateTimeline, int frame, float frameRangePercentage)
         {
             FighterManager fm = (FighterManager)fighter;
             var vars = (VarSetThrowTechTime)variables;
@@ -1230,7 +1238,7 @@ namespace rwby
             }
         }
         
-        public static void ModifyBurst(IFighterBase fighter, IStateVariables variables, HnSF.StateTimeline stateTimeline, int frame)
+        public static void ModifyBurst(IFighterBase fighter, IStateVariables variables, HnSF.StateTimeline stateTimeline, int frame, float frameRangePercentage)
         {
             FighterManager fm = (FighterManager)fighter;
             var vars = (VarModifyBurst)variables;

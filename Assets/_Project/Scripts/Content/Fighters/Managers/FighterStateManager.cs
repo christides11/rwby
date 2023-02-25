@@ -138,12 +138,16 @@ namespace rwby
         public void ProcessStateVariables(StateTimeline state, IStateVariables d, int realFrame, int totalFrames, bool onInterrupt)
         {
             var valid = d.FrameRanges.Length == 0 ? true : false;
+            int frameRange = 0;
+            int frStart = 0;
+            int frEnd = 0;
             for (int j = 0; j < d.FrameRanges.Length; j++)
             {
-                int frx = ConvertFrameRangeNumber((int)d.FrameRanges[j].x, totalFrames);
-                int fry = ConvertFrameRangeNumber((int)d.FrameRanges[j].y, totalFrames);
-                if (realFrame >= frx && realFrame <= fry)
+                frStart = ConvertFrameRangeNumber((int)d.FrameRanges[j].x, totalFrames);
+                frEnd = ConvertFrameRangeNumber((int)d.FrameRanges[j].y, totalFrames);
+                if (realFrame >= frStart && realFrame <= frEnd)
                 {
+                    frameRange = j;
                     valid = true;
                     break;
                 }
@@ -151,7 +155,7 @@ namespace rwby
 
             if (!valid) return;
             if (d.Condition != null && !conditionMapper.TryCondition(d.Condition.GetType(), manager, d.Condition, state, realFrame)) return;
-            functionMapper.functions[d.GetType()](manager, d, state, realFrame);
+            functionMapper.functions[d.GetType()](manager, d, state, realFrame, (float)(realFrame - frStart) / (float)(frEnd - frStart));
 
             if (d.Children is null) return;
             foreach (var t in d.Children)

@@ -40,6 +40,8 @@ namespace rwby
         DASH_INIT_acceleration,
         DASH_INIT_maxSpeed,
         TECH_ROLL_initSpeed,
-        HITSTUN_Gravity
+        HITSTUN_Gravity,
+        AERIAL_Gravity,
+        AERIAL_DJ_Gravity
     }
 }

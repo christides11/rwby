@@ -48,7 +48,7 @@ MonoBehaviour:
     - inputType: 1
       buttonID: 2
       stickDirection: {x: 0, y: -1}
-      directionDeviation: 0.8
+      directionDeviation: 0.75
     sequenceWindow: 8
     sequenceInputs: []
   inputSequenceAsHoldInputs: 0
@@ -91,7 +91,7 @@ MonoBehaviour:
       damage: 500
       chipDamage: 100
       hitEffectbank: {fileID: 11400000, guid: 5d1086999fc610e4290407b33cce3ff1, type: 2}
-      hitEffect: hit_slash1
+      hitEffect: hit4
       blockEffectbank: {fileID: 11400000, guid: 5d1086999fc610e4290407b33cce3ff1, type: 2}
       blockEffect: shieldhit1
       hitSoundbank: {fileID: 11400000, guid: 2f4063bd6a5418f4a9c4e61c84752271, type: 2}
@@ -184,12 +184,8 @@ MonoBehaviour:
         targetType: 0
         stateMovesetID: -1
         state:
-          rid: 387795733835153430
+          rid: 1200828822363832342
         frame: 0
-    - rid: 387795733835153430
-      type: {class: RubyRoseStateReference, ns: rwby.core, asm: rwby.core}
-      data:
-        state: 66
     - rid: 387795733835153431
       type: {class: ConditionButtonHeld, ns: rwby, asm: rwby.csharp}
       data:
@@ -197,6 +193,10 @@ MonoBehaviour:
         button: 3
         offset: 0
         holdTime: 6
+    - rid: 1200828822363832342
+      type: {class: FighterAttackStateReference, ns: rwby, asm: rwby.csharp}
+      data:
+        state: 113
     - rid: 2193520813467238401
       type: {class: VarChangeState, ns: rwby, asm: rwby.csharp}
       data:

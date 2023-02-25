@@ -121,7 +121,7 @@ namespace rwby
                 {
                     var e = GetEffect(sounds.sounds[i]);
                     if (!soundObjects[i]) soundObjects[i] = GameObject.Instantiate(gameSettings.audioSourcePrefab);
-                    if(sounds.sounds[i].parented) soundObjects[i].transform.SetParent(transform, false);    
+                    soundObjects[i].transform.SetParent(sounds.sounds[i].parented ? transform : null, false);
                     soundObjects[i].clip = e;
                     soundObjects[i].transform.localPosition = sounds.sounds[i].pos;
                     soundObjects[i].volume = sounds.sounds[i].volume;
@@ -129,6 +129,7 @@ namespace rwby
                     soundObjects[i].maxDistance = sounds.sounds[i].maxDist;
                     soundObjects[i].outputAudioMixerGroup = sfxMixerGroup;
                     soundObjects[i].pitch = sounds.sounds[i].pitch;
+                    soundObjects[i].Stop();
                     soundObjects[i].Play();
                 }
 
