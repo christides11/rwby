@@ -182,10 +182,7 @@ MonoBehaviour:
   m_AnimatedTarget: {fileID: 5769742830577336205}
   m_LayerIndex: 0
   m_ShowDebugText: 0
-  m_ChildCameras:
-  - {fileID: 4726134681789520758}
-  - {fileID: 6397899412466257497}
-  - {fileID: 9195571207067664808}
+  m_ChildCameras: []
   m_Instructions:
   - m_FullHash: 1823207173
     m_VirtualCamera: {fileID: 4726134681789520758}
@@ -294,28 +291,10 @@ MonoBehaviour:
   - {fileID: 1118175827707240841}
   - {fileID: 1910354587247426349}
   - {fileID: 2448118380062591044}
-  currentProfile:
-    undeletable: 0
-    version: 0
-    profileName: 
-    behaviours: []
-    joystickMaps: []
-    keyboardMaps: []
-    mouseMaps: []
-    controllerCam:
-      deadzoneHoz: 0
-      deadzoneVert: 0
-      speedHoz: 0
-      speedVert: 0
-      speedLockOnHoz: 0
-      speedLockOnVert: 0
-    keyboardCam:
-      deadzoneHoz: 0
-      deadzoneVert: 0
-      speedHoz: 0
-      speedVert: 0
-      speedLockOnHoz: 0
-      speedLockOnVert: 0
+  disableCameraUpdate: 0
+  updateCamInLate: 0
+  updateCamInRender: 0
+  targetWeight: 1
 --- !u!1 &1067469446411079918
 GameObject:
   m_ObjectHideFlags: 0
@@ -435,6 +414,7 @@ MonoBehaviour:
     ModeOverride: 0
     LensShift: {x: 0, y: 0}
     GateFit: 2
+    FocusDistance: 10
     m_SensorSize: {x: 1, y: 1}
   m_Transitions:
     m_BlendHint: 0
@@ -590,6 +570,7 @@ MonoBehaviour:
     ModeOverride: 0
     LensShift: {x: 0, y: 0}
     GateFit: 2
+    FocusDistance: 10
     m_SensorSize: {x: 1, y: 1}
   m_Transitions:
     m_BlendHint: 0
@@ -745,6 +726,7 @@ MonoBehaviour:
     ModeOverride: 0
     LensShift: {x: 0, y: 0}
     GateFit: 2
+    FocusDistance: 10
     m_SensorSize: {x: 1, y: 1}
   m_Transitions:
     m_BlendHint: 0
@@ -898,9 +880,9 @@ MonoBehaviour:
   m_LookaheadTime: 0
   m_LookaheadSmoothing: 0
   m_LookaheadIgnoreY: 0
-  m_XDamping: 0.05
-  m_YDamping: 0.3
-  m_ZDamping: 0.05
+  m_XDamping: 0
+  m_YDamping: 0
+  m_ZDamping: 0
   m_TargetMovementOnly: 1
   m_ScreenX: 0.5
   m_ScreenY: 0.5
@@ -1002,7 +984,7 @@ MonoBehaviour:
   m_NoiseProfile: {fileID: 11400000, guid: a1c9179827624e34fbbd6146425d856b, type: 2}
   m_PivotOffset: {x: 0, y: 0, z: 0}
   m_AmplitudeGain: 0
-  m_FrequencyGain: 1
+  m_FrequencyGain: 0
   mNoiseOffsets: {x: 253.59982, y: 179.39438, z: 41.731934}
 --- !u!1 &8292333390959453373
 GameObject:

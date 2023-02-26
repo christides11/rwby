@@ -1,0 +1,158 @@
+Photon Fusion KCC Addon - Release History
+
+Last tested with Fusion SDK 1.1.4 Build 609
+
+Version 1.1.8
+- Fixed ground snapping while moving very fast with multiple CCD steps.
+- Added KCC.SetExternalDelta() to move KCC by a specific vector in next update. This can also be used from KCCProcessor.ProcessPhysicsQuery() to extend currently executed move (external delta is consumed immediately).
+- KCCData.DeltaTime == 0.0f is now valid (velocity-based movement is already consumed and external delta movement is pending).
+- Fixed AirKCCProcessor.ProcessPhysicsQuery() stage to correctly handle zero delta time.
+- Added KCCHits (available through KCCData.Hits) - a new collection with all currently active overlap hits and metadata for custom collider filtering (this collection is not networked and supports only local history).
+- Removed KCC.PhysicsContacts => replaced by more detailed KCCData.Hits.
+- Removed KCC.GetTrackedColliders() => replaced by more detailed KCCData.Hits.
+- Suppress Convex Mesh Colliders added to KCC Settings (disabled by default). Enable if you experience incorrect depenetration from MeshCollider with Convex toggle enabled.
+- Added metadata about collider penetration (Ground / Slope / Wall / Hang / Top / Trigger - check ECollisionType for more details), available via KCCHit.
+- Fixed drawing KCC debug gizmos.
+- Updated DepenetrationChecker.
+
+Version 1.1.7
+- Added Dynamic Word Count to KCC inspector.
+- Added support for custom interpolation alpha in KCC.Interpolate() call.
+- Continuous Collision Detection (CCD) is now optional KCC Feature (EKCCFeature.CCD) and can be enabled/disabled from processors on demand.
+
+Version 1.1.6
+- Compatibility with Fusion SDK 1.1.2 Build 545
+
+Version 1.1.5
+- Added more KCC API methods for getting modifiers/interactions/processors of type T. Processors can be sorted by priority.
+- Added support for user controlled interactions by overriding CanStartInteraction() / CanStopInteraction() in processors. This affects modifiers and collisions.
+- Added extra collision query (no depenetration) if a teleport from ProcessPhysicsQuery(), OnEnter(), OnExit() and OnStay() is detected. This may trigger additional OnEnter() and OnExit() calls.
+- Added CCD Radius Multiplier to settings. This property controls maximum distance the KCC moves in single CCD step. Valid range is 25% - 75% (default).
+- Added anti-jitter feature - the KCC checks minimum position delta (configurable in settings) to move when synchronizing Transform with KCCData.TargetPosition ("follow a target"). KCCData calculated in Fixed and Render updates remain unaffected.
+- Added teleport threshold to settings (was hardcoded). This property defines minimum distance the KCC must move in single tick to treat the movement as instant. Affects interpolation and other KCC features.
+- Added KCC.TransientData. This partial data structure is used to to store/restore and process data from/to KCCData before/after KCC moves in fixed/render update.
+
+Version 1.1.4
+- Input and state authority write local state to network buffer after each tick. Previously it was done in IAfterAllTicks.AfterAllTicks(). This change fixes reading interpolation data on input authority.
+- Maximum count of synchronized collisions/modifiers/ignores added to settings.
+
+Version 1.1.3
+- Added KCC_DISABLE_TERRAIN script define to remove support of TerrainCollider. This allows removing built-in Terrain Physics package from project.
+- Added KCC.ReadNetworkPosition(int* ptr) to get networked position from custom memory location (for example using InterpolationData). This method respects KCCSettings.PositionAccuracy.
+- Default KCCData local history decreased from 180 to 60 ticks. The value was too high.
+- EKCCStage.Stay changed to EKCCStage.OnStay.
+- EKCCStage.Interpolate changed to EKCCStage.OnInterpolate.
+- IKCCProcessor.Enter() changed to IKCCProcessor.OnEnter().
+- IKCCProcessor.Exit() changed to IKCCProcessor.OnExit().
+- IKCCProcessor.Stay() changed to IKCCProcessor.OnStay().
+- IKCCProcessor.Interpolate() changed to IKCCProcessor.OnInterpolate().
+- Execution of IKCCProcessor.ProcessUserLogic() follows same rules as execution any other stage (processors can be suppressed).
+- Added EKCCStages.OnStay, EKCCStages.OnInterpolate and EKCCStages.ProcessUserLogic - these now follow same rules as other stages (can be included/excluded in IKCCProcessor.GetValidStages()).
+- Added BaseKCCProcessor - this is an optimized, local-only processor type which must be manually registered using KCC.AddLocalProcessor(). It doesn't require NetworkObject and cannot be synchronized over network.
+- Performance optimizations.
+
+BREAKING CHANGES
+- Overriding processor methods OnStay(), OnInterpolate() and ProcessUserLogic() now requires appropriate stages to be returned in GetValidStages().
+
+Version 1.1.2
+- Fixed: MeshCollider.convex is disabled during physics query only on read/write enabled meshes.
+- Removed restore of full precision position and rotation from history on input authority. Origin is always quantized so there's no way to reduce prediction error except increasing accuracy.
+- Added custom position and rotation accuracy to KCCSettings. Position accuracy cannot be less accurate (clamped internally) than default position accuracy.
+- Fixed IKCCProcessor.OnEnter() not called when initializing local processors.
+
+Version 1.1.1
+- Fixed: MeshCollider.convex is disabled during physics query only on colliders (trigger are not affected).
+- IKCCProcessor and base processor implementations are now partial to support more advanced extensions.
+- KCC.Initialize(EKCCDriver.None) forwards the call to KCC.Deinitialize().
+- Fixed delta time calculation in first render update after fixed update with EKCCRenderBehavior.Interpolate.
+- Added new KCC processor stage - ProcessUserLogic() - to run custom logic before or after KCC updates. Can be executed multiple times by calling KCC.ProcessUserLogic() and supports user data passed as argument (object).
+- Fixed prediction correction on teleport.
+
+Version 1.1.0
+- Added KCC.IsValidHitCollider() for colliders filtering after custom overlap/shapecast query outside of KCC. This method uses same filtering as physics query stage.
+
+Version 1.0.9
+- KCC.LocalProcessors is now read-only and modified exclusively by KCC.AddLocalProcessor() and KCC.RemoveLocalProcessor().
+- Calling KCC.AddLocalProcessor() invokes IKCCProcessor.Enter() on input and state authority.
+- Calling KCC.RemoveLocalProcessor() invokes IKCCProcessor.Exit() on input and state authority.
+- KCCSettings.Processors underlying type changed from List<KCCProcessor> to KCCProcessor[]. This collection is supposed to be read-only at runtime.
+- KCCSettings.Processors are now added to KCC.LocalProcessors upon initialization using methods mentioned above, IKCCProcessor.Enter() / IKCCProcessor.Exit() will be invoked on processors.
+- Disabled stage caching on proxies - IKCCProcessor.GetValidStages() won't be called.
+- Added KCC.EnforceFeature() for API completeness - features can be disabled by default and only force execution when needed.
+- Fixed exceptions from KCC.OnDestroy() when stopping play mode.
+
+Version 1.0.8
+- KCC now requires kinematic Rigidbody.
+- Added default KCC Features to settings (networked).
+- Added Prediction Correction as feature (can be suppressed).
+- Added KCC.SynchronizeTransform() for explicit synchronization.
+- IKCCProcessor.SetInputProperties() is now called also in Interpolate render behavior.
+- Added partial KCC.RestoreUserHistoryData() for custom data restoration from local history (input authority only).
+- Safe restore of KCCData.IsGrounded from local history if it's synchronized over network and other ground properties are not calculated.
+
+Version 1.0.7
+- Compatibility with Fusion SDK 0.13.0 RC Nightly Build 423 (breaking changes).
+
+Version 1.0.6
+- Added KCCData.UnscaledDeltaTime - delta time for current fixed/render update, independent of CCD.
+- Added KCCData.DesiredPosition - equals to position before depenetration and post-processing.
+- Added GetModifier<T>(), GetInteraction<T>() and GetProcessor<T>() to public APIs.
+- Added KCC Features - this allows to suppress selected functionality from execution by calling KCC.SuppressFeature().
+- Added optional reset of dynamic velocity upon grounding to GroundKCCProcessor.
+- Exposed some properties of GroundKCCProcessor and AirKCCProcessor.
+- Gravity multiplier in AirKCCProcessor is now applied in SetInputProperties stage.
+- Fixed step up conditions to be more restrictive - preventing step up when moving down within ~25° from vertical axis, and angle between penetration direction and move direction is higher than ~85°.
+- Step up distance in each tick is now proportional to angle between penetration direction and move direction. This prefers depenetration over direct vertical movement on edges.
+
+Version 1.0.5
+- Fixed stage tracing.
+- Fixed prediction error correction while simulation and render speed are synchronized.
+- Improved step up check direction calculation and step height detection.
+- Fixed ground detection on single collision treated as wall.
+- Resetting negative vertical DynamicVelocity in GroundKCCProcessor is now less constrained.
+- Added KCCSettings.RenderBehavior which controls if the KCC is predicted (immediate response, full physics processing) or interpolated (1 frame delay, more performant, invariant of prediction error due to variable delta time).
+- Added KCC.IsProxy - identifies KCC without input and state authority.
+- IKCCProcessor.Interpolate() is now called also for input/state authority with EKCCRenderBehavior.Interpolate.
+
+Version 1.0.4
+- Improved ground distance computation for mesh and terrain colliders.
+- KCCPhysicsUtility.ProjectPenetration() changed to KCCPhysicsUtility.ProjectVerticalPenetration().
+- Added Interpolate stage to KCC processor - will be called for all KCC proxies who interact with processor on state authority.
+- Render interpolation of KCC proxy is now executed independently of custom interpolation calls from FUN.
+- Removed EKCCNetworkTarget (unused).
+
+Version 1.0.3
+- Removed implicit initialization with EKCCDriver.Unity from KCC.Start(). This driver must be initialized explicitly.
+- Fixed KCCData propagation from fixed to render update and history.
+- All editor debug drawings now use KCCDebug.DisplayTime. Control of this property added to KCC inspector.
+- Removed optional arguments from KCC.HasInteraction() and KCC.HasProcessor(). Full check is performed always. HasProcessor() now checks also local and settings processors.
+- All prefabs with NetworkObject marked as Spawnable.
+- Added KCCSettings.Extent (defines additional radius extent for ground detection and processors tracking).
+- KCCSettings.CreateCollider replaced by KCCSettings.SpawnColliderOnProxy toggle.
+- Removed EKCCNetworkTarget (unused).
+
+Version 1.0.2
+- CHANGE: partial methods OnInitialize() and OnDeinitialize() changed to event Action<KCC>.
+- CHANGE: renamed CollisionEnter() => OnCollisionEnter and CollisionExit() => OnCollisionExit().
+- KCC.IsInFixedUpdate is force set to true while Spawned() chain is pending execution.
+- Added list of locally executed processors which accepts IKCCProcessor type - KCC.LocalProcessors.
+- Added support for plain C# processors - instance must be added as local processor.
+- Added Profiler entries.
+- Performance optimizations.
+- Added SetMass(), SetLayer() and SetLayerMask() to KCC public API.
+- Fixed RefreshChildColliders().
+- Initialization refactoring - it is now possible to change KCCSettings properties before first KCC.Initialize() call and these will be treated as default values.
+- Calling KCC API now requires Initialize() to be called prior first usage.
+- Improved visual debugging.
+- Depenetration pass is now skipped when CollisionLayerMask == 0.
+- Added EKCCShape.Void for full processing without physics query.
+- Optimized synchronization of base networked properties.
+- GroundKCCProcessor and AirKCCProcessor are now unsealed partial for extensibility.
+- Added KCCCollider data structure for fast property checks and synchronization.
+
+Version 1.0.1
+- New depenetration algorithm.
+- Fixed ground snapping.
+
+Version 1.0.0
+- Initial release.

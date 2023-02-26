@@ -1,5 +1,4 @@
 using Fusion;
-using KinematicCharacterController;
 
 namespace rwby
 {
@@ -8,15 +7,16 @@ namespace rwby
     {
         private void Awake()
         {
+            /*
             KinematicCharacterSystem.EnsureCreation();
             KinematicCharacterSystem.Settings.AutoSimulation = false;
-            KinematicCharacterSystem.Settings.Interpolate = false;
+            KinematicCharacterSystem.Settings.Interpolate = false;*/
         }
 
         public override void FixedUpdateNetwork()
         {
-            KinematicCharacterSystem.PreSimulationInterpolationUpdate(Runner.DeltaTime);
-            KinematicCharacterSystem.Simulate(Runner.DeltaTime, KinematicCharacterSystem.CharacterMotors, KinematicCharacterSystem.PhysicsMovers);
+            //KinematicCharacterSystem.PreSimulationInterpolationUpdate(Runner.DeltaTime);
+            //KinematicCharacterSystem.Simulate(Runner.DeltaTime, KinematicCharacterSystem.CharacterMotors, KinematicCharacterSystem.PhysicsMovers);
         }
     }
 }

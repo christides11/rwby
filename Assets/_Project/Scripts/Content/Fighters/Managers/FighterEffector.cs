@@ -143,10 +143,11 @@ namespace rwby
         {
             if (Runner.IsResimulation)
             {
+                /*
                 if (Runner.IsLastTick && !AreEffectsUpToDate())
                 {
                     SyncEffects();
-                }
+                }*/
                 return;
             }
 

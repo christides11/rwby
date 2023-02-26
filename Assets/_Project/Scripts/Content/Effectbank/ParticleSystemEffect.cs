@@ -1,6 +1,5 @@
 using System;
 using UnityEngine;
-using static UnityEngine.Rendering.SplashScreen;
 
 namespace rwby
 {

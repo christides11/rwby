@@ -37,7 +37,7 @@ namespace rwby
 
             for (int i = 0; i < hitCount; i++)
             {
-                FighterManager fm = checkResults[i].GetComponent<FighterManager>();
+                FighterManager fm = checkResults[i].GetComponentInParent<FighterManager>();
                 if (fm == parentHUD.playerFighter || objectsTracked.ContainsKey(fm)) continue;
 
                 AddTrackedObject(fm);

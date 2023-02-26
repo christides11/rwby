@@ -499,7 +499,7 @@ namespace rwby
         public virtual void RotateTowards(Vector3 direction, float speed)
         {
             Vector3 newDir = Vector3.RotateTowards(transform.forward, direction, speed * Runner.DeltaTime, 0.0f);
-            physicsManager.kCC.Motor.SetRotation(Quaternion.LookRotation(newDir), false);
+            physicsManager.ForceSetRotation(Quaternion.LookRotation(newDir), false);//.kCC.Motor.SetRotation(Quaternion.LookRotation(newDir), false);
         }
 
         public void SetRotation(Vector3 direction, bool bypassInterpolation = true)

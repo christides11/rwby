@@ -287,9 +287,6 @@ GameObject:
   - component: {fileID: 1457010570893242128}
   - component: {fileID: 2326289350170218266}
   - component: {fileID: 7571525903815252237}
-  - component: {fileID: 1765053112054983048}
-  - component: {fileID: 2898563863352299436}
-  - component: {fileID: 5710829672531719765}
   - component: {fileID: 4006742894894194177}
   - component: {fileID: 8828466035712802024}
   - component: {fileID: 4017428576835799020}
@@ -297,6 +294,8 @@ GameObject:
   - component: {fileID: -7876643753530837430}
   - component: {fileID: 7571584989760676080}
   - component: {fileID: -6033534292445977296}
+  - component: {fileID: 987529256960447127}
+  - component: {fileID: 8208463095827947397}
   m_Layer: 6
   m_Name: RubyRose
   m_TagString: Player
@@ -377,8 +376,6 @@ MonoBehaviour:
   - {fileID: 1457010570893242128}
   - {fileID: 2326289350170218266}
   - {fileID: 7571525903815252237}
-  - {fileID: 1765053112054983048}
-  - {fileID: 5710829672531719765}
   - {fileID: 4006742894894194177}
   - {fileID: 8828466035712802024}
   - {fileID: 4017428576835799020}
@@ -386,6 +383,7 @@ MonoBehaviour:
   - {fileID: -7876643753530837430}
   - {fileID: 7571584989760676080}
   - {fileID: -6033534292445977296}
+  - {fileID: 8208463095827947397}
   SimulationBehaviours: []
 --- !u!114 &728284172682202706
 MonoBehaviour:
@@ -444,7 +442,7 @@ MonoBehaviour:
   statManager: {fileID: 7571525903815252237}
   healthManager: {fileID: 2326289350170218266}
   fighterDefinition: {fileID: 11400000, guid: f0f374ed69303bf499b21d67a399ece3, type: 2}
-  capsuleCollider: {fileID: 2898563863352299436}
+  capsuleCollider: {fileID: 0}
   soundbankContainer: {fileID: 4006742894894194177}
   fighterEffector: {fileID: 6390373237626046470}
   fighterAnimator: {fileID: 4017428576835799020}
@@ -803,8 +801,7 @@ MonoBehaviour:
   _forceMovement: {x: 0, y: 0, z: 0}
   _forceGravity: 0
   manager: {fileID: 3846760401122892541}
-  kCC: {fileID: 1765053112054983048}
-  cc: {fileID: 2898563863352299436}
+  kcc: {fileID: 8208463095827947397}
   _ecbOffset: 1
   _ecbRadius: 1
   _ecbHeight: 2
@@ -940,105 +937,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _interpolationDataSource: 2
---- !u!114 &1765053112054983048
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3009557721057671630}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cb7b14e909d9e2348a44729a0b81689a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _interpolationDataSource: 2
-  Motor: {fileID: 5710829672531719765}
-  stableMovementSharpness: 0.9
-  airMovementSharpness: 0.9
-  IgnoredColliders: []
---- !u!136 &2898563863352299436
-CapsuleCollider:
-  m_ObjectHideFlags: 8
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3009557721057671630}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 0.3
-  m_Height: 1.65
-  m_Direction: 1
-  m_Center: {x: 0, y: 0.825, z: 0}
---- !u!114 &5710829672531719765
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3009557721057671630}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4d1bc5515e3ab954e80599c538834774, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _interpolationDataSource: 2
-  Capsule: {fileID: 2898563863352299436}
-  CapsuleRadius: 0.3
-  CapsuleHeight: 1.65
-  CapsuleYOffset: 0.825
-  CapsulePhysicsMaterial: {fileID: 0}
-  GroundDetectionExtraDistance: 0
-  MaxStableSlopeAngle: 60
-  StableGroundLayers:
-    serializedVersion: 2
-    m_Bits: 2056
-  DiscreteCollisionEvents: 0
-  StepHandling: 1
-  MaxStepHeight: 0.5
-  AllowSteppingWithoutStableGrounding: 0
-  MinRequiredStepDepth: 0
-  LedgeAndDenivelationHandling: 1
-  MaxStableDistanceFromLedge: 0
-  MaxVelocityForLedgeSnap: 0
-  MaxStableDenivelationAngle: 180
-  InteractiveRigidbodyHandling: 0
-  RigidbodyInteractionType: 0
-  SimulatedCharacterMass: 1
-  PreserveAttachedRigidbodyMomentum: 0
-  HasPlanarConstraint: 0
-  PlanarConstraintAxis: {x: 0, y: 0, z: 1}
-  MaxMovementIterations: 5
-  MaxDecollisionIterations: 1
-  CheckMovementInitialOverlaps: 1
-  KillVelocityWhenExceedMaxMovementIterations: 1
-  KillRemainingMovementWhenExceedMaxMovementIterations: 1
-  GroundCollider: {fileID: 0}
-  interpolationTarget: {fileID: 7954403120791412188}
-  __mustUnground:
-    _value: 0
-  __mustUngroundTimeCounter: 0
-  _LastMovementIterationFoundAnyGround:
-    _value: 0
-  _AttachedRigidbodyVelocity: {x: 0, y: 0, z: 0}
-  _BaseVelocity: {x: 0, y: 0, z: 0}
-  _TransientPosition: {x: 0, y: 0, z: 0}
-  _TransientRotation: {x: 0, y: 0, z: 0, w: 0}
-  _InitialTickPosition: {x: 0, y: 0, z: 0}
-  _InitialSimulationPosition: {x: 0, y: 0, z: 0}
-  _InitialSimulationRotation: {x: 0, y: 0, z: 0, w: 0}
-  _InitialTickRotation: {x: 0, y: 0, z: 0, w: 0}
-  _visualExtraOffset: {x: 0, y: 0, z: 0}
 --- !u!114 &4006742894894194177
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1231,6 +1129,83 @@ MonoBehaviour:
   - 0
   - 0
   - 0
+--- !u!54 &987529256960447127
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3009557721057671630}
+  serializedVersion: 4
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 0
+  m_IsKinematic: 1
+  m_Interpolate: 0
+  m_Constraints: 126
+  m_CollisionDetection: 0
+--- !u!114 &8208463095827947397
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3009557721057671630}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2f7684f04e649e84fb2ee1bc9fbee42d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _interpolationDataSource: 2
+  _settings:
+    Shape: 1
+    IsTrigger: 0
+    Radius: 0.35
+    Height: 1.8
+    Extent: 0.035
+    Mass: 1
+    ColliderLayer: 6
+    CollisionLayerMask:
+      serializedVersion: 2
+      m_Bits: 18440
+    RenderBehavior: 1
+    Features: -1
+    SuppressConvexMeshColliders: 0
+    SpawnColliderOnProxy: 1
+    AllowClientTeleports: 0
+    TeleportThreshold: 1
+    CCDRadiusMultiplier: 0.75
+    AntiJitterDistance: {x: 0, y: 0}
+    GroundSnapDistance: 0.25
+    GroundSnapSpeed: 4
+    StepHeight: 0.3
+    StepSpeed: 1
+    Processors:
+    - {fileID: 1165945167626676098, guid: 877a230fbc9180c4aba6984ef4895c3b, type: 3}
+    - {fileID: 1489271193718263106, guid: 728617fd18c55bb4abe953f32ebfbfc0, type: 3}
+    PositionAccuracy:
+      _value: 0
+      _inverse: 0
+      _hash: -194233199
+    RotationAccuracy:
+      _value: 0
+      _inverse: 0
+      _hash: -258202764
+    MaxNetworkedCollisions: 4
+    MaxNetworkedModifiers: 4
+    MaxNetworkedIgnores: 4
 --- !u!1 &3783412658040432495
 GameObject:
   m_ObjectHideFlags: 0

@@ -3,14 +3,14 @@ using System.Collections;
 using System.Collections.Generic;
 using Cinemachine;
 using Fusion;
-using KinematicCharacterController;
+using Fusion.KCC;
 using Rewired;
 using UnityEngine;
 
 namespace rwby
 {
     //[OrderBefore(typeof(FighterInputManager), typeof(FighterManager))]
-    [OrderAfter(typeof(KinematicCharacterMotor))]
+    [OrderAfter(typeof(KCC))]
     public class LockonCameraManager : BaseCameraManager
     {
         public enum CameraState
@@ -172,12 +172,20 @@ namespace rwby
                 }
             }
         }
-        
+
+        public bool disableCameraUpdate;
+        public bool updateCamInLate;
+        public bool updateCamInRender;
         public override void Render()
         {
-            if (!active) return;
+            if (!active || disableCameraUpdate) return;
             base.Render();
             CamUpdate();
+        }
+
+        private void LateUpdate()
+        {
+            if (updateCamInLate) cinemachineBrain.ManualUpdate();
         }
 
         public virtual void CamUpdate()
@@ -185,11 +193,11 @@ namespace rwby
             switch (currentCameraState)
             {
                 case CameraState.THIRDPERSON:
-                    cinemachineBrain.ManualUpdate();
+                    if(updateCamInRender) cinemachineBrain.ManualUpdate();
                     TryLockOn();
                     break;
                 case CameraState.LOCK_ON:
-                    cinemachineBrain.ManualUpdate();
+                    if(updateCamInRender) cinemachineBrain.ManualUpdate();
                     Vector3 lookDir = (lockOnTargetable.TargetOrigin.position - followTarget.TargetOrigin.position).normalized;
                     lookDir.y = 0;
                     targetGroup.transform.rotation = Quaternion.LookRotation(lookDir);

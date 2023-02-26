@@ -1,4 +1,5 @@
 using Fusion;
+using Fusion.KCC;
 using HnSF.Fighters;
 using System.Collections;
 using System.Collections.Generic;
@@ -15,10 +16,11 @@ namespace rwby
         [Networked] public float forceGravity { get; set; }
 
         [SerializeField] protected FighterManager manager;
-        public FighterCC kCC;
-        public CapsuleCollider cc;
+        //public FighterCC kCC;
+        public KCC kcc;
+        public CapsuleCollider cc => kcc.Collider;
 
-        protected Vector3 rotationDir;
+        [SerializeField] protected Vector3 rotationDir;
 
         public void ResimulationResync()
         {
@@ -26,7 +28,8 @@ namespace rwby
                 || !Mathf.Approximately(ecbRadius, localECBRadius) 
                 || !Mathf.Approximately(ecbHeight, localECBHeight))
             {
-                kCC.Motor.SetCapsuleDimensions(ecbRadius, ecbHeight, ecbOffset);
+                
+                //kCC.Motor.SetCapsuleDimensions(ecbRadius, ecbHeight, ecbOffset);
                 localECBOffset = this.ecbOffset;
                 localECBRadius = this.ecbRadius;
                 localECBHeight = this.ecbHeight;
@@ -35,16 +38,27 @@ namespace rwby
         
         public void Tick()
         {
-            kCC.SetMovement(forceMovement, forceGravity);
+            kcc.SetInputDirection(forceMovement.magnitude.IsAlmostZero() ? Vector3.zero : forceMovement.normalized);
+            kcc.SetKinematicVelocity(forceMovement);
+            kcc.SetDynamicVelocity(new Vector3(0, forceGravity, 0));
+            //kCC.SetMovement(forceMovement, forceGravity);
             if(rotationDir == Vector3.zero)
             {
-                kCC.SetRotation(transform.forward);
+                kcc.SetLookRotation(Quaternion.LookRotation(transform.forward));
+            //    kCC.SetRotation(transform.forward);
             }
             else
             {
-                kCC.SetRotation(rotationDir);
+                kcc.SetLookRotation(Quaternion.LookRotation(rotationDir));
+                //    kCC.SetRotation(rotationDir);
             }
             rotationDir = Vector3.zero;
+        }
+
+        public void Move(Vector3 position)
+        {
+            kcc.SetPosition(position);//.TeleportRPC(position, 0, 0);
+            //kCC.Motor.MoveCharacter(position);
         }
 
         [Networked] public float ecbOffset { get; set; } = 1;
@@ -60,7 +74,7 @@ namespace rwby
             this.ecbOffset = ecbCenter;
             this.ecbRadius = ecbRadius;
             this.ecbHeight = ecbHeight;
-            kCC.Motor.SetCapsuleDimensions(ecbRadius, ecbHeight, ecbCenter);
+            //kCC.Motor.SetCapsuleDimensions(ecbRadius, ecbHeight, ecbCenter);
             localECBOffset = this.ecbOffset;
             localECBRadius = this.ecbRadius;
             localECBHeight = this.ecbHeight;
@@ -69,7 +83,7 @@ namespace rwby
         public void SnapECB()
         {
             Vector3 newECBPosition = transform.position + new Vector3(0, ecbOffset - (ecbHeight/2.0f), 0);
-            kCC.Motor.SetPosition(newECBPosition);
+            //kCC.Motor.SetPosition(newECBPosition);
         }
 
         public Vector3 ECBCenter()
@@ -79,18 +93,26 @@ namespace rwby
 
         public void SetPosition(Vector3 position, bool bypassInterpolation = true)
         {
-            kCC.Motor.SetPosition(position, bypassInterpolation);
+            //kCC.Motor.SetPosition(position, bypassInterpolation);
         }
 
         public void ForceUnground()
         {
-            kCC.Motor.ForceUnground();
+            kcc.Data.HasJumped = true;
+            //kCC.Motor.ForceUnground();
         }
 
         public void SetRotation(Vector3 rot, bool bypassInterpolation = true)
         {
             rotationDir = rot;
-            kCC.Motor.SetRotation(Quaternion.LookRotation(rotationDir), bypassInterpolation);
+            kcc.SetLookRotation(Quaternion.LookRotation(rotationDir));
+            //kCC.Motor.SetRotation(Quaternion.LookRotation(rotationDir), bypassInterpolation);
+        }
+
+        public void ForceSetRotation(Quaternion rot, bool bypassinterpolation = true)
+        {
+            kcc.SetLookRotation(rot);
+            //kCC.Motor.SetRotation(Quaternion.LookRotation(rotationDir), bypassInterpolation);
         }
 
         public Vector3 GetOverallForce()
@@ -100,12 +122,13 @@ namespace rwby
 
         public void CheckIfGrounded()
         {
-            IsGroundedNetworked = kCC.Motor.GroundingStatus.IsStableOnGround;
+            IsGroundedNetworked = kcc.Data.IsGrounded;
+            //IsGroundedNetworked = kCC.Motor.GroundingStatus.IsStableOnGround;
         }
 
         public void Freeze()
         {
-            kCC.SetMovement(Vector3.zero, 0);
+            //kCC.SetMovement(Vector3.zero, 0);
         }
 
         public void ResetForces()
