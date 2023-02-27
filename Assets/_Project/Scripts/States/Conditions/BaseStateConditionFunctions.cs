@@ -151,7 +151,8 @@ namespace rwby
             FighterManager f = fighter as FighterManager;
             ConditionMoveset vars = (ConditionMoveset)variables;
 
-            return f.StateManager.CurrentStateMoveset == vars.moveset;
+            bool r = f.StateManager.CurrentStateMoveset == vars.moveset;
+            return vars.inverse ? !r : r;
         }
 
         public static bool HitstunValue(IFighterBase fighter, IConditionVariables variables, HnSF.StateTimeline arg3, int arg4)

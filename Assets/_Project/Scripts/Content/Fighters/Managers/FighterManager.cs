@@ -68,7 +68,7 @@ namespace rwby
         [SerializeField] protected FighterStatManager statManager;
         [SerializeField] protected FighterHealthManager healthManager;
         public IFighterDefinition fighterDefinition;
-        [SerializeField] protected CapsuleCollider capsuleCollider;
+        //[SerializeField] protected CapsuleCollider capsuleCollider;
         [SerializeField] protected SoundbankContainer soundbankContainer;
         public FighterEffector fighterEffector;
         public FighterAnimator fighterAnimator;
@@ -359,12 +359,12 @@ namespace rwby
             {
                 Collider c = lockonResultList[i];
                 // Ignore self.
-                if (c.gameObject == gameObject)
+                if (c.transform.parent.gameObject == gameObject)
                 {
                     continue;
                 }
                 // Only objects with ILockonable can be locked on to.
-                if (c.TryGetComponent(out ITargetable targetLockonComponent) == false)
+                if (c.transform.parent.TryGetComponent(out ITargetable targetLockonComponent) == false)
                 {
                     continue;
                 }
@@ -389,7 +389,7 @@ namespace rwby
                 {
                     if (targetDistance.sqrMagnitude < closestDistance)
                     {
-                        closestTarget = c.gameObject;
+                        closestTarget = c.transform.parent.gameObject;
                         closestAngle = currAngle;
                         closestDistance = targetDistance.sqrMagnitude;
                     }
@@ -397,7 +397,7 @@ namespace rwby
                 // Target is closer to the angle than the last one, this is the new target.
                 else if (currAngle > closestAngle)
                 {
-                    closestTarget = c.gameObject;
+                    closestTarget = c.transform.parent.gameObject;
                     closestAngle = currAngle;
                     closestDistance = targetDistance.sqrMagnitude;
                 }
@@ -560,7 +560,7 @@ namespace rwby
 
         public Bounds GetBounds()
         {
-            return capsuleCollider.bounds;
+            return physicsManager.cc.bounds;
         }
 
         public virtual List<ModIDContentReference> GetLoadedContentList()

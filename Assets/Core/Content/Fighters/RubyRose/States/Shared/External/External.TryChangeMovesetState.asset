@@ -10,22 +10,21 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d4d62b28b52db7d459dd2f283317c705, type: 3}
-  m_Name: RR.Rifle.External.TryAirAtk
+  m_Name: External.TryChangeMovesetState
   m_EditorClassIdentifier: 
   data:
-  - rid: 8688056360164655104
-  - rid: 6951768528003006472
+  - rid: 6951768367642443815
   references:
     version: 2
     RefIds:
     - rid: -2
       type: {class: , ns: , asm: }
-    - rid: 1200828934167986181
-      type: {class: FighterAttackStateReference, ns: rwby, asm: rwby.csharp}
+    - rid: 1200828934167986183
+      type: {class: RubyRoseStateReference, ns: rwby.core, asm: rwby.core}
       data:
-        state: 117
-    - rid: 6951768528003006472
-      type: {class: VarChangeStateList, ns: rwby, asm: rwby.csharp}
+        state: 200
+    - rid: 6951768367642443815
+      type: {class: VarChangeState, ns: rwby, asm: rwby.csharp}
       data:
         name: 
         id: 0
@@ -34,20 +33,15 @@ MonoBehaviour:
         frameRanges: []
         condition:
           rid: -2
+        ignoreStateConditions: 0
+        ignoreAirtimeCheck: 0
+        ignoreStringUseCheck: 0
         ignoreAuraRequirement: 0
         checkInputSequence: 1
-        checkCondition: 1
-        states:
-        - movesetID: -1
-          state:
-            rid: 1200828934167986181
-    - rid: 8688056360164655104
-      type: {class: VarTrySpecial, ns: rwby, asm: rwby.csharp}
-      data:
-        name: 
-        id: 0
-        parent: 0
-        children: 
-        frameRanges: []
-        condition:
-          rid: -2
+        checkCondition: 0
+        overrideStateChange: 0
+        targetType: 0
+        stateMovesetID: -1
+        state:
+          rid: 1200828934167986183
+        frame: 0

@@ -39,6 +39,7 @@ MonoBehaviour:
   - rid: 1200828715613814784
   - rid: 1200828715613814785
   - rid: 1200828892007366656
+  - rid: 1200828934167986188
   auraRequirement: 0
   initialGroundedState: 1
   stateType: 2
@@ -310,6 +311,18 @@ MonoBehaviour:
         inverse: 0
         statReference: 0
         value: 10
+    - rid: 1200828934167986188
+      type: {class: VarExternal, ns: rwby, asm: rwby.csharp}
+      data:
+        name: Try Change Moveset (Quick)
+        id: 27
+        parent: -1
+        children: 
+        frameRanges:
+        - {x: 1, y: -1}
+        condition:
+          rid: -2
+        asset: {fileID: 11400000, guid: db06d570605d4024f8bbbf5429f550b9, type: 2}
     - rid: 2193520813467238401
       type: {class: VarChangeState, ns: rwby, asm: rwby.csharp}
       data:

@@ -20,22 +20,10 @@ MonoBehaviour:
     RefIds:
     - rid: -2
       type: {class: , ns: , asm: }
-    - rid: 387795967775604737
-      type: {class: RubyRoseStateReference, ns: rwby.core, asm: rwby.core}
+    - rid: 1200828934167986180
+      type: {class: FighterAttackStateReference, ns: rwby, asm: rwby.csharp}
       data:
-        state: 118
-    - rid: 387795978025172993
-      type: {class: RubyRoseStateReference, ns: rwby.core, asm: rwby.core}
-      data:
-        state: 93
-    - rid: 387795978025173008
-      type: {class: RubyRoseStateReference, ns: rwby.core, asm: rwby.core}
-      data:
-        state: 57
-    - rid: 2193520838792970249
-      type: {class: RubyRoseStateReference, ns: rwby.core, asm: rwby.core}
-      data:
-        state: 87
+        state: 100
     - rid: 6951768528003006472
       type: {class: VarChangeStateList, ns: rwby, asm: rwby.csharp}
       data:
@@ -46,6 +34,7 @@ MonoBehaviour:
         frameRanges: []
         condition:
           rid: -2
+        ignoreAuraRequirement: 0
         checkInputSequence: 1
         checkCondition: 1
         states:
@@ -54,26 +43,7 @@ MonoBehaviour:
             rid: 8688056606344609836
         - movesetID: -1
           state:
-            rid: 387795978025173008
-        - movesetID: -1
-          state:
-            rid: 387795967775604737
-        - movesetID: -1
-          state:
-            rid: 7270848878803943431
-        - movesetID: -1
-          state:
-            rid: 387795978025172993
-        - movesetID: -1
-          state:
-            rid: 8688056833868562436
-        - movesetID: -1
-          state:
-            rid: 2193520838792970249
-    - rid: 7270848878803943431
-      type: {class: RubyRoseStateReference, ns: rwby.core, asm: rwby.core}
-      data:
-        state: 116
+            rid: 1200828934167986180
     - rid: 8688056360164655104
       type: {class: VarTrySpecial, ns: rwby, asm: rwby.csharp}
       data:
@@ -88,7 +58,3 @@ MonoBehaviour:
       type: {class: FighterCmnStateReference, ns: rwby, asm: rwby.csharp}
       data:
         state: 43
-    - rid: 8688056833868562436
-      type: {class: RubyRoseStateReference, ns: rwby.core, asm: rwby.core}
-      data:
-        state: 115
