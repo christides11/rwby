@@ -11,5 +11,13 @@ namespace rwby
         public int FunctionMap => (int)BaseStateConditionEnum.NONE;
 
         public ExternalCondition externalCondition;
+
+        public IConditionVariables Copy()
+        {
+            return new ConditionExternal()
+            {
+                externalCondition = externalCondition,
+            };
+        }
     }
 }

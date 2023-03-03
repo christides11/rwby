@@ -12,5 +12,16 @@ namespace rwby
         public bool inverse;
         public float minAngle;
         public float maxAngle;
+
+        public IConditionVariables Copy()
+        {
+            return new ConditionWallAngle()
+            {
+                inputSource = inputSource,
+                inverse = inverse,
+                minAngle = minAngle,
+                maxAngle = maxAngle
+            };
+        }
     }
 }

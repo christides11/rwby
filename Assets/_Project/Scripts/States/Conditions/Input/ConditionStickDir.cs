@@ -12,5 +12,16 @@ namespace rwby
         public float directionDeviation;
         public int framesBack;
         public bool inverse;
+
+        public IConditionVariables Copy()
+        {
+            return new ConditionStickDir()
+            {
+                stickDirection = stickDirection,
+                directionDeviation = directionDeviation,
+                framesBack = framesBack,
+                inverse = inverse
+            };
+        }
     }
 }

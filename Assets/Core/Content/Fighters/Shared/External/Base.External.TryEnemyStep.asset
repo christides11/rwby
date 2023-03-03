@@ -1,0 +1,74 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d4d62b28b52db7d459dd2f283317c705, type: 3}
+  m_Name: Base.External.TryEnemyStep
+  m_EditorClassIdentifier: 
+  data:
+  - rid: 6951768358483656704
+  references:
+    version: 2
+    RefIds:
+    - rid: 5283439312591388686
+      type: {class: ConditionAnd, ns: rwby, asm: rwby.csharp}
+      data:
+        conditions:
+        - rid: 5283439312591388690
+        - rid: 5283439312591388687
+        - rid: 5283439312591388688
+    - rid: 5283439312591388687
+      type: {class: ConditionButton, ns: rwby, asm: rwby.csharp}
+      data:
+        inverse: 0
+        checkAbilityButton: 0
+        button: 0
+        buttonState: 1
+        offset: 0
+        buffer: 3
+    - rid: 5283439312591388688
+      type: {class: ConditionCheckForCollider, ns: rwby, asm: rwby.csharp}
+      data:
+        inverse: 0
+        layerMask:
+          serializedVersion: 2
+          m_Bits: 64
+        offset: {x: 0, y: 0, z: 0}
+        halfExtents: {x: 0.5, y: 0.5, z: 0.5}
+    - rid: 5283439312591388689
+      type: {class: FighterCmnStateReference, ns: rwby, asm: rwby.csharp}
+      data:
+        state: 56
+    - rid: 5283439312591388690
+      type: {class: ConditionCanEnemyStep, ns: rwby, asm: rwby.csharp}
+      data:
+        inverse: 0
+    - rid: 6951768358483656704
+      type: {class: VarChangeState, ns: rwby, asm: rwby.csharp}
+      data:
+        name: Try Fall
+        id: 0
+        parent: 0
+        children: 
+        frameRanges: []
+        condition:
+          rid: 5283439312591388686
+        ignoreStateConditions: 1
+        ignoreAirtimeCheck: 1
+        ignoreStringUseCheck: 1
+        ignoreAuraRequirement: 1
+        checkInputSequence: 0
+        checkCondition: 0
+        overrideStateChange: 0
+        targetType: 0
+        stateMovesetID: -1
+        state:
+          rid: 5283439312591388689
+        frame: 0

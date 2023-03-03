@@ -39,10 +39,22 @@ namespace rwby
         }
         [SelectImplementation(typeof(IConditionVariables))] [SerializeField, SerializeReference]
         public IConditionVariables condition;
-        public IConditionVariables Condition => condition;
+         public IConditionVariables Condition { get => condition; set => condition = value; }
 
         public VarModifyType modifyType;
         public AnimationReference[] wantedAnimations;
         [ShowIf("modifyType", VarModifyType.SET)] public float fadeTime;
+
+        public IStateVariables Copy()
+        {
+            return new VarModifyAnimationSet()
+            {
+                frameRanges = frameRanges,
+                condition = condition.Copy(),
+                modifyType = modifyType,
+                wantedAnimations = wantedAnimations,
+                fadeTime = fadeTime
+            };
+        }
     }
 }

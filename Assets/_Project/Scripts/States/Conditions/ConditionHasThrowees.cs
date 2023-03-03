@@ -9,6 +9,13 @@ namespace rwby
     public struct ConditionHasThrowees : IConditionVariables
     {
         public int FunctionMap => (int)BaseStateConditionEnum.NONE;
-        
+
+        public IConditionVariables Copy()
+        {
+            return new ConditionHasThrowees()
+            {
+
+            };
+        }
     }
 }

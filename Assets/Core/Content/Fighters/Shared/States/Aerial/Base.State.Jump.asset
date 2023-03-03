@@ -24,13 +24,15 @@ MonoBehaviour:
   - rid: 2193520703102779404
   - rid: 2193520703102779397
   - rid: 8688056570279886859
+  - rid: 5283439312591388692
   - rid: 2193520791838261256
   - rid: 2193520791838261262
   - rid: 8688056195711238163
   auraRequirement: 0
   initialGroundedState: 2
-  stateType: 0
+  stateType: 1
   maxUsesInString: -1
+  maxUsesPerAirtime: -1
   selfChainable: 0
   allowBaseStateTransitions: 1
   inputSequence:
@@ -113,6 +115,7 @@ MonoBehaviour:
         inputSource: 0
         normalizeInputSource: 0
         useRotationIfInputZero: 0
+        useSlope: 0
         baseAccel:
           rid: 2193520703102779398
         movementAccel:
@@ -129,6 +132,7 @@ MonoBehaviour:
         slopeMaxClamp: 0
         slopeDivi: 0
         slopeMulti: 0
+        slopeMultiMin: 0
         slopeMultiMax: 0
         slopeinputModi: 0
     - rid: 2193520703102779398
@@ -204,6 +208,7 @@ MonoBehaviour:
       type: {class: ConditionButton, ns: rwby, asm: rwby.csharp}
       data:
         inverse: 1
+        checkAbilityButton: 0
         button: 0
         buttonState: 0
         offset: 0
@@ -260,6 +265,18 @@ MonoBehaviour:
         condition:
           rid: -2
         asset: {fileID: 11400000, guid: e3eaa1968ad0197499aa52999cb46489, type: 2}
+    - rid: 5283439312591388692
+      type: {class: VarExternal, ns: rwby, asm: rwby.csharp}
+      data:
+        name: Try Enemy Step
+        id: 8
+        parent: -1
+        children: 
+        frameRanges:
+        - {x: 5, y: -1}
+        condition:
+          rid: -2
+        asset: {fileID: 11400000, guid: a8844c3d05bce98469f86710807ea33d, type: 2}
     - rid: 8688056195711238163
       type: {class: VarExternal, ns: rwby, asm: rwby.csharp}
       data:

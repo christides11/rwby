@@ -39,12 +39,21 @@ namespace rwby
         }
         [SelectImplementation(typeof(IConditionVariables))] [SerializeField, SerializeReference]
         public IConditionVariables condition;
-        public IConditionVariables Condition => condition;
+         public IConditionVariables Condition { get => condition; set => condition = value; }
 
         [SelectImplementation((typeof(FighterStatReferenceBase<float>)))] [SerializeField, SerializeReference]
         public FighterStatReferenceFloatBase minValue;
 
         [SelectImplementation((typeof(FighterStatReferenceBase<float>)))] [SerializeField, SerializeReference]
         public FighterStatReferenceFloatBase maxValue;
+
+        public IStateVariables Copy()
+        {
+            return new VarClampGravity()
+            {
+                minValue = (FighterStatReferenceFloatBase)minValue?.Copy(),
+                maxValue = (FighterStatReferenceFloatBase)maxValue?.Copy()
+            };
+        }
     }
 }

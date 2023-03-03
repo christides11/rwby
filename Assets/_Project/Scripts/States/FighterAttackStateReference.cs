@@ -1,3 +1,5 @@
+using HnSF;
+
 namespace rwby
 {
     public class FighterAttackStateReference : HnSF.FighterStateReferenceBase
@@ -7,6 +9,14 @@ namespace rwby
         public override int GetState()
         {
             return (int)state;
+        }
+
+        public override FighterStateReferenceBase Copy()
+        {
+            return new FighterAttackStateReference()
+            {
+                state = state
+            };
         }
     }
 }

@@ -18,5 +18,16 @@ namespace rwby
                     throw new ArgumentOutOfRangeException();
             }
         }
+
+        public override FighterStatReferenceBase<int> Copy()
+        {
+            return new FighterBaseStatReferenceInt()
+            {
+                inverse = inverse,
+                statReference = statReference,
+                value = value,
+                variable = variable
+            };
+        }
     }
 }

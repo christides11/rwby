@@ -12,5 +12,14 @@ namespace rwby
 
         public float minAngle;
         public float maxAngle;
+
+        public IConditionVariables Copy()
+        {
+            return new ConditionFloorAngle()
+            {
+                minAngle = minAngle,
+                maxAngle = maxAngle,
+            };
+        }
     }
 }

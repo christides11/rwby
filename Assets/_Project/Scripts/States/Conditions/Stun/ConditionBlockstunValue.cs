@@ -10,5 +10,15 @@ namespace rwby
         public bool inverse;
         public int minValue;
         public int maxValue;
+
+        public IConditionVariables Copy()
+        {
+            return new ConditionBlockstunValue()
+            {
+                inverse = inverse,
+                minValue = minValue,
+                maxValue = maxValue
+            };
+        }
     }
 }

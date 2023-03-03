@@ -21,5 +21,16 @@ namespace rwby
         public ComparisonTypes comparison;
         public int valueAIndex;
         public int valueBIndex;
+
+        public IConditionVariables Copy()
+        {
+            return new ConditionWhiteboardIntIntComparison()
+            {
+                inverse = inverse,
+                comparison = comparison,
+                valueAIndex = valueAIndex,
+                valueBIndex = valueBIndex
+            };
+        }
     }
 }

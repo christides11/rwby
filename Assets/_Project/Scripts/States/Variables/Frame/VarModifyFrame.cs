@@ -17,7 +17,7 @@ namespace rwby
             get => id;
             set => id = value;
         }
-        public IConditionVariables Condition => condition;
+         public IConditionVariables Condition { get => condition; set => condition = value; }
         
         public int Parent
         {
@@ -47,5 +47,14 @@ namespace rwby
         
         [SerializeField, HideInInspector] private int parent;
         [SerializeField, HideInInspector] private int[] children;
+
+        public IStateVariables Copy()
+        {
+            return new VarModifyFrame()
+            {
+                modifyType = modifyType,
+                value = value
+            };
+        }
     }
 }

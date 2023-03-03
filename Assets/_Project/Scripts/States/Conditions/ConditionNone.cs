@@ -8,5 +8,10 @@ namespace rwby
     public struct ConditionNone : IConditionVariables
     {
         public int FunctionMap => (int)BaseStateConditionEnum.NONE;
+
+        public IConditionVariables Copy()
+        {
+            return new ConditionNone();
+        }
     }
 }

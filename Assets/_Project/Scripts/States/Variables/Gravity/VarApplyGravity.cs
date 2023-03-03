@@ -40,7 +40,7 @@ namespace rwby
         }
         [SelectImplementation(typeof(IConditionVariables))] [SerializeField, SerializeReference]
         public IConditionVariables condition;
-        public IConditionVariables Condition => condition;
+         public IConditionVariables Condition { get => condition; set => condition = value; }
 
         private bool calculateValue => !useValue;
         public bool useValue;
@@ -57,5 +57,18 @@ namespace rwby
         public FighterStatReferenceFloatBase multi;
         [SelectImplementation((typeof(FighterStatReferenceBase<float>)))] [SerializeReference]
         public FighterStatReferenceFloatBase maxFallSpeed;
+
+        public IStateVariables Copy()
+        {
+            return new VarApplyGravity()
+            {
+                useValue = useValue,
+                value = (FighterStatReferenceFloatBase)value?.Copy(),
+                jumpHeight = (FighterStatReferenceFloatBase)jumpHeight?.Copy(),
+                jumpTime = (FighterStatReferenceFloatBase)jumpTime?.Copy(),
+                multi = (FighterStatReferenceFloatBase)multi?.Copy(),
+                maxFallSpeed = (FighterStatReferenceFloatBase)maxFallSpeed?.Copy(),
+            };
+        }
     }
 }

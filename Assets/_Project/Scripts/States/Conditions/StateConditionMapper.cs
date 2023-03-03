@@ -45,6 +45,8 @@ namespace rwby
             functions.Add(typeof(ConditionHasHitstun), BaseStateConditionFunctions.HasHitstun);
             functions.Add(typeof(ConditionCanBurst), BaseStateConditionFunctions.CanBurst);
             functions.Add(typeof(ConditionAuraPercentage), BaseStateConditionFunctions.AuraPercentage);
+            functions.Add(typeof(ConditionCheckForCollider), BaseStateConditionFunctions.CheckForCollider);
+            functions.Add(typeof(ConditionCanEnemyStep), BaseStateConditionFunctions.CanEnemyStep);
         }
     }
 }

@@ -38,9 +38,18 @@ namespace rwby
         }
         [SelectImplementation(typeof(IConditionVariables))] [SerializeField, SerializeReference]
         public IConditionVariables condition;
-        public IConditionVariables Condition => condition;
+         public IConditionVariables Condition { get => condition; set => condition = value; }
 
         public VarModifyType modifyType;
         public int value;
+
+        public IStateVariables Copy()
+        {
+            return new VarModifyAirDashCount()
+            {
+                modifyType = modifyType,
+                value = value
+            };
+        }
     }
 }

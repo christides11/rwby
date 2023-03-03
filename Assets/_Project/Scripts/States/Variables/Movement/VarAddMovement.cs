@@ -38,12 +38,23 @@ namespace rwby
         }
         [SelectImplementation(typeof(IConditionVariables))] [SerializeField, SerializeReference]
         public IConditionVariables condition;
-        public IConditionVariables Condition => condition;
+         public IConditionVariables Condition { get => condition; set => condition = value; }
 
         public VarInputSourceType inputSource;
         public bool normalizeInputSource;
         public bool useRotationIfInputZero;
         [SelectImplementation((typeof(FighterStatReferenceBase<float>)))] [SerializeReference]
         public FighterStatReferenceFloatBase force;
+
+        public IStateVariables Copy()
+        {
+            return new VarAddMovement()
+            {
+                inputSource = inputSource,
+                normalizeInputSource = normalizeInputSource,
+                useRotationIfInputZero = useRotationIfInputZero,
+                force = (FighterStatReferenceFloatBase)force?.Copy()
+            };
+        }
     }
 }

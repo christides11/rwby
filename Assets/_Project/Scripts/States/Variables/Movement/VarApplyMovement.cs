@@ -39,7 +39,7 @@ namespace rwby
         }
         [SelectImplementation(typeof(IConditionVariables))] [SerializeField, SerializeReference]
         public IConditionVariables condition;
-        public IConditionVariables Condition => condition;
+         public IConditionVariables Condition { get => condition; set => condition = value; }
 
         public VarInputSourceType inputSource;
         public bool normalizeInputSource;
@@ -72,5 +72,29 @@ namespace rwby
         public float slopeMultiMax;
         //[ShowIf("inputSource", VarInputSourceType.slope)]
         public float slopeinputModi;
+
+        public IStateVariables Copy()
+        {
+            return new VarApplyMovement()
+            {
+                inputSource = inputSource,
+                normalizeInputSource = normalizeInputSource,
+                useRotationIfInputZero = useRotationIfInputZero,
+                useSlope = useSlope,
+                baseAccel = (FighterStatReferenceFloatBase)baseAccel?.Copy(),
+                movementAccel = (FighterStatReferenceFloatBase)movementAccel?.Copy(),
+                deceleration = (FighterStatReferenceFloatBase)deceleration?.Copy(),
+                minSpeed = (FighterStatReferenceFloatBase)minSpeed?.Copy(),
+                maxSpeed = (FighterStatReferenceFloatBase)maxSpeed?.Copy(),
+                accelerationFromDot = (FighterStatReferenceAnimationCurveBase)accelerationFromDot?.Copy(),
+                slopeMinClamp = slopeMinClamp,
+                slopeMaxClamp = slopeMaxClamp,
+                slopeDivi = slopeDivi,
+                slopeMulti = slopeMultiMin,
+                slopeMultiMax = slopeMultiMax,
+                slopeMultiMin = slopeMultiMin,
+                slopeinputModi = slopeinputModi,
+            };
+        }
     }
 }

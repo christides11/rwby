@@ -52,7 +52,7 @@ namespace rwby
         }
         [SelectImplementation(typeof(IConditionVariables))] [SerializeField, SerializeReference]
         public IConditionVariables condition;
-        public IConditionVariables Condition => condition;
+         public IConditionVariables Condition { get => condition; set => condition = value; }
 
         public RaycastDirSource raycastDirectionSource;
         public Vector3 direction;
@@ -61,5 +61,19 @@ namespace rwby
         public bool bypassInterpolation;
         public StartPointTypes startPoint;
         public float startUpOffset;
+
+        public IStateVariables Copy()
+        {
+            return new VarTeleportRaycast()
+            {
+                raycastDirectionSource = raycastDirectionSource,
+                direction = direction,
+                distance = distance,
+                goToPosOnNoHit = goToPosOnNoHit,
+                bypassInterpolation = bypassInterpolation,
+                startPoint = startPoint,
+                startUpOffset = startUpOffset,
+            };
+        }
     }
 }

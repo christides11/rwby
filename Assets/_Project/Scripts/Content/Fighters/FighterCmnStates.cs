@@ -58,6 +58,7 @@ namespace rwby
         BURST = 52,
         GUARD_COUNTER = 53,
         THROW_AIR = 54,
-        THROW_ATTEMPT_AIR = 55
+        THROW_ATTEMPT_AIR = 55,
+        ENEMY_STEP
     }
 }

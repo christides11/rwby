@@ -25,6 +25,7 @@ MonoBehaviour:
   - rid: 8688056331001921554
   - rid: 8688056409313247247
   - rid: 8688056217396838408
+  - rid: 5283439312591388705
   - rid: 8688056360164655107
   - rid: 2193520783924396052
   - rid: 8688056409313247249
@@ -138,6 +139,18 @@ MonoBehaviour:
       type: {class: FighterCmnStateReference, ns: rwby, asm: rwby.csharp}
       data:
         state: 5
+    - rid: 5283439312591388705
+      type: {class: VarExternal, ns: rwby, asm: rwby.csharp}
+      data:
+        name: Try Enemy Step
+        id: 15
+        parent: -1
+        children: 
+        frameRanges:
+        - {x: 5, y: -1}
+        condition:
+          rid: -2
+        asset: {fileID: 11400000, guid: a8844c3d05bce98469f86710807ea33d, type: 2}
     - rid: 5775512102425853954
       type: {class: VarModifySoundSet, ns: rwby, asm: rwby.csharp}
       data:
@@ -191,6 +204,8 @@ MonoBehaviour:
     - rid: 7270848899719102489
       type: {class: ConditionMoveset, ns: rwby, asm: rwby.csharp}
       data:
+        inverse: 0
+        checkCurrentMovesetInstead: 0
         moveset: 1
     - rid: 7270848899719102490
       type: {class: VarExternal, ns: rwby, asm: rwby.csharp}
@@ -274,6 +289,8 @@ MonoBehaviour:
     - rid: 8688056409313247248
       type: {class: ConditionMoveset, ns: rwby, asm: rwby.csharp}
       data:
+        inverse: 0
+        checkCurrentMovesetInstead: 0
         moveset: 0
     - rid: 8688056409313247249
       type: {class: VarExternal, ns: rwby, asm: rwby.csharp}

@@ -38,7 +38,7 @@ namespace rwby
         }
         [SelectImplementation(typeof(IConditionVariables))] [SerializeField, SerializeReference]
         public IConditionVariables condition;
-        public IConditionVariables Condition => condition;
+         public IConditionVariables Condition { get => condition; set => condition = value; }
         
         public VarInputSourceType inputSource;
         public bool normalizeInputSource;
@@ -55,5 +55,23 @@ namespace rwby
         public bool clearWallIfNotFound;
 
         public float rayDistance;
+
+        public IStateVariables Copy()
+        {
+            return new VarFindWall()
+            {
+                inputSource = inputSource,
+                normalizeInputSource = normalizeInputSource,
+                useRotationIfInputZero = useRotationIfInputZero,
+                inputSourceOffset = inputSourceOffset,
+                minAngle = minAngle,
+                maxAngle = maxAngle,
+                raycastCount = raycastCount,
+                startAngleOffset = startAngleOffset,
+                angleBasedOnWallDir = angleBasedOnWallDir,
+                clearWallIfNotFound = clearWallIfNotFound,
+                rayDistance = rayDistance,
+            };
+        }
     }
 }

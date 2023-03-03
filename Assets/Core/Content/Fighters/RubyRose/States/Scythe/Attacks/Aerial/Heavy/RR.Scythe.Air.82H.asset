@@ -52,13 +52,13 @@ MonoBehaviour:
     - inputType: 1
       buttonID: 3
       stickDirection: {x: 0, y: -1}
-      directionDeviation: 0.75
+      directionDeviation: 0.7
     sequenceWindow: 8
     sequenceInputs:
     - inputType: 1
       buttonID: 0
       stickDirection: {x: 0, y: 1}
-      directionDeviation: 0.75
+      directionDeviation: 0.7
   inputSequenceAsHoldInputs: 0
   condition:
     rid: -2
@@ -84,8 +84,8 @@ MonoBehaviour:
       autolink: 0
       gravityAutolinkPercentage: 0
       movementAutolinkPercentage: 0
-      groundHitForce: {x: 0, y: 14, z: 0}
-      aerialHitForce: {x: 0, y: 14, z: 0}
+      groundHitForce: {x: 0, y: 16, z: 0}
+      aerialHitForce: {x: 0, y: 16, z: 0}
       pullPushMultiplier: 0
       pullPushMaxDistance: 10
       blockLift: 0
@@ -286,6 +286,13 @@ MonoBehaviour:
           rid: 1200828845523992579
         multi:
           rid: 1200828845523992580
+        useCurve: 0
+        applyCurve:
+          serializedVersion: 2
+          m_Curve: []
+          m_PreInfinity: 2
+          m_PostInfinity: 2
+          m_RotationOrder: 4
         maxFallSpeed:
           rid: 1200828845523992581
     - rid: 1200828845523992579

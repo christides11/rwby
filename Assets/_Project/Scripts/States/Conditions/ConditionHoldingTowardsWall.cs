@@ -10,5 +10,14 @@ namespace rwby
 
         public int buffer;
         public bool inverse;
+
+        public IConditionVariables Copy()
+        {
+            return new ConditionHoldingTowardsWall()
+            {
+                buffer = buffer,
+                inverse = inverse
+            };
+        }
     }
 }

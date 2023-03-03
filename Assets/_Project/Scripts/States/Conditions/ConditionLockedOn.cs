@@ -9,5 +9,14 @@ namespace rwby
 
         public bool inverse;
         public bool requireTarget;
+
+        public IConditionVariables Copy()
+        {
+            return new ConditionLockedOn()
+            {
+                inverse = inverse,
+                requireTarget = requireTarget,
+            };
+        }
     }
 }

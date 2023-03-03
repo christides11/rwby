@@ -24,10 +24,14 @@ MonoBehaviour:
   - rid: 2193520691360038912
   - rid: 8688056201677897733
   - rid: 8688056570279886855
+  - rid: 5283439312591388694
   - rid: 8688056635878539271
+  auraRequirement: 0
   initialGroundedState: 2
-  stateType: 0
+  stateType: 1
   maxUsesInString: -1
+  maxUsesPerAirtime: -1
+  selfChainable: 0
   allowBaseStateTransitions: 1
   inputSequence:
     executeWindow: 3
@@ -81,6 +85,18 @@ MonoBehaviour:
         inverse: 0
         statReference: 0
         value: 0
+    - rid: 5283439312591388694
+      type: {class: VarExternal, ns: rwby, asm: rwby.csharp}
+      data:
+        name: Try Enemy Step
+        id: 7
+        parent: -1
+        children: 
+        frameRanges:
+        - {x: 1, y: -1}
+        condition:
+          rid: -2
+        asset: {fileID: 11400000, guid: a8844c3d05bce98469f86710807ea33d, type: 2}
     - rid: 8688056201677897733
       type: {class: VarModifyAirDashCount, ns: rwby, asm: rwby.csharp}
       data:

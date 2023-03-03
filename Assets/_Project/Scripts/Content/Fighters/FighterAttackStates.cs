@@ -37,6 +37,7 @@ namespace rwby
         AIR_8H_Charged,
         AIR_28H,
         AIR_28H_Charged,
-        AIR_82H
+        AIR_82H,
+        GRD_82H
     }
 }

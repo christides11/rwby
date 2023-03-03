@@ -14,5 +14,18 @@ namespace rwby
         public float minAngle;
         public float maxAngle;
         public bool signedAngle;
+
+        public IConditionVariables Copy()
+        {
+            return new ConditionCompareInputDir()
+            {
+                inverse = inverse,
+                inputSourceA = inputSourceA,
+                inputSourceB = inputSourceB,
+                minAngle = minAngle,
+                maxAngle = maxAngle,
+                signedAngle = signedAngle
+            };
+        }
     }
 }

@@ -199,6 +199,10 @@ MonoBehaviour:
     state:
       rid: 387795733835153476
     stateTimeline: {fileID: 11400000, guid: 64fe64489eef7f346b46521a6dd19b37, type: 2}
+  - name: enemy step
+    state:
+      rid: 5283439312591388684
+    stateTimeline: {fileID: 11400000, guid: a79bbec776cfbcc4fa4a42267fbda698, type: 2}
   airAttacks:
   - name: throw (attempt)
     state:
@@ -589,6 +593,10 @@ MonoBehaviour:
       type: {class: RubyRoseStateReference, ns: rwby.core, asm: rwby.core}
       data:
         state: 214
+    - rid: 5283439312591388684
+      type: {class: FighterCmnStateReference, ns: rwby, asm: rwby.csharp}
+      data:
+        state: 56
     - rid: 5775511544003297313
       type: {class: FighterCmnStateReference, ns: rwby, asm: rwby.csharp}
       data:

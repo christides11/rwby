@@ -94,6 +94,46 @@ MonoBehaviour:
     state:
       rid: 1200828934167986179
     stateTimeline: {fileID: 11400000, guid: bda5b1beba175cf46a9a1b31aaf61a57, type: 2}
+  - name: 5LL
+    state:
+      rid: 1200828978177507328
+    stateTimeline: {fileID: 11400000, guid: 86b0d60894ba0a74ab309c024706231e, type: 2}
+  - name: 8L
+    state:
+      rid: 1200828978177507335
+    stateTimeline: {fileID: 11400000, guid: d75287e0a212ae74a9e88a7a10fbaba8, type: 2}
+  - name: 28L
+    state:
+      rid: 5283439287287414803
+    stateTimeline: {fileID: 11400000, guid: 0e35ed99294c9384ca9fab889de2c71b, type: 2}
+  - name: 5H
+    state:
+      rid: 5283439287287414814
+    stateTimeline: {fileID: 11400000, guid: 609750ff22f0acc4fa7e78f731047003, type: 2}
+  - name: 5HH
+    state:
+      rid: 5283439287287414816
+    stateTimeline: {fileID: 11400000, guid: 42ce95a31e3c16e4f85e8c841c2892a3, type: 2}
+  - name: 2H
+    state:
+      rid: 1200828978177507340
+    stateTimeline: {fileID: 11400000, guid: a9af0cac5029cf748a6d065154c013c0, type: 2}
+  - name: 28H
+    state:
+      rid: 1200828978177507341
+    stateTimeline: {fileID: 11400000, guid: 1052644c1c5e78742a98d53fa1875e0c, type: 2}
+  - name: 82H
+    state:
+      rid: 5283439287287414827
+    stateTimeline: {fileID: 11400000, guid: 5c15b65e1f47040448c2a0f03c572762, type: 2}
+  - name: 8h
+    state:
+      rid: 5283439287287414824
+    stateTimeline: {fileID: 11400000, guid: 877db9c91aeb69e4b94ef4fc60333827, type: 2}
+  - name: 8H (Atk)
+    state:
+      rid: 5283439287287414825
+    stateTimeline: {fileID: 11400000, guid: 1ae57078a1bbdce4bb70b0612ecf79d3, type: 2}
   airActions:
   - name: fall
     state:
@@ -151,11 +191,27 @@ MonoBehaviour:
     state:
       rid: 387795932360736790
     stateTimeline: {fileID: 11400000, guid: 64fe64489eef7f346b46521a6dd19b37, type: 2}
+  - name: enemy step
+    state:
+      rid: 5283439312591388683
+    stateTimeline: {fileID: 11400000, guid: a79bbec776cfbcc4fa4a42267fbda698, type: 2}
   airAttacks:
   - name: 5L
     state:
       rid: 1200828934167986182
     stateTimeline: {fileID: 11400000, guid: 255255466269afe448b68516e283a67e, type: 2}
+  - name: 5LL
+    state:
+      rid: 5283439272019886080
+    stateTimeline: {fileID: 11400000, guid: 1608ffbc3555fd5468a1bf415b126ca6, type: 2}
+  - name: 5LLL
+    state:
+      rid: 5283439272019886081
+    stateTimeline: {fileID: 11400000, guid: a6163d72cf2f0d94bb361b57bf67abf7, type: 2}
+  - name: 5H
+    state:
+      rid: 1200828981955002368
+    stateTimeline: {fileID: 11400000, guid: 68525ed6b5df38142aff02ddf86e356b, type: 2}
   recovery:
   - name: neutral tech (Ground)
     state:
@@ -413,6 +469,62 @@ MonoBehaviour:
       type: {class: FighterAttackStateReference, ns: rwby, asm: rwby.csharp}
       data:
         state: 117
+    - rid: 1200828978177507328
+      type: {class: FighterAttackStateReference, ns: rwby, asm: rwby.csharp}
+      data:
+        state: 101
+    - rid: 1200828978177507335
+      type: {class: FighterAttackStateReference, ns: rwby, asm: rwby.csharp}
+      data:
+        state: 105
+    - rid: 1200828978177507340
+      type: {class: FighterAttackStateReference, ns: rwby, asm: rwby.csharp}
+      data:
+        state: 112
+    - rid: 1200828978177507341
+      type: {class: FighterAttackStateReference, ns: rwby, asm: rwby.csharp}
+      data:
+        state: 116
+    - rid: 1200828981955002368
+      type: {class: FighterAttackStateReference, ns: rwby, asm: rwby.csharp}
+      data:
+        state: 126
+    - rid: 5283439272019886080
+      type: {class: FighterAttackStateReference, ns: rwby, asm: rwby.csharp}
+      data:
+        state: 118
+    - rid: 5283439272019886081
+      type: {class: FighterAttackStateReference, ns: rwby, asm: rwby.csharp}
+      data:
+        state: 119
+    - rid: 5283439287287414803
+      type: {class: FighterAttackStateReference, ns: rwby, asm: rwby.csharp}
+      data:
+        state: 107
+    - rid: 5283439287287414814
+      type: {class: FighterAttackStateReference, ns: rwby, asm: rwby.csharp}
+      data:
+        state: 109
+    - rid: 5283439287287414816
+      type: {class: FighterAttackStateReference, ns: rwby, asm: rwby.csharp}
+      data:
+        state: 110
+    - rid: 5283439287287414824
+      type: {class: FighterAttackStateReference, ns: rwby, asm: rwby.csharp}
+      data:
+        state: 114
+    - rid: 5283439287287414825
+      type: {class: RubyRoseStateReference, ns: rwby.core, asm: rwby.core}
+      data:
+        state: 203
+    - rid: 5283439287287414827
+      type: {class: FighterAttackStateReference, ns: rwby, asm: rwby.csharp}
+      data:
+        state: 136
+    - rid: 5283439312591388683
+      type: {class: FighterCmnStateReference, ns: rwby, asm: rwby.csharp}
+      data:
+        state: 56
     - rid: 5775511466801889290
       type: {class: RubyRoseStateReference, ns: rwby.core, asm: rwby.core}
       data:

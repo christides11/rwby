@@ -38,9 +38,18 @@ namespace rwby
         }
         [SelectImplementation(typeof(IConditionVariables))] [SerializeField, SerializeReference]
         public IConditionVariables condition;
-        public IConditionVariables Condition => condition;
+         public IConditionVariables Condition { get => condition; set => condition = value; }
 
         public VarTargetType targetType;
         public HitInfo hitboxInfo;
+
+        public IStateVariables Copy()
+        {
+            return new VarDirectDamage()
+            {
+                targetType = targetType,
+                hitboxInfo = hitboxInfo
+            };
+        }
     }
 }

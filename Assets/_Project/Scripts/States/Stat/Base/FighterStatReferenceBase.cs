@@ -20,5 +20,15 @@ namespace rwby
         {
             return value;
         }
+
+        public virtual FighterStatReferenceBase<T> Copy()
+        {
+            return new FighterStatReferenceBase<T>()
+            {
+                inverse = inverse,
+                statReference = statReference,
+                value = value
+            };
+        }
     }
 }

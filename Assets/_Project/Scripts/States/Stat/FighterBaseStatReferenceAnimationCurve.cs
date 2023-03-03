@@ -21,5 +21,16 @@ namespace rwby
                     throw new ArgumentOutOfRangeException();
             }
         }
+
+        public override FighterStatReferenceBase<AnimationCurve> Copy()
+        {
+            return new FighterBaseStatReferenceAnimationCurve()
+            {
+                inverse = inverse,
+                statReference = statReference,
+                value = value,
+                variable = variable
+            };
+        }
     }
 }

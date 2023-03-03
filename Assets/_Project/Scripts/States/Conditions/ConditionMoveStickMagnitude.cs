@@ -12,5 +12,14 @@ namespace rwby
         
         public float minValue;
         public float maxValue;
+
+        public IConditionVariables Copy()
+        {
+            return new ConditionMoveStickMagnitude()
+            {
+                minValue = minValue,
+                maxValue = maxValue,
+            };
+        }
     }
 }

@@ -10,5 +10,14 @@ namespace rwby
 
         public VarInputSourceType inputSource;
         public float maxAngle;
+
+        public IConditionVariables Copy()
+        {
+            return new ConditionCompareSlopeDir()
+            {
+                inputSource = inputSource,
+                maxAngle = maxAngle
+            };
+        }
     }
 }

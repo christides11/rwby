@@ -39,7 +39,7 @@ namespace rwby
         }
         [SelectImplementation(typeof(IConditionVariables))] [SerializeField, SerializeReference]
         public IConditionVariables condition;
-        public IConditionVariables Condition => condition;
+         public IConditionVariables Condition { get => condition; set => condition = value; }
 
         public bool useValue;
         [ShowIf("useValue")] [AllowNesting]
@@ -50,5 +50,16 @@ namespace rwby
 
         [SelectImplementation((typeof(FighterStatReferenceBase<float>)))] [SerializeReference]
         public FighterStatReferenceFloatBase jumpHeight;
+
+        public IStateVariables Copy()
+        {
+            return new VarApplyJumpForce()
+            {
+                useValue = useValue,
+                value = value,
+                maxJumpTime = (FighterStatReferenceFloatBase)maxJumpTime?.Copy(),
+                jumpHeight = (FighterStatReferenceFloatBase)jumpHeight?.Copy()
+            };
+        }
     }
 }

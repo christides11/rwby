@@ -11,5 +11,13 @@ namespace rwby.core
         {
             return (int)state;
         }
+
+        public override FighterStateReferenceBase Copy()
+        {
+            return new RubyRoseStateReference()
+            {
+                state = state
+            };
+        }
     }
 }

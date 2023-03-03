@@ -39,12 +39,24 @@ namespace rwby
         }
         [SelectImplementation(typeof(IConditionVariables))] [SerializeField, SerializeReference]
         public IConditionVariables condition;
-        public IConditionVariables Condition => condition;
+         public IConditionVariables Condition { get => condition; set => condition = value; }
 
         public VarModifyType modifyType;
         public int value;
         public bool clamp;
         [ShowIf("clamp")] public int clampMin;
         [ShowIf("clamp")] public int clampMax;
+
+        public IStateVariables Copy()
+        {
+            return new VarModifyBlockstun()
+            {
+                modifyType = modifyType,
+                value = value,
+                clamp = clamp,
+                clampMin = clampMin,
+                clampMax = clampMax,
+            };
+        }
     }
 }

@@ -39,7 +39,7 @@ namespace rwby
         
         [SelectImplementation(typeof(IConditionVariables))] [SerializeField, SerializeReference]
         public IConditionVariables condition;
-        public IConditionVariables Condition => condition;
+         public IConditionVariables Condition { get => condition; set => condition = value; }
 
         public int increment;
         public int chargePerLevel;
@@ -47,5 +47,18 @@ namespace rwby
         public bool checkAbilityButton;
         public PlayerInputType button;
         public bool canHold;
+
+        public IStateVariables Copy()
+        {
+            return new VarIncrementChargeLevel()
+            {
+                increment = increment,
+                chargePerLevel = chargePerLevel,
+                maxLevel = maxLevel,
+                checkAbilityButton = checkAbilityButton,
+                button = button,
+                canHold = canHold,
+            };
+        }
     }
 }

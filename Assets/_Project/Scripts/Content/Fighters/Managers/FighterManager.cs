@@ -114,6 +114,9 @@ namespace rwby
 
         public Transform[] boneRefs;
 
+        [Networked] public int currEnemyStep { get; set; }
+        public Collider[] colliderHitResults = new Collider[8];
+
         [Header("FOOTSTEP SOUNDS")]
         public SoundReference[] footstepsDirt;
         public SoundReference[] footstepsSnow;

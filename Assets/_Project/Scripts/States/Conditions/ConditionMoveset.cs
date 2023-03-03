@@ -9,6 +9,16 @@ namespace rwby
 
         public bool inverse;
 
+        public bool checkCurrentMovesetInstead;
         public int moveset;
+
+        public IConditionVariables Copy()
+        {
+            return new ConditionMoveset()
+            {
+                inverse = inverse,
+                moveset = moveset
+            };
+        }
     }
 }

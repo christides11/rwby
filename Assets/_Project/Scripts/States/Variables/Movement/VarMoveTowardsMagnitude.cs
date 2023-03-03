@@ -38,7 +38,7 @@ namespace rwby
         }
         [SelectImplementation(typeof(IConditionVariables))] [SerializeField, SerializeReference]
         public IConditionVariables condition;
-        public IConditionVariables Condition => condition;
+         public IConditionVariables Condition { get => condition; set => condition = value; }
 
 
         [SelectImplementation((typeof(FighterStatReferenceBase<float>)))] [SerializeReference]
@@ -47,5 +47,16 @@ namespace rwby
         public FighterStatReferenceFloatBase distance;
         public bool applyMovement;
         public bool applyGravity;
+
+        public IStateVariables Copy()
+        {
+            return new VarMoveTowardsMagnitude()
+            {
+                force = (FighterStatReferenceFloatBase)force?.Copy(),
+                distance = (FighterStatReferenceFloatBase)distance?.Copy(),
+                applyMovement = applyMovement,
+                applyGravity = applyGravity,
+            };
+        }
     }
 }

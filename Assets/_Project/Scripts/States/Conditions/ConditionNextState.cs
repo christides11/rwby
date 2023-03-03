@@ -12,5 +12,15 @@ namespace rwby
         [SelectImplementation(typeof(FighterStateReferenceBase))] [SerializeField, SerializeReference]
         public FighterStateReferenceBase state;
         public bool inverse;
+
+        public IConditionVariables Copy()
+        {
+            return new ConditionNextState()
+            {
+                stateMovesetID = stateMovesetID,
+                // TODO: state
+                inverse = inverse
+            };
+        }
     }
 }

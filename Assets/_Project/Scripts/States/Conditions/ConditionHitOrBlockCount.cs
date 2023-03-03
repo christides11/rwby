@@ -19,7 +19,16 @@ namespace rwby
 
         public bool inverse;
         public int hitCount;
-
         public HitOrBlockEnum hitOrBlock;
+
+        public IConditionVariables Copy()
+        {
+            return new ConditionHitOrBlockCount()
+            {
+                inverse = inverse,
+                hitCount = hitCount,
+                hitOrBlock = hitOrBlock
+            };
+        }
     }
 }

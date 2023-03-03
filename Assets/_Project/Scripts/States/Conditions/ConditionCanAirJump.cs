@@ -10,5 +10,13 @@ namespace rwby
 
         [SelectImplementation((typeof(FighterStatReferenceBase<int>)))] [SerializeReference]
         public FighterStatReferenceIntBase maxAirJumps;
+
+        public IConditionVariables Copy()
+        {
+            return new ConditionCanAirJump()
+            {
+                // TODO:
+            };
+        }
     }
 }

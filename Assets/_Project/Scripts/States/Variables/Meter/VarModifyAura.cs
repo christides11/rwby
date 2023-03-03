@@ -38,7 +38,7 @@ namespace rwby
         }
         [SelectImplementation(typeof(IConditionVariables))] [SerializeField, SerializeReference]
         public IConditionVariables condition;
-        public IConditionVariables Condition => condition;
+         public IConditionVariables Condition { get => condition; set => condition = value; }
         
         public VarTargetType targetType;
         
@@ -46,5 +46,16 @@ namespace rwby
         public bool valueIsPercentage;
         [SelectImplementation((typeof(FighterStatReferenceBase<int>)))] [SerializeReference]
         public FighterStatReferenceIntBase value;
+
+        public IStateVariables Copy()
+        {
+            return new VarModifyAura()
+            {
+                targetType = targetType,
+                modifyType = modifyType,
+                valueIsPercentage = valueIsPercentage,
+                value = (FighterStatReferenceIntBase)value?.Copy()
+            };
+        }
     }
 }

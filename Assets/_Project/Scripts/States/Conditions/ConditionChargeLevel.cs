@@ -10,5 +10,14 @@ namespace rwby
 
         public int minLevel;
         public int maxLevel;
+
+        public IConditionVariables Copy()
+        {
+            return new ConditionChargeLevel()
+            {
+                minLevel = minLevel,
+                maxLevel = maxLevel
+            };
+        }
     }
 }

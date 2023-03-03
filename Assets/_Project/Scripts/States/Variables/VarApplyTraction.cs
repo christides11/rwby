@@ -38,12 +38,22 @@ namespace rwby
         }
         [SelectImplementation(typeof(IConditionVariables))] [SerializeField, SerializeReference]
         public IConditionVariables condition;
-        public IConditionVariables Condition => condition;
+         public IConditionVariables Condition { get => condition; set => condition = value; }
 
         [SelectImplementation(typeof(FighterStatReferenceFloatBase))] [SerializeField, SerializeReference]
         public FighterStatReferenceFloatBase traction;
 
         public bool applyMovement;
         public bool applyGravity;
+
+        public IStateVariables Copy()
+        {
+            return new VarApplyTraction()
+            {
+                traction = (FighterStatReferenceFloatBase)traction?.Copy(),
+                applyMovement = applyMovement,
+                applyGravity = applyGravity,
+            };
+        }
     }
 }

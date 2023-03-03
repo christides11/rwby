@@ -10,5 +10,15 @@ namespace rwby
         public bool inverse;
         public int hitboxIndex;
         public int hitCount;
+
+        public IConditionVariables Copy()
+        {
+            return new ConditionHitboxHitCount()
+            {
+                inverse = inverse,
+                hitboxIndex = hitboxIndex,
+                hitCount = hitCount
+            };
+        }
     }
 }

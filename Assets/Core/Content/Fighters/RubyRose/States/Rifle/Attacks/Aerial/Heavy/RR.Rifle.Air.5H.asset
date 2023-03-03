@@ -30,16 +30,18 @@ MonoBehaviour:
   - rid: 7270848428946489353
   - rid: 7270848718906589184
   - rid: 7270848718906589187
-  - rid: 387795756708003840
   - rid: 387795756708003845
   - rid: 387795756708003849
   - rid: 387795756708003850
-  - rid: 387795983688269837
+  - rid: 1200828981955002394
+  - rid: 387795983688269827
+  - rid: 1200828981955002370
+  - rid: 1200828981955002377
   auraRequirement: 0
   initialGroundedState: 2
   stateType: 2
   maxUsesInString: 1
-  maxUsesPerAirtime: -1
+  maxUsesPerAirtime: 1
   selfChainable: 0
   allowBaseStateTransitions: 1
   inputSequence:
@@ -61,7 +63,7 @@ MonoBehaviour:
     clashLevel: 0
     hitStateGroundedGroups: -1
     hit:
-      groundHitState: 30
+      groundHitState: 34
       airHitState: 32
       groundBounce: 0
       wallBounce: 0
@@ -76,8 +78,8 @@ MonoBehaviour:
       autolink: 0
       gravityAutolinkPercentage: 0
       movementAutolinkPercentage: 0
-      groundHitForce: {x: 0, y: 0, z: 5}
-      aerialHitForce: {x: 0, y: 4, z: 1.5}
+      groundHitForce: {x: 0, y: -20, z: 5}
+      aerialHitForce: {x: 0, y: -20, z: 5}
       pullPushMultiplier: 0
       pullPushMaxDistance: 10
       blockLift: 0
@@ -91,7 +93,7 @@ MonoBehaviour:
       damage: 300
       chipDamage: 100
       hitEffectbank: {fileID: 11400000, guid: 5d1086999fc610e4290407b33cce3ff1, type: 2}
-      hitEffect: hit1
+      hitEffect: hit4
       blockEffectbank: {fileID: 11400000, guid: 5d1086999fc610e4290407b33cce3ff1, type: 2}
       blockEffect: shieldhit1
       hitSoundbank: {fileID: 0}
@@ -123,8 +125,8 @@ MonoBehaviour:
       autolink: 0
       gravityAutolinkPercentage: 0
       movementAutolinkPercentage: 0
-      groundHitForce: {x: 0, y: 0, z: 5}
-      aerialHitForce: {x: 0, y: 3, z: 2}
+      groundHitForce: {x: 0, y: -20, z: 5}
+      aerialHitForce: {x: 0, y: -20, z: 5}
       pullPushMultiplier: 0
       pullPushMaxDistance: 0
       blockLift: 0
@@ -163,55 +165,6 @@ MonoBehaviour:
     RefIds:
     - rid: -2
       type: {class: , ns: , asm: }
-    - rid: 387795756708003840
-      type: {class: VarApplyGravity, ns: rwby, asm: rwby.csharp}
-      data:
-        name: 
-        id: 18
-        parent: -1
-        children: 
-        frameRanges:
-        - {x: 1, y: -1}
-        condition:
-          rid: -2
-        useValue: 0
-        value:
-          rid: -2
-        jumpHeight:
-          rid: 387795756708003841
-        jumpTime:
-          rid: 387795756708003842
-        multi:
-          rid: 387795756708003843
-        maxFallSpeed:
-          rid: 387795756708003844
-    - rid: 387795756708003841
-      type: {class: FighterBaseStatReferenceFloat, ns: rwby, asm: rwby.csharp}
-      data:
-        inverse: 0
-        statReference: 1
-        value: 0
-        variable: 13
-    - rid: 387795756708003842
-      type: {class: FighterBaseStatReferenceFloat, ns: rwby, asm: rwby.csharp}
-      data:
-        inverse: 0
-        statReference: 1
-        value: 0
-        variable: 12
-    - rid: 387795756708003843
-      type: {class: FighterStatReferenceFloatBase, ns: rwby, asm: rwby.csharp}
-      data:
-        inverse: 0
-        statReference: 0
-        value: 1
-    - rid: 387795756708003844
-      type: {class: FighterBaseStatReferenceFloat, ns: rwby, asm: rwby.csharp}
-      data:
-        inverse: 0
-        statReference: 1
-        value: 0
-        variable: 23
     - rid: 387795756708003845
       type: {class: VarClampMovement, ns: rwby, asm: rwby.csharp}
       data:
@@ -230,7 +183,7 @@ MonoBehaviour:
       data:
         inverse: 0
         statReference: 0
-        value: 5
+        value: 20
     - rid: 387795756708003849
       type: {class: VarExternal, ns: rwby, asm: rwby.csharp}
       data:
@@ -255,17 +208,38 @@ MonoBehaviour:
         condition:
           rid: -2
         asset: {fileID: 11400000, guid: bc799e59dd7b59244a7f8dcbdcafabf0, type: 2}
-    - rid: 387795983688269837
-      type: {class: VarChangeState, ns: rwby, asm: rwby.csharp}
+    - rid: 387795983688269827
+      type: {class: VarModifyFallSpeed, ns: rwby, asm: rwby.csharp}
       data:
-        name: Try Land
-        id: 22
+        name: 
+        id: 23
         parent: -1
         children: 
         frameRanges:
-        - {x: 1, y: -1}
+        - {x: 6, y: 6}
         condition:
-          rid: 387795983688269839
+          rid: -2
+        targetType: 0
+        modifyType: 0
+        value:
+          rid: 387795983688269828
+    - rid: 387795983688269828
+      type: {class: FighterStatReferenceFloatBase, ns: rwby, asm: rwby.csharp}
+      data:
+        inverse: 0
+        statReference: 0
+        value: 9
+    - rid: 1200828981955002370
+      type: {class: VarChangeState, ns: rwby, asm: rwby.csharp}
+      data:
+        name: Try Land
+        id: 24
+        parent: -1
+        children: 
+        frameRanges:
+        - {x: 2, y: -1}
+        condition:
+          rid: 1200828981955002371
         ignoreStateConditions: 0
         ignoreAirtimeCheck: 0
         ignoreStringUseCheck: 0
@@ -276,16 +250,116 @@ MonoBehaviour:
         targetType: 0
         stateMovesetID: -1
         state:
-          rid: 387795983688269838
+          rid: 1200828981955002372
         frame: 0
-    - rid: 387795983688269838
-      type: {class: FighterCmnStateReference, ns: rwby, asm: rwby.csharp}
-      data:
-        state: 28
-    - rid: 387795983688269839
+    - rid: 1200828981955002371
       type: {class: ConditionIsGrounded, ns: rwby, asm: rwby.csharp}
       data:
         inverse: 0
+    - rid: 1200828981955002372
+      type: {class: FighterCmnStateReference, ns: rwby, asm: rwby.csharp}
+      data:
+        state: 28
+    - rid: 1200828981955002377
+      type: {class: VarApplyGravitySimple, ns: rwby, asm: rwby.csharp}
+      data:
+        name: 
+        id: 25
+        parent: -1
+        children: 
+        frameRanges:
+        - {x: 1, y: 5}
+        - {x: 10, y: -1}
+        condition:
+          rid: -2
+        affectedByGravityMulti: 0
+        value:
+          rid: 1200828981955002392
+        multi:
+          rid: 1200828981955002379
+        useCurve: 0
+        applyCurve:
+          serializedVersion: 2
+          m_Curve:
+          - serializedVersion: 3
+            time: 0
+            value: 0
+            inSlope: 9.610691
+            outSlope: 9.610691
+            tangentMode: 0
+            weightedMode: 0
+            inWeight: 0
+            outWeight: 0.036319613
+          - serializedVersion: 3
+            time: 0.25
+            value: 1
+            inSlope: 0
+            outSlope: 0
+            tangentMode: 0
+            weightedMode: 0
+            inWeight: 0.33333334
+            outWeight: 0
+          - serializedVersion: 3
+            time: 1
+            value: 1
+            inSlope: 0
+            outSlope: 0
+            tangentMode: 0
+            weightedMode: 0
+            inWeight: 0
+            outWeight: 0
+          m_PreInfinity: 2
+          m_PostInfinity: 2
+          m_RotationOrder: 4
+        maxFallSpeed:
+          rid: 1200828981955002393
+    - rid: 1200828981955002379
+      type: {class: FighterStatReferenceFloatBase, ns: rwby, asm: rwby.csharp}
+      data:
+        inverse: 0
+        statReference: 0
+        value: 1
+    - rid: 1200828981955002392
+      type: {class: FighterBaseStatReferenceFloat, ns: rwby, asm: rwby.csharp}
+      data:
+        inverse: 0
+        statReference: 1
+        value: 0
+        variable: 39
+    - rid: 1200828981955002393
+      type: {class: FighterBaseStatReferenceFloat, ns: rwby, asm: rwby.csharp}
+      data:
+        inverse: 0
+        statReference: 1
+        value: 0
+        variable: 23
+    - rid: 1200828981955002394
+      type: {class: VarClampGravity, ns: rwby, asm: rwby.csharp}
+      data:
+        name: 
+        id: 26
+        parent: -1
+        children: 
+        frameRanges:
+        - {x: 6, y: 6}
+        condition:
+          rid: -2
+        minValue:
+          rid: 1200828981955002395
+        maxValue:
+          rid: 1200828981955002396
+    - rid: 1200828981955002395
+      type: {class: FighterStatReferenceFloatBase, ns: rwby, asm: rwby.csharp}
+      data:
+        inverse: 0
+        statReference: 0
+        value: 0
+    - rid: 1200828981955002396
+      type: {class: FighterStatReferenceFloatBase, ns: rwby, asm: rwby.csharp}
+      data:
+        inverse: 0
+        statReference: 0
+        value: 0
     - rid: 2193520813467238401
       type: {class: VarChangeState, ns: rwby, asm: rwby.csharp}
       data:
@@ -327,7 +401,7 @@ MonoBehaviour:
         boxType: 1
         attachedTo: 0
         shape: 0
-        offset: {x: 0, y: 1, z: 1}
+        offset: {x: 0, y: 0, z: 0}
         boxExtents: {x: 1, y: 1, z: 1}
         radius: 0
         definitionIndex: 0
@@ -339,7 +413,7 @@ MonoBehaviour:
         parent: -1
         children: 
         frameRanges:
-        - {x: 4, y: -1}
+        - {x: 10, y: -1}
         condition:
           rid: -2
         traction:
@@ -430,15 +504,15 @@ MonoBehaviour:
         parent: -1
         children: 
         frameRanges:
-        - {x: 1, y: 1}
+        - {x: 6, y: 6}
         condition:
           rid: -2
         sounds:
-        - soundbank: {fileID: 11400000, guid: 2f4063bd6a5418f4a9c4e61c84752271, type: 2}
-          sound: swing1
+        - soundbank: {fileID: 11400000, guid: 46cf32b8cf1903a428cb8802d2539eca, type: 2}
+          sound: swing13
           parented: 1
           offset: {x: 0, y: 0, z: 0}
-          volume: 1
+          volume: 0.3
           minDist: 5
           maxDist: 20
           pitchDeviMin: 0

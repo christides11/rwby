@@ -39,7 +39,7 @@ namespace rwby
         }
         [SelectImplementation(typeof(IConditionVariables))] [SerializeField, SerializeReference]
         public IConditionVariables condition;
-        public IConditionVariables Condition => condition;
+         public IConditionVariables Condition { get => condition; set => condition = value; }
 
         public bool ignoreStateConditions;
         public bool ignoreAirtimeCheck;
@@ -55,5 +55,23 @@ namespace rwby
         [SelectImplementation(typeof(FighterStateReferenceBase))] [SerializeField, SerializeReference]
         public FighterStateReferenceBase state;
         public int frame;
+
+        public IStateVariables Copy()
+        {
+            return new VarChangeState()
+            {
+                ignoreStateConditions = ignoreStateConditions,
+                ignoreAirtimeCheck = ignoreAirtimeCheck,
+                ignoreStringUseCheck = ignoreStringUseCheck,
+                ignoreAuraRequirement = ignoreAuraRequirement,
+                checkInputSequence = checkInputSequence,
+                checkCondition = checkCondition,
+                overrideStateChange = overrideStateChange,
+                targetType = targetType,
+                stateMovesetID = stateMovesetID,
+                state = state == null ? null : (FighterStateReferenceBase)state?.Copy(),
+                frame = frame
+            };
+        }
     }
 }

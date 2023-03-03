@@ -39,11 +39,22 @@ namespace rwby
         }
         [SelectImplementation(typeof(IConditionVariables))] [SerializeField, SerializeReference]
         public IConditionVariables condition;
-        public IConditionVariables Condition => condition;
+         public IConditionVariables Condition { get => condition; set => condition = value; }
 
         public VarModifyType modifyType;
         public EffectReference[] wantedEffects;
         public bool doNotAddToSet;
         public bool OffsetStartAtFighter;
+
+        public IStateVariables Copy()
+        {
+            return new VarModifyEffectSet()
+            {
+                modifyType = modifyType,
+                wantedEffects = wantedEffects,
+                doNotAddToSet = doNotAddToSet,
+                OffsetStartAtFighter = OffsetStartAtFighter,
+            };
+        }
     }
 }

@@ -38,7 +38,7 @@ namespace rwby
         }
         [SelectImplementation(typeof(IConditionVariables))] [SerializeField, SerializeReference]
         public IConditionVariables condition;
-        public IConditionVariables Condition => condition;
+         public IConditionVariables Condition { get => condition; set => condition = value; }
 
         public CreateProjectileDefinition def;
 
@@ -46,5 +46,17 @@ namespace rwby
         public bool pointTowardsLockonTargetXZ;
         public bool pointTowardsLockonTargetY;
         public bool useCameraForward;
+
+        public IStateVariables Copy()
+        {
+            return new VarCreateProjectile()
+            {
+                def = def,
+                force = force,
+                pointTowardsLockonTargetXZ = pointTowardsLockonTargetXZ,
+                pointTowardsLockonTargetY = pointTowardsLockonTargetY,
+                useCameraForward = useCameraForward,
+            };
+        }
     }
 }

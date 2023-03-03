@@ -34,12 +34,15 @@ MonoBehaviour:
   - rid: 387795983688269876
   - rid: 5775511466801889304
   - rid: 5775511466801889305
+  - rid: 1200828964849319943
+  - rid: 1200828978177507329
+  - rid: 1200828978177507338
   auraRequirement: 0
   initialGroundedState: 1
   stateType: 2
   maxUsesInString: 1
   maxUsesPerAirtime: -1
-  selfChainable: 3
+  selfChainable: 0
   allowBaseStateTransitions: 1
   inputSequence:
     executeWindow: 3
@@ -55,7 +58,7 @@ MonoBehaviour:
     rid: -2
   hitboxInfo:
   - ID: 0
-    groundedFoldoutGroup: 1
+    groundedFoldoutGroup: 0
     groundedCounterHitFoldoutGroup: 0
     clashLevel: 0
     hitStateGroundedGroups: -1
@@ -90,7 +93,7 @@ MonoBehaviour:
       damage: 500
       chipDamage: 100
       hitEffectbank: {fileID: 11400000, guid: 5d1086999fc610e4290407b33cce3ff1, type: 2}
-      hitEffect: hit_slash1
+      hitEffect: hit4
       blockEffectbank: {fileID: 11400000, guid: 5d1086999fc610e4290407b33cce3ff1, type: 2}
       blockEffect: shieldhit1
       hitSoundbank: {fileID: 11400000, guid: 2f4063bd6a5418f4a9c4e61c84752271, type: 2}
@@ -186,10 +189,78 @@ MonoBehaviour:
         parent: 18
         children: 
         frameRanges:
-        - {x: 5, y: -1}
+        - {x: 8, y: -1}
         condition:
           rid: -2
         asset: {fileID: 11400000, guid: f103f0d58e560f448a4431a38a96fb76, type: 2}
+    - rid: 1200828964849319943
+      type: {class: VarClampMovement, ns: rwby, asm: rwby.csharp}
+      data:
+        name: 
+        id: 22
+        parent: -1
+        children: 
+        frameRanges:
+        - {x: 0, y: 0}
+        condition:
+          rid: -2
+        magnitude:
+          rid: 1200828964849319944
+    - rid: 1200828964849319944
+      type: {class: FighterStatReferenceFloatBase, ns: rwby, asm: rwby.csharp}
+      data:
+        inverse: 0
+        statReference: 0
+        value: 5
+    - rid: 1200828978177507329
+      type: {class: VarChangeState, ns: rwby, asm: rwby.csharp}
+      data:
+        name: Try 5LL
+        id: 23
+        parent: 13
+        children: 
+        frameRanges:
+        - {x: 8, y: -1}
+        condition:
+          rid: -2
+        ignoreStateConditions: 0
+        ignoreAirtimeCheck: 0
+        ignoreStringUseCheck: 0
+        ignoreAuraRequirement: 0
+        checkInputSequence: 1
+        checkCondition: 0
+        overrideStateChange: 0
+        targetType: 0
+        stateMovesetID: -1
+        state:
+          rid: 1200828978177507330
+        frame: 0
+    - rid: 1200828978177507330
+      type: {class: FighterAttackStateReference, ns: rwby, asm: rwby.csharp}
+      data:
+        state: 101
+    - rid: 1200828978177507338
+      type: {class: VarAddMovement, ns: rwby, asm: rwby.csharp}
+      data:
+        name: 
+        id: 24
+        parent: -1
+        children: 
+        frameRanges:
+        - {x: 1, y: 1}
+        condition:
+          rid: -2
+        inputSource: 1
+        normalizeInputSource: 0
+        useRotationIfInputZero: 0
+        force:
+          rid: 1200828978177507339
+    - rid: 1200828978177507339
+      type: {class: FighterStatReferenceFloatBase, ns: rwby, asm: rwby.csharp}
+      data:
+        inverse: 0
+        statReference: 0
+        value: 4
     - rid: 2193520813467238401
       type: {class: VarChangeState, ns: rwby, asm: rwby.csharp}
       data:
@@ -243,7 +314,7 @@ MonoBehaviour:
         parent: -1
         children: 
         frameRanges:
-        - {x: 4, y: -1}
+        - {x: 1, y: -1}
         condition:
           rid: -2
         traction:
@@ -255,7 +326,7 @@ MonoBehaviour:
       data:
         inverse: 0
         statReference: 0
-        value: 30
+        value: 40
         variable: 0
     - rid: 5775511466801889304
       type: {class: VarModifyAnimationSet, ns: rwby, asm: rwby.csharp}
@@ -383,7 +454,7 @@ MonoBehaviour:
         name: On Hit or Block
         id: 13
         parent: -1
-        children: 0e000000
+        children: 170000000e000000
         frameRanges: []
         condition:
           rid: 8688056833868562433
@@ -401,7 +472,7 @@ MonoBehaviour:
         parent: 13
         children: 
         frameRanges:
-        - {x: 7, y: -1}
+        - {x: 8, y: -1}
         condition:
           rid: -2
         asset: {fileID: 11400000, guid: ba688ef34edd2d84ea6a5b2e1e2af06e, type: 2}

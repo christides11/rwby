@@ -10,5 +10,14 @@ namespace rwby
 
         public int checkDistance;
         public bool inverse;
+
+        public IConditionVariables Copy()
+        {
+            return new ConditionCheckSuccessfulBlock()
+            {
+                checkDistance = checkDistance,
+                inverse = inverse
+            };
+        }
     }
 }

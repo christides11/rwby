@@ -47,12 +47,25 @@ namespace rwby
         }
         [SelectImplementation(typeof(IConditionVariables))] [SerializeField, SerializeReference]
         public IConditionVariables condition;
-        public IConditionVariables Condition => condition;
+         public IConditionVariables Condition { get => condition; set => condition = value; }
 
         public bool ignoreAuraRequirement;
         public bool checkInputSequence;
         public bool checkCondition;
 
         public StateListEntry[] states;
+
+        public IStateVariables Copy()
+        {
+            return new VarChangeStateList()
+            {
+                frameRanges = frameRanges,
+                condition = condition.Copy(),
+                ignoreAuraRequirement = ignoreAuraRequirement,
+                checkInputSequence = checkInputSequence,
+                checkCondition = checkCondition,
+                states = states
+            };
+        }
     }
 }

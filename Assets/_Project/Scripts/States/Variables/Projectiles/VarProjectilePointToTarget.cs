@@ -38,10 +38,20 @@ namespace rwby
         }
         [SelectImplementation(typeof(IConditionVariables))] [SerializeField, SerializeReference]
         public IConditionVariables condition;
-        public IConditionVariables Condition => condition;
+         public IConditionVariables Condition { get => condition; set => condition = value; }
 
         public int projectileOffset;
         public float maxAngle;
         public bool ignoreIfOutsideAngle;
+
+        public IStateVariables Copy()
+        {
+            return new VarProjectilePointToTarget()
+            {
+                projectileOffset = projectileOffset,
+                maxAngle = maxAngle,
+                ignoreIfOutsideAngle = ignoreIfOutsideAngle,
+            };
+        }
     }
 }

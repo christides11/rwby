@@ -99,7 +99,7 @@ MonoBehaviour:
       blockEffect: shieldhit1
       hitSoundbank: {fileID: 11400000, guid: 2f4063bd6a5418f4a9c4e61c84752271, type: 2}
       hitSound: hit-sword-1
-      hitSoundVolume: 1
+      hitSoundVolume: 0.5
       hitSoundMinDist: 7
       hitSoundMaxDist: 15
       hitBlockSoundbank: {fileID: 0}
@@ -279,15 +279,15 @@ MonoBehaviour:
         parent: -1
         children: 
         frameRanges:
-        - {x: 7, y: -1}
+        - {x: 10, y: -1}
         condition:
           rid: -2
         affectedByGravityMulti: 0
         value:
           rid: 1200828867698753538
         multi:
-          rid: 1200828867698753539
-        useCurve: 1
+          rid: 1200828961850130435
+        useCurve: 0
         applyCurve:
           serializedVersion: 2
           m_Curve:
@@ -337,12 +337,6 @@ MonoBehaviour:
         statReference: 1
         value: 0
         variable: 39
-    - rid: 1200828867698753539
-      type: {class: FighterStatReferenceFloatBase, ns: rwby, asm: rwby.csharp}
-      data:
-        inverse: 0
-        statReference: 0
-        value: 1
     - rid: 1200828869187207168
       type: {class: VarModifyFallSpeed, ns: rwby, asm: rwby.csharp}
       data:
@@ -385,6 +379,12 @@ MonoBehaviour:
         inverse: 0
         statReference: 0
         value: 90
+    - rid: 1200828961850130435
+      type: {class: FighterStatReferenceFloatBase, ns: rwby, asm: rwby.csharp}
+      data:
+        inverse: 0
+        statReference: 0
+        value: 1
     - rid: 2193520813467238401
       type: {class: VarChangeState, ns: rwby, asm: rwby.csharp}
       data:

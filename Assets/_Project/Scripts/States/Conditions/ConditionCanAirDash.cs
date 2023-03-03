@@ -10,5 +10,13 @@ namespace rwby
 
         [SelectImplementation((typeof(FighterStatReferenceBase<int>)))] [SerializeReference]
         public FighterStatReferenceIntBase maxAirDashes;
+
+        public IConditionVariables Copy()
+        {
+            return new ConditionCanAirDash()
+            {
+                maxAirDashes = maxAirDashes == null ? null : (FighterStatReferenceIntBase)maxAirDashes.Copy()
+            };
+        }
     }
 }

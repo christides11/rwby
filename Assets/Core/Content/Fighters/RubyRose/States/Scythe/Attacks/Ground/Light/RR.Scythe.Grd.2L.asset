@@ -25,7 +25,6 @@ MonoBehaviour:
   - rid: 2193520817874927616
   - rid: 8688056217396838433
   - rid: 8688056833868562432
-  - rid: 8688056833868562434
   - rid: 7270848428946489353
   - rid: 7270848718906589184
   - rid: 7270848718906589187
@@ -34,13 +33,16 @@ MonoBehaviour:
   - rid: 387795756708003853
   - rid: 387795983688269850
   - rid: 387795983688269853
-  - rid: 5775511522355183617
-  - rid: 5775511522355183618
   - rid: 1200828581722193920
   - rid: 1200828595729596419
   - rid: 1200828581722193923
   - rid: 1200828595729596416
   - rid: 1200828595729596417
+  - rid: 5283439287287414845
+  - rid: 5283439287287414847
+  - rid: 5283439287287414849
+  - rid: 5283439287287414850
+  - rid: 5283439287287414852
   auraRequirement: 0
   initialGroundedState: 1
   stateType: 2
@@ -626,36 +628,74 @@ MonoBehaviour:
         statReference: 0
         value: 30
         variable: 0
-    - rid: 5775511522355183617
-      type: {class: VarModifyAnimationSet, ns: rwby, asm: rwby.csharp}
+    - rid: 5283439287287414845
+      type: {class: VarExternal, ns: rwby, asm: rwby.csharp}
       data:
-        name: 
-        id: 26
-        parent: -1
-        children: 
-        frameRanges:
-        - {x: 0, y: 0}
-        condition:
-          rid: -2
-        modifyType: 1
-        wantedAnimations:
-        - animationbank: {fileID: 11400000, guid: 2f728dafc0068ab45a19c79cbfc04bdd, type: 2}
-          animation: scythe.grd.2L
-        fadeTime: 0
-    - rid: 5775511522355183618
-      type: {class: VarModifyAnimationFrame, ns: rwby, asm: rwby.csharp}
-      data:
-        name: 
-        id: 27
+        name: Try Change Moveset (Quick)
+        id: 33
         parent: -1
         children: 
         frameRanges:
         - {x: 1, y: -1}
         condition:
           rid: -2
-        modifyType: 0
-        animations: 00000000
-        frame: 1
+        asset: {fileID: 11400000, guid: db06d570605d4024f8bbbf5429f550b9, type: 2}
+    - rid: 5283439287287414847
+      type: {class: VarEmpty, ns: rwby, asm: rwby.csharp}
+      data:
+        name: Scythe
+        id: 34
+        parent: 13
+        children: 23000000
+        frameRanges: []
+        condition:
+          rid: 5283439287287414848
+    - rid: 5283439287287414848
+      type: {class: ConditionMoveset, ns: rwby, asm: rwby.csharp}
+      data:
+        inverse: 0
+        checkCurrentMovesetInstead: 1
+        moveset: 0
+    - rid: 5283439287287414849
+      type: {class: VarExternal, ns: rwby, asm: rwby.csharp}
+      data:
+        name: Try Grd Atk
+        id: 35
+        parent: 34
+        children: 
+        frameRanges:
+        - {x: 17, y: -1}
+        condition:
+          rid: -2
+        asset: {fileID: 11400000, guid: 38d47b53b1c6fa24580e163448503c28, type: 2}
+    - rid: 5283439287287414850
+      type: {class: VarEmpty, ns: rwby, asm: rwby.csharp}
+      data:
+        name: Rifle
+        id: 36
+        parent: 13
+        children: 25000000
+        frameRanges: []
+        condition:
+          rid: 5283439287287414851
+    - rid: 5283439287287414851
+      type: {class: ConditionMoveset, ns: rwby, asm: rwby.csharp}
+      data:
+        inverse: 0
+        checkCurrentMovesetInstead: 1
+        moveset: 1
+    - rid: 5283439287287414852
+      type: {class: VarExternal, ns: rwby, asm: rwby.csharp}
+      data:
+        name: Try Grd Atk
+        id: 37
+        parent: 36
+        children: 
+        frameRanges:
+        - {x: 17, y: -1}
+        condition:
+          rid: -2
+        asset: {fileID: 11400000, guid: ba688ef34edd2d84ea6a5b2e1e2af06e, type: 2}
     - rid: 7270848428946489353
       type: {class: VarRotateTowards, ns: rwby, asm: rwby.csharp}
       data:
@@ -731,7 +771,7 @@ MonoBehaviour:
         name: On Hit or Block
         id: 13
         parent: -1
-        children: 0e000000
+        children: 2200000024000000
         frameRanges: []
         condition:
           rid: 8688056833868562433
@@ -741,15 +781,3 @@ MonoBehaviour:
         inverse: 0
         hitCount: 1
         hitOrBlock: -1
-    - rid: 8688056833868562434
-      type: {class: VarExternal, ns: rwby, asm: rwby.csharp}
-      data:
-        name: Try Grd Atk
-        id: 14
-        parent: 13
-        children: 
-        frameRanges:
-        - {x: 17, y: -1}
-        condition:
-          rid: -2
-        asset: {fileID: 11400000, guid: 38d47b53b1c6fa24580e163448503c28, type: 2}

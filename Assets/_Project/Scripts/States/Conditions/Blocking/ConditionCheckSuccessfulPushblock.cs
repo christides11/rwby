@@ -10,5 +10,14 @@ namespace rwby
 
         public int checkLength;
         public bool inverse;
+
+        public IConditionVariables Copy()
+        {
+            return new ConditionCheckSuccessfulPushblock()
+            {
+                checkLength = checkLength,
+                inverse = inverse
+            };
+        }
     }
 }

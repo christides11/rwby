@@ -10,5 +10,14 @@ namespace rwby
 
         [Range(0.0f, 1.0f)] public float percentage;
         public bool inverse;
+
+        public IConditionVariables Copy()
+        {
+            return new ConditionAuraPercentage()
+            {
+                percentage = percentage,
+                inverse = inverse
+            };
+        }
     }
 }

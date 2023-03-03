@@ -41,7 +41,7 @@ namespace rwby
         }
         [SelectImplementation(typeof(IConditionVariables))] [SerializeField, SerializeReference]
         public IConditionVariables condition;
-        public IConditionVariables Condition => condition;
+         public IConditionVariables Condition { get => condition; set => condition = value; }
         
         private bool IsRectangle => shape == BoxShape.Rectangle;
         public FighterBoxType boxType;
@@ -53,5 +53,19 @@ namespace rwby
         [HideIf("IsRectangle")]
         public float radius;
         public int definitionIndex;
+
+        public IStateVariables Copy()
+        {
+            return new VarCreateBox()
+            {
+                boxType = boxType,
+                attachedTo = attachedTo,
+                shape = shape,
+                offset = offset,
+                boxExtents = boxExtents,
+                radius = radius,
+                definitionIndex = definitionIndex
+            };
+        }
     }
 }

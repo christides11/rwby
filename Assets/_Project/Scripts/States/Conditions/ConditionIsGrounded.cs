@@ -8,5 +8,13 @@ namespace rwby
         public int FunctionMap => (int)BaseStateConditionEnum.IS_GROUNDED;
 
         public bool inverse;
+
+        public IConditionVariables Copy()
+        {
+            return new ConditionIsGrounded()
+            {
+                inverse = inverse
+            };
+        }
     }
 }

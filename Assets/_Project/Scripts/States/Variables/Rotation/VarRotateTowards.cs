@@ -39,7 +39,7 @@ namespace rwby
         }
         [SelectImplementation(typeof(IConditionVariables))] [SerializeField, SerializeReference]
         public IConditionVariables condition;
-        public IConditionVariables Condition => condition;
+         public IConditionVariables Condition { get => condition; set => condition = value; }
         
         public VarRotateTowardsType rotateTowards;
         [ShowIf("rotateTowards", VarRotateTowardsType.custom)][AllowNesting]
@@ -48,5 +48,16 @@ namespace rwby
 
         [SelectImplementation((typeof(FighterStatReferenceBase<float>)))] [SerializeReference]
         public FighterStatReferenceFloatBase rotationSpeed;
+
+        public IStateVariables Copy()
+        {
+            return new VarRotateTowards()
+            {
+                rotateTowards = rotateTowards,
+                eulerAngle = eulerAngle,
+                rotateTowardsTarget = rotateTowardsTarget,
+                rotationSpeed = rotationSpeed == null ? null : (FighterStatReferenceFloatBase)rotationSpeed?.Copy()
+            };
+        }
     }
 }

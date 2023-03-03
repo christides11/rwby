@@ -151,7 +151,7 @@ namespace rwby
             FighterManager f = fighter as FighterManager;
             ConditionMoveset vars = (ConditionMoveset)variables;
 
-            bool r = f.StateManager.CurrentStateMoveset == vars.moveset;
+            bool r = vars.checkCurrentMovesetInstead ? f.FStateManager.CurrentMoveset == vars.moveset : f.StateManager.CurrentStateMoveset == vars.moveset;
             return vars.inverse ? !r : r;
         }
 
@@ -576,6 +576,36 @@ namespace rwby
             var vars = (ConditionAuraPercentage)variables;
 
             var r = ((float)f.FCombatManager.Aura / (float)f.fighterDefinition.Aura) >= vars.percentage;
+
+            return vars.inverse ? !r : r;
+        }
+
+        public static bool CheckForCollider(IFighterBase fighter, IConditionVariables variables, HnSF.StateTimeline arg3, int arg4)
+        {
+            FighterManager f = fighter as FighterManager;
+            var vars = (ConditionCheckForCollider)variables;
+
+            int hitCnt = f.Runner.GetPhysicsScene().OverlapBox(f.myTransform.position, vars.halfExtents, f.colliderHitResults, f.myTransform.rotation, vars.layerMask);
+
+            int rHitCnt = 0;
+            for(int i = 0; i < hitCnt; i++)
+            {
+                if (f.colliderHitResults[i] == f.FPhysicsManager.cc) continue;
+                rHitCnt++;
+            }
+
+            var r = rHitCnt > 0 ? true : false;
+
+            return vars.inverse ? !r : r;
+        }
+
+        public static bool CanEnemyStep(IFighterBase fighter, IConditionVariables variables, HnSF.StateTimeline arg3,
+            int arg4)
+        {
+            FighterManager f = fighter as FighterManager;
+            var vars = (ConditionCanEnemyStep)variables;
+
+            var r = f.currEnemyStep < 2;
 
             return vars.inverse ? !r : r;
         }

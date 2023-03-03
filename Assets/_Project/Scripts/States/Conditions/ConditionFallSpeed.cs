@@ -13,5 +13,15 @@ namespace rwby
         public bool absoluteValue;
         public float minValue;
         public float maxValue;
+
+        public IConditionVariables Copy()
+        {
+            return new ConditionFallSpeed()
+            {
+                absoluteValue = absoluteValue,
+                minValue = minValue,
+                maxValue = maxValue
+            };
+        }
     }
 }

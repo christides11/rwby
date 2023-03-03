@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using ExitGames.Client.Photon.StructWrapping;
@@ -1252,6 +1253,26 @@ namespace rwby
                     fm.FCombatManager.BurstMeter += vars.value.GetValue(fm);
                     break;
             }
+        }
+
+        internal static void ConserveInertia(IFighterBase fighter, IStateVariables variables, HnSF.StateTimeline stateTimeline, int frame, float frameRangePercentage)
+        {
+            FighterManager fm = (FighterManager)fighter;
+            var vars = (VarConserveInertia)variables;
+
+            fm.FPhysicsManager.conservedInertia = fm.myTransform.InverseTransformDirection(fm.FPhysicsManager.forceMovement);
+        }
+
+        internal static void ReleaseInertia(IFighterBase fighter, IStateVariables variables, HnSF.StateTimeline stateTimeline, int frame, float frameRangePercentage)
+        {
+            FighterManager fm = (FighterManager)fighter;
+            var vars = (VarReleaseInertia)variables;
+
+            if (vars.applyToMovement)
+            {
+                fm.FPhysicsManager.forceMovement = fm.myTransform.TransformDirection(fm.FPhysicsManager.conservedInertia);
+            }
+            fm.FPhysicsManager.conservedInertia = Vector3.zero;
         }
     }
 }

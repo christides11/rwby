@@ -38,9 +38,20 @@ namespace rwby
         }
         [SelectImplementation(typeof(IConditionVariables))] [SerializeField, SerializeReference]
         public IConditionVariables condition;
-        public IConditionVariables Condition => condition;
+         public IConditionVariables Condition { get => condition; set => condition = value; }
 
         public bool keepEffects;
         public bool autoIncrementEffects;
+
+        public IStateVariables Copy()
+        {
+            return new VarClearCurrentEffects()
+            {
+                frameRanges = frameRanges,
+                condition = condition.Copy(),
+                keepEffects = keepEffects,
+                autoIncrementEffects = autoIncrementEffects
+            };
+        }
     }
 }

@@ -11,5 +11,16 @@ namespace rwby
         public PlayerInputType button;
         public int offset;
         public int holdTime;
+
+        public IConditionVariables Copy()
+        {
+            return new ConditionButtonHeld()
+            {
+                inverse = inverse,
+                button = button,
+                offset = offset,
+                holdTime = holdTime
+            };
+        }
     }
 }

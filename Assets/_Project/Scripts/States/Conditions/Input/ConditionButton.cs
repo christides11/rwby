@@ -20,5 +20,18 @@ namespace rwby
         public ButtonStateType buttonState;
         public int offset;
         public int buffer;
+
+        public IConditionVariables Copy()
+        {
+            return new ConditionButton()
+            {
+                inverse = inverse,
+                checkAbilityButton = checkAbilityButton,
+                button = button,
+                buttonState = buttonState,
+                offset = offset,
+                buffer = buffer
+            };
+        }
     }
 }

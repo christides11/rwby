@@ -40,12 +40,23 @@ namespace rwby
         }
         [SelectImplementation(typeof(IConditionVariables))] [SerializeField, SerializeReference]
         public IConditionVariables condition;
-        public IConditionVariables Condition => condition;
+         public IConditionVariables Condition { get => condition; set => condition = value; }
 
         public VarModifyType modifyType;
         public VarRotateTowardsType rotateTowards;
         public bool useTargetWhenNoMovement;
         [ShowIf("rotateTowards", VarRotateTowardsType.custom)][AllowNesting]
         public Vector3 eulerAngle;
+
+        public IStateVariables Copy()
+        {
+            return new VarModifyRotation()
+            {
+                modifyType = modifyType,
+                rotateTowards = rotateTowards,
+                useTargetWhenNoMovement = useTargetWhenNoMovement,
+                eulerAngle = eulerAngle
+            };
+        }
     }
 }

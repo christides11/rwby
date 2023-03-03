@@ -8,5 +8,13 @@ namespace rwby
         public int FunctionMap => (int)BaseStateConditionEnum.NONE;
 
         public bool inverse;
+
+        public IConditionVariables Copy()
+        {
+            return new ConditionCanBurst()
+            {
+                inverse = inverse
+            };
+        }
     }
 }

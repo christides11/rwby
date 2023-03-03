@@ -49,7 +49,14 @@ namespace rwby
             foreach (var action in groundAttacks)
             {
                 action.stateTimeline.Initialize();
-                stateMap.Add(action.state.GetState(), action.stateTimeline);
+                try
+                {
+                    stateMap.Add(action.state.GetState(), action.stateTimeline);
+                }
+                catch(Exception e)
+                {
+                    Debug.LogError($"{name}:{action.name} error: {e}", action.stateTimeline);
+                }
             }
             
             foreach (var action in airAttacks)

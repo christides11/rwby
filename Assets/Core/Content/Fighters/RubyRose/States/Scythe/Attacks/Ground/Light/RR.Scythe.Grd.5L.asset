@@ -28,18 +28,21 @@ MonoBehaviour:
   - rid: 387796143482339328
   - rid: 8688056738971123715
   - rid: 8688056833868562432
-  - rid: 8688056833868562434
   - rid: 7270848428946489353
   - rid: 7270848718906589184
   - rid: 7270848718906589187
   - rid: 387795756708003851
   - rid: 387795983688269854
   - rid: 387795983688269856
-  - rid: 1200828577779548167
   - rid: 1200828715613814784
   - rid: 1200828715613814785
   - rid: 1200828892007366656
   - rid: 1200828934167986188
+  - rid: 1200828960701153283
+  - rid: 1200828964849319936
+  - rid: 1200828964849319938
+  - rid: 1200828964849319940
+  - rid: 1200828964849319942
   auraRequirement: 0
   initialGroundedState: 1
   stateType: 2
@@ -235,33 +238,6 @@ MonoBehaviour:
         modifyType: 0
         effects: 00000000
         frame: 1
-    - rid: 1200828577779548167
-      type: {class: VarChangeState, ns: rwby, asm: rwby.csharp}
-      data:
-        name: Try 5LL
-        id: 23
-        parent: 13
-        children: 
-        frameRanges:
-        - {x: 7, y: -1}
-        condition:
-          rid: -2
-        ignoreStateConditions: 0
-        ignoreAirtimeCheck: 0
-        ignoreStringUseCheck: 0
-        ignoreAuraRequirement: 0
-        checkInputSequence: 1
-        checkCondition: 0
-        overrideStateChange: 0
-        targetType: 0
-        stateMovesetID: -1
-        state:
-          rid: 1200828577779548168
-        frame: 0
-    - rid: 1200828577779548168
-      type: {class: FighterAttackStateReference, ns: rwby, asm: rwby.csharp}
-      data:
-        state: 101
     - rid: 1200828715613814784
       type: {class: VarModifyAnimationSet, ns: rwby, asm: rwby.csharp}
       data:
@@ -323,6 +299,100 @@ MonoBehaviour:
         condition:
           rid: -2
         asset: {fileID: 11400000, guid: db06d570605d4024f8bbbf5429f550b9, type: 2}
+    - rid: 1200828960701153280
+      type: {class: ConditionAnd, ns: rwby, asm: rwby.csharp}
+      data:
+        conditions:
+        - rid: 1200828960701153282
+    - rid: 1200828960701153282
+      type: {class: ConditionHitOrBlockCount, ns: rwby, asm: rwby.csharp}
+      data:
+        inverse: 0
+        hitCount: 1
+        hitOrBlock: -1
+    - rid: 1200828960701153283
+      type: {class: VarEmpty, ns: rwby, asm: rwby.csharp}
+      data:
+        name: Scythe
+        id: 28
+        parent: 13
+        children: 1d0000001e000000
+        frameRanges: []
+        condition:
+          rid: 1200828964849319939
+    - rid: 1200828964849319936
+      type: {class: VarChangeState, ns: rwby, asm: rwby.csharp}
+      data:
+        name: Try 5LL
+        id: 29
+        parent: 28
+        children: 
+        frameRanges:
+        - {x: 7, y: -1}
+        condition:
+          rid: -2
+        ignoreStateConditions: 0
+        ignoreAirtimeCheck: 0
+        ignoreStringUseCheck: 0
+        ignoreAuraRequirement: 0
+        checkInputSequence: 1
+        checkCondition: 0
+        overrideStateChange: 0
+        targetType: 0
+        stateMovesetID: -1
+        state:
+          rid: 1200828964849319937
+        frame: 0
+    - rid: 1200828964849319937
+      type: {class: FighterAttackStateReference, ns: rwby, asm: rwby.csharp}
+      data:
+        state: 101
+    - rid: 1200828964849319938
+      type: {class: VarExternal, ns: rwby, asm: rwby.csharp}
+      data:
+        name: Try Grd Atk
+        id: 30
+        parent: 28
+        children: 
+        frameRanges:
+        - {x: 7, y: -1}
+        condition:
+          rid: -2
+        asset: {fileID: 11400000, guid: 38d47b53b1c6fa24580e163448503c28, type: 2}
+    - rid: 1200828964849319939
+      type: {class: ConditionMoveset, ns: rwby, asm: rwby.csharp}
+      data:
+        inverse: 0
+        checkCurrentMovesetInstead: 1
+        moveset: 0
+    - rid: 1200828964849319940
+      type: {class: VarEmpty, ns: rwby, asm: rwby.csharp}
+      data:
+        name: Rifle
+        id: 31
+        parent: 13
+        children: 20000000
+        frameRanges: []
+        condition:
+          rid: 1200828964849319941
+    - rid: 1200828964849319941
+      type: {class: ConditionMoveset, ns: rwby, asm: rwby.csharp}
+      data:
+        inverse: 0
+        checkCurrentMovesetInstead: 1
+        moveset: 1
+    - rid: 1200828964849319942
+      type: {class: VarExternal, ns: rwby, asm: rwby.csharp}
+      data:
+        name: Try Grd Atk
+        id: 32
+        parent: 31
+        children: 
+        frameRanges:
+        - {x: 7, y: -1}
+        condition:
+          rid: -2
+        asset: {fileID: 11400000, guid: ba688ef34edd2d84ea6a5b2e1e2af06e, type: 2}
     - rid: 2193520813467238401
       type: {class: VarChangeState, ns: rwby, asm: rwby.csharp}
       data:
@@ -502,25 +572,7 @@ MonoBehaviour:
         name: On Hit or Block
         id: 13
         parent: -1
-        children: 170000000e000000
+        children: 1c0000001f000000
         frameRanges: []
         condition:
-          rid: 8688056833868562433
-    - rid: 8688056833868562433
-      type: {class: ConditionHitOrBlockCount, ns: rwby, asm: rwby.csharp}
-      data:
-        inverse: 0
-        hitCount: 1
-        hitOrBlock: -1
-    - rid: 8688056833868562434
-      type: {class: VarExternal, ns: rwby, asm: rwby.csharp}
-      data:
-        name: Try Grd Atk
-        id: 14
-        parent: 13
-        children: 
-        frameRanges:
-        - {x: 7, y: -1}
-        condition:
-          rid: -2
-        asset: {fileID: 11400000, guid: 38d47b53b1c6fa24580e163448503c28, type: 2}
+          rid: 1200828960701153280

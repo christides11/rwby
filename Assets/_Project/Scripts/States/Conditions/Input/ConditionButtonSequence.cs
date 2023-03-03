@@ -15,5 +15,19 @@ namespace rwby
         public int offset;
         public bool processSequenceButtons;
         public bool holdInput;
+
+        public IConditionVariables Copy()
+        {
+            return new ConditionButtonSequence()
+            {
+                sequence = new InputSequence()
+                {
+                    executeWindow = sequence.executeWindow,
+                    executeInputs = new List<InputDefinition>(sequence.executeInputs),
+                    sequenceWindow = sequence.sequenceWindow,
+                    sequenceInputs = new List<InputDefinition>(sequence.sequenceInputs)
+                }
+            };
+        }
     }
 }

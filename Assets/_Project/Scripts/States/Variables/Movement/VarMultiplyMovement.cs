@@ -38,8 +38,16 @@ namespace rwby
         }
         [SelectImplementation(typeof(IConditionVariables))] [SerializeField, SerializeReference]
         public IConditionVariables condition;
-        public IConditionVariables Condition => condition;
+         public IConditionVariables Condition { get => condition; set => condition = value; }
         [SelectImplementation((typeof(FighterStatReferenceBase<float>)))] [SerializeReference]
         public FighterStatReferenceFloatBase multiplier;
+
+        public IStateVariables Copy()
+        {
+            return new VarMultiplyMovement()
+            {
+                multiplier = (FighterStatReferenceFloatBase)multiplier?.Copy()
+            };
+        }
     }
 }

@@ -10,5 +10,14 @@ namespace rwby
 
         public bool inverse;
         public int valueIndex;
+
+        public IConditionVariables Copy()
+        {
+            return new ConditionWhiteboardBoolean()
+            {
+                inverse = inverse,
+                valueIndex = valueIndex
+            };
+        }
     }
 }

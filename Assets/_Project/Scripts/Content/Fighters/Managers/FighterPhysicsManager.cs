@@ -1,8 +1,6 @@
 using Fusion;
 using Fusion.KCC;
 using HnSF.Fighters;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace rwby
@@ -14,6 +12,8 @@ namespace rwby
 
         [Networked] public Vector3 forceMovement { get; set; }
         [Networked] public float forceGravity { get; set; }
+
+        [Networked] public Vector3 conservedInertia { get; set; }
 
         [SerializeField] protected FighterManager manager;
         //public FighterCC kCC;

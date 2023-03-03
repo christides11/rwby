@@ -1,0 +1,534 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7789f25d17401bc4b915ca6fcecf2a29, type: 3}
+  m_Name: RR.Rifle.Grd.82H
+  m_EditorClassIdentifier: 
+  stateName: 82H
+  useBaseState: 0
+  baseState: {fileID: 0}
+  totalFrames: 26
+  autoIncrement: 0
+  autoLoop: 0
+  autoLoopFrame: 1
+  data:
+  - rid: 2193520813467238401
+  - rid: 2193520813467238403
+  - rid: 2193520817874927616
+  - rid: 8688056217396838433
+  - rid: 8688056833868562432
+  - rid: 8688056833868562434
+  - rid: 7270848428946489353
+  - rid: 7270848718906589184
+  - rid: 7270848718906589187
+  - rid: 387795964830941184
+  - rid: 387795978025173001
+  - rid: 387795978025173002
+  - rid: 387795978025173003
+  - rid: 387795978025173007
+  auraRequirement: 0
+  initialGroundedState: 1
+  stateType: 2
+  maxUsesInString: 1
+  maxUsesPerAirtime: -1
+  selfChainable: 0
+  allowBaseStateTransitions: 1
+  inputSequence:
+    executeWindow: 3
+    executeInputs:
+    - inputType: 0
+      buttonID: 3
+      stickDirection: {x: 0, y: 0}
+      directionDeviation: 0
+    - inputType: 1
+      buttonID: 3
+      stickDirection: {x: 0, y: -1}
+      directionDeviation: 0.7
+    sequenceWindow: 8
+    sequenceInputs:
+    - inputType: 1
+      buttonID: 0
+      stickDirection: {x: 0, y: 1}
+      directionDeviation: 0.7
+  inputSequenceAsHoldInputs: 0
+  condition:
+    rid: -2
+  hitboxInfo:
+  - ID: 0
+    groundedFoldoutGroup: 1
+    groundedCounterHitFoldoutGroup: 0
+    clashLevel: 0
+    hitStateGroundedGroups: -1
+    hit:
+      groundHitState: 34
+      airHitState: 34
+      groundBounce: 0
+      wallBounce: 0
+      groundBounceForce: 0
+      wallBounceForce: 0
+      noKill: 0
+      unblockable: 0
+      hardKnockdown: 0
+      hitForceType: 0
+      hitForceRelation: 0
+      hitForceRelationOffset: {x: 0, y: 0, z: 0}
+      autolink: 0
+      gravityAutolinkPercentage: 0
+      movementAutolinkPercentage: 0
+      groundHitForce: {x: 0, y: 8, z: 20}
+      aerialHitForce: {x: 0, y: 8, z: 20}
+      pullPushMultiplier: 0
+      pullPushMaxDistance: 10
+      blockLift: 0
+      attackerHitstop: 8
+      hitstop: 8
+      hitstun: 50
+      blockstun: 30
+      untech: 50
+      initialProration: 0
+      comboProration: 0.2
+      damage: 800
+      chipDamage: 100
+      hitEffectbank: {fileID: 11400000, guid: 5d1086999fc610e4290407b33cce3ff1, type: 2}
+      hitEffect: hit1
+      blockEffectbank: {fileID: 11400000, guid: 5d1086999fc610e4290407b33cce3ff1, type: 2}
+      blockEffect: shieldhit1
+      hitSoundbank: {fileID: 11400000, guid: 2f4063bd6a5418f4a9c4e61c84752271, type: 2}
+      hitSound: hit-punch-4
+      hitSoundVolume: 0.3
+      hitSoundMinDist: 5
+      hitSoundMaxDist: 20
+      hitBlockSoundbank: {fileID: 11400000, guid: 2f4063bd6a5418f4a9c4e61c84752271, type: 2}
+      hitBlockSound: hit-guard-1
+      hitCameraShakeStrength: 1
+      blockCameraShakeStrength: 1
+      cameraShakeLength: 4
+      ignoreProration: 0
+      ignoreHitstunScaling: 0
+      ignorePushbackScaling: 0
+    counterhit:
+      groundHitState: 30
+      airHitState: 32
+      groundBounce: 0
+      wallBounce: 0
+      groundBounceForce: 0
+      wallBounceForce: 0
+      noKill: 0
+      unblockable: 0
+      hardKnockdown: 0
+      hitForceType: 0
+      hitForceRelation: 0
+      hitForceRelationOffset: {x: 0, y: 0, z: 0}
+      autolink: 0
+      gravityAutolinkPercentage: 0
+      movementAutolinkPercentage: 0
+      groundHitForce: {x: 0, y: 5, z: 20}
+      aerialHitForce: {x: 0, y: 5, z: 20}
+      pullPushMultiplier: 0
+      pullPushMaxDistance: 0
+      blockLift: 0
+      attackerHitstop: 8
+      hitstop: 8
+      hitstun: 12
+      blockstun: 12
+      untech: 300
+      initialProration: 0
+      comboProration: 0
+      damage: 350
+      chipDamage: 0
+      hitEffectbank: {fileID: 0}
+      hitEffect: 
+      blockEffectbank: {fileID: 0}
+      blockEffect: 
+      hitSoundbank: {fileID: 0}
+      hitSound: 
+      hitSoundVolume: 0
+      hitSoundMinDist: 0
+      hitSoundMaxDist: 0
+      hitBlockSoundbank: {fileID: 0}
+      hitBlockSound: 
+      hitCameraShakeStrength: 2
+      blockCameraShakeStrength: 2
+      cameraShakeLength: 8
+      ignoreProration: 0
+      ignoreHitstunScaling: 0
+      ignorePushbackScaling: 0
+  - ID: 0
+    groundedFoldoutGroup: 1
+    groundedCounterHitFoldoutGroup: 0
+    clashLevel: 0
+    hitStateGroundedGroups: -1
+    hit:
+      groundHitState: 34
+      airHitState: 34
+      groundBounce: 0
+      wallBounce: 1
+      groundBounceForce: 0
+      wallBounceForce: 15
+      noKill: 0
+      unblockable: 0
+      hardKnockdown: 0
+      hitForceType: 0
+      hitForceRelation: 0
+      hitForceRelationOffset: {x: 0, y: 0, z: 0}
+      autolink: 0
+      gravityAutolinkPercentage: 0
+      movementAutolinkPercentage: 0
+      groundHitForce: {x: 0, y: 8, z: 20}
+      aerialHitForce: {x: 0, y: 8, z: 20}
+      pullPushMultiplier: 0
+      pullPushMaxDistance: 10
+      blockLift: 0
+      attackerHitstop: 8
+      hitstop: 8
+      hitstun: 50
+      blockstun: 30
+      untech: 50
+      initialProration: 0
+      comboProration: 0.2
+      damage: 900
+      chipDamage: 100
+      hitEffectbank: {fileID: 11400000, guid: 5d1086999fc610e4290407b33cce3ff1, type: 2}
+      hitEffect: hit1
+      blockEffectbank: {fileID: 11400000, guid: 5d1086999fc610e4290407b33cce3ff1, type: 2}
+      blockEffect: shieldhit1
+      hitSoundbank: {fileID: 11400000, guid: 2f4063bd6a5418f4a9c4e61c84752271, type: 2}
+      hitSound: hit-punch-4
+      hitSoundVolume: 0.3
+      hitSoundMinDist: 5
+      hitSoundMaxDist: 20
+      hitBlockSoundbank: {fileID: 11400000, guid: 2f4063bd6a5418f4a9c4e61c84752271, type: 2}
+      hitBlockSound: hit-guard-1
+      hitCameraShakeStrength: 1
+      blockCameraShakeStrength: 1
+      cameraShakeLength: 4
+      ignoreProration: 0
+      ignoreHitstunScaling: 0
+      ignorePushbackScaling: 0
+    counterhit:
+      groundHitState: 30
+      airHitState: 32
+      groundBounce: 0
+      wallBounce: 0
+      groundBounceForce: 0
+      wallBounceForce: 0
+      noKill: 0
+      unblockable: 0
+      hardKnockdown: 0
+      hitForceType: 0
+      hitForceRelation: 0
+      hitForceRelationOffset: {x: 0, y: 0, z: 0}
+      autolink: 0
+      gravityAutolinkPercentage: 0
+      movementAutolinkPercentage: 0
+      groundHitForce: {x: 0, y: 5, z: 20}
+      aerialHitForce: {x: 0, y: 5, z: 20}
+      pullPushMultiplier: 0
+      pullPushMaxDistance: 0
+      blockLift: 0
+      attackerHitstop: 8
+      hitstop: 8
+      hitstun: 12
+      blockstun: 12
+      untech: 300
+      initialProration: 0
+      comboProration: 0
+      damage: 350
+      chipDamage: 0
+      hitEffectbank: {fileID: 0}
+      hitEffect: 
+      blockEffectbank: {fileID: 0}
+      blockEffect: 
+      hitSoundbank: {fileID: 0}
+      hitSound: 
+      hitSoundVolume: 0
+      hitSoundMinDist: 0
+      hitSoundMaxDist: 0
+      hitBlockSoundbank: {fileID: 0}
+      hitBlockSound: 
+      hitCameraShakeStrength: 2
+      blockCameraShakeStrength: 2
+      cameraShakeLength: 8
+      ignoreProration: 0
+      ignoreHitstunScaling: 0
+      ignorePushbackScaling: 0
+  throwboxInfo: []
+  hurtboxInfo:
+  - hitInvincible: 0
+    projectileInvincible: 0
+  references:
+    version: 2
+    RefIds:
+    - rid: -2
+      type: {class: , ns: , asm: }
+    - rid: 387795964830941184
+      type: {class: VarClampMovement, ns: rwby, asm: rwby.csharp}
+      data:
+        name: 
+        id: 18
+        parent: -1
+        children: 
+        frameRanges:
+        - {x: 0, y: 0}
+        condition:
+          rid: -2
+        magnitude:
+          rid: 387795964830941185
+    - rid: 387795964830941185
+      type: {class: FighterStatReferenceFloatBase, ns: rwby, asm: rwby.csharp}
+      data:
+        inverse: 0
+        statReference: 0
+        value: 1
+    - rid: 387795978025173001
+      type: {class: VarModifyFrame, ns: rwby, asm: rwby.csharp}
+      data:
+        name: 
+        id: 19
+        frameRanges:
+        - {x: 1, y: 6}
+        - {x: 8, y: -1}
+        condition:
+          rid: -2
+        modifyType: 0
+        value: 1
+        parent: -1
+        children: 
+    - rid: 387795978025173002
+      type: {class: VarIncrementChargeLevel, ns: rwby, asm: rwby.csharp}
+      data:
+        name: 
+        id: 20
+        parent: -1
+        children: 
+        frameRanges:
+        - {x: 7, y: 7}
+        condition:
+          rid: -2
+        increment: 1
+        chargePerLevel: 12
+        maxLevel: 1
+        checkAbilityButton: 0
+        button: 3
+        canHold: 0
+    - rid: 387795978025173003
+      type: {class: VarCreateBox, ns: rwby, asm: rwby.csharp}
+      data:
+        name: Hitbox (Charged)
+        id: 21
+        parent: -1
+        children: 
+        frameRanges:
+        - {x: 8, y: 10}
+        condition:
+          rid: 387795978025173006
+        boxType: 1
+        attachedTo: 0
+        shape: 0
+        offset: {x: 0, y: 1, z: -1}
+        boxExtents: {x: 1, y: 1, z: 1}
+        radius: 0
+        definitionIndex: 1
+    - rid: 387795978025173005
+      type: {class: ConditionChargeLevel, ns: rwby, asm: rwby.csharp}
+      data:
+        minLevel: 0
+        maxLevel: 0
+    - rid: 387795978025173006
+      type: {class: ConditionChargeLevel, ns: rwby, asm: rwby.csharp}
+      data:
+        minLevel: 1
+        maxLevel: 1
+    - rid: 387795978025173007
+      type: {class: VarModifySoundSet, ns: rwby, asm: rwby.csharp}
+      data:
+        name: 
+        id: 22
+        parent: -1
+        children: 
+        frameRanges:
+        - {x: 8, y: 8}
+        condition:
+          rid: -2
+        sounds:
+        - soundbank: {fileID: 11400000, guid: 2f4063bd6a5418f4a9c4e61c84752271, type: 2}
+          sound: swing13
+          parented: 0
+          offset: {x: 0, y: 0, z: 0}
+          volume: 0.2
+          minDist: 5
+          maxDist: 20
+          pitchDeviMin: 0
+          pitchDeviMax: 0
+    - rid: 2193520813467238401
+      type: {class: VarChangeState, ns: rwby, asm: rwby.csharp}
+      data:
+        name: To Idle
+        id: 0
+        parent: -1
+        children: 
+        frameRanges:
+        - {x: -1, y: -1}
+        condition:
+          rid: -2
+        ignoreStateConditions: 0
+        ignoreAirtimeCheck: 0
+        ignoreStringUseCheck: 0
+        ignoreAuraRequirement: 0
+        checkInputSequence: 0
+        checkCondition: 0
+        overrideStateChange: 0
+        targetType: 0
+        stateMovesetID: -1
+        state:
+          rid: 2193520813467238402
+        frame: 0
+    - rid: 2193520813467238402
+      type: {class: FighterCmnStateReference, ns: rwby, asm: rwby.csharp}
+      data:
+        state: 1
+    - rid: 2193520813467238403
+      type: {class: VarCreateBox, ns: rwby, asm: rwby.csharp}
+      data:
+        name: Hitbox
+        id: 1
+        parent: -1
+        children: 
+        frameRanges:
+        - {x: 8, y: 10}
+        condition:
+          rid: 387795978025173005
+        boxType: 1
+        attachedTo: 0
+        shape: 0
+        offset: {x: 0, y: 1, z: -1}
+        boxExtents: {x: 1, y: 1, z: 1}
+        radius: 0
+        definitionIndex: 0
+    - rid: 2193520817874927616
+      type: {class: VarApplyTraction, ns: rwby, asm: rwby.csharp}
+      data:
+        name: 
+        id: 2
+        parent: -1
+        children: 
+        frameRanges:
+        - {x: 5, y: -1}
+        condition:
+          rid: -2
+        traction:
+          rid: 2193520817874927617
+        applyMovement: 1
+        applyGravity: 0
+    - rid: 2193520817874927617
+      type: {class: FighterBaseStatReferenceFloat, ns: rwby, asm: rwby.csharp}
+      data:
+        inverse: 0
+        statReference: 0
+        value: 30
+        variable: 0
+    - rid: 7270848428946489353
+      type: {class: VarRotateTowards, ns: rwby, asm: rwby.csharp}
+      data:
+        name: 
+        id: 15
+        parent: -1
+        children: 
+        frameRanges:
+        - {x: 1, y: 3}
+        condition:
+          rid: -2
+        rotateTowards: 0
+        eulerAngle: {x: 0, y: 0, z: 0}
+        rotateTowardsTarget: 1
+        rotationSpeed:
+          rid: 7270848428946489354
+    - rid: 7270848428946489354
+      type: {class: FighterStatReferenceFloatBase, ns: rwby, asm: rwby.csharp}
+      data:
+        inverse: 0
+        statReference: 0
+        value: 60
+    - rid: 7270848718906589184
+      type: {class: VarSetCounterhitState, ns: rwby, asm: rwby.csharp}
+      data:
+        name: 
+        id: 16
+        parent: -1
+        children: 
+        frameRanges:
+        - {x: 1, y: 6}
+        condition:
+          rid: -2
+    - rid: 7270848718906589187
+      type: {class: VarCreateBox, ns: rwby, asm: rwby.csharp}
+      data:
+        name: Hurtbox
+        id: 17
+        parent: -1
+        children: 
+        frameRanges:
+        - {x: 1, y: -1}
+        condition:
+          rid: -2
+        boxType: 0
+        attachedTo: 0
+        shape: 0
+        offset: {x: 0, y: 1, z: 0}
+        boxExtents: {x: 0.5, y: 1, z: 0.5}
+        radius: 0
+        definitionIndex: 0
+    - rid: 8688056217396838433
+      type: {class: VarCreateBox, ns: rwby, asm: rwby.csharp}
+      data:
+        name: Colbox
+        id: 4
+        parent: -1
+        children: 
+        frameRanges:
+        - {x: 1, y: -1}
+        condition:
+          rid: -2
+        boxType: 2
+        attachedTo: 0
+        shape: 0
+        offset: {x: 0, y: 1, z: 0}
+        boxExtents: {x: 0.5, y: 1, z: 0.5}
+        radius: 0
+        definitionIndex: 0
+    - rid: 8688056833868562432
+      type: {class: VarEmpty, ns: rwby, asm: rwby.csharp}
+      data:
+        name: On Hit or Block
+        id: 13
+        parent: -1
+        children: 0e000000
+        frameRanges: []
+        condition:
+          rid: 8688056833868562433
+    - rid: 8688056833868562433
+      type: {class: ConditionHitOrBlockCount, ns: rwby, asm: rwby.csharp}
+      data:
+        inverse: 0
+        hitCount: 1
+        hitOrBlock: -1
+    - rid: 8688056833868562434
+      type: {class: VarExternal, ns: rwby, asm: rwby.csharp}
+      data:
+        name: Try Grd Atk
+        id: 14
+        parent: 13
+        children: 
+        frameRanges:
+        - {x: 7, y: -1}
+        condition:
+          rid: -2
+        asset: {fileID: 11400000, guid: ba688ef34edd2d84ea6a5b2e1e2af06e, type: 2}

@@ -38,10 +38,20 @@ namespace rwby
         }
         [SelectImplementation(typeof(IConditionVariables))] [SerializeField, SerializeReference]
         public IConditionVariables condition;
-        public IConditionVariables Condition => condition;
+         public IConditionVariables Condition { get => condition; set => condition = value; }
 
         public VarModifyType modifyType;
         public int[] animations;
         public float weight;
+
+        public IStateVariables Copy()
+        {
+            return new VarModifyAnimationWeight()
+            {
+                modifyType = modifyType,
+                animations = animations,
+                weight = weight
+            };
+        }
     }
 }
