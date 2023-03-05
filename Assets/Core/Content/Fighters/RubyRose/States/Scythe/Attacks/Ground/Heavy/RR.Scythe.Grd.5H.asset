@@ -15,7 +15,7 @@ MonoBehaviour:
   stateName: 5H
   useBaseState: 0
   baseState: {fileID: 0}
-  totalFrames: 26
+  totalFrames: 30
   autoIncrement: 1
   autoLoop: 0
   autoLoopFrame: 1
@@ -24,16 +24,25 @@ MonoBehaviour:
   - rid: 2193520813467238403
   - rid: 2193520817874927616
   - rid: 8688056217396838433
-  - rid: 8688056331001921542
-  - rid: 8688056331001921543
-  - rid: 8688056740327194626
+  - rid: 8688056738971123712
+  - rid: 387796143482339328
+  - rid: 8688056738971123715
+  - rid: 387795983688269854
   - rid: 8688056833868562432
-  - rid: 8688056833868562434
   - rid: 7270848428946489353
   - rid: 7270848718906589184
   - rid: 7270848718906589187
-  - rid: 387795983688269862
-  - rid: 387795983688269863
+  - rid: 387795756708003851
+  - rid: 387795983688269856
+  - rid: 1200828715613814784
+  - rid: 1200828715613814785
+  - rid: 1200828892007366656
+  - rid: 1200828934167986188
+  - rid: 1200828960701153283
+  - rid: 1200828964849319936
+  - rid: 1200828964849319938
+  - rid: 1200828964849319940
+  - rid: 1200828964849319942
   auraRequirement: 0
   initialGroundedState: 1
   stateType: 2
@@ -61,7 +70,7 @@ MonoBehaviour:
     hitStateGroundedGroups: -1
     hit:
       groundHitState: 30
-      airHitState: 34
+      airHitState: 32
       groundBounce: 0
       wallBounce: 0
       groundBounceForce: 0
@@ -76,33 +85,33 @@ MonoBehaviour:
       gravityAutolinkPercentage: 0
       movementAutolinkPercentage: 0
       groundHitForce: {x: 0, y: 0, z: 5}
-      aerialHitForce: {x: 0, y: 3, z: 2}
+      aerialHitForce: {x: 0, y: 4, z: 1}
       pullPushMultiplier: 0
       pullPushMaxDistance: 10
       blockLift: 0
       attackerHitstop: 4
       hitstop: 4
-      hitstun: 30
-      blockstun: 30
-      untech: 30
+      hitstun: 25
+      blockstun: 18
+      untech: 25
       initialProration: 0
       comboProration: 0.2
       damage: 500
       chipDamage: 100
       hitEffectbank: {fileID: 11400000, guid: 5d1086999fc610e4290407b33cce3ff1, type: 2}
-      hitEffect: hit1
+      hitEffect: hit4
       blockEffectbank: {fileID: 11400000, guid: 5d1086999fc610e4290407b33cce3ff1, type: 2}
       blockEffect: shieldhit1
       hitSoundbank: {fileID: 11400000, guid: 2f4063bd6a5418f4a9c4e61c84752271, type: 2}
       hitSound: hit-sword-1
-      hitSoundVolume: 0.2
-      hitSoundMinDist: 5
-      hitSoundMaxDist: 20
+      hitSoundVolume: 0.35
+      hitSoundMinDist: 7
+      hitSoundMaxDist: 15
       hitBlockSoundbank: {fileID: 11400000, guid: 2f4063bd6a5418f4a9c4e61c84752271, type: 2}
-      hitBlockSound: 
-      hitCameraShakeStrength: 1
-      blockCameraShakeStrength: 1
-      cameraShakeLength: 4
+      hitBlockSound: hit-guard-1
+      hitCameraShakeStrength: 0
+      blockCameraShakeStrength: 0
+      cameraShakeLength: 0
       ignoreProration: 0
       ignoreHitstunScaling: 0
       ignorePushbackScaling: 0
@@ -123,7 +132,7 @@ MonoBehaviour:
       gravityAutolinkPercentage: 0
       movementAutolinkPercentage: 0
       groundHitForce: {x: 0, y: 0, z: 5}
-      aerialHitForce: {x: 0, y: 3, z: 2}
+      aerialHitForce: {x: 0, y: 4, z: 1}
       pullPushMultiplier: 0
       pullPushMaxDistance: 0
       blockLift: 0
@@ -140,15 +149,15 @@ MonoBehaviour:
       hitEffect: 
       blockEffectbank: {fileID: 0}
       blockEffect: 
-      hitSoundbank: {fileID: 0}
+      hitSoundbank: {fileID: 11400000, guid: 2f4063bd6a5418f4a9c4e61c84752271, type: 2}
       hitSound: 
       hitSoundVolume: 0
       hitSoundMinDist: 0
       hitSoundMaxDist: 0
-      hitBlockSoundbank: {fileID: 0}
+      hitBlockSoundbank: {fileID: 11400000, guid: 2f4063bd6a5418f4a9c4e61c84752271, type: 2}
       hitBlockSound: 
-      hitCameraShakeStrength: 2
-      blockCameraShakeStrength: 2
+      hitCameraShakeStrength: 3
+      blockCameraShakeStrength: 3
       cameraShakeLength: 8
       ignoreProration: 0
       ignoreHitstunScaling: 0
@@ -162,34 +171,224 @@ MonoBehaviour:
     RefIds:
     - rid: -2
       type: {class: , ns: , asm: }
-    - rid: 387795983688269862
+    - rid: 387795756708003851
+      type: {class: VarModifySoundSet, ns: rwby, asm: rwby.csharp}
+      data:
+        name: 
+        id: 18
+        parent: -1
+        children: 
+        frameRanges:
+        - {x: 6, y: 6}
+        condition:
+          rid: -2
+        sounds:
+        - soundbank: {fileID: 11400000, guid: 46cf32b8cf1903a428cb8802d2539eca, type: 2}
+          sound: swing14
+          parented: 1
+          offset: {x: 0, y: 0, z: 0}
+          volume: 0.3
+          minDist: 10
+          maxDist: 30
+          pitchDeviMin: 0
+          pitchDeviMax: 0
+    - rid: 387795983688269854
       type: {class: VarEmpty, ns: rwby, asm: rwby.csharp}
       data:
         name: On Hit
-        id: 18
+        id: 19
         parent: -1
-        children: 13000000
+        children: 14000000
         frameRanges: []
         condition:
-          rid: 387795983688269864
-    - rid: 387795983688269863
+          rid: 387795983688269855
+    - rid: 387795983688269855
+      type: {class: ConditionHitOrBlockCount, ns: rwby, asm: rwby.csharp}
+      data:
+        inverse: 0
+        hitCount: 1
+        hitOrBlock: 1
+    - rid: 387795983688269856
       type: {class: VarExternal, ns: rwby, asm: rwby.csharp}
       data:
         name: Try Jump
-        id: 19
-        parent: 18
+        id: 20
+        parent: 19
         children: 
         frameRanges:
         - {x: 7, y: -1}
         condition:
           rid: -2
         asset: {fileID: 11400000, guid: f103f0d58e560f448a4431a38a96fb76, type: 2}
-    - rid: 387795983688269864
+    - rid: 387796115928383488
+      type: {class: FighterBoneReferenceRaw, ns: rwby, asm: rwby.csharp}
+      data:
+        value: 1
+    - rid: 387796143482339328
+      type: {class: VarModifyEffectFrame, ns: rwby, asm: rwby.csharp}
+      data:
+        name: 
+        id: 22
+        parent: -1
+        children: 
+        frameRanges:
+        - {x: -1, y: -1}
+        condition:
+          rid: -2
+        modifyType: 0
+        effects: 00000000
+        frame: 1
+    - rid: 1200828715613814784
+      type: {class: VarModifyAnimationSet, ns: rwby, asm: rwby.csharp}
+      data:
+        name: 
+        id: 24
+        parent: -1
+        children: 
+        frameRanges:
+        - {x: 0, y: 0}
+        condition:
+          rid: -2
+        modifyType: 1
+        wantedAnimations:
+        - animationbank: {fileID: 11400000, guid: 2f728dafc0068ab45a19c79cbfc04bdd, type: 2}
+          animation: scythe.grd.5L
+        fadeTime: 0
+    - rid: 1200828715613814785
+      type: {class: VarModifyAnimationFrame, ns: rwby, asm: rwby.csharp}
+      data:
+        name: 
+        id: 25
+        parent: -1
+        children: 
+        frameRanges:
+        - {x: 1, y: 6}
+        condition:
+          rid: -2
+        modifyType: 0
+        animations: 00000000
+        frame: 1
+    - rid: 1200828892007366656
+      type: {class: VarClampMovement, ns: rwby, asm: rwby.csharp}
+      data:
+        name: 
+        id: 26
+        parent: -1
+        children: 
+        frameRanges:
+        - {x: 0, y: 0}
+        condition:
+          rid: -2
+        magnitude:
+          rid: 1200828892007366657
+    - rid: 1200828892007366657
+      type: {class: FighterStatReferenceFloatBase, ns: rwby, asm: rwby.csharp}
+      data:
+        inverse: 0
+        statReference: 0
+        value: 10
+    - rid: 1200828934167986188
+      type: {class: VarExternal, ns: rwby, asm: rwby.csharp}
+      data:
+        name: Try Change Moveset (Quick)
+        id: 27
+        parent: -1
+        children: 
+        frameRanges:
+        - {x: 1, y: -1}
+        condition:
+          rid: -2
+        asset: {fileID: 11400000, guid: db06d570605d4024f8bbbf5429f550b9, type: 2}
+    - rid: 1200828960701153280
+      type: {class: ConditionAnd, ns: rwby, asm: rwby.csharp}
+      data:
+        conditions:
+        - rid: 1200828960701153282
+    - rid: 1200828960701153282
       type: {class: ConditionHitOrBlockCount, ns: rwby, asm: rwby.csharp}
       data:
         inverse: 0
         hitCount: 1
-        hitOrBlock: 1
+        hitOrBlock: -1
+    - rid: 1200828960701153283
+      type: {class: VarEmpty, ns: rwby, asm: rwby.csharp}
+      data:
+        name: Scythe
+        id: 28
+        parent: 13
+        children: 1d0000001e000000
+        frameRanges: []
+        condition:
+          rid: 1200828964849319939
+    - rid: 1200828964849319936
+      type: {class: VarChangeState, ns: rwby, asm: rwby.csharp}
+      data:
+        name: Try 5HH
+        id: 29
+        parent: 28
+        children: 
+        frameRanges:
+        - {x: 10, y: -1}
+        condition:
+          rid: -2
+        ignoreStateConditions: 0
+        ignoreAirtimeCheck: 0
+        ignoreStringUseCheck: 0
+        ignoreAuraRequirement: 0
+        checkInputSequence: 1
+        checkCondition: 0
+        overrideStateChange: 0
+        targetType: 0
+        stateMovesetID: -1
+        state:
+          rid: 5283439332687872001
+        frame: 0
+    - rid: 1200828964849319938
+      type: {class: VarExternal, ns: rwby, asm: rwby.csharp}
+      data:
+        name: Try Grd Atk
+        id: 30
+        parent: 28
+        children: 
+        frameRanges:
+        - {x: 10, y: -1}
+        condition:
+          rid: -2
+        asset: {fileID: 11400000, guid: 38d47b53b1c6fa24580e163448503c28, type: 2}
+    - rid: 1200828964849319939
+      type: {class: ConditionMoveset, ns: rwby, asm: rwby.csharp}
+      data:
+        inverse: 0
+        checkCurrentMovesetInstead: 1
+        moveset: 0
+    - rid: 1200828964849319940
+      type: {class: VarEmpty, ns: rwby, asm: rwby.csharp}
+      data:
+        name: Rifle
+        id: 31
+        parent: 13
+        children: 20000000
+        frameRanges: []
+        condition:
+          rid: 1200828964849319941
+    - rid: 1200828964849319941
+      type: {class: ConditionMoveset, ns: rwby, asm: rwby.csharp}
+      data:
+        inverse: 0
+        checkCurrentMovesetInstead: 1
+        moveset: 1
+    - rid: 1200828964849319942
+      type: {class: VarExternal, ns: rwby, asm: rwby.csharp}
+      data:
+        name: Try Grd Atk
+        id: 32
+        parent: 31
+        children: 
+        frameRanges:
+        - {x: 10, y: -1}
+        condition:
+          rid: -2
+        asset: {fileID: 11400000, guid: ba688ef34edd2d84ea6a5b2e1e2af06e, type: 2}
     - rid: 2193520813467238401
       type: {class: VarChangeState, ns: rwby, asm: rwby.csharp}
       data:
@@ -243,7 +442,7 @@ MonoBehaviour:
         parent: -1
         children: 
         frameRanges:
-        - {x: 4, y: -1}
+        - {x: 1, y: -1}
         condition:
           rid: -2
         traction:
@@ -257,6 +456,10 @@ MonoBehaviour:
         statReference: 0
         value: 30
         variable: 0
+    - rid: 5283439332687872001
+      type: {class: FighterAttackStateReference, ns: rwby, asm: rwby.csharp}
+      data:
+        state: 110
     - rid: 7270848428946489353
       type: {class: VarRotateTowards, ns: rwby, asm: rwby.csharp}
       data:
@@ -326,83 +529,50 @@ MonoBehaviour:
         boxExtents: {x: 0.5, y: 1, z: 0.5}
         radius: 0
         definitionIndex: 0
-    - rid: 8688056331001921542
-      type: {class: VarModifyAnimationSet, ns: rwby, asm: rwby.csharp}
+    - rid: 8688056738971123712
+      type: {class: VarModifyEffectSet, ns: rwby, asm: rwby.csharp}
       data:
         name: 
-        id: 5
+        id: 7
         parent: -1
         children: 
         frameRanges:
-        - {x: 0, y: 0}
+        - {x: 6, y: 6}
         condition:
           rid: -2
         modifyType: 1
-        wantedAnimations:
-        - animationbank: {fileID: 11400000, guid: 2f728dafc0068ab45a19c79cbfc04bdd, type: 2}
-          animation: scythe.grd.5H
-        fadeTime: 0
-    - rid: 8688056331001921543
-      type: {class: VarModifyAnimationFrame, ns: rwby, asm: rwby.csharp}
+        wantedEffects:
+        - effectbank: {fileID: 11400000, guid: 6815e44ec9f5dc842a65867c5eb910cc, type: 2}
+          effect: rr.s.grd.5L
+          parent:
+            rid: 387796115928383488
+          offset: {x: 0, y: 1, z: 0}
+          rotation: {x: 0, y: 0, z: 0}
+          scale: {x: 1, y: 1, z: 1}
+          isTemporary: 1
+          hitstopAffected: 1
+        doNotAddToSet: 0
+        OffsetStartAtFighter: 0
+    - rid: 8688056738971123715
+      type: {class: VarClearCurrentEffects, ns: rwby, asm: rwby.csharp}
       data:
         name: 
-        id: 6
+        id: 9
         parent: -1
         children: 
         frameRanges:
-        - {x: 1, y: 4}
-        - {x: 6, y: -1}
+        - {x: -2, y: -2}
         condition:
           rid: -2
-        modifyType: 0
-        animations: 00000000
-        frame: 1
-    - rid: 8688056740327194626
-      type: {class: VarModifySoundSet, ns: rwby, asm: rwby.csharp}
-      data:
-        name: 
-        id: 10
-        parent: -1
-        children: 
-        frameRanges:
-        - {x: 1, y: 1}
-        condition:
-          rid: -2
-        sounds:
-        - soundbank: {fileID: 11400000, guid: 2f4063bd6a5418f4a9c4e61c84752271, type: 2}
-          sound: swing1
-          parented: 1
-          offset: {x: 0, y: 0, z: 0}
-          volume: 1
-          minDist: 5
-          maxDist: 20
-          pitchDeviMin: 0
-          pitchDeviMax: 0
+        keepEffects: 1
+        autoIncrementEffects: 1
     - rid: 8688056833868562432
       type: {class: VarEmpty, ns: rwby, asm: rwby.csharp}
       data:
         name: On Hit or Block
         id: 13
         parent: -1
-        children: 0e000000
+        children: 1c0000001f000000
         frameRanges: []
         condition:
-          rid: 8688056833868562433
-    - rid: 8688056833868562433
-      type: {class: ConditionHitOrBlockCount, ns: rwby, asm: rwby.csharp}
-      data:
-        inverse: 0
-        hitCount: 1
-        hitOrBlock: -1
-    - rid: 8688056833868562434
-      type: {class: VarExternal, ns: rwby, asm: rwby.csharp}
-      data:
-        name: Try Grd Atk
-        id: 14
-        parent: 13
-        children: 
-        frameRanges:
-        - {x: 7, y: -1}
-        condition:
-          rid: -2
-        asset: {fileID: 11400000, guid: 38d47b53b1c6fa24580e163448503c28, type: 2}
+          rid: 1200828960701153280

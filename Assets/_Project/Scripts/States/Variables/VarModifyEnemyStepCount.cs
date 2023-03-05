@@ -3,8 +3,8 @@ using UnityEngine;
 
 namespace rwby
 {
-    [StateVariable("ECB/Set ECB")]
-    public struct VarSetECB : IStateVariables
+    [StateVariable("Modify Enemy Step Count")]
+    public struct VarModifyEnemyStepCount : IStateVariables
     {
         public string name;
         public string Name
@@ -36,23 +36,20 @@ namespace rwby
             get => frameRanges;
             set => frameRanges = value;
         }
-        [SelectImplementation(typeof(IConditionVariables))] [SerializeField, SerializeReference]
+        [SelectImplementation(typeof(IConditionVariables))]
+        [SerializeField, SerializeReference]
         public IConditionVariables condition;
-         public IConditionVariables Condition { get => condition; set => condition = value; }
+        public IConditionVariables Condition { get => condition; set => condition = value; }
 
-        public float ecbCenter;
-        public float ecbRadius;
-        public float ecbHeight;
+        public VarModifyType modifyType;
+        public int value;
 
         public IStateVariables Copy()
         {
-            return new VarSetECB()
+            return new VarModifyJumpCount()
             {
-                frameRanges = frameRanges,
-                condition = condition?.Copy(),
-                ecbCenter = ecbCenter,
-                ecbRadius = ecbRadius,
-                ecbHeight = ecbHeight,
+                modifyType = modifyType,
+                value = value
             };
         }
     }

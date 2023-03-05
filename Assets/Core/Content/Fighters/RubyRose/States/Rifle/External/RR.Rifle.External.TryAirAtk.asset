@@ -28,6 +28,10 @@ MonoBehaviour:
       type: {class: FighterAttackStateReference, ns: rwby, asm: rwby.csharp}
       data:
         state: 126
+    - rid: 5283439354918469639
+      type: {class: FighterAttackStateReference, ns: rwby, asm: rwby.csharp}
+      data:
+        state: 131
     - rid: 6951768528003006472
       type: {class: VarChangeStateList, ns: rwby, asm: rwby.csharp}
       data:
@@ -42,6 +46,9 @@ MonoBehaviour:
         checkInputSequence: 1
         checkCondition: 1
         states:
+        - movesetID: -1
+          state:
+            rid: 5283439354918469639
         - movesetID: -1
           state:
             rid: 1200828981955002369

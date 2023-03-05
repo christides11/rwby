@@ -28,6 +28,7 @@ MonoBehaviour:
   - rid: 7270848885102739461
   - rid: 387796025889783858
   - rid: 387796025889783860
+  - rid: 5283439354918469646
   auraRequirement: 0
   initialGroundedState: 2
   stateType: 1
@@ -64,6 +65,8 @@ MonoBehaviour:
     - rid: 387796025889783859
       type: {class: ConditionMoveset, ns: rwby, asm: rwby.csharp}
       data:
+        inverse: 0
+        checkCurrentMovesetInstead: 0
         moveset: 2
     - rid: 387796025889783860
       type: {class: VarExternal, ns: rwby, asm: rwby.csharp}
@@ -110,6 +113,20 @@ MonoBehaviour:
         absoluteValue: 0
         minValue: -100
         maxValue: 5
+    - rid: 5283439354918469646
+      type: {class: VarSetECB, ns: rwby, asm: rwby.csharp}
+      data:
+        name: 
+        id: 10
+        parent: -1
+        children: 
+        frameRanges:
+        - {x: 0, y: 0}
+        condition:
+          rid: -2
+        ecbCenter: 0.9
+        ecbRadius: 0.35
+        ecbHeight: 1.8
     - rid: 7270848885102739461
       type: {class: VarExternal, ns: rwby, asm: rwby.csharp}
       data:
@@ -153,6 +170,8 @@ MonoBehaviour:
     - rid: 8688056409313247235
       type: {class: ConditionMoveset, ns: rwby, asm: rwby.csharp}
       data:
+        inverse: 0
+        checkCurrentMovesetInstead: 0
         moveset: 0
     - rid: 8688056409313247237
       type: {class: VarExternal, ns: rwby, asm: rwby.csharp}
@@ -179,4 +198,6 @@ MonoBehaviour:
     - rid: 8688056409313247239
       type: {class: ConditionMoveset, ns: rwby, asm: rwby.csharp}
       data:
+        inverse: 0
+        checkCurrentMovesetInstead: 0
         moveset: 1

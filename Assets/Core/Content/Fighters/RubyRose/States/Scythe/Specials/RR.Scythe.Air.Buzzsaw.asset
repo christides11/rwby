@@ -35,6 +35,7 @@ MonoBehaviour:
   - rid: 7270848729635094541
   - rid: 8688056342057058320
   - rid: 387795891450544161
+  - rid: 5283439354918469634
   auraRequirement: 0
   initialGroundedState: 2
   stateType: 2
@@ -182,20 +183,32 @@ MonoBehaviour:
         sounds:
         - soundbank: {fileID: 11400000, guid: 46cf32b8cf1903a428cb8802d2539eca, type: 2}
           sound: swing15
-          parented: 0
+          parented: 1
           offset: {x: 0, y: 0, z: 0}
           volume: 0.3
           minDist: 5
           maxDist: 20
           pitchDeviMin: 0
           pitchDeviMax: 0
+    - rid: 5283439354918469634
+      type: {class: VarExternal, ns: rwby, asm: rwby.csharp}
+      data:
+        name: Try Enemy Step
+        id: 17
+        parent: 12
+        children: 
+        frameRanges:
+        - {x: 5, y: -1}
+        condition:
+          rid: -2
+        asset: {fileID: 11400000, guid: a8844c3d05bce98469f86710807ea33d, type: 2}
     - rid: 7270848729635094528
       type: {class: VarEmpty, ns: rwby, asm: rwby.csharp}
       data:
         name: On Hit
         id: 12
         parent: -1
-        children: 0d0000000e000000
+        children: 110000000d0000000e000000
         frameRanges: []
         condition:
           rid: 7270848729635094529

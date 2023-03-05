@@ -9,6 +9,7 @@ namespace Fusion.KCC
 		public Vector3                 Position;
 		public float                   Radius;
 		public float                   Height;
+		public float				   Offset;
 		public float                   Extent;
 		public LayerMask               LayerMask;
 		public QueryTriggerInteraction TriggerInteraction;

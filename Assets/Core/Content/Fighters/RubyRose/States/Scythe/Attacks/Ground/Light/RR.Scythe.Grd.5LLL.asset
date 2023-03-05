@@ -27,8 +27,6 @@ MonoBehaviour:
   - rid: 8688056738971123712
   - rid: 387796143482339328
   - rid: 8688056738971123715
-  - rid: 8688056833868562432
-  - rid: 8688056833868562434
   - rid: 7270848428946489353
   - rid: 7270848718906589184
   - rid: 7270848718906589187
@@ -40,6 +38,11 @@ MonoBehaviour:
   - rid: 1200828778329669634
   - rid: 1200828778329669637
   - rid: 1200828778329669639
+  - rid: 5283439339132682245
+  - rid: 5283439341301399552
+  - rid: 5283439341301399554
+  - rid: 5283439341301399556
+  - rid: 5283439341301399557
   auraRequirement: 0
   initialGroundedState: 1
   stateType: 2
@@ -298,7 +301,7 @@ MonoBehaviour:
         name: On Hit
         id: 19
         parent: -1
-        children: 14000000
+        children: 140000001d0000001e000000
         frameRanges: []
         condition:
           rid: 387795983688269855
@@ -494,6 +497,74 @@ MonoBehaviour:
         statReference: 0
         value: 30
         variable: 0
+    - rid: 5283439339132682245
+      type: {class: VarExternal, ns: rwby, asm: rwby.csharp}
+      data:
+        name: Try Change Moveset (Quick)
+        id: 28
+        parent: -1
+        children: 
+        frameRanges:
+        - {x: 1, y: -1}
+        condition:
+          rid: -2
+        asset: {fileID: 11400000, guid: db06d570605d4024f8bbbf5429f550b9, type: 2}
+    - rid: 5283439341301399552
+      type: {class: VarEmpty, ns: rwby, asm: rwby.csharp}
+      data:
+        name: Scythe
+        id: 29
+        parent: 19
+        children: 1f000000
+        frameRanges: []
+        condition:
+          rid: 5283439341301399553
+    - rid: 5283439341301399553
+      type: {class: ConditionMoveset, ns: rwby, asm: rwby.csharp}
+      data:
+        inverse: 0
+        checkCurrentMovesetInstead: 1
+        moveset: 0
+    - rid: 5283439341301399554
+      type: {class: VarEmpty, ns: rwby, asm: rwby.csharp}
+      data:
+        name: Rifle
+        id: 30
+        parent: 19
+        children: 20000000
+        frameRanges: []
+        condition:
+          rid: 5283439341301399555
+    - rid: 5283439341301399555
+      type: {class: ConditionMoveset, ns: rwby, asm: rwby.csharp}
+      data:
+        inverse: 0
+        checkCurrentMovesetInstead: 1
+        moveset: 1
+    - rid: 5283439341301399556
+      type: {class: VarExternal, ns: rwby, asm: rwby.csharp}
+      data:
+        name: Try Grd Atk
+        id: 31
+        parent: 29
+        children: 
+        frameRanges:
+        - {x: 7, y: -1}
+        condition:
+          rid: -2
+        asset: {fileID: 11400000, guid: 38d47b53b1c6fa24580e163448503c28, type: 2}
+    - rid: 5283439341301399557
+      type: {class: VarExternal, ns: rwby, asm: rwby.csharp}
+      data:
+        name: Try Grd Atk
+        id: 32
+        parent: 30
+        children: 
+        frameRanges:
+        - {x: 7, y: -1}
+        condition:
+          rid: -2
+        asset: {fileID: 11400000, guid: ba688ef34edd2d84ea6a5b2e1e2af06e, type: 2}
     - rid: 7270848428946489353
       type: {class: VarRotateTowards, ns: rwby, asm: rwby.csharp}
       data:
@@ -583,7 +654,8 @@ MonoBehaviour:
           offset: {x: 0, y: 0, z: 0}
           rotation: {x: 0, y: 0, z: 0}
           scale: {x: 0, y: 0, z: 0}
-          autoIncrement: 0
+          isTemporary: 0
+          hitstopAffected: 0
         doNotAddToSet: 0
         OffsetStartAtFighter: 0
     - rid: 8688056738971123715
@@ -599,31 +671,3 @@ MonoBehaviour:
           rid: -2
         keepEffects: 1
         autoIncrementEffects: 1
-    - rid: 8688056833868562432
-      type: {class: VarEmpty, ns: rwby, asm: rwby.csharp}
-      data:
-        name: On Hit or Block
-        id: 13
-        parent: -1
-        children: 0e000000
-        frameRanges: []
-        condition:
-          rid: 8688056833868562433
-    - rid: 8688056833868562433
-      type: {class: ConditionHitOrBlockCount, ns: rwby, asm: rwby.csharp}
-      data:
-        inverse: 0
-        hitCount: 1
-        hitOrBlock: -1
-    - rid: 8688056833868562434
-      type: {class: VarExternal, ns: rwby, asm: rwby.csharp}
-      data:
-        name: Try Grd Atk
-        id: 14
-        parent: 13
-        children: 
-        frameRanges:
-        - {x: 7, y: -1}
-        condition:
-          rid: -2
-        asset: {fileID: 11400000, guid: 38d47b53b1c6fa24580e163448503c28, type: 2}

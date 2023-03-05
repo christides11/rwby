@@ -26,10 +26,12 @@ MonoBehaviour:
   - rid: 8688056409313247245
   - rid: 8688056833868562435
   - rid: 7270848885102739464
+  - rid: 5283439354918469647
   auraRequirement: 0
   initialGroundedState: 2
   stateType: 1
   maxUsesInString: -1
+  maxUsesPerAirtime: -1
   selfChainable: 0
   allowBaseStateTransitions: 1
   inputSequence:
@@ -50,6 +52,20 @@ MonoBehaviour:
     RefIds:
     - rid: -2
       type: {class: , ns: , asm: }
+    - rid: 5283439354918469647
+      type: {class: VarSetECB, ns: rwby, asm: rwby.csharp}
+      data:
+        name: 
+        id: 7
+        parent: -1
+        children: 
+        frameRanges:
+        - {x: 0, y: 0}
+        condition:
+          rid: -2
+        ecbCenter: 0.9
+        ecbRadius: 0.35
+        ecbHeight: 1.8
     - rid: 7270848885102739462
       type: {class: VarEmpty, ns: rwby, asm: rwby.csharp}
       data:
@@ -63,6 +79,8 @@ MonoBehaviour:
     - rid: 7270848885102739463
       type: {class: ConditionMoveset, ns: rwby, asm: rwby.csharp}
       data:
+        inverse: 0
+        checkCurrentMovesetInstead: 0
         moveset: 1
     - rid: 7270848885102739464
       type: {class: VarExternal, ns: rwby, asm: rwby.csharp}
@@ -107,6 +125,8 @@ MonoBehaviour:
     - rid: 8688056409313247244
       type: {class: ConditionMoveset, ns: rwby, asm: rwby.csharp}
       data:
+        inverse: 0
+        checkCurrentMovesetInstead: 0
         moveset: 0
     - rid: 8688056409313247245
       type: {class: VarExternal, ns: rwby, asm: rwby.csharp}

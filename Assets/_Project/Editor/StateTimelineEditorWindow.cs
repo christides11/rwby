@@ -1,7 +1,5 @@
-using System.Collections;
-using System.Collections.Generic;
+using System;
 using UnityEngine;
-using UnityEngine.UIElements;
 
 namespace rwby
 {
@@ -10,7 +8,7 @@ namespace rwby
         public static StateTimelineEditorWindow OpenWindow(StateTimeline stateTimeline)
         {
             StateTimelineEditorWindow wnd = CreateWindow<StateTimelineEditorWindow>();
-            wnd.titleContent = new GUIContent("State Timeline");
+            wnd.titleContent = new GUIContent(String.IsNullOrEmpty(stateTimeline.stateName) ? "State Timeline" : stateTimeline.stateName);
             wnd.minSize = new Vector2(400, 300);
             wnd.stateTimeline = stateTimeline;
             wnd.RefreshAll(true);

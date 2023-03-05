@@ -75,6 +75,7 @@ namespace rwby
             this.ecbRadius = ecbRadius;
             this.ecbHeight = ecbHeight;
             //kCC.Motor.SetCapsuleDimensions(ecbRadius, ecbHeight, ecbCenter);
+            kcc.SetShape(EKCCShape.Capsule, ecbRadius, ecbHeight, ecbCenter);
             localECBOffset = this.ecbOffset;
             localECBRadius = this.ecbRadius;
             localECBHeight = this.ecbHeight;
@@ -83,6 +84,7 @@ namespace rwby
         public void SnapECB()
         {
             Vector3 newECBPosition = transform.position + new Vector3(0, ecbOffset - (ecbHeight/2.0f), 0);
+            kcc.SetPosition(newECBPosition);//.SetShape(EKCCShape.Capsule, 0, 0, newECBPosition);
             //kCC.Motor.SetPosition(newECBPosition);
         }
 
@@ -93,6 +95,7 @@ namespace rwby
 
         public void SetPosition(Vector3 position, bool bypassInterpolation = true)
         {
+            kcc.SetPosition(position);
             //kCC.Motor.SetPosition(position, bypassInterpolation);
         }
 
@@ -128,7 +131,9 @@ namespace rwby
 
         public void Freeze()
         {
-            //kCC.SetMovement(Vector3.zero, 0);
+            kcc.SetInputDirection(Vector3.zero);
+            kcc.SetKinematicVelocity(Vector3.zero);
+            kcc.SetDynamicVelocity(Vector3.zero);
         }
 
         public void ResetForces()

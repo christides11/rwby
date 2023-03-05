@@ -114,7 +114,7 @@ namespace rwby
 
         public Transform[] boneRefs;
 
-        [Networked] public int currEnemyStep { get; set; }
+        [Networked] public int CurrentEnemyStep { get; set; }
         public Collider[] colliderHitResults = new Collider[8];
 
         [Header("FOOTSTEP SOUNDS")]
@@ -434,6 +434,7 @@ namespace rwby
 
         public virtual void ResetVariablesOnGround()
         {
+            CurrentEnemyStep = 0;
             CurrentAirDash = 0;
             CurrentJump = 0;
             FPhysicsManager.forceGravity = 0;

@@ -599,9 +599,9 @@ namespace Fusion.KCC
 		/// </summary>
 		public void SetPosition(Vector3 position)
 		{
-			if (HasAnyAuthority == false)
+			/*if (HasAnyAuthority == false)
 				return;
-
+			*/
 			KCCData data = _renderData;
 
 			data.BasePosition       = position;
@@ -676,15 +676,16 @@ namespace Fusion.KCC
 	    /// <item><description>Void - Skips internal physics query, collider is despawned, processors are executed.</description></item>
 	    /// </list>
 		/// </summary>
-		public void SetShape(EKCCShape shape, float radius = 0.0f, float height = 0.0f)
+		public void SetShape(EKCCShape shape, float radius = 0.0f, float height = 0.0f, float Offset = 0.0f)
 		{
-			if (HasAnyAuthority == false)
+			/*if (HasAnyAuthority == false)
 				return;
-
+			*/
 			_settings.Shape = shape;
 
 			if (radius > 0.0f) { _settings.Radius = radius; }
 			if (height > 0.0f) { _settings.Height = height; }
+			_settings.Offset = Offset;
 
 			RefreshCollider();
 		}
@@ -728,6 +729,13 @@ namespace Fusion.KCC
 				return;
 
 			_settings.Height = height;
+
+			RefreshCollider();
+		}
+
+		public void SetCenter(float center)
+		{
+			_settings.Offset = center;
 
 			RefreshCollider();
 		}
@@ -2180,7 +2188,7 @@ namespace Fusion.KCC
 
 			if (_settings.CollisionLayerMask != 0 && _collider.IsSpawned == true)
 			{
-				OverlapCapsule(_extendedOverlapInfo, data, data.TargetPosition, _settings.Radius, _settings.Height, _settings.Radius, _settings.CollisionLayerMask, QueryTriggerInteraction.Collide);
+				OverlapCapsule(_extendedOverlapInfo, data, data.TargetPosition, _settings.Radius, _settings.Height, _settings.Radius, _settings.Offset, _settings.CollisionLayerMask, QueryTriggerInteraction.Collide);
 
 				if (_settings.SuppressConvexMeshColliders == true)
 				{
@@ -2672,7 +2680,7 @@ namespace Fusion.KCC
 
 				Vector3 checkPosition = targetPosition + new Vector3(0.0f, _settings.StepHeight, 0.0f);
 
-				if (OverlapCapsule(_sharedOverlapInfo, data, checkPosition, _settings.Radius, _settings.Height, 0.0f, _settings.CollisionLayerMask, QueryTriggerInteraction.Ignore) == true)
+				if (OverlapCapsule(_sharedOverlapInfo, data, checkPosition, _settings.Radius, _settings.Height, 0.0f, _settings.Offset, _settings.CollisionLayerMask, QueryTriggerInteraction.Ignore) == true)
 				{
 					data.IsSteppingUp = false;
 					return;
@@ -2691,7 +2699,7 @@ namespace Fusion.KCC
 
 				checkPosition += combinedCheckDirectionXZ * _settings.Radius;
 
-				if (OverlapCapsule(_sharedOverlapInfo, data, checkPosition, _settings.Radius, _settings.Height, 0.0f, _settings.CollisionLayerMask, QueryTriggerInteraction.Ignore) == true)
+				if (OverlapCapsule(_sharedOverlapInfo, data, checkPosition, _settings.Radius, _settings.Height, 0.0f, _settings.Offset, _settings.CollisionLayerMask, QueryTriggerInteraction.Ignore) == true)
 				{
 					data.IsSteppingUp = false;
 					return;
@@ -2758,7 +2766,7 @@ namespace Fusion.KCC
 			int   penetrationSteps        = Mathf.CeilToInt(maxPenetrationDistance / maxStepPenetrationDelta);
 			float penetrationDelta        = maxPenetrationDistance / penetrationSteps;
 
-			OverlapCapsule(_sharedOverlapInfo, data, data.TargetPosition - new Vector3(0.0f, _settings.GroundSnapDistance, 0.0f), _settings.Radius, _settings.Height + _settings.GroundSnapDistance, _settings.Radius, _settings.CollisionLayerMask, QueryTriggerInteraction.Ignore);
+			OverlapCapsule(_sharedOverlapInfo, data, data.TargetPosition - new Vector3(0.0f, _settings.GroundSnapDistance, 0.0f), _settings.Radius, _settings.Height + _settings.GroundSnapDistance, _settings.Radius, _settings.Offset, _settings.CollisionLayerMask, QueryTriggerInteraction.Ignore);
 
 			if (_sharedOverlapInfo.ColliderHitCount == 0)
 				return;
@@ -2830,13 +2838,14 @@ namespace Fusion.KCC
 			data.GroundTangent = data.TransformDirection;
 		}
 
-		private bool OverlapCapsule(KCCOverlapInfo overlapInfo, KCCData data, Vector3 position, float radius, float height, float extent, LayerMask layerMask, QueryTriggerInteraction triggerInteraction)
+		private bool OverlapCapsule(KCCOverlapInfo overlapInfo, KCCData data, Vector3 position, float radius, float height, float extent, float offset, LayerMask layerMask, QueryTriggerInteraction triggerInteraction)
 		{
 			overlapInfo.Reset(false);
 
 			overlapInfo.Position           = position;
 			overlapInfo.Radius             = radius;
 			overlapInfo.Height             = height;
+			overlapInfo.Offset             = offset;
 			overlapInfo.Extent             = extent;
 			overlapInfo.LayerMask          = layerMask;
 			overlapInfo.TriggerInteraction = triggerInteraction;
@@ -2930,7 +2939,7 @@ namespace Fusion.KCC
 			}
 			else
 			{
-				OverlapCapsule(_trackOverlapInfo, data, data.TargetPosition, _settings.Radius, _settings.Height, _settings.Extent, _settings.CollisionLayerMask, QueryTriggerInteraction.Collide);
+				OverlapCapsule(_trackOverlapInfo, data, data.TargetPosition, _settings.Radius, _settings.Height, _settings.Extent, _settings.Offset, _settings.CollisionLayerMask, QueryTriggerInteraction.Collide);
 
 				if (extendedOverlapInfo != null)
 				{

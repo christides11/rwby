@@ -17,6 +17,7 @@ namespace rwby
             return new ConditionMoveset()
             {
                 inverse = inverse,
+                checkCurrentMovesetInstead = checkCurrentMovesetInstead,
                 moveset = moveset
             };
         }

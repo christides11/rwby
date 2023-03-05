@@ -1255,7 +1255,7 @@ namespace rwby
             }
         }
 
-        internal static void ConserveInertia(IFighterBase fighter, IStateVariables variables, HnSF.StateTimeline stateTimeline, int frame, float frameRangePercentage)
+        public static void ConserveInertia(IFighterBase fighter, IStateVariables variables, HnSF.StateTimeline stateTimeline, int frame, float frameRangePercentage)
         {
             FighterManager fm = (FighterManager)fighter;
             var vars = (VarConserveInertia)variables;
@@ -1263,7 +1263,7 @@ namespace rwby
             fm.FPhysicsManager.conservedInertia = fm.myTransform.InverseTransformDirection(fm.FPhysicsManager.forceMovement);
         }
 
-        internal static void ReleaseInertia(IFighterBase fighter, IStateVariables variables, HnSF.StateTimeline stateTimeline, int frame, float frameRangePercentage)
+        public static void ReleaseInertia(IFighterBase fighter, IStateVariables variables, HnSF.StateTimeline stateTimeline, int frame, float frameRangePercentage)
         {
             FighterManager fm = (FighterManager)fighter;
             var vars = (VarReleaseInertia)variables;
@@ -1273,6 +1273,22 @@ namespace rwby
                 fm.FPhysicsManager.forceMovement = fm.myTransform.TransformDirection(fm.FPhysicsManager.conservedInertia);
             }
             fm.FPhysicsManager.conservedInertia = Vector3.zero;
+        }
+
+        public static void ModifyEnemyStepCount(IFighterBase fighter, IStateVariables variables, HnSF.StateTimeline stateTimeline, int frame, float frameRangePercentage)
+        {
+            FighterManager fm = (FighterManager)fighter;
+            var vars = (VarModifyEnemyStepCount)variables;
+
+            switch (vars.modifyType)
+            {
+                case VarModifyType.SET:
+                    fm.CurrentEnemyStep = vars.value;
+                    break;
+                case VarModifyType.ADD:
+                    fm.CurrentEnemyStep += vars.value;
+                    break;
+            }
         }
     }
 }

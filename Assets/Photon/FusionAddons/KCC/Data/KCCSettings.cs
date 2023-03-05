@@ -28,6 +28,9 @@ namespace Fusion.KCC
 		[Tooltip("Sets collider height.")]
 		public float Height = 1.8f;
 
+		[Tooltip("Sets collider center.")]
+		public float Offset = 1.8f / 2.0f;
+
 		[Tooltip("Defines additional radius extent for ground detection and processors tracking. Recommended range is 1-2% of radius.\n" +
 		"Low values decreases stability and has potential performance impact when executing additional checks.\n" +
 		"High values increases stability at the cost of increased sustained performance impact.")]

@@ -16,6 +16,7 @@ namespace Fusion.KCC
 		public bool            IsTrigger;
 		public float           Radius;
 		public float           Height;
+		public float		   Center;
 		public int             Layer;
 
 		// PUBLIC METHODS
@@ -27,6 +28,7 @@ namespace Fusion.KCC
 				IsTrigger = settings.IsTrigger;
 				Radius    = settings.Radius;
 				Height    = settings.Height;
+				Center    = settings.Offset;
 				Layer     = settings.ColliderLayer;
 
 				GameObject = new GameObject("KCCCollider");
@@ -43,7 +45,7 @@ namespace Fusion.KCC
 				Collider.isTrigger = settings.IsTrigger;
 				Collider.radius    = settings.Radius;
 				Collider.height    = settings.Height;
-				Collider.center    = new Vector3(0.0f, settings.Height * 0.5f, 0.0f);
+				Collider.center    = new Vector3(0.0f, settings.Offset, 0.0f);//new Vector3(0.0f, settings.Height * 0.5f, 0.0f);
 
 				IsSpawned = true;
 			}
@@ -60,11 +62,17 @@ namespace Fusion.KCC
 				Collider.radius = settings.Radius;
 			}
 
-			if (Height != settings.Height)
+            if (Center != settings.Offset)
+            {
+                Center = settings.Offset;
+                Collider.center = new Vector3(0.0f, settings.Offset, 0.0f);
+            }
+
+            if (Height != settings.Height)
 			{
 				Height = settings.Height;
 				Collider.height = settings.Height;
-				Collider.center = new Vector3(0.0f, settings.Height * 0.5f, 0.0f);
+				//Collider.center = new Vector3(0.0f, settings.Height * 0.5f, 0.0f);
 			}
 
 			if (Layer != settings.ColliderLayer)
@@ -93,6 +101,7 @@ namespace Fusion.KCC
 			IsTrigger  = default;
 			Radius     = default;
 			Height     = default;
+			Center     = default;
 			Layer      = default;
 		}
 	}

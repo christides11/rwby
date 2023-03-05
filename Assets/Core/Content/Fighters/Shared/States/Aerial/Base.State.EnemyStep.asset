@@ -27,6 +27,7 @@ MonoBehaviour:
   - rid: 5283439312591388675
   - rid: 5283439312591388680
   - rid: 5283439312591388703
+  - rid: 5283439354918469632
   auraRequirement: 0
   initialGroundedState: 2
   stateType: 1
@@ -173,3 +174,16 @@ MonoBehaviour:
         rotateTowards: 0
         useTargetWhenNoMovement: 0
         eulerAngle: {x: 0, y: 0, z: 0}
+    - rid: 5283439354918469632
+      type: {class: VarModifyEnemyStepCount, ns: rwby, asm: rwby.csharp}
+      data:
+        name: 
+        id: 11
+        parent: -1
+        children: 
+        frameRanges:
+        - {x: 0, y: 0}
+        condition:
+          rid: -2
+        modifyType: 0
+        value: 1

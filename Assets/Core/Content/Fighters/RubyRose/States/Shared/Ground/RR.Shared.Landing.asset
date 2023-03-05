@@ -63,6 +63,8 @@ MonoBehaviour:
     - rid: 5775511807202426882
       type: {class: ConditionMoveset, ns: rwby, asm: rwby.csharp}
       data:
+        inverse: 0
+        checkCurrentMovesetInstead: 0
         moveset: 0
     - rid: 7270848366746009601
       type: {class: VarModifyEffectSet, ns: rwby, asm: rwby.csharp}
@@ -84,7 +86,8 @@ MonoBehaviour:
           offset: {x: 0, y: 0.2, z: 0}
           rotation: {x: 0, y: 0, z: 0}
           scale: {x: 1, y: 1, z: 1}
-          autoIncrement: 1
+          isTemporary: 0
+          hitstopAffected: 0
         doNotAddToSet: 0
         OffsetStartAtFighter: 1
     - rid: 8688056217396838402

@@ -38,6 +38,7 @@ MonoBehaviour:
   - rid: 1200828785595777031
   - rid: 1200828804794155008
   - rid: 1200828822363832321
+  - rid: 5283439339132682244
   auraRequirement: 0
   initialGroundedState: 2
   stateType: 2
@@ -201,7 +202,7 @@ MonoBehaviour:
         name: On Hit
         id: 19
         parent: -1
-        children: 14000000
+        children: 2100000014000000
         frameRanges: []
         condition:
           rid: 387795983688269855
@@ -219,7 +220,7 @@ MonoBehaviour:
         parent: 19
         children: 
         frameRanges:
-        - {x: 11, y: -1}
+        - {x: 1, y: -1}
         condition:
           rid: -2
         asset: {fileID: 11400000, guid: bc799e59dd7b59244a7f8dcbdcafabf0, type: 2}
@@ -409,6 +410,18 @@ MonoBehaviour:
         statReference: 0
         value: 100
         variable: 0
+    - rid: 5283439339132682244
+      type: {class: VarExternal, ns: rwby, asm: rwby.csharp}
+      data:
+        name: Try Enemy Step
+        id: 33
+        parent: 19
+        children: 
+        frameRanges:
+        - {x: 1, y: -1}
+        condition:
+          rid: -2
+        asset: {fileID: 11400000, guid: a8844c3d05bce98469f86710807ea33d, type: 2}
     - rid: 7270848428946489353
       type: {class: VarRotateTowards, ns: rwby, asm: rwby.csharp}
       data:

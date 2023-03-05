@@ -79,6 +79,7 @@ namespace rwby
             functions.Add(typeof(VarModifyBurst), BaseStateFunctions.ModifyBurst);
             functions.Add(typeof(VarConserveInertia), BaseStateFunctions.ConserveInertia);
             functions.Add(typeof(VarReleaseInertia), BaseStateFunctions.ReleaseInertia);
+            functions.Add(typeof(VarModifyEnemyStepCount), BaseStateFunctions.ModifyEnemyStepCount);
         }
     }
 }

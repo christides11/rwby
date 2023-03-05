@@ -585,7 +585,8 @@ namespace rwby
             FighterManager f = fighter as FighterManager;
             var vars = (ConditionCheckForCollider)variables;
 
-            int hitCnt = f.Runner.GetPhysicsScene().OverlapBox(f.myTransform.position, vars.halfExtents, f.colliderHitResults, f.myTransform.rotation, vars.layerMask);
+            var checkPos = f.myTransform.position + f.myTransform.forward * vars.offset.z + f.myTransform.right * vars.offset.x + Vector3.up * vars.offset.y;
+            int hitCnt = f.Runner.GetPhysicsScene().OverlapBox(checkPos, vars.halfExtents, f.colliderHitResults, f.myTransform.rotation, vars.layerMask);
 
             int rHitCnt = 0;
             for(int i = 0; i < hitCnt; i++)
@@ -605,7 +606,7 @@ namespace rwby
             FighterManager f = fighter as FighterManager;
             var vars = (ConditionCanEnemyStep)variables;
 
-            var r = f.currEnemyStep < 2;
+            var r = f.CurrentEnemyStep < 2;
 
             return vars.inverse ? !r : r;
         }
