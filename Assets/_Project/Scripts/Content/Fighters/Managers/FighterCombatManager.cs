@@ -256,6 +256,7 @@ namespace rwby
         {
             LastHitStop = value;
             HitStop = value;
+            inputManager.ExtraBuffer = value;
         }
 
         public virtual void SetHitStun(int value)
@@ -352,7 +353,7 @@ namespace rwby
                         }
                         break;
                     case HnSF.Input.InputDefinitionType.Button:
-                        if (inputManager.GetButton(sequence.executeInputs[e].buttonID, out int gotOffset, baseOffset, (int)sequence.executeWindow).firstPress == false)
+                        if (inputManager.GetButton(sequence.executeInputs[e].buttonID, out int gotOffset, baseOffset, (int)sequence.executeWindow+inputManager.ExtraBuffer).firstPress == false)
                         {
                             return false;
                         }
@@ -374,7 +375,7 @@ namespace rwby
                 switch (sequence.sequenceInputs[s].inputType)
                 {
                     case HnSF.Input.InputDefinitionType.Stick:
-                        for (uint f = currentOffset; f < currentOffset + sequence.sequenceWindow; f++)
+                        for (uint f = currentOffset; f < currentOffset + sequence.sequenceWindow + inputManager.ExtraBuffer; f++)
                         {
                             if (CheckStickDirection(sequence.sequenceInputs[s].stickDirection, sequence.sequenceInputs[s].directionDeviation, (int)f))
                             {
@@ -389,7 +390,7 @@ namespace rwby
                         }
                         break;
                     case HnSF.Input.InputDefinitionType.Button:
-                        for (uint f = currentOffset; f < currentOffset + sequence.sequenceWindow; f++)
+                        for (uint f = currentOffset; f < currentOffset + sequence.sequenceWindow + inputManager.ExtraBuffer; f++)
                         {
                             if ((!holdInput && inputManager.GetButton(sequence.sequenceInputs[s].buttonID, out int gotOffset, (int)f, 0).firstPress)
                                 || (holdInput && inputManager.GetButton(sequence.sequenceInputs[s].buttonID, out int gotOffsetTwo, (int)f, 0).isDown))

@@ -38,9 +38,19 @@ namespace rwby
         [Networked] public NetworkObject inputProvider { get; set; }
         [Networked] public byte inputSourceIndex { get; set; }
 
+        [Networked] public int ExtraBuffer { get; set; }
+
         public override void Spawned()
         {
             base.Spawned();
+        }
+
+        public void Tick()
+        {
+            if(manager.FCombatManager.HitStop <= 0 && ExtraBuffer > 0)
+            {
+                ExtraBuffer--;
+            }
         }
 
         public void FeedInput()

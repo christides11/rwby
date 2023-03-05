@@ -203,6 +203,7 @@ namespace rwby
             combatManager.CounterhitState = false;
             GetFloorAngle();
             inputManager.FeedInput();
+            inputManager.Tick();
             if (Runner.Simulation.IsResimulation && Runner.Simulation.IsFirstTick)
             {
                 FPhysicsManager.ResimulationResync();

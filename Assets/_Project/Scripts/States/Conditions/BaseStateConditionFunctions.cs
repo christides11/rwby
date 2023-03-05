@@ -73,7 +73,7 @@ namespace rwby
                         break;
                 }
             }
-            var b = f.InputManager.GetButton(buttonInt, vars.offset, vars.buffer);
+            var b = f.InputManager.GetButton(buttonInt, vars.offset, vars.buffer + f.InputManager.ExtraBuffer);
             switch (vars.buttonState)
             {
                 case ConditionButton.ButtonStateType.IsDown:
