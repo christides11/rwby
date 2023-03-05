@@ -221,6 +221,7 @@ namespace rwby
                 FCombatManager.HitStop--;
                 FPhysicsManager.Freeze();
                 fighterEffector.PauseCurrentEffects();
+                FStateManager.Tick();
                 return;
             }
 

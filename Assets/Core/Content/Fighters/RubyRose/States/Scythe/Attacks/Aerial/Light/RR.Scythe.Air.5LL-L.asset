@@ -36,9 +36,9 @@ MonoBehaviour:
   - rid: 387795756708003850
   - rid: 387795932360736829
   - rid: 1200828797842358273
-  - rid: 1200828797842358278
   - rid: 1200828822363832336
   - rid: 1200828822363832339
+  - rid: 5283439363954835460
   auraRequirement: 0
   initialGroundedState: 2
   stateType: 2
@@ -85,7 +85,7 @@ MonoBehaviour:
       gravityAutolinkPercentage: 0
       movementAutolinkPercentage: 0
       groundHitForce: {x: 0, y: 4, z: 3}
-      aerialHitForce: {x: 0, y: 3, z: 0}
+      aerialHitForce: {x: 0, y: 2, z: 0}
       pullPushMultiplier: 0
       pullPushMaxDistance: 10
       blockLift: 0
@@ -420,25 +420,6 @@ MonoBehaviour:
         inverse: 0
         statReference: 0
         value: 3
-    - rid: 1200828797842358278
-      type: {class: VarMultiplyMovement, ns: rwby, asm: rwby.csharp}
-      data:
-        name: 
-        id: 26
-        parent: -1
-        children: 
-        frameRanges:
-        - {x: 1, y: 5}
-        condition:
-          rid: -2
-        multiplier:
-          rid: 1200828797842358279
-    - rid: 1200828797842358279
-      type: {class: FighterStatReferenceFloatBase, ns: rwby, asm: rwby.csharp}
-      data:
-        inverse: 0
-        statReference: 0
-        value: 0.9
     - rid: 1200828822363832336
       type: {class: VarModifyFallSpeed, ns: rwby, asm: rwby.csharp}
       data:
@@ -486,10 +467,10 @@ MonoBehaviour:
         parent: -1
         children: 
         frameRanges:
-        - {x: 10, y: 10}
-        - {x: 15, y: 15}
-        - {x: 20, y: 20}
-        - {x: 25, y: 25}
+        - {x: 12, y: 12}
+        - {x: 17, y: 17}
+        - {x: 22, y: 22}
+        - {x: 28, y: 28}
         condition:
           rid: -2
         frameDivider: 0
@@ -541,6 +522,18 @@ MonoBehaviour:
         boxExtents: {x: 1, y: 1, z: 1}
         radius: 0
         definitionIndex: 0
+    - rid: 5283439363954835460
+      type: {class: VarExternal, ns: rwby, asm: rwby.csharp}
+      data:
+        name: Try Enemy Step
+        id: 30
+        parent: 13
+        children: 
+        frameRanges:
+        - {x: 7, y: -1}
+        condition:
+          rid: -2
+        asset: {fileID: 11400000, guid: a8844c3d05bce98469f86710807ea33d, type: 2}
     - rid: 7270848428946489353
       type: {class: VarRotateTowards, ns: rwby, asm: rwby.csharp}
       data:
@@ -637,7 +630,7 @@ MonoBehaviour:
         name: On Hit or Block
         id: 13
         parent: -1
-        children: 0e0000001400000015000000
+        children: 1e0000000e0000001400000015000000
         frameRanges: []
         condition:
           rid: 8688056833868562433

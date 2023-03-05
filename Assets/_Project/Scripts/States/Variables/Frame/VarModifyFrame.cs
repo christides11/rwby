@@ -41,6 +41,8 @@ namespace rwby
         [SerializeField] public Vector2Int[] frameRanges;
         [SelectImplementation(typeof(IConditionVariables))] [SerializeField, SerializeReference] 
         public IConditionVariables condition;
+        public bool RunDuringHitstop { get => runDuringHitstop; set => runDuringHitstop = value; }
+        public bool runDuringHitstop;
 
         public VarModifyType modifyType;
         public int value;

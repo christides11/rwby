@@ -68,6 +68,11 @@ namespace rwby
         {
             if (CurrentState == 0) return;
             var stateTimeline = GetState();
+            if (combatManager.HitStop > 0)
+            {
+                ProcessState(stateTimeline, onInterrupt: false, autoIncrement: stateTimeline.autoIncrement, autoLoop: stateTimeline.autoLoop, true);
+                return;
+            }
             ProcessState(stateTimeline, onInterrupt: false, autoIncrement: stateTimeline.autoIncrement, autoLoop: stateTimeline.autoLoop);
             // TODO: Move to combat manager.
             // Handles cancel list on clashing
@@ -98,7 +103,7 @@ namespace rwby
             }
         }
 
-        private void ProcessState(StateTimeline state, bool onInterrupt = false, bool autoIncrement = false, bool autoLoop = false)
+        private void ProcessState(StateTimeline state, bool onInterrupt = false, bool autoIncrement = false, bool autoLoop = false, bool processHitstop = false)
         {
             //Profiler.BeginSample($"State Processing: {state.stateName}");
             var topState = state;
@@ -108,14 +113,14 @@ namespace rwby
                 foreach (var d in state.data)
                 {
                     if (d.Parent != -1) continue; 
-                    ProcessStateVariables(state, d, realFrame, topState.totalFrames, onInterrupt);
+                    ProcessStateVariables(state, d, realFrame, topState.totalFrames, onInterrupt, processHitstop);
                 }
 
                 if (!state.useBaseState) break;
                 state = (StateTimeline)state.baseState;
             }
             state = topState;
-            if (onInterrupt != false || !autoIncrement)
+            if (onInterrupt != false || !autoIncrement || processHitstop)
             {
                 //Profiler.EndSample();
                 return;
@@ -135,8 +140,9 @@ namespace rwby
             //Profiler.EndSample();
         }
         
-        public void ProcessStateVariables(StateTimeline state, IStateVariables d, int realFrame, int totalFrames, bool onInterrupt)
+        public void ProcessStateVariables(StateTimeline state, IStateVariables d, int realFrame, int totalFrames, bool onInterrupt, bool processHitstop = false)
         {
+            if (processHitstop && !d.RunDuringHitstop) return;
             var valid = d.FrameRanges.Length == 0 ? true : false;
             int frameRange = 0;
             int frStart = 0;
@@ -161,7 +167,7 @@ namespace rwby
             foreach (var t in d.Children)
             {
                 int childStateIndex = state.stateVariablesIDMap[t];
-                ProcessStateVariables(state, state.data[childStateIndex], realFrame, totalFrames, onInterrupt);
+                ProcessStateVariables(state, state.data[childStateIndex], realFrame, totalFrames, onInterrupt, processHitstop);
             }
         }
 

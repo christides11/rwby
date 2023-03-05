@@ -42,6 +42,7 @@ MonoBehaviour:
   - rid: 5283439342073675795
   - rid: 5283439342073675796
   - rid: 5283439342073675798
+  - rid: 5283439363954835457
   auraRequirement: 0
   initialGroundedState: 2
   stateType: 2
@@ -197,7 +198,7 @@ MonoBehaviour:
         parent: 13
         children: 
         frameRanges:
-        - {x: 7, y: -1}
+        - {x: 10, y: -1}
         condition:
           rid: -2
         asset: {fileID: 11400000, guid: 280b115f7de70e2429fc1b2a1d4051f2, type: 2}
@@ -209,7 +210,7 @@ MonoBehaviour:
         parent: 13
         children: 
         frameRanges:
-        - {x: 7, y: -1}
+        - {x: 10, y: -1}
         condition:
           rid: -2
         asset: {fileID: 11400000, guid: bc799e59dd7b59244a7f8dcbdcafabf0, type: 2}
@@ -279,7 +280,7 @@ MonoBehaviour:
         parent: -1
         children: 
         frameRanges:
-        - {x: 10, y: -1}
+        - {x: 7, y: -1}
         condition:
           rid: -2
         affectedByGravityMulti: 0
@@ -466,7 +467,7 @@ MonoBehaviour:
         parent: 32
         children: 
         frameRanges:
-        - {x: 7, y: -1}
+        - {x: 10, y: -1}
         condition:
           rid: -2
         ignoreStateConditions: 0
@@ -493,7 +494,7 @@ MonoBehaviour:
         parent: 32
         children: 
         frameRanges:
-        - {x: 7, y: -1}
+        - {x: 10, y: -1}
         condition:
           rid: -2
         asset: {fileID: 11400000, guid: 852b081cfd9efbb449cca3171458f8cc, type: 2}
@@ -521,10 +522,22 @@ MonoBehaviour:
         parent: 35
         children: 
         frameRanges:
-        - {x: 7, y: -1}
+        - {x: 10, y: -1}
         condition:
           rid: -2
         asset: {fileID: 11400000, guid: cc00d510ea2530d49bdc1b20fbaa26a5, type: 2}
+    - rid: 5283439363954835457
+      type: {class: VarExternal, ns: rwby, asm: rwby.csharp}
+      data:
+        name: Try Enemy Step
+        id: 37
+        parent: 13
+        children: 
+        frameRanges:
+        - {x: 7, y: -1}
+        condition:
+          rid: -2
+        asset: {fileID: 11400000, guid: a8844c3d05bce98469f86710807ea33d, type: 2}
     - rid: 7270848428946489353
       type: {class: VarRotateTowards, ns: rwby, asm: rwby.csharp}
       data:
@@ -621,7 +634,7 @@ MonoBehaviour:
         name: On Hit or Block
         id: 13
         parent: -1
-        children: 14000000150000002000000023000000
+        children: 2500000014000000150000002000000023000000
         frameRanges: []
         condition:
           rid: 8688056833868562433

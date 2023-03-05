@@ -53,6 +53,8 @@ namespace rwby
         [SelectImplementation(typeof(IConditionVariables))] [SerializeField, SerializeReference]
         public IConditionVariables condition;
          public IConditionVariables Condition { get => condition; set => condition = value; }
+        public bool RunDuringHitstop { get => runDuringHitstop; set => runDuringHitstop = value; }
+        public bool runDuringHitstop;
 
         public RaycastDirSource raycastDirectionSource;
         public Vector3 direction;

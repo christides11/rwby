@@ -41,6 +41,8 @@ namespace rwby
         [SelectImplementation(typeof(IConditionVariables))] [SerializeField, SerializeReference]
         public IConditionVariables condition;
          public IConditionVariables Condition { get => condition; set => condition = value; }
+        public bool RunDuringHitstop { get => runDuringHitstop; set => runDuringHitstop = value; }
+        public bool runDuringHitstop;
 
         private bool calculateValue => !useValue;
         public bool useValue;

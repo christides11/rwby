@@ -34,6 +34,7 @@ MonoBehaviour:
   - rid: 387795756708003850
   - rid: 387795932360736829
   - rid: 1200828797842358273
+  - rid: 5283439363954835459
   auraRequirement: 0
   initialGroundedState: 2
   stateType: 2
@@ -174,7 +175,7 @@ MonoBehaviour:
         parent: -1
         children: 
         frameRanges:
-        - {x: 10, y: -1}
+        - {x: 7, y: -1}
         condition:
           rid: -2
         useValue: 0
@@ -223,7 +224,7 @@ MonoBehaviour:
         parent: 13
         children: 
         frameRanges:
-        - {x: 7, y: -1}
+        - {x: 10, y: -1}
         condition:
           rid: -2
         asset: {fileID: 11400000, guid: 280b115f7de70e2429fc1b2a1d4051f2, type: 2}
@@ -235,7 +236,7 @@ MonoBehaviour:
         parent: 13
         children: 
         frameRanges:
-        - {x: 7, y: -1}
+        - {x: 10, y: -1}
         condition:
           rid: -2
         asset: {fileID: 11400000, guid: bc799e59dd7b59244a7f8dcbdcafabf0, type: 2}
@@ -247,7 +248,7 @@ MonoBehaviour:
         parent: -1
         children: 
         frameRanges:
-        - {x: 10, y: -1}
+        - {x: 12, y: -1}
         condition:
           rid: 387795932360736830
         ignoreStateConditions: 0
@@ -342,6 +343,18 @@ MonoBehaviour:
         boxExtents: {x: 1, y: 1, z: 1}
         radius: 0
         definitionIndex: 0
+    - rid: 5283439363954835459
+      type: {class: VarExternal, ns: rwby, asm: rwby.csharp}
+      data:
+        name: Try Enemy Step
+        id: 25
+        parent: 13
+        children: 
+        frameRanges:
+        - {x: 7, y: -1}
+        condition:
+          rid: -2
+        asset: {fileID: 11400000, guid: a8844c3d05bce98469f86710807ea33d, type: 2}
     - rid: 7270848428946489353
       type: {class: VarRotateTowards, ns: rwby, asm: rwby.csharp}
       data:
@@ -438,7 +451,7 @@ MonoBehaviour:
         name: On Hit or Block
         id: 13
         parent: -1
-        children: 0e0000001400000015000000
+        children: 190000000e0000001400000015000000
         frameRanges: []
         condition:
           rid: 8688056833868562433
@@ -456,7 +469,7 @@ MonoBehaviour:
         parent: 13
         children: 
         frameRanges:
-        - {x: 7, y: -1}
+        - {x: 10, y: -1}
         condition:
           rid: -2
         asset: {fileID: 11400000, guid: 852b081cfd9efbb449cca3171458f8cc, type: 2}
