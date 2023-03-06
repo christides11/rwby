@@ -17,7 +17,7 @@ MonoBehaviour:
   baseState: {fileID: 0}
   totalFrames: 30
   autoIncrement: 1
-  autoLoop: 1
+  autoLoop: 0
   autoLoopFrame: 5
   data:
   - rid: 2193520817874927616
@@ -71,10 +71,11 @@ MonoBehaviour:
         - {x: -1, y: -1}
         condition:
           rid: -2
-        ignoreStateConditions: 0
-        ignoreAirtimeCheck: 0
-        ignoreStringUseCheck: 0
-        ignoreAuraRequirement: 0
+        runDuringHitstop: 0
+        ignoreStateConditions: 1
+        ignoreAirtimeCheck: 1
+        ignoreStringUseCheck: 1
+        ignoreAuraRequirement: 1
         checkInputSequence: 0
         checkCondition: 0
         overrideStateChange: 0
@@ -86,7 +87,7 @@ MonoBehaviour:
     - rid: 387796001253490697
       type: {class: RubyRoseStateReference, ns: rwby.core, asm: rwby.core}
       data:
-        state: 76
+        state: 243
     - rid: 387796001253490699
       type: {class: VarCreateProjectile, ns: rwby, asm: rwby.csharp}
       data:
@@ -100,6 +101,7 @@ MonoBehaviour:
         - {x: 29, y: 29}
         condition:
           rid: -2
+        runDuringHitstop: 0
         def:
           projectilebank: {fileID: 11400000, guid: 02cf602e942df44429e02fc5b197a5dc, type: 2}
           projectile: bullet
@@ -125,6 +127,7 @@ MonoBehaviour:
         - {x: 26, y: 26}
         condition:
           rid: -2
+        runDuringHitstop: 0
         sounds:
         - soundbank: {fileID: 11400000, guid: 46cf32b8cf1903a428cb8802d2539eca, type: 2}
           sound: swing13
@@ -148,6 +151,7 @@ MonoBehaviour:
         - {x: 29, y: 29}
         condition:
           rid: -2
+        runDuringHitstop: 0
         sounds:
         - soundbank: {fileID: 11400000, guid: 46cf32b8cf1903a428cb8802d2539eca, type: 2}
           sound: swing12
@@ -171,6 +175,7 @@ MonoBehaviour:
         - {x: 29, y: 29}
         condition:
           rid: -2
+        runDuringHitstop: 0
         projectileOffset: 0
         maxAngle: 25
         ignoreIfOutsideAngle: 0
@@ -187,6 +192,7 @@ MonoBehaviour:
         - {x: 29, y: 29}
         condition:
           rid: -2
+        runDuringHitstop: 0
         projectileOffset: 0
         force: {x: 0, y: 0, z: 25}
         keepRawForce: 1
@@ -203,6 +209,7 @@ MonoBehaviour:
         - {x: 29, y: 29}
         condition:
           rid: -2
+        runDuringHitstop: 0
         projectileOffset: 0
     - rid: 387796057753387011
       type: {class: VarProjectileModifyHomingStrength, ns: rwby, asm: rwby.csharp}
@@ -217,6 +224,7 @@ MonoBehaviour:
         - {x: 29, y: 29}
         condition:
           rid: -2
+        runDuringHitstop: 0
         projectileOffset: 0
         homingStrength: 16
     - rid: 2193520817874927616
@@ -230,6 +238,7 @@ MonoBehaviour:
         - {x: 1, y: -1}
         condition:
           rid: -2
+        runDuringHitstop: 0
         traction:
           rid: 2193520817874927617
         applyMovement: 1
@@ -252,6 +261,7 @@ MonoBehaviour:
         - {x: 1, y: -1}
         condition:
           rid: -2
+        runDuringHitstop: 0
         boxType: 0
         attachedTo: 0
         shape: 0
@@ -270,6 +280,7 @@ MonoBehaviour:
         - {x: 1, y: -1}
         condition:
           rid: -2
+        runDuringHitstop: 0
         boxType: 2
         attachedTo: 0
         shape: 0

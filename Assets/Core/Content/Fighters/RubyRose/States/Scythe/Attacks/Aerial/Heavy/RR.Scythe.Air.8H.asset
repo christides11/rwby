@@ -37,6 +37,7 @@ MonoBehaviour:
   - rid: 1200828822363832329
   - rid: 1200828822363832351
   - rid: 5283439339132682243
+  - rid: 5283439388944236547
   auraRequirement: 0
   initialGroundedState: 2
   stateType: 2
@@ -279,6 +280,7 @@ MonoBehaviour:
         - {x: 1, y: 6}
         condition:
           rid: -2
+        runDuringHitstop: 0
         useValue: 0
         value:
           rid: -2
@@ -328,6 +330,7 @@ MonoBehaviour:
         - {x: 0, y: 0}
         condition:
           rid: -2
+        runDuringHitstop: 0
         magnitude:
           rid: 387795756708003846
     - rid: 387795756708003846
@@ -352,6 +355,7 @@ MonoBehaviour:
         - {x: 1, y: -1}
         condition:
           rid: 387795932360736839
+        runDuringHitstop: 0
         ignoreStateConditions: 0
         ignoreAirtimeCheck: 0
         ignoreStringUseCheck: 0
@@ -383,6 +387,7 @@ MonoBehaviour:
         - {x: 7, y: 7}
         condition:
           rid: -2
+        runDuringHitstop: 0
         targetType: 0
         modifyType: 1
         value:
@@ -404,6 +409,7 @@ MonoBehaviour:
         - {x: 7, y: 7}
         condition:
           rid: -2
+        runDuringHitstop: 0
         inputSource: 1
         normalizeInputSource: 0
         useRotationIfInputZero: 0
@@ -428,6 +434,7 @@ MonoBehaviour:
         - {x: 13, y: -1}
         condition:
           rid: 1200828822363832331
+        runDuringHitstop: 0
         ignoreStateConditions: 0
         ignoreAirtimeCheck: 0
         ignoreStringUseCheck: 0
@@ -459,6 +466,7 @@ MonoBehaviour:
         - {x: -2, y: -2}
         condition:
           rid: 1200828822363832353
+        runDuringHitstop: 0
         magnitude:
           rid: 1200828822363832352
     - rid: 1200828822363832352
@@ -482,6 +490,7 @@ MonoBehaviour:
         - {x: -1, y: -1}
         condition:
           rid: -2
+        runDuringHitstop: 0
         ignoreStateConditions: 0
         ignoreAirtimeCheck: 0
         ignoreStringUseCheck: 0
@@ -509,6 +518,7 @@ MonoBehaviour:
         - {x: 9, y: 35}
         condition:
           rid: 387795932360736824
+        runDuringHitstop: 0
         boxType: 1
         attachedTo: 0
         shape: 0
@@ -527,7 +537,21 @@ MonoBehaviour:
         - {x: 1, y: -1}
         condition:
           rid: -2
+        runDuringHitstop: 0
         asset: {fileID: 11400000, guid: a8844c3d05bce98469f86710807ea33d, type: 2}
+    - rid: 5283439388944236547
+      type: {class: VarExternal, ns: rwby, asm: rwby.csharp}
+      data:
+        name: Try Air Dash
+        id: 29
+        parent: 13
+        children: 
+        frameRanges:
+        - {x: 10, y: -1}
+        condition:
+          rid: -2
+        runDuringHitstop: 0
+        asset: {fileID: 11400000, guid: 280b115f7de70e2429fc1b2a1d4051f2, type: 2}
     - rid: 7270848428946489353
       type: {class: VarRotateTowards, ns: rwby, asm: rwby.csharp}
       data:
@@ -539,6 +563,7 @@ MonoBehaviour:
         - {x: 1, y: 3}
         condition:
           rid: -2
+        runDuringHitstop: 0
         rotateTowards: 0
         eulerAngle: {x: 0, y: 0, z: 0}
         rotateTowardsTarget: 1
@@ -561,6 +586,7 @@ MonoBehaviour:
         - {x: 1, y: 8}
         condition:
           rid: -2
+        runDuringHitstop: 0
     - rid: 7270848718906589187
       type: {class: VarCreateBox, ns: rwby, asm: rwby.csharp}
       data:
@@ -572,6 +598,7 @@ MonoBehaviour:
         - {x: 1, y: -1}
         condition:
           rid: -2
+        runDuringHitstop: 0
         boxType: 0
         attachedTo: 0
         shape: 0
@@ -591,6 +618,7 @@ MonoBehaviour:
         - {x: 36, y: -1}
         condition:
           rid: -2
+        runDuringHitstop: 0
         boxType: 2
         attachedTo: 0
         shape: 0
@@ -609,6 +637,7 @@ MonoBehaviour:
         - {x: 8, y: 8}
         condition:
           rid: -2
+        runDuringHitstop: 0
         sounds:
         - soundbank: {fileID: 11400000, guid: 2f4063bd6a5418f4a9c4e61c84752271, type: 2}
           sound: swing14
@@ -625,10 +654,11 @@ MonoBehaviour:
         name: On Hit
         id: 13
         parent: -1
-        children: 1c0000000e000000
+        children: 1c0000000e0000001d000000
         frameRanges: []
         condition:
           rid: 8688056833868562433
+        runDuringHitstop: 0
     - rid: 8688056833868562433
       type: {class: ConditionHitOrBlockCount, ns: rwby, asm: rwby.csharp}
       data:
@@ -646,4 +676,5 @@ MonoBehaviour:
         - {x: 10, y: -1}
         condition:
           rid: -2
+        runDuringHitstop: 0
         asset: {fileID: 11400000, guid: 852b081cfd9efbb449cca3171458f8cc, type: 2}

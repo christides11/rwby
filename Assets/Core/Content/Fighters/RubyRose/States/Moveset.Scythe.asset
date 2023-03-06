@@ -134,6 +134,10 @@ MonoBehaviour:
     state:
       rid: 1200828822363832341
     stateTimeline: {fileID: 11400000, guid: 0f54c50849c572a4d96452935ec46fd2, type: 2}
+  - name: Change Moveset
+    state:
+      rid: 1200828934167986176
+    stateTimeline: {fileID: 11400000, guid: 3e2de3c5a9a7bda41b6ed9ad3867584f, type: 2}
   - name: Buzzsaw
     state:
       rid: 1200828577779548165
@@ -146,10 +150,30 @@ MonoBehaviour:
     state:
       rid: 1200828865405779972
     stateTimeline: {fileID: 11400000, guid: d2eb3763e0815ee40925b6717bd8bdf2, type: 2}
-  - name: Change Moveset
+  - name: Sniper Stance (Enter)
     state:
-      rid: 1200828934167986176
-    stateTimeline: {fileID: 11400000, guid: 3e2de3c5a9a7bda41b6ed9ad3867584f, type: 2}
+      rid: 5283439381931622400
+    stateTimeline: {fileID: 11400000, guid: a8a7c7b783fc553499cefccd9fe29c24, type: 2}
+  - name: Sniper Stance
+    state:
+      rid: 5283439381931622401
+    stateTimeline: {fileID: 11400000, guid: 3871968f87c955b4392997da683e0592, type: 2}
+  - name: Sniper Stance - L
+    state:
+      rid: 5283439381931622402
+    stateTimeline: {fileID: 11400000, guid: 280c97d640960ea408e897b6ae740ff1, type: 2}
+  - name: Sniper Stance - H
+    state:
+      rid: 5283439381931622403
+    stateTimeline: {fileID: 11400000, guid: a6c6816bbd08dc24cbfa82f0825d82f8, type: 2}
+  - name: Sniper Stance (Exit)
+    state:
+      rid: 5283439381931622404
+    stateTimeline: {fileID: 11400000, guid: fed974894f0f10041b97dd7da27544dd, type: 2}
+  - name: Scythe Throw
+    state:
+      rid: 5283439386529628160
+    stateTimeline: {fileID: 11400000, guid: 8771aaf182926ac47933bafa4b43830a, type: 2}
   airActions:
   - name: fall
     state:
@@ -260,6 +284,10 @@ MonoBehaviour:
     state:
       rid: 1200828865405779969
     stateTimeline: {fileID: 11400000, guid: 29a87ca2f33f9734ba97e8a917316e33, type: 2}
+  - name: Scythe Throw
+    state:
+      rid: 5283439386529628161
+    stateTimeline: {fileID: 11400000, guid: 8771aaf182926ac47933bafa4b43830a, type: 2}
   recovery:
   - name: neutral tech (Ground)
     state:
@@ -596,7 +624,7 @@ MonoBehaviour:
     - rid: 5282967595019141120
       type: {class: RubyRoseStateReference, ns: rwby.core, asm: rwby.core}
       data:
-        state: 210
+        state: 238
     - rid: 5282967595019141121
       type: {class: RubyRoseStateReference, ns: rwby.core, asm: rwby.core}
       data:
@@ -613,6 +641,34 @@ MonoBehaviour:
       type: {class: FighterAttackStateReference, ns: rwby, asm: rwby.csharp}
       data:
         state: 110
+    - rid: 5283439381931622400
+      type: {class: RubyRoseStateReference, ns: rwby.core, asm: rwby.core}
+      data:
+        state: 238
+    - rid: 5283439381931622401
+      type: {class: RubyRoseStateReference, ns: rwby.core, asm: rwby.core}
+      data:
+        state: 239
+    - rid: 5283439381931622402
+      type: {class: RubyRoseStateReference, ns: rwby.core, asm: rwby.core}
+      data:
+        state: 240
+    - rid: 5283439381931622403
+      type: {class: RubyRoseStateReference, ns: rwby.core, asm: rwby.core}
+      data:
+        state: 241
+    - rid: 5283439381931622404
+      type: {class: RubyRoseStateReference, ns: rwby.core, asm: rwby.core}
+      data:
+        state: 243
+    - rid: 5283439386529628160
+      type: {class: RubyRoseStateReference, ns: rwby.core, asm: rwby.core}
+      data:
+        state: 250
+    - rid: 5283439386529628161
+      type: {class: RubyRoseStateReference, ns: rwby.core, asm: rwby.core}
+      data:
+        state: 251
     - rid: 5775511544003297313
       type: {class: FighterCmnStateReference, ns: rwby, asm: rwby.csharp}
       data:
@@ -644,11 +700,11 @@ MonoBehaviour:
     - rid: 7270848718906589197
       type: {class: RubyRoseStateReference, ns: rwby.core, asm: rwby.core}
       data:
-        state: 210
+        state: 250
     - rid: 7270848718906589198
       type: {class: RubyRoseStateReference, ns: rwby.core, asm: rwby.core}
       data:
-        state: 214
+        state: 251
     - rid: 7270848809565159429
       type: {class: RubyRoseStateReference, ns: rwby.core, asm: rwby.core}
       data:

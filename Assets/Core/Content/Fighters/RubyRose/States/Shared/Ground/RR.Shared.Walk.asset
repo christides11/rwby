@@ -32,6 +32,7 @@ MonoBehaviour:
   - rid: 387796025889783857
   - rid: 5775511760438034432
   - rid: 5775511990160850947
+  - rid: 5283439388944236545
   auraRequirement: 0
   initialGroundedState: 1
   stateType: 1
@@ -61,13 +62,16 @@ MonoBehaviour:
         name: Barehanded
         id: 11
         parent: -1
-        children: 0c000000
+        children: 0c0000000f000000
         frameRanges: []
         condition:
           rid: 387796025889783856
+        runDuringHitstop: 0
     - rid: 387796025889783856
       type: {class: ConditionMoveset, ns: rwby, asm: rwby.csharp}
       data:
+        inverse: 0
+        checkCurrentMovesetInstead: 0
         moveset: 2
     - rid: 387796025889783857
       type: {class: VarExternal, ns: rwby, asm: rwby.csharp}
@@ -80,6 +84,7 @@ MonoBehaviour:
         - {x: 1, y: -1}
         condition:
           rid: -2
+        runDuringHitstop: 0
         asset: {fileID: 11400000, guid: dd623d7795614cc4ebc52c3e2bc7027f, type: 2}
     - rid: 2193520817874927619
       type: {class: VarEmpty, ns: rwby, asm: rwby.csharp}
@@ -91,9 +96,12 @@ MonoBehaviour:
         frameRanges: []
         condition:
           rid: 2193520817874927620
+        runDuringHitstop: 0
     - rid: 2193520817874927620
       type: {class: ConditionMoveset, ns: rwby, asm: rwby.csharp}
       data:
+        inverse: 0
+        checkCurrentMovesetInstead: 0
         moveset: 0
     - rid: 2193520817874927621
       type: {class: VarExternal, ns: rwby, asm: rwby.csharp}
@@ -106,6 +114,7 @@ MonoBehaviour:
         - {x: 1, y: -1}
         condition:
           rid: -2
+        runDuringHitstop: 0
         asset: {fileID: 11400000, guid: 38d47b53b1c6fa24580e163448503c28, type: 2}
     - rid: 2193520879941976064
       type: {class: VarCreateBox, ns: rwby, asm: rwby.csharp}
@@ -118,6 +127,7 @@ MonoBehaviour:
         - {x: 1, y: -1}
         condition:
           rid: -2
+        runDuringHitstop: 0
         boxType: 2
         attachedTo: 0
         shape: 0
@@ -125,6 +135,21 @@ MonoBehaviour:
         boxExtents: {x: 0.3, y: 1, z: 0.3}
         radius: 0
         definitionIndex: 0
+    - rid: 5283439388944236545
+      type: {class: VarModifyIntWhiteboard, ns: rwby, asm: rwby.csharp}
+      data:
+        name: 
+        id: 15
+        parent: 11
+        children: 
+        frameRanges:
+        - {x: 0, y: 0}
+        condition:
+          rid: -2
+        runDuringHitstop: 0
+        modifyType: 4
+        index: 5
+        val: 1
     - rid: 5775511760438034432
       type: {class: VarFootstepSFX, ns: rwby, asm: rwby.csharp}
       data:
@@ -138,6 +163,7 @@ MonoBehaviour:
         - {x: 70, y: 70}
         condition:
           rid: -2
+        runDuringHitstop: 0
     - rid: 5775511990160850947
       type: {class: VarChangeState, ns: rwby, asm: rwby.csharp}
       data:
@@ -149,6 +175,7 @@ MonoBehaviour:
         - {x: 1, y: -1}
         condition:
           rid: 5775511990160850948
+        runDuringHitstop: 0
         ignoreStateConditions: 0
         ignoreAirtimeCheck: 0
         ignoreStringUseCheck: 0
@@ -184,9 +211,12 @@ MonoBehaviour:
         frameRanges: []
         condition:
           rid: 7270848899719102478
+        runDuringHitstop: 0
     - rid: 7270848899719102478
       type: {class: ConditionMoveset, ns: rwby, asm: rwby.csharp}
       data:
+        inverse: 0
+        checkCurrentMovesetInstead: 0
         moveset: 1
     - rid: 7270848899719102479
       type: {class: VarExternal, ns: rwby, asm: rwby.csharp}
@@ -199,6 +229,7 @@ MonoBehaviour:
         - {x: 1, y: -1}
         condition:
           rid: -2
+        runDuringHitstop: 0
         asset: {fileID: 11400000, guid: ba688ef34edd2d84ea6a5b2e1e2af06e, type: 2}
     - rid: 8688056216264638484
       type: {class: VarEmpty, ns: rwby, asm: rwby.csharp}
@@ -210,6 +241,7 @@ MonoBehaviour:
         frameRanges: []
         condition:
           rid: 8688056216264638485
+        runDuringHitstop: 0
     - rid: 8688056216264638485
       type: {class: ConditionLockedOn, ns: rwby, asm: rwby.csharp}
       data:
@@ -225,6 +257,7 @@ MonoBehaviour:
         frameRanges: []
         condition:
           rid: 8688056217396838400
+        runDuringHitstop: 0
     - rid: 8688056217003884545
       type: {class: VarModifyAnimationFrame, ns: rwby, asm: rwby.csharp}
       data:
@@ -236,6 +269,7 @@ MonoBehaviour:
         - {x: 1, y: -1}
         condition:
           rid: -2
+        runDuringHitstop: 0
         modifyType: 0
         animations: 00000000
         frame: 1

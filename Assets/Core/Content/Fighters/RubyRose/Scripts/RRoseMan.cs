@@ -151,22 +151,20 @@ public class RRoseMan : FighterManager
         }
     }
 
+    int boff;
     public override void FixedUpdateNetwork()
     {
         base.FixedUpdateNetwork();
         if (DisableUpdate) return;
-        if (stateManager.CurrentMoveset == 2)
+        if (stateManager.CurrentMoveset == 2 && fighterWhiteboard.Ints[5] == 1 && inputManager.GetC(out boff, 0, 3).firstPress)
         {
-            if (fighterWhiteboard.Ints[5] == 1)
+            if (!currentScythe) return;
+            if (Vector3.Distance(transform.position, currentScythe.transform.position) < scytheCatchDistance)
             {
-                if (!currentScythe) return;
-                if (Vector3.Distance(transform.position, currentScythe.transform.position) < scytheCatchDistance)
-                {
-                    stateManager.SetMoveset(0);
-                    stateManager.MarkForStateChange(physicsManager.IsGroundedNetworked ? (int)FighterCmnStates.IDLE : (int)FighterCmnStates.FALL);
-                    Runner.Despawn(currentScythe);
-                    currentScythe = null;
-                }
+                stateManager.SetMoveset(0);
+                stateManager.MarkForStateChange(physicsManager.IsGroundedNetworked ? (int)FighterCmnStates.IDLE : (int)FighterCmnStates.FALL);
+                Runner.Despawn(currentScythe);
+                currentScythe = null;
             }
         }
     }
@@ -196,7 +194,7 @@ public class RRoseMan : FighterManager
         fighterWhiteboard.UpdateInt(2, WhiteboardModifyTypes.SET,1); // Has Weapon
         fighterWhiteboard.UpdateInt(3, WhiteboardModifyTypes.SET,0); // Current Gundash
         fighterWhiteboard.UpdateInt(4, WhiteboardModifyTypes.SET,3); // Gundash Max
-        fighterWhiteboard.UpdateInt(5, WhiteboardModifyTypes.SET,0); // Detect Scythe
+        fighterWhiteboard.UpdateInt(5, WhiteboardModifyTypes.SET,0); // Can Grab Scythe
         FStateManager.ChangeState((int)FighterCmnStates.IDLE, 0);
     }
 

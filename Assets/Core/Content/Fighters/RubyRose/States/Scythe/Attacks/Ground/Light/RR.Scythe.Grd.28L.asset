@@ -44,6 +44,7 @@ MonoBehaviour:
   - rid: 1200828845523992589
   - rid: 1200828845523992593
   - rid: 5283439363954835461
+  - rid: 5283439388944236546
   auraRequirement: 0
   initialGroundedState: 1
   stateType: 2
@@ -191,6 +192,7 @@ MonoBehaviour:
         - {x: 6, y: 6}
         condition:
           rid: -2
+        runDuringHitstop: 0
         sounds:
         - soundbank: {fileID: 11400000, guid: 46cf32b8cf1903a428cb8802d2539eca, type: 2}
           sound: swing14
@@ -207,10 +209,11 @@ MonoBehaviour:
         name: On Hit
         id: 19
         parent: -1
-        children: 2400000014000000
+        children: 240000002500000014000000
         frameRanges: []
         condition:
           rid: 387795983688269855
+        runDuringHitstop: 0
     - rid: 387795983688269855
       type: {class: ConditionHitOrBlockCount, ns: rwby, asm: rwby.csharp}
       data:
@@ -228,6 +231,7 @@ MonoBehaviour:
         - {x: 11, y: -1}
         condition:
           rid: -2
+        runDuringHitstop: 0
         asset: {fileID: 11400000, guid: bc799e59dd7b59244a7f8dcbdcafabf0, type: 2}
     - rid: 1200828715613814784
       type: {class: VarModifyAnimationSet, ns: rwby, asm: rwby.csharp}
@@ -240,6 +244,7 @@ MonoBehaviour:
         - {x: 0, y: 0}
         condition:
           rid: -2
+        runDuringHitstop: 0
         modifyType: 1
         wantedAnimations:
         - animationbank: {fileID: 11400000, guid: 2f728dafc0068ab45a19c79cbfc04bdd, type: 2}
@@ -256,6 +261,7 @@ MonoBehaviour:
         - {x: 1, y: 6}
         condition:
           rid: -2
+        runDuringHitstop: 0
         modifyType: 0
         animations: 00000000
         frame: 1
@@ -270,6 +276,7 @@ MonoBehaviour:
         - {x: 0, y: 0}
         condition:
           rid: -2
+        runDuringHitstop: 0
         groundedGroup: 2
     - rid: 1200828785595777026
       type: {class: VarModifyFallSpeed, ns: rwby, asm: rwby.csharp}
@@ -282,6 +289,7 @@ MonoBehaviour:
         - {x: 1, y: 1}
         condition:
           rid: -2
+        runDuringHitstop: 0
         targetType: 0
         modifyType: 1
         value:
@@ -303,6 +311,7 @@ MonoBehaviour:
         - {x: 4, y: 4}
         condition:
           rid: -2
+        runDuringHitstop: 0
         inputSource: 1
         normalizeInputSource: 0
         useRotationIfInputZero: 0
@@ -326,6 +335,7 @@ MonoBehaviour:
         - {x: 4, y: 4}
         condition:
           rid: -2
+        runDuringHitstop: 0
         targetType: 0
         modifyType: 1
         value:
@@ -353,6 +363,7 @@ MonoBehaviour:
         - {x: 14, y: 16}
         condition:
           rid: 1200828804794155009
+        runDuringHitstop: 0
         modifyType: 1
         rotateTowards: 2
         useTargetWhenNoMovement: 0
@@ -371,6 +382,7 @@ MonoBehaviour:
         - {x: 9, y: 12}
         condition:
           rid: 1200828822363832322
+        runDuringHitstop: 0
         modifyType: 1
         value: 13
         parent: -1
@@ -392,6 +404,7 @@ MonoBehaviour:
         - {x: 13, y: 15}
         condition:
           rid: -2
+        runDuringHitstop: 0
         targetType: 0
         modifyType: 0
         value:
@@ -413,6 +426,7 @@ MonoBehaviour:
         - {x: 16, y: -1}
         condition:
           rid: -2
+        runDuringHitstop: 0
         affectedByGravityMulti: 0
         value:
           rid: 1200828845523992590
@@ -458,6 +472,7 @@ MonoBehaviour:
         - {x: 20, y: -1}
         condition:
           rid: 1200828845523992595
+        runDuringHitstop: 0
         ignoreStateConditions: 0
         ignoreAirtimeCheck: 0
         ignoreStringUseCheck: 0
@@ -489,6 +504,7 @@ MonoBehaviour:
         - {x: -1, y: -1}
         condition:
           rid: -2
+        runDuringHitstop: 0
         ignoreStateConditions: 0
         ignoreAirtimeCheck: 0
         ignoreStringUseCheck: 0
@@ -516,6 +532,7 @@ MonoBehaviour:
         - {x: 9, y: 13}
         condition:
           rid: -2
+        runDuringHitstop: 0
         boxType: 1
         attachedTo: 0
         shape: 0
@@ -534,6 +551,7 @@ MonoBehaviour:
         - {x: 13, y: 20}
         condition:
           rid: -2
+        runDuringHitstop: 0
         traction:
           rid: 2193520817874927617
         applyMovement: 1
@@ -556,7 +574,21 @@ MonoBehaviour:
         - {x: 7, y: -1}
         condition:
           rid: -2
+        runDuringHitstop: 0
         asset: {fileID: 11400000, guid: a8844c3d05bce98469f86710807ea33d, type: 2}
+    - rid: 5283439388944236546
+      type: {class: VarExternal, ns: rwby, asm: rwby.csharp}
+      data:
+        name: Try Air Dash
+        id: 37
+        parent: 19
+        children: 
+        frameRanges:
+        - {x: 11, y: -1}
+        condition:
+          rid: -2
+        runDuringHitstop: 0
+        asset: {fileID: 11400000, guid: 280b115f7de70e2429fc1b2a1d4051f2, type: 2}
     - rid: 7270848428946489353
       type: {class: VarRotateTowards, ns: rwby, asm: rwby.csharp}
       data:
@@ -568,6 +600,7 @@ MonoBehaviour:
         - {x: 1, y: 3}
         condition:
           rid: -2
+        runDuringHitstop: 0
         rotateTowards: 0
         eulerAngle: {x: 0, y: 0, z: 0}
         rotateTowardsTarget: 1
@@ -590,6 +623,7 @@ MonoBehaviour:
         - {x: 1, y: 9}
         condition:
           rid: -2
+        runDuringHitstop: 0
     - rid: 7270848718906589187
       type: {class: VarCreateBox, ns: rwby, asm: rwby.csharp}
       data:
@@ -601,6 +635,7 @@ MonoBehaviour:
         - {x: 1, y: -1}
         condition:
           rid: -2
+        runDuringHitstop: 0
         boxType: 0
         attachedTo: 0
         shape: 0
@@ -619,6 +654,7 @@ MonoBehaviour:
         - {x: 1, y: 15}
         condition:
           rid: 1200828785595777037
+        runDuringHitstop: 0
         boxType: 2
         attachedTo: 0
         shape: 0
@@ -636,6 +672,7 @@ MonoBehaviour:
         frameRanges: []
         condition:
           rid: 8688056833868562433
+        runDuringHitstop: 0
     - rid: 8688056833868562433
       type: {class: ConditionHitOrBlockCount, ns: rwby, asm: rwby.csharp}
       data:
@@ -653,4 +690,5 @@ MonoBehaviour:
         - {x: 14, y: -1}
         condition:
           rid: -2
+        runDuringHitstop: 0
         asset: {fileID: 11400000, guid: 852b081cfd9efbb449cca3171458f8cc, type: 2}

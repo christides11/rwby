@@ -20,10 +20,6 @@ MonoBehaviour:
     RefIds:
     - rid: -2
       type: {class: , ns: , asm: }
-    - rid: 387796025889783869
-      type: {class: RubyRoseStateReference, ns: rwby.core, asm: rwby.core}
-      data:
-        state: 87
     - rid: 6951768528003006472
       type: {class: VarChangeStateList, ns: rwby, asm: rwby.csharp}
       data:
@@ -34,23 +30,11 @@ MonoBehaviour:
         frameRanges: []
         condition:
           rid: -2
+        runDuringHitstop: 0
         ignoreAuraRequirement: 0
         checkInputSequence: 1
         checkCondition: 1
-        states:
-        - movesetID: -1
-          state:
-            rid: 387796025889783869
-        - movesetID: -1
-          state:
-            rid: 7270848878803943431
-        - movesetID: -1
-          state:
-            rid: 8688056833868562436
-    - rid: 7270848878803943431
-      type: {class: RubyRoseStateReference, ns: rwby.core, asm: rwby.core}
-      data:
-        state: 56
+        states: []
     - rid: 8688056360164655104
       type: {class: VarTrySpecial, ns: rwby, asm: rwby.csharp}
       data:
@@ -61,7 +45,4 @@ MonoBehaviour:
         frameRanges: []
         condition:
           rid: -2
-    - rid: 8688056833868562436
-      type: {class: RubyRoseStateReference, ns: rwby.core, asm: rwby.core}
-      data:
-        state: 120
+        runDuringHitstop: 0

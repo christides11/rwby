@@ -42,6 +42,7 @@ MonoBehaviour:
   - rid: 387796025889783854
   - rid: 5775511990160850944
   - rid: 1200828934167986184
+  - rid: 5283439388944236544
   auraRequirement: 0
   initialGroundedState: 1
   stateType: 1
@@ -78,10 +79,11 @@ MonoBehaviour:
         name: Barehanded
         id: 15
         parent: -1
-        children: 100000001100000012000000
+        children: 10000000110000001200000017000000
         frameRanges: []
         condition:
           rid: 387796025889783851
+        runDuringHitstop: 0
     - rid: 387796025889783851
       type: {class: ConditionMoveset, ns: rwby, asm: rwby.csharp}
       data:
@@ -99,6 +101,7 @@ MonoBehaviour:
         - {x: 1, y: -1}
         condition:
           rid: -2
+        runDuringHitstop: 0
         asset: {fileID: 11400000, guid: dd623d7795614cc4ebc52c3e2bc7027f, type: 2}
     - rid: 387796025889783853
       type: {class: VarCreateBox, ns: rwby, asm: rwby.csharp}
@@ -111,6 +114,7 @@ MonoBehaviour:
         - {x: 1, y: -1}
         condition:
           rid: -2
+        runDuringHitstop: 0
         boxType: 0
         attachedTo: 0
         shape: 0
@@ -129,6 +133,7 @@ MonoBehaviour:
         - {x: 1, y: -1}
         condition:
           rid: -2
+        runDuringHitstop: 0
         boxType: 3
         attachedTo: 0
         shape: 0
@@ -147,6 +152,7 @@ MonoBehaviour:
         - {x: 1, y: -1}
         condition:
           rid: 1200828934167986185
+        runDuringHitstop: 0
         asset: {fileID: 11400000, guid: 581bd36fa27d58b44a3364ba084b7eb5, type: 2}
     - rid: 1200828934167986185
       type: {class: ConditionMoveset, ns: rwby, asm: rwby.csharp}
@@ -165,6 +171,7 @@ MonoBehaviour:
         - {x: 0, y: 0}
         condition:
           rid: -2
+        runDuringHitstop: 0
         ecbCenter: 0.825
         ecbRadius: 0.3
         ecbHeight: 1.65
@@ -178,6 +185,7 @@ MonoBehaviour:
         frameRanges: []
         condition:
           rid: 8688056409313247233
+        runDuringHitstop: 0
     - rid: 2193520817874927618
       type: {class: VarExternal, ns: rwby, asm: rwby.csharp}
       data:
@@ -189,6 +197,7 @@ MonoBehaviour:
         - {x: 1, y: -1}
         condition:
           rid: -2
+        runDuringHitstop: 0
         asset: {fileID: 11400000, guid: 38d47b53b1c6fa24580e163448503c28, type: 2}
     - rid: 2193520836063002646
       type: {class: VarCreateBox, ns: rwby, asm: rwby.csharp}
@@ -201,6 +210,7 @@ MonoBehaviour:
         - {x: 1, y: -1}
         condition:
           rid: -2
+        runDuringHitstop: 0
         boxType: 0
         attachedTo: 0
         shape: 0
@@ -219,6 +229,7 @@ MonoBehaviour:
         - {x: 1, y: -1}
         condition:
           rid: -2
+        runDuringHitstop: 0
         boxType: 2
         attachedTo: 0
         shape: 0
@@ -226,6 +237,21 @@ MonoBehaviour:
         boxExtents: {x: 0.3, y: 0.75, z: 0.3}
         radius: 0
         definitionIndex: 0
+    - rid: 5283439388944236544
+      type: {class: VarModifyIntWhiteboard, ns: rwby, asm: rwby.csharp}
+      data:
+        name: 
+        id: 23
+        parent: 15
+        children: 
+        frameRanges:
+        - {x: 0, y: 0}
+        condition:
+          rid: -2
+        runDuringHitstop: 0
+        modifyType: 4
+        index: 5
+        val: 1
     - rid: 5775511466801889299
       type: {class: VarModifyAnimationSet, ns: rwby, asm: rwby.csharp}
       data:
@@ -237,6 +263,7 @@ MonoBehaviour:
         - {x: 0, y: 0}
         condition:
           rid: 5775511466801889302
+        runDuringHitstop: 0
         modifyType: 1
         wantedAnimations:
         - animationbank: {fileID: 11400000, guid: 2f728dafc0068ab45a19c79cbfc04bdd, type: 2}
@@ -265,6 +292,7 @@ MonoBehaviour:
         - {x: 1, y: -1}
         condition:
           rid: 5775511990160850946
+        runDuringHitstop: 0
         ignoreStateConditions: 0
         ignoreAirtimeCheck: 0
         ignoreStringUseCheck: 0
@@ -301,6 +329,7 @@ MonoBehaviour:
         - {x: 1, y: -1}
         condition:
           rid: -2
+        runDuringHitstop: 0
         asset: {fileID: 11400000, guid: 68d69ede5c5e2c3488b29d6881e25946, type: 2}
     - rid: 8688056201677897732
       type: {class: VarModifyAnimationSet, ns: rwby, asm: rwby.csharp}
@@ -313,6 +342,7 @@ MonoBehaviour:
         - {x: 0, y: 0}
         condition:
           rid: 5775511466801889303
+        runDuringHitstop: 0
         modifyType: 1
         wantedAnimations:
         - animationbank: {fileID: 11400000, guid: 2f728dafc0068ab45a19c79cbfc04bdd, type: 2}
@@ -328,6 +358,7 @@ MonoBehaviour:
         frameRanges: []
         condition:
           rid: 8688056216264638479
+        runDuringHitstop: 0
     - rid: 8688056216264638479
       type: {class: ConditionLockedOn, ns: rwby, asm: rwby.csharp}
       data:
@@ -343,6 +374,7 @@ MonoBehaviour:
         frameRanges: []
         condition:
           rid: 8688056216264638481
+        runDuringHitstop: 0
     - rid: 8688056216264638481
       type: {class: ConditionLockedOn, ns: rwby, asm: rwby.csharp}
       data:
@@ -359,6 +391,7 @@ MonoBehaviour:
         - {x: 1, y: -1}
         condition:
           rid: -2
+        runDuringHitstop: 0
         modifyType: 0
         animations: 00000000
         frame: 1
@@ -379,6 +412,7 @@ MonoBehaviour:
         - {x: 1, y: -1}
         condition:
           rid: -2
+        runDuringHitstop: 0
         boxType: 3
         attachedTo: 0
         shape: 0
@@ -396,6 +430,7 @@ MonoBehaviour:
         frameRanges: []
         condition:
           rid: 8688056606344609830
+        runDuringHitstop: 0
     - rid: 8688056606344609830
       type: {class: ConditionMoveset, ns: rwby, asm: rwby.csharp}
       data:
@@ -413,6 +448,7 @@ MonoBehaviour:
         - {x: 1, y: -1}
         condition:
           rid: -2
+        runDuringHitstop: 0
         asset: {fileID: 11400000, guid: ba688ef34edd2d84ea6a5b2e1e2af06e, type: 2}
     - rid: 8688056606344609832
       type: {class: VarCreateBox, ns: rwby, asm: rwby.csharp}
@@ -425,6 +461,7 @@ MonoBehaviour:
         - {x: 1, y: -1}
         condition:
           rid: -2
+        runDuringHitstop: 0
         boxType: 0
         attachedTo: 0
         shape: 0
@@ -443,6 +480,7 @@ MonoBehaviour:
         - {x: 1, y: -1}
         condition:
           rid: -2
+        runDuringHitstop: 0
         boxType: 3
         attachedTo: 0
         shape: 0
