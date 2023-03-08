@@ -65,7 +65,7 @@ namespace rwby
                     rotation = manager.myTransform.eulerAngles,
                     scale = new Vector3(1, 1, 1),
                     isTemporary = false
-                } }, addToEffectSet: false);
+                } });
             }
 
             if (!string.IsNullOrEmpty(hitReaction.hitInfoGroup.hitSound))
@@ -104,7 +104,7 @@ namespace rwby
                     rotation = manager.myTransform.eulerAngles,
                     scale = new Vector3(1, 1, 1),
                     isTemporary = false
-                } }, addToEffectSet: false);
+                } });
             }
 
             if (!string.IsNullOrEmpty(hitReaction.hitInfoGroup.hitSound))
@@ -146,7 +146,7 @@ namespace rwby
                     scale = new Vector3(1, 1, 1),
                     isTemporary = false,
                     hitstopAffected = false
-                } }, addToEffectSet: false);
+                } });
             }
             
             if (!string.IsNullOrEmpty(hitReaction.hitInfoGroup.hitBlockSound))

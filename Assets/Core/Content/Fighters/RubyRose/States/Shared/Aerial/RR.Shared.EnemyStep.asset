@@ -25,6 +25,7 @@ MonoBehaviour:
   - rid: 5283439312591388700
   - rid: 5283439312591388701
   - rid: 5283439312591388702
+  - rid: 5283439403872288775
   auraRequirement: 0
   initialGroundedState: 2
   stateType: 1
@@ -56,10 +57,11 @@ MonoBehaviour:
         name: Scythe
         id: 1
         parent: -1
-        children: 03000000
+        children: 0300000006000000
         frameRanges: []
         condition:
           rid: 5283439312591388697
+        runDuringHitstop: 0
     - rid: 5283439312591388697
       type: {class: ConditionMoveset, ns: rwby, asm: rwby.csharp}
       data:
@@ -76,6 +78,7 @@ MonoBehaviour:
         frameRanges: []
         condition:
           rid: 5283439312591388699
+        runDuringHitstop: 0
     - rid: 5283439312591388699
       type: {class: ConditionMoveset, ns: rwby, asm: rwby.csharp}
       data:
@@ -93,6 +96,7 @@ MonoBehaviour:
         - {x: 1, y: -1}
         condition:
           rid: -2
+        runDuringHitstop: 0
         asset: {fileID: 11400000, guid: 852b081cfd9efbb449cca3171458f8cc, type: 2}
     - rid: 5283439312591388701
       type: {class: VarExternal, ns: rwby, asm: rwby.csharp}
@@ -105,6 +109,7 @@ MonoBehaviour:
         - {x: 1, y: -1}
         condition:
           rid: -2
+        runDuringHitstop: 0
         asset: {fileID: 11400000, guid: cc00d510ea2530d49bdc1b20fbaa26a5, type: 2}
     - rid: 5283439312591388702
       type: {class: VarReleaseInertia, ns: rwby, asm: rwby.csharp}
@@ -117,4 +122,22 @@ MonoBehaviour:
         - {x: -1, y: -1}
         condition:
           rid: -2
+        runDuringHitstop: 0
         applyToMovement: 0
+    - rid: 5283439403872288775
+      type: {class: VarModifyAnimationSet, ns: rwby, asm: rwby.csharp}
+      data:
+        name: Scythe Anim
+        id: 6
+        parent: 1
+        children: 
+        frameRanges:
+        - {x: 0, y: 0}
+        condition:
+          rid: -2
+        runDuringHitstop: 0
+        modifyType: 1
+        wantedAnimations:
+        - animationbank: {fileID: 11400000, guid: 2f728dafc0068ab45a19c79cbfc04bdd, type: 2}
+          animation: jumpsquat
+        fadeTime: 0

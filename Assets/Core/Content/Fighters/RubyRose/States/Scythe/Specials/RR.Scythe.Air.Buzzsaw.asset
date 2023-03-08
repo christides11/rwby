@@ -36,6 +36,10 @@ MonoBehaviour:
   - rid: 8688056342057058320
   - rid: 387795891450544161
   - rid: 5283439354918469634
+  - rid: 5283439432637087744
+  - rid: 5283439432637087745
+  - rid: 5283439432637087748
+  - rid: 5283439432637087749
   auraRequirement: 0
   initialGroundedState: 2
   stateType: 2
@@ -180,6 +184,7 @@ MonoBehaviour:
         - {x: 115, y: 115}
         condition:
           rid: -2
+        runDuringHitstop: 0
         sounds:
         - soundbank: {fileID: 11400000, guid: 46cf32b8cf1903a428cb8802d2539eca, type: 2}
           sound: swing15
@@ -201,7 +206,76 @@ MonoBehaviour:
         - {x: 5, y: -1}
         condition:
           rid: -2
+        runDuringHitstop: 0
         asset: {fileID: 11400000, guid: a8844c3d05bce98469f86710807ea33d, type: 2}
+    - rid: 5283439432637087744
+      type: {class: VarModifyAnimationSet, ns: rwby, asm: rwby.csharp}
+      data:
+        name: Set Startup Anim
+        id: 18
+        parent: -1
+        children: 
+        frameRanges:
+        - {x: 0, y: 0}
+        condition:
+          rid: -2
+        runDuringHitstop: 0
+        modifyType: 1
+        wantedAnimations:
+        - animationbank: {fileID: 11400000, guid: 2f728dafc0068ab45a19c79cbfc04bdd, type: 2}
+          animation: scythe.atk.air.buzzsaw.startup
+        fadeTime: 0
+    - rid: 5283439432637087745
+      type: {class: VarModifyAnimationSet, ns: rwby, asm: rwby.csharp}
+      data:
+        name: Set Loop Anim
+        id: 19
+        parent: -1
+        children: 
+        frameRanges:
+        - {x: 5, y: 5}
+        condition:
+          rid: -2
+        runDuringHitstop: 0
+        modifyType: 1
+        wantedAnimations:
+        - animationbank: {fileID: 11400000, guid: 2f728dafc0068ab45a19c79cbfc04bdd, type: 2}
+          animation: scythe.atk.air.buzzsaw.loop
+        fadeTime: 0
+    - rid: 5283439432637087748
+      type: {class: VarModifyAnimationFrame, ns: rwby, asm: rwby.csharp}
+      data:
+        name: Add Anim Frame
+        id: 20
+        parent: -1
+        children: 
+        frameRanges:
+        - {x: 6, y: -1}
+        condition:
+          rid: -2
+        runDuringHitstop: 0
+        modifyType: 0
+        animations: 00000000
+        frame: 1
+    - rid: 5283439432637087749
+      type: {class: VarModifyAnimationFrame, ns: rwby, asm: rwby.csharp}
+      data:
+        name: Set Anim Frame
+        id: 21
+        parent: -1
+        children: 
+        frameRanges:
+        - {x: 25, y: 25}
+        - {x: 45, y: 45}
+        - {x: 65, y: 65}
+        - {x: 85, y: 85}
+        - {x: 105, y: 105}
+        condition:
+          rid: -2
+        runDuringHitstop: 0
+        modifyType: 1
+        animations: 00000000
+        frame: 0
     - rid: 7270848729635094528
       type: {class: VarEmpty, ns: rwby, asm: rwby.csharp}
       data:
@@ -212,6 +286,7 @@ MonoBehaviour:
         frameRanges: []
         condition:
           rid: 7270848729635094529
+        runDuringHitstop: 0
     - rid: 7270848729635094529
       type: {class: ConditionHitOrBlockCount, ns: rwby, asm: rwby.csharp}
       data:
@@ -229,6 +304,7 @@ MonoBehaviour:
         - {x: 5, y: -1}
         condition:
           rid: -2
+        runDuringHitstop: 0
         asset: {fileID: 11400000, guid: e38b0fa35e04d9049862303c4ec51c99, type: 2}
     - rid: 7270848729635094541
       type: {class: VarExternal, ns: rwby, asm: rwby.csharp}
@@ -241,6 +317,7 @@ MonoBehaviour:
         - {x: 5, y: -1}
         condition:
           rid: -2
+        runDuringHitstop: 0
         asset: {fileID: 11400000, guid: e3543988f17bcfe4c80b20a6e4e51546, type: 2}
     - rid: 8688056342057058304
       type: {class: VarModifyFallSpeed, ns: rwby, asm: rwby.csharp}
@@ -253,6 +330,7 @@ MonoBehaviour:
         - {x: 0, y: 0}
         condition:
           rid: -2
+        runDuringHitstop: 0
         targetType: 0
         modifyType: 1
         value:
@@ -275,6 +353,7 @@ MonoBehaviour:
         - {x: 5, y: -1}
         condition:
           rid: 8688056342057058307
+        runDuringHitstop: 0
         ignoreStateConditions: 0
         ignoreAirtimeCheck: 0
         ignoreStringUseCheck: 0
@@ -302,6 +381,7 @@ MonoBehaviour:
         - {x: 5, y: -1}
         condition:
           rid: -2
+        runDuringHitstop: 0
         boxType: 1
         attachedTo: 0
         shape: 0
@@ -320,6 +400,7 @@ MonoBehaviour:
         - {x: 3, y: -1}
         condition:
           rid: -2
+        runDuringHitstop: 0
         useValue: 1
         value:
           rid: 8688056342057058311
@@ -375,6 +456,7 @@ MonoBehaviour:
         - {x: -1, y: -1}
         condition:
           rid: -2
+        runDuringHitstop: 0
         ignoreStateConditions: 0
         ignoreAirtimeCheck: 0
         ignoreStringUseCheck: 0
@@ -402,6 +484,7 @@ MonoBehaviour:
         - {x: 5, y: -1}
         condition:
           rid: -2
+        runDuringHitstop: 0
         frameDivider: 5
     - rid: 8688056342057058323
       type: {class: VarCreateBox, ns: rwby, asm: rwby.csharp}
@@ -414,6 +497,7 @@ MonoBehaviour:
         - {x: 1, y: -1}
         condition:
           rid: -2
+        runDuringHitstop: 0
         boxType: 2
         attachedTo: 0
         shape: 0
@@ -436,6 +520,7 @@ MonoBehaviour:
         - {x: 0, y: 0}
         condition:
           rid: -2
+        runDuringHitstop: 0
         inputSource: 1
         normalizeInputSource: 1
         useRotationIfInputZero: 0
@@ -459,6 +544,7 @@ MonoBehaviour:
         - {x: 0, y: 0}
         condition:
           rid: -2
+        runDuringHitstop: 0
         magnitude:
           rid: 8688056377568657430
     - rid: 8688056377568657430
@@ -479,6 +565,7 @@ MonoBehaviour:
         - {x: 0, y: 0}
         condition:
           rid: -2
+        runDuringHitstop: 0
         modifyType: 1
         rotateTowards: 0
         useTargetWhenNoMovement: 0
@@ -494,6 +581,7 @@ MonoBehaviour:
         - {x: 1, y: 1}
         condition:
           rid: -2
+        runDuringHitstop: 0
         targetType: 0
         modifyType: 0
         valueIsPercentage: 0

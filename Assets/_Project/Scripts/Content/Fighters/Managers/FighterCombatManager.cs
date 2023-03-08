@@ -588,6 +588,7 @@ namespace rwby
             if (physicsManager.forceGravity > 0)
             {
                 physicsManager.SetGrounded(false);
+                physicsManager.ForceUnground();
             }
 
             int dmg = (int)(hitInfoGroup.damage * (hitInfoGroup.ignoreProration ? 1.0f : Proration));

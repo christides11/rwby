@@ -501,14 +501,16 @@ namespace rwby
             VarModifyEffectSet vars = (VarModifyEffectSet)variables;
 
             Vector3 pBase = Vector3.zero;
+            Vector3 eulerBase = Vector3.zero;
             if (vars.OffsetStartAtFighter) pBase = f.myTransform.position;
+            if (vars.RotOffsetFromFighters) eulerBase = f.myTransform.eulerAngles;
             switch (vars.modifyType)
             {
                 case VarModifyType.SET:
-                    f.fighterEffector.SetEffects(vars.wantedEffects);
+                    f.fighterEffector.SetEffects(vars.wantedEffects, pBase, eulerBase);
                     break;
                 case VarModifyType.ADD:
-                    f.fighterEffector.AddEffects(vars.wantedEffects, pBase, !vars.doNotAddToSet);
+                    f.fighterEffector.AddEffects(vars.wantedEffects, pBase, eulerBase);
                     break;
             }
         }

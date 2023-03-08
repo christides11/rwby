@@ -29,6 +29,7 @@ MonoBehaviour:
   initialGroundedState: 2
   stateType: 4
   maxUsesInString: -1
+  maxUsesPerAirtime: -1
   selfChainable: 0
   allowBaseStateTransitions: 1
   inputSequence:
@@ -60,6 +61,7 @@ MonoBehaviour:
         - {x: 2, y: -1}
         condition:
           rid: -2
+        runDuringHitstop: 0
         useValue: 1
         value:
           rid: 7270848813903118336
@@ -96,6 +98,7 @@ MonoBehaviour:
         - {x: 1, y: -1}
         condition:
           rid: 2193520836063002642
+        runDuringHitstop: 0
         asset: {fileID: 11400000, guid: 3e988135845709d4594e5628d0bf81cd, type: 2}
     - rid: 2193520836063002642
       type: {class: ConditionHitstunValue, ns: rwby, asm: rwby.csharp}
@@ -113,8 +116,14 @@ MonoBehaviour:
         - {x: 2, y: -1}
         condition:
           rid: 2193520836063002644
+        runDuringHitstop: 0
+        ignoreStateConditions: 0
+        ignoreAirtimeCheck: 0
+        ignoreStringUseCheck: 0
+        ignoreAuraRequirement: 0
         checkInputSequence: 0
         checkCondition: 0
+        overrideStateChange: 0
         targetType: 0
         stateMovesetID: -1
         state:
@@ -146,6 +155,7 @@ MonoBehaviour:
         - {x: 1, y: -1}
         condition:
           rid: -2
+        runDuringHitstop: 0
         boxType: 2
         attachedTo: 0
         shape: 0
@@ -164,6 +174,7 @@ MonoBehaviour:
         - {x: 1, y: -1}
         condition:
           rid: -2
+        runDuringHitstop: 0
         boxType: 0
         attachedTo: 0
         shape: 0

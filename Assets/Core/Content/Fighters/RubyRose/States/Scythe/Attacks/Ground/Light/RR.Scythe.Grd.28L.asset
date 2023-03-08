@@ -45,6 +45,9 @@ MonoBehaviour:
   - rid: 1200828845523992593
   - rid: 5283439363954835461
   - rid: 5283439388944236546
+  - rid: 5283439403872288788
+  - rid: 5283439429343248384
+  - rid: 5283439429343248385
   auraRequirement: 0
   initialGroundedState: 1
   stateType: 2
@@ -248,7 +251,7 @@ MonoBehaviour:
         modifyType: 1
         wantedAnimations:
         - animationbank: {fileID: 11400000, guid: 2f728dafc0068ab45a19c79cbfc04bdd, type: 2}
-          animation: scythe.grd.5L
+          animation: petaldash
         fadeTime: 0
     - rid: 1200828715613814785
       type: {class: VarModifyAnimationFrame, ns: rwby, asm: rwby.csharp}
@@ -258,7 +261,7 @@ MonoBehaviour:
         parent: -1
         children: 
         frameRanges:
-        - {x: 1, y: 6}
+        - {x: 1, y: 8}
         condition:
           rid: -2
         runDuringHitstop: 0
@@ -589,6 +592,66 @@ MonoBehaviour:
           rid: -2
         runDuringHitstop: 0
         asset: {fileID: 11400000, guid: 280b115f7de70e2429fc1b2a1d4051f2, type: 2}
+    - rid: 5283439403872288788
+      type: {class: VarModifyAnimationSet, ns: rwby, asm: rwby.csharp}
+      data:
+        name: 
+        id: 38
+        parent: -1
+        children: 
+        frameRanges:
+        - {x: 15, y: 15}
+        condition:
+          rid: -2
+        runDuringHitstop: 0
+        modifyType: 1
+        wantedAnimations:
+        - animationbank: {fileID: 11400000, guid: 2f728dafc0068ab45a19c79cbfc04bdd, type: 2}
+          animation: fall
+        fadeTime: 0
+    - rid: 5283439429343248384
+      type: {class: VarModifyEffectSet, ns: rwby, asm: rwby.csharp}
+      data:
+        name: 
+        id: 39
+        parent: -1
+        children: 
+        frameRanges:
+        - {x: 0, y: 0}
+        condition:
+          rid: -2
+        runDuringHitstop: 0
+        modifyType: 0
+        wantedEffects:
+        - effectbank: {fileID: 11400000, guid: 6815e44ec9f5dc842a65867c5eb910cc, type: 2}
+          effect: petaldash
+          parent:
+            rid: 5283439429343248388
+          offset: {x: 0, y: 0, z: 0}
+          rotation: {x: 0, y: 0, z: 0}
+          scale: {x: 1, y: 1, z: 1}
+          isTemporary: 1
+          hitstopAffected: 1
+        OffsetStartAtFighter: 0
+        RotOffsetFromFighters: 0
+    - rid: 5283439429343248385
+      type: {class: VarClearCurrentEffects, ns: rwby, asm: rwby.csharp}
+      data:
+        name: 
+        id: 40
+        parent: -1
+        children: 
+        frameRanges:
+        - {x: 15, y: 15}
+        condition:
+          rid: -2
+        runDuringHitstop: 0
+        keepEffects: 0
+        autoIncrementEffects: 0
+    - rid: 5283439429343248388
+      type: {class: FighterBoneReferenceCmn, ns: rwby, asm: rwby.csharp}
+      data:
+        value: 1
     - rid: 7270848428946489353
       type: {class: VarRotateTowards, ns: rwby, asm: rwby.csharp}
       data:

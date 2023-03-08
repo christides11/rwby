@@ -26,6 +26,7 @@ MonoBehaviour:
   - rid: 387795733835153472
   - rid: 387795733835153474
   - rid: 5775512102425853952
+  - rid: 5283439403872288768
   auraRequirement: 0
   initialGroundedState: 2
   stateType: 1
@@ -64,6 +65,7 @@ MonoBehaviour:
         - {x: 0, y: 0}
         condition:
           rid: 387795932360736817
+        runDuringHitstop: 0
         modifyType: 1
         rotateTowards: 0
         useTargetWhenNoMovement: 0
@@ -79,6 +81,7 @@ MonoBehaviour:
         - {x: -1, y: -1}
         condition:
           rid: -2
+        runDuringHitstop: 0
         magnitude:
           rid: 387795733835153471
     - rid: 387795733835153471
@@ -98,6 +101,7 @@ MonoBehaviour:
         - {x: -1, y: -1}
         condition:
           rid: -2
+        runDuringHitstop: 0
         multiplier:
           rid: 387795733835153473
     - rid: 387795733835153473
@@ -118,6 +122,7 @@ MonoBehaviour:
         - {x: -1, y: -1}
         condition:
           rid: -2
+        runDuringHitstop: 0
         inputSource: 0
         normalizeInputSource: 0
         useRotationIfInputZero: 0
@@ -135,6 +140,29 @@ MonoBehaviour:
       data:
         inverse: 1
         requireTarget: 0
+    - rid: 5283439403872288768
+      type: {class: VarModifyAnimationSet, ns: rwby, asm: rwby.csharp}
+      data:
+        name: Scythe Anim
+        id: 8
+        parent: -1
+        children: 
+        frameRanges:
+        - {x: 0, y: 0}
+        condition:
+          rid: 5283439403872288769
+        runDuringHitstop: 0
+        modifyType: 1
+        wantedAnimations:
+        - animationbank: {fileID: 11400000, guid: 2f728dafc0068ab45a19c79cbfc04bdd, type: 2}
+          animation: jumpsquat
+        fadeTime: 0
+    - rid: 5283439403872288769
+      type: {class: ConditionMoveset, ns: rwby, asm: rwby.csharp}
+      data:
+        inverse: 0
+        checkCurrentMovesetInstead: 0
+        moveset: 0
     - rid: 5775512102425853952
       type: {class: VarModifySoundSet, ns: rwby, asm: rwby.csharp}
       data:
@@ -146,10 +174,11 @@ MonoBehaviour:
         - {x: 1, y: 1}
         condition:
           rid: -2
+        runDuringHitstop: 0
         sounds:
         - soundbank: {fileID: 11400000, guid: 2f4063bd6a5418f4a9c4e61c84752271, type: 2}
           sound: jump
-          parented: 0
+          parented: 1
           offset: {x: 0, y: 0, z: 0}
           volume: 1
           minDist: 3
@@ -167,6 +196,7 @@ MonoBehaviour:
         - {x: 1, y: -1}
         condition:
           rid: -2
+        runDuringHitstop: 0
         boxType: 2
         attachedTo: 0
         shape: 0

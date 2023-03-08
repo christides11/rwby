@@ -34,6 +34,8 @@ MonoBehaviour:
   - rid: 7270848899719102490
   - rid: 387795729903517697
   - rid: 5775512102425853954
+  - rid: 5283439399747190784
+  - rid: 5283439403872288774
   auraRequirement: 0
   initialGroundedState: 2
   stateType: 1
@@ -74,6 +76,7 @@ MonoBehaviour:
         - {x: 10, y: -1}
         condition:
           rid: -2
+        runDuringHitstop: 0
         useValue: 0
         value:
           rid: -2
@@ -123,6 +126,7 @@ MonoBehaviour:
         - {x: -1, y: -1}
         condition:
           rid: -2
+        runDuringHitstop: 0
         ignoreStateConditions: 0
         ignoreAirtimeCheck: 0
         ignoreStringUseCheck: 0
@@ -150,7 +154,54 @@ MonoBehaviour:
         - {x: 5, y: -1}
         condition:
           rid: -2
+        runDuringHitstop: 0
         asset: {fileID: 11400000, guid: a8844c3d05bce98469f86710807ea33d, type: 2}
+    - rid: 5283439399747190784
+      type: {class: VarModifyEffectSet, ns: rwby, asm: rwby.csharp}
+      data:
+        name: 
+        id: 16
+        parent: -1
+        children: 
+        frameRanges:
+        - {x: 1, y: 1}
+        condition:
+          rid: -2
+        runDuringHitstop: 0
+        modifyType: 0
+        wantedEffects:
+        - effectbank: {fileID: 11400000, guid: 5d1086999fc610e4290407b33cce3ff1, type: 2}
+          effect: airdash
+          parent:
+            rid: 5283439399747190786
+          offset: {x: 0, y: 1, z: 0}
+          rotation: {x: 0, y: 0, z: 0}
+          scale: {x: 1, y: 1, z: 1}
+          isTemporary: 0
+          hitstopAffected: 0
+        OffsetStartAtFighter: 1
+        RotOffsetFromFighters: 1
+    - rid: 5283439399747190786
+      type: {class: FighterBoneReferenceCmn, ns: rwby, asm: rwby.csharp}
+      data:
+        value: 0
+    - rid: 5283439403872288774
+      type: {class: VarModifyAnimationSet, ns: rwby, asm: rwby.csharp}
+      data:
+        name: 
+        id: 17
+        parent: 6
+        children: 
+        frameRanges:
+        - {x: 0, y: 0}
+        condition:
+          rid: -2
+        runDuringHitstop: 0
+        modifyType: 1
+        wantedAnimations:
+        - animationbank: {fileID: 11400000, guid: 2f728dafc0068ab45a19c79cbfc04bdd, type: 2}
+          animation: scythe.airdash
+        fadeTime: 0
     - rid: 5775512102425853954
       type: {class: VarModifySoundSet, ns: rwby, asm: rwby.csharp}
       data:
@@ -162,16 +213,17 @@ MonoBehaviour:
         - {x: 1, y: 1}
         condition:
           rid: -2
+        runDuringHitstop: 0
         sounds:
         - soundbank: {fileID: 11400000, guid: 2f4063bd6a5418f4a9c4e61c84752271, type: 2}
           sound: airdash
-          parented: 0
+          parented: 1
           offset: {x: 0, y: 0, z: 0}
           volume: 1
-          minDist: 2
+          minDist: 0
           maxDist: 10
-          pitchDeviMin: -0.1
-          pitchDeviMax: 0.1
+          pitchDeviMin: 0
+          pitchDeviMax: 0
     - rid: 7270848729635094542
       type: {class: VarClampMovement, ns: rwby, asm: rwby.csharp}
       data:
@@ -183,6 +235,7 @@ MonoBehaviour:
         - {x: -2, y: -2}
         condition:
           rid: -2
+        runDuringHitstop: 0
         magnitude:
           rid: 7270848729635094543
     - rid: 7270848729635094543
@@ -201,6 +254,7 @@ MonoBehaviour:
         frameRanges: []
         condition:
           rid: 7270848899719102489
+        runDuringHitstop: 0
     - rid: 7270848899719102489
       type: {class: ConditionMoveset, ns: rwby, asm: rwby.csharp}
       data:
@@ -218,6 +272,7 @@ MonoBehaviour:
         - {x: 1, y: -1}
         condition:
           rid: -2
+        runDuringHitstop: 0
         asset: {fileID: 11400000, guid: cc00d510ea2530d49bdc1b20fbaa26a5, type: 2}
     - rid: 8688056217396838408
       type: {class: VarExternal, ns: rwby, asm: rwby.csharp}
@@ -230,6 +285,7 @@ MonoBehaviour:
         - {x: 5, y: -1}
         condition:
           rid: -2
+        runDuringHitstop: 0
         asset: {fileID: 11400000, guid: 280b115f7de70e2429fc1b2a1d4051f2, type: 2}
     - rid: 8688056331001921554
       type: {class: VarCreateBox, ns: rwby, asm: rwby.csharp}
@@ -242,6 +298,7 @@ MonoBehaviour:
         - {x: 1, y: -1}
         condition:
           rid: -2
+        runDuringHitstop: 0
         boxType: 2
         attachedTo: 0
         shape: 0
@@ -260,6 +317,7 @@ MonoBehaviour:
         - {x: 5, y: -1}
         condition:
           rid: -2
+        runDuringHitstop: 0
         ignoreStateConditions: 0
         ignoreAirtimeCheck: 0
         ignoreStringUseCheck: 0
@@ -282,10 +340,11 @@ MonoBehaviour:
         name: Scythe
         id: 6
         parent: -1
-        children: 07000000
+        children: 0700000011000000
         frameRanges: []
         condition:
           rid: 8688056409313247248
+        runDuringHitstop: 0
     - rid: 8688056409313247248
       type: {class: ConditionMoveset, ns: rwby, asm: rwby.csharp}
       data:
@@ -303,6 +362,7 @@ MonoBehaviour:
         - {x: 5, y: -1}
         condition:
           rid: -2
+        runDuringHitstop: 0
         asset: {fileID: 11400000, guid: 852b081cfd9efbb449cca3171458f8cc, type: 2}
     - rid: 8688056473731203098
       type: {class: VarClampMovement, ns: rwby, asm: rwby.csharp}
@@ -315,6 +375,7 @@ MonoBehaviour:
         - {x: 0, y: 0}
         condition:
           rid: -2
+        runDuringHitstop: 0
         magnitude:
           rid: 8688056473731203099
     - rid: 8688056473731203099
@@ -334,6 +395,7 @@ MonoBehaviour:
         - {x: 1, y: 1}
         condition:
           rid: -2
+        runDuringHitstop: 0
         inputSource: 0
         normalizeInputSource: 1
         useRotationIfInputZero: 1

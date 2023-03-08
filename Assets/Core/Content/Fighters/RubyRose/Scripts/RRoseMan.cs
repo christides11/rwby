@@ -161,6 +161,7 @@ public class RRoseMan : FighterManager
             if (!currentScythe) return;
             if (Vector3.Distance(transform.position, currentScythe.transform.position) < scytheCatchDistance)
             {
+                inputManager.ClearBuffer();
                 stateManager.SetMoveset(0);
                 stateManager.MarkForStateChange(physicsManager.IsGroundedNetworked ? (int)FighterCmnStates.IDLE : (int)FighterCmnStates.FALL);
                 Runner.Despawn(currentScythe);
@@ -172,13 +173,6 @@ public class RRoseMan : FighterManager
     public override void Spawned()
     {
         base.Spawned();
-        /*
-        fighterWhiteboard.UpdateInt(0, WhiteboardModifyTypes.SET, 16); // Max bullets
-        fighterWhiteboard.UpdateInt(1, WhiteboardModifyTypes.SET, fighterWhiteboard.Ints[0]); // Current Bullets
-        fighterWhiteboard.UpdateInt(2, WhiteboardModifyTypes.SET,1); // Has Weapon
-        fighterWhiteboard.UpdateInt(3, WhiteboardModifyTypes.SET,0); // Current Gundash
-        fighterWhiteboard.UpdateInt(4, WhiteboardModifyTypes.SET,3); // Gundash Max
-        FStateManager.ChangeState((int)FighterCmnStates.IDLE, 0);*/
     }
 
     public override void HandleDeath()

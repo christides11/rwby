@@ -18,7 +18,7 @@ MonoBehaviour:
   totalFrames: 10
   autoIncrement: 1
   autoLoop: 1
-  autoLoopFrame: 2
+  autoLoopFrame: 3
   data:
   - rid: 2193520836063002636
   - rid: 8688056331001921553
@@ -27,6 +27,7 @@ MonoBehaviour:
   initialGroundedState: 2
   stateType: 4
   maxUsesInString: -1
+  maxUsesPerAirtime: -1
   selfChainable: 0
   allowBaseStateTransitions: 1
   inputSequence:
@@ -55,9 +56,10 @@ MonoBehaviour:
         parent: -1
         children: 
         frameRanges:
-        - {x: 2, y: -1}
+        - {x: 3, y: -1}
         condition:
           rid: -2
+        runDuringHitstop: 0
         useValue: 1
         value:
           rid: 7270848813903118337
@@ -101,6 +103,7 @@ MonoBehaviour:
         - {x: 1, y: -1}
         condition:
           rid: -2
+        runDuringHitstop: 0
         boxType: 2
         attachedTo: 0
         shape: 0
@@ -119,6 +122,7 @@ MonoBehaviour:
         - {x: 1, y: -1}
         condition:
           rid: -2
+        runDuringHitstop: 0
         boxType: 0
         attachedTo: 0
         shape: 0

@@ -29,6 +29,7 @@ MonoBehaviour:
   - rid: 387796025889783858
   - rid: 387796025889783860
   - rid: 5283439354918469646
+  - rid: 5283439403872288770
   auraRequirement: 0
   initialGroundedState: 2
   stateType: 1
@@ -62,6 +63,7 @@ MonoBehaviour:
         frameRanges: []
         condition:
           rid: 387796025889783859
+        runDuringHitstop: 0
     - rid: 387796025889783859
       type: {class: ConditionMoveset, ns: rwby, asm: rwby.csharp}
       data:
@@ -79,6 +81,7 @@ MonoBehaviour:
         - {x: 1, y: -1}
         condition:
           rid: -2
+        runDuringHitstop: 0
         asset: {fileID: 11400000, guid: f2912e9d85718be4ea3ecf8f7e070b6b, type: 2}
     - rid: 2193520750553202689
       type: {class: VarChangeState, ns: rwby, asm: rwby.csharp}
@@ -91,6 +94,7 @@ MonoBehaviour:
         - {x: 5, y: -1}
         condition:
           rid: 2193520750553202691
+        runDuringHitstop: 0
         ignoreStateConditions: 0
         ignoreAirtimeCheck: 0
         ignoreStringUseCheck: 0
@@ -124,9 +128,27 @@ MonoBehaviour:
         - {x: 0, y: 0}
         condition:
           rid: -2
+        runDuringHitstop: 0
         ecbCenter: 0.9
         ecbRadius: 0.35
         ecbHeight: 1.8
+    - rid: 5283439403872288770
+      type: {class: VarModifyAnimationSet, ns: rwby, asm: rwby.csharp}
+      data:
+        name: Scythe Anim
+        id: 11
+        parent: 4
+        children: 
+        frameRanges:
+        - {x: 0, y: 0}
+        condition:
+          rid: -2
+        runDuringHitstop: 0
+        modifyType: 1
+        wantedAnimations:
+        - animationbank: {fileID: 11400000, guid: 2f728dafc0068ab45a19c79cbfc04bdd, type: 2}
+          animation: jump
+        fadeTime: 0
     - rid: 7270848885102739461
       type: {class: VarExternal, ns: rwby, asm: rwby.csharp}
       data:
@@ -138,6 +160,7 @@ MonoBehaviour:
         - {x: 1, y: -1}
         condition:
           rid: -2
+        runDuringHitstop: 0
         asset: {fileID: 11400000, guid: cc00d510ea2530d49bdc1b20fbaa26a5, type: 2}
     - rid: 8688056331001921556
       type: {class: VarCreateBox, ns: rwby, asm: rwby.csharp}
@@ -150,6 +173,7 @@ MonoBehaviour:
         - {x: 1, y: -1}
         condition:
           rid: -2
+        runDuringHitstop: 0
         boxType: 2
         attachedTo: 0
         shape: 0
@@ -163,10 +187,11 @@ MonoBehaviour:
         name: Scythe
         id: 4
         parent: -1
-        children: 05000000
+        children: 050000000b000000
         frameRanges: []
         condition:
           rid: 8688056409313247235
+        runDuringHitstop: 0
     - rid: 8688056409313247235
       type: {class: ConditionMoveset, ns: rwby, asm: rwby.csharp}
       data:
@@ -184,6 +209,7 @@ MonoBehaviour:
         - {x: 1, y: -1}
         condition:
           rid: -2
+        runDuringHitstop: 0
         asset: {fileID: 11400000, guid: 852b081cfd9efbb449cca3171458f8cc, type: 2}
     - rid: 8688056409313247238
       type: {class: VarEmpty, ns: rwby, asm: rwby.csharp}
@@ -195,6 +221,7 @@ MonoBehaviour:
         frameRanges: []
         condition:
           rid: 8688056409313247239
+        runDuringHitstop: 0
     - rid: 8688056409313247239
       type: {class: ConditionMoveset, ns: rwby, asm: rwby.csharp}
       data:

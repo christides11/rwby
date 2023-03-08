@@ -34,6 +34,7 @@ MonoBehaviour:
   - rid: 8688056606344609837
   - rid: 7270848342715531266
   - rid: 5775512056252071944
+  - rid: 5283439429343248389
   auraRequirement: 0
   initialGroundedState: 1
   stateType: 1
@@ -79,6 +80,7 @@ MonoBehaviour:
         - {x: 0, y: 0}
         condition:
           rid: -2
+        runDuringHitstop: 0
         ecbCenter: 0.825
         ecbRadius: 0.3
         ecbHeight: 1.65
@@ -93,6 +95,7 @@ MonoBehaviour:
         - {x: 1, y: -1}
         condition:
           rid: 8688056409313247233
+        runDuringHitstop: 0
     - rid: 2193520862594334720
       type: {class: VarCreateBox, ns: rwby, asm: rwby.csharp}
       data:
@@ -104,6 +107,7 @@ MonoBehaviour:
         - {x: 1, y: -1}
         condition:
           rid: -2
+        runDuringHitstop: 0
         boxType: 2
         attachedTo: 0
         shape: 0
@@ -111,6 +115,23 @@ MonoBehaviour:
         boxExtents: {x: 0.4, y: 1, z: 0.4}
         radius: 0
         definitionIndex: 0
+    - rid: 5283439429343248389
+      type: {class: VarModifyAnimationSet, ns: rwby, asm: rwby.csharp}
+      data:
+        name: 
+        id: 17
+        parent: -1
+        children: 
+        frameRanges:
+        - {x: 0, y: 0}
+        condition:
+          rid: -2
+        runDuringHitstop: 0
+        modifyType: 1
+        wantedAnimations:
+        - animationbank: {fileID: 11400000, guid: 2f728dafc0068ab45a19c79cbfc04bdd, type: 2}
+          animation: scythe.block
+        fadeTime: 0
     - rid: 5775511537229496344
       type: {class: ConditionInBlockstun, ns: rwby, asm: rwby.csharp}
       data:
@@ -126,6 +147,7 @@ MonoBehaviour:
         - {x: 1, y: -1}
         condition:
           rid: -2
+        runDuringHitstop: 0
         boxType: 3
         attachedTo: 0
         shape: 0
@@ -144,6 +166,7 @@ MonoBehaviour:
         - {x: 1, y: -1}
         condition:
           rid: 5775512056252071946
+        runDuringHitstop: 0
         ignoreStateConditions: 0
         ignoreAirtimeCheck: 0
         ignoreStringUseCheck: 0
@@ -175,6 +198,7 @@ MonoBehaviour:
         - {x: 1, y: -1}
         condition:
           rid: -2
+        runDuringHitstop: 0
         boxType: 0
         attachedTo: 0
         shape: 0
@@ -193,6 +217,7 @@ MonoBehaviour:
         - {x: 1, y: -1}
         condition:
           rid: 7270848342715531267
+        runDuringHitstop: 0
         ignoreStateConditions: 0
         ignoreAirtimeCheck: 0
         ignoreStringUseCheck: 0
@@ -216,6 +241,8 @@ MonoBehaviour:
     - rid: 8688056409313247233
       type: {class: ConditionMoveset, ns: rwby, asm: rwby.csharp}
       data:
+        inverse: 0
+        checkCurrentMovesetInstead: 0
         moveset: 0
     - rid: 8688056606344609792
       type: {class: VarEmpty, ns: rwby, asm: rwby.csharp}
@@ -228,9 +255,12 @@ MonoBehaviour:
         - {x: 1, y: -1}
         condition:
           rid: 8688056606344609793
+        runDuringHitstop: 0
     - rid: 8688056606344609793
       type: {class: ConditionMoveset, ns: rwby, asm: rwby.csharp}
       data:
+        inverse: 0
+        checkCurrentMovesetInstead: 0
         moveset: 1
     - rid: 8688056606344609794
       type: {class: VarEmpty, ns: rwby, asm: rwby.csharp}
@@ -242,6 +272,7 @@ MonoBehaviour:
         frameRanges: []
         condition:
           rid: 8688056606344609796
+        runDuringHitstop: 0
     - rid: 8688056606344609796
       type: {class: ConditionAnd, ns: rwby, asm: rwby.csharp}
       data:
@@ -268,10 +299,13 @@ MonoBehaviour:
         - {x: 5, y: -1}
         condition:
           rid: 8688056606344609800
+        runDuringHitstop: 0
         asset: {fileID: 11400000, guid: c8d832c162e368d439cbe63210340e04, type: 2}
     - rid: 8688056606344609800
       type: {class: ConditionMoveset, ns: rwby, asm: rwby.csharp}
       data:
+        inverse: 0
+        checkCurrentMovesetInstead: 0
         moveset: 0
     - rid: 8688056606344609801
       type: {class: VarExternal, ns: rwby, asm: rwby.csharp}
@@ -284,10 +318,13 @@ MonoBehaviour:
         - {x: 5, y: -1}
         condition:
           rid: 8688056606344609802
+        runDuringHitstop: 0
         asset: {fileID: 11400000, guid: c8d832c162e368d439cbe63210340e04, type: 2}
     - rid: 8688056606344609802
       type: {class: ConditionMoveset, ns: rwby, asm: rwby.csharp}
       data:
+        inverse: 0
+        checkCurrentMovesetInstead: 0
         moveset: 1
     - rid: 8688056606344609804
       type: {class: VarChangeState, ns: rwby, asm: rwby.csharp}
@@ -300,6 +337,7 @@ MonoBehaviour:
         - {x: 5, y: -1}
         condition:
           rid: 8688056606344609805
+        runDuringHitstop: 0
         ignoreStateConditions: 0
         ignoreAirtimeCheck: 0
         ignoreStringUseCheck: 0
@@ -333,6 +371,7 @@ MonoBehaviour:
         - {x: 0, y: 0}
         condition:
           rid: -2
+        runDuringHitstop: 0
         magnitude:
           rid: 8688056606344609827
     - rid: 8688056606344609827
@@ -352,6 +391,7 @@ MonoBehaviour:
         - {x: 1, y: -1}
         condition:
           rid: -2
+        runDuringHitstop: 0
         ignoreStateConditions: 0
         ignoreAirtimeCheck: 0
         ignoreStringUseCheck: 0

@@ -45,8 +45,8 @@ namespace rwby
 
         public VarModifyType modifyType;
         public EffectReference[] wantedEffects;
-        public bool doNotAddToSet;
         public bool OffsetStartAtFighter;
+        public bool RotOffsetFromFighters;
 
         public IStateVariables Copy()
         {
@@ -54,8 +54,8 @@ namespace rwby
             {
                 modifyType = modifyType,
                 wantedEffects = wantedEffects,
-                doNotAddToSet = doNotAddToSet,
                 OffsetStartAtFighter = OffsetStartAtFighter,
+                RotOffsetFromFighters = RotOffsetFromFighters,
             };
         }
     }

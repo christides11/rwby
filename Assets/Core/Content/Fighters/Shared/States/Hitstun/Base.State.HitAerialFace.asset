@@ -18,7 +18,7 @@ MonoBehaviour:
   totalFrames: 30
   autoIncrement: 1
   autoLoop: 0
-  autoLoopFrame: 2
+  autoLoopFrame: 3
   data:
   - rid: 7270848878803943435
   - rid: 7270848878803943436
@@ -58,9 +58,11 @@ MonoBehaviour:
         - {x: 1, y: -1}
         condition:
           rid: 5775511544003297297
+        runDuringHitstop: 0
         ignoreStateConditions: 0
         ignoreAirtimeCheck: 0
         ignoreStringUseCheck: 0
+        ignoreAuraRequirement: 0
         checkInputSequence: 0
         checkCondition: 0
         overrideStateChange: 0
@@ -115,12 +117,14 @@ MonoBehaviour:
         parent: -1
         children: 
         frameRanges:
-        - {x: 2, y: -1}
+        - {x: 3, y: -1}
         condition:
           rid: 7270848697680265239
+        runDuringHitstop: 0
         ignoreStateConditions: 0
         ignoreAirtimeCheck: 0
         ignoreStringUseCheck: 0
+        ignoreAuraRequirement: 0
         checkInputSequence: 0
         checkCondition: 0
         overrideStateChange: 1
@@ -155,9 +159,10 @@ MonoBehaviour:
         parent: -1
         children: 
         frameRanges:
-        - {x: 2, y: -1}
+        - {x: 3, y: -1}
         condition:
           rid: -2
+        runDuringHitstop: 0
         inputSource: 1
         normalizeInputSource: 0
         useRotationIfInputZero: 0
@@ -177,12 +182,14 @@ MonoBehaviour:
         parent: -1
         children: 
         frameRanges:
-        - {x: 2, y: -1}
+        - {x: 3, y: -1}
         condition:
           rid: 7270848878803943437
+        runDuringHitstop: 0
         ignoreStateConditions: 0
         ignoreAirtimeCheck: 0
         ignoreStringUseCheck: 0
+        ignoreAuraRequirement: 0
         checkInputSequence: 0
         checkCondition: 0
         overrideStateChange: 1

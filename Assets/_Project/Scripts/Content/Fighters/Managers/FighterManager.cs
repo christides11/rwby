@@ -68,7 +68,6 @@ namespace rwby
         [SerializeField] protected FighterStatManager statManager;
         [SerializeField] protected FighterHealthManager healthManager;
         public IFighterDefinition fighterDefinition;
-        //[SerializeField] protected CapsuleCollider capsuleCollider;
         [SerializeField] protected SoundbankContainer soundbankContainer;
         public FighterEffector fighterEffector;
         public FighterAnimator fighterAnimator;
@@ -80,7 +79,6 @@ namespace rwby
         public Transform visualModelTransform;
         public Transform myTransform;
         [SerializeReference] public IContentLoad[] contentLoaders = new IContentLoad[0];
-        public GameObject shieldVisual;
 
         [Header("Lock On")]
         public LayerMask lockonLayerMask;
@@ -162,7 +160,6 @@ namespace rwby
         public override void Render()
         {
             base.Render();
-            shieldVisual.SetActive(combatManager.BlockState != BlockStateType.NONE);
             visualModelTransform.localPosition = Vector3.zero;
             if (FCombatManager.HitStop > 0 && FCombatManager.HitStun > 0)
             {

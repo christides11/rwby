@@ -27,6 +27,7 @@ MonoBehaviour:
   - rid: 8688056833868562435
   - rid: 7270848885102739464
   - rid: 5283439354918469647
+  - rid: 5283439403872288772
   auraRequirement: 0
   initialGroundedState: 2
   stateType: 1
@@ -63,9 +64,27 @@ MonoBehaviour:
         - {x: 0, y: 0}
         condition:
           rid: -2
-        ecbCenter: 1
+        runDuringHitstop: 0
+        ecbCenter: 1.2
         ecbRadius: 0.35
         ecbHeight: 1.2
+    - rid: 5283439403872288772
+      type: {class: VarModifyAnimationSet, ns: rwby, asm: rwby.csharp}
+      data:
+        name: Scythe Anim
+        id: 8
+        parent: 2
+        children: 
+        frameRanges:
+        - {x: 0, y: 0}
+        condition:
+          rid: -2
+        runDuringHitstop: 0
+        modifyType: 1
+        wantedAnimations:
+        - animationbank: {fileID: 11400000, guid: 2f728dafc0068ab45a19c79cbfc04bdd, type: 2}
+          animation: fall
+        fadeTime: 0
     - rid: 7270848885102739462
       type: {class: VarEmpty, ns: rwby, asm: rwby.csharp}
       data:
@@ -76,6 +95,7 @@ MonoBehaviour:
         frameRanges: []
         condition:
           rid: 7270848885102739463
+        runDuringHitstop: 0
     - rid: 7270848885102739463
       type: {class: ConditionMoveset, ns: rwby, asm: rwby.csharp}
       data:
@@ -93,6 +113,7 @@ MonoBehaviour:
         - {x: 1, y: -1}
         condition:
           rid: -2
+        runDuringHitstop: 0
         asset: {fileID: 11400000, guid: cc00d510ea2530d49bdc1b20fbaa26a5, type: 2}
     - rid: 8688056331001921555
       type: {class: VarCreateBox, ns: rwby, asm: rwby.csharp}
@@ -105,6 +126,7 @@ MonoBehaviour:
         - {x: 1, y: -1}
         condition:
           rid: -2
+        runDuringHitstop: 0
         boxType: 2
         attachedTo: 0
         shape: 0
@@ -118,10 +140,11 @@ MonoBehaviour:
         name: Scythe
         id: 2
         parent: -1
-        children: 03000000
+        children: 0300000008000000
         frameRanges: []
         condition:
           rid: 8688056409313247244
+        runDuringHitstop: 0
     - rid: 8688056409313247244
       type: {class: ConditionMoveset, ns: rwby, asm: rwby.csharp}
       data:
@@ -139,6 +162,7 @@ MonoBehaviour:
         - {x: 1, y: -1}
         condition:
           rid: -2
+        runDuringHitstop: 0
         asset: {fileID: 11400000, guid: 852b081cfd9efbb449cca3171458f8cc, type: 2}
     - rid: 8688056833868562435
       type: {class: VarCreateBox, ns: rwby, asm: rwby.csharp}
@@ -151,6 +175,7 @@ MonoBehaviour:
         - {x: 1, y: -1}
         condition:
           rid: -2
+        runDuringHitstop: 0
         boxType: 0
         attachedTo: 0
         shape: 0

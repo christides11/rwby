@@ -29,6 +29,7 @@ MonoBehaviour:
   - rid: 7270848899719102485
   - rid: 7270848899719102487
   - rid: 5775512102425853956
+  - rid: 5283439399747190788
   auraRequirement: 0
   initialGroundedState: 2
   stateType: 1
@@ -56,6 +57,35 @@ MonoBehaviour:
     RefIds:
     - rid: -2
       type: {class: , ns: , asm: }
+    - rid: 5283439399747190788
+      type: {class: VarModifyEffectSet, ns: rwby, asm: rwby.csharp}
+      data:
+        name: 
+        id: 10
+        parent: -1
+        children: 
+        frameRanges:
+        - {x: 1, y: 1}
+        condition:
+          rid: -2
+        runDuringHitstop: 0
+        modifyType: 0
+        wantedEffects:
+        - effectbank: {fileID: 11400000, guid: 5d1086999fc610e4290407b33cce3ff1, type: 2}
+          effect: djump
+          parent:
+            rid: 5283439399747190789
+          offset: {x: 0, y: 1, z: 0}
+          rotation: {x: 0, y: 0, z: 0}
+          scale: {x: 1, y: 1, z: 1}
+          isTemporary: 0
+          hitstopAffected: 0
+        OffsetStartAtFighter: 1
+        RotOffsetFromFighters: 1
+    - rid: 5283439399747190789
+      type: {class: FighterBoneReferenceCmn, ns: rwby, asm: rwby.csharp}
+      data:
+        value: 0
     - rid: 5775512102425853956
       type: {class: VarModifySoundSet, ns: rwby, asm: rwby.csharp}
       data:
@@ -67,10 +97,11 @@ MonoBehaviour:
         - {x: 1, y: 1}
         condition:
           rid: -2
+        runDuringHitstop: 0
         sounds:
         - soundbank: {fileID: 11400000, guid: 2f4063bd6a5418f4a9c4e61c84752271, type: 2}
           sound: jump
-          parented: 0
+          parented: 1
           offset: {x: 0, y: 0, z: 0}
           volume: 1
           minDist: 2
@@ -87,9 +118,12 @@ MonoBehaviour:
         frameRanges: []
         condition:
           rid: 7270848899719102486
+        runDuringHitstop: 0
     - rid: 7270848899719102486
       type: {class: ConditionMoveset, ns: rwby, asm: rwby.csharp}
       data:
+        inverse: 0
+        checkCurrentMovesetInstead: 0
         moveset: 1
     - rid: 7270848899719102487
       type: {class: VarExternal, ns: rwby, asm: rwby.csharp}
@@ -102,6 +136,7 @@ MonoBehaviour:
         - {x: 1, y: -1}
         condition:
           rid: -2
+        runDuringHitstop: 0
         asset: {fileID: 11400000, guid: cc00d510ea2530d49bdc1b20fbaa26a5, type: 2}
     - rid: 8688056136894513153
       type: {class: VarMultiplyMovement, ns: rwby, asm: rwby.csharp}
@@ -114,6 +149,7 @@ MonoBehaviour:
         - {x: 0, y: 0}
         condition:
           rid: -2
+        runDuringHitstop: 0
         multiplier:
           rid: 8688056136894513154
     - rid: 8688056136894513154
@@ -134,6 +170,7 @@ MonoBehaviour:
         - {x: 0, y: 0}
         condition:
           rid: -2
+        runDuringHitstop: 0
         inputSource: 0
         normalizeInputSource: 0
         useRotationIfInputZero: 0
@@ -157,6 +194,7 @@ MonoBehaviour:
         - {x: 1, y: -1}
         condition:
           rid: -2
+        runDuringHitstop: 0
         boxType: 2
         attachedTo: 0
         shape: 0
@@ -174,9 +212,12 @@ MonoBehaviour:
         frameRanges: []
         condition:
           rid: 8688056409313247252
+        runDuringHitstop: 0
     - rid: 8688056409313247252
       type: {class: ConditionMoveset, ns: rwby, asm: rwby.csharp}
       data:
+        inverse: 0
+        checkCurrentMovesetInstead: 0
         moveset: 0
     - rid: 8688056409313247253
       type: {class: VarExternal, ns: rwby, asm: rwby.csharp}
@@ -189,6 +230,7 @@ MonoBehaviour:
         - {x: 1, y: -1}
         condition:
           rid: -2
+        runDuringHitstop: 0
         asset: {fileID: 11400000, guid: 852b081cfd9efbb449cca3171458f8cc, type: 2}
     - rid: 8688056473731203102
       type: {class: VarClampMovement, ns: rwby, asm: rwby.csharp}
@@ -201,6 +243,7 @@ MonoBehaviour:
         - {x: 0, y: 0}
         condition:
           rid: -2
+        runDuringHitstop: 0
         magnitude:
           rid: 8688056473731203103
     - rid: 8688056473731203103

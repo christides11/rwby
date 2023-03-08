@@ -33,12 +33,12 @@ namespace rwby
             if(Object.HasStateAuthority) rng = new NetworkRNG(327);
         }
 
-        public void SetEffects(EffectReference[] wantedEffects)
+        public void SetEffects(EffectReference[] wantedEffects, Vector3 posBase = default, Vector3 eulerBase = default)
         {
-            AddEffects(wantedEffects);
+            AddEffects(wantedEffects, posBase, eulerBase);
         }
 
-        public void AddEffects(EffectReference[] wantedEffects, Vector3 posBase = default, bool addToEffectSet = true)
+        public void AddEffects(EffectReference[] wantedEffects, Vector3 posBase = default, Vector3 eulerBase = default)
         {
             var temp = effects;
             for (int i = 0; i < wantedEffects.Length; i++)
@@ -50,7 +50,7 @@ namespace rwby
                     frame = Runner.Tick,
                     parent = wantedEffects[i].parent == null ? 0 : wantedEffects[i].parent.GetBone(),
                     pos = posBase + wantedEffects[i].offset,
-                    rot = wantedEffects[i].rotation,
+                    rot = eulerBase + wantedEffects[i].rotation,
                     scale = wantedEffects[i].scale
                 });
                 
