@@ -23,6 +23,7 @@ MonoBehaviour:
   - rid: 2193520836063002636
   - rid: 8688056331001921553
   - rid: 8688056335261499403
+  - rid: 5283439522114961411
   auraRequirement: 0
   initialGroundedState: 2
   stateType: 4
@@ -85,6 +86,23 @@ MonoBehaviour:
         statReference: 1
         value: 0
         variable: 23
+    - rid: 5283439522114961411
+      type: {class: VarModifyAnimationSet, ns: rwby, asm: rwby.csharp}
+      data:
+        name: 
+        id: 5
+        parent: -1
+        children: 
+        frameRanges:
+        - {x: 0, y: 0}
+        condition:
+          rid: -2
+        runDuringHitstop: 0
+        modifyType: 1
+        wantedAnimations:
+        - animationbank: {fileID: 11400000, guid: 2f728dafc0068ab45a19c79cbfc04bdd, type: 2}
+          animation: scythe.hit.faceup
+        fadeTime: 0
     - rid: 7270848813903118337
       type: {class: FighterBaseStatReferenceFloat, ns: rwby, asm: rwby.csharp}
       data:

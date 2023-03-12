@@ -35,8 +35,6 @@ MonoBehaviour:
   - rid: 387795756708003851
   - rid: 387795983688269854
   - rid: 387795983688269856
-  - rid: 1200828715613814784
-  - rid: 1200828715613814785
   - rid: 1200828804794155010
   - rid: 1200828804794155011
   - rid: 1200828804794155013
@@ -45,6 +43,8 @@ MonoBehaviour:
   - rid: 1200828804794155024
   - rid: 5283439354918469635
   - rid: 5283439354918469636
+  - rid: 5283439516512944128
+  - rid: 5283439516512944129
   auraRequirement: 0
   initialGroundedState: 1
   stateType: 2
@@ -94,8 +94,8 @@ MonoBehaviour:
       autolink: 0
       gravityAutolinkPercentage: 0
       movementAutolinkPercentage: 0
-      groundHitForce: {x: 0, y: 21, z: 18}
-      aerialHitForce: {x: 0, y: 21, z: 18}
+      groundHitForce: {x: 0, y: 15, z: 15}
+      aerialHitForce: {x: 0, y: 10, z: 10}
       pullPushMultiplier: 0
       pullPushMaxDistance: 10
       blockLift: 0
@@ -173,7 +173,7 @@ MonoBehaviour:
       ignoreHitstunScaling: 0
       ignorePushbackScaling: 0
   - ID: 1
-    groundedFoldoutGroup: 0
+    groundedFoldoutGroup: 1
     groundedCounterHitFoldoutGroup: 0
     clashLevel: 0
     hitStateGroundedGroups: -1
@@ -289,6 +289,7 @@ MonoBehaviour:
         children: 
         frameRanges:
         - {x: 6, y: 6}
+        - {x: 16, y: 16}
         condition:
           rid: -2
         runDuringHitstop: 0
@@ -350,38 +351,6 @@ MonoBehaviour:
         runDuringHitstop: 0
         modifyType: 0
         effects: 00000000
-        frame: 1
-    - rid: 1200828715613814784
-      type: {class: VarModifyAnimationSet, ns: rwby, asm: rwby.csharp}
-      data:
-        name: 
-        id: 24
-        parent: -1
-        children: 
-        frameRanges:
-        - {x: 0, y: 0}
-        condition:
-          rid: -2
-        runDuringHitstop: 0
-        modifyType: 1
-        wantedAnimations:
-        - animationbank: {fileID: 11400000, guid: 2f728dafc0068ab45a19c79cbfc04bdd, type: 2}
-          animation: scythe.grd.5L
-        fadeTime: 0
-    - rid: 1200828715613814785
-      type: {class: VarModifyAnimationFrame, ns: rwby, asm: rwby.csharp}
-      data:
-        name: 
-        id: 25
-        parent: -1
-        children: 
-        frameRanges:
-        - {x: 1, y: 6}
-        condition:
-          rid: -2
-        runDuringHitstop: 0
-        modifyType: 0
-        animations: 00000000
         frame: 1
     - rid: 1200828804794155010
       type: {class: VarSetGroundedState, ns: rwby, asm: rwby.csharp}
@@ -450,7 +419,7 @@ MonoBehaviour:
         parent: -1
         children: 
         frameRanges:
-        - {x: 16, y: 18}
+        - {x: 17, y: 19}
         condition:
           rid: -2
         runDuringHitstop: 0
@@ -641,6 +610,38 @@ MonoBehaviour:
           rid: -2
         runDuringHitstop: 0
         asset: {fileID: 11400000, guid: a8844c3d05bce98469f86710807ea33d, type: 2}
+    - rid: 5283439516512944128
+      type: {class: VarModifyAnimationSet, ns: rwby, asm: rwby.csharp}
+      data:
+        name: 
+        id: 34
+        parent: -1
+        children: 
+        frameRanges:
+        - {x: 0, y: 0}
+        condition:
+          rid: -2
+        runDuringHitstop: 0
+        modifyType: 1
+        wantedAnimations:
+        - animationbank: {fileID: 11400000, guid: 2f728dafc0068ab45a19c79cbfc04bdd, type: 2}
+          animation: scythe.grd.28H
+        fadeTime: 0
+    - rid: 5283439516512944129
+      type: {class: VarModifyAnimationFrame, ns: rwby, asm: rwby.csharp}
+      data:
+        name: 
+        id: 35
+        parent: -1
+        children: 
+        frameRanges:
+        - {x: 1, y: 16}
+        condition:
+          rid: -2
+        runDuringHitstop: 0
+        modifyType: 0
+        animations: 00000000
+        frame: 1
     - rid: 7270848428946489353
       type: {class: VarRotateTowards, ns: rwby, asm: rwby.csharp}
       data:
@@ -723,6 +724,7 @@ MonoBehaviour:
         children: 
         frameRanges:
         - {x: 6, y: 6}
+        - {x: 16, y: 16}
         condition:
           rid: -2
         runDuringHitstop: 0
