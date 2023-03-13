@@ -59,6 +59,9 @@ namespace rwby
         GUARD_COUNTER = 53,
         THROW_AIR = 54,
         THROW_ATTEMPT_AIR = 55,
-        ENEMY_STEP
+        ENEMY_STEP,
+        HIT_AERIAL_FACE_UP_END,
+        HIT_AERIAL_FACE_UP_FALL,
+        GROUND_LAY_FACE_UP_CRASH
     }
 }

@@ -15,7 +15,7 @@ MonoBehaviour:
   stateName: Ground Lay (Face Up)
   useBaseState: 1
   baseState: {fileID: 11400000, guid: 2db2c07c5ff766a419a7249a03a85ae8, type: 2}
-  totalFrames: 60
+  totalFrames: 40
   autoIncrement: 1
   autoLoop: 0
   autoLoopFrame: 1
@@ -61,6 +61,7 @@ MonoBehaviour:
         - {x: 0, y: 0}
         condition:
           rid: 387796149032714245
+        runDuringHitstop: 0
         modifyType: 1
         wantedAnimations:
         - animationbank: {fileID: 11400000, guid: 2f728dafc0068ab45a19c79cbfc04bdd, type: 2}
@@ -69,6 +70,8 @@ MonoBehaviour:
     - rid: 387796149032714245
       type: {class: ConditionMoveset, ns: rwby, asm: rwby.csharp}
       data:
+        inverse: 0
+        checkCurrentMovesetInstead: 0
         moveset: 0
     - rid: 387796161339850766
       type: {class: VarModifyFallSpeed, ns: rwby, asm: rwby.csharp}
@@ -81,6 +84,7 @@ MonoBehaviour:
         - {x: 0, y: 0}
         condition:
           rid: -2
+        runDuringHitstop: 0
         targetType: 0
         modifyType: 1
         value:
@@ -102,6 +106,7 @@ MonoBehaviour:
         - {x: 1, y: -1}
         condition:
           rid: -2
+        runDuringHitstop: 0
         boxType: 0
         attachedTo: 0
         shape: 0
@@ -120,6 +125,7 @@ MonoBehaviour:
         - {x: 0, y: 0}
         condition:
           rid: -2
+        runDuringHitstop: 0
         multiplier:
           rid: 8688056342057058328
     - rid: 8688056342057058328
@@ -140,6 +146,7 @@ MonoBehaviour:
         - {x: 1, y: -1}
         condition:
           rid: -2
+        runDuringHitstop: 0
         traction:
           rid: 8688056342057058330
         applyMovement: 1

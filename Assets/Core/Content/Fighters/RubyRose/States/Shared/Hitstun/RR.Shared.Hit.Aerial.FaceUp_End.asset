@@ -1,0 +1,217 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7789f25d17401bc4b915ca6fcecf2a29, type: 3}
+  m_Name: RR.Shared.Hit.Aerial.FaceUp_End
+  m_EditorClassIdentifier: 
+  stateName: Hit Aerial Face Up (End)
+  useBaseState: 1
+  baseState: {fileID: 11400000, guid: ab3b74319da46dc4cbec28f93696a988, type: 2}
+  totalFrames: 10
+  autoIncrement: 1
+  autoLoop: 1
+  autoLoopFrame: 6
+  data:
+  - rid: 2193520836063002636
+  - rid: 8688056331001921553
+  - rid: 8688056335261499403
+  - rid: 5283439522114961411
+  - rid: 5283439538307858434
+  - rid: 5283439538307858442
+  - rid: 5283439538307858444
+  auraRequirement: 0
+  initialGroundedState: 2
+  stateType: 4
+  maxUsesInString: -1
+  maxUsesPerAirtime: -1
+  selfChainable: 0
+  allowBaseStateTransitions: 1
+  inputSequence:
+    executeWindow: 3
+    executeInputs: []
+    sequenceWindow: 8
+    sequenceInputs: []
+  inputSequenceAsHoldInputs: 0
+  condition:
+    rid: -2
+  hitboxInfo: []
+  throwboxInfo: []
+  hurtboxInfo:
+  - hitInvincible: 0
+    projectileInvincible: 0
+  references:
+    version: 2
+    RefIds:
+    - rid: -2
+      type: {class: , ns: , asm: }
+    - rid: 2193520836063002636
+      type: {class: VarApplyGravity, ns: rwby, asm: rwby.csharp}
+      data:
+        name: 
+        id: 0
+        parent: -1
+        children: 
+        frameRanges:
+        - {x: 1, y: -1}
+        condition:
+          rid: -2
+        runDuringHitstop: 0
+        useValue: 1
+        value:
+          rid: 7270848813903118337
+        jumpHeight:
+          rid: -2
+        jumpTime:
+          rid: -2
+        multi:
+          rid: 2193520836063002639
+        maxFallSpeed:
+          rid: 2193520836063002640
+    - rid: 2193520836063002639
+      type: {class: FighterBaseStatReferenceFloat, ns: rwby, asm: rwby.csharp}
+      data:
+        inverse: 0
+        statReference: 0
+        value: 1
+        variable: 0
+    - rid: 2193520836063002640
+      type: {class: FighterBaseStatReferenceFloat, ns: rwby, asm: rwby.csharp}
+      data:
+        inverse: 0
+        statReference: 1
+        value: 0
+        variable: 23
+    - rid: 5283439522114961411
+      type: {class: VarModifyAnimationSet, ns: rwby, asm: rwby.csharp}
+      data:
+        name: 
+        id: 5
+        parent: -1
+        children: 
+        frameRanges:
+        - {x: 0, y: 0}
+        condition:
+          rid: -2
+        runDuringHitstop: 0
+        modifyType: 1
+        wantedAnimations:
+        - animationbank: {fileID: 11400000, guid: 2f728dafc0068ab45a19c79cbfc04bdd, type: 2}
+          animation: scythe.hit.faceup
+        fadeTime: 0
+    - rid: 5283439538307858434
+      type: {class: VarChangeState, ns: rwby, asm: rwby.csharp}
+      data:
+        name: To Fall
+        id: 6
+        parent: -1
+        children: 
+        frameRanges:
+        - {x: 2, y: -1}
+        condition:
+          rid: 5283439538307858436
+        runDuringHitstop: 0
+        ignoreStateConditions: 1
+        ignoreAirtimeCheck: 1
+        ignoreStringUseCheck: 1
+        ignoreAuraRequirement: 1
+        checkInputSequence: 0
+        checkCondition: 0
+        overrideStateChange: 0
+        targetType: 0
+        stateMovesetID: -1
+        state:
+          rid: 5283439538307858435
+        frame: 0
+    - rid: 5283439538307858435
+      type: {class: FighterCmnStateReference, ns: rwby, asm: rwby.csharp}
+      data:
+        state: 58
+    - rid: 5283439538307858436
+      type: {class: ConditionFallSpeed, ns: rwby, asm: rwby.csharp}
+      data:
+        absoluteValue: 0
+        minValue: -3.4028235e+38
+        maxValue: 0
+    - rid: 5283439538307858442
+      type: {class: VarModifyAnimationFrame, ns: rwby, asm: rwby.csharp}
+      data:
+        name: 
+        id: 7
+        parent: -1
+        children: 
+        frameRanges:
+        - {x: 0, y: 0}
+        condition:
+          rid: -2
+        runDuringHitstop: 0
+        modifyType: 1
+        animations: 00000000
+        frame: 5
+    - rid: 5283439538307858444
+      type: {class: VarModifyAnimationFrame, ns: rwby, asm: rwby.csharp}
+      data:
+        name: 
+        id: 8
+        parent: -1
+        children: 
+        frameRanges:
+        - {x: 5, y: 5}
+        condition:
+          rid: -2
+        runDuringHitstop: 0
+        modifyType: 1
+        animations: 00000000
+        frame: 5
+    - rid: 7270848813903118337
+      type: {class: FighterBaseStatReferenceFloat, ns: rwby, asm: rwby.csharp}
+      data:
+        inverse: 0
+        statReference: 1
+        value: 0
+        variable: 38
+    - rid: 8688056331001921553
+      type: {class: VarCreateBox, ns: rwby, asm: rwby.csharp}
+      data:
+        name: Colbox
+        id: 3
+        parent: -1
+        children: 
+        frameRanges:
+        - {x: 1, y: -1}
+        condition:
+          rid: -2
+        runDuringHitstop: 0
+        boxType: 2
+        attachedTo: 0
+        shape: 0
+        offset: {x: 0, y: 1, z: 0}
+        boxExtents: {x: 0.5, y: 1, z: 0.5}
+        radius: 0
+        definitionIndex: 0
+    - rid: 8688056335261499403
+      type: {class: VarCreateBox, ns: rwby, asm: rwby.csharp}
+      data:
+        name: Hurtbox
+        id: 4
+        parent: -1
+        children: 
+        frameRanges:
+        - {x: 1, y: -1}
+        condition:
+          rid: -2
+        runDuringHitstop: 0
+        boxType: 0
+        attachedTo: 0
+        shape: 0
+        offset: {x: 0, y: 1, z: 0}
+        boxExtents: {x: 0.5, y: 1, z: 0.5}
+        radius: 0
+        definitionIndex: 0

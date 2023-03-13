@@ -17,13 +17,14 @@ MonoBehaviour:
   baseState: {fileID: 11400000, guid: ab3b74319da46dc4cbec28f93696a988, type: 2}
   totalFrames: 10
   autoIncrement: 1
-  autoLoop: 1
+  autoLoop: 0
   autoLoopFrame: 3
   data:
   - rid: 2193520836063002636
   - rid: 8688056331001921553
   - rid: 8688056335261499403
   - rid: 5283439522114961411
+  - rid: 5283439538307858432
   auraRequirement: 0
   initialGroundedState: 2
   stateType: 4
@@ -103,6 +104,34 @@ MonoBehaviour:
         - animationbank: {fileID: 11400000, guid: 2f728dafc0068ab45a19c79cbfc04bdd, type: 2}
           animation: scythe.hit.faceup
         fadeTime: 0
+    - rid: 5283439538307858432
+      type: {class: VarChangeState, ns: rwby, asm: rwby.csharp}
+      data:
+        name: To End
+        id: 6
+        parent: -1
+        children: 
+        frameRanges:
+        - {x: -1, y: -1}
+        condition:
+          rid: -2
+        runDuringHitstop: 0
+        ignoreStateConditions: 1
+        ignoreAirtimeCheck: 1
+        ignoreStringUseCheck: 1
+        ignoreAuraRequirement: 1
+        checkInputSequence: 0
+        checkCondition: 0
+        overrideStateChange: 0
+        targetType: 0
+        stateMovesetID: -1
+        state:
+          rid: 5283439538307858433
+        frame: 0
+    - rid: 5283439538307858433
+      type: {class: FighterCmnStateReference, ns: rwby, asm: rwby.csharp}
+      data:
+        state: 57
     - rid: 7270848813903118337
       type: {class: FighterBaseStatReferenceFloat, ns: rwby, asm: rwby.csharp}
       data:

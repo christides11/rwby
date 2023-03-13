@@ -321,6 +321,10 @@ MonoBehaviour:
     state:
       rid: 5775512034015969297
     stateTimeline: {fileID: 11400000, guid: d718c01d38288fd43b4c7021de0c274e, type: 2}
+  - name: ground lay face up (crash)
+    state:
+      rid: 5283439538307858475
+    stateTimeline: {fileID: 11400000, guid: 2247813eacfb70b4bb72ddd179181593, type: 2}
   hitstun:
   - name: hit upper (Ground)
     state:
@@ -358,6 +362,14 @@ MonoBehaviour:
     state:
       rid: 387796093188440089
     stateTimeline: {fileID: 11400000, guid: d4ba1e64a5a03cd4cb9c8b8c1c7a77c1, type: 2}
+  - name: hit face up (end)
+    state:
+      rid: 5283439538307858439
+    stateTimeline: {fileID: 11400000, guid: 5d29fa22218c9dc4bb72f1437c545ae2, type: 2}
+  - name: hit face up (fall)
+    state:
+      rid: 5283439538307858440
+    stateTimeline: {fileID: 11400000, guid: d48c3e71c5dfa2a45a948da885a7bf91, type: 2}
   references:
     version: 2
     RefIds:
@@ -669,6 +681,18 @@ MonoBehaviour:
       type: {class: RubyRoseStateReference, ns: rwby.core, asm: rwby.core}
       data:
         state: 251
+    - rid: 5283439538307858439
+      type: {class: FighterCmnStateReference, ns: rwby, asm: rwby.csharp}
+      data:
+        state: 57
+    - rid: 5283439538307858440
+      type: {class: FighterCmnStateReference, ns: rwby, asm: rwby.csharp}
+      data:
+        state: 58
+    - rid: 5283439538307858475
+      type: {class: FighterCmnStateReference, ns: rwby, asm: rwby.csharp}
+      data:
+        state: 59
     - rid: 5775511544003297313
       type: {class: FighterCmnStateReference, ns: rwby, asm: rwby.csharp}
       data:
