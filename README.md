@@ -1,7 +1,8 @@
-# RWBY: From Dust
+# RWBY
+# MOVED TO https://dev.azure.com/ChrisTides11/rwby
 
 ## Overview
-**RWBY: From Dust** is a multiplayer hack and slash fangame based on Rooster Teeth's animated series [RWBY](https://en.wikipedia.org/wiki/RWBY).
+**RWBY** is a multiplayer hack and slash fangame based on Rooster Teeth's animated series [RWBY](https://en.wikipedia.org/wiki/RWBY).
 
 ## Current Features
 * Multiple gamemodes supporting local and online play
