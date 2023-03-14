@@ -19,6 +19,6 @@ N/A.
 * Development Guide - N/A
 
 ## Licensing & Attribution
-From Dust is currently under the [MIT license](https://github.com/christides11/rwby/blob/main/LICENSE).
+This project is under the [MIT license](https://github.com/christides11/rwby/blob/main/LICENSE).
 
 This is not endorsed by Rooster Teeth in any way. Views, opinions, and thoughts are all my own. Rooster Teeth and RWBY are trade names or registered trademarks of Rooster Teeth Productions, LLC. © Rooster Teeth Productions, LLC.
